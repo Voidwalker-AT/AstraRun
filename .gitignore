@@ -1,0 +1,40 @@
+# AstraRun .gitignore
+
+# Python Virtual Environments
+.venv/
+venv/
+ENV/
+env/
+
+# Python cache & bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyd
+
+# Testing & Coverage
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Logs
+logs/*.log
+*.log
+
+# Build artifacts & package distribution
+build/
+dist/
+*.egg-info/
+*.spec
+
+# IDE & Editor settings
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS generated files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/

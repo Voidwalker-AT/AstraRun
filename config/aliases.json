@@ -1,0 +1,17 @@
+{
+  "calculator": "calc",
+  "editor": "notepad",
+  "notes": "notepad",
+  "text": "notepad",
+  "vscode": "code",
+  "vs code": "code",
+  "browser": "vivaldi",
+  "terminal": "wt",
+  "windows terminal": "wt",
+  "powershell": "pwsh",
+  "pwsh": "pwsh",
+  "cmd": "cmd",
+  "prompt": "cmd",
+  "explorer": "explorer",
+  "files": "explorer"
+}

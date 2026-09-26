@@ -1,0 +1,20 @@
+{
+  "hotkey": {
+    "modifiers": ["Alt"],
+    "key": "Space"
+  },
+  "ui": {
+    "width": 640,
+    "height": 56,
+    "theme": "dark",
+    "placeholder": "What do you want to do?",
+    "hide_on_focus_loss": true,
+    "opacity": 0.98
+  },
+  "logging": {
+    "level": "INFO",
+    "file": "logs/astrarun.log",
+    "max_bytes": 10485760,
+    "backup_count": 3
+  }
+}

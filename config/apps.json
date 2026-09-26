@@ -1,0 +1,27 @@
+{
+  "notepad": {
+    "name": "Notepad",
+    "path": "C:\\Windows\\System32\\notepad.exe",
+    "description": "Windows Text Editor"
+  },
+  "calc": {
+    "name": "Calculator",
+    "path": "C:\\Windows\\System32\\calc.exe",
+    "description": "Windows Calculator"
+  },
+  "cmd": {
+    "name": "Command Prompt",
+    "path": "C:\\Windows\\System32\\cmd.exe",
+    "description": "Windows Command Prompt"
+  },
+  "powershell": {
+    "name": "Windows PowerShell",
+    "path": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+    "description": "Windows PowerShell 5.1"
+  },
+  "explorer": {
+    "name": "File Explorer",
+    "path": "C:\\Windows\\explorer.exe",
+    "description": "Windows File Explorer"
+  }
+}

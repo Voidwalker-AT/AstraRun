@@ -9,7 +9,13 @@
     "theme": "dark",
     "placeholder": "What do you want to do?",
     "hide_on_focus_loss": true,
-    "opacity": 0.98
+    "opacity": 0.98,
+    "max_suggestions": 5
+  },
+  "telemetry": {
+    "enabled": true,
+    "file": "data/routing_events.jsonl",
+    "store_raw_request": true
   },
   "logging": {
     "level": "INFO",
@@ -18,3 +24,4 @@
     "backup_count": 3
   }
 }
+

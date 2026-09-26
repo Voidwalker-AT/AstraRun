@@ -1,4 +1,4 @@
-"""Modern, low-latency PySide6 launcher window for AstraRun."""
+"""Modern, low-latency PySide6 launcher window for AstraRun v0.2."""
 
 from __future__ import annotations
 
@@ -20,13 +20,70 @@ from PySide6.QtWidgets import (
 from astrarun.core.logging import get_logger
 from astrarun.core.models import Decision, RoutingContext
 from astrarun.routing.base import BaseRouter
+from astrarun.search.models import CandidateCategory, SearchResult
 from astrarun.tools.registry import ToolRegistry
+from astrarun.ui.positioning import compute_launcher_position
 
 logger = get_logger("astrarun.ui.launcher")
 
 
+class SuggestionRowWidget(QWidget):
+    """Custom row widget displaying candidate title, match subtitle, and category badge."""
+
+    def __init__(self, result: SearchResult, parent: QWidget | None = None):
+        super().__init__(parent)
+        layout = QHBoxLayout(self)
+        layout.setContentsMargins(8, 4, 8, 4)
+        layout.setSpacing(8)
+
+        # Candidate name
+        self.title_label = QLabel(result.name, self)
+        self.title_label.setStyleSheet("""
+            color: #cdd6f4;
+            font-size: 14px;
+            font-weight: 500;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        """)
+        layout.addWidget(self.title_label)
+
+        # Subtitle (match term or hint)
+        subtitle_text = f"({result.matched_alias})" if result.matched_alias.lower() != result.name.lower() else ""
+        if subtitle_text:
+            self.sub_label = QLabel(subtitle_text, self)
+            self.sub_label.setStyleSheet("""
+                color: #6c7086;
+                font-size: 12px;
+                font-family: 'Segoe UI', system-ui, sans-serif;
+            """)
+            layout.addWidget(self.sub_label)
+
+        layout.addStretch(1)
+
+        # Category Badge
+        cat_str = result.category.value if hasattr(result.category, "value") else str(result.category)
+        badge_colors = {
+            "APP": ("#89b4fa", "#1e1e2e"),
+            "FOLDER": ("#f9e2af", "#1e1e2e"),
+            "WEB": ("#a6e3a1", "#1e1e2e"),
+            "COMMAND": ("#cba6f7", "#1e1e2e"),
+        }
+        fg_col, bg_col = badge_colors.get(cat_str.upper(), ("#bac2de", "#1e1e2e"))
+
+        self.badge = QLabel(cat_str.upper(), self)
+        self.badge.setStyleSheet(f"""
+            color: {fg_col};
+            background-color: #313244;
+            font-size: 11px;
+            font-weight: bold;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            border-radius: 4px;
+            padding: 2px 6px;
+        """)
+        layout.addWidget(self.badge)
+
+
 class LauncherWindow(QDialog):
-    """Sleek, keyboard-first command launcher interface."""
+    """Sleek, keyboard-first command launcher interface with ranked fuzzy suggestions."""
 
     def __init__(
         self,
@@ -34,12 +91,25 @@ class LauncherWindow(QDialog):
         registry: ToolRegistry,
         context: RoutingContext,
         settings: dict | None = None,
+        on_refresh_callback: Callable[[], None] | None = None,
     ):
         super().__init__()
         self.router = router
         self.registry = registry
         self.context = context
         self.settings = settings or {}
+        self.on_refresh_callback = on_refresh_callback
+
+        # Auto-initialize search index if missing from context
+        if self.context.search_index is None:
+            from astrarun.search.index import SearchIndex
+            self.context.search_index = SearchIndex(usage_store=self.context.usage_store)
+            self.context.search_index.build_from_sources(
+                apps=self.context.apps,
+                folders=self.context.folders,
+                urls=self.context.urls,
+                aliases=self.context.aliases,
+            )
 
         # Configuration options
         ui_cfg = self.settings.get("ui", {})
@@ -47,6 +117,7 @@ class LauncherWindow(QDialog):
         self.launcher_height = int(ui_cfg.get("height", 56))
         self.placeholder_text = str(ui_cfg.get("placeholder", "What do you want to do?"))
         self.hide_on_focus_loss = bool(ui_cfg.get("hide_on_focus_loss", True))
+        self.max_suggestions = int(ui_cfg.get("max_suggestions", 5))
 
         self._init_window()
         self._init_ui()
@@ -64,7 +135,6 @@ class LauncherWindow(QDialog):
 
     def _init_ui(self) -> None:
         """Build the UI structure with modern dark styling."""
-        # Main layout
         self.root_layout = QVBoxLayout(self)
         self.root_layout.setContentsMargins(10, 10, 10, 10)
         self.root_layout.setSpacing(0)
@@ -126,7 +196,7 @@ class LauncherWindow(QDialog):
         self.input_field.returnPressed.connect(self.execute_command)
         bar_layout.addWidget(self.input_field, stretch=1)
 
-        # Status / Feedback label (e.g. for errors or confirmations)
+        # Status / Feedback label
         self.status_label = QLabel("", self.bar_row)
         self.status_label.setStyleSheet("""
             color: #f38ba8;
@@ -138,24 +208,21 @@ class LauncherWindow(QDialog):
 
         self.card_layout.addWidget(self.bar_row)
 
-        # Suggestions list widget (hidden initially)
+        # Suggestions list widget
         self.suggestions_list = QListWidget(self.card)
         self.suggestions_list.setStyleSheet("""
             QListWidget {
                 background: transparent;
                 border: none;
                 border-top: 1px solid #313244;
-                color: #a6adc8;
-                font-size: 14px;
-                padding-top: 6px;
+                padding-top: 4px;
             }
             QListWidget::item {
-                padding: 6px 8px;
                 border-radius: 6px;
+                padding: 2px;
             }
             QListWidget::item:selected {
                 background-color: #313244;
-                color: #89b4fa;
             }
         """)
         self.suggestions_list.itemClicked.connect(self._on_suggestion_clicked)
@@ -171,17 +238,9 @@ class LauncherWindow(QDialog):
         self.error_timer.timeout.connect(self._clear_status)
 
     def position_on_active_screen(self) -> None:
-        """Position the launcher centered horizontally on the screen containing the cursor."""
-        cursor_pos = QCursor.pos()
-        screen = QGuiApplication.screenAt(cursor_pos) or QGuiApplication.primaryScreen()
-        if not screen:
-            return
-
-        avail = screen.availableGeometry()
-        x = avail.x() + (avail.width() - self.width()) // 2
-        # Position at ~32% from the top of the monitor for ideal ergonomics
-        y = avail.y() + int(avail.height() * 0.30)
-        self.move(x, y)
+        """Position window upper-middle centered on the monitor hosting the active window."""
+        pos = compute_launcher_position(self.width(), self.height())
+        self.move(pos)
 
     def show_and_activate(self) -> None:
         """Bring the launcher to foreground on the active screen and focus the input."""
@@ -221,7 +280,6 @@ class LauncherWindow(QDialog):
         """)
         self.status_label.setText(message)
         self.status_label.show()
-        # Keep message visible for 3 seconds unless user types
         self.error_timer.start(3000)
 
     def _clear_status(self) -> None:
@@ -231,71 +289,116 @@ class LauncherWindow(QDialog):
 
     def _adjust_height(self, expanded: bool, count: int = 0) -> None:
         """Adjust widget height based on suggestions list visibility."""
-        base_h = self.launcher_height + 20  # +20 for layout margins
+        base_h = self.launcher_height + 20
         if expanded and count > 0:
-            item_h = 32
-            max_items = min(count, 5)
-            new_h = base_h + (item_h * max_items) + 12
+            item_h = 36
+            max_items = min(count, self.max_suggestions)
+            new_h = base_h + (item_h * max_items) + 8
             self.resize(self.launcher_width, new_h)
         else:
             self.resize(self.launcher_width, base_h)
 
     def _on_text_changed(self, text: str) -> None:
-        """Handle real-time suggestions based on current input text."""
+        """Query unified search index and update ranked interactive suggestions."""
         self._clear_status()
-        clean = text.strip().lower()
-        if not clean or len(clean) < 2:
+        clean = text.strip()
+        if not clean:
             self.suggestions_list.hide()
             self._adjust_height(expanded=False)
             return
 
-        # Simple prefix matching for apps, folders, and URLs
-        matches: list[tuple[str, str]] = []
+        # Strip action verb prefix for search
+        from astrarun.routing.deterministic import normalize_request
+        _, target = normalize_request(clean)
+        search_query = target if target else clean
 
-        # Check applications
-        for k, app in self.context.apps.items():
-            if k.startswith(clean) or app.name.lower().startswith(clean):
-                matches.append((f"Open {app.name}", f"open {k}"))
+        if len(search_query) < 2 or not self.context.search_index:
+            self.suggestions_list.hide()
+            self._adjust_height(expanded=False)
+            return
 
-        # Check folders
-        for k, folder in self.context.folders.items():
-            if k.startswith(clean):
-                matches.append((f"Open {folder.name} Folder", f"open {k}"))
-
-        # Check URLs
-        for k, url in self.context.urls.items():
-            if k.startswith(clean):
-                matches.append((f"Open {k.title()}", f"open {k}"))
-
-        if matches:
+        results = self.context.search_index.search(search_query, limit=self.max_suggestions)
+        if results:
             self.suggestions_list.clear()
-            for label, cmd in matches[:5]:
-                item = QListWidgetItem(label)
-                item.setData(Qt.ItemDataRole.UserRole, cmd)
+            for res in results:
+                item = QListWidgetItem()
+                item.setSizeHint(QWidget().sizeHint())  # placeholder
+                row_widget = SuggestionRowWidget(res, self.suggestions_list)
+                item.setSizeHint(row_widget.sizeHint())
+                item.setData(Qt.ItemDataRole.UserRole, res)
                 self.suggestions_list.addItem(item)
+                self.suggestions_list.setItemWidget(item, row_widget)
+
+            self.suggestions_list.setCurrentRow(0)
             self.suggestions_list.show()
-            self._adjust_height(expanded=True, count=len(matches[:5]))
+            self._adjust_height(expanded=True, count=len(results))
         else:
             self.suggestions_list.hide()
             self._adjust_height(expanded=False)
 
     def _on_suggestion_clicked(self, item: QListWidgetItem) -> None:
         """Execute command associated with clicked suggestion."""
-        cmd = item.data(Qt.ItemDataRole.UserRole)
-        if cmd:
-            self.input_field.setText(cmd)
-            self.execute_command()
+        res: SearchResult = item.data(Qt.ItemDataRole.UserRole)
+        if res:
+            self._execute_result(res)
+
+    def _execute_result(self, res: SearchResult) -> None:
+        """Directly dispatch an executed SearchResult."""
+        logger.info("Executing suggestion directly: %s (%s)", res.name, res.category)
+
+        # Handle internal command
+        if res.id == "cmd:refresh_apps" or res.command == "refresh apps":
+            if self.on_refresh_callback:
+                self.on_refresh_callback()
+            self.show_feedback("Applications refreshed.", is_error=False)
+            return
+
+        # Build decision from SearchResult
+        if res.category == CandidateCategory.APP:
+            decision = Decision(tool="open_app", args={"app": res.matched_alias, "path": res.target})
+        elif res.category == CandidateCategory.FOLDER:
+            decision = Decision(tool="open_folder", args={"folder": res.target})
+        elif res.category == CandidateCategory.WEB:
+            decision = Decision(tool="open_url", args={"url": res.target})
+        else:
+            decision = Decision(tool="open_app", args={"app": res.name, "path": res.target})
+
+        success, msg = self.registry.execute(decision)
+        if success:
+            if self.context.usage_store:
+                self.context.usage_store.record_launch(res.id)
+            self.dismiss()
+        else:
+            self.show_feedback(msg, is_error=True)
 
     def execute_command(self) -> None:
-        """Interpret the input through the router and dispatch to the tool registry."""
+        """Execute selected suggestion if present, or route typed input."""
+        # 1. If an item is highlighted in the suggestions list, execute it!
+        current_row = self.suggestions_list.currentRow()
+        if self.suggestions_list.isVisible() and current_row >= 0:
+            item = self.suggestions_list.item(current_row)
+            if item:
+                res = item.data(Qt.ItemDataRole.UserRole)
+                if res and isinstance(res, SearchResult):
+                    self._execute_result(res)
+                    return
+
+        # 2. Otherwise route raw typed command
         query = self.input_field.text().strip()
         if not query:
             return
 
         logger.info("Processing command: '%s'", query)
         decision: Decision = self.router.route(query, self.context)
-        success, message = self.registry.execute(decision)
 
+        # Handle internal refresh command
+        if decision.tool == "refresh_apps":
+            if self.on_refresh_callback:
+                self.on_refresh_callback()
+            self.show_feedback("Applications refreshed.", is_error=False)
+            return
+
+        success, message = self.registry.execute(decision)
         if success:
             logger.info("Command executed successfully: '%s'", query)
             self.dismiss()
@@ -304,16 +407,43 @@ class LauncherWindow(QDialog):
             self.show_feedback(message, is_error=True)
 
     def keyPressEvent(self, event: QKeyEvent) -> None:
-        """Handle navigation keys."""
-        if event.key() == Qt.Key.Key_Escape:
+        """Handle keyboard-first navigation."""
+        key = event.key()
+
+        # Escape dismisses launcher
+        if key == Qt.Key.Key_Escape:
             self.dismiss()
             event.accept()
             return
 
-        if event.key() == Qt.Key.Key_Down and self.suggestions_list.isVisible():
-            self.suggestions_list.setFocus()
-            if self.suggestions_list.count() > 0:
-                self.suggestions_list.setCurrentRow(0)
+        # Down arrow: move selection down in suggestions
+        if key == Qt.Key.Key_Down and self.suggestions_list.isVisible():
+            count = self.suggestions_list.count()
+            if count > 0:
+                current = self.suggestions_list.currentRow()
+                nxt = (current + 1) % count
+                self.suggestions_list.setCurrentRow(nxt)
+            event.accept()
+            return
+
+        # Up arrow: move selection up in suggestions
+        if key == Qt.Key.Key_Up and self.suggestions_list.isVisible():
+            count = self.suggestions_list.count()
+            if count > 0:
+                current = self.suggestions_list.currentRow()
+                prev = (current - 1) if current > 0 else (count - 1)
+                self.suggestions_list.setCurrentRow(prev)
+            event.accept()
+            return
+
+        # Tab key: complete or cycle
+        if key == Qt.Key.Key_Tab and self.suggestions_list.isVisible():
+            current_row = self.suggestions_list.currentRow()
+            if current_row >= 0:
+                item = self.suggestions_list.item(current_row)
+                res = item.data(Qt.ItemDataRole.UserRole)
+                if res:
+                    self.input_field.setText(res.name)
             event.accept()
             return
 

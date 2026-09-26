@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import os
+import re
 import shutil
 import sys
 from pathlib import Path
@@ -73,7 +74,10 @@ class AppDiscoveryCache:
         # 3. Check Known Installation Fallbacks (especially for WindowsApps and Vivaldi)
         self._scan_known_fallback_locations(discovered)
 
-        # 4. Apply configured apps (highest precedence)
+        # 4. Scan Start Menu Shortcuts (.lnk)
+        self._scan_start_menu_shortcuts(discovered)
+
+        # 5. Apply configured apps (highest precedence)
         for key, app_info in self._configured_apps.items():
             discovered[key] = app_info
 
@@ -168,3 +172,48 @@ class AppDiscoveryCache:
                             description=f"Discovered via fallback path: {p}"
                         )
                         break
+
+    def _scan_start_menu_shortcuts(self, discovered: dict[str, AppInfo]) -> None:
+        """Scan Start Menu Programs directories for application shortcuts (.lnk)."""
+        if sys.platform != "win32":
+            return
+
+        start_menu_dirs = []
+        appdata = os.environ.get("APPDATA")
+        if appdata:
+            start_menu_dirs.append(Path(appdata) / "Microsoft" / "Windows" / "Start Menu" / "Programs")
+        programdata = os.environ.get("PROGRAMDATA")
+        if programdata:
+            start_menu_dirs.append(Path(programdata) / "Microsoft" / "Windows" / "Start Menu" / "Programs")
+
+        exclude_words = {"uninstall", "help", "documentation", "readme", "website", "remove", "setup", "license"}
+
+        for menu_dir in start_menu_dirs:
+            if not menu_dir.exists():
+                continue
+            try:
+                for lnk in menu_dir.rglob("*.lnk"):
+                    stem_clean = lnk.stem.strip()
+                    lower_stem = stem_clean.lower()
+
+                    # Filter out uninstaller/help shortcuts
+                    if any(w in lower_stem for w in exclude_words):
+                        continue
+
+                    norm_key = re.sub(r"[^a-zA-Z0-9]+", "", lower_stem)
+                    if not norm_key:
+                        continue
+
+                    app_info = AppInfo(
+                        key=lower_stem,
+                        name=stem_clean,
+                        path=str(lnk.resolve()),
+                        description=f"Start Menu Shortcut: {stem_clean}"
+                    )
+
+                    if lower_stem not in discovered:
+                        discovered[lower_stem] = app_info
+                    if norm_key not in discovered:
+                        discovered[norm_key] = app_info
+            except Exception as err:
+                logger.debug("Error scanning Start Menu at %s: %s", menu_dir, err)

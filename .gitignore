@@ -21,6 +21,10 @@ htmlcov/
 logs/*.log
 *.log
 
+# Local telemetry, usage, and evaluation data
+data/
+*.jsonl
+
 # Build artifacts & package distribution
 build/
 dist/

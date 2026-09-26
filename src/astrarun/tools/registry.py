@@ -58,6 +58,15 @@ class ToolRegistry:
                 handler=open_url,
             )
         )
+        self.register(
+            ToolMetadata(
+                name="refresh_apps",
+                description="Rescan installed Windows applications and rebuild the search index",
+                risk=ToolRisk.LOW,
+                args_schema={},
+                handler=lambda **_: True,
+            )
+        )
 
     def execute(self, decision: Decision) -> tuple[bool, str]:
         """

@@ -1,21 +1,23 @@
-# AstraRun — Windows Intelligent Command Launcher (v0.1)
+# AstraRun — Windows Intelligent Command Launcher (v0.2)
 
 AstraRun is a local, lightweight, low-latency Windows command launcher engineered as the foundational command interface for an evolving AI-assisted workstation control ecosystem.
 
 AstraRun replaces fragile string-interpolated shell execution with a strictly typed pipeline:
-`Natural Language -> Request Normalizer -> Router -> Typed Decision -> Tool Registry -> Windows OS`.
+`Natural Language -> Request Normalizer -> Fuzzy / Deterministic Router -> Typed Decision -> Tool Registry -> Windows OS`.
 
 ---
 
-## Key Capabilities (v0.1)
+## Key Capabilities (v0.2)
 
 - **Instantaneous Hotkey Activation**: Summoned with `Alt+Space` in ~4.5ms from a pre-warmed resident background process.
-- **Zero Raw Shell Ingestion**: Strictly prohibits `os.system()`, `shell=True`, and `eval()`. Commands are parsed into structured decisions and dispatched through validated tool handlers.
-- **Dynamic Application Discovery**: Discovers over 80+ local Windows executables via `App Paths` registry and `PATH` without hardcoded usernames or fixed paths.
-- **Known Folders Resolution**: Resolves user known folders (`Downloads`, `Documents`, `Desktop`, `Pictures`, `Videos`, `Workspace`, `Active Projects`) using Windows Registry and Windows Shell APIs.
-- **Configurable URL Aliases**: Instantly open web destinations (`github`, `youtube`, `google`) or raw URLs in the default browser.
-- **Sleek PySide6 Interface**: Borderless, translucent dark-mode command bar centered on the active display.
-- **Extensible Router Abstraction**: Pluggable interface (`route(request, context) -> Decision`) designed for seamless drop-in integration with Laya and Kev in future milestones.
+- **Multi-Signal Fuzzy Matching Engine**: Combines exact, alias, prefix, word-token, acronym, single-drop typo (`notpad` -> `Notepad`), and Damerau-Levenshtein edit-distance scoring with bounded usage boost (`<= 0.03`).
+- **Ranked Suggestions UI**: Dynamic dropdown drawer with visual category badges (`APP`, `FOLDER`, `WEB`, `COMMAND`), active selection highlighting, and ergonomic auto-expansion.
+- **Full Keyboard Navigation**: Complete keyboard-only control via `Up`/`Down` arrow navigation, `Tab` autocompletion, `Enter` execution, and `Escape` dismissal.
+- **Zero Raw Shell Ingestion & 0.0% False Execution Rate**: Strict confidence gating (`0.75`) guarantees ambiguous or out-of-scope queries (`kill port 3000`, `delete system32`, `asdfgh`) are safely rejected as `unknown` rather than mistriggering apps.
+- **Foreground-Window-Aware Monitor Placement**: Anchors the launcher to the active foreground application's display with mouse cursor and primary monitor fallbacks using native Win32 APIs.
+- **Expanded Application Discovery**: Discovers **~400 applications** cached at startup from Windows User & System Start Menu shortcuts (`.lnk`), `App Paths` registry, and `PATH`.
+- **Local-Only Privacy-Preserving Telemetry**: Appends structured routing events to `data/routing_events.jsonl` with automated regex credential redaction (API keys, Bearer tokens, passwords) and zero external network egress.
+- **Empirical Evaluation Benchmark Suite**: Standardized 88-query evaluation suite evaluating accuracy, false execution rate, and microsecond latencies.
 
 ---
 
@@ -23,23 +25,33 @@ AstraRun replaces fragile string-interpolated shell execution with a strictly ty
 
 ```mermaid
 flowchart TD
-    subgraph Activation ["Activation Layer"]
+    subgraph Activation ["Activation & Display"]
         HK["Global Hotkey (Win32 Alt+Space)"] -->|WM_HOTKEY| HKT["Hotkey Listener Thread"]
         HKT -->|Qt Signal| UI["PySide6 Launcher Window"]
+        Pos["Win32 Positioning Engine"] -.->|Target Work Area| UI
         User["User Typing"] -->|Input String| UI
     end
 
+    subgraph Search ["Search & Ranking Engine"]
+        UI -->|Live Query| Index["SearchIndex (In-Memory)"]
+        Index -->|Precomputed Terms| Matcher["FuzzyMatcher"]
+        Matcher -->|Multi-Signal Scoring| Scorer["FuzzyScorer"]
+        Usage["UsageStore (data/usage.json)"] -.->|Bounded Boost <=0.03| Scorer
+        Scorer -->|Ranked Results + Badges| UI
+    end
+
     subgraph Pipeline ["Decision & Execution Pipeline"]
-        UI -->|Natural Language| Norm["Request Normalizer"]
-        Norm -->|Cleaned Query| Router["Deterministic Router"]
-        Router -->|Context Query| Cache["App & Folder Discovery Cache"]
-        Router -->|Typed Decision| Dec["Decision Object"]
+        UI -->|Committed Request| Router["DeterministicRouter"]
+        Router -->|Score >= 0.75| Dec["Decision Object"]
+        Router -->|Score < 0.75| Unknown["Unknown Decision"]
+        Dec -->|Log Event| Telemetry["Telemetry Collector (Redacted)"]
         Dec -->|Validation & Policy| Reg["Tool Registry"]
-        Reg -->|Dispatched Handler| Tool["Registered Tool (open_app / open_folder / open_url)"]
+        Reg -->|Dispatched Handler| Tool["Registered Tool (open_app / open_folder / open_url / refresh_apps)"]
+        Reg -->|Record Success| Usage
     end
 
     subgraph OS ["Operating System Layer"]
-        Tool -->|Safe Invocation| WinOS["Windows OS"]
+        Tool -->|os.startfile / subprocess argv| WinOS["Windows OS"]
     end
 ```
 
@@ -50,18 +62,21 @@ flowchart TD
 | Shortcut / Key | Context | Action |
 | :--- | :--- | :--- |
 | **`Alt + Space`** | Global (Anywhere) | Toggle / summon AstraRun command bar |
-| **`Enter`** | Command Bar Active | Execute the entered command |
+| **`Up / Down Arrow`** | Command Bar Active | Navigate through ranked suggestions |
+| **`Tab`** | Command Bar Active | Autocomplete input with selected suggestion title |
+| **`Enter`** | Suggestion Selected | Immediately execute selected suggestion |
+| **`Enter`** | Raw Input (No selection) | Route query through deterministic & fuzzy engine (score >= 0.75) |
 | **`Escape`** | Command Bar Active | Dismiss AstraRun without executing |
-| **`Down Arrow`** | Command Bar Active | Focus and select from real-time suggestions |
 | **`Click Outside`** | Command Bar Active | Auto-dismisses window (configurable) |
 
 ---
 
 ## Supported Commands
 
-### Applications
+### Applications & Discovered Software (~400 apps)
 ```text
 open notepad          # or 'launch notepad', 'notepad', 'editor'
+notpad                # Typo-tolerant: automatically resolves to Notepad
 open calculator       # or 'calc'
 open vscode           # or 'code', 'vs code'
 open vivaldi          # or 'browser'
@@ -69,9 +84,10 @@ open terminal         # or 'wt', 'windows terminal'
 open powershell       # or 'pwsh'
 open cmd              # or 'prompt'
 open explorer         # or 'files'
+refresh apps          # Internal command: re-scans application caches
 ```
 
-### Folders
+### Folders & Workspaces
 ```text
 open downloads        # opens User Downloads
 open documents        # opens User Documents
@@ -87,22 +103,35 @@ open active projects  # opens E:\Workspace\Active
 open github           # opens https://github.com
 open youtube          # opens https://youtube.com
 open google           # opens https://google.com
+open reddit           # opens https://reddit.com
 open https://news.ycombinator.com
 ```
 
 ---
 
-## Performance Metrics
+## Performance & Benchmark Metrics
 
-Empirical measurements gathered on Windows 11 host (1536x864, Python 3.13):
+Empirical measurements gathered on Windows 11 host (Python 3.13):
 
+### 1. Interactive Runtime Latencies
 | Metric | Measured Value | Target Standard |
 | :--- | :--- | :--- |
 | **Hotkey-to-Visible Latency** | **4.51 ms** | < 50 ms |
-| **Routing Latency** | **4.61 µs** | < 1 ms |
+| **Fuzzy Search Latency (Mean)** | **3.03 ms** (~411 candidates) | < 15 ms |
+| **Fuzzy Search Latency (p50)** | **21.7 µs** | < 1 ms |
+| **Direct Route Latency** | **4.61 µs** | < 1 ms |
 | **Startup to Pre-warmed Ready** | **1.27 s** | < 3 s |
 | **Resident Idle Memory** | **~4 MB - 50 MB** | < 100 MB |
 | **Idle CPU Utilization** | **0.0%** (Kernel Wait) | 0.0% |
+
+### 2. Routing Intelligence Benchmark (88 Queries)
+| Benchmark Metric | Result | Target Standard |
+| :--- | :--- | :--- |
+| **Overall Accuracy** | **100.0%** (88 / 88) | >= 95.0% |
+| **Exact Resolution Accuracy** | **100.0%** (20 / 20) | 100.0% |
+| **Fuzzy Resolution Accuracy** | **100.0%** (20 / 20) | >= 95.0% |
+| **Unresolved Rejection Accuracy** | **100.0%** (18 / 18) | >= 95.0% |
+| **FALSE EXECUTION RATE** | **0.0%** (0 / 18 false triggers) | <= 1.0% |
 
 ---
 
@@ -154,22 +183,24 @@ AstraRun will pre-warm its interface, register `Alt+Space`, and remain resident 
 ## Configuration
 
 Configuration files are stored under `config/`:
-- **`config/settings.json`**: Global hotkey (`modifiers`, `key`), UI dimensions, theme, and logging.
+- **`config/settings.json`**: Global hotkey, UI dimensions, theme, max suggestions, telemetry, and logging.
 - **`config/apps.json`**: Custom application definitions and paths.
 - **`config/aliases.json`**: Natural language aliases (`calculator` -> `calc`, `vscode` -> `code`).
 - **`config/urls.json`**: Web aliases (`github` -> `https://github.com`).
 
 ---
 
-## Testing
+## Testing & Benchmarks
 
-Run the automated test suite with:
-
+Run the automated test suite (44 tests):
 ```powershell
-.venv\Scripts\pytest
+.venv\Scripts\pytest -v
 ```
 
-All 24 automated tests cover configuration loading, normalization, routing logic, tool registry policy enforcement, UI navigation, and live host system discovery.
+Run the standardized routing evaluation benchmark (88 queries):
+```powershell
+.venv\Scripts\python benchmarks\routing\run_benchmark.py
+```
 
 ---
 
@@ -182,36 +213,48 @@ AstraRun/
 |-- requirements.txt           # Pinned dependencies
 |-- pyproject.toml             # Package metadata & build definition
 |-- .gitignore                 # Environment & build ignores
+|-- benchmarks/                # Evaluation suites & harnesses
+|   `-- routing/
+|       |-- routing_dataset.json # 88 curated evaluation queries
+|       `-- run_benchmark.py     # Evaluation runner & report generator
 |-- config/                    # Human-editable configuration files
 |   |-- settings.json
 |   |-- apps.json
 |   |-- aliases.json
-|   |-- urls.json
+|   `-- urls.json
+|-- data/                      # Local-only runtime storage (git-ignored)
+|   |-- routing_events.jsonl   # Redacted telemetry event stream
+|   `-- usage.json             # Usage frequency & recency store
 |-- docs/                      # Engineering documentation
 |   |-- ARCHITECTURE.md        # Architecture specification & diagrams
-|   |-- DECISIONS.md           # Architecture Decision Records (ADRs)
-|   |-- SECURITY.md            # Security boundaries & risk model
-|   |-- ROADMAP.md             # Evolutionary roadmap
-|   |-- LAYA_KEV_INTEGRATION.md# Future AI routing integration
-|   |-- TOOLS.md               # Tool registry specifications
+|   |-- DECISIONS.md           # Architecture Decision Records (ADRs 001-009)
+|   |-- SECURITY.md            # Security boundaries, privacy & risk model
+|   |-- ROADMAP.md             # Evolutionary roadmap (v0.1 -> Workstation Daemon)
+|   |-- SEARCH.md              # Multi-signal search engine specification
+|   |-- ROUTING_DATASET.md     # Benchmark dataset schema & query catalog
 |   |-- CONFIGURATION.md       # Configuration reference
-|   |-- ENVIRONMENT_AUDIT.md   # Initial host environment audit
-|   |-- TESTING.md             # Testing & empirical verification report
+|   |-- TESTING.md             # Automated test report & manual matrix
 |   |-- STATUS.md              # Current milestone status report
+|   `-- benchmarks/
+|       `-- benchmark_results_v0.2.md # Benchmark results report
 |-- logs/                      # Rotating application logs
-|   |-- astrarun.log
+|   `-- astrarun.log
 |-- scripts/                   # Developer utilities & benchmarks
-|   |-- benchmark.py
+|   `-- benchmark.py
 |-- src/
-|   |-- astrarun/
+|   `-- astrarun/
 |       |-- __init__.py
 |       |-- main.py            # Main entrypoint & daemon orchestration
 |       |-- core/              # Models, enums, structured logging
-|       |-- routing/           # Base router & deterministic implementation
+|       |-- search/            # Fuzzy search engine, scorer, matcher, index
+|       |-- routing/           # Base router & deterministic / fuzzy router
 |       |-- tools/             # Tool registry & safe execution handlers
-|       |-- discovery/         # Windows App Paths & Known Folders discovery
+|       |-- discovery/         # App Paths, Start Menu shortcuts, Known Folders
 |       |-- hotkeys/           # Win32 RegisterHotKey background listener
+|       |-- telemetry/         # Local privacy-preserving event logger & redactor
+|       |-- usage/             # Atomic usage store for frequency ranking
 |       |-- config/            # Resilient JSON configuration loader
-|       |-- ui/                # PySide6 frameless launcher window
-`-- tests/                     # Unit, UI, and integration tests
+|       `-- ui/                # PySide6 launcher window & positioning engine
+`-- tests/                     # 44 automated unit, UI, and integration tests
 ```
+

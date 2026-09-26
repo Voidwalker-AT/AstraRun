@@ -20,7 +20,7 @@ flowchart LR
 
 ---
 
-### v0.1 — Deterministic Launcher (Current Phase)
+### v0.1 — Deterministic Launcher (Complete)
 - Native PySide6 frameless window centered on active display.
 - Global `Alt+Space` hotkey backed by non-blocking Win32 `RegisterHotKey`.
 - Deterministic router with prefix & verb normalization (`open`, `launch`, `start`, `show`, `go to`).
@@ -32,11 +32,16 @@ flowchart LR
 
 ---
 
-### v0.2 — Discovery & Fuzzy Matching
-- Real-time prefix suggestions and fuzzy search autocomplete (e.g. `note` -> `Notepad`).
-- Asynchronous filesystem indexer for user documents and recent projects.
-- UI keyboard navigation for suggestion lists (`Up`/`Down`/`Tab`).
-- Multi-monitor explicit active-window monitor detection.
+### v0.2 — Discovery & Fuzzy Matching (Complete — 2026-09-27)
+- Multi-signal fuzzy matching engine (exact, prefix, word-token, acronym, single-drop typo, subsequence, edit-distance, bounded usage boost).
+- Precomputed candidate terms (`PrecomputedTerm`) delivering 3.03ms mean search latency across ~400+ candidates.
+- Interactive ranked suggestions list with visual category badges (`APP`, `FOLDER`, `WEB`, `COMMAND`).
+- Keyboard navigation: `Up`/`Down` selection, `Tab` input completion, and `Enter` execution.
+- Strict auto-execution confidence threshold (`0.75`), resulting in an empirical **0.0% False Execution Rate**.
+- Foreground-window-aware monitor placement via Win32 `GetForegroundWindow` / `MonitorFromWindow`.
+- Expanded Windows application discovery: User & System Start Menu shortcuts, App Paths, PATH (~400 apps cached).
+- Local-only privacy-preserving telemetry (`data/routing_events.jsonl`) with defensive credential redaction.
+- Standardized 88-query evaluation benchmark suite (`benchmarks/routing/run_benchmark.py`).
 
 ---
 

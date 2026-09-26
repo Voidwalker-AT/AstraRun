@@ -1,6 +1,6 @@
 # AstraRun Configuration Guide
 
-> **Version**: 0.1.0  
+> **Version**: 0.2.0  
 > **Location**: `config/`  
 
 AstraRun is configured via human-readable JSON files in the `config/` directory. No code modifications are required to add custom applications, aliases, URLs, or adjust keyboard shortcuts.
@@ -9,7 +9,7 @@ AstraRun is configured via human-readable JSON files in the `config/` directory.
 
 ## 1. `config/settings.json`
 
-Global runtime settings, hotkeys, UI preferences, and logging options.
+Global runtime settings, hotkeys, UI preferences, telemetry options, and logging options.
 
 ```json
 {
@@ -23,7 +23,13 @@ Global runtime settings, hotkeys, UI preferences, and logging options.
     "theme": "dark",
     "placeholder": "What do you want to do?",
     "hide_on_focus_loss": true,
-    "opacity": 0.98
+    "opacity": 0.98,
+    "max_suggestions": 5
+  },
+  "telemetry": {
+    "enabled": true,
+    "file": "data/routing_events.jsonl",
+    "store_raw_request": true
   },
   "logging": {
     "level": "INFO",
@@ -37,6 +43,21 @@ Global runtime settings, hotkeys, UI preferences, and logging options.
 ### Hotkey Options
 - **`modifiers`**: List of modifier keys. Supported: `"Alt"`, `"Ctrl"`, `"Shift"`, `"Win"`.
 - **`key`**: Activation key. Default is `"Space"`. Can be any letter (`"A"`-`"Z"`), number (`"0"`-`"9"`), or key name (`"Space"`, `"F1"`-`"F12"`).
+
+### UI Options
+- **`width`**: Horizontal width of launcher window in pixels (default: `640`).
+- **`height`**: Base height of single-line input bar in pixels (default: `56`).
+- **`theme`**: Color palette (`"dark"`).
+- **`placeholder`**: Placeholder text in input line.
+- **`hide_on_focus_loss`**: Whether to automatically dismiss the window if user clicks elsewhere.
+- **`opacity`**: Window opacity from `0.1` to `1.0` (default: `0.98`).
+- **`max_suggestions`**: Maximum number of ranked suggestion rows to display beneath input (default: `5`).
+
+### Telemetry Options
+- **`enabled`**: Whether to log local routing events to disk (default: `true`).
+- **`file`**: Path to local append-only JSONL event file (default: `"data/routing_events.jsonl"`).
+- **`store_raw_request`**: If `false`, omits the raw query text and records only verb and target structures (default: `true`). All requests undergo regex-based credential redaction before persistence.
+
 
 ---
 

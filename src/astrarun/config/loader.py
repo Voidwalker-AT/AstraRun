@@ -24,7 +24,13 @@ DEFAULT_SETTINGS: dict[str, Any] = {
         "theme": "dark",
         "placeholder": "What do you want to do?",
         "hide_on_focus_loss": True,
-        "opacity": 0.98
+        "opacity": 0.98,
+        "max_suggestions": 5
+    },
+    "telemetry": {
+        "enabled": True,
+        "file": "data/routing_events.jsonl",
+        "store_raw_request": True
     },
     "logging": {
         "level": "INFO",

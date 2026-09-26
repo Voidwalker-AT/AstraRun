@@ -1,0 +1,530 @@
+[
+  {
+    "request": "notepad",
+    "expected": { "intent": "open_app", "target": "notepad", "should_execute": true },
+    "category": "exact_app",
+    "description": "Direct application name"
+  },
+  {
+    "request": "calc",
+    "expected": { "intent": "open_app", "target": "calc", "should_execute": true },
+    "category": "exact_app",
+    "description": "Direct executable key"
+  },
+  {
+    "request": "cmd",
+    "expected": { "intent": "open_app", "target": "cmd", "should_execute": true },
+    "category": "exact_app",
+    "description": "Command Prompt"
+  },
+  {
+    "request": "powershell",
+    "expected": { "intent": "open_app", "target": "powershell", "should_execute": true },
+    "category": "exact_app",
+    "description": "Windows PowerShell"
+  },
+  {
+    "request": "pwsh",
+    "expected": { "intent": "open_app", "target": "pwsh", "should_execute": true },
+    "category": "exact_app",
+    "description": "PowerShell 7"
+  },
+  {
+    "request": "explorer",
+    "expected": { "intent": "open_app", "target": "explorer", "should_execute": true },
+    "category": "exact_app",
+    "description": "Windows File Explorer"
+  },
+  {
+    "request": "code",
+    "expected": { "intent": "open_app", "target": "code", "should_execute": true },
+    "category": "exact_app",
+    "description": "VS Code key"
+  },
+  {
+    "request": "vivaldi",
+    "expected": { "intent": "open_app", "target": "vivaldi", "should_execute": true },
+    "category": "exact_app",
+    "description": "Vivaldi browser"
+  },
+  {
+    "request": "wt",
+    "expected": { "intent": "open_app", "target": "wt", "should_execute": true },
+    "category": "exact_app",
+    "description": "Windows Terminal binary key"
+  },
+  {
+    "request": "calculator",
+    "expected": { "intent": "open_app", "target": "calc", "should_execute": true },
+    "category": "alias_app",
+    "description": "Full word alias for calc"
+  },
+  {
+    "request": "editor",
+    "expected": { "intent": "open_app", "target": "notepad", "should_execute": true },
+    "category": "alias_app",
+    "description": "Generic alias for notepad"
+  },
+  {
+    "request": "notes",
+    "expected": { "intent": "open_app", "target": "notepad", "should_execute": true },
+    "category": "alias_app",
+    "description": "Synonym alias for notepad"
+  },
+  {
+    "request": "vscode",
+    "expected": { "intent": "open_app", "target": "code", "should_execute": true },
+    "category": "alias_app",
+    "description": "Combined alias for VS Code"
+  },
+  {
+    "request": "vs code",
+    "expected": { "intent": "open_app", "target": "code", "should_execute": true },
+    "category": "alias_app",
+    "description": "Spaced alias for VS Code"
+  },
+  {
+    "request": "visual studio code",
+    "expected": { "intent": "open_app", "target": "code", "should_execute": true },
+    "category": "alias_app",
+    "description": "Full product title for VS Code"
+  },
+  {
+    "request": "terminal",
+    "expected": { "intent": "open_app", "target": "wt", "should_execute": true },
+    "category": "alias_app",
+    "description": "Terminal alias"
+  },
+  {
+    "request": "windows terminal",
+    "expected": { "intent": "open_app", "target": "wt", "should_execute": true },
+    "category": "alias_app",
+    "description": "Windows Terminal full alias"
+  },
+  {
+    "request": "browser",
+    "expected": { "intent": "open_app", "target": "vivaldi", "should_execute": true },
+    "category": "alias_app",
+    "description": "Browser alias"
+  },
+  {
+    "request": "files",
+    "expected": { "intent": "open_app", "target": "explorer", "should_execute": true },
+    "category": "alias_app",
+    "description": "Files alias for explorer"
+  },
+  {
+    "request": "prompt",
+    "expected": { "intent": "open_app", "target": "cmd", "should_execute": true },
+    "category": "alias_app",
+    "description": "Prompt alias for cmd"
+  },
+  {
+    "request": "open notepad",
+    "expected": { "intent": "open_app", "target": "notepad", "should_execute": true },
+    "category": "action_verb",
+    "description": "open verb + notepad"
+  },
+  {
+    "request": "launch notepad",
+    "expected": { "intent": "open_app", "target": "notepad", "should_execute": true },
+    "category": "action_verb",
+    "description": "launch verb + notepad"
+  },
+  {
+    "request": "start notepad",
+    "expected": { "intent": "open_app", "target": "notepad", "should_execute": true },
+    "category": "action_verb",
+    "description": "start verb + notepad"
+  },
+  {
+    "request": "run notepad",
+    "expected": { "intent": "open_app", "target": "notepad", "should_execute": true },
+    "category": "action_verb",
+    "description": "run verb + notepad"
+  },
+  {
+    "request": "open calculator",
+    "expected": { "intent": "open_app", "target": "calc", "should_execute": true },
+    "category": "action_verb",
+    "description": "open verb + calculator"
+  },
+  {
+    "request": "start calc",
+    "expected": { "intent": "open_app", "target": "calc", "should_execute": true },
+    "category": "action_verb",
+    "description": "start verb + calc"
+  },
+  {
+    "request": "open vscode",
+    "expected": { "intent": "open_app", "target": "code", "should_execute": true },
+    "category": "action_verb",
+    "description": "open verb + vscode"
+  },
+  {
+    "request": "launch vs code",
+    "expected": { "intent": "open_app", "target": "code", "should_execute": true },
+    "category": "action_verb",
+    "description": "launch verb + vs code"
+  },
+  {
+    "request": "start vivaldi",
+    "expected": { "intent": "open_app", "target": "vivaldi", "should_execute": true },
+    "category": "action_verb",
+    "description": "start verb + vivaldi"
+  },
+  {
+    "request": "open terminal",
+    "expected": { "intent": "open_app", "target": "wt", "should_execute": true },
+    "category": "action_verb",
+    "description": "open verb + terminal"
+  },
+  {
+    "request": "open powershell",
+    "expected": { "intent": "open_app", "target": "powershell", "should_execute": true },
+    "category": "action_verb",
+    "description": "open verb + powershell"
+  },
+  {
+    "request": "open cmd",
+    "expected": { "intent": "open_app", "target": "cmd", "should_execute": true },
+    "category": "action_verb",
+    "description": "open verb + cmd"
+  },
+  {
+    "request": "open explorer",
+    "expected": { "intent": "open_app", "target": "explorer", "should_execute": true },
+    "category": "action_verb",
+    "description": "open verb + explorer"
+  },
+  {
+    "request": "downloads",
+    "expected": { "intent": "open_folder", "target": "downloads", "should_execute": true },
+    "category": "folder",
+    "description": "Downloads folder direct"
+  },
+  {
+    "request": "open downloads",
+    "expected": { "intent": "open_folder", "target": "downloads", "should_execute": true },
+    "category": "folder",
+    "description": "open verb + downloads"
+  },
+  {
+    "request": "show downloads",
+    "expected": { "intent": "open_folder", "target": "downloads", "should_execute": true },
+    "category": "folder",
+    "description": "show verb + downloads"
+  },
+  {
+    "request": "go to downloads",
+    "expected": { "intent": "open_folder", "target": "downloads", "should_execute": true },
+    "category": "folder",
+    "description": "go to verb + downloads"
+  },
+  {
+    "request": "goto downloads",
+    "expected": { "intent": "open_folder", "target": "downloads", "should_execute": true },
+    "category": "folder",
+    "description": "goto verb + downloads"
+  },
+  {
+    "request": "documents",
+    "expected": { "intent": "open_folder", "target": "documents", "should_execute": true },
+    "category": "folder",
+    "description": "Documents direct"
+  },
+  {
+    "request": "open documents",
+    "expected": { "intent": "open_folder", "target": "documents", "should_execute": true },
+    "category": "folder",
+    "description": "open verb + documents"
+  },
+  {
+    "request": "show documents",
+    "expected": { "intent": "open_folder", "target": "documents", "should_execute": true },
+    "category": "folder",
+    "description": "show verb + documents"
+  },
+  {
+    "request": "desktop",
+    "expected": { "intent": "open_folder", "target": "desktop", "should_execute": true },
+    "category": "folder",
+    "description": "Desktop direct"
+  },
+  {
+    "request": "open desktop",
+    "expected": { "intent": "open_folder", "target": "desktop", "should_execute": true },
+    "category": "folder",
+    "description": "open verb + desktop"
+  },
+  {
+    "request": "pictures",
+    "expected": { "intent": "open_folder", "target": "pictures", "should_execute": true },
+    "category": "folder",
+    "description": "Pictures direct"
+  },
+  {
+    "request": "open pictures",
+    "expected": { "intent": "open_folder", "target": "pictures", "should_execute": true },
+    "category": "folder",
+    "description": "open verb + pictures"
+  },
+  {
+    "request": "videos",
+    "expected": { "intent": "open_folder", "target": "videos", "should_execute": true },
+    "category": "folder",
+    "description": "Videos direct"
+  },
+  {
+    "request": "open videos",
+    "expected": { "intent": "open_folder", "target": "videos", "should_execute": true },
+    "category": "folder",
+    "description": "open verb + videos"
+  },
+  {
+    "request": "workspace",
+    "expected": { "intent": "open_folder", "target": "workspace", "should_execute": true },
+    "category": "folder",
+    "description": "Workspace root direct"
+  },
+  {
+    "request": "open workspace",
+    "expected": { "intent": "open_folder", "target": "workspace", "should_execute": true },
+    "category": "folder",
+    "description": "open verb + workspace"
+  },
+  {
+    "request": "active",
+    "expected": { "intent": "open_folder", "target": "active", "should_execute": true },
+    "category": "folder",
+    "description": "Active projects directory direct"
+  },
+  {
+    "request": "active projects",
+    "expected": { "intent": "open_folder", "target": "active projects", "should_execute": true },
+    "category": "folder",
+    "description": "Active projects direct"
+  },
+  {
+    "request": "open active projects",
+    "expected": { "intent": "open_folder", "target": "active projects", "should_execute": true },
+    "category": "folder",
+    "description": "open verb + active projects"
+  },
+  {
+    "request": "github",
+    "expected": { "intent": "open_url", "target": "github", "should_execute": true },
+    "category": "url",
+    "description": "GitHub alias direct"
+  },
+  {
+    "request": "open github",
+    "expected": { "intent": "open_url", "target": "github", "should_execute": true },
+    "category": "url",
+    "description": "open verb + github"
+  },
+  {
+    "request": "youtube",
+    "expected": { "intent": "open_url", "target": "youtube", "should_execute": true },
+    "category": "url",
+    "description": "YouTube alias direct"
+  },
+  {
+    "request": "open youtube",
+    "expected": { "intent": "open_url", "target": "youtube", "should_execute": true },
+    "category": "url",
+    "description": "open verb + youtube"
+  },
+  {
+    "request": "google",
+    "expected": { "intent": "open_url", "target": "google", "should_execute": true },
+    "category": "url",
+    "description": "Google alias direct"
+  },
+  {
+    "request": "open google",
+    "expected": { "intent": "open_url", "target": "google", "should_execute": true },
+    "category": "url",
+    "description": "open verb + google"
+  },
+  {
+    "request": "reddit",
+    "expected": { "intent": "open_url", "target": "reddit", "should_execute": true },
+    "category": "url",
+    "description": "Reddit alias direct"
+  },
+  {
+    "request": "duckduckgo",
+    "expected": { "intent": "open_url", "target": "duckduckgo", "should_execute": true },
+    "category": "url",
+    "description": "DuckDuckGo alias direct"
+  },
+  {
+    "request": "https://news.ycombinator.com",
+    "expected": { "intent": "open_url", "target": "https://news.ycombinator.com", "should_execute": true },
+    "category": "url",
+    "description": "Raw HTTPS URL"
+  },
+  {
+    "request": "open https://python.org",
+    "expected": { "intent": "open_url", "target": "https://python.org", "should_execute": true },
+    "category": "url",
+    "description": "open verb + raw URL"
+  },
+  {
+    "request": "refresh apps",
+    "expected": { "intent": "refresh_apps", "target": "cmd:refresh_apps", "should_execute": true },
+    "category": "management",
+    "description": "Internal refresh apps command"
+  },
+  {
+    "request": "reload apps",
+    "expected": { "intent": "refresh_apps", "target": "cmd:refresh_apps", "should_execute": true },
+    "category": "management",
+    "description": "Alias for refresh apps"
+  },
+  {
+    "request": "notpad",
+    "expected": { "intent": "open_app", "target": "notepad", "should_execute": true },
+    "category": "typo_app",
+    "description": "Single-letter typo on notepad"
+  },
+  {
+    "request": "dwnloads",
+    "expected": { "intent": "open_folder", "target": "downloads", "should_execute": true },
+    "category": "typo_app",
+    "description": "Typo on downloads folder"
+  },
+  {
+    "request": "calcultor",
+    "expected": { "intent": "open_app", "target": "calc", "should_execute": true },
+    "category": "typo_app",
+    "description": "Typo on calculator"
+  },
+  {
+    "request": "vscod",
+    "expected": { "intent": "open_app", "target": "code", "should_execute": true },
+    "category": "typo_app",
+    "description": "Typo on vscode"
+  },
+  {
+    "request": "githb",
+    "expected": { "intent": "open_url", "target": "github", "should_execute": true },
+    "category": "typo_app",
+    "description": "Typo on github"
+  },
+  {
+    "request": "vsc",
+    "expected": { "intent": "open_app", "target": "code", "should_execute": true },
+    "category": "acronym_app",
+    "description": "Acronym for Visual Studio Code"
+  },
+  {
+    "request": "open the project from yesterday",
+    "expected": { "intent": "unknown", "target": null, "should_execute": false },
+    "category": "ambiguous",
+    "description": "Ambiguous project intent requiring future semantic indexing; MUST NOT auto-execute"
+  },
+  {
+    "request": "open my notes",
+    "expected": { "intent": "unknown", "target": null, "should_execute": false },
+    "category": "ambiguous",
+    "description": "Ambiguous file intent; MUST NOT guess a random app"
+  },
+  {
+    "request": "find my latest screenshot",
+    "expected": { "intent": "unknown", "target": null, "should_execute": false },
+    "category": "ambiguous",
+    "description": "Filesystem search query out-of-scope for v0.2; MUST NOT execute"
+  },
+  {
+    "request": "kill port 3000",
+    "expected": { "intent": "unknown", "target": null, "should_execute": false },
+    "category": "unsupported",
+    "description": "Process management tool scheduled for v0.7; MUST NOT execute"
+  },
+  {
+    "request": "start deep learning workspace",
+    "expected": { "intent": "unknown", "target": null, "should_execute": false },
+    "category": "ambiguous",
+    "description": "Multi-workspace orchestration out-of-scope for v0.2; MUST NOT execute"
+  },
+  {
+    "request": "ask gemini to analyze screen",
+    "expected": { "intent": "unknown", "target": null, "should_execute": false },
+    "category": "unsupported",
+    "description": "AI Bridge query out-of-scope for v0.2; MUST NOT execute"
+  },
+  {
+    "request": "make me coffee",
+    "expected": { "intent": "unknown", "target": null, "should_execute": false },
+    "category": "unsupported",
+    "description": "Invalid real-world action; MUST NOT execute"
+  },
+  {
+    "request": "asdfgh",
+    "expected": { "intent": "unknown", "target": null, "should_execute": false },
+    "category": "garbage",
+    "description": "Random keyboard smash; MUST NOT execute"
+  },
+  {
+    "request": "what is the weather today",
+    "expected": { "intent": "unknown", "target": null, "should_execute": false },
+    "category": "unsupported",
+    "description": "Informational query out-of-scope for v0.2; MUST NOT execute"
+  },
+  {
+    "request": "delete system32",
+    "expected": { "intent": "unknown", "target": null, "should_execute": false },
+    "category": "prohibited",
+    "description": "Destructive input; MUST NOT execute"
+  },
+  {
+    "request": "open something random",
+    "expected": { "intent": "unknown", "target": null, "should_execute": false },
+    "category": "ambiguous",
+    "description": "Ambiguous request; MUST NOT guess"
+  },
+  {
+    "request": "notepad & del something",
+    "expected": { "intent": "unknown", "target": null, "should_execute": false },
+    "category": "security_probe",
+    "description": "Shell injection probe; MUST NOT evaluate shell operators"
+  },
+  {
+    "request": "notepad ; whoami",
+    "expected": { "intent": "unknown", "target": null, "should_execute": false },
+    "category": "security_probe",
+    "description": "Command chaining probe; MUST NOT evaluate shell operators"
+  },
+  {
+    "request": "$(whoami)",
+    "expected": { "intent": "unknown", "target": null, "should_execute": false },
+    "category": "security_probe",
+    "description": "Subshell probe; MUST NOT execute"
+  },
+  {
+    "request": "powershell -Command Remove-Item C:\\",
+    "expected": { "intent": "unknown", "target": null, "should_execute": false },
+    "category": "security_probe",
+    "description": "Powershell command probe; MUST NOT execute"
+  },
+  {
+    "request": "javascript:alert(1)",
+    "expected": { "intent": "unknown", "target": null, "should_execute": false },
+    "category": "security_probe",
+    "description": "Javascript pseudo-protocol probe; MUST NOT execute"
+  },
+  {
+    "request": "file:///C:/Windows/calc.exe",
+    "expected": { "intent": "unknown", "target": null, "should_execute": false },
+    "category": "security_probe",
+    "description": "File URI scheme probe; MUST NOT execute"
+  },
+  {
+    "request": "data:text/html,test",
+    "expected": { "intent": "unknown", "target": null, "should_execute": false },
+    "category": "security_probe",
+    "description": "Data URI scheme probe; MUST NOT execute"
+  }
+]

@@ -71,8 +71,11 @@ class FolderInfo:
 
 @dataclass
 class RoutingContext:
-    """Contextual registries and caches provided to routers."""
+    """Contextual registries, search index, and telemetry provided to routers."""
     apps: dict[str, AppInfo] = field(default_factory=dict)
     folders: dict[str, FolderInfo] = field(default_factory=dict)
     urls: dict[str, str] = field(default_factory=dict)
     aliases: dict[str, str] = field(default_factory=dict)
+    search_index: Any = None
+    telemetry: Any = None
+    usage_store: Any = None

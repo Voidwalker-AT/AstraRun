@@ -18,7 +18,8 @@ flowchart LR
     v6 --> v65["v0.6.5: Hybrid NLP Engine"]
     v65 --> v7["v0.7: Workstation Capabilities"]
     v7 --> v8["v0.8: Task Runtime & History"]
-    v8 --> v9["v0.9: Window Management"]
+    v8 --> v85["v0.8.5: Memory, Learning & Skills"]
+    v85 --> v9["v0.9: Window Management"]
     v9 --> v10["v0.10: Application Interaction"]
     v10 --> v11["v0.11: Daemon & Rich Context"]
     v11 --> v12["v0.12: Optional Reasoning Providers"]
@@ -155,6 +156,22 @@ flowchart LR
 - **Privacy & Redaction Controls**: Automatic regex redaction of API keys, tokens, and passwords; SHA-256 request hashing; and bounded capability payloads.
 - **Task Benchmark V1 (300 cases)**: 100.0% Status Accuracy, 100.0% Sequence Accuracy, 100.0% Persistence Accuracy.
 - **197 Passing Automated Tests**.
+
+---
+
+### v0.8.5 — Memory, Learning & Skill Foundation (Complete — 2026-09-27)
+- **Zero Neural / Learned Execution Authority**: Learning never grants direct computer control. Pipeline remains strictly gated: `Learned Memory -> NLP / Entity Resolution -> Proposed Action -> ActionGate -> Hard Policy -> CapabilityRegistry -> OS`.
+- **Non-Learnable Security Policies**: High-risk capability confirmation requirements, ActionGate safeguards, protected system processes (`lsass.exe`, `csrss.exe`), and dangerous shell commands can **NEVER** be weakened or bypassed by learning.
+- **Dual-Database Architecture**: Physical separation between ephemeral execution tracking (`data/astra_history.db`, 30-day retention) and durable workstation knowledge (`data/astra_learning.db`, WAL mode, `PRAGMA user_version = 1`, append-only audit trail).
+- **Mathematical Confidence Engine**: Combines positive evidence weights, asymmetric contradiction penalties, asymptotic support saturation, 70-day exponential time decay, and pinned fact guarantees ($\ge 0.95$).
+- **Evidence Extraction & Teaching Parser**: Parses natural language instructions (*"remember that foo is bar"*, *"always use code for editing"*) and detects user corrections across a 120-second temporal sliding window.
+- **Multi-Tier Alias Precedence**: Deterministic resolution order: `Static Config > Conflicted Gating > User-Confirmed Learned > High-Confidence Habit > Fuzzy Fallback`. Conflicting candidates automatically yield safe disambiguation.
+- **Declarative Pattern Mining & Skill Synthesis**: Discovers recurring capability n-grams ($L \in [2, 5]$, support $\ge 3$) from task history, parameterizes variable tokens (`{target_project}`), and enforces maximum step risk inheritance.
+- **Memory Inspector & Skill Review UI**: PySide6 split-view inspector (`MemoryView`) with full provenance audit and candidate skill review dialog (`SkillReviewWidget`) requiring explicit human approval prior to activation.
+- **Offline Training Dataset Exporter**: Offline dataset generator (`dataset_builder.py`) sanitizing queries with regex credential redaction and platform path normalization, gated behind `allow_training_dataset_export: true`.
+- **Learning Benchmark V1 (320 cases)**: 100.0% Accuracy, 0.00% False Memory Activation Rate, 100.0% Security Invariant Enforcement Rate, 25.28 ms mean latency.
+- **215 Passing Automated Tests**: 197 baseline tests + 18 dedicated v0.8.5 learning and safety tests passing cleanly.
+- Formal architectural decision records ADR-056 through ADR-065.
 
 ---
 

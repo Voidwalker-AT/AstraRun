@@ -5,15 +5,15 @@
   "status_accuracy": 100.0,
   "sequence_accuracy": 100.0,
   "persistence_accuracy": 100.0,
-  "mean_latency_ms": 64.63569833353783,
-  "p50_latency_ms": 9.63350001256913,
-  "p95_latency_ms": 256.51410000864416,
+  "mean_latency_ms": 70.81296699858892,
+  "p50_latency_ms": 13.977299997350201,
+  "p95_latency_ms": 307.5986000185367,
   "scale_test": {
     "tasks_count": 10000,
     "events_count": 100000,
-    "insert_duration_s": 1.1026743999973405,
-    "recent_query_ms": 1.2636000174097717,
-    "search_latency_ms": 7.429400022374466,
-    "cleanup_latency_ms": 339.5903999917209
+    "insert_duration_s": 1.2509780999971554,
+    "recent_query_ms": 1.6383999900426716,
+    "search_latency_ms": 11.121299990918487,
+    "cleanup_latency_ms": 392.0017999771517
   }
 }

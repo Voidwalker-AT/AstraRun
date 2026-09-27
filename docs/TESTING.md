@@ -1,6 +1,6 @@
 # AstraRun Testing & Verification Report
 
-> **Version**: 0.8.0  
+> **Version**: 0.8.5  
 > **Status**: VERIFIED & PASSING  
 > **Execution Date**: 2026-09-27  
 
@@ -8,9 +8,30 @@
 
 ## 1. Test Suite Architecture
 
-The AstraRun test suite contains **197 automated tests across 18 modules**:
+The AstraRun test suite contains **215 automated tests across 19 modules**:
 
-1. **Task Runtime, Activity & History Tests (v0.8)**:
+1. **Memory, Learning & Skill Foundation Tests (v0.8.5)**:
+   - `tests/test_v085_learning.py` (18 tests):
+     - `test_memory_models_and_enums`: Dataclass immutability, enum mapping, serialization.
+     - `test_confidence_calculator_math`: Formula checks, positive weights, double contradiction penalty, asymptotic saturation.
+     - `test_confidence_time_decay`: Half-life decay over 70 days, pinned fact floor ($\ge 0.95$).
+     - `test_confidence_conflict_detection`: Contradiction identification, threshold gating.
+     - `test_sqlite_learning_store_schema`: SQLite WAL mode, foreign keys, user_version = 1.
+     - `test_sqlite_learning_store_crud`: Memory insertion, retrieval, update, deletion.
+     - `test_evidence_extractor_natural_language`: Teaching syntax parsing (`"remember that foo is bar"`).
+     - `test_evidence_extractor_corrections`: Correction detection across 120s window (*"no, I meant code"*).
+     - `test_evidence_extractor_security_filter`: Non-learnable security policies and dangerous commands blocked from learning.
+     - `test_memory_store_confirm_and_reject`: User confirmation, rejection, and tombstone tracking.
+     - `test_alias_manager_precedence`: Multi-tier precedence resolution (`Static > Conflicted Gating > User-Confirmed Learned > High-Confidence Habit > Fuzzy`).
+     - `test_alias_manager_conflict_gating`: Ambiguity suppression when conflicting aliases exist.
+     - `test_pattern_miner_discovery`: Discovery of recurring sequences ($L \in [2,5]$, support $\ge 3$).
+     - `test_skill_manager_compilation`: Compilation of skill candidates into executable workflows.
+     - `test_learning_engine_background_dispatch`: Off-hot-path background worker execution.
+     - `test_dataset_builder_sanitization`: Offline dataset export with token redaction and path normalization.
+     - `test_security_regressions_non_learnable`: Confirmations and hard policies cannot be weakened or bypassed.
+     - `test_ui_memory_and_skills`: PySide6 `MemoryView` and `SkillReviewWidget` interaction and signals.
+
+2. **Task Runtime, Activity & History Tests (v0.8)**:
    - `tests/test_v08_tasks.py` (28 tests):
      - `test_task_status_properties`: 14 formal states, `is_terminal`, `is_active`, `is_waiting`.
      - `test_fsm_valid_transitions`: Legal state transitions verified.
@@ -41,7 +62,7 @@ The AstraRun test suite contains **197 automated tests across 18 modules**:
      - `test_sql_injection_defense`: Parameterized SQL queries immune to SQL injection.
      - `test_zero_raw_shell_execution_invariant`: Zero shell execution calls across tasks subsystem.
 
-2. **Workstation Capability Tests (v0.7)**:
+3. **Workstation Capability Tests (v0.7)**:
    - `tests/test_v07_capabilities.py` (43 tests):
      - `test_capability_registry_init_and_listing`: Registry population (47 capabilities, 9 categories).
      - `test_capability_registry_execute_success`: Clean dispatch, observation recording, latency profiling.
@@ -87,7 +108,7 @@ The AstraRun test suite contains **197 automated tests across 18 modules**:
      - `test_security_regressions`: Zero shell execution and traversal regressions.
      - `test_reasoning_escalation_boundary_unconfigured`: Unconfigured reasoning provider boundary handling.
 
-1. **Hybrid Natural Language Understanding Tests (v0.6.5)**:
+4. **Hybrid Natural Language Understanding Tests (v0.6.5)**:
    - `tests/test_v065_nlp.py` (29 tests):
      - `test_port_extraction`: Port notation variants (`port 3000`, `:5173`, `port:8080`, `localhost:8000`).
      - `test_pid_extraction`: Process ID extraction and normalization (`pid 14236`, `PID: 404`).
@@ -119,8 +140,7 @@ The AstraRun test suite contains **197 automated tests across 18 modules**:
      - `test_reasoning_required`: Complex activity and diagnostic reasoning escalation.
      - `test_no_raw_shell`: Invariant verification preventing shell command evaluation.
 
-
-1. **Gated Workstation Actions & Context Tests (v0.6)**:
+5. **Gated Workstation Actions & Context Tests (v0.6)**:
    - `tests/test_v06_actions.py`:
      - `test_project_registry_loading`: Verifies loading projects catalog from `workspace.json`.
      - `test_project_registry_exact_and_fuzzy_search`: Validates exact lookup, path resolution, and fuzzy alias search for `astrarun` and `server`.
@@ -141,7 +161,7 @@ The AstraRun test suite contains **197 automated tests across 18 modules**:
      - `test_ui_disambiguation_card`: Validates Up/Down arrow keyboard navigation and selection signals.
      - `test_ai_bridge_protocol`: Verifies `ReasoningProvider` protocol compliance and request/result dataclass typing.
 
-2. **Laya Ensemble & Fusion Tests (v0.5)**:
+6. **Laya Ensemble & Fusion Tests (v0.5)**:
    - `tests/test_v05_ensemble.py`:
      - `test_jsd_identical_distributions`: Verifies Jensen-Shannon divergence equals 0.0 for identical probability distributions.
      - `test_jsd_orthogonal_distributions`: Verifies Jensen-Shannon divergence reaches theoretical maximum ($\approx \ln(2)$) for orthogonal distributions.
@@ -162,7 +182,7 @@ The AstraRun test suite contains **197 automated tests across 18 modules**:
      - `test_entity_resolver_destructive_command_blocked`: **HARD POLICY**: Blocks destructive commands (`rmdir /s /q`, `format`, `del system32`).
      - `test_jev_router_disabled_and_mock`: Validates safe fallback when disabled and deterministic mock simulation for offline testing.
 
-2. **Kev Router & Shadow Mode Tests (v0.4)**:
+7. **Kev Router & Shadow Mode Tests (v0.4)**:
    - `tests/test_kev_router.py`:
      - `test_kev_router_disabled`: Verifies abstention when disabled without loading model weights.
      - `test_kev_router_construction`: Validates device/mode configuration and threshold.
@@ -174,7 +194,7 @@ The AstraRun test suite contains **197 automated tests across 18 modules**:
      - `test_shadow_mode_safety_zero_execution_authority`: **CRITICAL SAFETY INVARIANT**: Verifies that even if Kev predicts `open_app` with 0.99 confidence, when production is `unknown`, **NO OS APPLICATION IS LAUNCHED**.
      - `test_kev_formatting_delimiters`: Verifies Qwen FIM/box delimiters (`<|fim_prefix|>`, `<|fim_middle|>`, `<|box_start|>`, `<|box_end|>`, `<|fim_suffix|>`).
 
-3. **Laya Router & Shadow Mode Tests (v0.3)**:
+8. **Laya Router & Shadow Mode Tests (v0.3)**:
    - `tests/test_laya_router.py`:
      - `test_laya_router_disabled`: Verifies abstention when disabled without loading model.
      - `test_laya_router_construction`: Validates device/mode configuration and threshold.
@@ -185,7 +205,7 @@ The AstraRun test suite contains **197 automated tests across 18 modules**:
      - `test_laya_shadow_event_collector`: Verifies JSONL append, schema, and regex credential redaction.
      - `test_shadow_mode_safety_zero_execution_authority`: **CRITICAL SAFETY INVARIANT**: Verifies that Laya predictions NEVER execute and ToolRegistry only executes production decisions.
 
-4. **Unit Tests (v0.1 & v0.2)**:
+9. **Unit Tests (v0.1 & v0.2)**:
    - `tests/test_routing.py`: Request normalization (`open`, `launch`, `start`, `go to`, `show`), application/folder/URL routing, and unknown rejection.
    - `tests/test_config.py`: Default and custom configuration loading, corrupted JSON resilience.
    - `tests/test_tools.py`: Tool registry validation, missing tool blocks, risk tier enforcement (`LOW`, `MEDIUM`, `HIGH`, `BLOCKED`).
@@ -195,11 +215,11 @@ The AstraRun test suite contains **197 automated tests across 18 modules**:
    - `tests/test_positioning.py`: Window positioning calculations and target screen geometry fallbacks.
    - `tests/test_security_regression.py`: Prevention of command injection metacharacters (`&`, `|`, `;`, `$`, `%`) and URL protocol verification.
 
-5. **UI Tests**:
+10. **UI Tests**:
    - `tests/test_ui.py`: Window show/dismiss, Escape key handling, initial state, suggestions generation, feedback messages.
    - `tests/test_ui_v02.py`: Keyboard arrow navigation (`Up`/`Down`), Tab autocompletion, weak suggestion rejection on Enter.
 
-6. **Integration Tests**:
+11. **Integration Tests**:
    - `tests/test_integration.py`: Live Windows application discovery (~400 apps cached), dynamic known folders, live routing.
 
 ---
@@ -319,14 +339,42 @@ tests/test_ai_bridge_protocol PASSED                                     [100%]
 ```
 
 ### Results Summary
-- **Total Tests Collected**: **197**
-- **Passed**: **197**
+- **Total Tests Collected**: **215**
+- **Passed**: **215**
 - **Failed**: **0**
-- **Duration**: **12.41s**
+- **Duration**: **12.56s**
 
 ---
 
-## 3. Task Benchmark V1 Evaluation (300 Lifecycle Cases)
+## 3. Learning Benchmark V1 Evaluation (320 Cases)
+
+```powershell
+.venv\Scripts\python benchmarks\learning\run_learning_benchmark.py
+```
+
+### Evaluation Results
+- **Cases Evaluated**: **320**
+- **Dataset SHA256**: `b935f4ece761d59a98d7b98053cc18ffcb6ae33259f4888cb828ab3787281b9a`
+- **Overall Accuracy**: **100.0%** (320 / 320)
+- **False Memory Activation Rate**: **0.00%** (Prime Safety Invariant)
+- **Security Invariant Enforcement Rate**: **100.0%** (40 / 40)
+- **End-to-End Latency (Mean)**: **25.28 ms**
+
+### Category Performance Breakdown
+| Category | Cases | Accuracy | Invariant Adherence |
+| :--- | :--- | :--- | :--- |
+| Explicit Teaching | 40 | 100.0% | 100.0% |
+| Correction Mining | 40 | 100.0% | 100.0% |
+| Habit Tracking | 40 | 100.0% | 100.0% |
+| Contradiction / Conflict | 40 | 100.0% | 100.0% |
+| Confidence Decay | 40 | 100.0% | 100.0% |
+| Skill Discovery | 40 | 100.0% | 100.0% |
+| Security Invariants | 40 | 100.0% | 100.0% |
+| Edge Cases | 40 | 100.0% | 100.0% |
+
+---
+
+## 4. Task Benchmark V1 Evaluation (300 Lifecycle Cases)
 
 ```powershell
 .venv\Scripts\python -u benchmarks\tasks\run_task_benchmark.py
@@ -348,7 +396,7 @@ tests/test_ai_bridge_protocol PASSED                                     [100%]
 
 ---
 
-## 4. Capability Benchmark V1 Evaluation (520 Cases)
+## 5. Capability Benchmark V1 Evaluation (520 Cases)
 
 ```powershell
 .venv\Scripts\python benchmarks\capabilities\run_capability_benchmark.py
@@ -365,7 +413,7 @@ tests/test_ai_bridge_protocol PASSED                                     [100%]
 
 ---
 
-## 4. NLP Benchmark V1 Evaluation (620 Cases)
+## 6. NLP Benchmark V1 Evaluation (620 Cases)
 
 ```powershell
 .venv\Scripts\python benchmarks\nlp\run_nlp_benchmark.py
@@ -383,7 +431,7 @@ tests/test_ai_bridge_protocol PASSED                                     [100%]
 
 ---
 
-## 5. Action Benchmark V1 Evaluation (330 Test Cases)
+## 7. Action Benchmark V1 Evaluation (330 Test Cases)
 
 ```powershell
 .venv\Scripts\python benchmarks\action\run_action_benchmark.py
@@ -404,7 +452,7 @@ tests/test_ai_bridge_protocol PASSED                                     [100%]
 
 ---
 
-## 6. Standardized Routing Evaluation Benchmark (88 Queries)
+## 8. Standardized Routing Evaluation Benchmark (88 Queries)
 
 ```powershell
 .venv\Scripts\python benchmarks\routing\run_benchmark.py
@@ -420,7 +468,7 @@ tests/test_ai_bridge_protocol PASSED                                     [100%]
 
 ---
 
-## 7. Empirical Manual Verification Matrix
+## 9. Empirical Manual Verification Matrix
 
 | Query Executed | Expected Outcome | Verification Status | Notes |
 | :--- | :--- | :--- | :--- |

@@ -684,6 +684,125 @@
 - **Consequences**:
   - Modular, cleanly testable subsystems with zero architectural contamination.
 
+---
+
+## ADR-056: Decoupling of Historical Audit Ledger from Learned Knowledge
+- **Status**: ACCEPTED
+- **Context**: Tightly coupling raw execution logs with learned aliases means log retention pruning deletes learned preferences, or keeping learned preferences retains gigabytes of raw logs.
+- **Decision**:
+  - Isolate raw task history in `data/astra_history.db` (30-day retention pruning via `TaskLedger`).
+  - Isolate durable knowledge in `data/astra_learning.db` (independent lifecycle).
+  - Store immutable provenance references (`task_id`, `event_id`, weights) rather than duplicating raw task payloads.
+- **Consequences**:
+  - Wiping history does not destroy learned aliases.
+  - Wiping learning does not compromise historical audit trails.
+
+---
+
+## ADR-057: Empirical Support Saturation and Double Contradiction Penalty Formula
+- **Status**: ACCEPTED
+- **Context**: Relying on simple frequency counters causes transient habits to become stubborn errors that resist user feedback.
+- **Decision**:
+  - Formulate confidence using asymptotic support saturation: $S(W_{\text{pos}}) = 1.0 - e^{-W_{\text{pos}}/3.0}$.
+  - Penalize negative evidence double in the balance ratio: $R = W_{\text{pos}} / (W_{\text{pos}} + 2.0 \cdot W_{\text{neg}})$.
+  - Time-decay inactive memories with a 70-day half-life, while pinning confirmed memories at $\ge 0.95$.
+- **Consequences**:
+  - Single observations cannot prematurely activate.
+  - A single user correction immediately collapses erroneous candidate confidence below deprecation thresholds.
+
+---
+
+## ADR-058: Asymmetric User Correction Absorption
+- **Status**: ACCEPTED
+- **Context**: When a user immediately corrects an action (e.g., "no, I meant code"), traditional systems treat this as an unrelated subsequent request.
+- **Decision**:
+  - Detect corrections within a 120-second window in the same conversation thread.
+  - Apply negative evidence (`USER_CORRECTION`, weight 3.0, double penalty) to the erroneous mapping.
+  - Apply positive evidence (`EXPLICIT_TEACHING`, weight 3.0, confirmed) to the corrected mapping.
+- **Consequences**:
+  - Immediate adaptation to user corrections with 0.00% false execution persistence.
+
+---
+
+## ADR-059: Multi-Tier Alias Resolution Precedence
+- **Status**: ACCEPTED
+- **Context**: Statistical learning must never override explicit user intent or statically configured system aliases.
+- **Decision**:
+  - Enforce strict hierarchical precedence:
+    $$\text{Static Config Alias} > \text{Conflicted Gating} > \text{User-Confirmed Alias} > \text{High-Confidence Habit} > \text{Fuzzy/NLP}$$
+  - Unconfirmed candidates with $C < 0.85$ are strictly barred from resolving.
+- **Consequences**:
+  - 100% predictable alias resolution with zero surprise misdirection.
+
+---
+
+## ADR-060: Strict Conflict Detection and Gating to Clarification Modal
+- **Status**: ACCEPTED
+- **Context**: When two applications vie for the same alias with close confidence scores, automated guessing risks launching the wrong application.
+- **Decision**:
+  - When $\Delta C < 0.20$ between top candidates without user confirmation, mark both as `CONFLICTED`.
+  - Suppress automated resolution and return `status="ambiguous"` to trigger the interactive disambiguation dialog.
+- **Consequences**:
+  - Preserves the 0.00% False Execution Rate invariant when user habits are divided.
+
+---
+
+## ADR-061: Non-Learnable Security Invariants
+- **Status**: ACCEPTED
+- **Context**: Machine learning agents risk prompt injection or habit drift that learns to bypass security confirmations.
+- **Decision**:
+  - Hardcode security policies in immutable Python modules (`ActionGate`, `CapabilityRegistry`).
+  - Protected processes (`lsass.exe`, `csrss.exe`) and blocked commands (`format c:`, `rmdir /s`) can never be learned, aliased, or manipulated.
+  - Repeated confirmations never convert a `CONFIRM` verdict to `AUTO`.
+- **Consequences**:
+  - Hard security guarantees are mathematically immune to learning drift.
+
+---
+
+## ADR-062: Declarative Workflow Skill Mining from Repetitive Capability Subgraphs
+- **Status**: ACCEPTED
+- **Context**: Generating arbitrary Python or shell code for skills exposes the workstation to fatal bugs and security breaches.
+- **Decision**:
+  - Mine frequent capability n-grams ($L \in [2, 5]$, support $\ge 3$) from completed tasks.
+  - Abstract arguments into typed parameters (`{target_project}`).
+  - Propose skills exclusively as sequences of registered `WorkstationCapability` identifiers.
+- **Consequences**:
+  - Skills compile directly into deterministic `Workflow` objects without arbitrary code execution.
+
+---
+
+## ADR-063: Mandatory Human Review Dialog (`SkillReviewWidget`) for Skill Activation
+- **Status**: ACCEPTED
+- **Context**: Autonomous skill activation risks executing complex sequences that the user never intended to automate.
+- **Decision**:
+  - All mined skills enter the `PENDING_REVIEW` state.
+  - Require explicit user approval in `SkillReviewWidget` before a skill can be compiled or triggered.
+- **Consequences**:
+  - Total user sovereignty over automated multi-step workflows.
+
+---
+
+## ADR-064: Zero Online Gradient Updates and Model Weight Mutation Invariant
+- **Status**: ACCEPTED
+- **Context**: Live fine-tuning or dynamic LoRA hot-patching introduces catastrophic forgetting, unpredictable resource spikes, and adversarial weight poisoning.
+- **Decision**:
+  - Strictly prohibit online weight updates during interactive workstation execution.
+  - All learning is stored as structured records in SQLite (`data/astra_learning.db`).
+- **Consequences**:
+  - Guaranteed sub-10ms launcher response and unshakeable model stability.
+
+---
+
+## ADR-065: Offline Dataset Export Sanitization and Authorization Gating
+- **Status**: ACCEPTED
+- **Context**: Exporting training data for future offline fine-tuning must never leak workstation secrets or occur without user knowledge.
+- **Decision**:
+  - Gate exports behind `allow_training_dataset_export: true` in configuration.
+  - Automatically redact detected API keys, bearer tokens, passwords, and user profile paths.
+- **Consequences**:
+  - Safe, privacy-compliant training dataset generation with zero cloud leakage.
+
+
 
 
 

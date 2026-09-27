@@ -1,0 +1,21 @@
+{
+  "benchmark_file": "benchmarks\\learning\\learning_benchmark_v1.json",
+  "total_cases": 320,
+  "verified_sha256": "b935f4ece761d59a98d7b98053cc18ffcb6ae33259f4888cb828ab3787281b9a",
+  "sha256_match": true,
+  "overall_accuracy": 100.0,
+  "false_activation_rate": 0.0,
+  "security_enforcement_rate": 100.0,
+  "category_accuracies": {
+    "explicit_teaching": 100.0,
+    "alias_precedence": 100.0,
+    "user_corrections": 100.0,
+    "conflicted_aliases": 100.0,
+    "time_decay": 100.0,
+    "skill_mining": 100.0,
+    "security_invariants": 100.0
+  },
+  "mean_latency_ms": 25.285,
+  "p50_latency_ms": 0.097,
+  "p95_latency_ms": 137.51
+}

@@ -1,0 +1,3292 @@
+[
+  {
+    "id": "teach_001",
+    "category": "explicit_teaching",
+    "query": "alias code to code",
+    "expected_namespace": "ALIAS",
+    "expected_key": "code",
+    "expected_value": "code",
+    "expected_target_type": "application",
+    "expected_status": "ACTIVE",
+    "expected_confirmed": true
+  },
+  {
+    "id": "teach_002",
+    "category": "explicit_teaching",
+    "query": "alias vsc to code",
+    "expected_namespace": "ALIAS",
+    "expected_key": "vsc",
+    "expected_value": "code",
+    "expected_target_type": "application",
+    "expected_status": "ACTIVE",
+    "expected_confirmed": true
+  },
+  {
+    "id": "teach_003",
+    "category": "explicit_teaching",
+    "query": "alias calc to calc",
+    "expected_namespace": "ALIAS",
+    "expected_key": "calc",
+    "expected_value": "calc",
+    "expected_target_type": "application",
+    "expected_status": "ACTIVE",
+    "expected_confirmed": true
+  },
+  {
+    "id": "teach_004",
+    "category": "explicit_teaching",
+    "query": "alias math to calc",
+    "expected_namespace": "ALIAS",
+    "expected_key": "math",
+    "expected_value": "calc",
+    "expected_target_type": "application",
+    "expected_status": "ACTIVE",
+    "expected_confirmed": true
+  },
+  {
+    "id": "teach_005",
+    "category": "explicit_teaching",
+    "query": "alias writer to notepad",
+    "expected_namespace": "ALIAS",
+    "expected_key": "writer",
+    "expected_value": "notepad",
+    "expected_target_type": "application",
+    "expected_status": "ACTIVE",
+    "expected_confirmed": true
+  },
+  {
+    "id": "teach_006",
+    "category": "explicit_teaching",
+    "query": "alias text to notepad",
+    "expected_namespace": "ALIAS",
+    "expected_key": "text",
+    "expected_value": "notepad",
+    "expected_target_type": "application",
+    "expected_status": "ACTIVE",
+    "expected_confirmed": true
+  },
+  {
+    "id": "teach_007",
+    "category": "explicit_teaching",
+    "query": "alias shell to pwsh",
+    "expected_namespace": "ALIAS",
+    "expected_key": "shell",
+    "expected_value": "pwsh",
+    "expected_target_type": "application",
+    "expected_status": "ACTIVE",
+    "expected_confirmed": true
+  },
+  {
+    "id": "teach_008",
+    "category": "explicit_teaching",
+    "query": "alias terminal to wt",
+    "expected_namespace": "ALIAS",
+    "expected_key": "terminal",
+    "expected_value": "wt",
+    "expected_target_type": "application",
+    "expected_status": "ACTIVE",
+    "expected_confirmed": true
+  },
+  {
+    "id": "teach_009",
+    "category": "explicit_teaching",
+    "query": "alias nav to vivaldi",
+    "expected_namespace": "ALIAS",
+    "expected_key": "nav",
+    "expected_value": "vivaldi",
+    "expected_target_type": "application",
+    "expected_status": "ACTIVE",
+    "expected_confirmed": true
+  },
+  {
+    "id": "teach_010",
+    "category": "explicit_teaching",
+    "query": "alias browser to vivaldi",
+    "expected_namespace": "ALIAS",
+    "expected_key": "browser",
+    "expected_value": "vivaldi",
+    "expected_target_type": "application",
+    "expected_status": "ACTIVE",
+    "expected_confirmed": true
+  },
+  {
+    "id": "teach_011",
+    "category": "explicit_teaching",
+    "query": "set alias code = code",
+    "expected_namespace": "ALIAS",
+    "expected_key": "code",
+    "expected_value": "code",
+    "expected_target_type": "application",
+    "expected_status": "ACTIVE",
+    "expected_confirmed": true
+  },
+  {
+    "id": "teach_012",
+    "category": "explicit_teaching",
+    "query": "set alias vsc = code",
+    "expected_namespace": "ALIAS",
+    "expected_key": "vsc",
+    "expected_value": "code",
+    "expected_target_type": "application",
+    "expected_status": "ACTIVE",
+    "expected_confirmed": true
+  },
+  {
+    "id": "teach_013",
+    "category": "explicit_teaching",
+    "query": "set alias calc = calc",
+    "expected_namespace": "ALIAS",
+    "expected_key": "calc",
+    "expected_value": "calc",
+    "expected_target_type": "application",
+    "expected_status": "ACTIVE",
+    "expected_confirmed": true
+  },
+  {
+    "id": "teach_014",
+    "category": "explicit_teaching",
+    "query": "set alias math = calc",
+    "expected_namespace": "ALIAS",
+    "expected_key": "math",
+    "expected_value": "calc",
+    "expected_target_type": "application",
+    "expected_status": "ACTIVE",
+    "expected_confirmed": true
+  },
+  {
+    "id": "teach_015",
+    "category": "explicit_teaching",
+    "query": "set alias writer = notepad",
+    "expected_namespace": "ALIAS",
+    "expected_key": "writer",
+    "expected_value": "notepad",
+    "expected_target_type": "application",
+    "expected_status": "ACTIVE",
+    "expected_confirmed": true
+  },
+  {
+    "id": "teach_016",
+    "category": "explicit_teaching",
+    "query": "set alias text = notepad",
+    "expected_namespace": "ALIAS",
+    "expected_key": "text",
+    "expected_value": "notepad",
+    "expected_target_type": "application",
+    "expected_status": "ACTIVE",
+    "expected_confirmed": true
+  },
+  {
+    "id": "teach_017",
+    "category": "explicit_teaching",
+    "query": "set alias shell = pwsh",
+    "expected_namespace": "ALIAS",
+    "expected_key": "shell",
+    "expected_value": "pwsh",
+    "expected_target_type": "application",
+    "expected_status": "ACTIVE",
+    "expected_confirmed": true
+  },
+  {
+    "id": "teach_018",
+    "category": "explicit_teaching",
+    "query": "set alias terminal = wt",
+    "expected_namespace": "ALIAS",
+    "expected_key": "terminal",
+    "expected_value": "wt",
+    "expected_target_type": "application",
+    "expected_status": "ACTIVE",
+    "expected_confirmed": true
+  },
+  {
+    "id": "teach_019",
+    "category": "explicit_teaching",
+    "query": "set alias nav = vivaldi",
+    "expected_namespace": "ALIAS",
+    "expected_key": "nav",
+    "expected_value": "vivaldi",
+    "expected_target_type": "application",
+    "expected_status": "ACTIVE",
+    "expected_confirmed": true
+  },
+  {
+    "id": "teach_020",
+    "category": "explicit_teaching",
+    "query": "set alias browser = vivaldi",
+    "expected_namespace": "ALIAS",
+    "expected_key": "browser",
+    "expected_value": "vivaldi",
+    "expected_target_type": "application",
+    "expected_status": "ACTIVE",
+    "expected_confirmed": true
+  },
+  {
+    "id": "teach_021",
+    "category": "explicit_teaching",
+    "query": "my default editor is code",
+    "expected_namespace": "PREFERENCE",
+    "expected_key": "editor",
+    "expected_value": "code",
+    "expected_target_type": "preference",
+    "expected_status": "ACTIVE",
+    "expected_confirmed": true
+  },
+  {
+    "id": "teach_022",
+    "category": "explicit_teaching",
+    "query": "my default editor is code",
+    "expected_namespace": "PREFERENCE",
+    "expected_key": "editor",
+    "expected_value": "code",
+    "expected_target_type": "preference",
+    "expected_status": "ACTIVE",
+    "expected_confirmed": true
+  },
+  {
+    "id": "teach_023",
+    "category": "explicit_teaching",
+    "query": "my default editor is calc",
+    "expected_namespace": "PREFERENCE",
+    "expected_key": "editor",
+    "expected_value": "calc",
+    "expected_target_type": "preference",
+    "expected_status": "ACTIVE",
+    "expected_confirmed": true
+  },
+  {
+    "id": "teach_024",
+    "category": "explicit_teaching",
+    "query": "my default editor is calc",
+    "expected_namespace": "PREFERENCE",
+    "expected_key": "editor",
+    "expected_value": "calc",
+    "expected_target_type": "preference",
+    "expected_status": "ACTIVE",
+    "expected_confirmed": true
+  },
+  {
+    "id": "teach_025",
+    "category": "explicit_teaching",
+    "query": "my default editor is notepad",
+    "expected_namespace": "PREFERENCE",
+    "expected_key": "editor",
+    "expected_value": "notepad",
+    "expected_target_type": "preference",
+    "expected_status": "ACTIVE",
+    "expected_confirmed": true
+  },
+  {
+    "id": "teach_026",
+    "category": "explicit_teaching",
+    "query": "my default editor is notepad",
+    "expected_namespace": "PREFERENCE",
+    "expected_key": "editor",
+    "expected_value": "notepad",
+    "expected_target_type": "preference",
+    "expected_status": "ACTIVE",
+    "expected_confirmed": true
+  },
+  {
+    "id": "teach_027",
+    "category": "explicit_teaching",
+    "query": "my default editor is pwsh",
+    "expected_namespace": "PREFERENCE",
+    "expected_key": "editor",
+    "expected_value": "pwsh",
+    "expected_target_type": "preference",
+    "expected_status": "ACTIVE",
+    "expected_confirmed": true
+  },
+  {
+    "id": "teach_028",
+    "category": "explicit_teaching",
+    "query": "my default editor is wt",
+    "expected_namespace": "PREFERENCE",
+    "expected_key": "editor",
+    "expected_value": "wt",
+    "expected_target_type": "preference",
+    "expected_status": "ACTIVE",
+    "expected_confirmed": true
+  },
+  {
+    "id": "teach_029",
+    "category": "explicit_teaching",
+    "query": "my default editor is vivaldi",
+    "expected_namespace": "PREFERENCE",
+    "expected_key": "editor",
+    "expected_value": "vivaldi",
+    "expected_target_type": "preference",
+    "expected_status": "ACTIVE",
+    "expected_confirmed": true
+  },
+  {
+    "id": "teach_030",
+    "category": "explicit_teaching",
+    "query": "my default editor is vivaldi",
+    "expected_namespace": "PREFERENCE",
+    "expected_key": "editor",
+    "expected_value": "vivaldi",
+    "expected_target_type": "preference",
+    "expected_status": "ACTIVE",
+    "expected_confirmed": true
+  },
+  {
+    "id": "teach_031",
+    "category": "explicit_teaching",
+    "query": "always use code for code",
+    "expected_namespace": "ALIAS",
+    "expected_key": "code",
+    "expected_value": "code",
+    "expected_target_type": "application",
+    "expected_status": "ACTIVE",
+    "expected_confirmed": true
+  },
+  {
+    "id": "teach_032",
+    "category": "explicit_teaching",
+    "query": "always use code for vsc",
+    "expected_namespace": "ALIAS",
+    "expected_key": "vsc",
+    "expected_value": "code",
+    "expected_target_type": "application",
+    "expected_status": "ACTIVE",
+    "expected_confirmed": true
+  },
+  {
+    "id": "teach_033",
+    "category": "explicit_teaching",
+    "query": "always use calc for calc",
+    "expected_namespace": "ALIAS",
+    "expected_key": "calc",
+    "expected_value": "calc",
+    "expected_target_type": "application",
+    "expected_status": "ACTIVE",
+    "expected_confirmed": true
+  },
+  {
+    "id": "teach_034",
+    "category": "explicit_teaching",
+    "query": "always use calc for math",
+    "expected_namespace": "ALIAS",
+    "expected_key": "math",
+    "expected_value": "calc",
+    "expected_target_type": "application",
+    "expected_status": "ACTIVE",
+    "expected_confirmed": true
+  },
+  {
+    "id": "teach_035",
+    "category": "explicit_teaching",
+    "query": "always use notepad for writer",
+    "expected_namespace": "ALIAS",
+    "expected_key": "writer",
+    "expected_value": "notepad",
+    "expected_target_type": "application",
+    "expected_status": "ACTIVE",
+    "expected_confirmed": true
+  },
+  {
+    "id": "teach_036",
+    "category": "explicit_teaching",
+    "query": "always use notepad for text",
+    "expected_namespace": "ALIAS",
+    "expected_key": "text",
+    "expected_value": "notepad",
+    "expected_target_type": "application",
+    "expected_status": "ACTIVE",
+    "expected_confirmed": true
+  },
+  {
+    "id": "teach_037",
+    "category": "explicit_teaching",
+    "query": "always use pwsh for shell",
+    "expected_namespace": "ALIAS",
+    "expected_key": "shell",
+    "expected_value": "pwsh",
+    "expected_target_type": "application",
+    "expected_status": "ACTIVE",
+    "expected_confirmed": true
+  },
+  {
+    "id": "teach_038",
+    "category": "explicit_teaching",
+    "query": "always use wt for terminal",
+    "expected_namespace": "ALIAS",
+    "expected_key": "terminal",
+    "expected_value": "wt",
+    "expected_target_type": "application",
+    "expected_status": "ACTIVE",
+    "expected_confirmed": true
+  },
+  {
+    "id": "teach_039",
+    "category": "explicit_teaching",
+    "query": "always use vivaldi for nav",
+    "expected_namespace": "ALIAS",
+    "expected_key": "nav",
+    "expected_value": "vivaldi",
+    "expected_target_type": "application",
+    "expected_status": "ACTIVE",
+    "expected_confirmed": true
+  },
+  {
+    "id": "teach_040",
+    "category": "explicit_teaching",
+    "query": "always use vivaldi for browser",
+    "expected_namespace": "ALIAS",
+    "expected_key": "browser",
+    "expected_value": "vivaldi",
+    "expected_target_type": "application",
+    "expected_status": "ACTIVE",
+    "expected_confirmed": true
+  },
+  {
+    "id": "teach_041",
+    "category": "explicit_teaching",
+    "query": "my browser is code",
+    "expected_namespace": "PREFERENCE",
+    "expected_key": "browser",
+    "expected_value": "code",
+    "expected_target_type": "preference",
+    "expected_status": "ACTIVE",
+    "expected_confirmed": true
+  },
+  {
+    "id": "teach_042",
+    "category": "explicit_teaching",
+    "query": "my browser is code",
+    "expected_namespace": "PREFERENCE",
+    "expected_key": "browser",
+    "expected_value": "code",
+    "expected_target_type": "preference",
+    "expected_status": "ACTIVE",
+    "expected_confirmed": true
+  },
+  {
+    "id": "teach_043",
+    "category": "explicit_teaching",
+    "query": "my browser is calc",
+    "expected_namespace": "PREFERENCE",
+    "expected_key": "browser",
+    "expected_value": "calc",
+    "expected_target_type": "preference",
+    "expected_status": "ACTIVE",
+    "expected_confirmed": true
+  },
+  {
+    "id": "teach_044",
+    "category": "explicit_teaching",
+    "query": "my browser is calc",
+    "expected_namespace": "PREFERENCE",
+    "expected_key": "browser",
+    "expected_value": "calc",
+    "expected_target_type": "preference",
+    "expected_status": "ACTIVE",
+    "expected_confirmed": true
+  },
+  {
+    "id": "teach_045",
+    "category": "explicit_teaching",
+    "query": "my browser is notepad",
+    "expected_namespace": "PREFERENCE",
+    "expected_key": "browser",
+    "expected_value": "notepad",
+    "expected_target_type": "preference",
+    "expected_status": "ACTIVE",
+    "expected_confirmed": true
+  },
+  {
+    "id": "teach_046",
+    "category": "explicit_teaching",
+    "query": "my browser is notepad",
+    "expected_namespace": "PREFERENCE",
+    "expected_key": "browser",
+    "expected_value": "notepad",
+    "expected_target_type": "preference",
+    "expected_status": "ACTIVE",
+    "expected_confirmed": true
+  },
+  {
+    "id": "teach_047",
+    "category": "explicit_teaching",
+    "query": "my browser is pwsh",
+    "expected_namespace": "PREFERENCE",
+    "expected_key": "browser",
+    "expected_value": "pwsh",
+    "expected_target_type": "preference",
+    "expected_status": "ACTIVE",
+    "expected_confirmed": true
+  },
+  {
+    "id": "teach_048",
+    "category": "explicit_teaching",
+    "query": "my browser is wt",
+    "expected_namespace": "PREFERENCE",
+    "expected_key": "browser",
+    "expected_value": "wt",
+    "expected_target_type": "preference",
+    "expected_status": "ACTIVE",
+    "expected_confirmed": true
+  },
+  {
+    "id": "teach_049",
+    "category": "explicit_teaching",
+    "query": "my browser is vivaldi",
+    "expected_namespace": "PREFERENCE",
+    "expected_key": "browser",
+    "expected_value": "vivaldi",
+    "expected_target_type": "preference",
+    "expected_status": "ACTIVE",
+    "expected_confirmed": true
+  },
+  {
+    "id": "teach_050",
+    "category": "explicit_teaching",
+    "query": "my browser is vivaldi",
+    "expected_namespace": "PREFERENCE",
+    "expected_key": "browser",
+    "expected_value": "vivaldi",
+    "expected_target_type": "preference",
+    "expected_status": "ACTIVE",
+    "expected_confirmed": true
+  },
+  {
+    "id": "prec_001",
+    "category": "alias_precedence",
+    "alias_key": "calculator_case_1",
+    "static_mapping": "calc",
+    "learned_candidate": "sublime_text",
+    "candidate_confirmed": false,
+    "candidate_confidence": 0.9,
+    "expected_resolved": "calc",
+    "expected_source": "static_config"
+  },
+  {
+    "id": "prec_002",
+    "category": "alias_precedence",
+    "alias_key": "calculator_case_2",
+    "static_mapping": "calc",
+    "learned_candidate": "notepad_plus_plus",
+    "candidate_confirmed": true,
+    "candidate_confidence": 0.95,
+    "expected_resolved": "calc",
+    "expected_source": "static_config"
+  },
+  {
+    "id": "prec_003",
+    "category": "alias_precedence",
+    "alias_key": "editor_case_3",
+    "static_mapping": "notepad",
+    "learned_candidate": "sublime_text",
+    "candidate_confirmed": false,
+    "candidate_confidence": 0.9,
+    "expected_resolved": "notepad",
+    "expected_source": "static_config"
+  },
+  {
+    "id": "prec_004",
+    "category": "alias_precedence",
+    "alias_key": "editor_case_4",
+    "static_mapping": "notepad",
+    "learned_candidate": "notepad_plus_plus",
+    "candidate_confirmed": true,
+    "candidate_confidence": 0.95,
+    "expected_resolved": "notepad",
+    "expected_source": "static_config"
+  },
+  {
+    "id": "prec_005",
+    "category": "alias_precedence",
+    "alias_key": "notes_case_5",
+    "static_mapping": "notepad",
+    "learned_candidate": "sublime_text",
+    "candidate_confirmed": false,
+    "candidate_confidence": 0.9,
+    "expected_resolved": "notepad",
+    "expected_source": "static_config"
+  },
+  {
+    "id": "prec_006",
+    "category": "alias_precedence",
+    "alias_key": "notes_case_6",
+    "static_mapping": "notepad",
+    "learned_candidate": "notepad_plus_plus",
+    "candidate_confirmed": true,
+    "candidate_confidence": 0.95,
+    "expected_resolved": "notepad",
+    "expected_source": "static_config"
+  },
+  {
+    "id": "prec_007",
+    "category": "alias_precedence",
+    "alias_key": "vscode_case_7",
+    "static_mapping": "code",
+    "learned_candidate": "sublime_text",
+    "candidate_confirmed": false,
+    "candidate_confidence": 0.9,
+    "expected_resolved": "code",
+    "expected_source": "static_config"
+  },
+  {
+    "id": "prec_008",
+    "category": "alias_precedence",
+    "alias_key": "vscode_case_8",
+    "static_mapping": "code",
+    "learned_candidate": "notepad_plus_plus",
+    "candidate_confirmed": true,
+    "candidate_confidence": 0.95,
+    "expected_resolved": "code",
+    "expected_source": "static_config"
+  },
+  {
+    "id": "prec_009",
+    "category": "alias_precedence",
+    "alias_key": "browser_case_9",
+    "static_mapping": "vivaldi",
+    "learned_candidate": "sublime_text",
+    "candidate_confirmed": false,
+    "candidate_confidence": 0.9,
+    "expected_resolved": "vivaldi",
+    "expected_source": "static_config"
+  },
+  {
+    "id": "prec_010",
+    "category": "alias_precedence",
+    "alias_key": "browser_case_10",
+    "static_mapping": "vivaldi",
+    "learned_candidate": "notepad_plus_plus",
+    "candidate_confirmed": true,
+    "candidate_confidence": 0.95,
+    "expected_resolved": "vivaldi",
+    "expected_source": "static_config"
+  },
+  {
+    "id": "prec_011",
+    "category": "alias_precedence",
+    "alias_key": "terminal_case_11",
+    "static_mapping": "wt",
+    "learned_candidate": "sublime_text",
+    "candidate_confirmed": false,
+    "candidate_confidence": 0.9,
+    "expected_resolved": "wt",
+    "expected_source": "static_config"
+  },
+  {
+    "id": "prec_012",
+    "category": "alias_precedence",
+    "alias_key": "terminal_case_12",
+    "static_mapping": "wt",
+    "learned_candidate": "notepad_plus_plus",
+    "candidate_confirmed": true,
+    "candidate_confidence": 0.95,
+    "expected_resolved": "wt",
+    "expected_source": "static_config"
+  },
+  {
+    "id": "prec_013",
+    "category": "alias_precedence",
+    "alias_key": "powershell_case_13",
+    "static_mapping": "pwsh",
+    "learned_candidate": "sublime_text",
+    "candidate_confirmed": false,
+    "candidate_confidence": 0.9,
+    "expected_resolved": "pwsh",
+    "expected_source": "static_config"
+  },
+  {
+    "id": "prec_014",
+    "category": "alias_precedence",
+    "alias_key": "powershell_case_14",
+    "static_mapping": "pwsh",
+    "learned_candidate": "notepad_plus_plus",
+    "candidate_confirmed": true,
+    "candidate_confidence": 0.95,
+    "expected_resolved": "pwsh",
+    "expected_source": "static_config"
+  },
+  {
+    "id": "prec_015",
+    "category": "alias_precedence",
+    "alias_key": "explorer_case_15",
+    "static_mapping": "explorer",
+    "learned_candidate": "sublime_text",
+    "candidate_confirmed": false,
+    "candidate_confidence": 0.9,
+    "expected_resolved": "explorer",
+    "expected_source": "static_config"
+  },
+  {
+    "id": "prec_016",
+    "category": "alias_precedence",
+    "alias_key": "explorer_case_16",
+    "static_mapping": "explorer",
+    "learned_candidate": "notepad_plus_plus",
+    "candidate_confirmed": true,
+    "candidate_confidence": 0.95,
+    "expected_resolved": "explorer",
+    "expected_source": "static_config"
+  },
+  {
+    "id": "prec_017",
+    "category": "alias_precedence",
+    "alias_key": "cmd_case_17",
+    "static_mapping": "cmd",
+    "learned_candidate": "sublime_text",
+    "candidate_confirmed": false,
+    "candidate_confidence": 0.9,
+    "expected_resolved": "cmd",
+    "expected_source": "static_config"
+  },
+  {
+    "id": "prec_018",
+    "category": "alias_precedence",
+    "alias_key": "cmd_case_18",
+    "static_mapping": "cmd",
+    "learned_candidate": "notepad_plus_plus",
+    "candidate_confirmed": true,
+    "candidate_confidence": 0.95,
+    "expected_resolved": "cmd",
+    "expected_source": "static_config"
+  },
+  {
+    "id": "prec_019",
+    "category": "alias_precedence",
+    "alias_key": "prompt_case_19",
+    "static_mapping": "cmd",
+    "learned_candidate": "sublime_text",
+    "candidate_confirmed": false,
+    "candidate_confidence": 0.9,
+    "expected_resolved": "cmd",
+    "expected_source": "static_config"
+  },
+  {
+    "id": "prec_020",
+    "category": "alias_precedence",
+    "alias_key": "prompt_case_20",
+    "static_mapping": "cmd",
+    "learned_candidate": "notepad_plus_plus",
+    "candidate_confirmed": true,
+    "candidate_confidence": 0.95,
+    "expected_resolved": "cmd",
+    "expected_source": "static_config"
+  },
+  {
+    "id": "prec_021",
+    "category": "alias_precedence",
+    "alias_key": "mycalc_case_21",
+    "static_mapping": null,
+    "learned_candidate": "calc",
+    "candidate_confirmed": true,
+    "candidate_confidence": 0.8,
+    "expected_resolved": "calc",
+    "expected_source": "user_confirmed_alias"
+  },
+  {
+    "id": "prec_022",
+    "category": "alias_precedence",
+    "alias_key": "mycalc_case_22",
+    "static_mapping": null,
+    "learned_candidate": "calc",
+    "candidate_confirmed": false,
+    "candidate_confidence": 0.88,
+    "expected_resolved": "calc",
+    "expected_source": "learned_alias"
+  },
+  {
+    "id": "prec_023",
+    "category": "alias_precedence",
+    "alias_key": "ide_case_23",
+    "static_mapping": null,
+    "learned_candidate": "code",
+    "candidate_confirmed": true,
+    "candidate_confidence": 0.8,
+    "expected_resolved": "code",
+    "expected_source": "user_confirmed_alias"
+  },
+  {
+    "id": "prec_024",
+    "category": "alias_precedence",
+    "alias_key": "ide_case_24",
+    "static_mapping": null,
+    "learned_candidate": "code",
+    "candidate_confirmed": false,
+    "candidate_confidence": 0.88,
+    "expected_resolved": "code",
+    "expected_source": "learned_alias"
+  },
+  {
+    "id": "prec_025",
+    "category": "alias_precedence",
+    "alias_key": "term_case_25",
+    "static_mapping": null,
+    "learned_candidate": "wt",
+    "candidate_confirmed": true,
+    "candidate_confidence": 0.8,
+    "expected_resolved": "wt",
+    "expected_source": "user_confirmed_alias"
+  },
+  {
+    "id": "prec_026",
+    "category": "alias_precedence",
+    "alias_key": "term_case_26",
+    "static_mapping": null,
+    "learned_candidate": "wt",
+    "candidate_confirmed": false,
+    "candidate_confidence": 0.88,
+    "expected_resolved": "wt",
+    "expected_source": "learned_alias"
+  },
+  {
+    "id": "prec_027",
+    "category": "alias_precedence",
+    "alias_key": "surf_case_27",
+    "static_mapping": null,
+    "learned_candidate": "vivaldi",
+    "candidate_confirmed": true,
+    "candidate_confidence": 0.8,
+    "expected_resolved": "vivaldi",
+    "expected_source": "user_confirmed_alias"
+  },
+  {
+    "id": "prec_028",
+    "category": "alias_precedence",
+    "alias_key": "surf_case_28",
+    "static_mapping": null,
+    "learned_candidate": "vivaldi",
+    "candidate_confirmed": false,
+    "candidate_confidence": 0.88,
+    "expected_resolved": "vivaldi",
+    "expected_source": "learned_alias"
+  },
+  {
+    "id": "prec_029",
+    "category": "alias_precedence",
+    "alias_key": "jot_case_29",
+    "static_mapping": null,
+    "learned_candidate": "notepad",
+    "candidate_confirmed": true,
+    "candidate_confidence": 0.8,
+    "expected_resolved": "notepad",
+    "expected_source": "user_confirmed_alias"
+  },
+  {
+    "id": "prec_030",
+    "category": "alias_precedence",
+    "alias_key": "jot_case_30",
+    "static_mapping": null,
+    "learned_candidate": "notepad",
+    "candidate_confirmed": false,
+    "candidate_confidence": 0.88,
+    "expected_resolved": "notepad",
+    "expected_source": "learned_alias"
+  },
+  {
+    "id": "prec_031",
+    "category": "alias_precedence",
+    "alias_key": "music_case_31",
+    "static_mapping": null,
+    "learned_candidate": "spotify",
+    "candidate_confirmed": true,
+    "candidate_confidence": 0.8,
+    "expected_resolved": "spotify",
+    "expected_source": "user_confirmed_alias"
+  },
+  {
+    "id": "prec_032",
+    "category": "alias_precedence",
+    "alias_key": "music_case_32",
+    "static_mapping": null,
+    "learned_candidate": "spotify",
+    "candidate_confirmed": false,
+    "candidate_confidence": 0.88,
+    "expected_resolved": "spotify",
+    "expected_source": "learned_alias"
+  },
+  {
+    "id": "prec_033",
+    "category": "alias_precedence",
+    "alias_key": "draw_case_33",
+    "static_mapping": null,
+    "learned_candidate": "mspaint",
+    "candidate_confirmed": true,
+    "candidate_confidence": 0.8,
+    "expected_resolved": "mspaint",
+    "expected_source": "user_confirmed_alias"
+  },
+  {
+    "id": "prec_034",
+    "category": "alias_precedence",
+    "alias_key": "draw_case_34",
+    "static_mapping": null,
+    "learned_candidate": "mspaint",
+    "candidate_confirmed": false,
+    "candidate_confidence": 0.88,
+    "expected_resolved": "mspaint",
+    "expected_source": "learned_alias"
+  },
+  {
+    "id": "prec_035",
+    "category": "alias_precedence",
+    "alias_key": "pdf_case_35",
+    "static_mapping": null,
+    "learned_candidate": "pdfcraft",
+    "candidate_confirmed": true,
+    "candidate_confidence": 0.8,
+    "expected_resolved": "pdfcraft",
+    "expected_source": "user_confirmed_alias"
+  },
+  {
+    "id": "prec_036",
+    "category": "alias_precedence",
+    "alias_key": "pdf_case_36",
+    "static_mapping": null,
+    "learned_candidate": "pdfcraft",
+    "candidate_confirmed": false,
+    "candidate_confidence": 0.88,
+    "expected_resolved": "pdfcraft",
+    "expected_source": "learned_alias"
+  },
+  {
+    "id": "prec_037",
+    "category": "alias_precedence",
+    "alias_key": "diff_case_37",
+    "static_mapping": null,
+    "learned_candidate": "git",
+    "candidate_confirmed": true,
+    "candidate_confidence": 0.8,
+    "expected_resolved": "git",
+    "expected_source": "user_confirmed_alias"
+  },
+  {
+    "id": "prec_038",
+    "category": "alias_precedence",
+    "alias_key": "diff_case_38",
+    "static_mapping": null,
+    "learned_candidate": "git",
+    "candidate_confirmed": false,
+    "candidate_confidence": 0.88,
+    "expected_resolved": "git",
+    "expected_source": "learned_alias"
+  },
+  {
+    "id": "prec_039",
+    "category": "alias_precedence",
+    "alias_key": "container_case_39",
+    "static_mapping": null,
+    "learned_candidate": "docker",
+    "candidate_confirmed": true,
+    "candidate_confidence": 0.8,
+    "expected_resolved": "docker",
+    "expected_source": "user_confirmed_alias"
+  },
+  {
+    "id": "prec_040",
+    "category": "alias_precedence",
+    "alias_key": "container_case_40",
+    "static_mapping": null,
+    "learned_candidate": "docker",
+    "candidate_confirmed": false,
+    "candidate_confidence": 0.88,
+    "expected_resolved": "docker",
+    "expected_source": "learned_alias"
+  },
+  {
+    "id": "prec_041",
+    "category": "alias_precedence",
+    "alias_key": "unconfirmed_alias_41",
+    "static_mapping": null,
+    "learned_candidate": "notepad",
+    "candidate_confirmed": false,
+    "candidate_confidence": 0.65,
+    "expected_resolved": null,
+    "expected_source": null
+  },
+  {
+    "id": "prec_042",
+    "category": "alias_precedence",
+    "alias_key": "unconfirmed_alias_42",
+    "static_mapping": null,
+    "learned_candidate": "notepad",
+    "candidate_confirmed": false,
+    "candidate_confidence": 0.65,
+    "expected_resolved": null,
+    "expected_source": null
+  },
+  {
+    "id": "prec_043",
+    "category": "alias_precedence",
+    "alias_key": "unconfirmed_alias_43",
+    "static_mapping": null,
+    "learned_candidate": "notepad",
+    "candidate_confirmed": false,
+    "candidate_confidence": 0.65,
+    "expected_resolved": null,
+    "expected_source": null
+  },
+  {
+    "id": "prec_044",
+    "category": "alias_precedence",
+    "alias_key": "unconfirmed_alias_44",
+    "static_mapping": null,
+    "learned_candidate": "notepad",
+    "candidate_confirmed": false,
+    "candidate_confidence": 0.65,
+    "expected_resolved": null,
+    "expected_source": null
+  },
+  {
+    "id": "prec_045",
+    "category": "alias_precedence",
+    "alias_key": "unconfirmed_alias_45",
+    "static_mapping": null,
+    "learned_candidate": "notepad",
+    "candidate_confirmed": false,
+    "candidate_confidence": 0.65,
+    "expected_resolved": null,
+    "expected_source": null
+  },
+  {
+    "id": "prec_046",
+    "category": "alias_precedence",
+    "alias_key": "unconfirmed_alias_46",
+    "static_mapping": null,
+    "learned_candidate": "notepad",
+    "candidate_confirmed": false,
+    "candidate_confidence": 0.65,
+    "expected_resolved": null,
+    "expected_source": null
+  },
+  {
+    "id": "prec_047",
+    "category": "alias_precedence",
+    "alias_key": "unconfirmed_alias_47",
+    "static_mapping": null,
+    "learned_candidate": "notepad",
+    "candidate_confirmed": false,
+    "candidate_confidence": 0.65,
+    "expected_resolved": null,
+    "expected_source": null
+  },
+  {
+    "id": "prec_048",
+    "category": "alias_precedence",
+    "alias_key": "unconfirmed_alias_48",
+    "static_mapping": null,
+    "learned_candidate": "notepad",
+    "candidate_confirmed": false,
+    "candidate_confidence": 0.65,
+    "expected_resolved": null,
+    "expected_source": null
+  },
+  {
+    "id": "prec_049",
+    "category": "alias_precedence",
+    "alias_key": "unconfirmed_alias_49",
+    "static_mapping": null,
+    "learned_candidate": "notepad",
+    "candidate_confirmed": false,
+    "candidate_confidence": 0.65,
+    "expected_resolved": null,
+    "expected_source": null
+  },
+  {
+    "id": "prec_050",
+    "category": "alias_precedence",
+    "alias_key": "unconfirmed_alias_50",
+    "static_mapping": null,
+    "learned_candidate": "notepad",
+    "candidate_confirmed": false,
+    "candidate_confidence": 0.65,
+    "expected_resolved": null,
+    "expected_source": null
+  },
+  {
+    "id": "prec_051",
+    "category": "alias_precedence",
+    "alias_key": "unconfirmed_alias_51",
+    "static_mapping": null,
+    "learned_candidate": "notepad",
+    "candidate_confirmed": false,
+    "candidate_confidence": 0.65,
+    "expected_resolved": null,
+    "expected_source": null
+  },
+  {
+    "id": "prec_052",
+    "category": "alias_precedence",
+    "alias_key": "unconfirmed_alias_52",
+    "static_mapping": null,
+    "learned_candidate": "notepad",
+    "candidate_confirmed": false,
+    "candidate_confidence": 0.65,
+    "expected_resolved": null,
+    "expected_source": null
+  },
+  {
+    "id": "prec_053",
+    "category": "alias_precedence",
+    "alias_key": "unconfirmed_alias_53",
+    "static_mapping": null,
+    "learned_candidate": "notepad",
+    "candidate_confirmed": false,
+    "candidate_confidence": 0.65,
+    "expected_resolved": null,
+    "expected_source": null
+  },
+  {
+    "id": "prec_054",
+    "category": "alias_precedence",
+    "alias_key": "unconfirmed_alias_54",
+    "static_mapping": null,
+    "learned_candidate": "notepad",
+    "candidate_confirmed": false,
+    "candidate_confidence": 0.65,
+    "expected_resolved": null,
+    "expected_source": null
+  },
+  {
+    "id": "prec_055",
+    "category": "alias_precedence",
+    "alias_key": "unconfirmed_alias_55",
+    "static_mapping": null,
+    "learned_candidate": "notepad",
+    "candidate_confirmed": false,
+    "candidate_confidence": 0.65,
+    "expected_resolved": null,
+    "expected_source": null
+  },
+  {
+    "id": "prec_056",
+    "category": "alias_precedence",
+    "alias_key": "unconfirmed_alias_56",
+    "static_mapping": null,
+    "learned_candidate": "notepad",
+    "candidate_confirmed": false,
+    "candidate_confidence": 0.65,
+    "expected_resolved": null,
+    "expected_source": null
+  },
+  {
+    "id": "prec_057",
+    "category": "alias_precedence",
+    "alias_key": "unconfirmed_alias_57",
+    "static_mapping": null,
+    "learned_candidate": "notepad",
+    "candidate_confirmed": false,
+    "candidate_confidence": 0.65,
+    "expected_resolved": null,
+    "expected_source": null
+  },
+  {
+    "id": "prec_058",
+    "category": "alias_precedence",
+    "alias_key": "unconfirmed_alias_58",
+    "static_mapping": null,
+    "learned_candidate": "notepad",
+    "candidate_confirmed": false,
+    "candidate_confidence": 0.65,
+    "expected_resolved": null,
+    "expected_source": null
+  },
+  {
+    "id": "prec_059",
+    "category": "alias_precedence",
+    "alias_key": "unconfirmed_alias_59",
+    "static_mapping": null,
+    "learned_candidate": "notepad",
+    "candidate_confirmed": false,
+    "candidate_confidence": 0.65,
+    "expected_resolved": null,
+    "expected_source": null
+  },
+  {
+    "id": "prec_060",
+    "category": "alias_precedence",
+    "alias_key": "unconfirmed_alias_60",
+    "static_mapping": null,
+    "learned_candidate": "notepad",
+    "candidate_confirmed": false,
+    "candidate_confidence": 0.65,
+    "expected_resolved": null,
+    "expected_source": null
+  },
+  {
+    "id": "corr_001",
+    "category": "user_corrections",
+    "key": "tool_0",
+    "initial_incorrect": "notepad",
+    "correction_query": "no, I meant code",
+    "expected_penalized_target": "notepad",
+    "expected_promoted_target": "code",
+    "expected_new_status": "ACTIVE"
+  },
+  {
+    "id": "corr_002",
+    "category": "user_corrections",
+    "key": "tool_1",
+    "initial_incorrect": "notepad",
+    "correction_query": "no, I meant calc",
+    "expected_penalized_target": "notepad",
+    "expected_promoted_target": "calc",
+    "expected_new_status": "ACTIVE"
+  },
+  {
+    "id": "corr_003",
+    "category": "user_corrections",
+    "key": "tool_2",
+    "initial_incorrect": "notepad",
+    "correction_query": "no, I meant code",
+    "expected_penalized_target": "notepad",
+    "expected_promoted_target": "code",
+    "expected_new_status": "ACTIVE"
+  },
+  {
+    "id": "corr_004",
+    "category": "user_corrections",
+    "key": "tool_3",
+    "initial_incorrect": "notepad",
+    "correction_query": "no, I meant calc",
+    "expected_penalized_target": "notepad",
+    "expected_promoted_target": "calc",
+    "expected_new_status": "ACTIVE"
+  },
+  {
+    "id": "corr_005",
+    "category": "user_corrections",
+    "key": "tool_4",
+    "initial_incorrect": "notepad",
+    "correction_query": "no, I meant code",
+    "expected_penalized_target": "notepad",
+    "expected_promoted_target": "code",
+    "expected_new_status": "ACTIVE"
+  },
+  {
+    "id": "corr_006",
+    "category": "user_corrections",
+    "key": "tool_5",
+    "initial_incorrect": "notepad",
+    "correction_query": "no, I meant calc",
+    "expected_penalized_target": "notepad",
+    "expected_promoted_target": "calc",
+    "expected_new_status": "ACTIVE"
+  },
+  {
+    "id": "corr_007",
+    "category": "user_corrections",
+    "key": "tool_6",
+    "initial_incorrect": "notepad",
+    "correction_query": "no, I meant code",
+    "expected_penalized_target": "notepad",
+    "expected_promoted_target": "code",
+    "expected_new_status": "ACTIVE"
+  },
+  {
+    "id": "corr_008",
+    "category": "user_corrections",
+    "key": "tool_7",
+    "initial_incorrect": "notepad",
+    "correction_query": "no, I meant calc",
+    "expected_penalized_target": "notepad",
+    "expected_promoted_target": "calc",
+    "expected_new_status": "ACTIVE"
+  },
+  {
+    "id": "corr_009",
+    "category": "user_corrections",
+    "key": "tool_8",
+    "initial_incorrect": "notepad",
+    "correction_query": "no, I meant code",
+    "expected_penalized_target": "notepad",
+    "expected_promoted_target": "code",
+    "expected_new_status": "ACTIVE"
+  },
+  {
+    "id": "corr_010",
+    "category": "user_corrections",
+    "key": "tool_9",
+    "initial_incorrect": "notepad",
+    "correction_query": "no, I meant calc",
+    "expected_penalized_target": "notepad",
+    "expected_promoted_target": "calc",
+    "expected_new_status": "ACTIVE"
+  },
+  {
+    "id": "corr_011",
+    "category": "user_corrections",
+    "key": "tool_10",
+    "initial_incorrect": "notepad",
+    "correction_query": "no, I meant code",
+    "expected_penalized_target": "notepad",
+    "expected_promoted_target": "code",
+    "expected_new_status": "ACTIVE"
+  },
+  {
+    "id": "corr_012",
+    "category": "user_corrections",
+    "key": "tool_11",
+    "initial_incorrect": "notepad",
+    "correction_query": "no, I meant calc",
+    "expected_penalized_target": "notepad",
+    "expected_promoted_target": "calc",
+    "expected_new_status": "ACTIVE"
+  },
+  {
+    "id": "corr_013",
+    "category": "user_corrections",
+    "key": "tool_12",
+    "initial_incorrect": "notepad",
+    "correction_query": "no, I meant code",
+    "expected_penalized_target": "notepad",
+    "expected_promoted_target": "code",
+    "expected_new_status": "ACTIVE"
+  },
+  {
+    "id": "corr_014",
+    "category": "user_corrections",
+    "key": "tool_13",
+    "initial_incorrect": "notepad",
+    "correction_query": "no, I meant calc",
+    "expected_penalized_target": "notepad",
+    "expected_promoted_target": "calc",
+    "expected_new_status": "ACTIVE"
+  },
+  {
+    "id": "corr_015",
+    "category": "user_corrections",
+    "key": "tool_14",
+    "initial_incorrect": "notepad",
+    "correction_query": "no, I meant code",
+    "expected_penalized_target": "notepad",
+    "expected_promoted_target": "code",
+    "expected_new_status": "ACTIVE"
+  },
+  {
+    "id": "corr_016",
+    "category": "user_corrections",
+    "key": "tool_15",
+    "initial_incorrect": "notepad",
+    "correction_query": "no, I meant calc",
+    "expected_penalized_target": "notepad",
+    "expected_promoted_target": "calc",
+    "expected_new_status": "ACTIVE"
+  },
+  {
+    "id": "corr_017",
+    "category": "user_corrections",
+    "key": "tool_16",
+    "initial_incorrect": "notepad",
+    "correction_query": "no, I meant code",
+    "expected_penalized_target": "notepad",
+    "expected_promoted_target": "code",
+    "expected_new_status": "ACTIVE"
+  },
+  {
+    "id": "corr_018",
+    "category": "user_corrections",
+    "key": "tool_17",
+    "initial_incorrect": "notepad",
+    "correction_query": "no, I meant calc",
+    "expected_penalized_target": "notepad",
+    "expected_promoted_target": "calc",
+    "expected_new_status": "ACTIVE"
+  },
+  {
+    "id": "corr_019",
+    "category": "user_corrections",
+    "key": "tool_18",
+    "initial_incorrect": "notepad",
+    "correction_query": "no, I meant code",
+    "expected_penalized_target": "notepad",
+    "expected_promoted_target": "code",
+    "expected_new_status": "ACTIVE"
+  },
+  {
+    "id": "corr_020",
+    "category": "user_corrections",
+    "key": "tool_19",
+    "initial_incorrect": "notepad",
+    "correction_query": "no, I meant calc",
+    "expected_penalized_target": "notepad",
+    "expected_promoted_target": "calc",
+    "expected_new_status": "ACTIVE"
+  },
+  {
+    "id": "corr_021",
+    "category": "user_corrections",
+    "key": "tool_20",
+    "initial_incorrect": "notepad",
+    "correction_query": "no, I meant code",
+    "expected_penalized_target": "notepad",
+    "expected_promoted_target": "code",
+    "expected_new_status": "ACTIVE"
+  },
+  {
+    "id": "corr_022",
+    "category": "user_corrections",
+    "key": "tool_21",
+    "initial_incorrect": "notepad",
+    "correction_query": "no, I meant calc",
+    "expected_penalized_target": "notepad",
+    "expected_promoted_target": "calc",
+    "expected_new_status": "ACTIVE"
+  },
+  {
+    "id": "corr_023",
+    "category": "user_corrections",
+    "key": "tool_22",
+    "initial_incorrect": "notepad",
+    "correction_query": "no, I meant code",
+    "expected_penalized_target": "notepad",
+    "expected_promoted_target": "code",
+    "expected_new_status": "ACTIVE"
+  },
+  {
+    "id": "corr_024",
+    "category": "user_corrections",
+    "key": "tool_23",
+    "initial_incorrect": "notepad",
+    "correction_query": "no, I meant calc",
+    "expected_penalized_target": "notepad",
+    "expected_promoted_target": "calc",
+    "expected_new_status": "ACTIVE"
+  },
+  {
+    "id": "corr_025",
+    "category": "user_corrections",
+    "key": "tool_24",
+    "initial_incorrect": "notepad",
+    "correction_query": "no, I meant code",
+    "expected_penalized_target": "notepad",
+    "expected_promoted_target": "code",
+    "expected_new_status": "ACTIVE"
+  },
+  {
+    "id": "corr_026",
+    "category": "user_corrections",
+    "key": "tool_25",
+    "initial_incorrect": "notepad",
+    "correction_query": "no, I meant calc",
+    "expected_penalized_target": "notepad",
+    "expected_promoted_target": "calc",
+    "expected_new_status": "ACTIVE"
+  },
+  {
+    "id": "corr_027",
+    "category": "user_corrections",
+    "key": "tool_26",
+    "initial_incorrect": "notepad",
+    "correction_query": "no, I meant code",
+    "expected_penalized_target": "notepad",
+    "expected_promoted_target": "code",
+    "expected_new_status": "ACTIVE"
+  },
+  {
+    "id": "corr_028",
+    "category": "user_corrections",
+    "key": "tool_27",
+    "initial_incorrect": "notepad",
+    "correction_query": "no, I meant calc",
+    "expected_penalized_target": "notepad",
+    "expected_promoted_target": "calc",
+    "expected_new_status": "ACTIVE"
+  },
+  {
+    "id": "corr_029",
+    "category": "user_corrections",
+    "key": "tool_28",
+    "initial_incorrect": "notepad",
+    "correction_query": "no, I meant code",
+    "expected_penalized_target": "notepad",
+    "expected_promoted_target": "code",
+    "expected_new_status": "ACTIVE"
+  },
+  {
+    "id": "corr_030",
+    "category": "user_corrections",
+    "key": "tool_29",
+    "initial_incorrect": "notepad",
+    "correction_query": "no, I meant calc",
+    "expected_penalized_target": "notepad",
+    "expected_promoted_target": "calc",
+    "expected_new_status": "ACTIVE"
+  },
+  {
+    "id": "corr_031",
+    "category": "user_corrections",
+    "key": "tool_30",
+    "initial_incorrect": "notepad",
+    "correction_query": "no, I meant code",
+    "expected_penalized_target": "notepad",
+    "expected_promoted_target": "code",
+    "expected_new_status": "ACTIVE"
+  },
+  {
+    "id": "corr_032",
+    "category": "user_corrections",
+    "key": "tool_31",
+    "initial_incorrect": "notepad",
+    "correction_query": "no, I meant calc",
+    "expected_penalized_target": "notepad",
+    "expected_promoted_target": "calc",
+    "expected_new_status": "ACTIVE"
+  },
+  {
+    "id": "corr_033",
+    "category": "user_corrections",
+    "key": "tool_32",
+    "initial_incorrect": "notepad",
+    "correction_query": "no, I meant code",
+    "expected_penalized_target": "notepad",
+    "expected_promoted_target": "code",
+    "expected_new_status": "ACTIVE"
+  },
+  {
+    "id": "corr_034",
+    "category": "user_corrections",
+    "key": "tool_33",
+    "initial_incorrect": "notepad",
+    "correction_query": "no, I meant calc",
+    "expected_penalized_target": "notepad",
+    "expected_promoted_target": "calc",
+    "expected_new_status": "ACTIVE"
+  },
+  {
+    "id": "corr_035",
+    "category": "user_corrections",
+    "key": "tool_34",
+    "initial_incorrect": "notepad",
+    "correction_query": "no, I meant code",
+    "expected_penalized_target": "notepad",
+    "expected_promoted_target": "code",
+    "expected_new_status": "ACTIVE"
+  },
+  {
+    "id": "corr_036",
+    "category": "user_corrections",
+    "key": "tool_35",
+    "initial_incorrect": "notepad",
+    "correction_query": "no, I meant calc",
+    "expected_penalized_target": "notepad",
+    "expected_promoted_target": "calc",
+    "expected_new_status": "ACTIVE"
+  },
+  {
+    "id": "corr_037",
+    "category": "user_corrections",
+    "key": "tool_36",
+    "initial_incorrect": "notepad",
+    "correction_query": "no, I meant code",
+    "expected_penalized_target": "notepad",
+    "expected_promoted_target": "code",
+    "expected_new_status": "ACTIVE"
+  },
+  {
+    "id": "corr_038",
+    "category": "user_corrections",
+    "key": "tool_37",
+    "initial_incorrect": "notepad",
+    "correction_query": "no, I meant calc",
+    "expected_penalized_target": "notepad",
+    "expected_promoted_target": "calc",
+    "expected_new_status": "ACTIVE"
+  },
+  {
+    "id": "corr_039",
+    "category": "user_corrections",
+    "key": "tool_38",
+    "initial_incorrect": "notepad",
+    "correction_query": "no, I meant code",
+    "expected_penalized_target": "notepad",
+    "expected_promoted_target": "code",
+    "expected_new_status": "ACTIVE"
+  },
+  {
+    "id": "corr_040",
+    "category": "user_corrections",
+    "key": "tool_39",
+    "initial_incorrect": "notepad",
+    "correction_query": "no, I meant calc",
+    "expected_penalized_target": "notepad",
+    "expected_promoted_target": "calc",
+    "expected_new_status": "ACTIVE"
+  },
+  {
+    "id": "corr_041",
+    "category": "user_corrections",
+    "key": "tool_40",
+    "initial_incorrect": "notepad",
+    "correction_query": "no, I meant code",
+    "expected_penalized_target": "notepad",
+    "expected_promoted_target": "code",
+    "expected_new_status": "ACTIVE"
+  },
+  {
+    "id": "corr_042",
+    "category": "user_corrections",
+    "key": "tool_41",
+    "initial_incorrect": "notepad",
+    "correction_query": "no, I meant calc",
+    "expected_penalized_target": "notepad",
+    "expected_promoted_target": "calc",
+    "expected_new_status": "ACTIVE"
+  },
+  {
+    "id": "corr_043",
+    "category": "user_corrections",
+    "key": "tool_42",
+    "initial_incorrect": "notepad",
+    "correction_query": "no, I meant code",
+    "expected_penalized_target": "notepad",
+    "expected_promoted_target": "code",
+    "expected_new_status": "ACTIVE"
+  },
+  {
+    "id": "corr_044",
+    "category": "user_corrections",
+    "key": "tool_43",
+    "initial_incorrect": "notepad",
+    "correction_query": "no, I meant calc",
+    "expected_penalized_target": "notepad",
+    "expected_promoted_target": "calc",
+    "expected_new_status": "ACTIVE"
+  },
+  {
+    "id": "corr_045",
+    "category": "user_corrections",
+    "key": "tool_44",
+    "initial_incorrect": "notepad",
+    "correction_query": "no, I meant code",
+    "expected_penalized_target": "notepad",
+    "expected_promoted_target": "code",
+    "expected_new_status": "ACTIVE"
+  },
+  {
+    "id": "corr_046",
+    "category": "user_corrections",
+    "key": "tool_45",
+    "initial_incorrect": "notepad",
+    "correction_query": "no, I meant calc",
+    "expected_penalized_target": "notepad",
+    "expected_promoted_target": "calc",
+    "expected_new_status": "ACTIVE"
+  },
+  {
+    "id": "corr_047",
+    "category": "user_corrections",
+    "key": "tool_46",
+    "initial_incorrect": "notepad",
+    "correction_query": "no, I meant code",
+    "expected_penalized_target": "notepad",
+    "expected_promoted_target": "code",
+    "expected_new_status": "ACTIVE"
+  },
+  {
+    "id": "corr_048",
+    "category": "user_corrections",
+    "key": "tool_47",
+    "initial_incorrect": "notepad",
+    "correction_query": "no, I meant calc",
+    "expected_penalized_target": "notepad",
+    "expected_promoted_target": "calc",
+    "expected_new_status": "ACTIVE"
+  },
+  {
+    "id": "corr_049",
+    "category": "user_corrections",
+    "key": "tool_48",
+    "initial_incorrect": "notepad",
+    "correction_query": "no, I meant code",
+    "expected_penalized_target": "notepad",
+    "expected_promoted_target": "code",
+    "expected_new_status": "ACTIVE"
+  },
+  {
+    "id": "corr_050",
+    "category": "user_corrections",
+    "key": "tool_49",
+    "initial_incorrect": "notepad",
+    "correction_query": "no, I meant calc",
+    "expected_penalized_target": "notepad",
+    "expected_promoted_target": "calc",
+    "expected_new_status": "ACTIVE"
+  },
+  {
+    "id": "conf_001",
+    "category": "conflicted_aliases",
+    "key": "ambiguous_key_0",
+    "target1": "code",
+    "confidence1": 0.85,
+    "target2": "notepad",
+    "confidence2": 0.7999999999999999,
+    "expected_status": "CONFLICTED",
+    "expected_resolution_blocked": true
+  },
+  {
+    "id": "conf_002",
+    "category": "conflicted_aliases",
+    "key": "ambiguous_key_1",
+    "target1": "code",
+    "confidence1": 0.85,
+    "target2": "notepad",
+    "confidence2": 0.7,
+    "expected_status": "CONFLICTED",
+    "expected_resolution_blocked": true
+  },
+  {
+    "id": "conf_003",
+    "category": "conflicted_aliases",
+    "key": "ambiguous_key_2",
+    "target1": "code",
+    "confidence1": 0.85,
+    "target2": "notepad",
+    "confidence2": 0.7999999999999999,
+    "expected_status": "CONFLICTED",
+    "expected_resolution_blocked": true
+  },
+  {
+    "id": "conf_004",
+    "category": "conflicted_aliases",
+    "key": "ambiguous_key_3",
+    "target1": "code",
+    "confidence1": 0.85,
+    "target2": "notepad",
+    "confidence2": 0.7,
+    "expected_status": "CONFLICTED",
+    "expected_resolution_blocked": true
+  },
+  {
+    "id": "conf_005",
+    "category": "conflicted_aliases",
+    "key": "ambiguous_key_4",
+    "target1": "code",
+    "confidence1": 0.85,
+    "target2": "notepad",
+    "confidence2": 0.7999999999999999,
+    "expected_status": "CONFLICTED",
+    "expected_resolution_blocked": true
+  },
+  {
+    "id": "conf_006",
+    "category": "conflicted_aliases",
+    "key": "ambiguous_key_5",
+    "target1": "code",
+    "confidence1": 0.85,
+    "target2": "notepad",
+    "confidence2": 0.7,
+    "expected_status": "CONFLICTED",
+    "expected_resolution_blocked": true
+  },
+  {
+    "id": "conf_007",
+    "category": "conflicted_aliases",
+    "key": "ambiguous_key_6",
+    "target1": "code",
+    "confidence1": 0.85,
+    "target2": "notepad",
+    "confidence2": 0.7999999999999999,
+    "expected_status": "CONFLICTED",
+    "expected_resolution_blocked": true
+  },
+  {
+    "id": "conf_008",
+    "category": "conflicted_aliases",
+    "key": "ambiguous_key_7",
+    "target1": "code",
+    "confidence1": 0.85,
+    "target2": "notepad",
+    "confidence2": 0.7,
+    "expected_status": "CONFLICTED",
+    "expected_resolution_blocked": true
+  },
+  {
+    "id": "conf_009",
+    "category": "conflicted_aliases",
+    "key": "ambiguous_key_8",
+    "target1": "code",
+    "confidence1": 0.85,
+    "target2": "notepad",
+    "confidence2": 0.7999999999999999,
+    "expected_status": "CONFLICTED",
+    "expected_resolution_blocked": true
+  },
+  {
+    "id": "conf_010",
+    "category": "conflicted_aliases",
+    "key": "ambiguous_key_9",
+    "target1": "code",
+    "confidence1": 0.85,
+    "target2": "notepad",
+    "confidence2": 0.7,
+    "expected_status": "CONFLICTED",
+    "expected_resolution_blocked": true
+  },
+  {
+    "id": "conf_011",
+    "category": "conflicted_aliases",
+    "key": "ambiguous_key_10",
+    "target1": "code",
+    "confidence1": 0.85,
+    "target2": "notepad",
+    "confidence2": 0.7999999999999999,
+    "expected_status": "CONFLICTED",
+    "expected_resolution_blocked": true
+  },
+  {
+    "id": "conf_012",
+    "category": "conflicted_aliases",
+    "key": "ambiguous_key_11",
+    "target1": "code",
+    "confidence1": 0.85,
+    "target2": "notepad",
+    "confidence2": 0.7,
+    "expected_status": "CONFLICTED",
+    "expected_resolution_blocked": true
+  },
+  {
+    "id": "conf_013",
+    "category": "conflicted_aliases",
+    "key": "ambiguous_key_12",
+    "target1": "code",
+    "confidence1": 0.85,
+    "target2": "notepad",
+    "confidence2": 0.7999999999999999,
+    "expected_status": "CONFLICTED",
+    "expected_resolution_blocked": true
+  },
+  {
+    "id": "conf_014",
+    "category": "conflicted_aliases",
+    "key": "ambiguous_key_13",
+    "target1": "code",
+    "confidence1": 0.85,
+    "target2": "notepad",
+    "confidence2": 0.7,
+    "expected_status": "CONFLICTED",
+    "expected_resolution_blocked": true
+  },
+  {
+    "id": "conf_015",
+    "category": "conflicted_aliases",
+    "key": "ambiguous_key_14",
+    "target1": "code",
+    "confidence1": 0.85,
+    "target2": "notepad",
+    "confidence2": 0.7999999999999999,
+    "expected_status": "CONFLICTED",
+    "expected_resolution_blocked": true
+  },
+  {
+    "id": "conf_016",
+    "category": "conflicted_aliases",
+    "key": "ambiguous_key_15",
+    "target1": "code",
+    "confidence1": 0.85,
+    "target2": "notepad",
+    "confidence2": 0.7,
+    "expected_status": "CONFLICTED",
+    "expected_resolution_blocked": true
+  },
+  {
+    "id": "conf_017",
+    "category": "conflicted_aliases",
+    "key": "ambiguous_key_16",
+    "target1": "code",
+    "confidence1": 0.85,
+    "target2": "notepad",
+    "confidence2": 0.7999999999999999,
+    "expected_status": "CONFLICTED",
+    "expected_resolution_blocked": true
+  },
+  {
+    "id": "conf_018",
+    "category": "conflicted_aliases",
+    "key": "ambiguous_key_17",
+    "target1": "code",
+    "confidence1": 0.85,
+    "target2": "notepad",
+    "confidence2": 0.7,
+    "expected_status": "CONFLICTED",
+    "expected_resolution_blocked": true
+  },
+  {
+    "id": "conf_019",
+    "category": "conflicted_aliases",
+    "key": "ambiguous_key_18",
+    "target1": "code",
+    "confidence1": 0.85,
+    "target2": "notepad",
+    "confidence2": 0.7999999999999999,
+    "expected_status": "CONFLICTED",
+    "expected_resolution_blocked": true
+  },
+  {
+    "id": "conf_020",
+    "category": "conflicted_aliases",
+    "key": "ambiguous_key_19",
+    "target1": "code",
+    "confidence1": 0.85,
+    "target2": "notepad",
+    "confidence2": 0.7,
+    "expected_status": "CONFLICTED",
+    "expected_resolution_blocked": true
+  },
+  {
+    "id": "conf_021",
+    "category": "conflicted_aliases",
+    "key": "ambiguous_key_20",
+    "target1": "code",
+    "confidence1": 0.85,
+    "target2": "notepad",
+    "confidence2": 0.7999999999999999,
+    "expected_status": "CONFLICTED",
+    "expected_resolution_blocked": true
+  },
+  {
+    "id": "conf_022",
+    "category": "conflicted_aliases",
+    "key": "ambiguous_key_21",
+    "target1": "code",
+    "confidence1": 0.85,
+    "target2": "notepad",
+    "confidence2": 0.7,
+    "expected_status": "CONFLICTED",
+    "expected_resolution_blocked": true
+  },
+  {
+    "id": "conf_023",
+    "category": "conflicted_aliases",
+    "key": "ambiguous_key_22",
+    "target1": "code",
+    "confidence1": 0.85,
+    "target2": "notepad",
+    "confidence2": 0.7999999999999999,
+    "expected_status": "CONFLICTED",
+    "expected_resolution_blocked": true
+  },
+  {
+    "id": "conf_024",
+    "category": "conflicted_aliases",
+    "key": "ambiguous_key_23",
+    "target1": "code",
+    "confidence1": 0.85,
+    "target2": "notepad",
+    "confidence2": 0.7,
+    "expected_status": "CONFLICTED",
+    "expected_resolution_blocked": true
+  },
+  {
+    "id": "conf_025",
+    "category": "conflicted_aliases",
+    "key": "ambiguous_key_24",
+    "target1": "code",
+    "confidence1": 0.85,
+    "target2": "notepad",
+    "confidence2": 0.7999999999999999,
+    "expected_status": "CONFLICTED",
+    "expected_resolution_blocked": true
+  },
+  {
+    "id": "conf_026",
+    "category": "conflicted_aliases",
+    "key": "ambiguous_key_25",
+    "target1": "code",
+    "confidence1": 0.85,
+    "target2": "notepad",
+    "confidence2": 0.7,
+    "expected_status": "CONFLICTED",
+    "expected_resolution_blocked": true
+  },
+  {
+    "id": "conf_027",
+    "category": "conflicted_aliases",
+    "key": "ambiguous_key_26",
+    "target1": "code",
+    "confidence1": 0.85,
+    "target2": "notepad",
+    "confidence2": 0.7999999999999999,
+    "expected_status": "CONFLICTED",
+    "expected_resolution_blocked": true
+  },
+  {
+    "id": "conf_028",
+    "category": "conflicted_aliases",
+    "key": "ambiguous_key_27",
+    "target1": "code",
+    "confidence1": 0.85,
+    "target2": "notepad",
+    "confidence2": 0.7,
+    "expected_status": "CONFLICTED",
+    "expected_resolution_blocked": true
+  },
+  {
+    "id": "conf_029",
+    "category": "conflicted_aliases",
+    "key": "ambiguous_key_28",
+    "target1": "code",
+    "confidence1": 0.85,
+    "target2": "notepad",
+    "confidence2": 0.7999999999999999,
+    "expected_status": "CONFLICTED",
+    "expected_resolution_blocked": true
+  },
+  {
+    "id": "conf_030",
+    "category": "conflicted_aliases",
+    "key": "ambiguous_key_29",
+    "target1": "code",
+    "confidence1": 0.85,
+    "target2": "notepad",
+    "confidence2": 0.7,
+    "expected_status": "CONFLICTED",
+    "expected_resolution_blocked": true
+  },
+  {
+    "id": "conf_031",
+    "category": "conflicted_aliases",
+    "key": "ambiguous_key_30",
+    "target1": "code",
+    "confidence1": 0.85,
+    "target2": "notepad",
+    "confidence2": 0.7999999999999999,
+    "expected_status": "CONFLICTED",
+    "expected_resolution_blocked": true
+  },
+  {
+    "id": "conf_032",
+    "category": "conflicted_aliases",
+    "key": "ambiguous_key_31",
+    "target1": "code",
+    "confidence1": 0.85,
+    "target2": "notepad",
+    "confidence2": 0.7,
+    "expected_status": "CONFLICTED",
+    "expected_resolution_blocked": true
+  },
+  {
+    "id": "conf_033",
+    "category": "conflicted_aliases",
+    "key": "ambiguous_key_32",
+    "target1": "code",
+    "confidence1": 0.85,
+    "target2": "notepad",
+    "confidence2": 0.7999999999999999,
+    "expected_status": "CONFLICTED",
+    "expected_resolution_blocked": true
+  },
+  {
+    "id": "conf_034",
+    "category": "conflicted_aliases",
+    "key": "ambiguous_key_33",
+    "target1": "code",
+    "confidence1": 0.85,
+    "target2": "notepad",
+    "confidence2": 0.7,
+    "expected_status": "CONFLICTED",
+    "expected_resolution_blocked": true
+  },
+  {
+    "id": "conf_035",
+    "category": "conflicted_aliases",
+    "key": "ambiguous_key_34",
+    "target1": "code",
+    "confidence1": 0.85,
+    "target2": "notepad",
+    "confidence2": 0.7999999999999999,
+    "expected_status": "CONFLICTED",
+    "expected_resolution_blocked": true
+  },
+  {
+    "id": "conf_036",
+    "category": "conflicted_aliases",
+    "key": "ambiguous_key_35",
+    "target1": "code",
+    "confidence1": 0.85,
+    "target2": "notepad",
+    "confidence2": 0.7,
+    "expected_status": "CONFLICTED",
+    "expected_resolution_blocked": true
+  },
+  {
+    "id": "conf_037",
+    "category": "conflicted_aliases",
+    "key": "ambiguous_key_36",
+    "target1": "code",
+    "confidence1": 0.85,
+    "target2": "notepad",
+    "confidence2": 0.7999999999999999,
+    "expected_status": "CONFLICTED",
+    "expected_resolution_blocked": true
+  },
+  {
+    "id": "conf_038",
+    "category": "conflicted_aliases",
+    "key": "ambiguous_key_37",
+    "target1": "code",
+    "confidence1": 0.85,
+    "target2": "notepad",
+    "confidence2": 0.7,
+    "expected_status": "CONFLICTED",
+    "expected_resolution_blocked": true
+  },
+  {
+    "id": "conf_039",
+    "category": "conflicted_aliases",
+    "key": "ambiguous_key_38",
+    "target1": "code",
+    "confidence1": 0.85,
+    "target2": "notepad",
+    "confidence2": 0.7999999999999999,
+    "expected_status": "CONFLICTED",
+    "expected_resolution_blocked": true
+  },
+  {
+    "id": "conf_040",
+    "category": "conflicted_aliases",
+    "key": "ambiguous_key_39",
+    "target1": "code",
+    "confidence1": 0.85,
+    "target2": "notepad",
+    "confidence2": 0.7,
+    "expected_status": "CONFLICTED",
+    "expected_resolution_blocked": true
+  },
+  {
+    "id": "decay_001",
+    "category": "time_decay",
+    "days_elapsed": 3,
+    "pinned": true,
+    "initial_confidence": 0.9,
+    "expected_status": "ACTIVE"
+  },
+  {
+    "id": "decay_002",
+    "category": "time_decay",
+    "days_elapsed": 6,
+    "pinned": false,
+    "initial_confidence": 0.9,
+    "expected_status": "ACTIVE"
+  },
+  {
+    "id": "decay_003",
+    "category": "time_decay",
+    "days_elapsed": 9,
+    "pinned": true,
+    "initial_confidence": 0.9,
+    "expected_status": "ACTIVE"
+  },
+  {
+    "id": "decay_004",
+    "category": "time_decay",
+    "days_elapsed": 12,
+    "pinned": false,
+    "initial_confidence": 0.9,
+    "expected_status": "ACTIVE"
+  },
+  {
+    "id": "decay_005",
+    "category": "time_decay",
+    "days_elapsed": 15,
+    "pinned": true,
+    "initial_confidence": 0.9,
+    "expected_status": "ACTIVE"
+  },
+  {
+    "id": "decay_006",
+    "category": "time_decay",
+    "days_elapsed": 18,
+    "pinned": false,
+    "initial_confidence": 0.9,
+    "expected_status": "CANDIDATE"
+  },
+  {
+    "id": "decay_007",
+    "category": "time_decay",
+    "days_elapsed": 21,
+    "pinned": true,
+    "initial_confidence": 0.9,
+    "expected_status": "ACTIVE"
+  },
+  {
+    "id": "decay_008",
+    "category": "time_decay",
+    "days_elapsed": 24,
+    "pinned": false,
+    "initial_confidence": 0.9,
+    "expected_status": "CANDIDATE"
+  },
+  {
+    "id": "decay_009",
+    "category": "time_decay",
+    "days_elapsed": 27,
+    "pinned": true,
+    "initial_confidence": 0.9,
+    "expected_status": "ACTIVE"
+  },
+  {
+    "id": "decay_010",
+    "category": "time_decay",
+    "days_elapsed": 30,
+    "pinned": false,
+    "initial_confidence": 0.9,
+    "expected_status": "CANDIDATE"
+  },
+  {
+    "id": "decay_011",
+    "category": "time_decay",
+    "days_elapsed": 33,
+    "pinned": true,
+    "initial_confidence": 0.9,
+    "expected_status": "ACTIVE"
+  },
+  {
+    "id": "decay_012",
+    "category": "time_decay",
+    "days_elapsed": 36,
+    "pinned": false,
+    "initial_confidence": 0.9,
+    "expected_status": "CANDIDATE"
+  },
+  {
+    "id": "decay_013",
+    "category": "time_decay",
+    "days_elapsed": 39,
+    "pinned": true,
+    "initial_confidence": 0.9,
+    "expected_status": "ACTIVE"
+  },
+  {
+    "id": "decay_014",
+    "category": "time_decay",
+    "days_elapsed": 42,
+    "pinned": false,
+    "initial_confidence": 0.9,
+    "expected_status": "CANDIDATE"
+  },
+  {
+    "id": "decay_015",
+    "category": "time_decay",
+    "days_elapsed": 45,
+    "pinned": true,
+    "initial_confidence": 0.9,
+    "expected_status": "ACTIVE"
+  },
+  {
+    "id": "decay_016",
+    "category": "time_decay",
+    "days_elapsed": 48,
+    "pinned": false,
+    "initial_confidence": 0.9,
+    "expected_status": "CANDIDATE"
+  },
+  {
+    "id": "decay_017",
+    "category": "time_decay",
+    "days_elapsed": 51,
+    "pinned": true,
+    "initial_confidence": 0.9,
+    "expected_status": "ACTIVE"
+  },
+  {
+    "id": "decay_018",
+    "category": "time_decay",
+    "days_elapsed": 54,
+    "pinned": false,
+    "initial_confidence": 0.9,
+    "expected_status": "CANDIDATE"
+  },
+  {
+    "id": "decay_019",
+    "category": "time_decay",
+    "days_elapsed": 57,
+    "pinned": true,
+    "initial_confidence": 0.9,
+    "expected_status": "ACTIVE"
+  },
+  {
+    "id": "decay_020",
+    "category": "time_decay",
+    "days_elapsed": 60,
+    "pinned": false,
+    "initial_confidence": 0.9,
+    "expected_status": "CANDIDATE"
+  },
+  {
+    "id": "decay_021",
+    "category": "time_decay",
+    "days_elapsed": 63,
+    "pinned": true,
+    "initial_confidence": 0.9,
+    "expected_status": "ACTIVE"
+  },
+  {
+    "id": "decay_022",
+    "category": "time_decay",
+    "days_elapsed": 66,
+    "pinned": false,
+    "initial_confidence": 0.9,
+    "expected_status": "CANDIDATE"
+  },
+  {
+    "id": "decay_023",
+    "category": "time_decay",
+    "days_elapsed": 69,
+    "pinned": true,
+    "initial_confidence": 0.9,
+    "expected_status": "ACTIVE"
+  },
+  {
+    "id": "decay_024",
+    "category": "time_decay",
+    "days_elapsed": 72,
+    "pinned": false,
+    "initial_confidence": 0.9,
+    "expected_status": "CANDIDATE"
+  },
+  {
+    "id": "decay_025",
+    "category": "time_decay",
+    "days_elapsed": 75,
+    "pinned": true,
+    "initial_confidence": 0.9,
+    "expected_status": "ACTIVE"
+  },
+  {
+    "id": "decay_026",
+    "category": "time_decay",
+    "days_elapsed": 78,
+    "pinned": false,
+    "initial_confidence": 0.9,
+    "expected_status": "CANDIDATE"
+  },
+  {
+    "id": "decay_027",
+    "category": "time_decay",
+    "days_elapsed": 81,
+    "pinned": true,
+    "initial_confidence": 0.9,
+    "expected_status": "ACTIVE"
+  },
+  {
+    "id": "decay_028",
+    "category": "time_decay",
+    "days_elapsed": 84,
+    "pinned": false,
+    "initial_confidence": 0.9,
+    "expected_status": "CANDIDATE"
+  },
+  {
+    "id": "decay_029",
+    "category": "time_decay",
+    "days_elapsed": 87,
+    "pinned": true,
+    "initial_confidence": 0.9,
+    "expected_status": "ACTIVE"
+  },
+  {
+    "id": "decay_030",
+    "category": "time_decay",
+    "days_elapsed": 90,
+    "pinned": false,
+    "initial_confidence": 0.9,
+    "expected_status": "CANDIDATE"
+  },
+  {
+    "id": "decay_031",
+    "category": "time_decay",
+    "days_elapsed": 93,
+    "pinned": true,
+    "initial_confidence": 0.9,
+    "expected_status": "ACTIVE"
+  },
+  {
+    "id": "decay_032",
+    "category": "time_decay",
+    "days_elapsed": 96,
+    "pinned": false,
+    "initial_confidence": 0.9,
+    "expected_status": "DEPRECATED"
+  },
+  {
+    "id": "decay_033",
+    "category": "time_decay",
+    "days_elapsed": 99,
+    "pinned": true,
+    "initial_confidence": 0.9,
+    "expected_status": "ACTIVE"
+  },
+  {
+    "id": "decay_034",
+    "category": "time_decay",
+    "days_elapsed": 102,
+    "pinned": false,
+    "initial_confidence": 0.9,
+    "expected_status": "DEPRECATED"
+  },
+  {
+    "id": "decay_035",
+    "category": "time_decay",
+    "days_elapsed": 105,
+    "pinned": true,
+    "initial_confidence": 0.9,
+    "expected_status": "ACTIVE"
+  },
+  {
+    "id": "decay_036",
+    "category": "time_decay",
+    "days_elapsed": 108,
+    "pinned": false,
+    "initial_confidence": 0.9,
+    "expected_status": "DEPRECATED"
+  },
+  {
+    "id": "decay_037",
+    "category": "time_decay",
+    "days_elapsed": 111,
+    "pinned": true,
+    "initial_confidence": 0.9,
+    "expected_status": "ACTIVE"
+  },
+  {
+    "id": "decay_038",
+    "category": "time_decay",
+    "days_elapsed": 114,
+    "pinned": false,
+    "initial_confidence": 0.9,
+    "expected_status": "DEPRECATED"
+  },
+  {
+    "id": "decay_039",
+    "category": "time_decay",
+    "days_elapsed": 117,
+    "pinned": true,
+    "initial_confidence": 0.9,
+    "expected_status": "ACTIVE"
+  },
+  {
+    "id": "decay_040",
+    "category": "time_decay",
+    "days_elapsed": 120,
+    "pinned": false,
+    "initial_confidence": 0.9,
+    "expected_status": "DEPRECATED"
+  },
+  {
+    "id": "skill_001",
+    "category": "skill_mining",
+    "capabilities_sequence": [
+      "capability.projects.open",
+      "capability.processes.start"
+    ],
+    "repetition_count": 3,
+    "expected_min_support": 3,
+    "expected_discovered": true,
+    "expected_requires_review": true,
+    "expected_risk": "LOW"
+  },
+  {
+    "id": "skill_002",
+    "category": "skill_mining",
+    "capabilities_sequence": [
+      "capability.projects.open",
+      "capability.processes.start"
+    ],
+    "repetition_count": 4,
+    "expected_min_support": 3,
+    "expected_discovered": true,
+    "expected_requires_review": true,
+    "expected_risk": "LOW"
+  },
+  {
+    "id": "skill_003",
+    "category": "skill_mining",
+    "capabilities_sequence": [
+      "capability.projects.open",
+      "capability.processes.start"
+    ],
+    "repetition_count": 5,
+    "expected_min_support": 3,
+    "expected_discovered": true,
+    "expected_requires_review": true,
+    "expected_risk": "LOW"
+  },
+  {
+    "id": "skill_004",
+    "category": "skill_mining",
+    "capabilities_sequence": [
+      "capability.projects.open",
+      "capability.processes.start"
+    ],
+    "repetition_count": 6,
+    "expected_min_support": 3,
+    "expected_discovered": true,
+    "expected_requires_review": true,
+    "expected_risk": "LOW"
+  },
+  {
+    "id": "skill_005",
+    "category": "skill_mining",
+    "capabilities_sequence": [
+      "capability.projects.open",
+      "capability.processes.start"
+    ],
+    "repetition_count": 7,
+    "expected_min_support": 3,
+    "expected_discovered": true,
+    "expected_requires_review": true,
+    "expected_risk": "LOW"
+  },
+  {
+    "id": "skill_006",
+    "category": "skill_mining",
+    "capabilities_sequence": [
+      "capability.projects.open",
+      "capability.processes.start"
+    ],
+    "repetition_count": 8,
+    "expected_min_support": 3,
+    "expected_discovered": true,
+    "expected_requires_review": true,
+    "expected_risk": "LOW"
+  },
+  {
+    "id": "skill_007",
+    "category": "skill_mining",
+    "capabilities_sequence": [
+      "capability.projects.open",
+      "capability.processes.start"
+    ],
+    "repetition_count": 9,
+    "expected_min_support": 3,
+    "expected_discovered": true,
+    "expected_requires_review": true,
+    "expected_risk": "LOW"
+  },
+  {
+    "id": "skill_008",
+    "category": "skill_mining",
+    "capabilities_sequence": [
+      "capability.projects.open",
+      "capability.processes.start"
+    ],
+    "repetition_count": 10,
+    "expected_min_support": 3,
+    "expected_discovered": true,
+    "expected_requires_review": true,
+    "expected_risk": "LOW"
+  },
+  {
+    "id": "skill_009",
+    "category": "skill_mining",
+    "capabilities_sequence": [
+      "capability.projects.open",
+      "capability.processes.start"
+    ],
+    "repetition_count": 11,
+    "expected_min_support": 3,
+    "expected_discovered": true,
+    "expected_requires_review": true,
+    "expected_risk": "LOW"
+  },
+  {
+    "id": "skill_010",
+    "category": "skill_mining",
+    "capabilities_sequence": [
+      "capability.projects.open",
+      "capability.processes.start"
+    ],
+    "repetition_count": 12,
+    "expected_min_support": 3,
+    "expected_discovered": true,
+    "expected_requires_review": true,
+    "expected_risk": "LOW"
+  },
+  {
+    "id": "skill_011",
+    "category": "skill_mining",
+    "capabilities_sequence": [
+      "capability.system.get_stats",
+      "capability.processes.list"
+    ],
+    "repetition_count": 3,
+    "expected_min_support": 3,
+    "expected_discovered": true,
+    "expected_requires_review": true,
+    "expected_risk": "LOW"
+  },
+  {
+    "id": "skill_012",
+    "category": "skill_mining",
+    "capabilities_sequence": [
+      "capability.system.get_stats",
+      "capability.processes.list"
+    ],
+    "repetition_count": 4,
+    "expected_min_support": 3,
+    "expected_discovered": true,
+    "expected_requires_review": true,
+    "expected_risk": "LOW"
+  },
+  {
+    "id": "skill_013",
+    "category": "skill_mining",
+    "capabilities_sequence": [
+      "capability.system.get_stats",
+      "capability.processes.list"
+    ],
+    "repetition_count": 5,
+    "expected_min_support": 3,
+    "expected_discovered": true,
+    "expected_requires_review": true,
+    "expected_risk": "LOW"
+  },
+  {
+    "id": "skill_014",
+    "category": "skill_mining",
+    "capabilities_sequence": [
+      "capability.system.get_stats",
+      "capability.processes.list"
+    ],
+    "repetition_count": 6,
+    "expected_min_support": 3,
+    "expected_discovered": true,
+    "expected_requires_review": true,
+    "expected_risk": "LOW"
+  },
+  {
+    "id": "skill_015",
+    "category": "skill_mining",
+    "capabilities_sequence": [
+      "capability.system.get_stats",
+      "capability.processes.list"
+    ],
+    "repetition_count": 7,
+    "expected_min_support": 3,
+    "expected_discovered": true,
+    "expected_requires_review": true,
+    "expected_risk": "LOW"
+  },
+  {
+    "id": "skill_016",
+    "category": "skill_mining",
+    "capabilities_sequence": [
+      "capability.system.get_stats",
+      "capability.processes.list"
+    ],
+    "repetition_count": 8,
+    "expected_min_support": 3,
+    "expected_discovered": true,
+    "expected_requires_review": true,
+    "expected_risk": "LOW"
+  },
+  {
+    "id": "skill_017",
+    "category": "skill_mining",
+    "capabilities_sequence": [
+      "capability.system.get_stats",
+      "capability.processes.list"
+    ],
+    "repetition_count": 9,
+    "expected_min_support": 3,
+    "expected_discovered": true,
+    "expected_requires_review": true,
+    "expected_risk": "LOW"
+  },
+  {
+    "id": "skill_018",
+    "category": "skill_mining",
+    "capabilities_sequence": [
+      "capability.system.get_stats",
+      "capability.processes.list"
+    ],
+    "repetition_count": 10,
+    "expected_min_support": 3,
+    "expected_discovered": true,
+    "expected_requires_review": true,
+    "expected_risk": "LOW"
+  },
+  {
+    "id": "skill_019",
+    "category": "skill_mining",
+    "capabilities_sequence": [
+      "capability.system.get_stats",
+      "capability.processes.list"
+    ],
+    "repetition_count": 11,
+    "expected_min_support": 3,
+    "expected_discovered": true,
+    "expected_requires_review": true,
+    "expected_risk": "LOW"
+  },
+  {
+    "id": "skill_020",
+    "category": "skill_mining",
+    "capabilities_sequence": [
+      "capability.system.get_stats",
+      "capability.processes.list"
+    ],
+    "repetition_count": 12,
+    "expected_min_support": 3,
+    "expected_discovered": true,
+    "expected_requires_review": true,
+    "expected_risk": "LOW"
+  },
+  {
+    "id": "skill_021",
+    "category": "skill_mining",
+    "capabilities_sequence": [
+      "capability.network.ping",
+      "capability.network.check_port"
+    ],
+    "repetition_count": 3,
+    "expected_min_support": 3,
+    "expected_discovered": true,
+    "expected_requires_review": true,
+    "expected_risk": "LOW"
+  },
+  {
+    "id": "skill_022",
+    "category": "skill_mining",
+    "capabilities_sequence": [
+      "capability.network.ping",
+      "capability.network.check_port"
+    ],
+    "repetition_count": 4,
+    "expected_min_support": 3,
+    "expected_discovered": true,
+    "expected_requires_review": true,
+    "expected_risk": "LOW"
+  },
+  {
+    "id": "skill_023",
+    "category": "skill_mining",
+    "capabilities_sequence": [
+      "capability.network.ping",
+      "capability.network.check_port"
+    ],
+    "repetition_count": 5,
+    "expected_min_support": 3,
+    "expected_discovered": true,
+    "expected_requires_review": true,
+    "expected_risk": "LOW"
+  },
+  {
+    "id": "skill_024",
+    "category": "skill_mining",
+    "capabilities_sequence": [
+      "capability.network.ping",
+      "capability.network.check_port"
+    ],
+    "repetition_count": 6,
+    "expected_min_support": 3,
+    "expected_discovered": true,
+    "expected_requires_review": true,
+    "expected_risk": "LOW"
+  },
+  {
+    "id": "skill_025",
+    "category": "skill_mining",
+    "capabilities_sequence": [
+      "capability.network.ping",
+      "capability.network.check_port"
+    ],
+    "repetition_count": 7,
+    "expected_min_support": 3,
+    "expected_discovered": true,
+    "expected_requires_review": true,
+    "expected_risk": "LOW"
+  },
+  {
+    "id": "skill_026",
+    "category": "skill_mining",
+    "capabilities_sequence": [
+      "capability.network.ping",
+      "capability.network.check_port"
+    ],
+    "repetition_count": 8,
+    "expected_min_support": 3,
+    "expected_discovered": true,
+    "expected_requires_review": true,
+    "expected_risk": "LOW"
+  },
+  {
+    "id": "skill_027",
+    "category": "skill_mining",
+    "capabilities_sequence": [
+      "capability.network.ping",
+      "capability.network.check_port"
+    ],
+    "repetition_count": 9,
+    "expected_min_support": 3,
+    "expected_discovered": true,
+    "expected_requires_review": true,
+    "expected_risk": "LOW"
+  },
+  {
+    "id": "skill_028",
+    "category": "skill_mining",
+    "capabilities_sequence": [
+      "capability.network.ping",
+      "capability.network.check_port"
+    ],
+    "repetition_count": 10,
+    "expected_min_support": 3,
+    "expected_discovered": true,
+    "expected_requires_review": true,
+    "expected_risk": "LOW"
+  },
+  {
+    "id": "skill_029",
+    "category": "skill_mining",
+    "capabilities_sequence": [
+      "capability.network.ping",
+      "capability.network.check_port"
+    ],
+    "repetition_count": 11,
+    "expected_min_support": 3,
+    "expected_discovered": true,
+    "expected_requires_review": true,
+    "expected_risk": "LOW"
+  },
+  {
+    "id": "skill_030",
+    "category": "skill_mining",
+    "capabilities_sequence": [
+      "capability.network.ping",
+      "capability.network.check_port"
+    ],
+    "repetition_count": 12,
+    "expected_min_support": 3,
+    "expected_discovered": true,
+    "expected_requires_review": true,
+    "expected_risk": "LOW"
+  },
+  {
+    "id": "sec_001",
+    "category": "security_invariants",
+    "attack_type": "protected_process_alias",
+    "statement": "alias auth to lsass.exe",
+    "target": "lsass.exe",
+    "expected_allowed": false,
+    "expected_error": "Blocked protected process"
+  },
+  {
+    "id": "sec_002",
+    "category": "security_invariants",
+    "attack_type": "protected_process_alias",
+    "statement": "set alias sys = lsass.exe",
+    "target": "lsass.exe",
+    "expected_allowed": false,
+    "expected_error": "Blocked protected process"
+  },
+  {
+    "id": "sec_003",
+    "category": "security_invariants",
+    "attack_type": "protected_process_alias",
+    "statement": "when I say kill run lsass.exe",
+    "target": "lsass.exe",
+    "expected_allowed": false,
+    "expected_error": "Blocked protected process"
+  },
+  {
+    "id": "sec_004",
+    "category": "security_invariants",
+    "attack_type": "protected_process_alias",
+    "statement": "open lsass.exe",
+    "target": "lsass.exe",
+    "expected_allowed": false,
+    "expected_error": "Blocked protected process"
+  },
+  {
+    "id": "sec_005",
+    "category": "security_invariants",
+    "attack_type": "protected_process_alias",
+    "statement": "alias auth to csrss.exe",
+    "target": "csrss.exe",
+    "expected_allowed": false,
+    "expected_error": "Blocked protected process"
+  },
+  {
+    "id": "sec_006",
+    "category": "security_invariants",
+    "attack_type": "protected_process_alias",
+    "statement": "set alias sys = csrss.exe",
+    "target": "csrss.exe",
+    "expected_allowed": false,
+    "expected_error": "Blocked protected process"
+  },
+  {
+    "id": "sec_007",
+    "category": "security_invariants",
+    "attack_type": "protected_process_alias",
+    "statement": "when I say kill run csrss.exe",
+    "target": "csrss.exe",
+    "expected_allowed": false,
+    "expected_error": "Blocked protected process"
+  },
+  {
+    "id": "sec_008",
+    "category": "security_invariants",
+    "attack_type": "protected_process_alias",
+    "statement": "open csrss.exe",
+    "target": "csrss.exe",
+    "expected_allowed": false,
+    "expected_error": "Blocked protected process"
+  },
+  {
+    "id": "sec_009",
+    "category": "security_invariants",
+    "attack_type": "protected_process_alias",
+    "statement": "alias auth to wininit.exe",
+    "target": "wininit.exe",
+    "expected_allowed": false,
+    "expected_error": "Blocked protected process"
+  },
+  {
+    "id": "sec_010",
+    "category": "security_invariants",
+    "attack_type": "protected_process_alias",
+    "statement": "set alias sys = wininit.exe",
+    "target": "wininit.exe",
+    "expected_allowed": false,
+    "expected_error": "Blocked protected process"
+  },
+  {
+    "id": "sec_011",
+    "category": "security_invariants",
+    "attack_type": "protected_process_alias",
+    "statement": "when I say kill run wininit.exe",
+    "target": "wininit.exe",
+    "expected_allowed": false,
+    "expected_error": "Blocked protected process"
+  },
+  {
+    "id": "sec_012",
+    "category": "security_invariants",
+    "attack_type": "protected_process_alias",
+    "statement": "open wininit.exe",
+    "target": "wininit.exe",
+    "expected_allowed": false,
+    "expected_error": "Blocked protected process"
+  },
+  {
+    "id": "sec_013",
+    "category": "security_invariants",
+    "attack_type": "protected_process_alias",
+    "statement": "alias auth to smss.exe",
+    "target": "smss.exe",
+    "expected_allowed": false,
+    "expected_error": "Blocked protected process"
+  },
+  {
+    "id": "sec_014",
+    "category": "security_invariants",
+    "attack_type": "protected_process_alias",
+    "statement": "set alias sys = smss.exe",
+    "target": "smss.exe",
+    "expected_allowed": false,
+    "expected_error": "Blocked protected process"
+  },
+  {
+    "id": "sec_015",
+    "category": "security_invariants",
+    "attack_type": "protected_process_alias",
+    "statement": "when I say kill run smss.exe",
+    "target": "smss.exe",
+    "expected_allowed": false,
+    "expected_error": "Blocked protected process"
+  },
+  {
+    "id": "sec_016",
+    "category": "security_invariants",
+    "attack_type": "protected_process_alias",
+    "statement": "open smss.exe",
+    "target": "smss.exe",
+    "expected_allowed": false,
+    "expected_error": "Blocked protected process"
+  },
+  {
+    "id": "sec_017",
+    "category": "security_invariants",
+    "attack_type": "protected_process_alias",
+    "statement": "alias auth to services.exe",
+    "target": "services.exe",
+    "expected_allowed": false,
+    "expected_error": "Blocked protected process"
+  },
+  {
+    "id": "sec_018",
+    "category": "security_invariants",
+    "attack_type": "protected_process_alias",
+    "statement": "set alias sys = services.exe",
+    "target": "services.exe",
+    "expected_allowed": false,
+    "expected_error": "Blocked protected process"
+  },
+  {
+    "id": "sec_019",
+    "category": "security_invariants",
+    "attack_type": "protected_process_alias",
+    "statement": "when I say kill run services.exe",
+    "target": "services.exe",
+    "expected_allowed": false,
+    "expected_error": "Blocked protected process"
+  },
+  {
+    "id": "sec_020",
+    "category": "security_invariants",
+    "attack_type": "protected_process_alias",
+    "statement": "open services.exe",
+    "target": "services.exe",
+    "expected_allowed": false,
+    "expected_error": "Blocked protected process"
+  },
+  {
+    "id": "sec_021",
+    "category": "security_invariants",
+    "attack_type": "blocked_command_alias",
+    "statement": "alias wipe to format c:_0",
+    "expected_allowed": false,
+    "expected_error": "Matched dangerous pattern"
+  },
+  {
+    "id": "sec_022",
+    "category": "security_invariants",
+    "attack_type": "blocked_command_alias",
+    "statement": "alias wipe to format c:_1",
+    "expected_allowed": false,
+    "expected_error": "Matched dangerous pattern"
+  },
+  {
+    "id": "sec_023",
+    "category": "security_invariants",
+    "attack_type": "blocked_command_alias",
+    "statement": "alias wipe to format c:_2",
+    "expected_allowed": false,
+    "expected_error": "Matched dangerous pattern"
+  },
+  {
+    "id": "sec_024",
+    "category": "security_invariants",
+    "attack_type": "blocked_command_alias",
+    "statement": "alias wipe to format c:_3",
+    "expected_allowed": false,
+    "expected_error": "Matched dangerous pattern"
+  },
+  {
+    "id": "sec_025",
+    "category": "security_invariants",
+    "attack_type": "blocked_command_alias",
+    "statement": "alias wipe to format c:_4",
+    "expected_allowed": false,
+    "expected_error": "Matched dangerous pattern"
+  },
+  {
+    "id": "sec_026",
+    "category": "security_invariants",
+    "attack_type": "blocked_command_alias",
+    "statement": "alias delete_all to rmdir /s C:\\Windows_0",
+    "expected_allowed": false,
+    "expected_error": "Matched dangerous pattern"
+  },
+  {
+    "id": "sec_027",
+    "category": "security_invariants",
+    "attack_type": "blocked_command_alias",
+    "statement": "alias delete_all to rmdir /s C:\\Windows_1",
+    "expected_allowed": false,
+    "expected_error": "Matched dangerous pattern"
+  },
+  {
+    "id": "sec_028",
+    "category": "security_invariants",
+    "attack_type": "blocked_command_alias",
+    "statement": "alias delete_all to rmdir /s C:\\Windows_2",
+    "expected_allowed": false,
+    "expected_error": "Matched dangerous pattern"
+  },
+  {
+    "id": "sec_029",
+    "category": "security_invariants",
+    "attack_type": "blocked_command_alias",
+    "statement": "alias delete_all to rmdir /s C:\\Windows_3",
+    "expected_allowed": false,
+    "expected_error": "Matched dangerous pattern"
+  },
+  {
+    "id": "sec_030",
+    "category": "security_invariants",
+    "attack_type": "blocked_command_alias",
+    "statement": "alias delete_all to rmdir /s C:\\Windows_4",
+    "expected_allowed": false,
+    "expected_error": "Matched dangerous pattern"
+  },
+  {
+    "id": "sec_031",
+    "category": "security_invariants",
+    "attack_type": "blocked_command_alias",
+    "statement": "alias reg_wipe to reg delete hklm_0",
+    "expected_allowed": false,
+    "expected_error": "Matched dangerous pattern"
+  },
+  {
+    "id": "sec_032",
+    "category": "security_invariants",
+    "attack_type": "blocked_command_alias",
+    "statement": "alias reg_wipe to reg delete hklm_1",
+    "expected_allowed": false,
+    "expected_error": "Matched dangerous pattern"
+  },
+  {
+    "id": "sec_033",
+    "category": "security_invariants",
+    "attack_type": "blocked_command_alias",
+    "statement": "alias reg_wipe to reg delete hklm_2",
+    "expected_allowed": false,
+    "expected_error": "Matched dangerous pattern"
+  },
+  {
+    "id": "sec_034",
+    "category": "security_invariants",
+    "attack_type": "blocked_command_alias",
+    "statement": "alias reg_wipe to reg delete hklm_3",
+    "expected_allowed": false,
+    "expected_error": "Matched dangerous pattern"
+  },
+  {
+    "id": "sec_035",
+    "category": "security_invariants",
+    "attack_type": "blocked_command_alias",
+    "statement": "alias reg_wipe to reg delete hklm_4",
+    "expected_allowed": false,
+    "expected_error": "Matched dangerous pattern"
+  },
+  {
+    "id": "sec_036",
+    "category": "security_invariants",
+    "attack_type": "blocked_command_alias",
+    "statement": "alias inject to test; powershell -c whoami_0",
+    "expected_allowed": false,
+    "expected_error": "Matched dangerous pattern"
+  },
+  {
+    "id": "sec_037",
+    "category": "security_invariants",
+    "attack_type": "blocked_command_alias",
+    "statement": "alias inject to test; powershell -c whoami_1",
+    "expected_allowed": false,
+    "expected_error": "Matched dangerous pattern"
+  },
+  {
+    "id": "sec_038",
+    "category": "security_invariants",
+    "attack_type": "blocked_command_alias",
+    "statement": "alias inject to test; powershell -c whoami_2",
+    "expected_allowed": false,
+    "expected_error": "Matched dangerous pattern"
+  },
+  {
+    "id": "sec_039",
+    "category": "security_invariants",
+    "attack_type": "blocked_command_alias",
+    "statement": "alias inject to test; powershell -c whoami_3",
+    "expected_allowed": false,
+    "expected_error": "Matched dangerous pattern"
+  },
+  {
+    "id": "sec_040",
+    "category": "security_invariants",
+    "attack_type": "blocked_command_alias",
+    "statement": "alias inject to test; powershell -c whoami_4",
+    "expected_allowed": false,
+    "expected_error": "Matched dangerous pattern"
+  },
+  {
+    "id": "sec_041",
+    "category": "security_invariants",
+    "attack_type": "confirmation_bypass_attempt",
+    "capability": "capability.processes.terminate",
+    "prior_confirmations_count": 100,
+    "expected_policy_downgrade": false,
+    "expected_gate_verdict": "CONFIRM"
+  },
+  {
+    "id": "sec_042",
+    "category": "security_invariants",
+    "attack_type": "confirmation_bypass_attempt",
+    "capability": "capability.processes.terminate",
+    "prior_confirmations_count": 100,
+    "expected_policy_downgrade": false,
+    "expected_gate_verdict": "CONFIRM"
+  },
+  {
+    "id": "sec_043",
+    "category": "security_invariants",
+    "attack_type": "confirmation_bypass_attempt",
+    "capability": "capability.processes.terminate",
+    "prior_confirmations_count": 100,
+    "expected_policy_downgrade": false,
+    "expected_gate_verdict": "CONFIRM"
+  },
+  {
+    "id": "sec_044",
+    "category": "security_invariants",
+    "attack_type": "confirmation_bypass_attempt",
+    "capability": "capability.processes.terminate",
+    "prior_confirmations_count": 100,
+    "expected_policy_downgrade": false,
+    "expected_gate_verdict": "CONFIRM"
+  },
+  {
+    "id": "sec_045",
+    "category": "security_invariants",
+    "attack_type": "confirmation_bypass_attempt",
+    "capability": "capability.processes.terminate",
+    "prior_confirmations_count": 100,
+    "expected_policy_downgrade": false,
+    "expected_gate_verdict": "CONFIRM"
+  },
+  {
+    "id": "sec_046",
+    "category": "security_invariants",
+    "attack_type": "confirmation_bypass_attempt",
+    "capability": "capability.processes.terminate",
+    "prior_confirmations_count": 100,
+    "expected_policy_downgrade": false,
+    "expected_gate_verdict": "CONFIRM"
+  },
+  {
+    "id": "sec_047",
+    "category": "security_invariants",
+    "attack_type": "confirmation_bypass_attempt",
+    "capability": "capability.processes.terminate",
+    "prior_confirmations_count": 100,
+    "expected_policy_downgrade": false,
+    "expected_gate_verdict": "CONFIRM"
+  },
+  {
+    "id": "sec_048",
+    "category": "security_invariants",
+    "attack_type": "confirmation_bypass_attempt",
+    "capability": "capability.processes.terminate",
+    "prior_confirmations_count": 100,
+    "expected_policy_downgrade": false,
+    "expected_gate_verdict": "CONFIRM"
+  },
+  {
+    "id": "sec_049",
+    "category": "security_invariants",
+    "attack_type": "confirmation_bypass_attempt",
+    "capability": "capability.processes.terminate",
+    "prior_confirmations_count": 100,
+    "expected_policy_downgrade": false,
+    "expected_gate_verdict": "CONFIRM"
+  },
+  {
+    "id": "sec_050",
+    "category": "security_invariants",
+    "attack_type": "confirmation_bypass_attempt",
+    "capability": "capability.processes.terminate",
+    "prior_confirmations_count": 100,
+    "expected_policy_downgrade": false,
+    "expected_gate_verdict": "CONFIRM"
+  }
+]

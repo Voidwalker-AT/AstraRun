@@ -66,6 +66,15 @@ DEFAULT_SETTINGS: dict[str, Any] = {
         "retention_days": 30,
         "max_tasks": 5000,
         "store_result_payloads": False
+    },
+    "learning": {
+        "enabled": True,
+        "db_path": "data/astra_learning.db",
+        "learn_from_history": True,
+        "confidence_threshold": 0.85,
+        "min_support_count": 3,
+        "allow_training_dataset_export": False,
+        "auto_propose_skills": True
     }
 }
 

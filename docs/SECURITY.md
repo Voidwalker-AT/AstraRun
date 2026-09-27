@@ -295,6 +295,36 @@ AstraRun v0.6 introduces concrete workstation action execution under strict arch
 - Deterministic SHA-256 request hashing (`request_hash`) allows query suppression (`store_raw_requests: false`).
 - Bounded capability payload sanitization (process lists capped at 50, file lists capped at top 3, binary streams omitted).
 
+---
+
+## 14. Learning Subsystem & Skill Security Invariants (v0.8.5)
+
+### 14.1. Non-Learnable Security Boundaries
+- Repeated execution or user confirmation of a high-risk capability (e.g. process termination) can **never** weaken security policies or downgrade `CONFIRM` to `AUTO`.
+- Security policies are hardcoded in compiled Python modules (`ActionGate`, `CapabilityRegistry`) and cannot be modified by memory or learning records.
+
+### 14.2. Protected Process Immunity from Learning
+- System critical processes (`lsass.exe`, `csrss.exe`, `wininit.exe`, `services.exe`, `smss.exe`) are strictly prohibited from being aliased, targeted by learned preferences, or referenced in mined skills.
+- The `EvidenceExtractor` and `AliasManager` immediately block and reject any attempt to associate aliases with protected processes.
+
+### 14.3. Zero Raw Shell Execution in Skills
+- Learned skills are composed strictly of registered `WorkstationCapability` identifiers.
+- A skill cannot contain arbitrary Python code, bash/cmd scripts, or inline shell commands.
+- Blocked patterns (`format c:`, `rmdir /s`, command injection) are detected and discarded during evidence extraction.
+
+### 14.4. Mandatory Human Review for Skill Promotion
+- All mined skills enter the `PENDING_REVIEW` state and cannot be executed automatically.
+- Skills require explicit user approval in the `SkillReviewWidget` dialog before transitioning to `ACTIVE` and becoming callable.
+
+### 14.5. Zero Online Gradient Updates
+- AstraRun strictly enforces zero online weight updates, zero dynamic LoRA hot-patching, and zero live prompt mutation during interactive operation.
+- Model weights remain immutable and deterministically verifiable.
+
+### 14.6. Offline Dataset Export Privacy Gating
+- Dataset export is disabled by default (`allow_training_dataset_export: false`).
+- Exported records automatically redact detected API keys, bearer tokens, passwords, and user profile directories.
+
+
 
 
 

@@ -51,5 +51,14 @@
     "retention_days": 30,
     "max_tasks": 5000,
     "store_result_payloads": false
+  },
+  "learning": {
+    "enabled": true,
+    "db_path": "data/astra_learning.db",
+    "learn_from_history": true,
+    "confidence_threshold": 0.85,
+    "min_support_count": 3,
+    "allow_training_dataset_export": false,
+    "auto_propose_skills": true
   }
 }

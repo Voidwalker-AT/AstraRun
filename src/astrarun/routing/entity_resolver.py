@@ -91,12 +91,14 @@ class EntityResolutionEngine:
         folder_cache: Optional[FolderResolver] = None,
         project_registry: Optional[ProjectRegistry] = None,
         context_engine: Optional[Any] = None,
+        alias_manager: Optional[Any] = None,
     ) -> None:
         self.workspace_json_path = Path(workspace_json_path)
         self.app_cache = app_cache or AppDiscoveryCache()
         self.folder_cache = folder_cache or FolderResolver()
         self.project_registry = project_registry or ProjectRegistry(workspace_json_path=self.workspace_json_path)
         self.context_engine = context_engine
+        self.alias_manager = alias_manager
         self._projects_cache: list[dict[str, Any]] = []
         self._load_projects()
 
@@ -333,6 +335,43 @@ class EntityResolutionEngine:
             "pwsh": "pwsh",
             "vivaldi": "vivaldi",
         }
+        # Check AliasManager if configured
+        if self.alias_manager:
+            conflicted = self.alias_manager.get_conflicted_candidates(terms)
+            if any(getattr(c.status, "value", c.status) == "CONFLICTED" for c in conflicted):
+                cand_dicts = [
+                    {"alias": c.key, "target": str(c.value), "score": c.confidence, "status": getattr(c.status, "value", c.status)}
+                    for c in conflicted
+                ]
+                return ProposedAction(
+                    action_type="open_app",
+                    raw_query=query,
+                    target=None,
+                    status="ambiguous",
+                    confidence=0.5,
+                    candidate_matches=cand_dicts,
+                    metadata={"reason": "Conflicted learned aliases require user clarification"},
+                )
+
+            res = self.alias_manager.resolve(terms, expected_target_type="application")
+            if res:
+                resolved_key, source, conf = res
+                app_obj = self.app_cache.get(resolved_key)
+                target_val = str(app_obj.path) if app_obj else resolved_key
+                app_name = app_obj.name if app_obj else resolved_key
+                return ProposedAction(
+                    action_type="open_app",
+                    raw_query=query,
+                    target=target_val,
+                    entity_id=f"app:{resolved_key}",
+                    tool="open_app",
+                    arguments={"app": resolved_key, "path": target_val},
+                    confidence=conf,
+                    status="resolved",
+                    candidate_matches=[{"alias": resolved_key, "name": app_name, "path": target_val, "score": conf}],
+                    metadata={"app_name": app_name, "source": source},
+                )
+
         if terms in alias_expansions:
             resolved_key = alias_expansions[terms]
             app_obj = self.app_cache.get(resolved_key)

@@ -1,4 +1,4 @@
-# AstraRun — Windows Intelligent Command Launcher & Workstation Control Plane (v0.8)
+# AstraRun — Windows Intelligent Command Launcher & Workstation Control Plane (v0.8.5)
 
 AstraRun is a local, lightweight, low-latency Windows command launcher and workstation orchestrator engineered as the foundational command interface for an evolving AI-assisted workstation control ecosystem.
 
@@ -7,9 +7,18 @@ AstraRun replaces fragile string-interpolated shell execution with a strictly ty
 
 ---
 
-## Key Capabilities (v0.8)
+## Key Capabilities (v0.8.5)
 
 - **Instantaneous Hotkey Activation**: Summoned with `Alt+Space` in ~4.5ms from a pre-warmed resident background process.
+- **Memory, Learning & Skill Foundation (v0.8.5)**: Durable workstation semantic memory, natural language teaching parser, and candidate skill discovery operating strictly off the interactive hot path in background threads.
+- **Zero Neural / Learned Execution Authority (v0.8.5)**: Learning never directly executes commands or expands computer control authority. Every proposed action continues to pass through `ActionGate` and hard policy enforcement.
+- **Non-Learnable Security Policies (v0.8.5)**: Repeating high-risk capabilities or confirmations can **NEVER** downgrade `CONFIRM` to `AUTO`, bypass `ActionGate`, or alias protected system processes (`lsass.exe`, `csrss.exe`) and dangerous commands (`format c:`, `rmdir /s`).
+- **Dual-Database Architecture (v0.8.5)**: Physical separation between ephemeral execution tracking (`data/astra_history.db`, 30-day retention) and durable workstation knowledge (`data/astra_learning.db`, SQLite WAL mode, `PRAGMA user_version = 1`, append-only audit trail).
+- **Mathematical Confidence Engine (v0.8.5)**: Continuous Bayesian-inspired confidence accounting for positive evidence, asymmetric contradiction penalties, asymptotic support saturation, 70-day exponential time decay, and pinned fact guarantees ($\ge 0.95$).
+- **Multi-Tier Alias Precedence (v0.8.5)**: Multi-tier resolution (`Static Config > Conflicted Gating > User-Confirmed Learned > High-Confidence Habit > Fuzzy Fallback`). Conflicting aliases automatically trigger safe disambiguation.
+- **Declarative Pattern Mining & Skill Synthesis (v0.8.5)**: Discovers recurring multi-step workflows from task history, parameterizes variable arguments (`{target_project}`), and compiles into typed `Workflow` structures requiring explicit human approval.
+- **Memory Inspector & Skill Review UI (v0.8.5)**: PySide6 split-view inspector (`MemoryView`) with full provenance audit and candidate skill review dialog (`SkillReviewWidget`).
+- **Offline Training Dataset Exporter (v0.8.5)**: Offline dataset builder (`dataset_builder.py`) sanitizing queries with credential redaction and path normalization, gated behind `allow_training_dataset_export: true`.
 - **Task Runtime & Lifecycle Authority (v0.8)**: Centrally governed by `TaskManager` across a formal 14-state directed Finite State Machine (`TaskStatus`).
 - **Live Activity Timeline UI (v0.8)**: Real-time observable step visualization (`TaskActivityView`) rendering ground-truth system operations with zero fake progress or fabricated thinking.
 - **Cooperative Cancellation (v0.8)**: Graceful abort mechanism governed by `CancellationToken` checkpoints preventing orphaned processes and resource leaks.
@@ -33,12 +42,13 @@ AstraRun replaces fragile string-interpolated shell execution with a strictly ty
 - **Decoupled Reasoning Provider Architecture (v0.7)**: Generic `ReasoningProvider` interface and `ReasoningRequired` escalation boundary remain unconfigured, ensuring 100% local, deterministic execution.
 - **Hybrid NLP Understanding Engine (v0.6.5)**: Deterministic clause decomposition, negation scoping (**0.00% Negated Action Leakage**), local temporal intervals, and entity recognition.
 - **Benchmark-Proven Performance**:
+  - **Learning Benchmark V1 (320 cases)**: **100.0% Accuracy**, **0.00% False Memory Activation Rate**, **100.0% Security Invariant Enforcement Rate**, **25.28 ms mean latency**.
   - **Task Benchmark V1 (300 cases)**: **100.0% Status Accuracy**, **100.0% Sequence Accuracy**, **100.0% Persistence Accuracy**, **64.6 ms mean latency**.
   - **Scale Benchmark (10k tasks / 100k events)**: **99,757 rows/sec insert**, **1.26 ms recent query**, **7.43 ms search**, **339 ms retention prune**.
   - **Capability Benchmark V1 (520 cases)**: **100.0% Capability Accuracy**, **100.0% Permission Accuracy**, **100.0% Block Recall**, **0.561 ms mean latency**.
   - **Action Benchmark V1 (330 cases)**: **100.0% Intent Accuracy**, **100.0% Gate Accuracy**, **0.00% False Execution Rate (FER)**, **0.057 ms mean latency**.
   - **NLP Benchmark V1 (620 cases)**: **100.0% Intent Accuracy**, **95.2% Clause Acc**, **0.00% Negated Action Leakage Rate**, **7.364 ms mean latency**.
-- **197 Passing Automated Tests**: 100% test pass rate across 18 test modules in ~12.4s.
+- **215 Passing Automated Tests**: 100% test pass rate across 19 test modules in ~12.56s.
 
 ---
 
@@ -86,6 +96,19 @@ flowchart TD
         Reg --> Proj["Projects (Git Status, Dev Ports)"]
         Reg --> Win["Windows (Discovery & Enumeration)"]
         Reg -.->|Record Facts| Store["Structured ObservationStore (200 facts)"]
+    end
+
+    subgraph Learning ["Learning & Memory Subsystem (v0.8.5)"]
+        TM -.->|Execution Events & Corrections| LE["LearningEngine (Background)"]
+        UI -.->|Teaching Utterances| LE
+        LE --> EE["EvidenceExtractor"]
+        LE --> PM["PatternMiner (Support >= 3)"]
+        EE --> MS["MemoryStore & AliasManager"]
+        MS --> LDB[("SQLite LearningDB (WAL Mode)")]
+        MS -.->|Learned Aliases (Multi-Tier)| Resolver
+        PM -.->|Candidate Workflows| SK["SkillManager"]
+        SK -.->|Human Review Required| SKUI["SkillReviewWidget"]
+        LDB -.-> MemView["MemoryView (Audit & Provenance)"]
     end
 ```
 
@@ -150,3 +173,12 @@ open AstraRun and check git status   # Compiles sequential multi-capability work
 find latest screenshot and reveal it # Resolves dependencies across capabilities
 check system status and gpu          # Composes multiple diagnostic cards
 ```
+
+### 6. Teaching, Preferences & Memory (v0.8.5)
+```text
+remember that notes is notepad       # Teaches explicit application alias
+always use code for editing          # Teaches explicit developer preference
+learn skills from history            # Runs offline pattern miner over task ledger
+show learned memories                # Opens MemoryView inspector with full provenance
+```
+

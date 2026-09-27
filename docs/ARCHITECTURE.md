@@ -394,6 +394,39 @@ $$\text{Natural Language} \longrightarrow \text{NLP Engine} \longrightarrow \tex
 - `TaskActivityView`: Real-time Catppuccin Mocha activity feed rendering verified internal events with duration profiling and responsive cancellation.
 - `HistoryView`: Interactive split-view with instant substring search across past requests, quick date/status filter chips, timeline inspection, and safe semantic re-runs.
 
+---
+
+## 11. Memory, Learning & Skill Foundation (v0.8.5)
+
+### 11.1. Dual-Database Separation
+- `data/astra_history.db`: Stores raw task execution chronologies (subject to 30-day retention pruning).
+- `data/astra_learning.db`: Stores durable semantic knowledge, learned aliases, preferences, and mined skills with independent lifecycle management.
+
+### 11.2. Semantic Memory Model (`astrarun.learning.memory`)
+- Namespaces: `ALIAS`, `PREFERENCE`, `WORKFLOW`, `ENTITY_ATTRIBUTE`, `TEACHING`.
+- 5-State FSM: `CANDIDATE`, `ACTIVE`, `REJECTED`, `DEPRECATED`, `CONFLICTED`.
+- Verifiable provenance: Every memory maintains immutable `EvidenceReference` records linking back to historical task/event occurrences.
+
+### 11.3. Confidence & Time-Decay Engine (`astrarun.learning.confidence`)
+- Empirical formula combining positive evidence weights, double contradiction penalties, asymptotic support saturation, and 70-day exponential time decay.
+- Confirmed/pinned memories retain a minimum floor of $\ge 0.95$.
+- Automatic conflict detection when top candidate confidence margin is $< 0.20$.
+
+### 11.4. Multi-Tier Alias Precedence (`astrarun.learning.aliases`)
+- Resolution hierarchy: Static Config > Conflicted Gating > User-Confirmed Learned > High-Confidence Habit ($C \ge 0.85$, $N \ge 3$) > Heuristic/Fuzzy.
+- Strong type safety enforcement and rejection of unconfirmed low-confidence candidates.
+
+### 11.5. Sequential Pattern Miner & Skills (`astrarun.learning.patterns`, `astrarun.learning.skills`)
+- Discovers recurring capability n-grams ($L \in [2, 5]$, support $\ge 3$) from completed tasks.
+- Abstract template parameterization and maximum risk inheritance.
+- Mandatory human review via `SkillReviewWidget` before skill activation.
+- Direct compilation to executable `Workflow` definitions.
+
+### 11.6. Zero Online Weight Updates & Non-Learnable Security Invariants
+- Zero live model fine-tuning or prompt mutation.
+- Non-learnable security policies: ActionGate permissions, confirmation requirements, and protected system processes (`lsass.exe`, `csrss.exe`) are mathematically immune to habit drift.
+
+
 
 
 

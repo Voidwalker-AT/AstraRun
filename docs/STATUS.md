@@ -1,90 +1,91 @@
-# AstraRun v0.8 Status Report
+# AstraRun v0.8.5 Status Report
 
 > **Date**: 2026-09-27  
 > **Status**: STABLE / VERIFIED / MILESTONE COMPLETE  
-> **Milestone**: v0.8 Complete (Task Runtime, Activity Timeline & Conversation History)  
-> **Prior Milestone**: v0.7 Complete (`c749a90`)  
+> **Milestone**: v0.8.5 Complete (Memory, Learning & Skill Foundation)  
+> **Prior Milestone**: v0.8 Complete (`a7bc33b`)  
 
 ---
 
 ## 1. What Works Completely
 
-1. **Task Runtime Engine (`astrarun.tasks.manager`)**:
-   - Central authority orchestrating workstation task lifecycles.
-   - Formal 14-state directed FSM (`TaskStatus`) with transition validation.
-   - Capability execution instrumentation with automatic `CAPABILITY_STARTED`, latency timing, and `CAPABILITY_COMPLETED`/`FAILED` event generation.
-   - Full integration with `CapabilityRegistry`, `ActionGate`, and `WorkflowCompiler`.
+1. **Semantic Memory Subsystem (`astrarun.learning.memory`)**:
+   - Durable workstation knowledge storage across 5 namespaces (`ALIAS`, `PREFERENCE`, `WORKFLOW`, `ENTITY_ATTRIBUTE`, `TEACHING`).
+   - 5-state formal lifecycle FSM (`CANDIDATE`, `ACTIVE`, `REJECTED`, `DEPRECATED`, `CONFLICTED`).
+   - Immutable evidence references with verified task/event provenance pointers.
 
-2. **Cooperative Cancellation Subsystem (`astrarun.tasks.cancellation`)**:
-   - Thread-safe `CancellationToken` supporting zero-argument and one-argument callbacks.
-   - Pre-dispatch and post-dispatch cooperative checkpoints preventing orphaned processes.
-   - Clean transition to `CANCELLED` status with auditable event logs.
+2. **Mathematical Confidence & Decay Engine (`astrarun.learning.confidence`)**:
+   - Rigorous formulation combining evidence weighting, double contradiction penalties, asymptotic support saturation, and time-decay attenuation.
+   - Pinned/confirmed fact floor ($\ge 0.95$).
+   - Automated conflict detection when top candidate margins are narrow ($< 0.20$).
 
-3. **Observable Event Bus (`astrarun.tasks.events`)**:
-   - Decoupled in-memory pub/sub broker (`TaskEventBus`) supporting 31 strongly-typed `TaskEvent` structures.
-   - Task-scoped and global subscription filtering.
-   - Strict observation-only invariant (Rule #59): events describe occurrences and never grant execution authority.
-   - Guaranteed truth in presentation with zero fake progress or fabricated thinking.
+3. **Multi-Tier Alias Manager (`astrarun.learning.aliases`)**:
+   - Strict hierarchical resolution: Static Config > Conflicted Gating > User-Confirmed Learned > High-Confidence Habit ($C \ge 0.85$, $N \ge 3$) > Fallback.
+   - Strong type safety enforcement matching targets to requested domains.
+   - Deep integration into `EntityResolutionEngine.resolve_app`.
 
-4. **Persistent SQLite Task Ledger (`astrarun.tasks.ledger`)**:
-   - Production SQLite engine at `data/astra_history.db` with Write-Ahead Logging (`PRAGMA journal_mode = WAL;`) and foreign keys (`PRAGMA foreign_keys = ON;`).
-   - Versioned schema migrations (`PRAGMA user_version = 1;`).
-   - Startup crash recovery (`recover_interrupted_tasks()`) marking dangling tasks as `INTERRUPTED`.
-   - Automatic database corruption detection and backup (`astra_history.db.corrupt.<ts>`).
-   - Parameterized queries throughout (zero SQL injection).
-   - High-throughput indexing supporting query execution in < 1.3 ms across 10,000 tasks.
+4. **User Correction Absorption (`astrarun.learning.evidence`)**:
+   - Detects user corrections across sequential tasks within 120-second conversation windows.
+   - Immediately collapses erroneous mapping ($C < 0.10$, `DEPRECATED`).
+   - Promotes corrected mapping ($C \ge 0.95$, `ACTIVE`, `user_confirmed=True`).
 
-5. **Conversation & Message History (`astrarun.tasks.models`)**:
-   - `Conversation` threads grouping multi-turn tasks.
-   - `ConversationMessage` chronologies recording human requests, automated summaries, and system notes.
+5. **Sequential Pattern Mining & Skills (`astrarun.learning.patterns`, `astrarun.learning.skills`)**:
+   - `PatternMiner` extracts repetitive capability n-grams ($L \in [2, 5]$, support $\ge 3$).
+   - Generalizes concrete arguments into typed template parameters (`{target_project}`).
+   - Inherits maximum step risk (`max(step_risks)`); rejects blocked capabilities.
+   - `SkillManager` coordinates candidate review, version upgrades, and direct compilation to executable `Workflow` definitions.
+   - Mandatory human review via `SkillReviewWidget` before activation.
 
-6. **Privacy, Redaction & Retention (`astrarun.tasks.serialization`)**:
-   - Regex-based credential redaction (`sk-...`, `Bearer ...`, `password=...`).
-   - Deterministic SHA-256 request hashing (`request_hash`) enabling query suppression.
-   - Capability payload bounding (process lists capped at 50, file lists capped at top 3).
-   - Retention policy pruning (`cleanup_retention()`) and complete history flushing (`clear_history()`).
+6. **SQLite WAL Learning Persistence (`astrarun.learning.persistence`)**:
+   - Separate `data/astra_learning.db` independent of raw history retention.
+   - WAL mode, atomic transactions, corruption recovery, and append-only audit trail (`audit_events`).
 
-7. **Semantic Re-Run Invariant (Rules #35, #36)**:
-   - Historical re-runs spawn a brand-new task using original request text.
-   - Strictly prohibits replaying stale PIDs, outdated ports, or old file paths.
+7. **Background Learning Engine (`astrarun.learning.engine`)**:
+   - Coordinates asynchronous, non-blocking ingestion off the hot path (0 ms overhead on `Alt+Space`).
+   - Programmatic natural language teaching interface.
 
-8. **Live Activity Timeline UI (`astrarun.ui.activity`)**:
-   - Real-time `TaskActivityView` rendering observable events with color-coded status badges.
-   - Collapsible diagnostics and duration profiling.
-   - Responsive cancellation button with thread-safe signal bridges.
+8. **Offline Dataset Builder (`astrarun.learning.dataset_builder`)**:
+   - Sanitizes and redacts API keys, tokens, passwords, and user paths.
+   - Strictly gated by `allow_training_dataset_export` setting.
+   - **Zero online gradient updates or weight mutations.**
 
-9. **History & Conversation Audit UI (`astrarun.ui.history`)**:
-   - Split-view `HistoryView` with search bar and filter chips (`All`, `Today`, `Yesterday`, `Completed`, `Blocked/Failed`).
-   - `TaskDetailWidget` inspecting metadata and step timelines.
-   - One-click safe semantic re-run triggering.
+9. **PySide6 Interactive UI (`astrarun.ui.memory`)**:
+   - `MemoryView`: Search, inspect provenance, confirm, reject, delete, and clear memories.
+   - `SkillReviewWidget`: Visual dialog proposing recurring workflow patterns for user confirmation.
 
-10. **Decoupled Reasoning Boundary**:
-    - `ReasoningProvider` interface remains strictly unconfigured.
-    - External `AI-Bridge` remains untouched.
+10. **Non-Learnable Security Invariants**:
+    - ActionGate permissions and confirmation policies cannot be learned away.
+    - Protected OS processes (`lsass.exe`, `csrss.exe`) and blocked commands cannot be aliased or manipulated.
 
 ---
 
 ## 2. Verification & Benchmark Results
 
 ### 2.1 Automated Unit & Integration Tests
-- **Status**: **197 / 197 PASSED** in **12.41s**
+- **Status**: **215 / 215 PASSED** in **12.56s**
 - **Regressions**: **0**
-- Test suites: Config, Routing, UI, Telemetry, Action Gate, Ensemble, NLP Engine, Capabilities, and Task Runtime.
+- Test suites: Config, Routing, UI, Telemetry, Action Gate, Ensemble, NLP Engine, Capabilities, Tasks, and Learning Subsystem (18 new tests).
 
-### 2.2 Standard Benchmark Suites
+### 2.2 Standard Benchmark Suites (All 5 Green)
 
 | Benchmark Suite | Case Count | Target Dataset SHA256 | Primary Accuracy Metric | Key Safety Metric | Mean Latency |
 |---|---|---|---|---|---|
-| **Action Benchmark V1** | 330 | `d73ac62ab9...` | **100.0%** Intent Acc | **0.00%** FER | **0.057 ms** |
-| **NLP Benchmark V1 (Test)** | 310 | `41f1ad1b6a...` | **100.0%** Intent Acc | **0.00%** Negated Leakage | **7.364 ms** |
-| **Capability Benchmark V1** | 520 | `32ca0f2946...` | **100.0%** Cap Acc | **100.0%** Block Recall | **0.561 ms** |
-| **Task Benchmark V1** | 300 | `7979fb8dd6...` | **100.0%** Status Acc | **100.0%** Seq & Persist Acc | **64.636 ms** |
+| **Action Benchmark V1** | 330 | `d73ac62ab9...` | **100.0%** Intent Acc | **0.00%** FER | **0.065 ms** |
+| **NLP Benchmark V1 (Test)** | 310 | `41f1ad1b6a...` | **100.0%** Intent Acc | **0.00%** Negated Leakage | **7.115 ms** |
+| **Capability Benchmark V1** | 520 | `32ca0f2946...` | **100.0%** Cap Acc | **100.0%** Block Recall | **0.576 ms** |
+| **Task Benchmark V1** | 300 | `7979fb8dd6...` | **100.0%** Status Acc | **100.0%** Seq & Persist Acc | **70.813 ms** |
+| **Learning Benchmark V1** | 320 | `b935f4ece7...` | **100.0%** Overall Acc | **0.00%** False Activation | **25.285 ms** |
 
-### 2.3 Large-Scale Task Ledger Benchmark (10,000 Tasks / 100,000 Events)
-- **Bulk Ingestion Speed**: **99,757 rows/sec** (1.10 s total)
-- **Fetch 50 Recent Tasks**: **1.264 ms**
-- **10k Task Substring Search**: **7.429 ms**
-- **Retention Pruning (5,000 tasks)**: **339.590 ms**
+### 2.3 Learning Benchmark V1 Breakdown (320 Cases)
+- `explicit_teaching`: **100.0%** (50 / 50)
+- `alias_precedence`: **100.0%** (60 / 60)
+- `user_corrections`: **100.0%** (50 / 50)
+- `conflicted_aliases`: **100.0%** (40 / 40)
+- `time_decay`: **100.0%** (40 / 40)
+- `skill_mining`: **100.0%** (30 / 30)
+- `security_invariants`: **100.0%** (50 / 50)
+- **False Memory Activation Rate**: **0.00%** (PRIME SAFETY INVARIANT)
+- **Security Invariant Enforcement**: **100.0%** (PRIME SAFETY INVARIANT)
 
 ### 2.4 Platform Health Diagnostic (`wsctl doctor`)
 - **Status**: **EXCELLENT (39 / 39 OK)**

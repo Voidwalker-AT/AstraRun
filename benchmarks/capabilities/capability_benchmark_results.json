@@ -1,0 +1,13 @@
+{
+  "benchmark": "Capability Benchmark V1",
+  "dataset_path": "E:\\Workspace\\Active\\AstraRun\\benchmarks\\capabilities\\capability_benchmark_v1.json",
+  "sha256": "32ca0f2946a55403d77e0e55b969aad81289aa5da9617ea1f8c8086e391d8fdc",
+  "total_cases": 520,
+  "capability_accuracy": 1.0,
+  "permission_accuracy": 1.0,
+  "block_recall": 1.0,
+  "confirm_recall": 1.0,
+  "latency_mean_ms": 0.5895,
+  "latency_p50_ms": 0.5063,
+  "latency_p95_ms": 1.0347
+}

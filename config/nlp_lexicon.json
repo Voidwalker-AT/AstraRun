@@ -22,6 +22,66 @@
       "bring up",
       "execute"
     ],
+    "focus_application": [
+      "focus",
+      "focus application",
+      "focus app",
+      "switch to app",
+      "bring to front",
+      "bring window to front",
+      "focus window"
+    ],
+    "close_application": [
+      "close",
+      "close application",
+      "close app",
+      "quit",
+      "exit application"
+    ],
+    "list_running_applications": [
+      "show running applications",
+      "show running apps",
+      "list running applications",
+      "list running apps",
+      "what applications are running",
+      "running applications",
+      "running apps"
+    ],
+    "system_summary": [
+      "system status",
+      "system summary",
+      "workstation status",
+      "system info",
+      "status of system",
+      "how is the system",
+      "computer status"
+    ],
+    "cpu_status": [
+      "cpu status",
+      "cpu usage",
+      "show cpu",
+      "show cpu usage",
+      "cpu percent",
+      "cpu utilization"
+    ],
+    "memory_status": [
+      "memory status",
+      "memory usage",
+      "show memory",
+      "show memory usage",
+      "ram usage",
+      "how much ram is free",
+      "how much memory is free",
+      "ram status",
+      "free ram"
+    ],
+    "gpu_status": [
+      "gpu status",
+      "gpu usage",
+      "show gpu",
+      "vram status",
+      "nvidia status"
+    ],
     "inspect_port": [
       "inspect port",
       "check port",
@@ -43,6 +103,15 @@
       "status of port",
       "inspect dev port"
     ],
+    "list_listening_ports": [
+      "show all listening ports",
+      "show listening ports",
+      "list listening ports",
+      "all listening ports",
+      "listening ports",
+      "open ports",
+      "what ports are listening"
+    ],
     "inspect_process": [
       "inspect process",
       "check process",
@@ -56,6 +125,30 @@
       "status of process",
       "process status",
       "tell me about process"
+    ],
+    "list_processes": [
+      "show node processes",
+      "show python processes",
+      "show processes",
+      "list processes",
+      "which python process is using the most memory",
+      "python process using most memory",
+      "top processes by ram",
+      "highest cpu process",
+      "newest node process"
+    ],
+    "project_status": [
+      "status of",
+      "project status",
+      "what branch is",
+      "is dirty",
+      "branch of"
+    ],
+    "windows_for_application": [
+      "show windows for",
+      "windows for",
+      "list windows for",
+      "show windows"
     ],
     "terminate_process": [
       "kill",
@@ -78,11 +171,17 @@
       "open file",
       "open screenshot",
       "open pdf",
+      "find my latest screenshot",
+      "open my latest screenshot",
+      "open the newest pdf in downloads",
       "find the newest",
       "find latest",
       "find the latest",
       "search for file",
-      "locate"
+      "locate",
+      "show recent files",
+      "recent files",
+      "reveal"
     ],
     "search_web": [
       "search google for",
@@ -97,6 +196,11 @@
       "explain this",
       "explain",
       "summarize",
+      "why did my server crash",
+      "why is this process using so much ram",
+      "figure out what's wrong with",
+      "fix my development environment",
+      "decide which project i should work on",
       "why is this failing",
       "why is port",
       "why is it failing",

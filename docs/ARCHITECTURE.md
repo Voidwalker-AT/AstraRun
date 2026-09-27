@@ -1,6 +1,6 @@
 # AstraRun Architecture Specification
 
-> **Version**: 0.4.0  
+> **Version**: 0.7.0  
 > **Target Platform**: Windows 11 / Windows 10 (64-bit)  
 > **Status**: APPROVED  
 
@@ -325,9 +325,43 @@ $$\text{Natural Language} \longrightarrow \text{NLP Engine} \longrightarrow \tex
 - Mixed-risk requests adopt `ToolRisk.HIGH` and mandate explicit confirmation.
 - Transparent partial capability reporting (`status="PARTIALLY_SUPPORTED"`).
 
-### 8.4. AI Bridge Escalation Boundary
-- Queries requiring background reasoning emit a typed `ReasoningRequired` envelope (`complex_context_restoration`, `diagnostic_reasoning`, `high_ambiguity_no_entities`).
-- Zero direct cloud API calls; escalation prepares clean handoff for the v0.7 AI Bridge sidecar.
+### 8.4. Reasoning Provider Boundary & Escalation
+- Queries requiring deep background reasoning emit a typed `ReasoningRequired` envelope (`complex_context_restoration`, `diagnostic_reasoning`, `high_ambiguity_no_entities`).
+- Zero direct cloud API calls; the `ReasoningProvider` interface remains unconfigured in v0.7.
+- External reasoning integration is deferred to milestone v0.12.
+
+---
+
+## 9. Workstation Capability Architecture (v0.7)
+
+### 9.1. Central Capability Registry (`astrarun.capabilities.registry`)
+- Universal typed execution boundary maintaining **47 registered capabilities** across 9 OS categories.
+- Replaces flat tool dispatch with strongly typed signatures, structured arguments, and typed `CapabilityResult` envelopes.
+- Explicit permissions:
+  - `AUTO`: Low-risk discovery, read-only queries, and safe application launch (40 capabilities).
+  - `CONFIRM`: High-risk operations (such as process termination) requiring explicit confirmation (3 capabilities).
+  - `BLOCK`: Dangerous operations unconditionally rejected by security policy (4 capabilities).
+- Bounded execution latency: mean **0.590 ms** across all categories.
+
+### 9.2. Category Partitioning & Handlers
+1. **`APPLICATION`**: Desktop app discovery via visible top-level windows (`EnumWindows`), window focus/restore (`ShowWindow`, `SetForegroundWindow`), safe launch, and non-destructive graceful closing (`WM_CLOSE`).
+2. **`FILE`**: Bounded metadata index over safe roots (`Workspace`, `Downloads`, `Documents`, `Desktop`, `Pictures`). Reparse point protection (`follow_symlinks=False`). Blocks executable scripts (`.bat`, `.cmd`, `.ps1`, `.exe`) with `PERMISSION_DENIED`; offers safe `reveal_file` in Explorer.
+3. **`PROCESS`**: Resource usage (CPU%, RSS, threads), parent/child relationships, bound ports, deterministic sorting (memory/CPU/name), and sanitized command-line arguments. TOCTOU-safe termination with protected process defense.
+4. **`NETWORK`**: 100% read-only listening port queries, process-to-port mapping (`find_process_on_port`), and socket connection status.
+5. **`SYSTEM`**: CPU model/load, memory, disk, battery, audio volume, dedicated GPU telemetry via `nvidia-smi` (RTX 2050), and native workstation session locking (`LockWorkStation`). Unconditional blocks on shutdown and reboot.
+6. **`PROJECT`**: Workspace project health, injection-proof Git status (`git branch --show-current`, `git status --porcelain`), and project-bound process/port detection.
+7. **`WINDOW`**: Read-only window discovery and enumeration (`WindowEntity`) preparing for v0.8 window management.
+8. **`AUDIO`**: Master volume and mute status inspection foundation.
+9. **`WORKFLOW`**: Safe multi-step workflow execution and auditing.
+
+### 9.3. Structured Observation Store (`astrarun.capabilities.store`)
+- In-memory bounded ring buffer (200 facts) capturing typed `Observation` records.
+- Automatically records read-only OS facts for future System-2 reasoning handoffs without disk overhead or external model calls.
+
+### 9.4. Structured UI Result Cards (`astrarun.ui.cards`)
+- `ResultCard`: Clean key-value diagnostic layout with status badge and capability action triggers.
+- `ListResultCard`: Selectable list presentation with keyboard navigation and Esc dismissal.
+
 
 
 

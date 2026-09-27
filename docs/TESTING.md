@@ -1,6 +1,6 @@
 # AstraRun Testing & Verification Report
 
-> **Version**: 0.6.5  
+> **Version**: 0.7.0  
 > **Status**: VERIFIED & PASSING  
 > **Execution Date**: 2026-09-27  
 
@@ -8,7 +8,53 @@
 
 ## 1. Test Suite Architecture
 
-The AstraRun test suite contains **126 automated tests across 16 modules**:
+The AstraRun test suite contains **169 automated tests across 17 modules**:
+
+1. **Workstation Capability Tests (v0.7)**:
+   - `tests/test_v07_capabilities.py` (43 tests):
+     - `test_capability_registry_init_and_listing`: Registry population (47 capabilities, 9 categories).
+     - `test_capability_registry_execute_success`: Clean dispatch, observation recording, latency profiling.
+     - `test_capability_registry_execute_confirm`: High-risk confirmation gating (`CONFIRM`).
+     - `test_capability_registry_execute_block`: Hard security policy interception (`BLOCK`).
+     - `test_capability_registry_execute_invalid_arg`: Type checking and error wrapping (`INVALID_ARGUMENT`).
+     - `test_capability_registry_execute_not_found`: Missing capability error (`NOT_FOUND`).
+     - `test_application_listing`: Top-level visible window desktop app discovery.
+     - `test_application_is_running`: Application running status check.
+     - `test_application_find`: Start Menu and App Paths lookup.
+     - `test_application_focus`: Window focus and restoration (`AMBIGUOUS` on multiples).
+     - `test_application_close_graceful`: Non-destructive `WM_CLOSE` messaging.
+     - `test_file_index_safe_roots`: Bounded traversal and symlink loop protection.
+     - `test_file_find_and_recent`: Pattern matching and recency sorting.
+     - `test_file_latest_screenshot`: Recent image and screenshot discovery.
+     - `test_file_metadata`: Size, timestamps, extension, and permissions.
+     - `test_file_open_blocks_scripts`: **HARD SECURITY**: Blocks `.bat`, `.cmd`, `.ps1`, `.exe` scripts.
+     - `test_file_reveal`: Safe `/select` highlighting in File Explorer.
+     - `test_process_listing_and_sorting`: Deterministic sorting by RSS, CPU%, and name.
+     - `test_process_inspection`: Detailed process metrics and sanitized command lines.
+     - `test_process_resource_usage`: Lightweight CPU%, memory RSS, and thread counts.
+     - `test_process_ports_and_tree`: Sockets and parent/child process relationships.
+     - `test_process_protected_termination_blocked`: **HARD POLICY**: Blocks terminating `explorer.exe`, `system`, `lsass`.
+     - `test_process_termination_toctou`: Validates PID recycling race condition protection.
+     - `test_network_listening_ports`: Listing local listening TCP dev sockets.
+     - `test_network_inspect_port`: Diagnostic query for specific port numbers.
+     - `test_network_find_process_on_port`: Mapping port to owning process entity.
+     - `test_network_connections`: Read-only socket status.
+     - `test_system_summary`: Unified host overview (CPU, RAM, disk, battery, GPU).
+     - `test_system_cpu_and_memory`: Core counts, frequency, RAM, swap metrics.
+     - `test_system_disk_and_battery`: Disk capacity and battery runtime.
+     - `test_system_gpu_status`: Discrete GPU metrics (NVIDIA RTX 2050) with graceful fallback.
+     - `test_system_audio_status`: Audio volume and mute inspection foundation.
+     - `test_system_lock_workstation`: Windows `LockWorkStation` invocation.
+     - `test_system_shutdown_and_restart_blocked`: **HARD POLICY**: Blocks `shutdown_system` and `restart_system`.
+     - `test_project_status_and_git`: Injection-proof Git status via structured subprocess calls.
+     - `test_project_processes_and_ports`: Project-bound process and listening port mapping.
+     - `test_window_discovery`: Window enumeration, geometry, and foreground focus tracking.
+     - `test_context_engine_expanded_queries`: ContextEngine recency queries (`last_project`, `last_file`, `last_process`, `last_port`).
+     - `test_observation_store`: In-memory bounded ring buffer fact recording.
+     - `test_result_card`: PySide6 `ResultCard` layout and action buttons.
+     - `test_list_result_card`: PySide6 `ListResultCard` selectable list and keyboard navigation.
+     - `test_security_regressions`: Zero shell execution and traversal regressions.
+     - `test_reasoning_escalation_boundary_unconfigured`: Unconfigured reasoning provider boundary handling.
 
 1. **Hybrid Natural Language Understanding Tests (v0.6.5)**:
    - `tests/test_v065_nlp.py` (29 tests):
@@ -242,14 +288,49 @@ tests/test_ai_bridge_protocol PASSED                                     [100%]
 ```
 
 ### Results Summary
-- **Total Tests Collected**: **97**
-- **Passed**: **97**
+- **Total Tests Collected**: **169**
+- **Passed**: **169**
 - **Failed**: **0**
-- **Duration**: ~8.59s
+- **Duration**: **9.03s**
 
 ---
 
-## 3. Action Benchmark V1 Evaluation (330 Test Cases)
+## 3. Capability Benchmark V1 Evaluation (520 Cases)
+
+```powershell
+.venv\Scripts\python benchmarks\capabilities\run_capability_benchmark.py
+```
+
+### Evaluation Results
+- **Total Benchmark Queries**: **520**
+- **Dataset SHA256**: `32ca0f2946a55403d77e0e55b969aad81289aa5da9617ea1f8c8086e391d8fdc`
+- **Capability Accuracy**: **100.0%** (520 / 520)
+- **Permission Accuracy**: **100.0%** (520 / 520)
+- **Block Recall**: **100.0%** (Prime Safety Invariant)
+- **Confirmation Recall**: **100.0%** (High-Risk Gating)
+- **End-to-End Latency (Mean)**: **0.590 ms** (p50: 0.506 ms, p95: 1.035 ms)
+
+---
+
+## 4. NLP Benchmark V1 Evaluation (620 Cases)
+
+```powershell
+.venv\Scripts\python benchmarks\nlp\run_nlp_benchmark.py
+```
+
+### Evaluation Results (Locked Test Set: 310 cases)
+- **Dataset SHA256**: `41f1ad1b6a29d071dad3ea93a8390961c41c136b15365586cd48ad3a61211c82`
+- **Intent Accuracy**: **100.0%**
+- **Clause Segmentation**: **95.2%**
+- **Multi-Action Match**: **100.0%**
+- **Negation Accuracy**: **100.0%**
+- **NEGATED ACTION LEAKAGE RATE**: **0.00%** (Prime Safety Invariant)
+- **Block Recall**: **100.0%**
+- **Mean Latency**: **5.796 ms** (p50: 5.859 ms, p95: 6.842 ms)
+
+---
+
+## 5. Action Benchmark V1 Evaluation (330 Test Cases)
 
 ```powershell
 .venv\Scripts\python benchmarks\action\run_action_benchmark.py
@@ -266,11 +347,11 @@ tests/test_ai_bridge_protocol PASSED                                     [100%]
 - **Clarification Precision**: **100.0%** (20 / 20)
 - **Block Recall**: **100.0%** (74 / 74)
 - **Confirmation Recall**: **100.0%** (31 / 31)
-- **End-to-End Latency (Mean)**: **0.077 ms** (p50: 0.027 ms, p95: 0.187 ms)
+- **End-to-End Latency (Mean)**: **0.051 ms** (p50: 0.024 ms, p95: 0.104 ms)
 
 ---
 
-## 4. Standardized Routing Evaluation Benchmark (88 Queries)
+## 6. Standardized Routing Evaluation Benchmark (88 Queries)
 
 ```powershell
 .venv\Scripts\python benchmarks\routing\run_benchmark.py
@@ -286,7 +367,7 @@ tests/test_ai_bridge_protocol PASSED                                     [100%]
 
 ---
 
-## 5. Empirical Manual Verification Matrix
+## 7. Empirical Manual Verification Matrix
 
 | Query Executed | Expected Outcome | Verification Status | Notes |
 | :--- | :--- | :--- | :--- |

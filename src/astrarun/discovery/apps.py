@@ -217,3 +217,10 @@ class AppDiscoveryCache:
                         discovered[norm_key] = app_info
             except Exception as err:
                 logger.debug("Error scanning Start Menu at %s: %s", menu_dir, err)
+
+        self._apps = discovered
+
+
+def discover_all_apps() -> dict[str, AppInfo]:
+    """Helper to discover all local applications via AppDiscoveryCache."""
+    return AppDiscoveryCache().apps

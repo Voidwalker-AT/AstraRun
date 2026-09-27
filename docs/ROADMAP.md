@@ -2,6 +2,7 @@
 
 > **Status**: APPROVED  
 > **Horizon**: v0.1 -> Workstation Control Platform  
+> **Note on Terminology**: Early roadmap drafts referred to "AI Bridge" as if it were an internal AstraRun reasoning subsystem. This has been corrected: the user has an independent platform project named `AI-Bridge`. AstraRun refers to external reasoning interfaces generically as **Reasoning Providers** or **Reasoning Gateways**. External integrations (including any optional future integration with AI-Bridge, local LLMs, or cloud models) are strictly decoupled and deferred to v0.12.
 
 ---
 
@@ -12,15 +13,17 @@ flowchart LR
     v1["v0.1: Deterministic Core"] --> v2["v0.2: Discovery & Fuzzy Match"]
     v2 --> v3["v0.3: Laya Fast Classifier"]
     v3 --> v4["v0.4: Kev Semantic Router"]
-    v4 --> v5["v0.5: AI Bridge Integration"]
-    v5 --> v6["v0.6: Actions & Context"]
+    v4 --> v5["v0.5: Laya Ensemble & Adaptation"]
+    v5 --> v6["v0.6: Actions & Context Engine"]
     v6 --> v65["v0.6.5: Hybrid NLP Engine"]
-    v65 --> v7["v0.7: AI Bridge Reasoning"]
-    v7 --> v8["v0.8: Workstation Workflows"]
-    v8 --> v9["v0.9: Window & Browser Control"]
-    v9 --> vFinal["v1.0: Workstation Daemon"]
+    v65 --> v7["v0.7: Workstation Capabilities"]
+    v7 --> v8["v0.8: Window Management"]
+    v8 --> v9["v0.9: Browser & File Intelligence"]
+    v9 --> v10["v0.10: Application Interaction"]
+    v10 --> v11["v0.11: Daemon & Rich Context"]
+    v11 --> v12["v0.12: Optional Reasoning Providers"]
+    v12 --> vFinal["v1.0: AI Workstation Control Plane"]
 ```
-
 
 ---
 
@@ -94,8 +97,6 @@ flowchart LR
 
 ---
 
----
-
 ### v0.6 — Gated Workstation Actions, Context Engine & Workflow Orchestration (Complete — 2026-09-27)
 - **Action Gate Multi-Tier Safety Layer**: Evaluates every proposed action across Tier 0 (Hard Policy), Tier 1 (Ambiguity & Disagreement), Tier 2 (Tool Registry Validation), and Tier 3 (Confirmation vs. Direct Allowance).
 - **Workstation Context Engine**: Captures lightweight local machine state (foreground window, title, PID via Win32 ctypes, and dev listening ports via psutil). Tracks project recency (24h TTL) and ephemeral process/port references (300s TTL). Bounded storage (30 items, 48h retention) with zero surveillance (no keystroke logging, no screenshots). Rejects adversarial context injection.
@@ -103,7 +104,7 @@ flowchart LR
 - **Project Registry**: Strictly read-only catalog over `E:\Workspace\workspace.json` (28 cataloged projects) with dynamic workspace discovery fallback and multi-tier fuzzy matching.
 - **Workflow Engine**: Structured execution of typed multi-step workflows (`open_project`, `open_project_in_vscode`, `inspect_dev_port`) with fail-fast partial failure handling and immutable audit logging in `data/workflow_audit.jsonl`.
 - **Confirmation & Disambiguation UI Cards**: Keyboard-safe PySide6 cards where single `Enter` is suppressed on HIGH risk (requires `Ctrl+Enter` or click), `Esc` cancels, and Up/Down arrows navigate ambiguous entity matches.
-- **AI Bridge Protocol Boundary**: Clean `ReasoningProvider` interface connecting AstraRun to external reasoning models with zero direct cloud API calls inside AstraRun.
+- **Reasoning Provider Boundary**: Clean `ReasoningProvider` interface connecting AstraRun to external reasoning models with zero direct cloud API calls inside AstraRun.
 - **Action Benchmark V1 (330 queries)**: Achieved 100.0% Intent Accuracy, 100.0% Gate Accuracy, 100.0% Tool Accuracy, 0.00% False Execution Rate, 100.0% Block Recall, 100.0% Confirmation Recall, and 0.077 ms mean latency.
 - **97 Passing Automated Tests**: 79 baseline regression tests + 18 v0.6 tests passing cleanly in ~8.5s.
 - Formal architectural decision records ADR-027 through ADR-032.
@@ -119,36 +120,57 @@ flowchart LR
 - **Syntactic Coreference Grounding**: Isolates pronoun recognition in NLP (`it`, `that`, `that process`), delegating final state binding to `WorkstationContextEngine` with mandatory disambiguation upon multiple candidates.
 - **Safe Workflow Compiler**: Compiles `StructuredUtterance` into `WorkflowProposal`. Conservative multi-clause policy: any blocked clause immediately blocks the entire request (`status="BLOCKED"`). Distinguishes `PARTIALLY_SUPPORTED` requests with itemized capability reporting.
 - **Developer Debugger CLI**: `python -m astrarun.nlp.debugger "<utterance>"` providing real-time parse tree, entity span, relation, and workflow preview inspection.
-- **AI Bridge Escalation (`ReasoningRequired`)**: Emits structured handoff envelopes for complex context restoration, open-ended diagnostic reasoning, and high-ambiguity requests without invoking LLMs.
+- **Reasoning Provider Escalation (`ReasoningRequired`)**: Emits structured handoff envelopes for complex context restoration, open-ended diagnostic reasoning, and high-ambiguity requests without invoking LLMs.
 - **NLP Benchmark V1 (620 queries)**: 100.0% Intent Accuracy, 95.2% Clause Segmentation Acc, 100.0% Multi-Action Match, 100.0% Negation Acc, 0.00% Negated Action Leakage Rate, 100.0% Block Recall, and 0.394 ms mean latency (rules) / 7.157 ms (spaCy hybrid).
 - **126 Passing Automated Tests**: 97 baseline tests + 29 dedicated v0.6.5 NLP tests passing cleanly in ~6.4s.
 - Formal architectural decision records ADR-033 through ADR-039.
 
 ---
 
-### v0.7 — AI Bridge Reasoning Integration (Next Milestone)
-- Connect `ReasoningProvider` and `ReasoningRequired` escalation envelopes to local AI Bridge sidecar service over IPC / localhost HTTP.
-- Implement background context synthesis for complex activity restoration (`"get me back to whatever I was doing before AstraRun"`).
-- Diagnostic error and port collision analysis through local LLM reasoning.
-- Output from AI Bridge strictly re-enters `EntityResolver` -> `ActionGate` -> `ToolRegistry`.
+### v0.7 — Workstation Capability Expansion (Current Milestone)
+- Expand deterministic, typed, policy-controlled OS capabilities across Applications, Files, Processes, Network, System, and Projects.
+- **Capability Registry**: Evolved typed abstraction with risk metadata, read-only flags, confirmation requirements, context effects, and unified `CapabilityResult`.
+- **Read-Only First Principle**: Focus on discover, inspect, and query before modify or terminate.
+- **Application Capabilities**: Running app enumeration, graceful window close (`WM_CLOSE`), safe single-window focus with disambiguation on multiple windows.
+- **Bounded File Discovery**: Metadata-only index over user roots (`Workspace`, `Downloads`, `Documents`, `Desktop`, `Pictures`). Screenshot discovery, document & source code search, recent/latest modifiers. Generic file opening blocks executable scripts (`.exe`, `.bat`, `.ps1`). Reparse point / junction traversal protection.
+- **Process & Network Capabilities**: Extended resource metrics (CPU%, RSS, threads, start time), process sorting, parent/child relationships, listening port discovery, sanitized command line privacy.
+- **System & Audio Status**: Structured CPU/RAM/disk metrics, graceful GPU & battery fallback, safe audio volume inspection foundation.
+- **Window Discovery Foundation**: Read-only enumeration (`WindowEntity`) preparing for v0.8 window management.
+- **ResultCard UI**: Compact informational presentation mode with keyboard dismissal and safe action buttons.
+- **Observation Model**: Structured OS observations stored in-memory for future reasoning handoffs.
+- **Zero Raw Shell & Zero Reasoning Invocation**: All operations are typed adapters; no external reasoning calls.
 
 ---
 
-### v0.8 — Advanced Workstation Workflows
-- Multi-step cross-project build and test pipelines (`wsctl run <project> <cmd>`).
-- Background process health monitoring and automated dev port recovery.
-- Environment switching (`ds-base`, `termux`, `.venv`).
+### v0.8 — Window Management
+- Native window management (focus switching, workspace snapping, tiling, multi-monitor geometry, virtual desktop routing).
+- Window state mutation (minimize, maximize, restore) via verified HWND handles.
 
 ---
 
-### v0.9 — Browser, Window & File Control
-- Native window management (focus switching, workspace snapping, virtual desktop routing).
-- Deep browser integration (Vivaldi tabs, Chromium devtools protocol).
-- Semantic workstation file search and metadata indexing.
+### v0.9 — Browser + File Intelligence
+- Deep browser integration (Vivaldi tabs, Chromium devtools protocol, active tab URL inspection).
+- Deeper file content indexing, document structure extraction, and code search without heavy embeddings.
 
 ---
 
-### v1.0 — Workstation Intelligence Daemon
-- Resident daemon coordinating cross-workspace awareness, context synthesis, proactive assistance, and multi-modal screen reasoning.
+### v0.10 — Application Interaction
+- Native UI automation and accessibility tree inspection (UI Automation / MSAA).
+- Controlled keystroke and menu command routing for standard desktop applications.
 
+---
 
+### v0.11 — Workstation Daemon / Rich Context
+- Resident system tray daemon with background event monitoring, context synthesis, proactive alerts, and dev port recovery.
+
+---
+
+### v0.12 — Optional Reasoning Providers
+- Connect `ReasoningProvider` interface to optional external reasoning gateways (e.g. independent `AI-Bridge` service, local LLM, cloud provider).
+- Consume structured `Observation` envelopes to diagnose crashes and formulate complex multi-step plans.
+- Deep reasoning remains strictly non-authoritative: output re-enters `EntityResolver` -> `ActionGate` -> `CapabilityRegistry`.
+
+---
+
+### v1.0 — AI Workstation Control Plane
+- Unified workstation control plane combining fast deterministic capabilities, rich local context, and deep reasoning assistance.

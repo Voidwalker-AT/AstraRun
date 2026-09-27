@@ -29,14 +29,17 @@ logger = logging.getLogger(__name__)
 # System paths and processes strictly blocked by policy
 _PROTECTED_PROCESSES = {
     "system", "system32", "registry", "lsass", "csrss", "smss",
-    "services.exe", "svchost.exe", "wininit", "explorer.exe",
+    "services.exe", "services", "svchost.exe", "svchost", "wininit",
+    "winlogon", "dwm", "explorer.exe", "explorer",
 }
 
 _PROHIBITED_COMMAND_PATTERNS = [
     re.compile(r'(?i)\b(?:format\s+[a-z]:?|rm\s+-rf|del\s+/[sfq]|system32|powershell\s+-enc|powershell\.exe|cmd\.exe)'),
-    re.compile(r'(?i)\b(?:delete\s+system32|kill\s+lsass|kill\s+system|format\s+c)'),
+    re.compile(r'(?i)\b(?:delete\s+system32|kill\s+lsass|kill\s+system|close\s+lsass|close\s+system|format\s+c)'),
+    re.compile(r'(?i)\b(?:shutdown|shut\s+down|restart\s+workstation|reboot\b)'),
+    re.compile(r'(?i)\b(?:open\s+(?:file\s+)?.*?\.(?:exe|bat|cmd|ps1|msi|scr|com))\b'),
+    re.compile(r'(?i)(?:\.\.[\\/]|windows[\\/]system32)'),
 ]
-
 
 
 class WorkflowCompiler:
@@ -64,12 +67,11 @@ class WorkflowCompiler:
                 blocked_reasons.append("Utterance contains prohibited destructive system command pattern.")
 
         for proc_name in _PROTECTED_PROCESSES:
-            if re.search(r'\b(?:kill|terminate|stop|end)\s+(?:process\s+)?' + re.escape(proc_name) + r'\b', raw_lower):
+            if re.search(r'\b(?:kill|terminate|stop|end|close)\s+(?:process\s+)?' + re.escape(proc_name) + r'\b', raw_lower):
                 blocked_reasons.append(f"Attempting to terminate protected system process '{proc_name}'.")
 
         for clause in utterance.clauses:
             text_lower = clause.text.lower()
-            # Check prohibited destructive patterns
             for pat in _PROHIBITED_COMMAND_PATTERNS:
                 if pat.search(text_lower):
                     blocked_reasons.append(
@@ -93,7 +95,6 @@ class WorkflowCompiler:
                             blocked_reasons.append(
                                 f"Termination of process on privileged port {entity.normalized} is prohibited."
                             )
-
 
         # If any clause is blocked, BLOCK THE ENTIRE REQUEST (Conservative Invariant)
         if blocked_reasons:
@@ -140,7 +141,6 @@ class WorkflowCompiler:
                     proj_id = proj_ent.normalized if proj_ent else None
 
                 if proj_id:
-                    # Check OPEN_WITH relation
                     has_vscode = (app_ent and app_ent.normalized == "vscode") or "vscode" in clause.text.lower() or "vs code" in clause.text.lower()
                     if has_vscode:
                         steps.append(WorkflowStep(
@@ -190,7 +190,6 @@ class WorkflowCompiler:
                 pid_ent = next((e for e in clause.entities if e.type == NLPEntityType.PROCESS), None)
                 pid_val = pid_ent.normalized if pid_ent and isinstance(pid_ent.normalized, int) else None
 
-                # Check contextual reference
                 if pid_val is None and clause.contextual_references:
                     ref = clause.contextual_references[0]
                     if ref.resolved_value:
@@ -237,12 +236,201 @@ class WorkflowCompiler:
                     overall_risk = ToolRisk.HIGH
                     preview_lines.append(f"{step_counter}. Terminate process {pid_val} [HIGH RISK - REQUIRES CONFIRMATION]")
                     step_counter += 1
-
                 else:
                     if not has_ambiguity:
                         unsupported_clauses.append(clause.text)
 
-            # E. Unsupported / Open-ended action
+            # E. Application Management (focus / close / running list)
+            elif clause.action == "focus_application":
+                app_ent = next((e for e in clause.entities if e.type == NLPEntityType.APPLICATION), None)
+                app_name = app_ent.normalized if app_ent else None
+                if app_name:
+                    steps.append(WorkflowStep(
+                        step_id=f"step_{step_counter}",
+                        name=f"Focus application {app_name}",
+                        tool="focus_application",
+                        arguments={"app": app_name},
+                        critical=True,
+                        source_clause_idx=clause.idx,
+                    ))
+                    preview_lines.append(f"{step_counter}. Focus application {app_name}")
+                    step_counter += 1
+                else:
+                    unsupported_clauses.append(clause.text)
+
+            elif clause.action == "close_application":
+                app_ent = next((e for e in clause.entities if e.type == NLPEntityType.APPLICATION), None)
+                app_name = app_ent.normalized if app_ent else None
+                if app_name:
+                    steps.append(WorkflowStep(
+                        step_id=f"step_{step_counter}",
+                        name=f"Close application {app_name}",
+                        tool="close_application",
+                        arguments={"app": app_name},
+                        critical=True,
+                        source_clause_idx=clause.idx,
+                    ))
+                    preview_lines.append(f"{step_counter}. Close application {app_name}")
+                    step_counter += 1
+                else:
+                    unsupported_clauses.append(clause.text)
+
+            elif clause.action == "list_running_applications":
+                steps.append(WorkflowStep(
+                    step_id=f"step_{step_counter}",
+                    name="List running applications",
+                    tool="list_running_applications",
+                    arguments={},
+                    critical=True,
+                    source_clause_idx=clause.idx,
+                ))
+                preview_lines.append(f"{step_counter}. List running applications")
+                step_counter += 1
+
+            # F. System Health & Performance
+            elif clause.action == "system_summary":
+                steps.append(WorkflowStep(
+                    step_id=f"step_{step_counter}",
+                    name="System health summary",
+                    tool="system_summary",
+                    arguments={},
+                    critical=True,
+                    source_clause_idx=clause.idx,
+                ))
+                preview_lines.append(f"{step_counter}. Show system summary")
+                step_counter += 1
+
+            elif clause.action == "gpu_status":
+                steps.append(WorkflowStep(
+                    step_id=f"step_{step_counter}",
+                    name="GPU status",
+                    tool="gpu_status",
+                    arguments={},
+                    critical=True,
+                    source_clause_idx=clause.idx,
+                ))
+                preview_lines.append(f"{step_counter}. Show GPU status")
+                step_counter += 1
+
+            elif clause.action == "memory_status":
+                steps.append(WorkflowStep(
+                    step_id=f"step_{step_counter}",
+                    name="Memory status",
+                    tool="memory_status",
+                    arguments={},
+                    critical=True,
+                    source_clause_idx=clause.idx,
+                ))
+                preview_lines.append(f"{step_counter}. Show memory status")
+                step_counter += 1
+
+            elif clause.action == "cpu_status":
+                steps.append(WorkflowStep(
+                    step_id=f"step_{step_counter}",
+                    name="CPU status",
+                    tool="cpu_status",
+                    arguments={},
+                    critical=True,
+                    source_clause_idx=clause.idx,
+                ))
+                preview_lines.append(f"{step_counter}. Show CPU status")
+                step_counter += 1
+
+            # G. Network Port Listing
+            elif clause.action == "list_listening_ports":
+                steps.append(WorkflowStep(
+                    step_id=f"step_{step_counter}",
+                    name="List listening ports",
+                    tool="list_listening_ports",
+                    arguments={"limit": 20},
+                    critical=True,
+                    source_clause_idx=clause.idx,
+                ))
+                preview_lines.append(f"{step_counter}. List listening ports")
+                step_counter += 1
+
+            # H. Process Listing
+            elif clause.action == "list_processes":
+                filter_name = None
+                if "node" in clause.text.lower():
+                    filter_name = "node"
+                elif "python" in clause.text.lower():
+                    filter_name = "python"
+                sort_by = "cpu" if "cpu" in clause.text.lower() else "memory"
+                steps.append(WorkflowStep(
+                    step_id=f"step_{step_counter}",
+                    name=f"List processes (filter={filter_name})",
+                    tool="list_processes",
+                    arguments={"limit": 10, "sort_by": sort_by, "filter_name": filter_name},
+                    critical=True,
+                    source_clause_idx=clause.idx,
+                ))
+                preview_lines.append(f"{step_counter}. List processes")
+                step_counter += 1
+
+            # I. Project Status / Git
+            elif clause.action == "project_status":
+                proj_ent = next((e for e in clause.entities if e.type == NLPEntityType.PROJECT), None)
+                proj_id = proj_ent.normalized if proj_ent else None
+                if proj_id:
+                    steps.append(WorkflowStep(
+                        step_id=f"step_{step_counter}",
+                        name=f"Project status for {proj_id}",
+                        tool="project_status",
+                        arguments={"project_id": proj_id},
+                        critical=True,
+                        source_clause_idx=clause.idx,
+                    ))
+                    preview_lines.append(f"{step_counter}. Show status of {proj_id}")
+                    step_counter += 1
+                else:
+                    unsupported_clauses.append(clause.text)
+
+            elif clause.action == "project_git_status":
+                proj_ent = next((e for e in clause.entities if e.type == NLPEntityType.PROJECT), None)
+                proj_id = proj_ent.normalized if proj_ent else None
+                if proj_id:
+                    steps.append(WorkflowStep(
+                        step_id=f"step_{step_counter}",
+                        name=f"Git status for {proj_id}",
+                        tool="project_git_status",
+                        arguments={"project_id": proj_id},
+                        critical=True,
+                        source_clause_idx=clause.idx,
+                    ))
+                    preview_lines.append(f"{step_counter}. Show Git status of {proj_id}")
+                    step_counter += 1
+                else:
+                    unsupported_clauses.append(clause.text)
+
+            # J. Window Discovery
+            elif clause.action in ("windows_for_application", "list_windows"):
+                app_ent = next((e for e in clause.entities if e.type == NLPEntityType.APPLICATION), None)
+                app_name = app_ent.normalized if app_ent else ""
+                if app_name:
+                    steps.append(WorkflowStep(
+                        step_id=f"step_{step_counter}",
+                        name=f"Show windows for {app_name}",
+                        tool="windows_for_application",
+                        arguments={"app": app_name},
+                        critical=True,
+                        source_clause_idx=clause.idx,
+                    ))
+                    preview_lines.append(f"{step_counter}. Show windows for {app_name}")
+                    step_counter += 1
+                else:
+                    steps.append(WorkflowStep(
+                        step_id=f"step_{step_counter}",
+                        name="List desktop windows",
+                        tool="list_windows",
+                        arguments={"limit": 20},
+                        critical=True,
+                        source_clause_idx=clause.idx,
+                    ))
+                    preview_lines.append(f"{step_counter}. List desktop windows")
+                    step_counter += 1
+
+            # K. Unsupported / Open-ended action
             else:
                 unsupported_clauses.append(clause.text)
 

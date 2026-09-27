@@ -1,10 +1,56 @@
-"""Data models for Workstation Context Engine."""
+"""Data models for Workstation Context Engine with trusted event tracking."""
 
 from __future__ import annotations
 
 import time
 from dataclasses import dataclass, field
+from enum import Enum
 from typing import Any, Dict, List, Optional
+
+
+class ContextTrustLevel(str, Enum):
+    """Trust classifications for contextual facts."""
+    VERIFIED_ACTION = "VERIFIED_ACTION"   # Directly executed/verified through AstraRun ActionGate
+    OS_OBSERVATION = "OS_OBSERVATION"     # Directly observed from Win32 / psutil snapshot
+    INFERRED = "INFERRED"                 # Deterministically inferred from relations
+    MODEL_PROPOSED = "MODEL_PROPOSED"     # Proposed by statistical model (NEVER auto-trusted)
+
+
+@dataclass
+class ContextEvent:
+    """Record of a workstation lifecycle event with source provenance and trust level."""
+    type: str
+    entity_id: str
+    timestamp: float = field(default_factory=time.time)
+    source: str = "astrarun"
+    trust_level: ContextTrustLevel = ContextTrustLevel.VERIFIED_ACTION
+    metadata: dict[str, Any] = field(default_factory=dict)
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "type": self.type,
+            "entity_id": self.entity_id,
+            "timestamp": self.timestamp,
+            "source": self.source,
+            "trust_level": self.trust_level.value,
+            "metadata": self.metadata,
+        }
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> ContextEvent:
+        trust_str = data.get("trust_level", ContextTrustLevel.VERIFIED_ACTION.value)
+        try:
+            trust = ContextTrustLevel(trust_str)
+        except ValueError:
+            trust = ContextTrustLevel.VERIFIED_ACTION
+        return cls(
+            type=data.get("type", ""),
+            entity_id=data.get("entity_id", ""),
+            timestamp=data.get("timestamp", time.time()),
+            source=data.get("source", "astrarun"),
+            trust_level=trust,
+            metadata=data.get("metadata", {}),
+        )
 
 
 @dataclass
@@ -109,6 +155,7 @@ class ContextReference:
     confidence: float = 1.0
     timestamp: float = field(default_factory=time.time)
     metadata: dict[str, Any] = field(default_factory=dict)
+    trust_level: ContextTrustLevel = ContextTrustLevel.VERIFIED_ACTION
 
     @property
     def age_seconds(self) -> float:
@@ -124,9 +171,15 @@ class WorkstationContext:
     foreground_app: str | None = None
     foreground_title: str | None = None
     foreground_pid: int | None = None
+    foreground_window: int | None = None
     active_project: str | None = None
     recent_projects: list[RecentProjectRecord] = field(default_factory=list)
     recent_actions: list[RecentAction] = field(default_factory=list)
+    recent_apps: list[str] = field(default_factory=list)
+    recent_files: list[str] = field(default_factory=list)
+    recent_processes: list[int] = field(default_factory=list)
+    recent_ports: list[int] = field(default_factory=list)
+    recent_events: list[ContextEvent] = field(default_factory=list)
     listening_dev_ports: list[DevPortInfo] = field(default_factory=list)
     timestamp: float = field(default_factory=time.time)
 
@@ -135,9 +188,15 @@ class WorkstationContext:
             "foreground_app": self.foreground_app,
             "foreground_title": self.foreground_title,
             "foreground_pid": self.foreground_pid,
+            "foreground_window": self.foreground_window,
             "active_project": self.active_project,
             "recent_projects": [p.to_dict() for p in self.recent_projects],
             "recent_actions": [a.to_dict() for a in self.recent_actions],
+            "recent_apps": self.recent_apps,
+            "recent_files": self.recent_files,
+            "recent_processes": self.recent_processes,
+            "recent_ports": self.recent_ports,
+            "recent_events": [e.to_dict() for e in self.recent_events],
             "listening_dev_ports": [p.to_dict() for p in self.listening_dev_ports],
             "timestamp": self.timestamp,
         }

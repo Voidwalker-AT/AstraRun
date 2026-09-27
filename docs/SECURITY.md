@@ -1,6 +1,6 @@
 # AstraRun Security Specification
 
-> **Version**: 0.4.0  
+> **Version**: 0.7.0  
 > **Status**: APPROVED  
 
 ---
@@ -232,10 +232,41 @@ AstraRun v0.6 introduces concrete workstation action execution under strict arch
 ### 11.4. Prompt Injection & Policy Bypass Interception
 - Language requesting policy circumvention (*"ignore policy"*, *"bypass safety"*, *"the previous model said"*) triggers unconditional security blocking.
 
-### 11.5. AI Bridge Privacy & Structured Context Sanitization
+### 11.5. Reasoning Provider Boundary & Context Privacy
 - When escalating via `ReasoningRequired` envelopes, AstraRun enforces a minimum-necessary structured context contract.
 - Prohibited: Raw shell history, environment secrets, and memory dumps.
 - Permitted: Minimal entity identifiers and relative timestamps.
+- Zero direct model API calls: the `ReasoningProvider` interface remains completely unconfigured in v0.7.
+
+---
+
+## 12. Workstation Capability Security Invariants (v0.7)
+
+### 12.1. Executable Script Open Prohibition
+- Direct invocation of `open_file` on script or binary files (`.bat`, `.cmd`, `.ps1`, `.vbs`, `.js`, `.wsf`, `.exe`, `.msi`) is intercepted and rejected with `PERMISSION_DENIED`.
+- AstraRun suggests `reveal_file` to highlight the file in Windows File Explorer via `explorer.exe /select` without executing it.
+
+### 12.2. TOCTOU Process Revalidation Protocol
+- Before issuing process termination signals, AstraRun verifies target PID, kernel `create_time`, and executable name against pre-check values.
+- Aborts immediately if the PID has been recycled by another process.
+
+### 12.3. Protected System Process Defense
+- A hardcoded non-overridable blocklist protects core Windows services (`explorer.exe`, `system`, `lsass.exe`, `csrss.exe`, `services.exe`, `smss.exe`, `wininit.exe`, `dwm.exe`, `svchost.exe`, `astrarun.exe`) from termination.
+
+### 12.4. Read-Only Port and Diagnostic Invariant
+- All network and diagnostic capabilities (`inspect_port`, `find_process_on_port`, `list_network_connections`) are 100% read-only.
+- Querying privileged ports (`<= 1023`) is completely safe because zero socket mutation is performed.
+
+### 12.5. Path Traversal & Reparse Point Safety
+- Directory indexing and file searches enforce `follow_symlinks=False` and prune NTFS directory junctions.
+- Inputs containing `..` or escaping bounded user roots are rejected with `PERMISSION_DENIED`.
+
+### 12.6. Command-Line Credential Masking
+- Process inspection automatically redacts sensitive parameters (`--api-key`, `--token`, `SECRET=...`) with `[REDACTED]`.
+
+### 12.7. Decoupled External Reasoning Guarantee
+- AstraRun maintains zero dependencies on cloud APIs or external LLMs. The `ReasoningProvider` interface is intentionally unconfigured, ensuring 100% local, deterministic execution.
+
 
 
 

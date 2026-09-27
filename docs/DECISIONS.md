@@ -496,6 +496,97 @@
 - **Consequences**:
   - 100% block recall on adversarial attacks with zero dangerous tool proposal.
 
+---
+
+## ADR-040: Unified Capability Registry as Workstation Operating Boundary
+- **Status**: ACCEPTED
+- **Context**: AstraRun v0.1–v0.6 relied on a flat, ad-hoc ToolRegistry with 5 hardcoded tools. Scaling workstation control requires a typed, multi-domain abstraction with explicit risk ratings and permission semantics.
+- **Decision**:
+  - Implement `CapabilityRegistry` organizing 47 capabilities into 9 categories (`APPLICATION`, `FILE`, `PROCESS`, `NETWORK`, `SYSTEM`, `PROJECT`, `WINDOW`, `AUDIO`, `WORKFLOW`).
+  - Standardize all handler outputs on a uniform `CapabilityResult` envelope with latency profiling and error codes.
+  - Enforce `AUTO`, `CONFIRM`, and `BLOCK` permission boundaries before dispatch.
+- **Consequences**:
+  - Clean separation between NLP understanding / planning and physical OS execution.
+  - Bounded dispatch latency (<0.6 ms mean).
+
+---
+
+## ADR-041: Top-Level Window Enumeration for Desktop Application Discovery
+- **Status**: ACCEPTED
+- **Context**: Traditional process enumeration (`psutil.process_iter()`) lists hundreds of background Windows services and daemon threads, making user-facing application discovery noisy and confusing.
+- **Decision**:
+  - Discover running desktop applications by querying visible top-level windows via Win32 User32 APIs (`EnumWindows`, `IsWindowVisible`, `GetWindowTextLengthW`, and bounding box verification).
+  - Map window handles back to owning processes via `GetWindowThreadProcessId`.
+- **Consequences**:
+  - Accurate, clean listing of interactive applications (VS Code, Chrome, Terminal, Slack) with zero background daemon noise.
+
+---
+
+## ADR-042: Non-Destructive WM_CLOSE Protocol for Application Termination
+- **Status**: ACCEPTED
+- **Context**: Force-killing applications (`TerminateProcess` / `taskkill /F`) causes data loss when users have unsaved work in editors, document processors, or IDEs.
+- **Decision**:
+  - Application close requests use the Win32 `WM_CLOSE` message (`PostMessageW(hwnd, 0x0010, 0, 0)`).
+  - Force-killing is strictly reserved for the explicit, confirmation-gated `terminate_process` capability.
+- **Consequences**:
+  - Applications trigger their native save dialogs; zero accidental loss of unsaved developer work.
+
+---
+
+## ADR-043: Executable Script Execution Prohibition with Explorer Reveal Alternative
+- **Status**: ACCEPTED
+- **Context**: Opening untrusted script files (`.bat`, `.cmd`, `.ps1`, `.exe`) through generic file opening mechanisms introduces drive-by execution hazards.
+- **Decision**:
+  - `open_file` strictly blocks executable and script file extensions, returning `PERMISSION_DENIED`.
+  - Provide `reveal_file`, which highlights the file in Windows File Explorer via `explorer.exe /select,<path>` without executing it.
+- **Consequences**:
+  - Eliminates script execution attack vectors while preserving developer file inspection convenience.
+
+---
+
+## ADR-044: Bounded Read-Only Sockets for Privileged Port Inspection
+- **Status**: ACCEPTED
+- **Context**: Port inspection must remain completely safe and unprivileged, even when inspecting system ports (`<= 1023`).
+- **Decision**:
+  - Network port capabilities are strictly read-only diagnostics via `psutil.net_connections()`.
+  - AstraRun never binds, modifies, or proxies network sockets.
+- **Consequences**:
+  - Inspecting port 80, 443, or 8080 requires zero elevated privileges and carries zero risk of socket disruption.
+
+---
+
+## ADR-045: TOCTOU-Safe Process Termination via Process Start Time and Name Revalidation
+- **Status**: ACCEPTED
+- **Context**: Rapid PID recycling in Windows creates a race condition where a process could terminate between confirmation and signal delivery, causing AstraRun to kill the wrong process.
+- **Decision**:
+  - Record target PID, creation timestamp (`create_time`), and process executable name during the pre-check.
+  - Revalidate all three attributes immediately before issuing `proc.terminate()`. Abort if any mismatch occurs.
+- **Consequences**:
+  - Eliminates PID reuse vulnerabilities; guarantees signals are delivered only to the intended process.
+
+---
+
+## ADR-046: Ephemeral In-Memory Fact Store for Workstation Observations
+- **Status**: ACCEPTED
+- **Context**: Future System-2 reasoning models need access to recent workstation facts without incurring database disk overhead or scanning the entire OS on every prompt.
+- **Decision**:
+  - Implement an in-memory, bounded ring buffer (`ObservationStore`) storing up to 200 typed `Observation` records.
+  - Read-only capabilities automatically record structured facts upon execution.
+- **Consequences**:
+  - Near-zero latency (<0.002 ms per record) and minimal RAM footprint (<150 KB).
+
+---
+
+## ADR-047: Decoupled Reasoning Provider Interface without Default Binding
+- **Status**: ACCEPTED
+- **Context**: Deep System-2 reasoning must remain strictly decoupled from the core workstation body and senses. The user's external projects (such as `AI-Bridge`) must never be hardcoded as default internal modules.
+- **Decision**:
+  - Maintain the generic `ReasoningProvider` interface and `ReasoningRequired` escalation boundary, but leave them **unconfigured** in v0.7.
+  - Defer all external LLM and reasoning integration to milestone v0.12.
+- **Consequences**:
+  - AstraRun operates 100% locally and deterministically with zero external cloud or model dependencies in v0.7.
+
+
 
 
 

@@ -135,3 +135,34 @@ Fuzzy matching engines can accidentally trigger destructive operations when pres
   - Verified across 18 adversarial, ambiguous, destructive, and out-of-scope queries (`kill port 3000`, `delete system32`, `asdfgh`, `open the project from yesterday`).
   - **Empirical False Execution Rate: 0.0%**.
 
+---
+
+## 8. Entity Resolution Security & Hard Policy Boundaries (v0.5)
+
+The `EntityResolutionEngine` (`src/astrarun/routing/entity_resolver.py`) enforces hard-coded operating system security boundaries prior to generating any proposed action:
+
+1. **Protected System Process Whitelist**:
+   - Workstation stability is non-negotiable. System processes (`system`, `registry`, `smss.exe`, `csrss.exe`, `wininit.exe`, `services.exe`, `lsass.exe`, `svchost.exe`, `winlogon.exe`, `explorer.exe`, `dwm.exe`, `spoolsv.exe`, `fontdrvhost.exe`) are unconditionally blocked from termination or suspension.
+   - Any attempt to target a protected process immediately emits `status="blocked"`, `policy_allowed=False`.
+
+2. **Privileged System Port Protection**:
+   - Automated socket termination targeting well-known system ports ($\le 1023$, including 22, 53, 80, 443) is strictly prohibited.
+   - Non-privileged developer ports (> 1023) require explicit user confirmation before action.
+
+3. **Destructive Shell Command Interception**:
+   - The engine validates queries against blacklisted destructive patterns (`rmdir /s /q`, `format`, `del ... system32`, `reg delete HKLM`, `diskpart`).
+   - Matched queries are immediately rejected with `status="blocked"`.
+
+4. **Zero Production Authority**:
+   - The Entity Resolution Engine produces `ProposedAction` descriptors for evaluation, inspection, and UI preview only. It possesses **zero execution authority**.
+
+---
+
+## 9. Telemetry Quarantine Protocol for External Judges (Jev)
+
+AstraRun v0.5 evaluates TypeSafe's Jev strictly as an offline reference benchmark judge. In compliance with Platform Rule 7 (Zero-Secret Policy):
+1. **Local Path Redaction**: Prior to transmitting any payload to an external endpoint, all Windows drive letters (`C:\`, `E:\`), local project paths, and user profiles are redacted into generic `<LOCAL_PATH>` tokens.
+2. **Credential Scrubbing**: Environment tokens, API keys, passwords, and user identities are scrubbed.
+3. **Graceful Offline Fallback**: If `TYPESAFE_API_KEY` is not present, the system defaults to safe abstention or deterministic offline simulation without raising runtime exceptions.
+
+

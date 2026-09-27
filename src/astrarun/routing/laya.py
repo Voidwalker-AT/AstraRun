@@ -203,6 +203,83 @@ class LayaRouter(BaseRouter):
                 source="laya"
             )
 
+    def predict_intent_batch(
+        self,
+        requests: list[str],
+        batch_size: int = 16,
+        questions: dict[str, Any] | None = None,
+    ) -> list[LayaDecision]:
+        """
+        Evaluate batch of requests with high throughput vectorized inference.
+        """
+        clean_requests = [r.strip() for r in requests]
+        agent = self.get_agent()
+        if agent is None:
+            err = self._load_error_msg or "Laya router disabled or unavailable"
+            return [
+                LayaDecision(
+                    intent="unknown",
+                    confidence=0.0,
+                    error=err,
+                )
+                for _ in clean_requests
+            ]
+
+        q_spec = questions or {
+            "intent": {
+                "type": "choice",
+                "instructions": "Which action does the user intend?",
+                "criteria": INTENT_CRITERIA,
+            }
+        }
+
+        t0 = time.perf_counter()
+        try:
+            results = agent.predict_batch(clean_requests, q_spec, batch_size=batch_size)
+            total_lat = (time.perf_counter() - t0) * 1000.0
+            per_query_lat = total_lat / max(1, len(clean_requests))
+
+            decisions = []
+            for clean_req, raw_output in zip(clean_requests, results):
+                if not clean_req:
+                    decisions.append(
+                        LayaDecision(intent="unknown", confidence=0.0, error="Empty request", latency_ms=per_query_lat)
+                    )
+                    continue
+
+                answers = raw_output.get("answers", {})
+                intent_answer = answers.get("intent", {})
+                chosen_intent = intent_answer.get("choice", "unknown")
+                probs = intent_answer.get("probabilities", {})
+                confidence = float(intent_answer.get("confidence", probs.get(chosen_intent, 0.0)))
+
+                is_exec = chosen_intent in EXECUTABLE_INTENTS and confidence >= self.confidence_threshold
+                requires_res = chosen_intent in ("open_project", "find_file") or chosen_intent in EXECUTABLE_INTENTS
+
+                decisions.append(
+                    LayaDecision(
+                        intent=chosen_intent,
+                        confidence=confidence,
+                        probabilities={str(k): float(v) for k, v in probs.items()},
+                        is_executable_now=is_exec,
+                        requires_resolution=requires_res,
+                        latency_ms=per_query_lat,
+                        raw_result=raw_output,
+                        source="laya",
+                    )
+                )
+            return decisions
+        except Exception as err:
+            logger.error("Laya predict_batch error: %s", err, exc_info=True)
+            return [
+                LayaDecision(
+                    intent="unknown",
+                    confidence=0.0,
+                    error=str(err),
+                )
+                for _ in clean_requests
+            ]
+
     def route(self, request: str, context: RoutingContext) -> Decision:
         """
         Conform to the BaseRouter contract.

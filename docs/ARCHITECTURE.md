@@ -206,9 +206,39 @@ sequenceDiagram
 
 ---
 
-## 5. Error Handling & Feedback Strategy
-
-- **Unknown Command**: Returns an explicit, non-intrusive status in the UI ("I don't know how to do that yet") without throwing unhandled exceptions.
-- **Ambiguous Match**: If top search candidate score is below `0.75`, auto-execution is rejected, protecting user safety against destructive typos.
-- **Application Not Found**: Displays specific message (e.g., "Application 'foo' was not found") and logs discovery cache status.
 - **System Exceptions**: Caught by global exception boundaries, recorded in `logs/astrarun.log` with stack traces, while keeping the launcher UI stable and responsive.
+
+---
+
+## 6. Decision Fusion, Entity Resolution & External Reference Architecture (v0.5)
+
+### 6.1. Decision Fusion Engine (`astrarun.routing.fusion`)
+- Ensembles Generic Zero-Shot Laya and Domain-Adapted AstraRun-Laya across modes E0 through E5.
+- Computes statistical disagreement metrics:
+  - Top-choice binary agreement indicator.
+  - Jensen-Shannon divergence $D_{\text{JS}}(P_{\text{gen}} \parallel P_{\text{ft}}) \in [0, 1]$.
+  - Shannon entropy $H(P_{\text{fused}})$ measuring epistemic prediction uncertainty.
+- In Mode E4 and E5, executes an active **disagreement gate**: if models disagree or $D_{\text{JS}} > 0.25$, forces safe abstention to `unknown`.
+- In Mode E5, applies multi-question gating: rejects if consequence risk is `BLOCKED`, and forces disambiguation if ambiguity is `ambiguous` or `unknown`.
+
+### 6.2. Deterministic Entity Resolution Engine (`astrarun.routing.entity_resolver`)
+- Translates high-level semantic intents into concrete, verified workstation targets without neural hallucinations.
+- Target Resolvers:
+  - `open_project`: Resolves against `workspace.json` (read-only) in `E:\Workspace`. Emits `status="ambiguous"` with candidate list if multiple projects match within $\Delta \le 0.15$.
+  - `open_app`: Resolves against discovered Windows applications via `AppDiscoveryCache`.
+  - `open_folder`: Resolves known directories via `FolderResolver`.
+  - `open_url`: Validates FQDN and URI schema.
+  - `process_action`: Extracts port numbers and process names; verifies against hard policy.
+  - `system_action`: Power, locking, and display management.
+- Hard Policy Security Boundaries:
+  - System processes (`lsass`, `csrss`, `svchost`, `smss`, `wininit`, etc.) are unconditionally blocked.
+  - Privileged ports ($\le 1023$) are strictly protected from automated termination.
+  - Destructive commands (`rmdir /s /q`, `format`, `del system32`) are intercepted prior to resolution.
+- **ZERO Production Authority**: Emits structured `ProposedAction` objects for evaluation and UI inspection only.
+
+### 6.3. External Reference Decision Model (`astrarun.routing.jev`)
+- Quarantined adapter interfacing with TypeSafe Jev System One API.
+- Relegated strictly to an offline benchmark quality auditor.
+- Sanitizes all local file paths to `<LOCAL_PATH>` prior to transmission.
+- Degrades gracefully to safe offline simulation if `TYPESAFE_API_KEY` is not present.
+

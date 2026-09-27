@@ -22,7 +22,9 @@ logs/*.log
 *.log
 
 # Local telemetry, usage, and evaluation data
-data/
+data/*
+!data/training/
+!data/training/**
 *.jsonl
 benchmarks/routing/cache/
 

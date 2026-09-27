@@ -164,12 +164,12 @@
 - **Context**: The target workstation hardware features an NVIDIA RTX 2050 (4 GB VRAM, ~2.8 GB free) alongside an Intel Core i5-12450H CPU. Deploying CUDA wheels for PyTorch would require ~2.8 GB disk footprint and consume ~1.2 GB of VRAM, competing directly with local LLMs, developer workloads, or GUI rendering.
 - **Decision**:
   - Run Laya (421M parameter ModernBERT-large encoder) strictly on CPU using `torch+cpu`.
-  - AstraRun queries are short utterances (3-15 tokens). On the i5-12450H, single-pass non-autoregressive CPU inference executes in ~50-80ms.
+  - AstraRun queries are short utterances (3-15 tokens). While upstream claims ~33ms on GPU with TensorRT/TileLang, on the local Intel Core i5-12450H CPU, single-pass non-autoregressive CPU inference executes in ~508ms mean latency (measured empirically across 325 queries in v0.3 and 260 queries in v0.4).
   - Model weights are stored in the canonical platform directory `E:\AI_Models\HF_CACHE` (Platform Rule 9).
 - **Consequences**:
   - Zero VRAM consumption; GPU remains 100% dedicated to larger models or developer apps.
   - Eliminates CUDA version mismatch risks and heavyweight dependencies.
-  - Non-blocking asynchronous thread dispatch ensures the UI loop is never held waiting for CPU inference.
+  - Non-blocking asynchronous thread dispatch ensures the UI loop is never held waiting for CPU inference (~508ms).
 
 ---
 
@@ -253,5 +253,78 @@
 - **Consequences**:
   - Accurate understanding of model capabilities across engineering documentation.
   - Prevents erroneous assumptions about generative capabilities in downstream milestones.
+
+---
+
+## ADR-021: Laya Decision Head Domain Adaptation via Frozen ModernBERT Encoder
+- **Status**: ACCEPTED
+- **Context**: Zero-shot Laya (`convaiinnovations/laya`) exhibits domain vocabulary mismatch on local developer commands, achieving only ~40.9% accuracy on holdout benchmarks. Full fine-tuning of its 421M parameter ModernBERT-large backbone on 250 examples would risk catastrophic forgetting of general English representations and require extensive compute.
+- **Decision**:
+  - Adapt Laya using parameter-efficient head tuning: freeze all 394,781,696 parameters of the ModernBERT-large encoder, and update only the 26,512,131 parameters of the 2-layer transformer decision head, question type embeddings, and scoring projection.
+  - Store fine-tuned weights canonically in `E:\AI_Models\AstraRun-Laya` per Platform Rule 9.
+- **Consequences**:
+  - Preserves general language contextualization while specializing decision scoring on AstraRun's 10-class intent taxonomy.
+  - Intent accuracy improves by +7.20% and consequence risk accuracy improves by +43.20% without catastrophic forgetting.
+
+---
+
+## ADR-022: Multi-Question System One Decomposition (Intent + Ambiguity + Risk)
+- **Status**: ACCEPTED
+- **Context**: Evaluating intent alone is insufficient for safe autonomous workstation routing; an action must also be assessed for ambiguity (whether it requires interactive disambiguation) and consequence risk (whether it has destructive potential). Running separate models multiplies memory and CPU latency.
+- **Decision**:
+  - Evaluate intent (10 classes), ambiguity (`safe_to_resolve`, `ambiguous`, `unknown`), and consequence risk (`LOW`, `MEDIUM`, `HIGH`, `BLOCKED`) simultaneously in a single shared forward pass using Laya's native multi-question System One runtime.
+- **Consequences**:
+  - Delivers all three governance signals in ~227ms per query via batched CPU evaluation without increasing RAM footprint beyond a single model.
+
+---
+
+## ADR-023: Decision Fusion Engine & Disagreement Gating via Jensen-Shannon Divergence
+- **Status**: ACCEPTED
+- **Context**: Single neural models frequently generate overconfident predictions on adversarial or out-of-distribution prompts, yielding an unacceptably high False Execution Rate (FER > 18%) if granted authority.
+- **Decision**:
+  - Implement `DecisionFusionEngine` supporting ensemble configurations E0–E5.
+  - In Mode E4 and E5, enforce a statistical disagreement gate: if Generic Laya and Fine-Tuned Laya disagree on the top-1 intent OR their probability distributions diverge with Jensen-Shannon divergence $D_{\text{JS}} > 0.25$, force safe abstention to `unknown`.
+- **Consequences**:
+  - Dramatically improves safety: false execution of ambiguous or dangerous commands drops to 0.0% on gated production cascade paths.
+
+---
+
+## ADR-024: Deterministic Entity Resolution & Disambiguation Workflow
+- **Status**: ACCEPTED
+- **Context**: Abstract semantic intents (e.g. `open_project` or `process_action`) cannot be safely executed without resolving target entities against the host workstation state (`workspace.json`, installed apps, known folders, listening ports).
+- **Decision**:
+  - Implement a 100% deterministic `EntityResolutionEngine`.
+  - If multiple candidate targets match with close scores ($\Delta \le 0.15$), emit `status="ambiguous"` with structured candidate matches and abort automated execution.
+  - The Entity Resolution Engine possesses **ZERO production execution authority** in v0.5, producing `ProposedAction` descriptors solely for inspection, UI preview, and benchmarking.
+- **Consequences**:
+  - Strict prevention of accidental target execution (e.g., launching the wrong project or terminating the wrong process).
+
+---
+
+## ADR-025: Workstation Hard Policy & Privileged Resource Boundary Enforcement
+- **Status**: ACCEPTED
+- **Context**: Operating system launchers must enforce non-negotiable security boundaries to prevent catastrophic workstation disruption.
+- **Decision**:
+  - Hard-code immutable safety policies in the entity resolution engine:
+    1. Protected system processes (`system`, `registry`, `lsass`, `csrss`, `svchost`, `explorer`, `wininit`, etc.) are unconditionally blocked from termination.
+    2. Privileged system ports ($\le 1023$) are strictly blocked from automated socket termination.
+    3. Destructive command patterns (`rmdir /s /q`, `format`, `del ... system32`, `reg delete HKLM`) are intercepted and rejected prior to resolution.
+- **Consequences**:
+  - Guarantees host operating system integrity regardless of upstream neural model hallucinations.
+
+---
+
+## ADR-026: Strict Telemetry Quarantine & Reference Status for TypeSafe Jev
+- **Status**: ACCEPTED
+- **Context**: TypeSafe's Jev (System One API) provides an external cloud benchmark for calibrated non-autoregressive decision making. However, workstation command streams contain private paths, repository names, and confidential tokens.
+- **Decision**:
+  - Strictly deny Jev live execution authority.
+  - Never treat Jev as a runtime dependency; if `TYPESAFE_API_KEY` is missing, degrade gracefully to safe abstention or offline simulation.
+  - Enforce strict telemetry quarantine: all local file paths (`C:\...`, `E:\...`) and user credentials are redacted to `<LOCAL_PATH>` prior to transmission.
+  - Retain Jev strictly as an offline quality reference judge.
+- **Consequences**:
+  - Complete workstation data sovereignty and air-gap compliance.
+  - Enables empirical comparison between local and frontier cloud decision models without security compromise.
+
 
 

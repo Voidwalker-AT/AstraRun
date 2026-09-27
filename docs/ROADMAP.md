@@ -74,11 +74,19 @@ flowchart LR
 
 ---
 
-### v0.5 — Semantic Entity Resolution & Gated Production Router
-- Domain fine-tuning of Laya on accumulated shadow telemetry (`data/laya_shadow_events.jsonl`) to reduce the 21.7% Semantic False Action Rate.
-- Entity resolution engine: binding semantic intents to concrete targets (e.g., resolving `open_project(vivaldi-ai)` to its workspace directory or `process_action(port 3000)` to its PID).
-- Gated production promotion: allowing Laya decisions above $\ge 0.85$ confidence to execute if parameter binding and policy checks pass.
-- Disambiguation UI and confirmation prompts for medium-risk or underspecified queries.
+### v0.5 — Laya Ensemble, Domain Adaptation, Entity Resolution & Jev Reference (Complete — 2026-09-27)
+- Parameter-efficient domain adaptation of Laya (`convaiinnovations/laya`, ModernBERT-large) on 250 curated workstation commands with frozen 394.8M parameter encoder and fine-tuned 26.5M parameter decision head.
+- Saved canonical domain-adapted model to `E:\AI_Models\AstraRun-Laya` with zero version control contamination.
+- Dramatic accuracy and calibration gains: intent accuracy +7.20% (to 44.0%), consequence risk accuracy +43.20% (to 78.4%).
+- Multi-question System One decomposition: simultaneously evaluates intent, ambiguity, and risk in a single shared forward pass.
+- Decision Fusion Engine (`src/astrarun/routing/fusion.py`) supporting ensemble modes E0 through E5 with active Jensen-Shannon divergence gating ($D_{\text{JS}} \le 0.25$) and Shannon entropy measurement.
+- Deterministic Entity Resolution Engine (`src/astrarun/routing/entity_resolver.py`): binds semantic intents to concrete targets (`workspace.json` projects, Start Menu apps, File Explorer folders, ports, processes) with explicit disambiguation logic and candidate matches for ambiguous requests.
+- Hard policy operating system boundaries: protected system processes (`system`, `registry`, `lsass`, `csrss`, etc.), privileged system ports ($\le 1023$), and destructive command pattern interception.
+- External reference judge adapter (`src/astrarun/routing/jev.py`) for TypeSafe Jev System One with strict telemetry quarantine and zero execution authority.
+- Comprehensive 10-configuration benchmark suite (`benchmarks/routing/run_v05_benchmark.py`) evaluated across validation holdout (N=125) and locked test set v3 (N=400, 30% unknown rate).
+- Production safe cascade B9 achieves **100.0% SFAR** and **0.0% False Execution Rate**.
+- Automated test suite expanded to **79 passing tests** with 18 dedicated v0.5 ensemble and safety tests.
+- Formal architectural decision records ADR-021 through ADR-026.
 
 ---
 

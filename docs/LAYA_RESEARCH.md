@@ -109,12 +109,13 @@ Places the input on an integer scale (e.g. $[0, 5]$) for priority or confidence 
 
 ## 6. Upstream Claims vs. Local Measurements
 
-| Characteristic | Upstream Claim | AstraRun v0.3 Measurement Objective |
+| Characteristic | Upstream Claim | Local Empirical Measurement (v0.3 & v0.4) |
 | :--- | :--- | :--- |
-| **Inference Latency** | ~33 ms on T4 GPU | Measure cold vs. warm p50/p95 on local i5-12450H CPU and RTX 2050 GPU |
-| **Probability Calibration** | RLCD calibrated | Measure Brier score, ECE, and reliability diagrams on 300+ command dataset |
-| **Zero-Shot Generalization** | "System 1" intuition | Evaluate zero-shot intent categorization across 10 distinct workstation categories |
-| **Memory Footprint** | Lightweight encoder | Measure resident RSS (RAM) and allocated VRAM |
+| **Inference Latency** | ~33 ms (T4 GPU / TileLang fast path) | **~508 ms mean** on Intel Core i5-12450H CPU (ONNX Runtime / PyTorch CPU) |
+| **Probability Calibration** | RLCD calibrated | **ECE = 0.0443, Brier = 0.7450** on 325-query benchmark |
+| **Zero-Shot Accuracy** | "System 1" intuition | **40.92% on Dataset 1, 43.85% on Holdout v2** |
+| **Semantic False Action Rate**| Not reported upstream | **21.67% (Dataset 1), 23.59% (Holdout v2)** |
+| **Memory Footprint** | Lightweight encoder | **~850 MB RAM** on CPU, 0 MB VRAM |
 
 ---
 

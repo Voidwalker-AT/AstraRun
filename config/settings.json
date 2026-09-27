@@ -17,6 +17,14 @@
     "file": "data/routing_events.jsonl",
     "store_raw_request": true
   },
+  "laya": {
+    "enabled": true,
+    "mode": "shadow",
+    "model": "convaiinnovations/laya",
+    "device": "cpu",
+    "confidence_threshold": 0.75,
+    "shadow_file": "data/laya_shadow_events.jsonl"
+  },
   "logging": {
     "level": "INFO",
     "file": "logs/astrarun.log",

@@ -1,4 +1,4 @@
-# AstraRun — Windows Intelligent Command Launcher (v0.2)
+# AstraRun — Windows Intelligent Command Launcher (v0.3)
 
 AstraRun is a local, lightweight, low-latency Windows command launcher engineered as the foundational command interface for an evolving AI-assisted workstation control ecosystem.
 
@@ -7,17 +7,19 @@ AstraRun replaces fragile string-interpolated shell execution with a strictly ty
 
 ---
 
-## Key Capabilities (v0.2)
+## Key Capabilities (v0.3)
 
 - **Instantaneous Hotkey Activation**: Summoned with `Alt+Space` in ~4.5ms from a pre-warmed resident background process.
 - **Multi-Signal Fuzzy Matching Engine**: Combines exact, alias, prefix, word-token, acronym, single-drop typo (`notpad` -> `Notepad`), and Damerau-Levenshtein edit-distance scoring with bounded usage boost (`<= 0.03`).
 - **Ranked Suggestions UI**: Dynamic dropdown drawer with visual category badges (`APP`, `FOLDER`, `WEB`, `COMMAND`), active selection highlighting, and ergonomic auto-expansion.
 - **Full Keyboard Navigation**: Complete keyboard-only control via `Up`/`Down` arrow navigation, `Tab` autocompletion, `Enter` execution, and `Escape` dismissal.
 - **Zero Raw Shell Ingestion & 0.0% False Execution Rate**: Strict confidence gating (`0.75`) guarantees ambiguous or out-of-scope queries (`kill port 3000`, `delete system32`, `asdfgh`) are safely rejected as `unknown` rather than mistriggering apps.
+- **Laya Neural Decision Router in Shadow Mode (v0.3)**: Integrated ModernBERT-large (421M parameters) non-autoregressive decision model running on CPU with **ZERO production execution authority**.
+- **10-Class Intent Taxonomy**: Formally defined semantic intent classes separating classification from parameter binding and OS tool invocation.
+- **Dual-Track Privacy-Preserving Shadow Telemetry**: Concurrently records production vs. Laya decisions in `data/laya_shadow_events.jsonl` with automated regex credential redaction (zero off-workstation egress).
 - **Foreground-Window-Aware Monitor Placement**: Anchors the launcher to the active foreground application's display with mouse cursor and primary monitor fallbacks using native Win32 APIs.
 - **Expanded Application Discovery**: Discovers **~400 applications** cached at startup from Windows User & System Start Menu shortcuts (`.lnk`), `App Paths` registry, and `PATH`.
-- **Local-Only Privacy-Preserving Telemetry**: Appends structured routing events to `data/routing_events.jsonl` with automated regex credential redaction (API keys, Bearer tokens, passwords) and zero external network egress.
-- **Empirical Evaluation Benchmark Suite**: Standardized 88-query evaluation suite evaluating accuracy, false execution rate, and microsecond latencies.
+- **Standardized Semantic Benchmark**: 325 curated queries evaluated across 15 categories, measuring calibration error (ECE 0.0443), Brier score (0.7450), and three-way system performance.
 
 ---
 
@@ -192,14 +194,19 @@ Configuration files are stored under `config/`:
 
 ## Testing & Benchmarks
 
-Run the automated test suite (44 tests):
+Run the complete automated test suite (52 tests):
 ```powershell
 .venv\Scripts\pytest -v
 ```
 
-Run the standardized routing evaluation benchmark (88 queries):
+Run the deterministic regression benchmark (88 queries):
 ```powershell
 .venv\Scripts\python benchmarks\routing\run_benchmark.py
+```
+
+Run the Laya semantic routing benchmark (325 queries):
+```powershell
+.venv\Scripts\python benchmarks\routing\run_semantic_benchmark.py
 ```
 
 ---
@@ -215,31 +222,36 @@ AstraRun/
 |-- .gitignore                 # Environment & build ignores
 |-- benchmarks/                # Evaluation suites & harnesses
 |   `-- routing/
-|       |-- routing_dataset.json # 88 curated evaluation queries
-|       `-- run_benchmark.py     # Evaluation runner & report generator
+|       |-- routing_dataset.json  # 88 curated deterministic evaluation queries
+|       |-- run_benchmark.py      # Deterministic evaluation runner
+|       |-- semantic_dataset.json # 325 curated semantic evaluation queries (15 categories)
+|       `-- run_semantic_benchmark.py # Semantic benchmark runner (System A vs B vs C)
 |-- config/                    # Human-editable configuration files
-|   |-- settings.json
-|   |-- apps.json
-|   |-- aliases.json
-|   `-- urls.json
+|   |-- settings.json          # Hotkey, UI, telemetry, and Laya shadow config
+|   |-- apps.json              # Custom application definitions
+|   |-- aliases.json           # Natural language aliases
+|   `-- urls.json              # Web aliases
 |-- data/                      # Local-only runtime storage (git-ignored)
 |   |-- routing_events.jsonl   # Redacted telemetry event stream
+|   |-- laya_shadow_events.jsonl # Paired production vs. Laya shadow evaluation stream
 |   `-- usage.json             # Usage frequency & recency store
 |-- docs/                      # Engineering documentation
-|   |-- ARCHITECTURE.md        # Architecture specification & diagrams
-|   |-- DECISIONS.md           # Architecture Decision Records (ADRs 001-009)
+|   |-- ARCHITECTURE.md        # Architecture specification & diagrams (v0.3)
+|   |-- DECISIONS.md           # Architecture Decision Records (ADRs 001-014)
 |   |-- SECURITY.md            # Security boundaries, privacy & risk model
 |   |-- ROADMAP.md             # Evolutionary roadmap (v0.1 -> Workstation Daemon)
-|   |-- SEARCH.md              # Multi-signal search engine specification
-|   |-- ROUTING_DATASET.md     # Benchmark dataset schema & query catalog
-|   |-- CONFIGURATION.md       # Configuration reference
-|   |-- TESTING.md             # Automated test report & manual matrix
-|   |-- STATUS.md              # Current milestone status report
-|   `-- benchmarks/
-|       `-- benchmark_results_v0.2.md # Benchmark results report
+|   |-- LAYA_RESEARCH.md       # Upstream Laya architecture & capabilities
+|   |-- LAYA_RUNTIME.md        # Hardware, PyTorch packaging & runtime specs
+|   |-- INTENT_TAXONOMY.md     # 10-class mutual exclusive intent taxonomy
+|   |-- LAYA_BENCHMARK.md      # Semantic benchmark 3-way evaluation report
+|   |-- LAYA_CALIBRATION.md    # ECE, Brier score, and automation trade-off curve
+|   |-- LAYA_KEV_INTEGRATION.md # Multi-tier cascaded architecture spec
+|   |-- TESTING.md             # Automated test report & verification matrix
+|   `-- STATUS.md              # Current milestone status report (v0.3)
 |-- logs/                      # Rotating application logs
 |   `-- astrarun.log
-|-- scripts/                   # Developer utilities & benchmarks
+|-- scripts/                   # Developer utilities & test scripts
+|   |-- test_laya_model.py     # Standalone Laya weight load & inference test
 |   `-- benchmark.py
 |-- src/
 |   `-- astrarun/
@@ -247,14 +259,23 @@ AstraRun/
 |       |-- main.py            # Main entrypoint & daemon orchestration
 |       |-- core/              # Models, enums, structured logging
 |       |-- search/            # Fuzzy search engine, scorer, matcher, index
-|       |-- routing/           # Base router & deterministic / fuzzy router
+|       |-- routing/           # Base router, deterministic router & LayaRouter
+|       |   |-- __init__.py
+|       |   |-- base.py
+|       |   |-- deterministic.py
+|       |   `-- laya.py        # Laya ModernBERT-large shadow router
 |       |-- tools/             # Tool registry & safe execution handlers
 |       |-- discovery/         # App Paths, Start Menu shortcuts, Known Folders
 |       |-- hotkeys/           # Win32 RegisterHotKey background listener
 |       |-- telemetry/         # Local privacy-preserving event logger & redactor
+|       |   |-- collector.py
+|       |   |-- redactor.py
+|       |   `-- shadow_collector.py # Thread-safe Laya shadow event collector
 |       |-- usage/             # Atomic usage store for frequency ranking
 |       |-- config/            # Resilient JSON configuration loader
 |       `-- ui/                # PySide6 launcher window & positioning engine
-`-- tests/                     # 44 automated unit, UI, and integration tests
+`-- tests/                     # 52 automated unit, UI, and integration tests
+    |-- test_laya_router.py    # Laya safety, resilience & shadow isolation tests
+    `-- ...
 ```
 

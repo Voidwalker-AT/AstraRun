@@ -22,8 +22,10 @@ from astrarun.discovery.apps import AppDiscoveryCache
 from astrarun.discovery.folders import FolderResolver
 from astrarun.hotkeys.manager import HotkeyManager
 from astrarun.routing.deterministic import DeterministicRouter
+from astrarun.routing.laya import LayaRouter
 from astrarun.search.index import SearchIndex
 from astrarun.telemetry.collector import RoutingEventCollector
+from astrarun.telemetry.shadow_collector import LayaShadowEventCollector
 from astrarun.tools.registry import ToolRegistry
 from astrarun.ui.launcher import LauncherWindow
 from astrarun.usage.store import UsageStore
@@ -70,12 +72,19 @@ def main() -> int:
     logger = get_logger("astrarun.main")
     logger.info("Initializing AstraRun v0.2...")
 
-    # 3. Initialize Usage Store and Local Telemetry
+    # 3. Initialize Usage Store, Telemetry, and Laya Shadow Collector
     usage_store = UsageStore("data/usage.json")
     telem_cfg = config.settings.get("telemetry", {})
     telemetry = RoutingEventCollector(
         event_file=telem_cfg.get("file", "data/routing_events.jsonl"),
         enabled=bool(telem_cfg.get("enabled", True)),
+        store_raw_request=bool(telem_cfg.get("store_raw_request", True)),
+    )
+    laya_cfg = config.settings.get("laya", {})
+    laya_router = LayaRouter(laya_cfg)
+    shadow_collector = LayaShadowEventCollector(
+        event_file=laya_cfg.get("shadow_file", "data/laya_shadow_events.jsonl"),
+        enabled=bool(laya_cfg.get("enabled", True)),
         store_raw_request=bool(telem_cfg.get("store_raw_request", True)),
     )
 
@@ -100,6 +109,8 @@ def main() -> int:
         search_index=search_index,
         telemetry=telemetry,
         usage_store=usage_store,
+        laya_router=laya_router,
+        shadow_collector=shadow_collector,
     )
 
     # 6. Initialize router and tool registry
@@ -137,6 +148,9 @@ def main() -> int:
     if args.run_command:
         logger.info("Headless command execution mode: '%s'", args.run_command)
         decision = router.route(args.run_command, routing_context)
+        if laya_router.enabled and laya_router.mode == "shadow":
+            laya_dec = laya_router.predict_intent(args.run_command)
+            shadow_collector.record_shadow_event(args.run_command, decision, laya_dec)
         success, message = registry.execute(decision)
         logger.info("Result: success=%s, message='%s'", success, message)
         print(f"[{'SUCCESS' if success else 'FAILURE'}] {message}")

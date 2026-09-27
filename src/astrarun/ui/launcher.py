@@ -363,6 +363,23 @@ class LauncherWindow(QDialog):
         else:
             decision = Decision(tool="open_app", args={"app": res.name, "path": res.target})
 
+        # Shadow evaluation in background thread (non-blocking, zero execution authority)
+        if (
+            self.context.laya_router
+            and getattr(self.context.laya_router, "enabled", False)
+            and getattr(self.context.laya_router, "mode", "") == "shadow"
+            and self.context.shadow_collector
+        ):
+            raw_req = self.input_field.text().strip() or res.name
+            def _async_shadow_res(q=raw_req, d=decision):
+                try:
+                    ld = self.context.laya_router.predict_intent(q)
+                    self.context.shadow_collector.record_shadow_event(q, d, ld)
+                except Exception as err:
+                    logger.debug("Shadow evaluation error: %s", err)
+            import threading
+            threading.Thread(target=_async_shadow_res, daemon=True).start()
+
         success, msg = self.registry.execute(decision)
         if success:
             if self.context.usage_store:
@@ -390,6 +407,22 @@ class LauncherWindow(QDialog):
 
         logger.info("Processing command: '%s'", query)
         decision: Decision = self.router.route(query, self.context)
+
+        # Shadow evaluation in background thread (non-blocking, zero execution authority)
+        if (
+            self.context.laya_router
+            and getattr(self.context.laya_router, "enabled", False)
+            and getattr(self.context.laya_router, "mode", "") == "shadow"
+            and self.context.shadow_collector
+        ):
+            def _async_shadow_cmd(q=query, d=decision):
+                try:
+                    ld = self.context.laya_router.predict_intent(q)
+                    self.context.shadow_collector.record_shadow_event(q, d, ld)
+                except Exception as err:
+                    logger.debug("Shadow evaluation error: %s", err)
+            import threading
+            threading.Thread(target=_async_shadow_cmd, daemon=True).start()
 
         # Handle internal refresh command
         if decision.tool == "refresh_apps":

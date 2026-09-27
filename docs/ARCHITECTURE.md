@@ -1,6 +1,6 @@
 # AstraRun Architecture Specification
 
-> **Version**: 0.2.0  
+> **Version**: 0.3.0  
 > **Target Platform**: Windows 11 / Windows 10 (64-bit)  
 > **Status**: APPROVED  
 
@@ -15,8 +15,10 @@ Unlike traditional launchers that rely on string-interpolated shell execution or
 - **Persistent Low-Latency Process**: Resident process with a hidden, pre-warmed Qt UI and a dedicated background Win32 message loop for instantaneous hotkey wake-up.
 - **Deterministic & Fuzzy Multi-Signal Search Engine**: Fast in-memory candidate index with precomputed terms, hierarchical fuzzy scoring (exact, prefix, token, acronym, single-drop typo, subsequence, edit-distance), and bounded usage ranking.
 - **Foreground-Aware Monitor Placement**: Native Win32 display detection anchoring the launcher to the active foreground application's display with mouse cursor and primary monitor fallbacks.
-- **Local-Only Privacy-Preserving Telemetry**: Structured routing event collection with defensive credential redaction and zero off-machine network egress.
-- **Modular Router Abstraction**: Pluggable routing interface (`route(request, context) -> Decision`) designed to seamlessly transition from deterministic/fuzzy rule-based matching in v0.2 to multi-tiered intelligence (Laya, Kev, AI Bridge) in subsequent versions.
+- **Local-Only Privacy-Preserving Telemetry & Shadow Logging**: Structured routing event collection and dual-track shadow evaluation logging with defensive credential redaction and zero off-machine network egress.
+- **Laya Neural Decision Router in Shadow Mode (v0.3)**: Integrated non-autoregressive decision model (`convaiinnovations/laya`, 421M parameter ModernBERT-large) evaluated strictly in shadow mode with ZERO production execution authority.
+- **Fixed Intent Taxonomy**: 10 mutually exclusive semantic categories separating abstract intent prediction from deterministic parameter binding and policy enforcement.
+- **Three-Tier Evolutionary Router Architecture**: Pluggable routing interface transitioning safely from pure deterministic matching (v0.2) to shadow semantic evaluation (v0.3), cascading resolution (v0.4), and multi-step agent planning (v0.5+).
 
 ---
 
@@ -145,6 +147,18 @@ flowchart TD
   - Filters out uninstallers, help, and documentation links.
   - Custom user entries in `config/apps.json`.
 - **Known Folders**: Dynamically queried via Windows User Shell Folders / `SHGetKnownFolderPath`.
+
+### 3.10. Laya Neural Decision Router (`astrarun.routing.laya`)
+- **Upstream Engine**: ModernBERT-large (421M parameters) with single-pass non-autoregressive decision classification head trained via Reinforcement Learning from AI Feedback (RLCD) (`convaiinnovations/laya`).
+- **Operational Mode**: Strictly **Shadow Mode** (`"mode": "shadow"`). Evaluates user input in real-time or asynchronously in a daemon thread, with **ZERO production execution authority**.
+- **Intent Taxonomy**: Maps input queries across 10 mutually exclusive intents (`open_app`, `open_folder`, `open_url`, `open_project`, `find_file`, `process_action`, `system_action`, `ai_query`, `browser_action`, `unknown`).
+- **Execution Authority Separation**: Only primitive intents supported by production tools (`open_app`, `open_folder`, `open_url`) are marked `is_executable_now=True`; all others require multi-step entity resolution or planning (`requires_resolution=True`).
+- **Hardware Isolation**: Runs on CPU via `torch+cpu` on Intel Core i5-12450H, achieving ~50-80ms single-pass latency with 0MB VRAM footprint, preserving RTX 2050 for heavy LLM workflows. Canonical weights cached in `E:\AI_Models\HF_CACHE` (Platform Rule 9).
+
+### 3.11. Shadow Event Collector (`astrarun.telemetry.shadow_collector`)
+- Pairs live production deterministic decisions with concurrent Laya neural predictions.
+- Appends structured records to `data/laya_shadow_events.jsonl` with schema versioning, microsecond latencies, full probability distributions, and defensive credential redaction.
+- Completely thread-safe and non-blocking: dispatches on background threads without delaying UI responsiveness or command execution.
 
 ---
 

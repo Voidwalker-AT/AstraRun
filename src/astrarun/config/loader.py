@@ -32,6 +32,14 @@ DEFAULT_SETTINGS: dict[str, Any] = {
         "file": "data/routing_events.jsonl",
         "store_raw_request": True
     },
+    "laya": {
+        "enabled": True,
+        "mode": "shadow",
+        "model": "convaiinnovations/laya",
+        "device": "cpu",
+        "confidence_threshold": 0.75,
+        "shadow_file": "data/laya_shadow_events.jsonl"
+    },
     "logging": {
         "level": "INFO",
         "file": "logs/astrarun.log",

@@ -45,18 +45,24 @@ flowchart LR
 
 ---
 
-### v0.3 — Laya Fast Classifier
-- Integration of Laya (lightweight local classifier for microsecond intent classification).
-- Fallback chain: Deterministic Router -> Laya.
-- Structured classification for common natural utterances ("jump into my downloads folder", "fire up vscode").
-- Zero cloud latency.
+### v0.3 — Laya Shadow Router & Semantic Decision Benchmark (Complete — 2026-09-27)
+- Integration of **Laya** (`convaiinnovations/laya`, 421M parameter ModernBERT-large) on CPU with zero VRAM overhead.
+- Strict **Shadow Mode** isolation: Laya evaluates input in real-time or asynchronously on daemon threads with **ZERO production execution authority**.
+- 10-class mutual exclusive Intent Taxonomy (`open_app`, `open_folder`, `open_url`, `open_project`, `find_file`, `process_action`, `system_action`, `ai_query`, `browser_action`, `unknown`).
+- Execution authority separation: only primitive tools (`open_app`, `open_folder`, `open_url`) map to `is_executable_now=True`; all complex intents map to `requires_resolution=True`.
+- Dual-track privacy-preserving shadow event telemetry in `data/laya_shadow_events.jsonl` with regex credential redaction.
+- Canonical AI model storage adhering to Platform Rule 9 (`E:\AI_Models\HF_CACHE`).
+- Comprehensive 325-query semantic evaluation benchmark suite across 15 categories (`benchmarks/routing/run_semantic_benchmark.py`).
+- Full empirical calibration analysis (ECE = 0.0443, Brier score = 0.7450) and automation trade-off curve documented in `docs/LAYA_BENCHMARK.md` and `docs/LAYA_CALIBRATION.md`.
+- Formal architectural decision records ADR-010 through ADR-014.
 
 ---
 
-### v0.4 — Kev Semantic Router
-- Integration of Kev (local semantic embedding and reasoning router).
-- Disambiguation of complex queries and intent negotiation ("open the project I worked on yesterday").
-- Confirmation flow in UI for ambiguous matches.
+### v0.4 — Semantic Entity Resolution & Gated Production Router
+- Domain fine-tuning of Laya on accumulated `data/laya_shadow_events.jsonl` to reduce the 21.7% Semantic False Action Rate.
+- Entity resolution engine: binding semantic intents to concrete targets (e.g., resolving `open_project(vivaldi-ai)` to its workspace directory or `process_action(port 3000)` to its PID).
+- Gated production promotion: allowing Laya decisions above $\ge 0.85$ confidence to execute if parameter binding and policy checks pass.
+- Disambiguation UI and confirmation prompts for medium-risk or underspecified queries.
 
 ---
 

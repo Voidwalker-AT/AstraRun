@@ -79,3 +79,5 @@ class RoutingContext:
     search_index: Any = None
     telemetry: Any = None
     usage_store: Any = None
+    laya_router: Any = None
+    shadow_collector: Any = None

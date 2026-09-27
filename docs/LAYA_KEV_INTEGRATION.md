@@ -1,88 +1,88 @@
-# Laya & Kev Integration Architecture
+# Laya & Kev Integration Architecture Specification
 
-> **Document Status**: DRAFT / SPECIFICATION  
-> **Target Release**: AstraRun v0.3 (Laya) & v0.4 (Kev)  
+> **Target Platform**: AstraRun Architecture Platform  
+> **Status**: APPROVED ARCHITECTURE DRAFT  
+> **Milestone Horizon**: v0.3 (Shadow) ➔ v0.4 (Entity Resolution) ➔ v0.5 (Kev Planning)  
 
 ---
 
-## 1. Architectural Role of Laya and Kev
+## 1. Architectural Roles & Taxonomy
 
-AstraRun v0.1 establishes a strict boundary: the UI and execution subsystems interact exclusively with a clean router interface:
+AstraRun's long-term vision requires handling everything from microsecond exact keystrokes (`calc`) to complex multi-step workstation requests (`kill whatever process is using port 3000 and restart my backend`). 
 
-```python
-route(request: str, context: RoutingContext) -> Decision
-```
+No single model architecture is optimal for both extremes. A three-tier cascaded architecture cleanly separates speed, intent categorization, entity resolution, and complex planning:
 
-In v0.1, this interface is satisfied by `DeterministicRouter`. In subsequent releases, intelligence will be added without modifying the launcher UI or the tool registry.
+| Tier | Component | Underlying Engine | Latency Target | Primary Responsibility | Production Authority |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **Tier 0** | **Deterministic & Fuzzy Router** | `SearchIndex` + `FuzzyScorer` | **< 20 µs** | Exact app, folder, URL, alias matches and single-drop typos | **FULL** (Immediate execution) |
+| **Tier 1** | **Laya Fast Intent Classifier** | ModernBERT-large (421M params, RLCD) | **50 - 80 ms** | Zero-shot intent categorization across 10 fixed classes | **GATED** (Subject to entity resolution & policy) |
+| **Tier 2** | **Kev Semantic Planner & Resolver** | Local SLM / Multi-Step Agent | **200 - 800 ms** | Disambiguation, entity extraction, multi-tool plan generation | **CONFIRMED** (Interactive user confirmation modal) |
+
+---
+
+## 2. The Decision Cascade Flow
 
 ```mermaid
 flowchart TD
-    UserReq["User Command (Natural Language)"] --> Norm["Request Normalizer"]
-    Norm --> Det["1. Deterministic Router (Fastest, zero-overhead regex & prefix)"]
+    User["User Query (e.g. 'open vivaldi project')"] --> T0{"Tier 0: Deterministic / Fuzzy"}
     
-    Det -->|Matched (Confidence == 1.0)| Dec["Structured Decision"]
-    Det -->|Unresolved / Low Confidence| Laya["2. Laya Classifier (Local Fast Intent Model)"]
+    T0 -->|"Direct Exact Match (Score >= 0.75)"| ExecT0["Direct Tool Execution (open_app/folder/url)"]
+    T0 -->|"Unresolved / Low Score (< 0.75)"| T1["Tier 1: Laya Fast Intent Classifier"]
     
-    Laya -->|Matched (Confidence >= 0.85)| Dec
-    Laya -->|Uncertain / Ambiguous| Kev["3. Kev Semantic Router (Local Embedding & Logic)"]
+    T1 --> IntentChoice{"Laya Intent Prediction"}
     
-    Kev -->|Resolved| Dec
-    Kev -->|Complex Generative / Open-Ended| AIBridge["4. AI Bridge / LLM Layer"]
+    IntentChoice -->|"Primitive Intent + Score >= 0.85"| ResolvePrim["Entity Resolution (Apps/Folders)"]
+    ResolvePrim -->|"Resolved"| PolicyCheck{"Policy Engine Gate"}
+    ResolvePrim -->|"Unresolved"| T2["Tier 2: Kev Planner"]
     
-    AIBridge --> Dec
+    IntentChoice -->|"Complex Intent (open_project, process_action)"| T2
+    IntentChoice -->|"unknown / Ambiguous"| Fallback["Prompt User / No Action"]
     
-    Dec --> Policy["Policy & Validation Engine"]
-    Policy --> ToolReg["Tool Registry (Dispatch Safe Handlers)"]
-    ToolReg --> OS["Windows Execution"]
+    T2 --> PlanGen["Synthesize Multi-Tool Execution Plan"]
+    PlanGen --> ConfirmModal["Render Interactive UI Confirmation Modal"]
+    ConfirmModal -->|"User Confirms"| PolicyCheck
+    ConfirmModal -->|"User Cancels"| Discard["Dismiss & Log Event"]
+    
+    PolicyCheck -->|"Allowed"| Registry["Tool Registry Execution"]
+    PolicyCheck -->|"Blocked"| BlockAlert["Security Rejection Status"]
 ```
 
 ---
 
-## 2. Fundamental Safety Constraint
+## 3. Laya's Boundary Contract
 
-> [!IMPORTANT]
-> **No AI model (Laya, Kev, or LLMs) will ever execute tools directly.**
+Laya is an **intent discriminator**, not an execution planner or string generator:
 
-Models are strictly information-processing units that output structured data conforming to the `Decision` schema:
-
-```json
-{
-  "tool": "open_app",
-  "args": {
-    "app": "code",
-    "target": "E:\\Workspace\\Active\\server"
-  },
-  "confidence": 0.94,
-  "source": "laya",
-  "explanation": "Resolved user request to opening server project in VS Code"
-}
-```
-
-The `Policy & Validation Engine` validates the returned `tool` and `args` against the registered schema and security constraints before the `ToolRegistry` dispatches to OS execution.
+1. **Non-Autoregressive Output**:
+   - Laya outputs categorical choice probabilities across the 10 fixed intents (`open_app`, `open_folder`, `open_url`, `open_project`, `find_file`, `process_action`, `system_action`, `ai_query`, `browser_action`, `unknown`).
+   - Laya **NEVER** outputs file paths, URL strings, command-line arguments, or arbitrary shell commands.
+2. **Authority Tagging**:
+   - Every `LayaDecision` includes `is_executable_now` and `requires_resolution`.
+   - Only primitive tool targets with verified parameters are marked `is_executable_now=True`.
+3. **Execution Prohibition in v0.3**:
+   - In v0.3, Laya is constrained to **Shadow Mode** (`"mode": "shadow"`). Its outputs are compared against Tier 0 decisions and logged to `data/laya_shadow_events.jsonl`, but never dispatched to OS handlers.
 
 ---
 
-## 3. Router Fallback Composition
+## 4. Kev's Planned Boundary Contract
 
-The routing architecture will use a `CompositeRouter` pattern:
+Kev will be introduced in milestone v0.5 to handle ambiguous, contextual, or multi-step intents:
 
-```python
-class CompositeRouter(BaseRouter):
-    def __init__(self, routers: list[BaseRouter]):
-        self.routers = routers
+1. **Contextual Memory & State**:
+   - Kev receives contextual state from the workstation: active editor workspace, recently modified files, running processes, and browser tab titles.
+2. **Entity Resolution Pipeline**:
+   - For `open_project`: Kev scans `E:\Workspace\` and `workspace.json`, mapping semantic project names (`vivaldi project`) to absolute directory paths (`E:\Workspace\Active\vivaldi-ai`).
+   - For `process_action`: Kev queries system network sockets (`netstat` / Win32 `GetExtendedTcpTable`), identifying the process holding port 3000 and presenting the exact PID and binary name to the user.
+3. **Interactive Confirmation for Destructive Actions**:
+   - Any plan containing actions classified as `ToolRisk.MEDIUM` or `ToolRisk.HIGH` (e.g. process termination, git branch switching) renders a structured preview widget in the AstraRun launcher with an explicit `[Execute] / [Cancel]` confirmation button.
 
-    def route(self, request: str, context: RoutingContext) -> Decision:
-        for router in self.routers:
-            decision = router.route(request, context)
-            if decision.is_resolved:
-                return decision
-        return Decision.unknown(request)
-```
+---
 
-In v0.1:
-`routers = [DeterministicRouter(app_cache, folder_cache, url_cache)]`
+## 5. Security & Verification Policy
 
-In v0.4:
-`routers = [DeterministicRouter(...), LayaRouter(...), KevRouter(...), AIBridgeRouter(...)]`
-
-This maintains modular testability and zero architectural rework.
+1. **Zero Raw Shell Ingestion Invariant**:
+   - Neither Laya nor Kev may emit raw shell command strings (`cmd.exe /c ...`). All proposed actions must decompose into registered, typed tool invocations.
+2. **Hard Policy Gatekeeping**:
+   - The Policy Engine executes downstream of both Laya and Kev. Even if Kev produces a multi-step plan, every step is individually validated against blocked commands, prohibited directories, and risk constraints before execution.
+3. **Local Compute Guarantee**:
+   - Both Laya (ModernBERT-large on CPU) and Kev (quantized local SLM) run 100% locally on the workstation without off-device data transmission.

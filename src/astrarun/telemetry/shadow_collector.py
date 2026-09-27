@@ -1,4 +1,4 @@
-"""Local shadow routing event collector for Laya evaluation.
+"""Local shadow routing event collector for Laya and Kev evaluation.
 
 Strictly local append-only JSONL recording without network egress.
 """
@@ -13,6 +13,7 @@ from typing import Any
 
 from astrarun.core.logging import get_logger
 from astrarun.core.models import Decision
+from astrarun.routing.kev import KevDecision
 from astrarun.routing.laya import LayaDecision
 from astrarun.telemetry.redactor import redact_sensitive_text
 
@@ -65,6 +66,68 @@ class LayaShadowEventCollector:
                 "requires_resolution": laya_decision.requires_resolution,
                 "latency_ms": round(laya_decision.latency_ms, 3),
                 "error": laya_decision.error,
+            },
+        }
+        if extra:
+            event["extra"] = extra
+
+        try:
+            line = json.dumps(event) + "\n"
+            with self._lock:
+                self.event_file.parent.mkdir(parents=True, exist_ok=True)
+                with open(self.event_file, "a", encoding="utf-8") as f:
+                    f.write(line)
+        except Exception as err:
+            logger.warning("Failed appending shadow event to %s: %s", self.event_file, err)
+
+
+class KevShadowEventCollector:
+    """Thread-safe recorder for Kev shadow-mode evaluations."""
+
+    def __init__(
+        self,
+        event_file: Path | str = "data/kev_shadow_events.jsonl",
+        enabled: bool = True,
+        store_raw_request: bool = True,
+    ) -> None:
+        self.event_file = Path(event_file)
+        self.enabled = enabled
+        self.store_raw_request = store_raw_request
+        self._lock = threading.Lock()
+
+    def record_shadow_event(
+        self,
+        request: str,
+        production_decision: Decision,
+        kev_decision: KevDecision,
+        extra: dict[str, Any] | None = None,
+    ) -> None:
+        """Record a paired production vs. Kev shadow evaluation event."""
+        if not self.enabled:
+            return
+
+        clean_req = redact_sensitive_text(request) if self.store_raw_request else None
+
+        event: dict[str, Any] = {
+            "schema_version": 1,
+            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "request": clean_req,
+            "production": {
+                "router": production_decision.source,
+                "tool": production_decision.tool,
+                "is_resolved": production_decision.is_resolved,
+                "confidence": round(production_decision.confidence, 4),
+                "args": production_decision.args,
+            },
+            "kev": {
+                "intent": kev_decision.intent,
+                "confidence": round(kev_decision.confidence, 4),
+                "probabilities": {k: round(v, 4) for k, v in kev_decision.probabilities.items()},
+                "is_executable_now": kev_decision.is_executable_now,
+                "requires_resolution": kev_decision.requires_resolution,
+                "latency_ms": round(kev_decision.latency_ms, 3),
+                "error": kev_decision.error,
+                "raw_result": kev_decision.raw_result,
             },
         }
         if extra:

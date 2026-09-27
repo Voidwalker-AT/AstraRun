@@ -171,3 +171,87 @@
   - Eliminates CUDA version mismatch risks and heavyweight dependencies.
   - Non-blocking asynchronous thread dispatch ensures the UI loop is never held waiting for CPU inference.
 
+---
+
+## ADR-015: Kev Shadow Router Isolation (Zero Execution Authority)
+- **Status**: ACCEPTED
+- **Context**: Introducing a second candidate decision model (`jaredpalmer/kev-0.8b`) requires strict enforcement of the prime safety invariant: ambiguous, unknown, or unsupported requests must result in `UNKNOWN -> NOTHING HAPPENS` with 0.0% false execution rate on production paths. Granting production execution authority to an uncalibrated or unverified model risks accidental or destructive actions.
+- **Decision**:
+  - `KevRouter` operates strictly behind AstraRun's `BaseRouter` interface in shadow mode with zero production execution authority.
+  - The production tool registry dispatches decisions exclusively from the verified deterministic pipeline.
+  - Kev shadow events are logged to local append-only storage with mandatory credential redaction.
+- **Consequences**:
+  - Kev can be benchmarked and evaluated safely without operational risk.
+  - Full telemetry and confidence distributions are preserved for offline calibration analysis.
+  - Zero possibility of unconfirmed application launches or destructive side effects.
+
+---
+
+## ADR-016: Kev Architectural Model (Qwen3.5-0.8B LoRA + PointerHead Single-Pass)
+- **Status**: ACCEPTED
+- **Context**: Kev uses a non-autoregressive decision model architecture built by Jared Palmer on top of a causal LM backbone (`Qwen/Qwen3.5-0.8B-Base`), a PEFT LoRA adapter, and a 256-dimensional dot-product `PointerHead` (`q.weight`, `k.weight`). It serves TypeSafe's public `/v1/systemone` format (`choice`, `score`, `noul`) in a single forward pass without generating text tokens.
+- **Decision**:
+  - Implement `KevRouter` matching upstream Kev-0.8B architecture:
+    - Input sequence formatted using Qwen FIM/box delimiter tokens (`<|fim_prefix|>`, `<|fim_middle|>`, `<|box_start|>`, `<|box_end|>`, `<|fim_suffix|>`).
+    - Option logits computed via pointer readout: $z = \frac{k(h_{opts}) \cdot q(h_{decide})}{\sqrt{dp}} / T$.
+    - Calibrated temperature scaling ($T \approx 2.351096$) loaded from `head.pt`.
+- **Consequences**:
+  - Full compatibility with the upstream Jared Palmer Kev repository.
+  - Preserves exact calibrated softmax probabilities across the 10-class intent taxonomy.
+  - Clean separation between state prompt encoding and option scoring.
+
+---
+
+## ADR-017: Workstation Hardware Constraints & Explicit Rejection of Kev-4B
+- **Status**: ACCEPTED
+- **Context**: The target machine has an Intel Core i5-12450H CPU, 15.65 GB total RAM (~4.43 GB free), and an NVIDIA RTX 2050 GPU (4 GB total, ~2.61 GB free). Kev models exist in 0.8B and 4B variants. Kev-4B requires ~8.2 GB of disk storage and ~8 GB in BF16 or ~16 GB in FP32 RAM. Loading Kev-4B on this hardware would exceed available RAM and VRAM, triggering heavy Windows page file thrashing, system freeze, or OOM crashes.
+- **Decision**:
+  - Explicitly reject Kev-4B as unfeasible for this machine.
+  - Adopt `jaredpalmer/kev-0.8b` (~1.71 GB total disk, ~3.2 GB FP32 RAM) as the only feasible candidate for this hardware boundary.
+  - Store model weights strictly in canonical platform storage `E:\AI_Models\HF_CACHE` per Platform Rule 9.
+- **Consequences**:
+  - Host RAM remains stable with ~1.2 GB headroom during inference.
+  - Adheres strictly to Platform Operating Contract Section 62 regarding hardware sizing boundaries.
+
+---
+
+## ADR-018: Blind Holdout (Holdout v2) Benchmark Methodology
+- **Status**: ACCEPTED
+- **Context**: Evaluating models exclusively on a known training or development benchmark risks metric gaming and overfitting. A high-quality evaluation requires testing out-of-distribution generalization on previously unseen queries with adversarial phrasing, difficult semantic contrasts, and ambiguous prompts.
+- **Decision**:
+  - Create a 260-query blind holdout dataset (`benchmarks/routing/semantic_holdout_v2.json`, SHA256: `96b8cd6cfb78e5752261478fc5f75dbc93d072ea0483052307f82e01ba982743`).
+  - Dataset holds 28.8% unknown queries (75 items) across 15 distinct categories, testing abstention reliability on adversarial, dangerous, and underspecified inputs.
+- **Consequences**:
+  - Prevents prompt tuning or threshold overfitting.
+  - Provides a scientifically rigorous test of zero-shot transfer and out-of-domain safety.
+
+---
+
+## ADR-019: Multi-Dimensional Decision Model Evaluation Matrix (Laya vs. Kev)
+- **Status**: ACCEPTED
+- **Context**: AstraRun requires an empirical basis for choosing whether Laya, Kev, or a hybrid cascade should serve as the semantic decision backbone for workstation routing.
+- **Decision**:
+  - Adopt a comprehensive multi-dimensional evaluation matrix comparing:
+    1. Overall accuracy and Macro/Weighted F1.
+    2. Unknown / Abstention Recall.
+    3. Semantic False Action Rate (SFAR) and High-Confidence SFAR (HC-SFAR @ 0.85).
+    4. Expected Calibration Error (ECE) and Brier Score.
+    5. Latency percentiles (mean, p50, p95, p99) on CPU.
+    6. Working memory and disk footprint.
+    7. Operational complexity and hardware requirements.
+- **Consequences**:
+  - Objective, data-driven selection between Laya and Kev.
+  - Establishes concrete gating criteria before any decision model is granted live execution authority.
+
+---
+
+## ADR-020: Correction of Upstream Laya `noul` Documentation
+- **Status**: ACCEPTED
+- **Context**: Previous documentation ambiguously described Laya's `noul` question type as producing "open-ended output". Direct inspection of the installed upstream codebase (`site-packages/laya/agent.py` lines 976-981) reveals that `noul` is strictly a binary boolean question returning $P(\text{true}) \in [0.0, 1.0]$ over `[false, true]`.
+- **Decision**:
+  - Correct all internal AstraRun documentation and architectural references to reflect the actual upstream implementation: `noul` is a binary boolean probability question, NOT open-ended text generation.
+- **Consequences**:
+  - Accurate understanding of model capabilities across engineering documentation.
+  - Prevents erroneous assumptions about generative capabilities in downstream milestones.
+
+

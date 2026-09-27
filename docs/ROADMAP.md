@@ -58,8 +58,24 @@ flowchart LR
 
 ---
 
-### v0.4 — Semantic Entity Resolution & Gated Production Router
-- Domain fine-tuning of Laya on accumulated `data/laya_shadow_events.jsonl` to reduce the 21.7% Semantic False Action Rate.
+### v0.4 — Kev Shadow Router & Laya-vs-Kev Decision Model Evaluation (Complete — 2026-09-27)
+- Integration of **Kev** (`jaredpalmer/kev-0.8b`, PEFT LoRA adapter on `Qwen/Qwen3.5-0.8B-Base` backbone with 256-dim dot-product `PointerHead` and temperature $T \approx 2.351$) on CPU in canonical cache (`E:\AI_Models\HF_CACHE`).
+- Strict **Shadow Mode** isolation: Kev operates under **ZERO production execution authority** (0.0% False Execution Rate).
+- Blind holdout evaluation dataset (`benchmarks/routing/semantic_holdout_v2.json`, 260 curated queries across 15 categories, 75 unknown queries, SHA256 verified).
+- Multi-model shadow event telemetry (`data/kev_shadow_events.jsonl` and `data/laya_shadow_events.jsonl`) with regex credential redaction.
+- Unified comparative benchmark harness (`benchmarks/routing/run_comparative_benchmark.py`) evaluating Deterministic vs. Laya vs. Kev vs. Cascades across both datasets.
+- Critical architectural and empirical findings:
+  - **Latency**: Laya (~500ms on ONNX CPU) exhibits a **~35x latency advantage** over Kev (~18,000ms on CPU reference loops lacking `flash-linear-attention`).
+  - **Memory Footprint**: Laya requires ~850MB RAM vs. Kev-0.8B ~3.2GB RAM. Kev-4B was formally rejected due to host memory limits (ADR-017).
+  - **Domain Alignment**: Kev was trained on CFPB consumer finance narratives and logic puzzles; without fine-tuning, its high temperature causes heavy abstention on launcher commands, whereas Laya demonstrates higher intent recall.
+  - **Conclusion**: Laya remains the superior baseline model for AstraRun on this workstation architecture.
+- 9 dedicated unit and safety tests in `tests/test_kev_router.py`, expanding the automated test suite to **61 passing tests**.
+- Formal decision records ADR-015 through ADR-020.
+
+---
+
+### v0.5 — Semantic Entity Resolution & Gated Production Router
+- Domain fine-tuning of Laya on accumulated shadow telemetry (`data/laya_shadow_events.jsonl`) to reduce the 21.7% Semantic False Action Rate.
 - Entity resolution engine: binding semantic intents to concrete targets (e.g., resolving `open_project(vivaldi-ai)` to its workspace directory or `process_action(port 3000)` to its PID).
 - Gated production promotion: allowing Laya decisions above $\ge 0.85$ confidence to execute if parameter binding and policy checks pass.
 - Disambiguation UI and confirmation prompts for medium-risk or underspecified queries.

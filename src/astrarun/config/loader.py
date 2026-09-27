@@ -32,6 +32,10 @@ DEFAULT_SETTINGS: dict[str, Any] = {
         "file": "data/routing_events.jsonl",
         "store_raw_request": True
     },
+    "shadow_models": {
+        "laya": True,
+        "kev": False
+    },
     "laya": {
         "enabled": True,
         "mode": "shadow",
@@ -39,6 +43,15 @@ DEFAULT_SETTINGS: dict[str, Any] = {
         "device": "cpu",
         "confidence_threshold": 0.75,
         "shadow_file": "data/laya_shadow_events.jsonl"
+    },
+    "kev": {
+        "enabled": False,
+        "mode": "shadow",
+        "model": "jaredpalmer/kev-0.8b",
+        "base_model": "Qwen/Qwen3.5-0.8B-Base",
+        "device": "cpu",
+        "confidence_threshold": 0.75,
+        "shadow_file": "data/kev_shadow_events.jsonl"
     },
     "logging": {
         "level": "INFO",

@@ -1,76 +1,83 @@
-# AstraRun v0.3 Status Report
+# AstraRun v0.4 Status Report
 
 > **Date**: 2026-09-27  
 > **Status**: STABLE / VERIFIED  
-> **Milestone**: v0.3 Complete (Laya Shadow Router & Semantic Decision Benchmark)  
+> **Milestone**: v0.4 Complete (Kev Shadow Router & Laya-vs-Kev Decision Model Evaluation)  
 
 ---
 
 ## 1. What Works Completely
 
-1. **Laya Neural Decision Router (`astrarun.routing.laya`)**:
-   - Integrates `convaiinnovations/laya` (421M parameter ModernBERT-large non-autoregressive decision model).
+1. **Kev Neural Decision Router (`astrarun.routing.kev`)**:
+   - Integrates `jaredpalmer/kev-0.8b` (PEFT LoRA adapter on `Qwen/Qwen3.5-0.8B-Base` backbone with 256-dim dot-product `PointerHead`).
+   - Calibrated temperature scaling ($T \approx 2.351096$) loaded from `head.pt`.
+   - Formatted single-pass sequence with Qwen FIM/box delimiters (`<|fim_prefix|>`, `<|fim_middle|>`, `<|box_start|>`, `<|box_end|>`, `<|fim_suffix|>`).
    - Deployed strictly in **Shadow Mode** (`"mode": "shadow"`).
-   - **ZERO Production Execution Authority**: All user launches remain 100% deterministic and fuzzy. Laya predictions are never dispatched to OS APIs.
-   - Evaluates on CPU via `torch+cpu` on Intel Core i5-12450H, consuming 0MB VRAM and leaving RTX 2050 available for heavy developer workflows.
-   - Weights stored canonically in `E:\AI_Models\HF_CACHE` (Platform Rule 9).
+   - **ZERO Production Execution Authority**: All user launches remain 100% deterministic and fuzzy. Kev predictions are never dispatched to OS APIs (0.0% False Execution Rate).
+   - Model weights stored canonically in `E:\AI_Models\HF_CACHE` (Platform Rule 9).
 
-2. **Categorical Intent Taxonomy**:
-   - 10 mutually exclusive, strictly defined intent classes (`open_app`, `open_folder`, `open_url`, `open_project`, `find_file`, `process_action`, `system_action`, `ai_query`, `browser_action`, `unknown`).
-   - Clean execution authority separation: only primitive registered tools map to `is_executable_now=True`; complex intents map to `requires_resolution=True`.
+2. **Laya Fast Decision Router (`astrarun.routing.laya`)**:
+   - Integrates `convaiinnovations/laya` (421M parameter ModernBERT-large non-autoregressive decision model).
+   - Deployed strictly in **Shadow Mode** with zero execution authority.
+   - Runs on CPU via ONNX Runtime, achieving ~508ms mean latency and 0MB VRAM footprint.
 
-3. **Local Shadow Event Telemetry (`astrarun.telemetry.shadow_collector`)**:
-   - Pairs production deterministic decisions with concurrent Laya neural predictions in `data/laya_shadow_events.jsonl`.
+3. **Curated Blind Holdout Evaluation Dataset (`benchmarks/routing/semantic_holdout_v2.json`)**:
+   - 260 curated queries across 15 distinct categories (`direct_app`, `direct_folder`, `direct_url`, `semantic_app`, `semantic_project`, `semantic_file`, `semantic_process`, `semantic_system`, `semantic_ai`, `semantic_browser`, `ambiguous`, `underspecified`, `unsupported`, `dangerous`, `adversarial`).
+   - 75 unknown queries (28.8% unknown rate) specifically testing model abstention.
+   - Verified SHA256 checksum: `96b8cd6cfb78e5752261478fc5f75dbc93d072ea0483052307f82e01ba982743`.
+
+4. **Multi-Model Shadow Event Telemetry (`astrarun.telemetry.shadow_collector`)**:
+   - Parallel collectors: `LayaShadowEventCollector` (`data/laya_shadow_events.jsonl`) and `KevShadowEventCollector` (`data/kev_shadow_events.jsonl`).
    - Thread-safe background execution with zero UI thread blocking.
    - Defensive regex redaction strips API keys, Bearer tokens, query credentials, and passwords.
 
-4. **Comprehensive 325-Query Semantic Benchmark Suite**:
-   - 325 curated queries across 15 distinct categories (`direct_app`, `direct_folder`, `direct_url`, `semantic_app`, `semantic_project`, `semantic_file`, `semantic_process`, `semantic_system`, `semantic_ai`, `semantic_browser`, `ambiguous`, `underspecified`, `unsupported`, `dangerous`, `adversarial`).
-   - Three-way evaluation comparing System A (Deterministic/Fuzzy), System B (Laya Zero-Shot), and System C (Simulated Cascade).
-   - Computes Expected Calibration Error (ECE = 0.0443), Brier score (0.7450), 10x10 confusion matrix, per-intent F1 scores, automation trade-off curve, and microsecond latency percentiles.
+5. **Unified Comparative Benchmark Harness (`benchmarks/routing/run_comparative_benchmark.py`)**:
+   - Evaluates Deterministic, Laya, Kev, and Cascades across both Dataset 1 (325 queries) and Dataset 2 (260 queries).
+   - Computes Expected Calibration Error (ECE), Brier score, reliability bins, automation trade-off curves, and latency percentiles.
 
-5. **Deterministic Foundation Preservation (v0.2 Regression)**:
+6. **Deterministic Foundation Preservation (v0.2 Regression)**:
    - 88-query deterministic routing benchmark remains at **100.0% accuracy** and **0.0% false execution rate**.
    - 395 applications and known folders discoverable in <3.5ms.
 
-6. **Automated Test Suite**:
-   - **52 automated unit, UI, and safety tests passing** across 12 test modules.
-   - 8 dedicated Laya router and shadow mode isolation tests in `tests/test_laya_router.py`.
+7. **Automated Test Suite**:
+   - **61 automated unit, UI, and safety tests passing** across 13 test modules.
+   - 9 dedicated Kev tests in `tests/test_kev_router.py` verifying shadow isolation, formatting, confidence normalization, and zero execution authority.
 
 ---
 
-## 2. What Partially Works
+## 2. Key Empirical Findings (Laya vs. Kev)
 
-- **Zero-Shot Calibration on Long-Tail Queries**:
-  - While Laya achieves strong classification on semantic processes (96% recall) and projects (80% recall), zero-shot performance on direct folder lookups and subtle ambiguous queries exhibits overconfidence in bins >0.80 (+17% to +23% gap).
-  - Standing Semantic False Action Rate (SFAR) is 21.67%, justifying keeping Laya in shadow mode until domain fine-tuning.
+1. **CPU Latency Disparity (The Linear Attention Bottleneck)**:
+   - **Laya**: ~508 ms on CPU using ONNX Runtime.
+   - **Kev-0.8B**: 15,000 - 23,000 ms (~18s) on CPU because Qwen3.5's Gated DeltaNet linear attention falls back to PyTorch interpreter loops in the absence of `flash-linear-attention` / `causal_conv1d` kernels on Windows.
+   - **Advantage**: Laya exhibits a **~35x latency advantage** on host hardware.
 
----
+2. **Memory Footprint**:
+   - **Laya**: ~850 MB RAM footprint.
+   - **Kev-0.8B**: ~3.2 GB RAM footprint in FP32 on CPU.
+   - **Kev-4B**: Formally rejected in ADR-017 due to 8–16 GB memory requirements causing swap thrashing on 16 GB workstation.
 
-## 3. What Does Not Work (By Design in v0.3)
+3. **Domain Specialization & Abstention**:
+   - As upstream creator Jared Palmer documented, Kev was trained on CFPB consumer finance complaint narratives and synthetic logic tasks, not desktop launcher tool-calls.
+   - Kev's calibrated temperature ($T=2.35$) causes heavy abstention on direct application queries (e.g. `open notepad` $\rightarrow$ `unknown`), while accurately categorizing URL and process actions.
+   - Laya achieves higher intent recall across launcher categories.
 
-- **Laya Production Execution**: Laya has **ZERO execution authority** in v0.3. Production execution is 100% deterministic/fuzzy.
-- **Kev, Jev, Qwen, Ollama, Cloud LLMs**: Intentionally excluded in v0.3. The focus was empirically testing whether non-autoregressive decision inference alone justifies production inclusion.
-- **Complex Multi-Step OS Actions**: Queries like `kill port 3000` or `open project from yesterday` are recognized semantically by Laya as `process_action` and `open_project`, but are safely blocked from immediate execution (`requires_resolution=True`).
-
----
-
-## 4. Empirical Benchmark Highlights
-
-| Metric | System A (Deterministic) | System B (Laya Zero-Shot) | System C (Cascade Sim) |
-| :--- | :--- | :--- | :--- |
-| **Accuracy (325 queries)** | **41.54%** | **40.92%** | **53.23%** |
-| **Semantic False Action Rate** | **4.17%** | **21.67%** | **23.75%** |
-| **Mean Latency** | **3.56 ms** | **507.99 ms** | **511.55 ms** |
-| **Execution Authority** | FULL | **ZERO (Shadow)** | NONE |
+4. **Recommendation**:
+   - **Laya remains the superior foundation for AstraRun workstation routing** on this hardware platform. Kev is deferred from interactive production routing.
 
 ---
 
-## 5. Next Recommended Step
+## 3. What Does Not Work (By Design in v0.4)
 
-**Milestone v0.4: Semantic Entity Resolution & Gated Production Router**:
-- Domain fine-tuning of Laya on accumulated `data/laya_shadow_events.jsonl` to eliminate the 21.7% false-action risk.
-- Entity resolution engine: resolve semantic targets (e.g. `open_project` -> directory path, `process_action` -> PID).
+- **Production Execution for Laya or Kev**: Both models operate under **ZERO execution authority** in v0.4. Production execution remains 100% deterministic/fuzzy.
+- **Model Fine-Tuning**: Neither model is fine-tuned in v0.4; this milestone establishes a pure zero-shot baseline comparison.
+- **Kev on Interactive Keystroke Paths**: Excluded due to ~18s CPU latency.
+
+---
+
+## 4. Next Recommended Step
+
+**Milestone v0.5: Semantic Entity Resolution & Gated Production Router**:
+- Domain fine-tuning of Laya on accumulated `data/laya_shadow_events.jsonl` to eliminate false-action risk.
+- Entity resolution engine: binding semantic intents to concrete targets (e.g., resolving `open_project(vivaldi-ai)` to its workspace directory or `process_action(port 3000)` to its PID).
 - Gated production promotion: allow Laya decisions with confidence $\ge 0.85$ to execute once parameters are verified.
-
-

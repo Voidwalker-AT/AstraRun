@@ -1,6 +1,6 @@
 # AstraRun Security Specification
 
-> **Version**: 0.3.0  
+> **Version**: 0.4.0  
 > **Status**: APPROVED  
 
 ---
@@ -82,29 +82,30 @@ Each tool registered in AstraRun is tagged with an immutable risk category:
 
 ---
 
-## 5. AI Risk Model & Laya Shadow Mode Isolation (v0.3)
+## 5. AI Risk Model & Dual-Shadow Isolation (Laya & Kev in v0.4)
 
-In AstraRun v0.3, the first neural decision model (**Laya**, ModernBERT-large 421M parameters) is introduced. Strict security controls ensure zero operational degradation:
+In AstraRun v0.3 and v0.4, two neural decision models (**Laya**, ModernBERT-large 421M parameters, and **Kev**, Qwen3.5-0.8B LoRA) are introduced. Strict security controls ensure zero operational degradation:
 
 1. **Zero Production Execution Authority**:
-   - Laya executes exclusively in **shadow mode** (`"mode": "shadow"`).
+   - Both Laya and Kev execute exclusively in **shadow mode** (`"mode": "shadow"`).
    - Inferences are captured asynchronously or in parallel with deterministic routing.
-   - Laya predictions are NEVER submitted to the `ToolRegistry` or executed against the OS.
+   - Laya and Kev predictions are **NEVER** submitted to the `ToolRegistry` or executed against the OS.
    - All production launches remain 100% driven by deterministic and fuzzy logic.
+   - Verified empirically by automated regression safety tests (`test_shadow_mode_safety_zero_execution_authority` in both `test_laya_router.py` and `test_kev_router.py`).
 
 2. **Categorical Intent Taxonomy (No Freeform Output)**:
-   - Laya does not generate freeform shell commands, arguments, or tool names.
+   - Neither model generates freeform shell commands, arbitrary code, arguments, or tool names.
    - Outputs are mathematically constrained to 10 predefined, mutually exclusive intent tokens (`open_app`, `open_folder`, `open_url`, `open_project`, `find_file`, `process_action`, `system_action`, `ai_query`, `browser_action`, `unknown`).
    - Only primitive tools (`open_app`, `open_folder`, `open_url`) map to immediate execution (`is_executable_now=True`). All complex or unverified intents map to `requires_resolution=True`, preventing unauthorized execution.
 
 3. **Hard Policy Precedence Over Probabilities**:
    - Security policies and blocked tool definitions (`ToolRisk.BLOCKED`) unconditionally supersede model predictions.
-   - If an adversarial input (e.g. `rmdir /s /q c:\`) receives a high model confidence for `open_app`, the Policy Engine detects the blocked command and rejects it unconditionally.
+   - If an adversarial input (e.g. `rmdir /s /q c:\` or `kill -9 1`) receives a high model confidence for `open_app` or `process_action`, the Policy Engine detects the blocked command and rejects it unconditionally.
 
 4. **Shadow Telemetry Privacy**:
-   - Shadow records are stored strictly in `data/laya_shadow_events.jsonl` (git-ignored, local-only).
+   - Shadow records are stored strictly in `data/laya_shadow_events.jsonl` and `data/kev_shadow_events.jsonl` (git-ignored, local-only).
    - Sensitive inputs pass through the credential redactor before logging.
-   - Zero external network requests: model weights run locally from `E:\AI_Models\HF_CACHE` (Platform Rule 9).
+   - Zero external network requests: model weights run locally from `E:\AI_Models\HF_CACHE` (Platform Rule 9). No cloud LLM APIs, telemetry pingbacks, or third-party web sockets are permitted.
 
 ---
 

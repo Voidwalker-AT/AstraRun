@@ -17,6 +17,10 @@
     "file": "data/routing_events.jsonl",
     "store_raw_request": true
   },
+  "shadow_models": {
+    "laya": true,
+    "kev": false
+  },
   "laya": {
     "enabled": true,
     "mode": "shadow",
@@ -25,6 +29,15 @@
     "confidence_threshold": 0.75,
     "shadow_file": "data/laya_shadow_events.jsonl"
   },
+  "kev": {
+    "enabled": false,
+    "mode": "shadow",
+    "model": "jaredpalmer/kev-0.8b",
+    "base_model": "Qwen/Qwen3.5-0.8B-Base",
+    "device": "cpu",
+    "confidence_threshold": 0.75,
+    "shadow_file": "data/kev_shadow_events.jsonl"
+  },
   "logging": {
     "level": "INFO",
     "file": "logs/astrarun.log",
@@ -32,4 +45,3 @@
     "backup_count": 3
   }
 }
-

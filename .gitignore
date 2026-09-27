@@ -24,6 +24,7 @@ logs/*.log
 # Local telemetry, usage, and evaluation data
 data/
 *.jsonl
+benchmarks/routing/cache/
 
 # Build artifacts & package distribution
 build/

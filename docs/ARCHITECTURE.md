@@ -1,6 +1,6 @@
 # AstraRun Architecture Specification
 
-> **Version**: 0.3.0  
+> **Version**: 0.4.0  
 > **Target Platform**: Windows 11 / Windows 10 (64-bit)  
 > **Status**: APPROVED  
 
@@ -17,8 +17,9 @@ Unlike traditional launchers that rely on string-interpolated shell execution or
 - **Foreground-Aware Monitor Placement**: Native Win32 display detection anchoring the launcher to the active foreground application's display with mouse cursor and primary monitor fallbacks.
 - **Local-Only Privacy-Preserving Telemetry & Shadow Logging**: Structured routing event collection and dual-track shadow evaluation logging with defensive credential redaction and zero off-machine network egress.
 - **Laya Neural Decision Router in Shadow Mode (v0.3)**: Integrated non-autoregressive decision model (`convaiinnovations/laya`, 421M parameter ModernBERT-large) evaluated strictly in shadow mode with ZERO production execution authority.
+- **Kev Neural Decision Router in Shadow Mode (v0.4)**: Integrated single-pass decision model (`jaredpalmer/kev-0.8b`, PEFT LoRA adapter on `Qwen/Qwen3.5-0.8B-Base` backbone with 256-dim dot-product `PointerHead` and calibrated temperature $T \approx 2.351$) evaluated strictly in shadow mode with ZERO production execution authority.
 - **Fixed Intent Taxonomy**: 10 mutually exclusive semantic categories separating abstract intent prediction from deterministic parameter binding and policy enforcement.
-- **Three-Tier Evolutionary Router Architecture**: Pluggable routing interface transitioning safely from pure deterministic matching (v0.2) to shadow semantic evaluation (v0.3), cascading resolution (v0.4), and multi-step agent planning (v0.5+).
+- **Multi-Model Evolutionary Router Architecture**: Pluggable routing interface transitioning safely from pure deterministic matching (v0.2) to single shadow semantic evaluation (v0.3), dual-model comparative evaluation (v0.4), cascading resolution, and multi-step agent planning (v0.5+).
 
 ---
 
@@ -153,12 +154,20 @@ flowchart TD
 - **Operational Mode**: Strictly **Shadow Mode** (`"mode": "shadow"`). Evaluates user input in real-time or asynchronously in a daemon thread, with **ZERO production execution authority**.
 - **Intent Taxonomy**: Maps input queries across 10 mutually exclusive intents (`open_app`, `open_folder`, `open_url`, `open_project`, `find_file`, `process_action`, `system_action`, `ai_query`, `browser_action`, `unknown`).
 - **Execution Authority Separation**: Only primitive intents supported by production tools (`open_app`, `open_folder`, `open_url`) are marked `is_executable_now=True`; all others require multi-step entity resolution or planning (`requires_resolution=True`).
-- **Hardware Isolation**: Runs on CPU via `torch+cpu` on Intel Core i5-12450H, achieving ~50-80ms single-pass latency with 0MB VRAM footprint, preserving RTX 2050 for heavy LLM workflows. Canonical weights cached in `E:\AI_Models\HF_CACHE` (Platform Rule 9).
+- **Hardware Isolation**: Runs on CPU via `torch+cpu` on Intel Core i5-12450H, achieving ~500ms latency via ONNX Runtime with 0MB VRAM footprint, preserving RTX 2050 for heavy LLM workflows. Canonical weights cached in `E:\AI_Models\HF_CACHE` (Platform Rule 9).
 
-### 3.11. Shadow Event Collector (`astrarun.telemetry.shadow_collector`)
-- Pairs live production deterministic decisions with concurrent Laya neural predictions.
-- Appends structured records to `data/laya_shadow_events.jsonl` with schema versioning, microsecond latencies, full probability distributions, and defensive credential redaction.
-- Completely thread-safe and non-blocking: dispatches on background threads without delaying UI responsiveness or command execution.
+### 3.11. Kev Neural Decision Router (`astrarun.routing.kev`)
+- **Upstream Engine**: `jaredpalmer/kev-0.8b` (PEFT LoRA adapter on `Qwen/Qwen3.5-0.8B-Base` backbone with 256-dimensional dot-product `PointerHead`).
+- **Operational Mode**: Strictly **Shadow Mode** (`"mode": "shadow"`). Zero production execution authority.
+- **Decision Mechanism**: Employs Qwen FIM/box delimiters (`<|fim_prefix|>`, `<|fim_middle|>`, `<|box_start|>`, `<|box_end|>`, `<|fim_suffix|>`) and dot-product pointer logits scaled by a fitted temperature parameter ($T \approx 2.351096$).
+- **Inference Profile**: Non-autoregressive single forward pass. On CPU, due to absence of specialized `flash-linear-attention` / `causal_conv1d` kernels on Windows, execution falls back to PyTorch interpreter loops (~15-20s per query).
+- **Abstention Tendency**: High abstention on out-of-domain desktop launcher actions, safely defaulting to `unknown`.
+
+### 3.12. Multi-Model Shadow Telemetry Pipeline (`astrarun.telemetry.shadow_collector`)
+- Independent, thread-safe shadow event collectors: `LayaShadowEventCollector` (`data/laya_shadow_events.jsonl`) and `KevShadowEventCollector` (`data/kev_shadow_events.jsonl`).
+- Pairs live production deterministic decisions with concurrent neural predictions.
+- Appends structured records with schema versioning, execution latencies, full probability distributions, and defensive credential redaction (`redact_sensitive_data()`).
+- Dispatches asynchronously on background daemon threads without delaying UI responsiveness or command execution.
 
 ---
 

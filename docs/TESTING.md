@@ -1,6 +1,6 @@
 # AstraRun Testing & Verification Report
 
-> **Version**: 0.3.0  
+> **Version**: 0.4.0  
 > **Status**: VERIFIED & PASSING  
 > **Execution Date**: 2026-09-27  
 
@@ -8,8 +8,21 @@
 
 ## 1. Test Suite Architecture
 
-The AstraRun test suite contains 52 automated tests across 12 modules:
-1. **Laya Router & Shadow Mode Tests (v0.3)**:
+The AstraRun test suite contains **61 automated tests across 13 modules**:
+
+1. **Kev Router & Shadow Mode Tests (v0.4)**:
+   - `tests/test_kev_router.py`:
+     - `test_kev_router_disabled`: Verifies abstention when disabled without loading model weights.
+     - `test_kev_router_construction`: Validates device/mode configuration and threshold.
+     - `test_kev_router_load_failure_resilience`: Validates graceful fallback on model load failure.
+     - `test_kev_router_inference_exception_resilience`: Verifies graceful unknown return on inference failure.
+     - `test_kev_router_intent_mapping`: Verifies 10-class intent schema and execution authority flags.
+     - `test_kev_confidence_preservation`: Verifies probability distribution and softmax normalization.
+     - `test_kev_shadow_event_collector`: Verifies JSONL append, schema, and regex credential redaction.
+     - `test_shadow_mode_safety_zero_execution_authority`: **CRITICAL SAFETY INVARIANT**: Verifies that even if Kev predicts `open_app` with 0.99 confidence, when production is `unknown`, **NO OS APPLICATION IS LAUNCHED**.
+     - `test_kev_formatting_delimiters`: Verifies Qwen FIM/box delimiters (`<|fim_prefix|>`, `<|fim_middle|>`, `<|box_start|>`, `<|box_end|>`, `<|fim_suffix|>`).
+
+2. **Laya Router & Shadow Mode Tests (v0.3)**:
    - `tests/test_laya_router.py`:
      - `test_laya_router_disabled`: Verifies abstention when disabled without loading model.
      - `test_laya_router_construction`: Validates device/mode configuration and threshold.
@@ -19,7 +32,8 @@ The AstraRun test suite contains 52 automated tests across 12 modules:
      - `test_laya_confidence_preservation`: Verifies choice and probability preservation.
      - `test_laya_shadow_event_collector`: Verifies JSONL append, schema, and regex credential redaction.
      - `test_shadow_mode_safety_zero_execution_authority`: **CRITICAL SAFETY INVARIANT**: Verifies that Laya predictions NEVER execute and ToolRegistry only executes production decisions.
-2. **Unit Tests (v0.1 & v0.2)**:
+
+3. **Unit Tests (v0.1 & v0.2)**:
    - `tests/test_routing.py`: Request normalization (`open`, `launch`, `start`, `go to`, `show`), application/folder/URL routing, and unknown rejection.
    - `tests/test_config.py`: Default and custom configuration loading, corrupted JSON resilience.
    - `tests/test_tools.py`: Tool registry validation, missing tool blocks, risk tier enforcement (`LOW`, `MEDIUM`, `HIGH`, `BLOCKED`).
@@ -28,10 +42,12 @@ The AstraRun test suite contains 52 automated tests across 12 modules:
    - `tests/test_telemetry.py`: Credential redaction (`sk-...`, Bearer tokens, passwords), local logging, disabled mode, and omit-raw-request mode.
    - `tests/test_positioning.py`: Window positioning calculations and target screen geometry fallbacks.
    - `tests/test_security_regression.py`: Prevention of command injection metacharacters (`&`, `|`, `;`, `$`, `%`) and URL protocol verification.
-3. **UI Tests**:
+
+4. **UI Tests**:
    - `tests/test_ui.py`: Window show/dismiss, Escape key handling, initial state, suggestions generation, feedback messages.
    - `tests/test_ui_v02.py`: Keyboard arrow navigation (`Up`/`Down`), Tab autocompletion, weak suggestion rejection on Enter.
-4. **Integration Tests**:
+
+5. **Integration Tests**:
    - `tests/test_integration.py`: Live Windows application discovery (~400 apps cached), dynamic known folders, live routing.
 
 ---

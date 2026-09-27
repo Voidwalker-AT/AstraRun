@@ -1,4 +1,4 @@
-# AstraRun — Windows Intelligent Command Launcher (v0.3)
+# AstraRun — Windows Intelligent Command Launcher (v0.4)
 
 AstraRun is a local, lightweight, low-latency Windows command launcher engineered as the foundational command interface for an evolving AI-assisted workstation control ecosystem.
 
@@ -7,7 +7,7 @@ AstraRun replaces fragile string-interpolated shell execution with a strictly ty
 
 ---
 
-## Key Capabilities (v0.3)
+## Key Capabilities (v0.4)
 
 - **Instantaneous Hotkey Activation**: Summoned with `Alt+Space` in ~4.5ms from a pre-warmed resident background process.
 - **Multi-Signal Fuzzy Matching Engine**: Combines exact, alias, prefix, word-token, acronym, single-drop typo (`notpad` -> `Notepad`), and Damerau-Levenshtein edit-distance scoring with bounded usage boost (`<= 0.03`).
@@ -15,11 +15,13 @@ AstraRun replaces fragile string-interpolated shell execution with a strictly ty
 - **Full Keyboard Navigation**: Complete keyboard-only control via `Up`/`Down` arrow navigation, `Tab` autocompletion, `Enter` execution, and `Escape` dismissal.
 - **Zero Raw Shell Ingestion & 0.0% False Execution Rate**: Strict confidence gating (`0.75`) guarantees ambiguous or out-of-scope queries (`kill port 3000`, `delete system32`, `asdfgh`) are safely rejected as `unknown` rather than mistriggering apps.
 - **Laya Neural Decision Router in Shadow Mode (v0.3)**: Integrated ModernBERT-large (421M parameters) non-autoregressive decision model running on CPU with **ZERO production execution authority**.
+- **Kev Neural Decision Router in Shadow Mode (v0.4)**: Integrated single-pass decision model (`jaredpalmer/kev-0.8b`, PEFT LoRA adapter on `Qwen/Qwen3.5-0.8B-Base` with 256-dim dot-product pointer head and temperature $T \approx 2.351$) evaluated strictly in shadow mode with **ZERO production execution authority**.
 - **10-Class Intent Taxonomy**: Formally defined semantic intent classes separating classification from parameter binding and OS tool invocation.
-- **Dual-Track Privacy-Preserving Shadow Telemetry**: Concurrently records production vs. Laya decisions in `data/laya_shadow_events.jsonl` with automated regex credential redaction (zero off-workstation egress).
+- **Multi-Model Shadow Event Telemetry**: Parallel collectors for Laya (`data/laya_shadow_events.jsonl`) and Kev (`data/kev_shadow_events.jsonl`) with automated regex credential redaction (zero off-workstation egress).
 - **Foreground-Window-Aware Monitor Placement**: Anchors the launcher to the active foreground application's display with mouse cursor and primary monitor fallbacks using native Win32 APIs.
 - **Expanded Application Discovery**: Discovers **~400 applications** cached at startup from Windows User & System Start Menu shortcuts (`.lnk`), `App Paths` registry, and `PATH`.
-- **Standardized Semantic Benchmark**: 325 curated queries evaluated across 15 categories, measuring calibration error (ECE 0.0443), Brier score (0.7450), and three-way system performance.
+- **Comprehensive Dual-Dataset Benchmark**: Evaluates Deterministic vs. Laya vs. Kev vs. Cascades across the 325-query original benchmark and a 260-query blind holdout dataset (`semantic_holdout_v2.json`, 75 unknowns, SHA256 verified).
+- **61 Automated Tests**: Complete suite of unit, UI, safety, and model isolation tests verifying zero execution authority.
 
 ---
 
@@ -209,6 +211,11 @@ Run the Laya semantic routing benchmark (325 queries):
 .venv\Scripts\python benchmarks\routing\run_semantic_benchmark.py
 ```
 
+Run the AstraRun v0.4 comparative benchmark (Deterministic vs. Laya vs. Kev vs. Cascades):
+```powershell
+.venv\Scripts\python benchmarks\routing\run_comparative_benchmark.py --sample 15
+```
+
 ---
 
 ## Project Structure
@@ -222,32 +229,41 @@ AstraRun/
 |-- .gitignore                 # Environment & build ignores
 |-- benchmarks/                # Evaluation suites & harnesses
 |   `-- routing/
-|       |-- routing_dataset.json  # 88 curated deterministic evaluation queries
-|       |-- run_benchmark.py      # Deterministic evaluation runner
-|       |-- semantic_dataset.json # 325 curated semantic evaluation queries (15 categories)
-|       `-- run_semantic_benchmark.py # Semantic benchmark runner (System A vs B vs C)
+|       |-- routing_dataset.json      # 88 curated deterministic evaluation queries
+|       |-- run_benchmark.py          # Deterministic evaluation runner
+|       |-- semantic_dataset.json     # 325 curated semantic evaluation queries (15 categories)
+|       |-- semantic_holdout_v2.json  # 260 curated blind holdout queries (75 unknowns)
+|       |-- run_semantic_benchmark.py # v0.3 Semantic benchmark runner
+|       `-- run_comparative_benchmark.py # v0.4 Multi-model comparative benchmark runner
 |-- config/                    # Human-editable configuration files
-|   |-- settings.json          # Hotkey, UI, telemetry, and Laya shadow config
+|   |-- settings.json          # Hotkey, UI, telemetry, and Laya/Kev shadow config
 |   |-- apps.json              # Custom application definitions
 |   |-- aliases.json           # Natural language aliases
 |   `-- urls.json              # Web aliases
 |-- data/                      # Local-only runtime storage (git-ignored)
 |   |-- routing_events.jsonl   # Redacted telemetry event stream
 |   |-- laya_shadow_events.jsonl # Paired production vs. Laya shadow evaluation stream
+|   |-- kev_shadow_events.jsonl  # Paired production vs. Kev shadow evaluation stream
 |   `-- usage.json             # Usage frequency & recency store
 |-- docs/                      # Engineering documentation
-|   |-- ARCHITECTURE.md        # Architecture specification & diagrams (v0.3)
-|   |-- DECISIONS.md           # Architecture Decision Records (ADRs 001-014)
-|   |-- SECURITY.md            # Security boundaries, privacy & risk model
+|   |-- ARCHITECTURE.md        # Architecture specification & diagrams (v0.4)
+|   |-- DECISIONS.md           # Architecture Decision Records (ADRs 001-020)
+|   |-- SECURITY.md            # Security boundaries, privacy & dual-shadow risk model
 |   |-- ROADMAP.md             # Evolutionary roadmap (v0.1 -> Workstation Daemon)
 |   |-- LAYA_RESEARCH.md       # Upstream Laya architecture & capabilities
 |   |-- LAYA_RUNTIME.md        # Hardware, PyTorch packaging & runtime specs
+|   |-- KEV_RESEARCH.md        # Upstream Kev architecture & capabilities
+|   |-- KEV_RUNTIME.md         # Hardware, transformers packaging & linear attention specs
+|   |-- KEV_BENCHMARK.md       # Kev semantic routing benchmark report
+|   |-- KEV_CALIBRATION.md     # Kev ECE, reliability bins, and automation curve
+|   |-- LAYA_VS_KEV.md         # Empirical head-to-head decision model comparison
+|   |-- LAYA_VS_KEV_DISAGREEMENTS.md # Detailed query-by-query disagreement analysis
 |   |-- INTENT_TAXONOMY.md     # 10-class mutual exclusive intent taxonomy
 |   |-- LAYA_BENCHMARK.md      # Semantic benchmark 3-way evaluation report
 |   |-- LAYA_CALIBRATION.md    # ECE, Brier score, and automation trade-off curve
 |   |-- LAYA_KEV_INTEGRATION.md # Multi-tier cascaded architecture spec
-|   |-- TESTING.md             # Automated test report & verification matrix
-|   `-- STATUS.md              # Current milestone status report (v0.3)
+|   |-- TESTING.md             # Automated test report & verification matrix (61 tests)
+|   `-- STATUS.md              # Current milestone status report (v0.4)
 |-- logs/                      # Rotating application logs
 |   `-- astrarun.log
 |-- scripts/                   # Developer utilities & test scripts
@@ -259,23 +275,25 @@ AstraRun/
 |       |-- main.py            # Main entrypoint & daemon orchestration
 |       |-- core/              # Models, enums, structured logging
 |       |-- search/            # Fuzzy search engine, scorer, matcher, index
-|       |-- routing/           # Base router, deterministic router & LayaRouter
+|       |-- routing/           # Base router, deterministic router, LayaRouter & KevRouter
 |       |   |-- __init__.py
 |       |   |-- base.py
 |       |   |-- deterministic.py
-|       |   `-- laya.py        # Laya ModernBERT-large shadow router
+|       |   |-- laya.py        # Laya ModernBERT-large shadow router
+|       |   `-- kev.py         # Kev Qwen3.5-0.8B LoRA shadow router
 |       |-- tools/             # Tool registry & safe execution handlers
 |       |-- discovery/         # App Paths, Start Menu shortcuts, Known Folders
 |       |-- hotkeys/           # Win32 RegisterHotKey background listener
 |       |-- telemetry/         # Local privacy-preserving event logger & redactor
 |       |   |-- collector.py
 |       |   |-- redactor.py
-|       |   `-- shadow_collector.py # Thread-safe Laya shadow event collector
+|       |   `-- shadow_collector.py # Thread-safe Laya & Kev shadow event collectors
 |       |-- usage/             # Atomic usage store for frequency ranking
 |       |-- config/            # Resilient JSON configuration loader
 |       `-- ui/                # PySide6 launcher window & positioning engine
-`-- tests/                     # 52 automated unit, UI, and integration tests
+`-- tests/                     # 61 automated unit, UI, integration, and safety tests
     |-- test_laya_router.py    # Laya safety, resilience & shadow isolation tests
+    |-- test_kev_router.py     # Kev safety, formatting, resilience & shadow isolation tests
     `-- ...
 ```
 

@@ -127,7 +127,20 @@ def foreground_window() -> CapabilityResult:
         )
 
     user32 = ctypes.windll.user32
+    try:
+        from astrarun.interaction.discovery import _ensure_desktop_attached
+        _ensure_desktop_attached()
+    except Exception:
+        pass
+
     hwnd = user32.GetForegroundWindow()
+    if not hwnd:
+        # In non-interactive subshell/background execution, fallback to topmost visible window
+        w_res = list_windows(limit=1)
+        if w_res.success and w_res.data and w_res.data.get("windows"):
+            top_w = w_res.data["windows"][0]
+            hwnd = top_w.get("hwnd", 0)
+
     if not hwnd:
         return CapabilityResult.fail(
             capability="foreground_window",

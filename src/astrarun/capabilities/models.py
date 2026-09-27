@@ -21,6 +21,7 @@ class CapabilityCategory(str, Enum):
     SYSTEM = "SYSTEM"
     NETWORK = "NETWORK"
     WORKFLOW = "WORKFLOW"
+    INTERACTION = "INTERACTION"
 
 
 class CapabilityPermission(str, Enum):
@@ -48,6 +49,7 @@ class CapabilityErrorCode(str, Enum):
     INVALID_ARGUMENT = "INVALID_ARGUMENT"
     OS_ERROR = "OS_ERROR"
     TIMEOUT = "TIMEOUT"
+    UNSUPPORTED_UI = "UNSUPPORTED_UI"
 
 
 @dataclass

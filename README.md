@@ -1,4 +1,4 @@
-# AstraRun — Windows Intelligent Command Launcher & Workstation Control Plane (v0.9)
+# AstraRun — Windows Intelligent Command Launcher & Workstation Control Plane (v0.10)
 
 AstraRun is a local, lightweight, low-latency Windows command launcher and workstation orchestrator engineered as the foundational command interface for an evolving AI-assisted workstation control ecosystem.
 
@@ -7,32 +7,34 @@ AstraRun replaces fragile string-interpolated shell execution with a strictly ty
 
 ---
 
-## Key Capabilities (v0.9)
+## Key Capabilities (v0.10)
 
+- **Semantic UI Automation Subsystem (v0.10)**: 11 new capabilities expanding the platform to **70 typed workstation capabilities** across 10 OS categories with direct Microsoft UI Automation (`IUIAutomation`) tree inspection and control manipulation.
+- **Dedicated COM MTA Worker Thread (v0.10)**: Isolates heavy COM accessibility traversals onto a dedicated background thread, eliminating GUI thread deadlocks and message pump freezes.
+- **Strict Control Mutation Invariant (v0.10)**:
+  $$\text{UIA Semantic Pattern} > \text{Win32 Control Message} > \text{Keyboard Shortcut} > \text{Coordinate Interaction (PERMANENTLY PROHIBITED)}$$
+  Zero blind coordinate clicking (`pyautogui.click(x, y)`). All control manipulations use strongly-typed UIA patterns (`InvokePattern`, `ValuePattern`, `TogglePattern`, `SelectionItemPattern`, `ScrollPattern`).
+- **Safe 64-bit SendInput & Clipboard Memory ABI (v0.10)**: Full 40-byte union alignment (`sizeof(INPUT) == 40`) for reliable Unicode keystroke typing and shortcut dispatch (`Ctrl+C`, `Ctrl+V`, `Alt+F4`), plus safe 64-bit global memory handle copying for clipboard operations.
+- **Text Payload as Data Invariant (v0.10)**: Text entry (`type "format c:" into notepad`) is treated strictly as literal data, never evaluated as shell commands.
+- **Password Masking & Privacy Invariant (v0.10)**: Controls marked `IsPassword` or matching credential heuristics have their values completely masked; secrets are never logged, persisted in SQLite, or exported in telemetry.
+- **Destructive Button Gating (v0.10)**: High-risk control actions (`delete`, `remove`, `format`, `drop`, `wipe`, `purge`, `reset`, `buy`, `terminate`) are gated behind `ActionGate` user confirmation prompts.
 - **Instantaneous Hotkey Activation**: Summoned with `Alt+Space` in ~4.5ms from a pre-warmed resident background process.
-- **Window Intelligence & Native Win32 Subsystem (v0.9)**: 12 new capabilities expanding the platform to **59 typed workstation capabilities** across 9 OS categories with zero external GUI automation dependencies.
-- **The Origin Window Invariant (v0.9)**: Captures foreground `HWND` synchronously on `Alt+Space` before the launcher steals focus; grounds relative actions (`snap left`, `maximize window`, `snap to top left`, `close window`) and deictic pronouns (`this window`, `it`) with automatic focus restoration.
-- **Self-Targeting Window Immunity (v0.9)**: Process-wide `_ASTRARUN_HWNDS` registry unconditionally prevents AstraRun from modifying, snapping, or closing its own resident windows.
-- **Deterministic Desktop Tiling Mathematics (v0.9)**: 11 exact geometric layout algorithms (`FULL`, `LEFT_HALF`, `RIGHT_HALF`, `TOP_HALF`, `BOTTOM_HALF`, `TOP_LEFT`, `TOP_RIGHT`, `BOTTOM_LEFT`, `BOTTOM_RIGHT`, `LEFT_TWO_THIRDS`, `RIGHT_ONE_THIRD`) and atomic multi-window arrangement (`arrange_desktop`).
-- **Bounded LIFO Window Restore Stack (v0.9)**: Thread-safe undo history (max depth 20, 600s TTL) enabling instantaneous 1-click or voice `undo` in **0.06 ms**.
-- **Multi-Monitor Geometry & DPI Awareness (v0.9)**: Multi-monitor enumeration via `EnumDisplayMonitors` with Per-Monitor DPI v2 awareness and work area boundary compliance.
-- **Canonical Composition Root (`AstraApplication`) (v0.9)**: Single pipeline unifying all 14 platform subsystems, enforcing direct navigation, sub-3ms fast-path launcher routing (0.47 ms measured), rich NLP, ActionGate safety, and background learning.
-- **Ambient Resident UI & System Tray (v0.9)**: Windows named mutex single-instance lock (`Local\AstraRun_SingleInstance_Mutex`), programmatically rendered high-DPI Catppuccin Mocha tray icon, interactive Diagnostics Dialog, and Settings Dialog.
+- **Window Intelligence & Native Win32 Subsystem (v0.9)**: Ground-truth window management with the Origin Window Invariant, 11 deterministic tiling layouts, bounded LIFO undo stack (0.06 ms restore), and multi-monitor DPI awareness.
+- **Self-Targeting Window Immunity**: Process-wide `_ASTRARUN_HWNDS` registry unconditionally prevents AstraRun from modifying, snapping, or closing its own resident windows.
+- **Canonical Composition Root (`AstraApplication`)**: Single pipeline unifying all 15 platform subsystems, enforcing direct navigation, sub-3ms fast-path launcher routing (0.47 ms measured), rich NLP, ActionGate safety, and background learning.
+- **Ambient Resident UI & System Tray**: Windows named mutex single-instance lock (`Local\AstraRun_SingleInstance_Mutex`), programmatically rendered high-DPI Catppuccin Mocha tray icon, interactive Diagnostics Dialog, and Settings Dialog.
 - **Memory, Learning & Skill Foundation (v0.8.5)**: Durable workstation semantic memory, natural language teaching parser, and candidate skill discovery operating strictly off the interactive hot path in background threads.
-- **Zero Neural / Learned Execution Authority**: Learning never directly executes commands or expands computer control authority. Every proposed action passes through `ActionGate` and hard policy enforcement.
-- **Non-Learnable Security Policies**: Repeating high-risk capabilities or confirmations can **NEVER** downgrade `CONFIRM` to `AUTO`, bypass `ActionGate`, or alias protected system processes (`lsass.exe`, `csrss.exe`) and dangerous commands (`format c:`, `rmdir /s`).
-- **Dual-Database Architecture**: Physical separation between ephemeral execution tracking (`data/astra_history.db`, 30-day retention) and durable workstation knowledge (`data/astra_learning.db`, SQLite WAL mode, `PRAGMA user_version = 1`, append-only audit trail).
-- **Task Runtime & Lifecycle Authority**: Centrally governed by `TaskManager` across a formal 14-state directed Finite State Machine (`TaskStatus`).
-- **Live Activity Timeline UI**: Real-time observable step visualization (`TaskActivityView`) rendering ground-truth system operations with zero fake progress or fabricated thinking.
+- **Task Runtime & Lifecycle Authority (v0.8)**: Centrally governed by `TaskManager` across a formal 14-state directed Finite State Machine (`TaskStatus`) with persistent SQLite Task Ledger.
 - **Benchmark-Proven Performance**:
-  - **Window Benchmark V1 (330 cases)**: **100.0% Accuracy**, **0.00% Wrong Window Action Rate**, **0.0229 ms mean latency**.
-  - **Product Benchmark V1 (220 cases)**: **100.0% Accuracy**, **0.00% False Execution Rate**, **0.4699 ms fast-path routing latency** (< 3ms invariant verified).
-  - **Learning Benchmark V1 (320 cases)**: **100.0% Accuracy**, **0.00% False Memory Activation Rate**, **100.0% Security Invariant Enforcement Rate**, **24.57 ms mean latency**.
-  - **Task Benchmark V1 (300 cases)**: **100.0% Status Accuracy**, **100.0% Sequence Accuracy**, **100.0% Persistence Accuracy**, **73.36 ms mean latency**.
-  - **Capability Benchmark V1 (520 cases)**: **100.0% Capability Accuracy**, **100.0% Permission Accuracy**, **100.0% Block Recall**, **0.783 ms mean latency**.
-  - **Action Benchmark V1 (330 cases)**: **100.0% Intent Accuracy**, **100.0% Gate Accuracy**, **0.00% False Execution Rate (FER)**, **0.091 ms mean latency**.
-  - **NLP Benchmark V1 (620 cases)**: **100.0% Intent Accuracy**, **95.2% Clause Acc**, **0.00% Negated Action Leakage Rate**, **7.809 ms mean latency**.
-- **252 Passing Automated Tests**: 100% test pass rate across 20 test modules in ~18.78s.
+  - **Interaction Benchmark V1 (405 cases)**: **100.0% Accuracy**, **0.00% WEAR**, **0 password leaks**, **100.0% destructive block recall**, **0.0621 ms mean latency**.
+  - **Product Benchmark V2 (280 cases)**: **100.0% Accuracy**, **0.00% False Execution Rate**, **0.5983 ms fast-path routing latency** (< 3ms invariant verified).
+  - **Window Benchmark V1 (330 cases)**: **100.0% Accuracy**, **0.00% Wrong Window Action Rate**, **0.0169 ms mean latency**.
+  - **Learning Benchmark V1 (320 cases)**: **100.0% Accuracy**, **0.00% False Memory Activation Rate**, **100.0% Security Invariant Enforcement Rate**, **28.32 ms mean latency**.
+  - **Task Benchmark V1 (300 cases)**: **100.0% Status Accuracy**, **100.0% Sequence Accuracy**, **100.0% Persistence Accuracy**, **79.58 ms mean latency**.
+  - **Capability Benchmark V1 (520 cases)**: **100.0% Capability Accuracy**, **100.0% Permission Accuracy**, **100.0% Block Recall**, **0.624 ms mean latency**.
+  - **Action Benchmark V1 (330 cases)**: **100.0% Intent Accuracy**, **100.0% Gate Accuracy**, **0.00% False Execution Rate (FER)**, **0.094 ms mean latency**.
+  - **NLP Benchmark V1 (620 cases)**: **100.0% Intent Accuracy**, **95.2% Clause Acc**, **0.00% Negated Action Leakage Rate**, **7.275 ms mean latency**.
+- **293 Passing Automated Tests**: 100% test pass rate across 21 test modules in ~30.76s.
 
 ---
 
@@ -64,7 +66,7 @@ flowchart TD
     subgraph Runtime ["Task Runtime & Ledger (v0.8)"]
         AllowOutcome --> TM["TaskManager (14-State FSM)"]
         ConfirmOutcome -->|User Confirms Ctrl+Enter| TM
-        TM --> Reg["CapabilityRegistry (47 Capabilities)"]
+        TM --> Reg["CapabilityRegistry (70 Capabilities)"]
         TM -.->|Emit Events| Bus["TaskEventBus (31 Observable Events)"]
         Bus -.-> ActView["TaskActivityView (Live Timeline)"]
         TM -.->|Persist State| Ledger[("SQLite TaskLedger (WAL Mode)")]
@@ -78,7 +80,8 @@ flowchart TD
         Reg --> Net["Network (Ports, Process-on-Port)"]
         Reg --> Sys["System (CPU, RAM, GPU, LockWorkStation)"]
         Reg --> Proj["Projects (Git Status, Dev Ports)"]
-        Reg --> Win["Windows (Discovery & Enumeration)"]
+        Reg --> Win["Windows (Tiling, Snapping, Undo)"]
+        Reg --> UI["Interaction (Inspect UI, Click, Text, Shortcuts)"]
         Reg -.->|Record Facts| Store["Structured ObservationStore (200 facts)"]
     end
 

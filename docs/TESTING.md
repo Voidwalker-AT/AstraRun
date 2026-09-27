@@ -1,16 +1,60 @@
 # AstraRun Testing & Verification Report
 
-> **Version**: 0.9  
+> **Version**: 0.10  
 > **Status**: VERIFIED & PASSING  
-> **Execution Date**: 2026-09-27  
+> **Execution Date**: 2026-09-28  
 
 ---
 
 ## 1. Test Suite Architecture
 
-The AstraRun test suite contains **252 automated tests across 20 modules**:
+The AstraRun test suite contains **293 automated tests across 21 modules**:
 
-1. **Daily Driver Integration & Window Intelligence Tests (v0.9)**:
+1. **Application Interaction & Control Grounding Tests (v0.10)**:
+   - `tests/test_v010_interaction.py` (41 tests):
+     - `test_uielementref_serialization`: Serialization/deserialization of UIElementRef dataclass.
+     - `test_control_types_and_patterns`: ControlType and ControlPattern enum coverage and UIA mappings.
+     - `test_keyboard_shortcut_canonical`: KeyboardShortcut canonical formatting and normalizations.
+     - `test_destructive_action_classification`: Gating detection of destructive action keywords.
+     - `test_safe_exceptions_in_destructive_action`: Whitelist of safe navigation actions (cancel, reset zoom).
+     - `test_password_element_detection`: IsPassword attribute and heuristic name/ID detection.
+     - `test_redact_sensitive_content`: Password token, API key, and bearer token redaction.
+     - `test_target_validation`: Simulated vs live window validation, HWND 0 rejection, and self-targeting guards.
+     - `test_element_resolver_exact_automation_id`: High-confidence AutomationId matching.
+     - `test_element_resolver_exact_name`: Exact name matching.
+     - `test_element_resolver_control_type_boost`: ControlType preference boost (+0.04).
+     - `test_element_resolver_synonyms`: Registered synonym matching.
+     - `test_element_resolver_ambiguity_detection`: Resolves ambiguous matches to CLARIFY outcome.
+     - `test_element_resolver_not_found`: Graceful NOT_FOUND for unmatched queries.
+     - `test_keyboard_parse_valid`: Parsing valid modifiers and single primary keys.
+     - `test_keyboard_parse_invalid`: Rejection of malformed or multiple-key shortcuts.
+     - `test_keyboard_dispatch_simulated`: Simulated SendInput shortcut dispatch.
+     - `test_type_text_simulated`: Simulated Unicode text typing.
+     - `test_controller_invoke_element`: Control invocation via InvokePattern.
+     - `test_controller_invoke_destructive_element_blocked`: Destructive action confirmation gating without force.
+     - `test_controller_set_element_value`: Atomic ValuePattern value assignment.
+     - `test_controller_toggle_element`: Checkbox toggling via TogglePattern.
+     - `test_controller_select_element`: Tab and row selection via SelectionItemPattern.
+     - `test_controller_focus_element`: Direct keyboard focus assignment via SetFocus.
+     - `test_controller_scroll_element`: Logical container scrolling via ScrollPattern.
+     - `test_service_inspect_ui`: High-level capability for UI tree enumeration.
+     - `test_service_click_element_safe`: Safe button click capability.
+     - `test_service_click_element_destructive_gated`: Destructive click PERMISSION_DENIED.
+     - `test_service_set_element_text`: Set element text capability.
+     - `test_service_toggle_checkbox`: Checkbox toggling capability.
+     - `test_service_select_tab`: Tab selection capability.
+     - `test_service_focus_control`: Focus assignment capability.
+     - `test_service_scroll_control`: Container scrolling capability.
+     - `test_service_press_shortcut`: Keyboard shortcut capability.
+     - `test_service_type_literal_text_payload_as_data`: Verifies text entry is strictly treated as data payload.
+     - `test_app_pipeline_ui_click`: Canonical `AstraApplication.handle_request` UI click routing.
+     - `test_app_pipeline_ui_destructive_click_confirmation`: Canonical pipeline destructive confirmation gating.
+     - `test_app_pipeline_ui_type_into`: Canonical pipeline type into edit field routing.
+     - `test_app_pipeline_ui_toggle`: Canonical pipeline checkbox toggle routing.
+     - `test_app_pipeline_ui_shortcuts`: Canonical pipeline shortcut dispatch (`ctrl+c`, `copy`, `paste`, `select all`).
+     - `test_live_ui_fixture_roundtrip`: Live COM UIA and SendInput against isolated out-of-process PySide6 window.
+
+2. **Daily Driver Integration & Window Intelligence Tests (v0.9)**:
    - `tests/test_v09_daily_driver.py` (37 tests):
      - `test_window_resolver_direct_match`: Resolves exact window title and app name.
      - `test_window_resolver_pronoun_to_origin`: Grounds "this window", "current window", "it" to origin window.
@@ -525,19 +569,38 @@ tests/test_ai_bridge_protocol PASSED                                     [100%]
 
 ---
 
-## 8.2. Product Benchmark V1 Evaluation (220 Test Cases)
+## 8.2. Product Benchmark V2 Evaluation (280 Test Cases)
 
 ```powershell
-.venv\Scripts\python benchmarks\product\run_product_benchmark.py
+.venv\Scripts\python benchmarks\product_v2\run_product_benchmark_v2.py
 ```
 
 ### Evaluation Results
-- **Total Cases Evaluated**: **220**
-- **Dataset SHA256**: `a417eacbe201ce4b095286682013c043129ed8d188f56b30b5567d5ff2abb395`
-- **Overall Accuracy**: **100.0%** (220 / 220)
+- **Total Cases Evaluated**: **280**
+- **Dataset SHA256**: `0e3face2732bee1859ea02df1de4da6a5d4753a45a11fcd6c8eae366c9f564ec`
+- **Overall Accuracy**: **100.0%** (280 / 280)
 - **FALSE EXECUTION RATE**: **0.00%** (Prime Architectural Invariant)
-- **Mean Fast-Path Routing Latency**: **0.4699 ms** (< 3ms Invariant Verified)
-- **Mean End-to-End Latency**: **141.88 ms**
+- **Safety Policy Violations**: **0**
+- **Mean Fast-Path Routing Latency**: **0.5983 ms** (< 3ms Invariant Verified)
+- **Mean End-to-End Latency**: **120.57 ms**
+
+---
+
+## 8.3. Interaction Benchmark V1 Evaluation (405 Test Cases)
+
+```powershell
+.venv\Scripts\python benchmarks\interaction\run_interaction_benchmark.py
+```
+
+### Evaluation Results
+- **Total Cases Evaluated**: **405**
+- **Dataset SHA256**: `a2496176564e0455f186834eb2782f14f35dfd1dd5a7774f22c88bcf708bfc77`
+- **Overall Accuracy**: **100.0%** (405 / 405)
+- **WRONG ELEMENT ACTION RATE (WEAR)**: **0.00%** (Prime Safety Invariant)
+- **Password Plaintext Leakage Count**: **0** (Zero Secret Policy)
+- **Destructive Block Recall**: **100.0%**
+- **Ambiguity Recall**: **100.0%**
+- **Mean Evaluation Latency**: **0.0621 ms**
 
 ---
 

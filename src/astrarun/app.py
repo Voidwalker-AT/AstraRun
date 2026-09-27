@@ -18,7 +18,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Callable, Dict, List, Optional, Union
 
-from astrarun.capabilities.models import CapabilityCategory, CapabilityResult, WindowEntity
+from astrarun.capabilities.models import CapabilityCategory, CapabilityErrorCode, CapabilityResult, WindowEntity
 from astrarun.capabilities.registry import CapabilityRegistry
 from astrarun.capabilities.store import ObservationStore
 from astrarun.config.loader import AppConfig, load_config
@@ -28,6 +28,7 @@ from astrarun.core.models import ActionGateOutcome, ActionGateResult, Decision, 
 from astrarun.discovery.apps import AppDiscoveryCache
 from astrarun.discovery.folders import FolderResolver
 from astrarun.hotkeys.manager import HotkeyManager
+from astrarun.interaction.keyboard import parse_shortcut
 from astrarun.learning.aliases import AliasManager
 from astrarun.learning.engine import LearningEngine
 from astrarun.learning.memory import MemoryStore
@@ -345,6 +346,166 @@ class AstraApplication:
                 message="AstraRun Workstation Capabilities",
                 data={"grouped_capabilities": grouped, "count": len(caps)},
             )
+
+        # -------------------------------------------------------------
+        # 1.5 UI INTERACTION & CONTROL GROUNDING (v0.10)
+        # -------------------------------------------------------------
+        shortcut_obj = None
+        if lower_q.startswith("press "):
+            shortcut_obj = parse_shortcut(lower_q[6:])
+        elif "+" in lower_q and len(words) == 1:
+            shortcut_obj = parse_shortcut(lower_q)
+
+        if shortcut_obj:
+            target_hwnd = active_origin.hwnd if active_origin else None
+            task = self.task_manager.create_task(request_text=clean, source="user_shortcut")
+            self.task_manager.transition_status(task.id, TaskStatus.RUNNING)
+            cap_res = self.capability_registry.execute(
+                "press_keyboard_shortcut",
+                {"shortcut": shortcut_obj.canonical_string, "hwnd": target_hwnd},
+                task_id=task.id,
+            )
+            if cap_res.success:
+                self._complete_task(task, cap_res)
+                return ExecutionResult(type="capability_result", success=True, message=cap_res.message, task=task, capability_result=cap_res)
+            else:
+                self._fail_task(task, cap_res.message, capability="press_keyboard_shortcut")
+                return ExecutionResult(type="error", success=False, message=cap_res.message, task=task, capability_result=cap_res)
+
+        if lower_q in ("copy", "copy this", "copy selection"):
+            target_hwnd = active_origin.hwnd if active_origin else None
+            cap_res = self.capability_registry.execute("press_keyboard_shortcut", {"shortcut": "Ctrl+C", "hwnd": target_hwnd})
+            return ExecutionResult(type="capability_result", success=cap_res.success, message=cap_res.message, capability_result=cap_res)
+        if lower_q in ("paste", "paste here", "paste text"):
+            target_hwnd = active_origin.hwnd if active_origin else None
+            cap_res = self.capability_registry.execute("press_keyboard_shortcut", {"shortcut": "Ctrl+V", "hwnd": target_hwnd})
+            return ExecutionResult(type="capability_result", success=cap_res.success, message=cap_res.message, capability_result=cap_res)
+        if lower_q in ("select all", "select all text"):
+            target_hwnd = active_origin.hwnd if active_origin else None
+            cap_res = self.capability_registry.execute("press_keyboard_shortcut", {"shortcut": "Ctrl+A", "hwnd": target_hwnd})
+            return ExecutionResult(type="capability_result", success=cap_res.success, message=cap_res.message, capability_result=cap_res)
+
+        if lower_q in ("inspect ui", "inspect window ui", "what buttons are in this window?", "what controls are in this window?", "show controls", "list buttons"):
+            target_hwnd = active_origin.hwnd if active_origin else None
+            cap_res = self.capability_registry.execute("inspect_window_ui", {"hwnd": target_hwnd})
+            return ExecutionResult(type="capability_result", success=cap_res.success, message=cap_res.message, capability_result=cap_res, data=cap_res.data)
+
+        if lower_q.startswith("click "):
+            target = clean[6:].strip()
+            target_hwnd = active_origin.hwnd if active_origin else None
+            task = self.task_manager.create_task(request_text=clean, source="user_interaction")
+            self.task_manager.transition_status(task.id, TaskStatus.RUNNING)
+
+            cap_res = self.capability_registry.execute(
+                "click_ui_element",
+                {"target": target, "hwnd": target_hwnd, "force": False},
+                task_id=task.id,
+            )
+            if cap_res.error_code == CapabilityErrorCode.PERMISSION_DENIED:
+                self.task_manager.transition_status(task.id, TaskStatus.WAITING_CONFIRMATION)
+                return ExecutionResult(
+                    type="confirm",
+                    success=False,
+                    message=cap_res.message,
+                    task=task,
+                    prompt=f"Confirm destructive click: {cap_res.message}",
+                )
+            if cap_res.error_code == CapabilityErrorCode.AMBIGUOUS:
+                self.task_manager.transition_status(task.id, TaskStatus.WAITING_CLARIFICATION)
+                return ExecutionResult(
+                    type="clarify",
+                    success=False,
+                    message=cap_res.message,
+                    task=task,
+                    candidates=cap_res.data.get("candidates", []),
+                    prompt="Which control did you mean?",
+                )
+            if cap_res.success:
+                self._complete_task(task, cap_res)
+                return ExecutionResult(type="capability_result", success=True, message=cap_res.message, task=task, capability_result=cap_res)
+            else:
+                self._fail_task(task, cap_res.message, capability="click_ui_element")
+                return ExecutionResult(type="error", success=False, message=cap_res.message, task=task, capability_result=cap_res)
+
+        if lower_q.startswith("type "):
+            type_args = clean[5:].strip()
+            target_hwnd = active_origin.hwnd if active_origin else None
+            task = self.task_manager.create_task(request_text=clean, source="user_interaction")
+            self.task_manager.transition_status(task.id, TaskStatus.RUNNING)
+
+            if " into " in type_args:
+                val, target_field = type_args.split(" into ", 1)
+                val = val.strip().strip('"\'')
+                cap_res = self.capability_registry.execute(
+                    "set_ui_element_value",
+                    {"target": target_field.strip(), "value": val, "hwnd": target_hwnd},
+                    task_id=task.id,
+                )
+            else:
+                val = type_args.strip().strip('"\'')
+                cap_res = self.capability_registry.execute(
+                    "type_text",
+                    {"text": val, "hwnd": target_hwnd},
+                    task_id=task.id,
+                )
+
+            if cap_res.success:
+                self._complete_task(task, cap_res)
+                return ExecutionResult(type="capability_result", success=True, message=cap_res.message, task=task, capability_result=cap_res)
+            else:
+                self._fail_task(task, cap_res.message, capability="type_text")
+                return ExecutionResult(type="error", success=False, message=cap_res.message, task=task, capability_result=cap_res)
+
+        if lower_q.startswith("toggle "):
+            target = clean[7:].strip()
+            target_hwnd = active_origin.hwnd if active_origin else None
+            task = self.task_manager.create_task(request_text=clean, source="user_interaction")
+            self.task_manager.transition_status(task.id, TaskStatus.RUNNING)
+            cap_res = self.capability_registry.execute(
+                "toggle_ui_element",
+                {"target": target, "hwnd": target_hwnd},
+                task_id=task.id,
+            )
+            if cap_res.success:
+                self._complete_task(task, cap_res)
+                return ExecutionResult(type="capability_result", success=True, message=cap_res.message, task=task, capability_result=cap_res)
+            else:
+                self._fail_task(task, cap_res.message, capability="toggle_ui_element")
+                return ExecutionResult(type="error", success=False, message=cap_res.message, task=task, capability_result=cap_res)
+
+        if lower_q.startswith("focus ") and not any(w in lower_q for w in ("window", "code", "notepad", "vivaldi", "terminal", "calc")):
+            target = clean[6:].strip()
+            target_hwnd = active_origin.hwnd if active_origin else None
+            task = self.task_manager.create_task(request_text=clean, source="user_interaction")
+            self.task_manager.transition_status(task.id, TaskStatus.RUNNING)
+            cap_res = self.capability_registry.execute(
+                "focus_ui_element",
+                {"target": target, "hwnd": target_hwnd},
+                task_id=task.id,
+            )
+            if cap_res.success:
+                self._complete_task(task, cap_res)
+                return ExecutionResult(type="capability_result", success=True, message=cap_res.message, task=task, capability_result=cap_res)
+            else:
+                self._fail_task(task, cap_res.message, capability="focus_ui_element")
+                return ExecutionResult(type="error", success=False, message=cap_res.message, task=task, capability_result=cap_res)
+
+        if lower_q.startswith("select tab ") or (lower_q.startswith("select ") and "tab" in lower_q):
+            target = clean[11:].strip() if lower_q.startswith("select tab ") else clean[7:].replace("tab", "").strip()
+            target_hwnd = active_origin.hwnd if active_origin else None
+            task = self.task_manager.create_task(request_text=clean, source="user_interaction")
+            self.task_manager.transition_status(task.id, TaskStatus.RUNNING)
+            cap_res = self.capability_registry.execute(
+                "select_ui_element",
+                {"target": target, "hwnd": target_hwnd},
+                task_id=task.id,
+            )
+            if cap_res.success:
+                self._complete_task(task, cap_res)
+                return ExecutionResult(type="capability_result", success=True, message=cap_res.message, task=task, capability_result=cap_res)
+            else:
+                self._fail_task(task, cap_res.message, capability="select_ui_element")
+                return ExecutionResult(type="error", success=False, message=cap_res.message, task=task, capability_result=cap_res)
 
         # -------------------------------------------------------------
         # 2. FAST PATH: Instant Deterministic Routing (< 3ms)

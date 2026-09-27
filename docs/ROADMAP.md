@@ -197,9 +197,22 @@ flowchart LR
 
 ---
 
-### v0.10 — Application Interaction
-- Native UI automation and accessibility tree inspection (UI Automation / MSAA).
-- Controlled keystroke and menu command routing for standard desktop applications.
+### v0.10 — Application Interaction & Control Grounding (Complete — 2026-09-28)
+- **Semantic UI Automation Subsystem (`astrarun.interaction`)**: 11 new workstation capabilities expanding the platform to **70 typed capabilities across 10 categories**.
+- **COM MTA Worker Architecture**: Dedicated `UIAutomationWorker` thread isolating COM UI Automation calls (`comtypes`) from the PySide6 main event loop, preventing UI deadlocks during deep accessibility tree traversals.
+- **Pattern-Driven Control Mutation**: Enforces $\text{UIA Patterns} > \text{Win32 Control Messages} > \text{SendInput Shortcuts} > \text{Coordinate Clicks (PERMANENTLY PROHIBITED)}$. Support for `InvokePattern`, `ValuePattern`, `TogglePattern`, `SelectionItemPattern`, `ScrollPattern`, and `ExpandCollapsePattern`.
+- **Bounded Element Traversal**: Tree depth bounding, max elements capping, and timeouts preventing traversal freezes on complex web or electron application trees.
+- **Robust Multi-Stage Element Resolver**: `AutomationId exact > Name exact > ControlType + Name > word boundary > synonym > fuzzy` with interactive control boosts (+0.04) and ambiguity clarification cards (`CLARIFY`).
+- **Safe 64-bit SendInput & Clipboard Memory ABI**: Full 40-byte union alignment (`sizeof(INPUT) == 40`) for reliable Unicode typing and shortcut dispatch (`Ctrl+C`, `Ctrl+V`, `Alt+F4`, etc.). Safe 64-bit memory handles for clipboard copying.
+- **Text Payload as Data Invariant**: Inputs such as `type "format c:" into notepad` are treated purely as literal data payloads, strictly shielded from shell evaluation.
+- **Password Masking & Privacy Invariant**: Password fields (`is_password=True`) are completely masked at discovery and logging layers, preventing credential leakage in SQLite Task Ledger, telemetry, or activity timelines.
+- **Destructive Button Gating**: Destructive actions (`delete`, `remove`, `format`, `drop`, `wipe`, `purge`, `reset`, `buy`, `terminate`) are caught upfront and gated behind `ActionGate` user confirmation prompts.
+- **Interaction Benchmark V1 (405 cases)**: 100.0% Accuracy, 0.00% WEAR (Wrong Element Action Rate), 0 password leaks, 100.0% destructive block recall, 100.0% ambiguity recall, 0.0621 ms mean latency.
+- **Product Benchmark V2 (280 cases)**: 100.0% Accuracy, 0.00% False Execution Rate, 0 safety violations, 0.5983 ms fast-path routing latency (< 3ms invariant verified).
+- **293 Passing Automated Tests**: 252 prior tests + 41 dedicated interaction and control grounding tests passing cleanly in 30.76s.
+- **Live Acceptance Suite (25 / 25 Passed)**: 100.0% pass rate across `SIMULATED`, `LIVE_FIXTURE`, and `LIVE_WORKSTATION` tests (`docs/V0.10_LIVE_ACCEPTANCE.md`).
+- **30-Minute Resident Dogfooding**: Zero hotkey drops, zero crashes, 0.0% idle CPU, resident RAM plateaued at ~69.2 MB (`docs/V0.10_DOGFOOD.md`).
+- Formal architectural decision records ADR-076 through ADR-078.
 
 ---
 

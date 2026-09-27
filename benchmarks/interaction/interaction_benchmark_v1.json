@@ -1,0 +1,3632 @@
+[
+  {
+    "case_id": "IB-0001",
+    "category": "SEMANTIC_BUTTON_CLICK",
+    "query": "save",
+    "element_name": "Save",
+    "automation_id": "btn_save",
+    "control_type": "button",
+    "expected_pattern": "invoke",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0002",
+    "category": "SEMANTIC_BUTTON_CLICK",
+    "query": "cancel",
+    "element_name": "Cancel",
+    "automation_id": "btn_cancel",
+    "control_type": "button",
+    "expected_pattern": "invoke",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0003",
+    "category": "SEMANTIC_BUTTON_CLICK",
+    "query": "submit",
+    "element_name": "Submit",
+    "automation_id": "btn_submit",
+    "control_type": "button",
+    "expected_pattern": "invoke",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0004",
+    "category": "SEMANTIC_BUTTON_CLICK",
+    "query": "apply",
+    "element_name": "Apply",
+    "automation_id": "btn_apply",
+    "control_type": "button",
+    "expected_pattern": "invoke",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0005",
+    "category": "SEMANTIC_BUTTON_CLICK",
+    "query": "ok",
+    "element_name": "OK",
+    "automation_id": "btn_ok",
+    "control_type": "button",
+    "expected_pattern": "invoke",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0006",
+    "category": "SEMANTIC_BUTTON_CLICK",
+    "query": "continue",
+    "element_name": "Continue",
+    "automation_id": "btn_continue",
+    "control_type": "button",
+    "expected_pattern": "invoke",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0007",
+    "category": "SEMANTIC_BUTTON_CLICK",
+    "query": "next",
+    "element_name": "Next",
+    "automation_id": "btn_next",
+    "control_type": "button",
+    "expected_pattern": "invoke",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0008",
+    "category": "SEMANTIC_BUTTON_CLICK",
+    "query": "previous",
+    "element_name": "Previous",
+    "automation_id": "btn_prev",
+    "control_type": "button",
+    "expected_pattern": "invoke",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0009",
+    "category": "SEMANTIC_BUTTON_CLICK",
+    "query": "refresh",
+    "element_name": "Refresh",
+    "automation_id": "btn_refresh",
+    "control_type": "button",
+    "expected_pattern": "invoke",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0010",
+    "category": "SEMANTIC_BUTTON_CLICK",
+    "query": "download",
+    "element_name": "Download",
+    "automation_id": "btn_download",
+    "control_type": "button",
+    "expected_pattern": "invoke",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0011",
+    "category": "SEMANTIC_BUTTON_CLICK",
+    "query": "upload",
+    "element_name": "Upload",
+    "automation_id": "btn_upload",
+    "control_type": "button",
+    "expected_pattern": "invoke",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0012",
+    "category": "SEMANTIC_BUTTON_CLICK",
+    "query": "export",
+    "element_name": "Export",
+    "automation_id": "btn_export",
+    "control_type": "button",
+    "expected_pattern": "invoke",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0013",
+    "category": "SEMANTIC_BUTTON_CLICK",
+    "query": "import",
+    "element_name": "Import",
+    "automation_id": "btn_import",
+    "control_type": "button",
+    "expected_pattern": "invoke",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0014",
+    "category": "SEMANTIC_BUTTON_CLICK",
+    "query": "copy",
+    "element_name": "Copy",
+    "automation_id": "btn_copy",
+    "control_type": "button",
+    "expected_pattern": "invoke",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0015",
+    "category": "SEMANTIC_BUTTON_CLICK",
+    "query": "paste",
+    "element_name": "Paste",
+    "automation_id": "btn_paste",
+    "control_type": "button",
+    "expected_pattern": "invoke",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0016",
+    "category": "SEMANTIC_BUTTON_CLICK",
+    "query": "cut",
+    "element_name": "Cut",
+    "automation_id": "btn_cut",
+    "control_type": "button",
+    "expected_pattern": "invoke",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0017",
+    "category": "SEMANTIC_BUTTON_CLICK",
+    "query": "print",
+    "element_name": "Print",
+    "automation_id": "btn_print",
+    "control_type": "button",
+    "expected_pattern": "invoke",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0018",
+    "category": "SEMANTIC_BUTTON_CLICK",
+    "query": "share",
+    "element_name": "Share",
+    "automation_id": "btn_share",
+    "control_type": "button",
+    "expected_pattern": "invoke",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0019",
+    "category": "SEMANTIC_BUTTON_CLICK",
+    "query": "send",
+    "element_name": "Send",
+    "automation_id": "btn_send",
+    "control_type": "button",
+    "expected_pattern": "invoke",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0020",
+    "category": "SEMANTIC_BUTTON_CLICK",
+    "query": "edit",
+    "element_name": "Edit",
+    "automation_id": "btn_edit",
+    "control_type": "button",
+    "expected_pattern": "invoke",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0021",
+    "category": "SEMANTIC_BUTTON_CLICK",
+    "query": "add",
+    "element_name": "Add",
+    "automation_id": "btn_add",
+    "control_type": "button",
+    "expected_pattern": "invoke",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0022",
+    "category": "SEMANTIC_BUTTON_CLICK",
+    "query": "create",
+    "element_name": "Create",
+    "automation_id": "btn_create",
+    "control_type": "button",
+    "expected_pattern": "invoke",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0023",
+    "category": "SEMANTIC_BUTTON_CLICK",
+    "query": "new",
+    "element_name": "New",
+    "automation_id": "btn_new",
+    "control_type": "button",
+    "expected_pattern": "invoke",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0024",
+    "category": "SEMANTIC_BUTTON_CLICK",
+    "query": "open",
+    "element_name": "Open",
+    "automation_id": "btn_open",
+    "control_type": "button",
+    "expected_pattern": "invoke",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0025",
+    "category": "SEMANTIC_BUTTON_CLICK",
+    "query": "select",
+    "element_name": "Select",
+    "automation_id": "btn_select",
+    "control_type": "button",
+    "expected_pattern": "invoke",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0026",
+    "category": "SEMANTIC_BUTTON_CLICK",
+    "query": "browse",
+    "element_name": "Browse",
+    "automation_id": "btn_browse",
+    "control_type": "button",
+    "expected_pattern": "invoke",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0027",
+    "category": "SEMANTIC_BUTTON_CLICK",
+    "query": "filter",
+    "element_name": "Filter",
+    "automation_id": "btn_filter",
+    "control_type": "button",
+    "expected_pattern": "invoke",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0028",
+    "category": "SEMANTIC_BUTTON_CLICK",
+    "query": "sort",
+    "element_name": "Sort",
+    "automation_id": "btn_sort",
+    "control_type": "button",
+    "expected_pattern": "invoke",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0029",
+    "category": "SEMANTIC_BUTTON_CLICK",
+    "query": "search",
+    "element_name": "Search",
+    "automation_id": "btn_search_action",
+    "control_type": "button",
+    "expected_pattern": "invoke",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0030",
+    "category": "SEMANTIC_BUTTON_CLICK",
+    "query": "play",
+    "element_name": "Play",
+    "automation_id": "btn_play",
+    "control_type": "button",
+    "expected_pattern": "invoke",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0031",
+    "category": "SEMANTIC_BUTTON_CLICK",
+    "query": "pause",
+    "element_name": "Pause",
+    "automation_id": "btn_pause",
+    "control_type": "button",
+    "expected_pattern": "invoke",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0032",
+    "category": "SEMANTIC_BUTTON_CLICK",
+    "query": "stop",
+    "element_name": "Stop",
+    "automation_id": "btn_stop",
+    "control_type": "button",
+    "expected_pattern": "invoke",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0033",
+    "category": "SEMANTIC_BUTTON_CLICK",
+    "query": "mute",
+    "element_name": "Mute",
+    "automation_id": "btn_mute",
+    "control_type": "button",
+    "expected_pattern": "invoke",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0034",
+    "category": "SEMANTIC_BUTTON_CLICK",
+    "query": "unmute",
+    "element_name": "Unmute",
+    "automation_id": "btn_unmute",
+    "control_type": "button",
+    "expected_pattern": "invoke",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0035",
+    "category": "SEMANTIC_BUTTON_CLICK",
+    "query": "settings",
+    "element_name": "Settings",
+    "automation_id": "btn_settings",
+    "control_type": "button",
+    "expected_pattern": "invoke",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0036",
+    "category": "SEMANTIC_BUTTON_CLICK",
+    "query": "help",
+    "element_name": "Help",
+    "automation_id": "btn_help",
+    "control_type": "button",
+    "expected_pattern": "invoke",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0037",
+    "category": "SEMANTIC_BUTTON_CLICK",
+    "query": "info",
+    "element_name": "Info",
+    "automation_id": "btn_info",
+    "control_type": "button",
+    "expected_pattern": "invoke",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0038",
+    "category": "SEMANTIC_BUTTON_CLICK",
+    "query": "details",
+    "element_name": "Details",
+    "automation_id": "btn_details",
+    "control_type": "button",
+    "expected_pattern": "invoke",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0039",
+    "category": "SEMANTIC_BUTTON_CLICK",
+    "query": "expand",
+    "element_name": "Expand",
+    "automation_id": "btn_expand",
+    "control_type": "button",
+    "expected_pattern": "invoke",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0040",
+    "category": "SEMANTIC_BUTTON_CLICK",
+    "query": "collapse",
+    "element_name": "Collapse",
+    "automation_id": "btn_collapse",
+    "control_type": "button",
+    "expected_pattern": "invoke",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0041",
+    "category": "SEMANTIC_BUTTON_CLICK",
+    "query": "maximize",
+    "element_name": "Maximize",
+    "automation_id": "btn_maximize",
+    "control_type": "button",
+    "expected_pattern": "invoke",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0042",
+    "category": "SEMANTIC_BUTTON_CLICK",
+    "query": "minimize",
+    "element_name": "Minimize",
+    "automation_id": "btn_minimize",
+    "control_type": "button",
+    "expected_pattern": "invoke",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0043",
+    "category": "SEMANTIC_BUTTON_CLICK",
+    "query": "restore",
+    "element_name": "Restore",
+    "automation_id": "btn_restore",
+    "control_type": "button",
+    "expected_pattern": "invoke",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0044",
+    "category": "SEMANTIC_BUTTON_CLICK",
+    "query": "zoom in",
+    "element_name": "Zoom In",
+    "automation_id": "btn_zoom_in",
+    "control_type": "button",
+    "expected_pattern": "invoke",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0045",
+    "category": "SEMANTIC_BUTTON_CLICK",
+    "query": "zoom out",
+    "element_name": "Zoom Out",
+    "automation_id": "btn_zoom_out",
+    "control_type": "button",
+    "expected_pattern": "invoke",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0046",
+    "category": "SEMANTIC_BUTTON_CLICK",
+    "query": "reset zoom",
+    "element_name": "Reset Zoom",
+    "automation_id": "btn_reset_zoom",
+    "control_type": "button",
+    "expected_pattern": "invoke",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0047",
+    "category": "SEMANTIC_BUTTON_CLICK",
+    "query": "retry",
+    "element_name": "Retry",
+    "automation_id": "btn_retry",
+    "control_type": "button",
+    "expected_pattern": "invoke",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0048",
+    "category": "SEMANTIC_BUTTON_CLICK",
+    "query": "ignore",
+    "element_name": "Ignore",
+    "automation_id": "btn_ignore",
+    "control_type": "button",
+    "expected_pattern": "invoke",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0049",
+    "category": "SEMANTIC_BUTTON_CLICK",
+    "query": "discard",
+    "element_name": "Discard",
+    "automation_id": "btn_discard",
+    "control_type": "button",
+    "expected_pattern": "invoke",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0050",
+    "category": "SEMANTIC_BUTTON_CLICK",
+    "query": "finish",
+    "element_name": "Finish",
+    "automation_id": "btn_finish",
+    "control_type": "button",
+    "expected_pattern": "invoke",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0051",
+    "category": "EDIT_FIELD_SET_VALUE",
+    "query": "search query",
+    "element_name": "Search Query",
+    "automation_id": "edit_search",
+    "control_type": "edit",
+    "value_to_set": "search query text",
+    "expected_pattern": "value",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0052",
+    "category": "EDIT_FIELD_SET_VALUE",
+    "query": "username",
+    "element_name": "Username",
+    "automation_id": "edit_username",
+    "control_type": "edit",
+    "value_to_set": "astra_user",
+    "expected_pattern": "value",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0053",
+    "category": "EDIT_FIELD_SET_VALUE",
+    "query": "email address",
+    "element_name": "Email Address",
+    "automation_id": "edit_email",
+    "control_type": "edit",
+    "value_to_set": "developer@astrarun.local",
+    "expected_pattern": "value",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0054",
+    "category": "EDIT_FIELD_SET_VALUE",
+    "query": "hostname",
+    "element_name": "Hostname",
+    "automation_id": "edit_host",
+    "control_type": "edit",
+    "value_to_set": "127.0.0.1",
+    "expected_pattern": "value",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0055",
+    "category": "EDIT_FIELD_SET_VALUE",
+    "query": "port number",
+    "element_name": "Port Number",
+    "automation_id": "edit_port",
+    "control_type": "edit",
+    "value_to_set": "8080",
+    "expected_pattern": "value",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0056",
+    "category": "EDIT_FIELD_SET_VALUE",
+    "query": "database name",
+    "element_name": "Database Name",
+    "automation_id": "edit_dbname",
+    "control_type": "edit",
+    "value_to_set": "astrarun_production",
+    "expected_pattern": "value",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0057",
+    "category": "EDIT_FIELD_SET_VALUE",
+    "query": "filename",
+    "element_name": "Filename",
+    "automation_id": "edit_filename",
+    "control_type": "edit",
+    "value_to_set": "report_2026.pdf",
+    "expected_pattern": "value",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0058",
+    "category": "EDIT_FIELD_SET_VALUE",
+    "query": "folder path",
+    "element_name": "Folder Path",
+    "automation_id": "edit_path",
+    "control_type": "edit",
+    "value_to_set": "C:\\Workspace\\Projects",
+    "expected_pattern": "value",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0059",
+    "category": "EDIT_FIELD_SET_VALUE",
+    "query": "title",
+    "element_name": "Title",
+    "automation_id": "edit_title",
+    "control_type": "edit",
+    "value_to_set": "AstraRun v0.10 Release",
+    "expected_pattern": "value",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0060",
+    "category": "EDIT_FIELD_SET_VALUE",
+    "query": "description",
+    "element_name": "Description",
+    "automation_id": "edit_desc",
+    "control_type": "edit",
+    "value_to_set": "Native UI Automation and Control Grounding",
+    "expected_pattern": "value",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0061",
+    "category": "EDIT_FIELD_SET_VALUE",
+    "query": "first name",
+    "element_name": "First Name",
+    "automation_id": "edit_firstname",
+    "control_type": "edit",
+    "value_to_set": "Ada",
+    "expected_pattern": "value",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0062",
+    "category": "EDIT_FIELD_SET_VALUE",
+    "query": "last name",
+    "element_name": "Last Name",
+    "automation_id": "edit_lastname",
+    "control_type": "edit",
+    "value_to_set": "Lovelace",
+    "expected_pattern": "value",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0063",
+    "category": "EDIT_FIELD_SET_VALUE",
+    "query": "display name",
+    "element_name": "Display Name",
+    "automation_id": "edit_display_name",
+    "control_type": "edit",
+    "value_to_set": "adalovelace",
+    "expected_pattern": "value",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0064",
+    "category": "EDIT_FIELD_SET_VALUE",
+    "query": "phone number",
+    "element_name": "Phone Number",
+    "automation_id": "edit_phone",
+    "control_type": "edit",
+    "value_to_set": "+1-555-0199",
+    "expected_pattern": "value",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0065",
+    "category": "EDIT_FIELD_SET_VALUE",
+    "query": "website url",
+    "element_name": "Website URL",
+    "automation_id": "edit_url",
+    "control_type": "edit",
+    "value_to_set": "https://github.com/astrarun",
+    "expected_pattern": "value",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0066",
+    "category": "EDIT_FIELD_SET_VALUE",
+    "query": "repository",
+    "element_name": "Repository",
+    "automation_id": "edit_repo",
+    "control_type": "edit",
+    "value_to_set": "workspace/astrarun",
+    "expected_pattern": "value",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0067",
+    "category": "EDIT_FIELD_SET_VALUE",
+    "query": "branch",
+    "element_name": "Branch",
+    "automation_id": "edit_branch",
+    "control_type": "edit",
+    "value_to_set": "master",
+    "expected_pattern": "value",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0068",
+    "category": "EDIT_FIELD_SET_VALUE",
+    "query": "commit message",
+    "element_name": "Commit Message",
+    "automation_id": "edit_commit",
+    "control_type": "edit",
+    "value_to_set": "feat: add UI automation subsystem",
+    "expected_pattern": "value",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0069",
+    "category": "EDIT_FIELD_SET_VALUE",
+    "query": "tag",
+    "element_name": "Tag",
+    "automation_id": "edit_tag",
+    "control_type": "edit",
+    "value_to_set": "v0.10.0",
+    "expected_pattern": "value",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0070",
+    "category": "EDIT_FIELD_SET_VALUE",
+    "query": "organization",
+    "element_name": "Organization",
+    "automation_id": "edit_org",
+    "control_type": "edit",
+    "value_to_set": "Astra Engineering",
+    "expected_pattern": "value",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0071",
+    "category": "EDIT_FIELD_SET_VALUE",
+    "query": "project id",
+    "element_name": "Project ID",
+    "automation_id": "edit_proj_id",
+    "control_type": "edit",
+    "value_to_set": "proj-alpha-09",
+    "expected_pattern": "value",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0072",
+    "category": "EDIT_FIELD_SET_VALUE",
+    "query": "timeout seconds",
+    "element_name": "Timeout Seconds",
+    "automation_id": "edit_timeout",
+    "control_type": "edit",
+    "value_to_set": "30",
+    "expected_pattern": "value",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0073",
+    "category": "EDIT_FIELD_SET_VALUE",
+    "query": "max retries",
+    "element_name": "Max Retries",
+    "automation_id": "edit_retries",
+    "control_type": "edit",
+    "value_to_set": "3",
+    "expected_pattern": "value",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0074",
+    "category": "EDIT_FIELD_SET_VALUE",
+    "query": "worker threads",
+    "element_name": "Worker Threads",
+    "automation_id": "edit_threads",
+    "control_type": "edit",
+    "value_to_set": "8",
+    "expected_pattern": "value",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0075",
+    "category": "EDIT_FIELD_SET_VALUE",
+    "query": "cache size mb",
+    "element_name": "Cache Size MB",
+    "automation_id": "edit_cache",
+    "control_type": "edit",
+    "value_to_set": "512",
+    "expected_pattern": "value",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0076",
+    "category": "EDIT_FIELD_SET_VALUE",
+    "query": "api endpoint",
+    "element_name": "API Endpoint",
+    "automation_id": "edit_endpoint",
+    "control_type": "edit",
+    "value_to_set": "https://api.astrarun.local/v1",
+    "expected_pattern": "value",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0077",
+    "category": "EDIT_FIELD_SET_VALUE",
+    "query": "subnet mask",
+    "element_name": "Subnet Mask",
+    "automation_id": "edit_subnet",
+    "control_type": "edit",
+    "value_to_set": "255.255.255.0",
+    "expected_pattern": "value",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0078",
+    "category": "EDIT_FIELD_SET_VALUE",
+    "query": "gateway",
+    "element_name": "Gateway",
+    "automation_id": "edit_gateway",
+    "control_type": "edit",
+    "value_to_set": "192.168.1.1",
+    "expected_pattern": "value",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0079",
+    "category": "EDIT_FIELD_SET_VALUE",
+    "query": "dns primary",
+    "element_name": "DNS Primary",
+    "automation_id": "edit_dns1",
+    "control_type": "edit",
+    "value_to_set": "1.1.1.1",
+    "expected_pattern": "value",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0080",
+    "category": "EDIT_FIELD_SET_VALUE",
+    "query": "dns secondary",
+    "element_name": "DNS Secondary",
+    "automation_id": "edit_dns2",
+    "control_type": "edit",
+    "value_to_set": "8.8.8.8",
+    "expected_pattern": "value",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0081",
+    "category": "EDIT_FIELD_SET_VALUE",
+    "query": "proxy host",
+    "element_name": "Proxy Host",
+    "automation_id": "edit_proxy",
+    "control_type": "edit",
+    "value_to_set": "proxy.corporate.internal",
+    "expected_pattern": "value",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0082",
+    "category": "EDIT_FIELD_SET_VALUE",
+    "query": "topic name",
+    "element_name": "Topic Name",
+    "automation_id": "edit_topic",
+    "control_type": "edit",
+    "value_to_set": "system.telemetry.events",
+    "expected_pattern": "value",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0083",
+    "category": "EDIT_FIELD_SET_VALUE",
+    "query": "queue name",
+    "element_name": "Queue Name",
+    "automation_id": "edit_queue",
+    "control_type": "edit",
+    "value_to_set": "tasks.high_priority",
+    "expected_pattern": "value",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0084",
+    "category": "EDIT_FIELD_SET_VALUE",
+    "query": "routing key",
+    "element_name": "Routing Key",
+    "automation_id": "edit_key",
+    "control_type": "edit",
+    "value_to_set": "tasks.*",
+    "expected_pattern": "value",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0085",
+    "category": "EDIT_FIELD_SET_VALUE",
+    "query": "index name",
+    "element_name": "Index Name",
+    "automation_id": "edit_index",
+    "control_type": "edit",
+    "value_to_set": "knowledge_base_v2",
+    "expected_pattern": "value",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0086",
+    "category": "EDIT_FIELD_SET_VALUE",
+    "query": "metric name",
+    "element_name": "Metric Name",
+    "automation_id": "edit_metric",
+    "control_type": "edit",
+    "value_to_set": "cpu_usage_pct",
+    "expected_pattern": "value",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0087",
+    "category": "EDIT_FIELD_SET_VALUE",
+    "query": "alert threshold",
+    "element_name": "Alert Threshold",
+    "automation_id": "edit_threshold",
+    "control_type": "edit",
+    "value_to_set": "90.0",
+    "expected_pattern": "value",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0088",
+    "category": "EDIT_FIELD_SET_VALUE",
+    "query": "query limit",
+    "element_name": "Query Limit",
+    "automation_id": "edit_limit",
+    "control_type": "edit",
+    "value_to_set": "100",
+    "expected_pattern": "value",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0089",
+    "category": "EDIT_FIELD_SET_VALUE",
+    "query": "offset",
+    "element_name": "Offset",
+    "automation_id": "edit_offset",
+    "control_type": "edit",
+    "value_to_set": "0",
+    "expected_pattern": "value",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0090",
+    "category": "EDIT_FIELD_SET_VALUE",
+    "query": "batch size",
+    "element_name": "Batch Size",
+    "automation_id": "edit_batch",
+    "control_type": "edit",
+    "value_to_set": "50",
+    "expected_pattern": "value",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0091",
+    "category": "EDIT_FIELD_SET_VALUE",
+    "query": "model name",
+    "element_name": "Model Name",
+    "automation_id": "edit_model",
+    "control_type": "edit",
+    "value_to_set": "laya-7b-instruct",
+    "expected_pattern": "value",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0092",
+    "category": "EDIT_FIELD_SET_VALUE",
+    "query": "temperature",
+    "element_name": "Temperature",
+    "automation_id": "edit_temp",
+    "control_type": "edit",
+    "value_to_set": "0.2",
+    "expected_pattern": "value",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0093",
+    "category": "EDIT_FIELD_SET_VALUE",
+    "query": "top p",
+    "element_name": "Top P",
+    "automation_id": "edit_topp",
+    "control_type": "edit",
+    "value_to_set": "0.95",
+    "expected_pattern": "value",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0094",
+    "category": "EDIT_FIELD_SET_VALUE",
+    "query": "max tokens",
+    "element_name": "Max Tokens",
+    "automation_id": "edit_tokens",
+    "control_type": "edit",
+    "value_to_set": "2048",
+    "expected_pattern": "value",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0095",
+    "category": "EDIT_FIELD_SET_VALUE",
+    "query": "stop sequence",
+    "element_name": "Stop Sequence",
+    "automation_id": "edit_stop",
+    "control_type": "edit",
+    "value_to_set": "<|endoftext|>",
+    "expected_pattern": "value",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0096",
+    "category": "EDIT_FIELD_SET_VALUE",
+    "query": "version note",
+    "element_name": "Version Note",
+    "automation_id": "edit_note",
+    "control_type": "edit",
+    "value_to_set": "Verified green benchmark build",
+    "expected_pattern": "value",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0097",
+    "category": "EDIT_FIELD_SET_VALUE",
+    "query": "author",
+    "element_name": "Author",
+    "automation_id": "edit_author",
+    "control_type": "edit",
+    "value_to_set": "Astra Engineering",
+    "expected_pattern": "value",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0098",
+    "category": "EDIT_FIELD_SET_VALUE",
+    "query": "license",
+    "element_name": "License",
+    "automation_id": "edit_license",
+    "control_type": "edit",
+    "value_to_set": "MIT",
+    "expected_pattern": "value",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0099",
+    "category": "EDIT_FIELD_SET_VALUE",
+    "query": "keyword tags",
+    "element_name": "Keyword Tags",
+    "automation_id": "edit_tags",
+    "control_type": "edit",
+    "value_to_set": "ai,windows,launcher,automation",
+    "expected_pattern": "value",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0100",
+    "category": "EDIT_FIELD_SET_VALUE",
+    "query": "comment",
+    "element_name": "Comment",
+    "automation_id": "edit_comment",
+    "control_type": "edit",
+    "value_to_set": "Initial automated review complete",
+    "expected_pattern": "value",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0101",
+    "category": "CHECKBOX_TOGGLE",
+    "query": "enable dark mode",
+    "element_name": "Enable Dark Mode",
+    "automation_id": "chk_dark_mode",
+    "control_type": "check_box",
+    "expected_pattern": "toggle",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0102",
+    "category": "CHECKBOX_TOGGLE",
+    "query": "enable auto-save",
+    "element_name": "Enable Auto-save",
+    "automation_id": "chk_autosave",
+    "control_type": "check_box",
+    "expected_pattern": "toggle",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0103",
+    "category": "CHECKBOX_TOGGLE",
+    "query": "show hidden files",
+    "element_name": "Show Hidden Files",
+    "automation_id": "chk_hidden_files",
+    "control_type": "check_box",
+    "expected_pattern": "toggle",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0104",
+    "category": "CHECKBOX_TOGGLE",
+    "query": "enable notifications",
+    "element_name": "Enable Notifications",
+    "automation_id": "chk_notifications",
+    "control_type": "check_box",
+    "expected_pattern": "toggle",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0105",
+    "category": "CHECKBOX_TOGGLE",
+    "query": "send telemetry",
+    "element_name": "Send Telemetry",
+    "automation_id": "chk_telemetry",
+    "control_type": "check_box",
+    "expected_pattern": "toggle",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0106",
+    "category": "CHECKBOX_TOGGLE",
+    "query": "enable hardware acceleration",
+    "element_name": "Enable Hardware Acceleration",
+    "automation_id": "chk_hw_accel",
+    "control_type": "check_box",
+    "expected_pattern": "toggle",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0107",
+    "category": "CHECKBOX_TOGGLE",
+    "query": "remember password",
+    "element_name": "Remember Password",
+    "automation_id": "chk_remember_pwd",
+    "control_type": "check_box",
+    "expected_pattern": "toggle",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0108",
+    "category": "CHECKBOX_TOGGLE",
+    "query": "launch at startup",
+    "element_name": "Launch at Startup",
+    "automation_id": "chk_startup",
+    "control_type": "check_box",
+    "expected_pattern": "toggle",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0109",
+    "category": "CHECKBOX_TOGGLE",
+    "query": "enable logging",
+    "element_name": "Enable Logging",
+    "automation_id": "chk_logging",
+    "control_type": "check_box",
+    "expected_pattern": "toggle",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0110",
+    "category": "CHECKBOX_TOGGLE",
+    "query": "debug mode",
+    "element_name": "Debug Mode",
+    "automation_id": "chk_debug",
+    "control_type": "check_box",
+    "expected_pattern": "toggle",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0111",
+    "category": "CHECKBOX_TOGGLE",
+    "query": "auto check for updates",
+    "element_name": "Auto Check for Updates",
+    "automation_id": "chk_updates",
+    "control_type": "check_box",
+    "expected_pattern": "toggle",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0112",
+    "category": "CHECKBOX_TOGGLE",
+    "query": "enable cloud sync",
+    "element_name": "Enable Cloud Sync",
+    "automation_id": "chk_sync",
+    "control_type": "check_box",
+    "expected_pattern": "toggle",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0113",
+    "category": "CHECKBOX_TOGGLE",
+    "query": "show line numbers",
+    "element_name": "Show Line Numbers",
+    "automation_id": "chk_line_numbers",
+    "control_type": "check_box",
+    "expected_pattern": "toggle",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0114",
+    "category": "CHECKBOX_TOGGLE",
+    "query": "word wrap",
+    "element_name": "Word Wrap",
+    "automation_id": "chk_word_wrap",
+    "control_type": "check_box",
+    "expected_pattern": "toggle",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0115",
+    "category": "CHECKBOX_TOGGLE",
+    "query": "highlight current line",
+    "element_name": "Highlight Current Line",
+    "automation_id": "chk_highlight_line",
+    "control_type": "check_box",
+    "expected_pattern": "toggle",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0116",
+    "category": "CHECKBOX_TOGGLE",
+    "query": "show whitespace",
+    "element_name": "Show Whitespace",
+    "automation_id": "chk_whitespace",
+    "control_type": "check_box",
+    "expected_pattern": "toggle",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0117",
+    "category": "CHECKBOX_TOGGLE",
+    "query": "enable spellcheck",
+    "element_name": "Enable Spellcheck",
+    "automation_id": "chk_spellcheck",
+    "control_type": "check_box",
+    "expected_pattern": "toggle",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0118",
+    "category": "CHECKBOX_TOGGLE",
+    "query": "auto close brackets",
+    "element_name": "Auto Close Brackets",
+    "automation_id": "chk_brackets",
+    "control_type": "check_box",
+    "expected_pattern": "toggle",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0119",
+    "category": "CHECKBOX_TOGGLE",
+    "query": "format on save",
+    "element_name": "Format on Save",
+    "automation_id": "chk_format_save",
+    "control_type": "check_box",
+    "expected_pattern": "toggle",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0120",
+    "category": "CHECKBOX_TOGGLE",
+    "query": "enable sound effects",
+    "element_name": "Enable Sound Effects",
+    "automation_id": "chk_sound",
+    "control_type": "check_box",
+    "expected_pattern": "toggle",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0121",
+    "category": "CHECKBOX_TOGGLE",
+    "query": "mute on inactive",
+    "element_name": "Mute on Inactive",
+    "automation_id": "chk_mute_inactive",
+    "control_type": "check_box",
+    "expected_pattern": "toggle",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0122",
+    "category": "CHECKBOX_TOGGLE",
+    "query": "keep window on top",
+    "element_name": "Keep Window on Top",
+    "automation_id": "chk_always_on_top",
+    "control_type": "check_box",
+    "expected_pattern": "toggle",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0123",
+    "category": "CHECKBOX_TOGGLE",
+    "query": "minimize to system tray",
+    "element_name": "Minimize to System Tray",
+    "automation_id": "chk_min_tray",
+    "control_type": "check_box",
+    "expected_pattern": "toggle",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0124",
+    "category": "CHECKBOX_TOGGLE",
+    "query": "close to system tray",
+    "element_name": "Close to System Tray",
+    "automation_id": "chk_close_tray",
+    "control_type": "check_box",
+    "expected_pattern": "toggle",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0125",
+    "category": "CHECKBOX_TOGGLE",
+    "query": "confirm before exit",
+    "element_name": "Confirm Before Exit",
+    "automation_id": "chk_confirm_exit",
+    "control_type": "check_box",
+    "expected_pattern": "toggle",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0126",
+    "category": "CHECKBOX_TOGGLE",
+    "query": "single instance mode",
+    "element_name": "Single Instance Mode",
+    "automation_id": "chk_single_instance",
+    "control_type": "check_box",
+    "expected_pattern": "toggle",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0127",
+    "category": "CHECKBOX_TOGGLE",
+    "query": "enable fuzzy search",
+    "element_name": "Enable Fuzzy Search",
+    "automation_id": "chk_fuzzy",
+    "control_type": "check_box",
+    "expected_pattern": "toggle",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0128",
+    "category": "CHECKBOX_TOGGLE",
+    "query": "case sensitive search",
+    "element_name": "Case Sensitive Search",
+    "automation_id": "chk_case_search",
+    "control_type": "check_box",
+    "expected_pattern": "toggle",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0129",
+    "category": "CHECKBOX_TOGGLE",
+    "query": "regex search",
+    "element_name": "Regex Search",
+    "automation_id": "chk_regex",
+    "control_type": "check_box",
+    "expected_pattern": "toggle",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0130",
+    "category": "CHECKBOX_TOGGLE",
+    "query": "include subdirectories",
+    "element_name": "Include Subdirectories",
+    "automation_id": "chk_subdirs",
+    "control_type": "check_box",
+    "expected_pattern": "toggle",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0131",
+    "category": "CHECKBOX_TOGGLE",
+    "query": "follow symlinks",
+    "element_name": "Follow Symlinks",
+    "automation_id": "chk_symlinks",
+    "control_type": "check_box",
+    "expected_pattern": "toggle",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0132",
+    "category": "CHECKBOX_TOGGLE",
+    "query": "compress output",
+    "element_name": "Compress Output",
+    "automation_id": "chk_compress",
+    "control_type": "check_box",
+    "expected_pattern": "toggle",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0133",
+    "category": "CHECKBOX_TOGGLE",
+    "query": "enable ssl verification",
+    "element_name": "Enable SSL Verification",
+    "automation_id": "chk_ssl",
+    "control_type": "check_box",
+    "expected_pattern": "toggle",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0134",
+    "category": "CHECKBOX_TOGGLE",
+    "query": "use proxy server",
+    "element_name": "Use Proxy Server",
+    "automation_id": "chk_proxy",
+    "control_type": "check_box",
+    "expected_pattern": "toggle",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0135",
+    "category": "CHECKBOX_TOGGLE",
+    "query": "log http requests",
+    "element_name": "Log HTTP Requests",
+    "automation_id": "chk_log_http",
+    "control_type": "check_box",
+    "expected_pattern": "toggle",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0136",
+    "category": "CHECKBOX_TOGGLE",
+    "query": "strict mode",
+    "element_name": "Strict Mode",
+    "automation_id": "chk_strict",
+    "control_type": "check_box",
+    "expected_pattern": "toggle",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0137",
+    "category": "CHECKBOX_TOGGLE",
+    "query": "read only mode",
+    "element_name": "Read Only Mode",
+    "automation_id": "chk_readonly",
+    "control_type": "check_box",
+    "expected_pattern": "toggle",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0138",
+    "category": "CHECKBOX_TOGGLE",
+    "query": "dry run mode",
+    "element_name": "Dry Run Mode",
+    "automation_id": "chk_dryrun",
+    "control_type": "check_box",
+    "expected_pattern": "toggle",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0139",
+    "category": "CHECKBOX_TOGGLE",
+    "query": "force overwrite",
+    "element_name": "Force Overwrite",
+    "automation_id": "chk_force_overwrite",
+    "control_type": "check_box",
+    "expected_pattern": "toggle",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0140",
+    "category": "CHECKBOX_TOGGLE",
+    "query": "preserve timestamps",
+    "element_name": "Preserve Timestamps",
+    "automation_id": "chk_preserve_time",
+    "control_type": "check_box",
+    "expected_pattern": "toggle",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0141",
+    "category": "CHECKBOX_TOGGLE",
+    "query": "verbose output",
+    "element_name": "Verbose Output",
+    "automation_id": "chk_verbose",
+    "control_type": "check_box",
+    "expected_pattern": "toggle",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0142",
+    "category": "CHECKBOX_TOGGLE",
+    "query": "enable gpu offload",
+    "element_name": "Enable GPU Offload",
+    "automation_id": "chk_gpu",
+    "control_type": "check_box",
+    "expected_pattern": "toggle",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0143",
+    "category": "CHECKBOX_TOGGLE",
+    "query": "low latency mode",
+    "element_name": "Low Latency Mode",
+    "automation_id": "chk_low_latency",
+    "control_type": "check_box",
+    "expected_pattern": "toggle",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0144",
+    "category": "CHECKBOX_TOGGLE",
+    "query": "compact view",
+    "element_name": "Compact View",
+    "automation_id": "chk_compact",
+    "control_type": "check_box",
+    "expected_pattern": "toggle",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0145",
+    "category": "CHECKBOX_TOGGLE",
+    "query": "high contrast mode",
+    "element_name": "High Contrast Mode",
+    "automation_id": "chk_high_contrast",
+    "control_type": "check_box",
+    "expected_pattern": "toggle",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0146",
+    "category": "TAB_AND_SELECTION",
+    "query": "general",
+    "element_name": "General",
+    "automation_id": "tab_general",
+    "control_type": "tab_item",
+    "expected_pattern": "selection_item",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0147",
+    "category": "TAB_AND_SELECTION",
+    "query": "advanced",
+    "element_name": "Advanced",
+    "automation_id": "tab_advanced",
+    "control_type": "tab_item",
+    "expected_pattern": "selection_item",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0148",
+    "category": "TAB_AND_SELECTION",
+    "query": "security",
+    "element_name": "Security",
+    "automation_id": "tab_security",
+    "control_type": "tab_item",
+    "expected_pattern": "selection_item",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0149",
+    "category": "TAB_AND_SELECTION",
+    "query": "privacy",
+    "element_name": "Privacy",
+    "automation_id": "tab_privacy",
+    "control_type": "tab_item",
+    "expected_pattern": "selection_item",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0150",
+    "category": "TAB_AND_SELECTION",
+    "query": "network",
+    "element_name": "Network",
+    "automation_id": "tab_network",
+    "control_type": "tab_item",
+    "expected_pattern": "selection_item",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0151",
+    "category": "TAB_AND_SELECTION",
+    "query": "appearance",
+    "element_name": "Appearance",
+    "automation_id": "tab_appearance",
+    "control_type": "tab_item",
+    "expected_pattern": "selection_item",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0152",
+    "category": "TAB_AND_SELECTION",
+    "query": "keyboard shortcuts",
+    "element_name": "Keyboard Shortcuts",
+    "automation_id": "tab_shortcuts",
+    "control_type": "tab_item",
+    "expected_pattern": "selection_item",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0153",
+    "category": "TAB_AND_SELECTION",
+    "query": "extensions",
+    "element_name": "Extensions",
+    "automation_id": "tab_extensions",
+    "control_type": "tab_item",
+    "expected_pattern": "selection_item",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0154",
+    "category": "TAB_AND_SELECTION",
+    "query": "storage",
+    "element_name": "Storage",
+    "automation_id": "tab_storage",
+    "control_type": "tab_item",
+    "expected_pattern": "selection_item",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0155",
+    "category": "TAB_AND_SELECTION",
+    "query": "database",
+    "element_name": "Database",
+    "automation_id": "tab_database",
+    "control_type": "tab_item",
+    "expected_pattern": "selection_item",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0156",
+    "category": "TAB_AND_SELECTION",
+    "query": "logs",
+    "element_name": "Logs",
+    "automation_id": "tab_logs",
+    "control_type": "tab_item",
+    "expected_pattern": "selection_item",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0157",
+    "category": "TAB_AND_SELECTION",
+    "query": "metrics",
+    "element_name": "Metrics",
+    "automation_id": "tab_metrics",
+    "control_type": "tab_item",
+    "expected_pattern": "selection_item",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0158",
+    "category": "TAB_AND_SELECTION",
+    "query": "diagnostics",
+    "element_name": "Diagnostics",
+    "automation_id": "tab_diagnostics",
+    "control_type": "tab_item",
+    "expected_pattern": "selection_item",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0159",
+    "category": "TAB_AND_SELECTION",
+    "query": "performance",
+    "element_name": "Performance",
+    "automation_id": "tab_performance",
+    "control_type": "tab_item",
+    "expected_pattern": "selection_item",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0160",
+    "category": "TAB_AND_SELECTION",
+    "query": "users",
+    "element_name": "Users",
+    "automation_id": "tab_users",
+    "control_type": "tab_item",
+    "expected_pattern": "selection_item",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0161",
+    "category": "TAB_AND_SELECTION",
+    "query": "permissions",
+    "element_name": "Permissions",
+    "automation_id": "tab_permissions",
+    "control_type": "tab_item",
+    "expected_pattern": "selection_item",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0162",
+    "category": "TAB_AND_SELECTION",
+    "query": "integrations",
+    "element_name": "Integrations",
+    "automation_id": "tab_integrations",
+    "control_type": "tab_item",
+    "expected_pattern": "selection_item",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0163",
+    "category": "TAB_AND_SELECTION",
+    "query": "api settings",
+    "element_name": "API Settings",
+    "automation_id": "tab_api",
+    "control_type": "tab_item",
+    "expected_pattern": "selection_item",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0164",
+    "category": "TAB_AND_SELECTION",
+    "query": "webhooks",
+    "element_name": "Webhooks",
+    "automation_id": "tab_webhooks",
+    "control_type": "tab_item",
+    "expected_pattern": "selection_item",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0165",
+    "category": "TAB_AND_SELECTION",
+    "query": "backup & restore",
+    "element_name": "Backup & Restore",
+    "automation_id": "tab_backup",
+    "control_type": "tab_item",
+    "expected_pattern": "selection_item",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0166",
+    "category": "TAB_AND_SELECTION",
+    "query": "environment",
+    "element_name": "Environment",
+    "automation_id": "tab_env",
+    "control_type": "tab_item",
+    "expected_pattern": "selection_item",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0167",
+    "category": "TAB_AND_SELECTION",
+    "query": "build settings",
+    "element_name": "Build Settings",
+    "automation_id": "tab_build",
+    "control_type": "tab_item",
+    "expected_pattern": "selection_item",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0168",
+    "category": "TAB_AND_SELECTION",
+    "query": "deployment",
+    "element_name": "Deployment",
+    "automation_id": "tab_deploy",
+    "control_type": "tab_item",
+    "expected_pattern": "selection_item",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0169",
+    "category": "TAB_AND_SELECTION",
+    "query": "monitoring",
+    "element_name": "Monitoring",
+    "automation_id": "tab_monitor",
+    "control_type": "tab_item",
+    "expected_pattern": "selection_item",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0170",
+    "category": "TAB_AND_SELECTION",
+    "query": "alerts",
+    "element_name": "Alerts",
+    "automation_id": "tab_alerts",
+    "control_type": "tab_item",
+    "expected_pattern": "selection_item",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0171",
+    "category": "TAB_AND_SELECTION",
+    "query": "audit trail",
+    "element_name": "Audit Trail",
+    "automation_id": "tab_audit",
+    "control_type": "tab_item",
+    "expected_pattern": "selection_item",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0172",
+    "category": "TAB_AND_SELECTION",
+    "query": "system info",
+    "element_name": "System Info",
+    "automation_id": "tab_sysinfo",
+    "control_type": "tab_item",
+    "expected_pattern": "selection_item",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0173",
+    "category": "TAB_AND_SELECTION",
+    "query": "plugins",
+    "element_name": "Plugins",
+    "automation_id": "tab_plugins",
+    "control_type": "tab_item",
+    "expected_pattern": "selection_item",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0174",
+    "category": "TAB_AND_SELECTION",
+    "query": "themes",
+    "element_name": "Themes",
+    "automation_id": "tab_themes",
+    "control_type": "tab_item",
+    "expected_pattern": "selection_item",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0175",
+    "category": "TAB_AND_SELECTION",
+    "query": "fonts",
+    "element_name": "Fonts",
+    "automation_id": "tab_fonts",
+    "control_type": "tab_item",
+    "expected_pattern": "selection_item",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0176",
+    "category": "TAB_AND_SELECTION",
+    "query": "editor",
+    "element_name": "Editor",
+    "automation_id": "tab_editor",
+    "control_type": "tab_item",
+    "expected_pattern": "selection_item",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0177",
+    "category": "TAB_AND_SELECTION",
+    "query": "terminal",
+    "element_name": "Terminal",
+    "automation_id": "tab_terminal",
+    "control_type": "tab_item",
+    "expected_pattern": "selection_item",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0178",
+    "category": "TAB_AND_SELECTION",
+    "query": "git & vcs",
+    "element_name": "Git & VCS",
+    "automation_id": "tab_git",
+    "control_type": "tab_item",
+    "expected_pattern": "selection_item",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0179",
+    "category": "TAB_AND_SELECTION",
+    "query": "docker",
+    "element_name": "Docker",
+    "automation_id": "tab_docker",
+    "control_type": "tab_item",
+    "expected_pattern": "selection_item",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0180",
+    "category": "TAB_AND_SELECTION",
+    "query": "kubernetes",
+    "element_name": "Kubernetes",
+    "automation_id": "tab_k8s",
+    "control_type": "tab_item",
+    "expected_pattern": "selection_item",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0181",
+    "category": "TAB_AND_SELECTION",
+    "query": "cloud providers",
+    "element_name": "Cloud Providers",
+    "automation_id": "tab_cloud",
+    "control_type": "tab_item",
+    "expected_pattern": "selection_item",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0182",
+    "category": "TAB_AND_SELECTION",
+    "query": "telemetry & usage",
+    "element_name": "Telemetry & Usage",
+    "automation_id": "tab_telemetry",
+    "control_type": "tab_item",
+    "expected_pattern": "selection_item",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0183",
+    "category": "TAB_AND_SELECTION",
+    "query": "help & support",
+    "element_name": "Help & Support",
+    "automation_id": "tab_help",
+    "control_type": "tab_item",
+    "expected_pattern": "selection_item",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0184",
+    "category": "TAB_AND_SELECTION",
+    "query": "documentation",
+    "element_name": "Documentation",
+    "automation_id": "tab_docs",
+    "control_type": "tab_item",
+    "expected_pattern": "selection_item",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0185",
+    "category": "TAB_AND_SELECTION",
+    "query": "changelog",
+    "element_name": "Changelog",
+    "automation_id": "tab_changelog",
+    "control_type": "tab_item",
+    "expected_pattern": "selection_item",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0186",
+    "category": "TAB_AND_SELECTION",
+    "query": "license agreement",
+    "element_name": "License Agreement",
+    "automation_id": "tab_license",
+    "control_type": "tab_item",
+    "expected_pattern": "selection_item",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0187",
+    "category": "TAB_AND_SELECTION",
+    "query": "account profile",
+    "element_name": "Account Profile",
+    "automation_id": "tab_profile",
+    "control_type": "tab_item",
+    "expected_pattern": "selection_item",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0188",
+    "category": "TAB_AND_SELECTION",
+    "query": "billing",
+    "element_name": "Billing",
+    "automation_id": "tab_billing",
+    "control_type": "tab_item",
+    "expected_pattern": "selection_item",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0189",
+    "category": "TAB_AND_SELECTION",
+    "query": "overview",
+    "element_name": "Overview",
+    "automation_id": "tab_overview",
+    "control_type": "tab_item",
+    "expected_pattern": "selection_item",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0190",
+    "category": "TAB_AND_SELECTION",
+    "query": "about astrarun",
+    "element_name": "About AstraRun",
+    "automation_id": "tab_about",
+    "control_type": "tab_item",
+    "expected_pattern": "selection_item",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0191",
+    "category": "KEYBOARD_SHORTCUTS",
+    "shortcut": "ctrl+c",
+    "expected_canonical": "Ctrl+C",
+    "expected_valid": true
+  },
+  {
+    "case_id": "IB-0192",
+    "category": "KEYBOARD_SHORTCUTS",
+    "shortcut": "ctrl+v",
+    "expected_canonical": "Ctrl+V",
+    "expected_valid": true
+  },
+  {
+    "case_id": "IB-0193",
+    "category": "KEYBOARD_SHORTCUTS",
+    "shortcut": "ctrl+x",
+    "expected_canonical": "Ctrl+X",
+    "expected_valid": true
+  },
+  {
+    "case_id": "IB-0194",
+    "category": "KEYBOARD_SHORTCUTS",
+    "shortcut": "ctrl+z",
+    "expected_canonical": "Ctrl+Z",
+    "expected_valid": true
+  },
+  {
+    "case_id": "IB-0195",
+    "category": "KEYBOARD_SHORTCUTS",
+    "shortcut": "ctrl+y",
+    "expected_canonical": "Ctrl+Y",
+    "expected_valid": true
+  },
+  {
+    "case_id": "IB-0196",
+    "category": "KEYBOARD_SHORTCUTS",
+    "shortcut": "ctrl+a",
+    "expected_canonical": "Ctrl+A",
+    "expected_valid": true
+  },
+  {
+    "case_id": "IB-0197",
+    "category": "KEYBOARD_SHORTCUTS",
+    "shortcut": "ctrl+s",
+    "expected_canonical": "Ctrl+S",
+    "expected_valid": true
+  },
+  {
+    "case_id": "IB-0198",
+    "category": "KEYBOARD_SHORTCUTS",
+    "shortcut": "ctrl+o",
+    "expected_canonical": "Ctrl+O",
+    "expected_valid": true
+  },
+  {
+    "case_id": "IB-0199",
+    "category": "KEYBOARD_SHORTCUTS",
+    "shortcut": "ctrl+f",
+    "expected_canonical": "Ctrl+F",
+    "expected_valid": true
+  },
+  {
+    "case_id": "IB-0200",
+    "category": "KEYBOARD_SHORTCUTS",
+    "shortcut": "ctrl+p",
+    "expected_canonical": "Ctrl+P",
+    "expected_valid": true
+  },
+  {
+    "case_id": "IB-0201",
+    "category": "KEYBOARD_SHORTCUTS",
+    "shortcut": "ctrl+shift+p",
+    "expected_canonical": "Ctrl+Shift+P",
+    "expected_valid": true
+  },
+  {
+    "case_id": "IB-0202",
+    "category": "KEYBOARD_SHORTCUTS",
+    "shortcut": "ctrl+shift+f",
+    "expected_canonical": "Ctrl+Shift+F",
+    "expected_valid": true
+  },
+  {
+    "case_id": "IB-0203",
+    "category": "KEYBOARD_SHORTCUTS",
+    "shortcut": "ctrl+shift+s",
+    "expected_canonical": "Ctrl+Shift+S",
+    "expected_valid": true
+  },
+  {
+    "case_id": "IB-0204",
+    "category": "KEYBOARD_SHORTCUTS",
+    "shortcut": "ctrl+shift+z",
+    "expected_canonical": "Ctrl+Shift+Z",
+    "expected_valid": true
+  },
+  {
+    "case_id": "IB-0205",
+    "category": "KEYBOARD_SHORTCUTS",
+    "shortcut": "ctrl+alt+t",
+    "expected_canonical": "Alt+Ctrl+T",
+    "expected_valid": true
+  },
+  {
+    "case_id": "IB-0206",
+    "category": "KEYBOARD_SHORTCUTS",
+    "shortcut": "ctrl+alt+del",
+    "expected_canonical": "Alt+Ctrl+Del",
+    "expected_valid": true
+  },
+  {
+    "case_id": "IB-0207",
+    "category": "KEYBOARD_SHORTCUTS",
+    "shortcut": "alt+f4",
+    "expected_canonical": "Alt+F4",
+    "expected_valid": true
+  },
+  {
+    "case_id": "IB-0208",
+    "category": "KEYBOARD_SHORTCUTS",
+    "shortcut": "alt+tab",
+    "expected_canonical": "Alt+Tab",
+    "expected_valid": true
+  },
+  {
+    "case_id": "IB-0209",
+    "category": "KEYBOARD_SHORTCUTS",
+    "shortcut": "alt+enter",
+    "expected_canonical": "Alt+Enter",
+    "expected_valid": true
+  },
+  {
+    "case_id": "IB-0210",
+    "category": "KEYBOARD_SHORTCUTS",
+    "shortcut": "f1",
+    "expected_canonical": "F1",
+    "expected_valid": true
+  },
+  {
+    "case_id": "IB-0211",
+    "category": "KEYBOARD_SHORTCUTS",
+    "shortcut": "f2",
+    "expected_canonical": "F2",
+    "expected_valid": true
+  },
+  {
+    "case_id": "IB-0212",
+    "category": "KEYBOARD_SHORTCUTS",
+    "shortcut": "f3",
+    "expected_canonical": "F3",
+    "expected_valid": true
+  },
+  {
+    "case_id": "IB-0213",
+    "category": "KEYBOARD_SHORTCUTS",
+    "shortcut": "f4",
+    "expected_canonical": "F4",
+    "expected_valid": true
+  },
+  {
+    "case_id": "IB-0214",
+    "category": "KEYBOARD_SHORTCUTS",
+    "shortcut": "f5",
+    "expected_canonical": "F5",
+    "expected_valid": true
+  },
+  {
+    "case_id": "IB-0215",
+    "category": "KEYBOARD_SHORTCUTS",
+    "shortcut": "f6",
+    "expected_canonical": "F6",
+    "expected_valid": true
+  },
+  {
+    "case_id": "IB-0216",
+    "category": "KEYBOARD_SHORTCUTS",
+    "shortcut": "f7",
+    "expected_canonical": "F7",
+    "expected_valid": true
+  },
+  {
+    "case_id": "IB-0217",
+    "category": "KEYBOARD_SHORTCUTS",
+    "shortcut": "f8",
+    "expected_canonical": "F8",
+    "expected_valid": true
+  },
+  {
+    "case_id": "IB-0218",
+    "category": "KEYBOARD_SHORTCUTS",
+    "shortcut": "f9",
+    "expected_canonical": "F9",
+    "expected_valid": true
+  },
+  {
+    "case_id": "IB-0219",
+    "category": "KEYBOARD_SHORTCUTS",
+    "shortcut": "f10",
+    "expected_canonical": "F10",
+    "expected_valid": true
+  },
+  {
+    "case_id": "IB-0220",
+    "category": "KEYBOARD_SHORTCUTS",
+    "shortcut": "f11",
+    "expected_canonical": "F11",
+    "expected_valid": true
+  },
+  {
+    "case_id": "IB-0221",
+    "category": "KEYBOARD_SHORTCUTS",
+    "shortcut": "f12",
+    "expected_canonical": "F12",
+    "expected_valid": true
+  },
+  {
+    "case_id": "IB-0222",
+    "category": "KEYBOARD_SHORTCUTS",
+    "shortcut": "enter",
+    "expected_canonical": "Enter",
+    "expected_valid": true
+  },
+  {
+    "case_id": "IB-0223",
+    "category": "KEYBOARD_SHORTCUTS",
+    "shortcut": "escape",
+    "expected_canonical": "Escape",
+    "expected_valid": true
+  },
+  {
+    "case_id": "IB-0224",
+    "category": "KEYBOARD_SHORTCUTS",
+    "shortcut": "esc",
+    "expected_canonical": "Esc",
+    "expected_valid": true
+  },
+  {
+    "case_id": "IB-0225",
+    "category": "KEYBOARD_SHORTCUTS",
+    "shortcut": "tab",
+    "expected_canonical": "Tab",
+    "expected_valid": true
+  },
+  {
+    "case_id": "IB-0226",
+    "category": "KEYBOARD_SHORTCUTS",
+    "shortcut": "space",
+    "expected_canonical": "Space",
+    "expected_valid": true
+  },
+  {
+    "case_id": "IB-0227",
+    "category": "KEYBOARD_SHORTCUTS",
+    "shortcut": "backspace",
+    "expected_canonical": "Backspace",
+    "expected_valid": true
+  },
+  {
+    "case_id": "IB-0228",
+    "category": "KEYBOARD_SHORTCUTS",
+    "shortcut": "delete",
+    "expected_canonical": "Delete",
+    "expected_valid": true
+  },
+  {
+    "case_id": "IB-0229",
+    "category": "KEYBOARD_SHORTCUTS",
+    "shortcut": "home",
+    "expected_canonical": "Home",
+    "expected_valid": true
+  },
+  {
+    "case_id": "IB-0230",
+    "category": "KEYBOARD_SHORTCUTS",
+    "shortcut": "end",
+    "expected_canonical": "End",
+    "expected_valid": true
+  },
+  {
+    "case_id": "IB-0231",
+    "category": "KEYBOARD_SHORTCUTS",
+    "shortcut": "pageup",
+    "expected_canonical": "Pageup",
+    "expected_valid": true
+  },
+  {
+    "case_id": "IB-0232",
+    "category": "KEYBOARD_SHORTCUTS",
+    "shortcut": "pagedown",
+    "expected_canonical": "Pagedown",
+    "expected_valid": true
+  },
+  {
+    "case_id": "IB-0233",
+    "category": "KEYBOARD_SHORTCUTS",
+    "shortcut": "up",
+    "expected_canonical": "Up",
+    "expected_valid": true
+  },
+  {
+    "case_id": "IB-0234",
+    "category": "KEYBOARD_SHORTCUTS",
+    "shortcut": "down",
+    "expected_canonical": "Down",
+    "expected_valid": true
+  },
+  {
+    "case_id": "IB-0235",
+    "category": "KEYBOARD_SHORTCUTS",
+    "shortcut": "left",
+    "expected_canonical": "Left",
+    "expected_valid": true
+  },
+  {
+    "case_id": "IB-0236",
+    "category": "CLIPBOARD_INTEGRITY",
+    "payload": "hello world",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0237",
+    "category": "CLIPBOARD_INTEGRITY",
+    "payload": "quick brown fox jumps over the lazy dog",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0238",
+    "category": "CLIPBOARD_INTEGRITY",
+    "payload": "https://example.com/search?q=astrarun",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0239",
+    "category": "CLIPBOARD_INTEGRITY",
+    "payload": "git commit -m \"feat: UI Automation\"",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0240",
+    "category": "CLIPBOARD_INTEGRITY",
+    "payload": "{\"key\": \"value\", \"count\": 42}",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0241",
+    "category": "CLIPBOARD_INTEGRITY",
+    "payload": "SELECT * FROM users WHERE active = 1;",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0242",
+    "category": "CLIPBOARD_INTEGRITY",
+    "payload": "def test_interaction(): assert True",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0243",
+    "category": "CLIPBOARD_INTEGRITY",
+    "payload": "127.0.0.1:8080",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0244",
+    "category": "CLIPBOARD_INTEGRITY",
+    "payload": "C:\\Program Files\\AstraRun\\app.exe",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0245",
+    "category": "CLIPBOARD_INTEGRITY",
+    "payload": "/usr/local/bin/python3",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0246",
+    "category": "CLIPBOARD_INTEGRITY",
+    "payload": "Line 1\nLine 2\nLine 3",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0247",
+    "category": "CLIPBOARD_INTEGRITY",
+    "payload": "   leading and trailing whitespace   ",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0248",
+    "category": "CLIPBOARD_INTEGRITY",
+    "payload": "Special characters: !@#$%^&*()_+-=[]{}|;:,.<>?",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0249",
+    "category": "CLIPBOARD_INTEGRITY",
+    "payload": "Unicode: \u2705 \ud83d\ude80 \u26a1 \u2728",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0250",
+    "category": "CLIPBOARD_INTEGRITY",
+    "payload": "Numeric: 3.141592653589793",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0251",
+    "category": "CLIPBOARD_INTEGRITY",
+    "payload": "Empty string handled",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0252",
+    "category": "CLIPBOARD_INTEGRITY",
+    "payload": "Tab\tSeparated\tValues",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0253",
+    "category": "CLIPBOARD_INTEGRITY",
+    "payload": "Windows CRLF\r\nNewline Test",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0254",
+    "category": "CLIPBOARD_INTEGRITY",
+    "payload": "Single character: X",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0255",
+    "category": "CLIPBOARD_INTEGRITY",
+    "payload": "Very long string sample: AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0256",
+    "category": "CLIPBOARD_INTEGRITY",
+    "payload": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0257",
+    "category": "CLIPBOARD_INTEGRITY",
+    "payload": "Markdown: # Header 1\n## Header 2\n- List item",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0258",
+    "category": "CLIPBOARD_INTEGRITY",
+    "payload": "HTML: <div class=\"container\"><span>Text</span></div>",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0259",
+    "category": "CLIPBOARD_INTEGRITY",
+    "payload": "SQL: INSERT INTO logs (level, msg) VALUES ('INFO', 'System ready');",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0260",
+    "category": "CLIPBOARD_INTEGRITY",
+    "payload": "Regex: ^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0261",
+    "category": "CLIPBOARD_INTEGRITY",
+    "payload": "Shell command string as data: ls -la /var/log",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0262",
+    "category": "CLIPBOARD_INTEGRITY",
+    "payload": "PowerShell data: Get-Process | Where-Object CPU -gt 10",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0263",
+    "category": "CLIPBOARD_INTEGRITY",
+    "payload": "CSV row: 101,John Doe,Engineering,San Francisco",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0264",
+    "category": "CLIPBOARD_INTEGRITY",
+    "payload": "JSON Array: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0265",
+    "category": "CLIPBOARD_INTEGRITY",
+    "payload": "Path with spaces: C:\\Users\\hp\\My Documents\\Notes.txt",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0266",
+    "category": "CLIPBOARD_INTEGRITY",
+    "payload": "UUID: 550e8400-e29b-41d4-a716-446655440000",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0267",
+    "category": "CLIPBOARD_INTEGRITY",
+    "payload": "IPv6 address: 2001:0db8:85a3:0000:0000:8a2e:0370:7334",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0268",
+    "category": "CLIPBOARD_INTEGRITY",
+    "payload": "Equation: E = mc^2",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0269",
+    "category": "CLIPBOARD_INTEGRITY",
+    "payload": "Base64: QXN0cmFSdW4gVjAuMTAgUm9ja3Mh",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0270",
+    "category": "CLIPBOARD_INTEGRITY",
+    "payload": "Quoted string: \"This is inside quotes\"",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0271",
+    "category": "CLIPBOARD_INTEGRITY",
+    "payload": "Single quotes: 'Literal single quoted value'",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0272",
+    "category": "CLIPBOARD_INTEGRITY",
+    "payload": "Backticks: `code block inside markdown`",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0273",
+    "category": "CLIPBOARD_INTEGRITY",
+    "payload": "Key-value: timeout=30s retry=3 backoff=exponential",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0274",
+    "category": "CLIPBOARD_INTEGRITY",
+    "payload": "Hex dump: 0xDEADBEEF 0xCAFEBABE",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0275",
+    "category": "CLIPBOARD_INTEGRITY",
+    "payload": "Final clipboard boundary check string",
+    "expected_success": true
+  },
+  {
+    "case_id": "IB-0276",
+    "category": "DESTRUCTIVE_ACTION_GATING",
+    "element_name": "Delete All",
+    "automation_id": "btn_delete_all",
+    "keyword": "delete",
+    "expected_blocked_without_force": true,
+    "expected_allowed_with_force": true
+  },
+  {
+    "case_id": "IB-0277",
+    "category": "DESTRUCTIVE_ACTION_GATING",
+    "element_name": "Delete File",
+    "automation_id": "btn_delete_file",
+    "keyword": "delete",
+    "expected_blocked_without_force": true,
+    "expected_allowed_with_force": true
+  },
+  {
+    "case_id": "IB-0278",
+    "category": "DESTRUCTIVE_ACTION_GATING",
+    "element_name": "Delete Account",
+    "automation_id": "btn_delete_account",
+    "keyword": "delete",
+    "expected_blocked_without_force": true,
+    "expected_allowed_with_force": true
+  },
+  {
+    "case_id": "IB-0279",
+    "category": "DESTRUCTIVE_ACTION_GATING",
+    "element_name": "Delete Database",
+    "automation_id": "btn_delete_db",
+    "keyword": "delete",
+    "expected_blocked_without_force": true,
+    "expected_allowed_with_force": true
+  },
+  {
+    "case_id": "IB-0280",
+    "category": "DESTRUCTIVE_ACTION_GATING",
+    "element_name": "Format Drive C:",
+    "automation_id": "btn_format_c",
+    "keyword": "format",
+    "expected_blocked_without_force": true,
+    "expected_allowed_with_force": true
+  },
+  {
+    "case_id": "IB-0281",
+    "category": "DESTRUCTIVE_ACTION_GATING",
+    "element_name": "Format Disk",
+    "automation_id": "btn_format_disk",
+    "keyword": "format",
+    "expected_blocked_without_force": true,
+    "expected_allowed_with_force": true
+  },
+  {
+    "case_id": "IB-0282",
+    "category": "DESTRUCTIVE_ACTION_GATING",
+    "element_name": "Drop Table Users",
+    "automation_id": "btn_drop_table",
+    "keyword": "drop",
+    "expected_blocked_without_force": true,
+    "expected_allowed_with_force": true
+  },
+  {
+    "case_id": "IB-0283",
+    "category": "DESTRUCTIVE_ACTION_GATING",
+    "element_name": "Drop Database",
+    "automation_id": "btn_drop_db",
+    "keyword": "drop",
+    "expected_blocked_without_force": true,
+    "expected_allowed_with_force": true
+  },
+  {
+    "case_id": "IB-0284",
+    "category": "DESTRUCTIVE_ACTION_GATING",
+    "element_name": "Truncate Logs",
+    "automation_id": "btn_truncate",
+    "keyword": "truncate",
+    "expected_blocked_without_force": true,
+    "expected_allowed_with_force": true
+  },
+  {
+    "case_id": "IB-0285",
+    "category": "DESTRUCTIVE_ACTION_GATING",
+    "element_name": "Remove User",
+    "automation_id": "btn_remove_user",
+    "keyword": "remove",
+    "expected_blocked_without_force": true,
+    "expected_allowed_with_force": true
+  },
+  {
+    "case_id": "IB-0286",
+    "category": "DESTRUCTIVE_ACTION_GATING",
+    "element_name": "Remove Directory",
+    "automation_id": "btn_remove_dir",
+    "keyword": "remove",
+    "expected_blocked_without_force": true,
+    "expected_allowed_with_force": true
+  },
+  {
+    "case_id": "IB-0287",
+    "category": "DESTRUCTIVE_ACTION_GATING",
+    "element_name": "Remove Repository",
+    "automation_id": "btn_remove_repo",
+    "keyword": "remove",
+    "expected_blocked_without_force": true,
+    "expected_allowed_with_force": true
+  },
+  {
+    "case_id": "IB-0288",
+    "category": "DESTRUCTIVE_ACTION_GATING",
+    "element_name": "Erase Disk",
+    "automation_id": "btn_erase",
+    "keyword": "erase",
+    "expected_blocked_without_force": true,
+    "expected_allowed_with_force": true
+  },
+  {
+    "case_id": "IB-0289",
+    "category": "DESTRUCTIVE_ACTION_GATING",
+    "element_name": "Purge Cache",
+    "automation_id": "btn_purge_cache",
+    "keyword": "purge",
+    "expected_blocked_without_force": true,
+    "expected_allowed_with_force": true
+  },
+  {
+    "case_id": "IB-0290",
+    "category": "DESTRUCTIVE_ACTION_GATING",
+    "element_name": "Purge All Records",
+    "automation_id": "btn_purge_records",
+    "keyword": "purge",
+    "expected_blocked_without_force": true,
+    "expected_allowed_with_force": true
+  },
+  {
+    "case_id": "IB-0291",
+    "category": "DESTRUCTIVE_ACTION_GATING",
+    "element_name": "Uninstall Software",
+    "automation_id": "btn_uninstall",
+    "keyword": "uninstall",
+    "expected_blocked_without_force": true,
+    "expected_allowed_with_force": true
+  },
+  {
+    "case_id": "IB-0292",
+    "category": "DESTRUCTIVE_ACTION_GATING",
+    "element_name": "Wipe Clean",
+    "automation_id": "btn_wipe",
+    "keyword": "wipe",
+    "expected_blocked_without_force": true,
+    "expected_allowed_with_force": true
+  },
+  {
+    "case_id": "IB-0293",
+    "category": "DESTRUCTIVE_ACTION_GATING",
+    "element_name": "Wipe Partition",
+    "automation_id": "btn_wipe_part",
+    "keyword": "wipe",
+    "expected_blocked_without_force": true,
+    "expected_allowed_with_force": true
+  },
+  {
+    "case_id": "IB-0294",
+    "category": "DESTRUCTIVE_ACTION_GATING",
+    "element_name": "Factory Reset",
+    "automation_id": "btn_factory_reset",
+    "keyword": "factory reset",
+    "expected_blocked_without_force": true,
+    "expected_allowed_with_force": true
+  },
+  {
+    "case_id": "IB-0295",
+    "category": "DESTRUCTIVE_ACTION_GATING",
+    "element_name": "Reset to Default",
+    "automation_id": "btn_reset_default",
+    "keyword": "reset",
+    "expected_blocked_without_force": true,
+    "expected_allowed_with_force": true
+  },
+  {
+    "case_id": "IB-0296",
+    "category": "DESTRUCTIVE_ACTION_GATING",
+    "element_name": "Clear All Data",
+    "automation_id": "btn_clear_all",
+    "keyword": "clear all",
+    "expected_blocked_without_force": true,
+    "expected_allowed_with_force": true
+  },
+  {
+    "case_id": "IB-0297",
+    "category": "DESTRUCTIVE_ACTION_GATING",
+    "element_name": "Purchase Subscription",
+    "automation_id": "btn_purchase",
+    "keyword": "purchase",
+    "expected_blocked_without_force": true,
+    "expected_allowed_with_force": true
+  },
+  {
+    "case_id": "IB-0298",
+    "category": "DESTRUCTIVE_ACTION_GATING",
+    "element_name": "Buy Now",
+    "automation_id": "btn_buy_now",
+    "keyword": "buy now",
+    "expected_blocked_without_force": true,
+    "expected_allowed_with_force": true
+  },
+  {
+    "case_id": "IB-0299",
+    "category": "DESTRUCTIVE_ACTION_GATING",
+    "element_name": "Transfer Funds",
+    "automation_id": "btn_transfer",
+    "keyword": "transfer funds",
+    "expected_blocked_without_force": true,
+    "expected_allowed_with_force": true
+  },
+  {
+    "case_id": "IB-0300",
+    "category": "DESTRUCTIVE_ACTION_GATING",
+    "element_name": "Terminate Process",
+    "automation_id": "btn_terminate_proc",
+    "keyword": "terminate",
+    "expected_blocked_without_force": true,
+    "expected_allowed_with_force": true
+  },
+  {
+    "case_id": "IB-0301",
+    "category": "DESTRUCTIVE_ACTION_GATING",
+    "element_name": "Empty Recycle Bin",
+    "automation_id": "btn_empty_bin",
+    "keyword": "empty recycle bin",
+    "expected_blocked_without_force": true,
+    "expected_allowed_with_force": true
+  },
+  {
+    "case_id": "IB-0302",
+    "category": "DESTRUCTIVE_ACTION_GATING",
+    "element_name": "Empty Trash",
+    "automation_id": "btn_empty_trash",
+    "keyword": "empty trash",
+    "expected_blocked_without_force": true,
+    "expected_allowed_with_force": true
+  },
+  {
+    "case_id": "IB-0303",
+    "category": "DESTRUCTIVE_ACTION_GATING",
+    "element_name": "Reinstall OS",
+    "automation_id": "btn_reinstall",
+    "keyword": "reinstall",
+    "expected_blocked_without_force": true,
+    "expected_allowed_with_force": true
+  },
+  {
+    "case_id": "IB-0304",
+    "category": "DESTRUCTIVE_ACTION_GATING",
+    "element_name": "Overwrite Existing",
+    "automation_id": "btn_overwrite",
+    "keyword": "overwrite",
+    "expected_blocked_without_force": true,
+    "expected_allowed_with_force": true
+  },
+  {
+    "case_id": "IB-0305",
+    "category": "DESTRUCTIVE_ACTION_GATING",
+    "element_name": "Delete Workspace",
+    "automation_id": "btn_delete_ws",
+    "keyword": "delete",
+    "expected_blocked_without_force": true,
+    "expected_allowed_with_force": true
+  },
+  {
+    "case_id": "IB-0306",
+    "category": "DESTRUCTIVE_ACTION_GATING",
+    "element_name": "Remove Backup",
+    "automation_id": "btn_remove_backup",
+    "keyword": "remove",
+    "expected_blocked_without_force": true,
+    "expected_allowed_with_force": true
+  },
+  {
+    "case_id": "IB-0307",
+    "category": "DESTRUCTIVE_ACTION_GATING",
+    "element_name": "Format Partition",
+    "automation_id": "btn_format_part",
+    "keyword": "format",
+    "expected_blocked_without_force": true,
+    "expected_allowed_with_force": true
+  },
+  {
+    "case_id": "IB-0308",
+    "category": "DESTRUCTIVE_ACTION_GATING",
+    "element_name": "Drop Index",
+    "automation_id": "btn_drop_idx",
+    "keyword": "drop",
+    "expected_blocked_without_force": true,
+    "expected_allowed_with_force": true
+  },
+  {
+    "case_id": "IB-0309",
+    "category": "DESTRUCTIVE_ACTION_GATING",
+    "element_name": "Purge Telemetry",
+    "automation_id": "btn_purge_telem",
+    "keyword": "purge",
+    "expected_blocked_without_force": true,
+    "expected_allowed_with_force": true
+  },
+  {
+    "case_id": "IB-0310",
+    "category": "DESTRUCTIVE_ACTION_GATING",
+    "element_name": "Wipe Device",
+    "automation_id": "btn_wipe_device",
+    "keyword": "wipe",
+    "expected_blocked_without_force": true,
+    "expected_allowed_with_force": true
+  },
+  {
+    "case_id": "IB-0311",
+    "category": "DESTRUCTIVE_ACTION_GATING",
+    "element_name": "Reset Network Settings",
+    "automation_id": "btn_reset_net",
+    "keyword": "reset",
+    "expected_blocked_without_force": true,
+    "expected_allowed_with_force": true
+  },
+  {
+    "case_id": "IB-0312",
+    "category": "DESTRUCTIVE_ACTION_GATING",
+    "element_name": "Clear All Cache",
+    "automation_id": "btn_clear_cache",
+    "keyword": "clear all",
+    "expected_blocked_without_force": true,
+    "expected_allowed_with_force": true
+  },
+  {
+    "case_id": "IB-0313",
+    "category": "DESTRUCTIVE_ACTION_GATING",
+    "element_name": "Purchase Token Pack",
+    "automation_id": "btn_purchase_tokens",
+    "keyword": "purchase",
+    "expected_blocked_without_force": true,
+    "expected_allowed_with_force": true
+  },
+  {
+    "case_id": "IB-0314",
+    "category": "DESTRUCTIVE_ACTION_GATING",
+    "element_name": "Buy License",
+    "automation_id": "btn_buy_lic",
+    "keyword": "buy now",
+    "expected_blocked_without_force": true,
+    "expected_allowed_with_force": true
+  },
+  {
+    "case_id": "IB-0315",
+    "category": "DESTRUCTIVE_ACTION_GATING",
+    "element_name": "Transfer Money",
+    "automation_id": "btn_transfer_money",
+    "keyword": "transfer money",
+    "expected_blocked_without_force": true,
+    "expected_allowed_with_force": true
+  },
+  {
+    "case_id": "IB-0316",
+    "category": "DESTRUCTIVE_ACTION_GATING",
+    "element_name": "Terminate Session",
+    "automation_id": "btn_term_sess",
+    "keyword": "terminate",
+    "expected_blocked_without_force": true,
+    "expected_allowed_with_force": true
+  },
+  {
+    "case_id": "IB-0317",
+    "category": "DESTRUCTIVE_ACTION_GATING",
+    "element_name": "Delete Branch",
+    "automation_id": "btn_del_branch",
+    "keyword": "delete",
+    "expected_blocked_without_force": true,
+    "expected_allowed_with_force": true
+  },
+  {
+    "case_id": "IB-0318",
+    "category": "DESTRUCTIVE_ACTION_GATING",
+    "element_name": "Remove Key",
+    "automation_id": "btn_rem_key",
+    "keyword": "remove",
+    "expected_blocked_without_force": true,
+    "expected_allowed_with_force": true
+  },
+  {
+    "case_id": "IB-0319",
+    "category": "DESTRUCTIVE_ACTION_GATING",
+    "element_name": "Format SD Card",
+    "automation_id": "btn_format_sd",
+    "keyword": "format",
+    "expected_blocked_without_force": true,
+    "expected_allowed_with_force": true
+  },
+  {
+    "case_id": "IB-0320",
+    "category": "DESTRUCTIVE_ACTION_GATING",
+    "element_name": "Drop Schema",
+    "automation_id": "btn_drop_schema",
+    "keyword": "drop",
+    "expected_blocked_without_force": true,
+    "expected_allowed_with_force": true
+  },
+  {
+    "case_id": "IB-0321",
+    "category": "PASSWORD_PRIVACY_PROTECTION",
+    "element_name": "Password",
+    "automation_id": "edit_password",
+    "plaintext_value": "secret_pass1",
+    "is_password": true,
+    "expected_redacted": true
+  },
+  {
+    "case_id": "IB-0322",
+    "category": "PASSWORD_PRIVACY_PROTECTION",
+    "element_name": "Confirm Password",
+    "automation_id": "edit_confirm_pwd",
+    "plaintext_value": "secret_pass1",
+    "is_password": true,
+    "expected_redacted": true
+  },
+  {
+    "case_id": "IB-0323",
+    "category": "PASSWORD_PRIVACY_PROTECTION",
+    "element_name": "Admin Password",
+    "automation_id": "edit_admin_pwd",
+    "plaintext_value": "SuperAdminSecret!",
+    "is_password": true,
+    "expected_redacted": true
+  },
+  {
+    "case_id": "IB-0324",
+    "category": "PASSWORD_PRIVACY_PROTECTION",
+    "element_name": "Current Password",
+    "automation_id": "edit_curr_pwd",
+    "plaintext_value": "old_password_123",
+    "is_password": true,
+    "expected_redacted": true
+  },
+  {
+    "case_id": "IB-0325",
+    "category": "PASSWORD_PRIVACY_PROTECTION",
+    "element_name": "New Password",
+    "automation_id": "edit_new_pwd",
+    "plaintext_value": "new_password_456",
+    "is_password": true,
+    "expected_redacted": true
+  },
+  {
+    "case_id": "IB-0326",
+    "category": "PASSWORD_PRIVACY_PROTECTION",
+    "element_name": "PIN Code",
+    "automation_id": "edit_pin",
+    "plaintext_value": "9876",
+    "is_password": true,
+    "expected_redacted": true
+  },
+  {
+    "case_id": "IB-0327",
+    "category": "PASSWORD_PRIVACY_PROTECTION",
+    "element_name": "Master PIN",
+    "automation_id": "edit_master_pin",
+    "plaintext_value": "1234",
+    "is_password": true,
+    "expected_redacted": true
+  },
+  {
+    "case_id": "IB-0328",
+    "category": "PASSWORD_PRIVACY_PROTECTION",
+    "element_name": "Secret Key",
+    "automation_id": "edit_secret_key",
+    "plaintext_value": "sec_key_99887766",
+    "is_password": true,
+    "expected_redacted": true
+  },
+  {
+    "case_id": "IB-0329",
+    "category": "PASSWORD_PRIVACY_PROTECTION",
+    "element_name": "Client Secret",
+    "automation_id": "edit_client_secret",
+    "plaintext_value": "cs_live_1234567890abcdef",
+    "is_password": true,
+    "expected_redacted": true
+  },
+  {
+    "case_id": "IB-0330",
+    "category": "PASSWORD_PRIVACY_PROTECTION",
+    "element_name": "API Token",
+    "automation_id": "edit_api_token",
+    "plaintext_value": "Bearer sk_live_998877665544332211",
+    "is_password": true,
+    "expected_redacted": true
+  },
+  {
+    "case_id": "IB-0331",
+    "category": "PASSWORD_PRIVACY_PROTECTION",
+    "element_name": "Database Password",
+    "automation_id": "edit_db_pass",
+    "plaintext_value": "db_secret_pass_77",
+    "is_password": true,
+    "expected_redacted": true
+  },
+  {
+    "case_id": "IB-0332",
+    "category": "PASSWORD_PRIVACY_PROTECTION",
+    "element_name": "SSH Key Passphrase",
+    "automation_id": "edit_ssh_pass",
+    "plaintext_value": "id_rsa_passphrase",
+    "is_password": true,
+    "expected_redacted": true
+  },
+  {
+    "case_id": "IB-0333",
+    "category": "PASSWORD_PRIVACY_PROTECTION",
+    "element_name": "GPG Passphrase",
+    "automation_id": "edit_gpg_pass",
+    "plaintext_value": "gpg_secure_phrase",
+    "is_password": true,
+    "expected_redacted": true
+  },
+  {
+    "case_id": "IB-0334",
+    "category": "PASSWORD_PRIVACY_PROTECTION",
+    "element_name": "WiFi Password",
+    "automation_id": "edit_wifi_pwd",
+    "plaintext_value": "WPA2_Secret_Password",
+    "is_password": true,
+    "expected_redacted": true
+  },
+  {
+    "case_id": "IB-0335",
+    "category": "PASSWORD_PRIVACY_PROTECTION",
+    "element_name": "Wallet Passphrase",
+    "automation_id": "edit_wallet_pwd",
+    "plaintext_value": "twelve word mnemonic seed phrase secret",
+    "is_password": true,
+    "expected_redacted": true
+  },
+  {
+    "case_id": "IB-0336",
+    "category": "PASSWORD_PRIVACY_PROTECTION",
+    "element_name": "Access Code",
+    "automation_id": "edit_access_code",
+    "plaintext_value": "AC-889900",
+    "is_password": true,
+    "expected_redacted": true
+  },
+  {
+    "case_id": "IB-0337",
+    "category": "PASSWORD_PRIVACY_PROTECTION",
+    "element_name": "Verification Code",
+    "automation_id": "edit_verify_code",
+    "plaintext_value": "765432",
+    "is_password": true,
+    "expected_redacted": true
+  },
+  {
+    "case_id": "IB-0338",
+    "category": "PASSWORD_PRIVACY_PROTECTION",
+    "element_name": "Encryption Key",
+    "automation_id": "edit_enc_key",
+    "plaintext_value": "AES256_Secret_Key_Data",
+    "is_password": true,
+    "expected_redacted": true
+  },
+  {
+    "case_id": "IB-0339",
+    "category": "PASSWORD_PRIVACY_PROTECTION",
+    "element_name": "Private Key",
+    "automation_id": "edit_private_key",
+    "plaintext_value": "-----BEGIN PRIVATE KEY-----\nMIIEvg...",
+    "is_password": true,
+    "expected_redacted": true
+  },
+  {
+    "case_id": "IB-0340",
+    "category": "PASSWORD_PRIVACY_PROTECTION",
+    "element_name": "Security Token",
+    "automation_id": "edit_sec_token",
+    "plaintext_value": "sec_tok_11223344",
+    "is_password": true,
+    "expected_redacted": true
+  },
+  {
+    "case_id": "IB-0341",
+    "category": "PASSWORD_PRIVACY_PROTECTION",
+    "element_name": "Recovery Key",
+    "automation_id": "edit_recovery_key",
+    "plaintext_value": "REC-AAAA-BBBB-CCCC-DDDD",
+    "is_password": true,
+    "expected_redacted": true
+  },
+  {
+    "case_id": "IB-0342",
+    "category": "PASSWORD_PRIVACY_PROTECTION",
+    "element_name": "Passcode",
+    "automation_id": "edit_passcode",
+    "plaintext_value": "54321",
+    "is_password": true,
+    "expected_redacted": true
+  },
+  {
+    "case_id": "IB-0343",
+    "category": "PASSWORD_PRIVACY_PROTECTION",
+    "element_name": "User Password",
+    "automation_id": "edit_user_pwd",
+    "plaintext_value": "user_p@ssw0rd",
+    "is_password": true,
+    "expected_redacted": true
+  },
+  {
+    "case_id": "IB-0344",
+    "category": "PASSWORD_PRIVACY_PROTECTION",
+    "element_name": "Root Password",
+    "automation_id": "edit_root_pwd",
+    "plaintext_value": "toor_root_pass",
+    "is_password": true,
+    "expected_redacted": true
+  },
+  {
+    "case_id": "IB-0345",
+    "category": "PASSWORD_PRIVACY_PROTECTION",
+    "element_name": "Redis Auth Password",
+    "automation_id": "edit_redis_pwd",
+    "plaintext_value": "redis_auth_token_77",
+    "is_password": true,
+    "expected_redacted": true
+  },
+  {
+    "case_id": "IB-0346",
+    "category": "PASSWORD_PRIVACY_PROTECTION",
+    "element_name": "Proxy Password",
+    "automation_id": "edit_proxy_pwd",
+    "plaintext_value": "proxy_auth_pass",
+    "is_password": true,
+    "expected_redacted": true
+  },
+  {
+    "case_id": "IB-0347",
+    "category": "PASSWORD_PRIVACY_PROTECTION",
+    "element_name": "SMTP Password",
+    "automation_id": "edit_smtp_pwd",
+    "plaintext_value": "smtp_relay_secret",
+    "is_password": true,
+    "expected_redacted": true
+  },
+  {
+    "case_id": "IB-0348",
+    "category": "PASSWORD_PRIVACY_PROTECTION",
+    "element_name": "Vault Token",
+    "automation_id": "edit_vault_tok",
+    "plaintext_value": "s.1234567890abcdefghijklmn",
+    "is_password": true,
+    "expected_redacted": true
+  },
+  {
+    "case_id": "IB-0349",
+    "category": "PASSWORD_PRIVACY_PROTECTION",
+    "element_name": "OAuth Secret",
+    "automation_id": "edit_oauth_sec",
+    "plaintext_value": "oauth_secret_hash_value",
+    "is_password": true,
+    "expected_redacted": true
+  },
+  {
+    "case_id": "IB-0350",
+    "category": "PASSWORD_PRIVACY_PROTECTION",
+    "element_name": "License Key",
+    "automation_id": "edit_lic_key",
+    "plaintext_value": "AAAA-BBBB-CCCC-DDDD-EEEE",
+    "is_password": false,
+    "expected_redacted": true
+  },
+  {
+    "case_id": "IB-0351",
+    "category": "PASSWORD_PRIVACY_PROTECTION",
+    "element_name": "Credit Card Number",
+    "automation_id": "edit_card_num",
+    "plaintext_value": "4111 2222 3333 4444",
+    "is_password": false,
+    "expected_redacted": true
+  },
+  {
+    "case_id": "IB-0352",
+    "category": "PASSWORD_PRIVACY_PROTECTION",
+    "element_name": "Bearer Auth Header",
+    "automation_id": "edit_auth_hdr",
+    "plaintext_value": "Bearer abcdef1234567890",
+    "is_password": false,
+    "expected_redacted": true
+  },
+  {
+    "case_id": "IB-0353",
+    "category": "PASSWORD_PRIVACY_PROTECTION",
+    "element_name": "API Key Header",
+    "automation_id": "edit_apikey_hdr",
+    "plaintext_value": "api_key: sk_test_1234567890abcdef",
+    "is_password": false,
+    "expected_redacted": true
+  },
+  {
+    "case_id": "IB-0354",
+    "category": "PASSWORD_PRIVACY_PROTECTION",
+    "element_name": "OTP Code",
+    "automation_id": "edit_otp",
+    "plaintext_value": "123456",
+    "is_password": true,
+    "expected_redacted": true
+  },
+  {
+    "case_id": "IB-0355",
+    "category": "PASSWORD_PRIVACY_PROTECTION",
+    "element_name": "Secondary Password",
+    "automation_id": "edit_sec_pwd",
+    "plaintext_value": "sec_p@ss_99",
+    "is_password": true,
+    "expected_redacted": true
+  },
+  {
+    "case_id": "IB-0356",
+    "category": "PASSWORD_PRIVACY_PROTECTION",
+    "element_name": "Backup Password",
+    "automation_id": "edit_backup_pwd",
+    "plaintext_value": "backup_safe_pass",
+    "is_password": true,
+    "expected_redacted": true
+  },
+  {
+    "case_id": "IB-0357",
+    "category": "PASSWORD_PRIVACY_PROTECTION",
+    "element_name": "Device Passcode",
+    "automation_id": "edit_dev_passcode",
+    "plaintext_value": "13579",
+    "is_password": true,
+    "expected_redacted": true
+  },
+  {
+    "case_id": "IB-0358",
+    "category": "PASSWORD_PRIVACY_PROTECTION",
+    "element_name": "Admin PIN",
+    "automation_id": "edit_admin_pin",
+    "plaintext_value": "0000",
+    "is_password": true,
+    "expected_redacted": true
+  },
+  {
+    "case_id": "IB-0359",
+    "category": "PASSWORD_PRIVACY_PROTECTION",
+    "element_name": "Service Secret",
+    "automation_id": "edit_svc_secret",
+    "plaintext_value": "service_account_secret_token",
+    "is_password": true,
+    "expected_redacted": true
+  },
+  {
+    "case_id": "IB-0360",
+    "category": "PASSWORD_PRIVACY_PROTECTION",
+    "element_name": "Session Token",
+    "automation_id": "edit_sess_tok",
+    "plaintext_value": "sess_token_abcdef1234567890",
+    "is_password": true,
+    "expected_redacted": true
+  },
+  {
+    "case_id": "IB-0361",
+    "category": "AMBIGUITY_AND_UNSUPPORTED_UI",
+    "query": "button",
+    "subcategory": "BUTTON_AMBIGUOUS",
+    "is_ambiguous": true,
+    "expected_error_code": "AMBIGUOUS"
+  },
+  {
+    "case_id": "IB-0362",
+    "category": "AMBIGUITY_AND_UNSUPPORTED_UI",
+    "query": "save",
+    "subcategory": "SAVE_AMBIGUOUS",
+    "is_ambiguous": true,
+    "expected_error_code": "AMBIGUOUS"
+  },
+  {
+    "case_id": "IB-0363",
+    "category": "AMBIGUITY_AND_UNSUPPORTED_UI",
+    "query": "edit",
+    "subcategory": "EDIT_AMBIGUOUS",
+    "is_ambiguous": true,
+    "expected_error_code": "AMBIGUOUS"
+  },
+  {
+    "case_id": "IB-0364",
+    "category": "AMBIGUITY_AND_UNSUPPORTED_UI",
+    "query": "cancel",
+    "subcategory": "CANCEL_AMBIGUOUS",
+    "is_ambiguous": true,
+    "expected_error_code": "AMBIGUOUS"
+  },
+  {
+    "case_id": "IB-0365",
+    "category": "AMBIGUITY_AND_UNSUPPORTED_UI",
+    "query": "option",
+    "subcategory": "OPTION_AMBIGUOUS",
+    "is_ambiguous": true,
+    "expected_error_code": "AMBIGUOUS"
+  },
+  {
+    "case_id": "IB-0366",
+    "category": "AMBIGUITY_AND_UNSUPPORTED_UI",
+    "query": "tab",
+    "subcategory": "TAB_AMBIGUOUS",
+    "is_ambiguous": true,
+    "expected_error_code": "AMBIGUOUS"
+  },
+  {
+    "case_id": "IB-0367",
+    "category": "AMBIGUITY_AND_UNSUPPORTED_UI",
+    "query": "item",
+    "subcategory": "ITEM_AMBIGUOUS",
+    "is_ambiguous": true,
+    "expected_error_code": "AMBIGUOUS"
+  },
+  {
+    "case_id": "IB-0368",
+    "category": "AMBIGUITY_AND_UNSUPPORTED_UI",
+    "query": "field",
+    "subcategory": "FIELD_AMBIGUOUS",
+    "is_ambiguous": true,
+    "expected_error_code": "AMBIGUOUS"
+  },
+  {
+    "case_id": "IB-0369",
+    "category": "AMBIGUITY_AND_UNSUPPORTED_UI",
+    "query": "setting",
+    "subcategory": "SETTING_AMBIGUOUS",
+    "is_ambiguous": true,
+    "expected_error_code": "AMBIGUOUS"
+  },
+  {
+    "case_id": "IB-0370",
+    "category": "AMBIGUITY_AND_UNSUPPORTED_UI",
+    "query": "select",
+    "subcategory": "SELECT_AMBIGUOUS",
+    "is_ambiguous": true,
+    "expected_error_code": "AMBIGUOUS"
+  },
+  {
+    "case_id": "IB-0371",
+    "category": "AMBIGUITY_AND_UNSUPPORTED_UI",
+    "query": "nonexistent_hyperlink_xyz",
+    "subcategory": "NOT_FOUND",
+    "is_ambiguous": false,
+    "expected_error_code": "NOT_FOUND"
+  },
+  {
+    "case_id": "IB-0372",
+    "category": "AMBIGUITY_AND_UNSUPPORTED_UI",
+    "query": "teleport_button",
+    "subcategory": "NOT_FOUND",
+    "is_ambiguous": false,
+    "expected_error_code": "NOT_FOUND"
+  },
+  {
+    "case_id": "IB-0373",
+    "category": "AMBIGUITY_AND_UNSUPPORTED_UI",
+    "query": "quantum_control",
+    "subcategory": "NOT_FOUND",
+    "is_ambiguous": false,
+    "expected_error_code": "NOT_FOUND"
+  },
+  {
+    "case_id": "IB-0374",
+    "category": "AMBIGUITY_AND_UNSUPPORTED_UI",
+    "query": "hyperdrive_dial",
+    "subcategory": "NOT_FOUND",
+    "is_ambiguous": false,
+    "expected_error_code": "NOT_FOUND"
+  },
+  {
+    "case_id": "IB-0375",
+    "category": "AMBIGUITY_AND_UNSUPPORTED_UI",
+    "query": "flux_capacitor_toggle",
+    "subcategory": "NOT_FOUND",
+    "is_ambiguous": false,
+    "expected_error_code": "NOT_FOUND"
+  },
+  {
+    "case_id": "IB-0376",
+    "category": "AMBIGUITY_AND_UNSUPPORTED_UI",
+    "query": "warp_speed_slider",
+    "subcategory": "NOT_FOUND",
+    "is_ambiguous": false,
+    "expected_error_code": "NOT_FOUND"
+  },
+  {
+    "case_id": "IB-0377",
+    "category": "AMBIGUITY_AND_UNSUPPORTED_UI",
+    "query": "antigravity_switch",
+    "subcategory": "NOT_FOUND",
+    "is_ambiguous": false,
+    "expected_error_code": "NOT_FOUND"
+  },
+  {
+    "case_id": "IB-0378",
+    "category": "AMBIGUITY_AND_UNSUPPORTED_UI",
+    "query": "time_machine_edit",
+    "subcategory": "NOT_FOUND",
+    "is_ambiguous": false,
+    "expected_error_code": "NOT_FOUND"
+  },
+  {
+    "case_id": "IB-0379",
+    "category": "AMBIGUITY_AND_UNSUPPORTED_UI",
+    "query": "invisible_widget_404",
+    "subcategory": "NOT_FOUND",
+    "is_ambiguous": false,
+    "expected_error_code": "NOT_FOUND"
+  },
+  {
+    "case_id": "IB-0380",
+    "category": "AMBIGUITY_AND_UNSUPPORTED_UI",
+    "query": "ghost_control_element",
+    "subcategory": "NOT_FOUND",
+    "is_ambiguous": false,
+    "expected_error_code": "NOT_FOUND"
+  },
+  {
+    "case_id": "IB-0381",
+    "category": "AMBIGUITY_AND_UNSUPPORTED_UI",
+    "query": "rm -rf /",
+    "subcategory": "INVALID_SHORTCUT",
+    "is_ambiguous": false,
+    "expected_error_code": "INVALID_ARGUMENT"
+  },
+  {
+    "case_id": "IB-0382",
+    "category": "AMBIGUITY_AND_UNSUPPORTED_UI",
+    "query": "calc.exe",
+    "subcategory": "INVALID_SHORTCUT",
+    "is_ambiguous": false,
+    "expected_error_code": "INVALID_ARGUMENT"
+  },
+  {
+    "case_id": "IB-0383",
+    "category": "AMBIGUITY_AND_UNSUPPORTED_UI",
+    "query": "notepad.exe",
+    "subcategory": "INVALID_SHORTCUT",
+    "is_ambiguous": false,
+    "expected_error_code": "INVALID_ARGUMENT"
+  },
+  {
+    "case_id": "IB-0384",
+    "category": "AMBIGUITY_AND_UNSUPPORTED_UI",
+    "query": "powershell -Command Get-Process",
+    "subcategory": "INVALID_SHORTCUT",
+    "is_ambiguous": false,
+    "expected_error_code": "INVALID_ARGUMENT"
+  },
+  {
+    "case_id": "IB-0385",
+    "category": "AMBIGUITY_AND_UNSUPPORTED_UI",
+    "query": "cmd.exe /c dir",
+    "subcategory": "INVALID_SHORTCUT",
+    "is_ambiguous": false,
+    "expected_error_code": "INVALID_ARGUMENT"
+  },
+  {
+    "case_id": "IB-0386",
+    "category": "AMBIGUITY_AND_UNSUPPORTED_UI",
+    "query": "echo hello world",
+    "subcategory": "INVALID_SHORTCUT",
+    "is_ambiguous": false,
+    "expected_error_code": "INVALID_ARGUMENT"
+  },
+  {
+    "case_id": "IB-0387",
+    "category": "AMBIGUITY_AND_UNSUPPORTED_UI",
+    "query": "format c: /fs:ntfs",
+    "subcategory": "INVALID_SHORTCUT",
+    "is_ambiguous": false,
+    "expected_error_code": "INVALID_ARGUMENT"
+  },
+  {
+    "case_id": "IB-0388",
+    "category": "AMBIGUITY_AND_UNSUPPORTED_UI",
+    "query": "del /f /q C:\\*",
+    "subcategory": "INVALID_SHORTCUT",
+    "is_ambiguous": false,
+    "expected_error_code": "INVALID_ARGUMENT"
+  },
+  {
+    "case_id": "IB-0389",
+    "category": "AMBIGUITY_AND_UNSUPPORTED_UI",
+    "query": "curl -X POST http://malicious.local",
+    "subcategory": "INVALID_SHORTCUT",
+    "is_ambiguous": false,
+    "expected_error_code": "INVALID_ARGUMENT"
+  },
+  {
+    "case_id": "IB-0390",
+    "category": "AMBIGUITY_AND_UNSUPPORTED_UI",
+    "query": "Invoke-Expression",
+    "subcategory": "INVALID_SHORTCUT",
+    "is_ambiguous": false,
+    "expected_error_code": "INVALID_ARGUMENT"
+  },
+  {
+    "case_id": "IB-0391",
+    "category": "AMBIGUITY_AND_UNSUPPORTED_UI",
+    "query": "shutdown /s /t 0",
+    "subcategory": "INVALID_SHORTCUT",
+    "is_ambiguous": false,
+    "expected_error_code": "INVALID_ARGUMENT"
+  },
+  {
+    "case_id": "IB-0392",
+    "category": "AMBIGUITY_AND_UNSUPPORTED_UI",
+    "query": "kill -9 1",
+    "subcategory": "INVALID_SHORTCUT",
+    "is_ambiguous": false,
+    "expected_error_code": "INVALID_ARGUMENT"
+  },
+  {
+    "case_id": "IB-0393",
+    "category": "AMBIGUITY_AND_UNSUPPORTED_UI",
+    "query": "drop database production;",
+    "subcategory": "INVALID_SHORTCUT",
+    "is_ambiguous": false,
+    "expected_error_code": "INVALID_ARGUMENT"
+  },
+  {
+    "case_id": "IB-0394",
+    "category": "AMBIGUITY_AND_UNSUPPORTED_UI",
+    "query": "sudo apt-get install",
+    "subcategory": "INVALID_SHORTCUT",
+    "is_ambiguous": false,
+    "expected_error_code": "INVALID_ARGUMENT"
+  },
+  {
+    "case_id": "IB-0395",
+    "category": "AMBIGUITY_AND_UNSUPPORTED_UI",
+    "query": "python -c import os; os.system('calc')",
+    "subcategory": "INVALID_SHORTCUT",
+    "is_ambiguous": false,
+    "expected_error_code": "INVALID_ARGUMENT"
+  },
+  {
+    "case_id": "IB-0396",
+    "category": "AMBIGUITY_AND_UNSUPPORTED_UI",
+    "query": "subatomic_radio_button",
+    "subcategory": "NOT_FOUND",
+    "is_ambiguous": false,
+    "expected_error_code": "NOT_FOUND"
+  },
+  {
+    "case_id": "IB-0397",
+    "category": "AMBIGUITY_AND_UNSUPPORTED_UI",
+    "query": "plasma_cannon_trigger",
+    "subcategory": "NOT_FOUND",
+    "is_ambiguous": false,
+    "expected_error_code": "NOT_FOUND"
+  },
+  {
+    "case_id": "IB-0398",
+    "category": "AMBIGUITY_AND_UNSUPPORTED_UI",
+    "query": "dimension_portal_combo",
+    "subcategory": "NOT_FOUND",
+    "is_ambiguous": false,
+    "expected_error_code": "NOT_FOUND"
+  },
+  {
+    "case_id": "IB-0399",
+    "category": "AMBIGUITY_AND_UNSUPPORTED_UI",
+    "query": "gravity_well_checkbox",
+    "subcategory": "NOT_FOUND",
+    "is_ambiguous": false,
+    "expected_error_code": "NOT_FOUND"
+  },
+  {
+    "case_id": "IB-0400",
+    "category": "AMBIGUITY_AND_UNSUPPORTED_UI",
+    "query": "tachyon_emitter_edit",
+    "subcategory": "NOT_FOUND",
+    "is_ambiguous": false,
+    "expected_error_code": "NOT_FOUND"
+  },
+  {
+    "case_id": "IB-0401",
+    "category": "AMBIGUITY_AND_UNSUPPORTED_UI",
+    "query": "dark_matter_gauge",
+    "subcategory": "NOT_FOUND",
+    "is_ambiguous": false,
+    "expected_error_code": "NOT_FOUND"
+  },
+  {
+    "case_id": "IB-0402",
+    "category": "AMBIGUITY_AND_UNSUPPORTED_UI",
+    "query": "singularity_compressor",
+    "subcategory": "NOT_FOUND",
+    "is_ambiguous": false,
+    "expected_error_code": "NOT_FOUND"
+  },
+  {
+    "case_id": "IB-0403",
+    "category": "AMBIGUITY_AND_UNSUPPORTED_UI",
+    "query": "zero_point_energy_dial",
+    "subcategory": "NOT_FOUND",
+    "is_ambiguous": false,
+    "expected_error_code": "NOT_FOUND"
+  },
+  {
+    "case_id": "IB-0404",
+    "category": "AMBIGUITY_AND_UNSUPPORTED_UI",
+    "query": "chronos_stabilizer_tab",
+    "subcategory": "NOT_FOUND",
+    "is_ambiguous": false,
+    "expected_error_code": "NOT_FOUND"
+  },
+  {
+    "case_id": "IB-0405",
+    "category": "AMBIGUITY_AND_UNSUPPORTED_UI",
+    "query": "hyperspace_lane_selector",
+    "subcategory": "NOT_FOUND",
+    "is_ambiguous": false,
+    "expected_error_code": "NOT_FOUND"
+  }
+]

@@ -868,3 +868,131 @@ class CapabilityRegistry:
             health=CapabilityHealth.UNAVAILABLE,
             health_reason="Prohibited by hard policy",
         ))
+
+        # ---------------------------------------------------------
+        # APPLICATION INTERACTION & UI AUTOMATION CAPABILITIES (v0.10)
+        # ---------------------------------------------------------
+        from astrarun.interaction.service import (
+            click_element,
+            focus_control,
+            get_clipboard,
+            inspect_ui,
+            press_shortcut,
+            scroll_control,
+            select_tab,
+            set_clipboard,
+            set_element_text,
+            toggle_checkbox,
+            type_literal_text,
+        )
+
+        self.register(Capability(
+            id="inspect_window_ui",
+            category=CapabilityCategory.INTERACTION,
+            description="Inspect accessible UI elements and control hierarchy of target or foreground window",
+            args_schema={"hwnd": int, "window": str, "max_elements": int, "filter_type": str},
+            risk=ToolRisk.LOW,
+            read_only=True,
+            handler=inspect_ui,
+            permission=CapabilityPermission.AUTO,
+        ))
+        self.register(Capability(
+            id="click_ui_element",
+            category=CapabilityCategory.INTERACTION,
+            description="Click or invoke a semantic button, menu item, or interactive control",
+            args_schema={"target": str, "hwnd": int, "window": str, "force": bool},
+            risk=ToolRisk.MEDIUM,
+            read_only=False,
+            handler=click_element,
+            permission=CapabilityPermission.AUTO,
+        ))
+        self.register(Capability(
+            id="set_ui_element_value",
+            category=CapabilityCategory.INTERACTION,
+            description="Set text content of an accessible input or edit field",
+            args_schema={"target": str, "value": str, "hwnd": int, "window": str},
+            risk=ToolRisk.MEDIUM,
+            read_only=False,
+            handler=set_element_text,
+            permission=CapabilityPermission.AUTO,
+        ))
+        self.register(Capability(
+            id="toggle_ui_element",
+            category=CapabilityCategory.INTERACTION,
+            description="Toggle a checkbox, switch, or binary toggle control",
+            args_schema={"target": str, "hwnd": int, "window": str},
+            risk=ToolRisk.MEDIUM,
+            read_only=False,
+            handler=toggle_checkbox,
+            permission=CapabilityPermission.AUTO,
+        ))
+        self.register(Capability(
+            id="select_ui_element",
+            category=CapabilityCategory.INTERACTION,
+            description="Select a tab, radio button, or list item",
+            args_schema={"target": str, "hwnd": int, "window": str},
+            risk=ToolRisk.LOW,
+            read_only=False,
+            handler=select_tab,
+            permission=CapabilityPermission.AUTO,
+        ))
+        self.register(Capability(
+            id="focus_ui_element",
+            category=CapabilityCategory.INTERACTION,
+            description="Assign native keyboard focus to a target control",
+            args_schema={"target": str, "hwnd": int, "window": str},
+            risk=ToolRisk.LOW,
+            read_only=False,
+            handler=focus_control,
+            permission=CapabilityPermission.AUTO,
+        ))
+        self.register(Capability(
+            id="scroll_ui_element",
+            category=CapabilityCategory.INTERACTION,
+            description="Scroll a container or active window logically",
+            args_schema={"direction": str, "target": str, "hwnd": int, "window": str},
+            risk=ToolRisk.LOW,
+            read_only=False,
+            handler=scroll_control,
+            permission=CapabilityPermission.AUTO,
+        ))
+        self.register(Capability(
+            id="press_keyboard_shortcut",
+            category=CapabilityCategory.INTERACTION,
+            description="Dispatch a validated keyboard shortcut (e.g. Ctrl+Shift+P) to target or foreground window",
+            args_schema={"shortcut": str, "hwnd": int, "window": str},
+            risk=ToolRisk.LOW,
+            read_only=False,
+            handler=press_shortcut,
+            permission=CapabilityPermission.AUTO,
+        ))
+        self.register(Capability(
+            id="type_text",
+            category=CapabilityCategory.INTERACTION,
+            description="Type literal text into the active/focused control without shell evaluation",
+            args_schema={"text": str, "hwnd": int, "window": str},
+            risk=ToolRisk.LOW,
+            read_only=False,
+            handler=type_literal_text,
+            permission=CapabilityPermission.AUTO,
+        ))
+        self.register(Capability(
+            id="get_clipboard_content",
+            category=CapabilityCategory.INTERACTION,
+            description="Read text content from the system clipboard",
+            args_schema={},
+            risk=ToolRisk.LOW,
+            read_only=True,
+            handler=get_clipboard,
+            permission=CapabilityPermission.AUTO,
+        ))
+        self.register(Capability(
+            id="set_clipboard_content",
+            category=CapabilityCategory.INTERACTION,
+            description="Write text content to the system clipboard",
+            args_schema={"text": str},
+            risk=ToolRisk.LOW,
+            read_only=False,
+            handler=set_clipboard,
+            permission=CapabilityPermission.AUTO,
+        ))

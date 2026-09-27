@@ -915,6 +915,45 @@
 - **Consequences**:
   - Graceful, user-safe window closing with zero data destruction.
 
+---
+
+## ADR-076: Microsoft UI Automation COM Architecture via Dedicated COM MTA Worker Thread
+- **Status**: ACCEPTED
+- **Context**: Calling Windows UI Automation COM APIs (`IUIAutomation`, `IUIAutomationElement`) on the main PySide6 GUI thread risks freezing the UI during deep tree traversals, and invoking controls in the same process can trigger COM message pump deadlocks.
+- **Decision**:
+  - Implement a dedicated `UIAutomationWorker` running in a Multi-Threaded Apartment (MTA) background thread (`comtypes.CoInitializeEx(COINIT_MULTITHREADED)`).
+  - Marshal all tree traversals, element inspections, and pattern invocations through this worker thread via thread-safe request queues.
+  - Target applications run in external processes, completely decoupled from AstraRun's event loop.
+- **Consequences**:
+  - Zero GUI thread freezing during large UI tree traversals.
+  - Safe, deadlock-free interaction across native Win32, WinForms, WPF, Qt, and Chromium accessibility trees.
+
+---
+
+## ADR-077: 64-bit SendInput & Clipboard Memory ABI Alignment
+- **Status**: ACCEPTED
+- **Context**: On 64-bit Windows, invoking `SendInput` or Windows Clipboard APIs via Python `ctypes` fails silently or corrupts memory if structures omit 64-bit alignment padding or if pointers are truncated to 32 bits.
+- **Decision**:
+  - Define `sizeof(INPUT) == 40` bytes exactly by declaring the full union (`MOUSEINPUT`, `KEYBDINPUT`, `HARDWAREINPUT`) matching 64-bit Windows SDK headers.
+  - Explicitly define `GlobalAlloc` return types as `ctypes.c_void_p` (64-bit handle) and use `ctypes.memmove` for UTF-16LE clipboard buffer copying with GMEM_MOVEABLE flags.
+- **Consequences**:
+  - 100% reliable Unicode keystroke injection and clipboard copy/paste operations without truncated memory handles or silent `SendInput` failures.
+
+---
+
+## ADR-078: Control Grounding Precedence & Strict Coordinate Prohibition
+- **Status**: ACCEPTED
+- **Context**: Blind coordinate clicking (e.g. `pyautogui.click(x, y)`) is brittle, resolution-dependent, sensitive to DPI scaling, and easily causes accidental destruction when windows move.
+- **Decision**:
+  - Enforce the immutable Control Grounding Precedence:
+    $$\text{UIA Semantic Pattern} > \text{Win32 Control Message} > \text{Keyboard Shortcut} > \text{Coordinate Interaction (PERMANENTLY PROHIBITED)}$$
+  - If a control cannot be semantically resolved via UI Automation patterns or Win32 messages, return `UNSUPPORTED_UI` or `NOT_FOUND` rather than guessing screen coordinates.
+  - Ground all unaddressed control mutations to the pre-captured `origin_window`.
+- **Consequences**:
+  - 0.00% Wrong Element Action Rate (WEAR).
+  - Absolute elimination of misplaced clicks causing unintended side-effects.
+
+
 
 
 

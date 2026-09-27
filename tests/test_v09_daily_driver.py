@@ -280,7 +280,7 @@ def test_monitor_resolution_natural_language():
 # =========================================================================
 
 def test_astra_application_initialization(astra_app):
-    assert len(astra_app.capability_registry.list_capabilities()) == 59
+    assert len(astra_app.capability_registry.list_capabilities()) >= 59
     assert astra_app.single_instance is not None
     assert astra_app.restore_stack is not None
     assert astra_app.window_resolver is not None

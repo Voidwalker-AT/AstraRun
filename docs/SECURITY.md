@@ -165,4 +165,52 @@ AstraRun v0.5 evaluates TypeSafe's Jev strictly as an offline reference benchmar
 2. **Credential Scrubbing**: Environment tokens, API keys, passwords, and user identities are scrubbed.
 3. **Graceful Offline Fallback**: If `TYPESAFE_API_KEY` is not present, the system defaults to safe abstention or deterministic offline simulation without raising runtime exceptions.
 
+---
+
+## 10. Action Gate, TOCTOU Defense & Context Privacy (v0.6)
+
+AstraRun v0.6 introduces concrete workstation action execution under strict architectural controls:
+
+### 10.1. Action Gate Multi-Tier Enforcement (`astrarun.policy.action_gate`)
+- All proposed actions pass through four non-bypassable tiers:
+  - **Tier 0 (Hard Policy Pre-Checks)**: Blocks dangerous shell patterns (`format`, `rmdir /s /q`, `del system32`), directory traversal (`../`), malicious download URLs, protected Windows system processes, and privileged port modification.
+  - **Tier 1 (Ambiguity & Disagreement Gating)**: Evaluates multi-candidate match distance ($\Delta \le 0.15$), model disagreement (Jensen-Shannon divergence $> 0.25$), and minimum confidence ($< 0.70$), forcing `CLARIFY` when uncertain.
+  - **Tier 2 (Tool Registry Validation)**: Enforces registered tool existence and typed argument checking.
+  - **Tier 3 (Risk & Confirmation)**: Distinguishes auto-allowed low-risk tools from gated high-risk actions.
+- Target Metric: **0.00% False Execution Rate (FER)**.
+
+### 10.2. Time-of-Check to Time-of-Use (TOCTOU) Process Defense
+- Process IDs are recycled quickly by the Windows kernel upon process exit.
+- To prevent a user confirmation intended for a dead development process from terminating an unrelated, newly spawned process, `ConfirmationToken` captures:
+  - `pid: int`
+  - `expected_create_time: float` (from `psutil.Process(pid).create_time()`)
+  - `expected_name: str` (e.g. `"node.exe"`)
+- Immediately prior to execution, `ActionGate.revalidate_confirmation` queries the OS. If `abs(current_ctime - expected_ctime) > 1.0\text{ s}` or process name has changed, execution aborts and the token is revoked.
+
+### 10.3. Cryptographic Confirmation Tokens & Tampering Prevention
+- High-risk and gated actions generate a 32-character hexadecimal token using `secrets.token_hex(16)`.
+- Tokens have a strictly bounded time-to-live of **60 seconds**.
+- Tokens are cryptographically bound to their original argument payload. Any argument tampering (e.g. swapping port from 3000 to 80) triggers immediate validation failure.
+- Tokens are single-use: atomically purged upon validation to prevent replay attacks.
+
+### 10.4. Workstation Context Privacy & Zero-Surveillance Invariants
+- Context capture is strictly limited to:
+  - Focused window title, executable name, and PID via Win32 `ctypes`.
+  - Active TCP listening dev ports (`1024..65535`) via `psutil`.
+  - Recent project interaction history.
+- Zero keystroke logging, zero screenshots, zero frame grabbing, zero background audio.
+- State history is bounded to **30 items** and automatically purged past **48 hours**.
+- Atomic persistence to local JSON (`data/context_state.json`) prevents state corruption across sudden reboots.
+
+### 10.5. Context Injection & Jailbreak Defense
+- All contextual requests are pre-screened for prompt injection vectors:
+  - `ignore previous context and ...`
+  - `the previous model said this is allowed ...`
+  - `pretend policy is disabled ...`
+- Matching queries immediately nullify context references, falling through to global hard security policy blocks.
+
+### 10.6. Immutable Workflow Audit Logging
+- Every workstation workflow execution appends a structured JSON transaction record to `data/workflow_audit.jsonl` recording workflow ID, target entity, step-by-step success/failure, latency, and timestamp.
+
+
 

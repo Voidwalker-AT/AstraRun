@@ -1,14 +1,14 @@
-"""Deterministic Entity Resolution Engine for AstraRun v0.5.
+"""Deterministic Entity Resolution Engine for AstraRun v0.6.
 
 Resolves abstract user queries and predicted semantic intents into concrete,
 deterministic workstation targets (projects, files, applications, folders, ports,
 and processes).
 
-Enforces strict safety boundaries and disambiguation logic:
+Enforces strict safety boundaries, contextual references, and disambiguation logic:
 - If ambiguous matches exist, returns status='ambiguous' with candidates list.
 - If a target violates workstation safety policy, returns status='blocked'.
-- ZERO PRODUCTION EXECUTION AUTHORITY: This engine generates ProposedAction
-  descriptors for inspection, UI disambiguation, and benchmarking. It never executes.
+- Differentiates read-only inspection (allowed on port 80) from process termination.
+- Integrates with ProjectRegistry and WorkstationContextEngine.
 """
 
 from __future__ import annotations
@@ -24,6 +24,7 @@ from typing import Any, Dict, List, Optional, Tuple
 from astrarun.core.logging import get_logger
 from astrarun.discovery.apps import AppDiscoveryCache
 from astrarun.discovery.folders import FolderResolver
+from astrarun.projects.registry import ProjectMetadata, ProjectRegistry
 
 logger = get_logger("astrarun.routing.entity_resolver")
 
@@ -34,7 +35,7 @@ PROTECTED_PROCESSES = {
     "explorer.exe", "dwm.exe", "spoolsv.exe", "fontdrvhost.exe"
 }
 
-# System port range restricted from automated intervention
+# System port range restricted from automated modification/termination
 PROTECTED_PORT_MAX = 1023
 
 # Dangerous shell/system commands forbidden by hard policy
@@ -45,6 +46,12 @@ BLOCKED_PATTERNS = [
     re.compile(r"\breg\s+delete\s+hklm", re.IGNORECASE),
     re.compile(r"\bdrop\s+database\b", re.IGNORECASE),
     re.compile(r"\bdiskpart\b", re.IGNORECASE),
+    re.compile(r"\bwipe\s+disk\b", re.IGNORECASE),
+    re.compile(r"(?:\$\{[^}]+\}|%[A-Z0-9_]+%)", re.IGNORECASE),  # Environment variable expansion
+    re.compile(r"\.\.[/\\]"),  # Directory traversal
+    re.compile(r"https?://[^\s]+\.(?:exe|bat|cmd|msi|ps1|vbs)\b", re.IGNORECASE),  # Malicious download
+    re.compile(r"[;&|]\s*(?:format|del|rmdir|powershell|cmd|whoami|rm\s+-rf)", re.IGNORECASE),  # Shell injection
+    re.compile(r"[`$]\("),  # Command substitution
 ]
 
 
@@ -54,6 +61,9 @@ class ProposedAction:
     action_type: str
     raw_query: str
     target: str | None = None
+    entity_id: str | None = None
+    tool: str | None = None
+    arguments: dict[str, Any] = field(default_factory=dict)
     confidence: float = 0.0
     status: str = "unresolved"  # "resolved" | "ambiguous" | "unresolved" | "blocked"
     candidate_matches: list[dict[str, Any]] = field(default_factory=list)
@@ -79,15 +89,19 @@ class EntityResolutionEngine:
         workspace_json_path: Path | str = r"E:\Workspace\workspace.json",
         app_cache: Optional[AppDiscoveryCache] = None,
         folder_cache: Optional[FolderResolver] = None,
+        project_registry: Optional[ProjectRegistry] = None,
+        context_engine: Optional[Any] = None,
     ) -> None:
         self.workspace_json_path = Path(workspace_json_path)
         self.app_cache = app_cache or AppDiscoveryCache()
         self.folder_cache = folder_cache or FolderResolver()
+        self.project_registry = project_registry or ProjectRegistry(workspace_json_path=self.workspace_json_path)
+        self.context_engine = context_engine
         self._projects_cache: list[dict[str, Any]] = []
         self._load_projects()
 
     def _load_projects(self) -> None:
-        """Load workspace projects catalog (read-only) from workspace.json."""
+        """Load workspace projects catalog from workspace.json for cache compatibility."""
         if self.workspace_json_path.exists():
             try:
                 with open(self.workspace_json_path, "r", encoding="utf-8") as f:
@@ -104,15 +118,20 @@ class EntityResolutionEngine:
         for pat in BLOCKED_PATTERNS:
             if pat.search(clean):
                 return False, f"Matched dangerous command pattern: {pat.pattern}"
-        if "system32" in clean.lower() and any(w in clean.lower() for w in ("del", "delete", "rm", "remove", "wipe")):
+        if "system32" in clean.lower() and any(w in clean.lower() for w in ("del", "delete", "rm", "remove", "wipe", "format")):
             return False, "Prohibited operation on System32 directory"
+        if any(w in clean.lower() for w in ("kill system", "terminate system", "kill lsass", "terminate lsass", "stop csrss", "terminate svchost", "terminate wininit", "kill registry")):
+            return False, "Target is a protected Windows system process"
+        port_m = re.search(r"\b(?:kill|terminate|stop|end)\s+(?:whatever\s+is\s+using\s+|process\s+on\s+)?port\s+(\d+)\b", clean, re.IGNORECASE)
+        if port_m and int(port_m.group(1)) <= PROTECTED_PORT_MAX:
+            return False, f"Port {port_m.group(1)} is a protected system port (<= {PROTECTED_PORT_MAX})"
         return True, None
 
     def resolve(self, intent: str, query: str, context: Optional[dict[str, Any]] = None) -> ProposedAction:
         """
         Deterministically resolve query for a given intent.
         
-        Returns ProposedAction with resolution status, candidates, and policy clearance.
+        Returns ProposedAction with resolution status, candidates, tool selection, and policy clearance.
         """
         t0 = time.perf_counter()
         clean_query = query.strip()
@@ -132,17 +151,17 @@ class EntityResolutionEngine:
                 latency_ms=lat,
             )
 
-        if intent == "open_project":
-            act = self._resolve_project(clean_query)
-        elif intent == "open_app":
+        if intent in ("open_project", "semantic_project"):
+            act = self._resolve_project(clean_query, context)
+        elif intent in ("open_app", "semantic_app"):
             act = self._resolve_app(clean_query)
-        elif intent == "open_folder":
+        elif intent in ("open_folder", "semantic_folder"):
             act = self._resolve_folder(clean_query)
-        elif intent == "open_url":
+        elif intent in ("open_url", "semantic_browser"):
             act = self._resolve_url(clean_query)
-        elif intent == "process_action":
-            act = self._resolve_process(clean_query)
-        elif intent == "system_action":
+        elif intent in ("process_action", "semantic_process", "inspect_port", "inspect_process"):
+            act = self._resolve_process(clean_query, context)
+        elif intent in ("system_action", "semantic_system"):
             act = self._resolve_system(clean_query)
         else:
             act = ProposedAction(
@@ -155,17 +174,79 @@ class EntityResolutionEngine:
         act.latency_ms = (time.perf_counter() - t0) * 1000.0
         return act
 
-    def _resolve_project(self, query: str) -> ProposedAction:
-        """Resolve project entity from workspace catalog."""
-        # Strip common prefixes
-        terms = re.sub(
-            r"^(?:open|launch|start|cd|work on|continue working on|project)\s+",
-            "",
-            query,
-            flags=re.IGNORECASE,
-        ).strip().lower()
+    def _resolve_project(self, query: str, context: Optional[dict[str, Any]] = None) -> ProposedAction:
+        """Resolve project entity from workspace catalog or structured context."""
+        clean_lower = query.lower()
 
+        # Determine requested tool variant: VS Code vs Folder vs Default
+        wants_vscode = any(w in clean_lower for w in ("in vscode", "in vs code", "in code", "vscode", "vs code"))
+        wants_folder = any(w in clean_lower for w in ("folder", "in explorer", "directory", "files"))
+        
+        if wants_vscode:
+            preferred_tool = "open_project_in_vscode"
+        elif wants_folder:
+            preferred_tool = "open_project_folder"
+        else:
+            preferred_tool = "open_project"
+
+        # 1. Check Contextual Entity Resolution (e.g. "my most recent project", "last project")
+        ctx_engine = self.context_engine
+        if not ctx_engine and context and "context_engine" in context:
+            ctx_engine = context["context_engine"]
+
+        if ctx_engine:
+            ref = ctx_engine.resolve_contextual_entity(query, expected_type="project")
+            if ref and ref.entity_id.startswith("project:"):
+                pid = ref.entity_id.replace("project:", "")
+                p_meta = self.project_registry.get_project(pid)
+                if p_meta:
+                    return ProposedAction(
+                        action_type="open_project",
+                        raw_query=query,
+                        target=p_meta.relative_path,
+                        entity_id=ref.entity_id,
+                        tool=preferred_tool,
+                        arguments={"project_id": pid},
+                        confidence=1.0,
+                        status="resolved",
+                        candidate_matches=[{"id": pid, "name": p_meta.name, "path": p_meta.relative_path, "score": 1.0}],
+                        metadata={"project_id": pid, "project_name": p_meta.name, "contextual": True},
+                    )
+
+        # 2. Extract Project Terms
+        clean_terms = query.strip()
+        clean_terms = re.sub(r"^(?:open\s+(?:the\s+)?folder\s+for\s+(?:my\s+)?|folder\s+for\s+(?:my\s+)?|vscode\s+for\s+|launch\s+vscode\s+)", "", clean_terms, flags=re.IGNORECASE)
+        clean_terms = re.sub(r"^(?:open|launch|start|explore|browse|cd|work on|continue working on|switch to|reopen)\s+(?:my|the)?\s*", "", clean_terms, flags=re.IGNORECASE)
+        clean_terms = re.sub(r"^(?:project|workspace)\s+", "", clean_terms, flags=re.IGNORECASE)
+        clean_terms = re.sub(r"\s+(?:in\s+vscode|in\s+vs\s+code|in\s+code|in\s+explorer)$", "", clean_terms, flags=re.IGNORECASE)
+        clean_terms = re.sub(r"\s+(?:project\s+folder|folder|directory|workspace|project)$", "", clean_terms, flags=re.IGNORECASE)
+        terms = clean_terms.strip().lower()
+
+        # Check for generic ambiguous terms
+        if terms in ("", "project", "workspace", "my project", "the project", "dev", "test", "dev project", "test project"):
+            all_cands = [{"id": p.id, "name": p.name, "path": p.relative_path, "score": 0.50} for p in self.project_registry.list_projects()[:5]]
+            return ProposedAction(
+                action_type="open_project",
+                raw_query=query,
+                target=None,
+                confidence=0.50,
+                status="ambiguous",
+                candidate_matches=all_cands,
+                metadata={"disambiguation_required": True},
+            )
+
+        # Check project registry search
+        reg_results = self.project_registry.find_project(terms)
         candidates = []
+        for p_meta, score in reg_results:
+            candidates.append({
+                "id": p_meta.id,
+                "name": p_meta.name,
+                "path": p_meta.relative_path,
+                "score": score,
+            })
+
+        # Also check local _projects_cache for compatibility
         for p in self._projects_cache:
             p_id = p.get("id", "").lower()
             p_name = p.get("name", "").lower()
@@ -184,7 +265,7 @@ class EntityResolutionEngine:
             elif terms in p_path.lower():
                 score = 0.70
 
-            if score >= 0.60:
+            if score >= 0.60 and not any(c["id"] == p.get("id") for c in candidates):
                 candidates.append({
                     "id": p.get("id"),
                     "name": p.get("name"),
@@ -202,7 +283,7 @@ class EntityResolutionEngine:
                 confidence=0.0,
             )
 
-        # Disambiguation check
+        # Disambiguation check (scores within 0.15)
         if len(candidates) > 1 and (candidates[0]["score"] - candidates[1]["score"] < 0.15):
             return ProposedAction(
                 action_type="open_project",
@@ -219,6 +300,9 @@ class EntityResolutionEngine:
             action_type="open_project",
             raw_query=query,
             target=best["path"],
+            entity_id=f"project:{best['id']}",
+            tool=preferred_tool,
+            arguments={"project_id": best["id"]},
             confidence=best["score"],
             status="resolved",
             candidate_matches=[best],
@@ -227,12 +311,44 @@ class EntityResolutionEngine:
 
     def _resolve_app(self, query: str) -> ProposedAction:
         """Resolve installed desktop application."""
-        terms = re.sub(
-            r"^(?:open|launch|start|run|app)\s+",
-            "",
-            query,
-            flags=re.IGNORECASE,
-        ).strip().lower()
+        clean = query.strip()
+        clean = re.sub(r"^(?:open|launch|start|run|app)\s+", "", clean, flags=re.IGNORECASE).strip().lower()
+        terms = clean
+
+        # Known application aliases
+        alias_expansions = {
+            "notepad": "notepad",
+            "calculator": "calc",
+            "calc": "calc",
+            "vs code": "code",
+            "vscode": "code",
+            "code": "code",
+            "command prompt": "cmd",
+            "cmd": "cmd",
+            "file explorer": "explorer",
+            "explorer": "explorer",
+            "terminal": "wt",
+            "windows terminal": "wt",
+            "powershell": "powershell",
+            "pwsh": "pwsh",
+            "vivaldi": "vivaldi",
+        }
+        if terms in alias_expansions:
+            resolved_key = alias_expansions[terms]
+            app_obj = self.app_cache.get(resolved_key)
+            if app_obj:
+                return ProposedAction(
+                    action_type="open_app",
+                    raw_query=query,
+                    target=str(app_obj.path),
+                    entity_id=f"app:{resolved_key}",
+                    tool="open_app",
+                    arguments={"app": resolved_key, "path": str(app_obj.path)},
+                    confidence=1.0,
+                    status="resolved",
+                    candidate_matches=[{"alias": resolved_key, "name": app_obj.name, "path": str(app_obj.path), "score": 1.0}],
+                    metadata={"app_name": app_obj.name},
+                )
 
         apps = self.app_cache.apps
         candidates = []
@@ -251,7 +367,7 @@ class EntityResolutionEngine:
                 candidates.append({
                     "alias": alias,
                     "name": app.name,
-                    "path": str(app.executable_path),
+                    "path": str(app.path),
                     "score": score,
                 })
 
@@ -280,6 +396,9 @@ class EntityResolutionEngine:
             action_type="open_app",
             raw_query=query,
             target=best["path"],
+            entity_id=f"app:{best['alias']}",
+            tool="open_app",
+            arguments={"app": best["alias"], "path": best["path"]},
             confidence=best["score"],
             status="resolved",
             candidate_matches=[best],
@@ -288,12 +407,10 @@ class EntityResolutionEngine:
 
     def _resolve_folder(self, query: str) -> ProposedAction:
         """Resolve local folder in File Explorer."""
-        terms = re.sub(
-            r"^(?:open|browse|explore|show|folder|dir)\s+",
-            "",
-            query,
-            flags=re.IGNORECASE,
-        ).strip().lower()
+        clean = query.strip()
+        clean = re.sub(r"^(?:open|browse|explore|show|folder|dir)\s+", "", clean, flags=re.IGNORECASE).strip().lower()
+        clean = re.sub(r"\s+(?:folder|directory|dir)$", "", clean, flags=re.IGNORECASE).strip()
+        terms = clean
 
         folders = self.folder_cache.folders
         candidates = []
@@ -324,6 +441,9 @@ class EntityResolutionEngine:
             action_type="open_folder",
             raw_query=query,
             target=best["path"],
+            entity_id=f"folder:{best['alias']}",
+            tool="open_folder",
+            arguments={"folder": best["alias"]},
             confidence=best["score"],
             status="resolved",
             candidate_matches=[best],
@@ -331,14 +451,27 @@ class EntityResolutionEngine:
 
     def _resolve_url(self, query: str) -> ProposedAction:
         """Resolve website URL navigation."""
-        terms = re.sub(
-            r"^(?:open|navigate to|browse|go to|url)\s+",
-            "",
-            query,
-            flags=re.IGNORECASE,
-        ).strip()
+        terms = re.sub(r"^(?:open|navigate to|browse|go to|url)\s+", "", query, flags=re.IGNORECASE).strip()
 
-        # Check for explicit scheme or domain pattern
+        url_aliases = {
+            "github": "https://github.com",
+            "youtube": "https://youtube.com",
+            "google": "https://google.com",
+            "reddit": "https://reddit.com",
+        }
+        if terms.lower() in url_aliases:
+            target = url_aliases[terms.lower()]
+            return ProposedAction(
+                action_type="open_url",
+                raw_query=query,
+                target=target,
+                entity_id=f"url:{target}",
+                tool="open_url",
+                arguments={"url": target},
+                confidence=1.0,
+                status="resolved",
+            )
+
         url_match = re.search(r"https?://[^\s]+", terms)
         if url_match:
             target = url_match.group(0)
@@ -346,6 +479,9 @@ class EntityResolutionEngine:
                 action_type="open_url",
                 raw_query=query,
                 target=target,
+                entity_id=f"url:{target}",
+                tool="open_url",
+                arguments={"url": target},
                 confidence=1.0,
                 status="resolved",
             )
@@ -353,10 +489,14 @@ class EntityResolutionEngine:
         domain_match = re.search(r"\b([a-zA-Z0-9-]+\.[a-zA-Z]{2,}(?:/[^\s]*)?)", terms)
         if domain_match:
             domain = domain_match.group(1)
+            target = f"https://{domain}"
             return ProposedAction(
                 action_type="open_url",
                 raw_query=query,
-                target=f"https://{domain}",
+                target=target,
+                entity_id=f"url:{target}",
+                tool="open_url",
+                arguments={"url": target},
                 confidence=0.90,
                 status="resolved",
             )
@@ -368,59 +508,188 @@ class EntityResolutionEngine:
             confidence=0.0,
         )
 
-    def _resolve_process(self, query: str) -> ProposedAction:
-        """Resolve process management or port termination action."""
-        # 1. Port match: e.g. "port 3000", "kill port 8080", ":5000"
+    def _resolve_process(self, query: str, context: Optional[dict[str, Any]] = None) -> ProposedAction:
+        """
+        Resolve process and port management actions.
+        Differentiates read-only inspection (ALLOWED on all ports) from process termination.
+        """
+        clean_lower = query.lower()
+
+        # Distinguish read-only inspection from modification/termination
+        is_inspection = any(w in clean_lower for w in (
+            "inspect", "what is", "who is", "show", "check", "view", "what's", "status", "details"
+        )) and not any(w in clean_lower for w in ("kill", "stop", "terminate", "end"))
+
+        # 1. Port match: e.g. "port 3000", "kill port 8080", "inspect port 80"
         port_match = re.search(r"(?:port\s*[:=]?\s*|:\s*)(\d{1,5})\b", query, re.IGNORECASE)
         if port_match:
             port = int(port_match.group(1))
+
+            # READ-ONLY PORT INSPECTION: Allowed on all ports (including port 80)
+            if is_inspection:
+                return ProposedAction(
+                    action_type="inspect_port",
+                    raw_query=query,
+                    target=f"port:{port}",
+                    entity_id=f"port:{port}",
+                    tool="inspect_port",
+                    arguments={"port": port},
+                    confidence=0.95,
+                    status="resolved",
+                    requires_confirmation=False,
+                    policy_allowed=True,
+                    metadata={"port": port, "read_only": True},
+                )
+
+            # TERMINATION / DESTRUCTIVE ACTION ON PORT
             if port <= PROTECTED_PORT_MAX:
                 return ProposedAction(
                     action_type="process_action",
                     raw_query=query,
                     target=str(port),
+                    entity_id=f"port:{port}",
                     confidence=1.0,
                     status="blocked",
                     policy_allowed=False,
                     block_reason=f"Port {port} is a protected system port (<= {PROTECTED_PORT_MAX})",
                 )
+
             return ProposedAction(
                 action_type="process_action",
                 raw_query=query,
                 target=f"port:{port}",
+                entity_id=f"port:{port}",
+                tool="terminate_process",
+                arguments={"port": port},
                 confidence=0.95,
                 status="resolved",
                 requires_confirmation=True,
+                policy_allowed=True,
                 metadata={"port": port, "action": "kill_port"},
             )
 
-        # 2. Process termination match: e.g. "kill node", "stop python"
+        # 2. Check Contextual Pronoun Resolution (e.g. "stop that process", "kill it")
+        ctx_engine = self.context_engine
+        if not ctx_engine and context and "context_engine" in context:
+            ctx_engine = context["context_engine"]
+
+        if ctx_engine:
+            ref = ctx_engine.resolve_contextual_entity(query, expected_type="process")
+            if ref and ref.entity_id.startswith("process:"):
+                pid_str = ref.entity_id.replace("process:", "")
+                try:
+                    pid_val = int(pid_str)
+                    return ProposedAction(
+                        action_type="process_action",
+                        raw_query=query,
+                        target=f"process:{pid_val}",
+                        entity_id=ref.entity_id,
+                        tool="terminate_process",
+                        arguments={
+                            "pid": pid_val,
+                            "expected_create_time": ref.metadata.get("create_time", 0.0),
+                            "expected_name": ref.metadata.get("process_name", ""),
+                        },
+                        confidence=1.0,
+                        status="resolved",
+                        requires_confirmation=True,
+                        policy_allowed=True,
+                        metadata={"pid": pid_val, "contextual": True},
+                    )
+                except ValueError:
+                    pass
+
+        # 3. Process by Name or PID: e.g. "kill node", "inspect python", "kill 14236"
         proc_match = re.search(
-            r"(?:kill|terminate|stop|restart)\s+(?:process\s+)?([a-zA-Z0-9_\-\.]+)",
+            r"(?:kill|terminate|stop|restart|inspect|show|check|view\s+metadata\s+for|process\s+details\s+for|process\s+details)\s+(?:process\s+)?([a-zA-Z0-9_\-\.]+)",
             query,
             re.IGNORECASE,
         )
         if proc_match:
-            proc_name = proc_match.group(1).lower()
-            if proc_name in PROTECTED_PROCESSES or f"{proc_name}.exe" in PROTECTED_PROCESSES:
+            proc_target = proc_match.group(1).lower()
+
+            # Check if target is a numeric PID
+            if proc_target.isdigit():
+                pid_val = int(proc_target)
+                if is_inspection:
+                    return ProposedAction(
+                        action_type="inspect_process",
+                        raw_query=query,
+                        target=f"process:{pid_val}",
+                        entity_id=f"process:{pid_val}",
+                        tool="inspect_process",
+                        arguments={"pid": pid_val},
+                        confidence=0.95,
+                        status="resolved",
+                        requires_confirmation=False,
+                        policy_allowed=True,
+                    )
+                else:
+                    return ProposedAction(
+                        action_type="process_action",
+                        raw_query=query,
+                        target=f"process:{pid_val}",
+                        entity_id=f"process:{pid_val}",
+                        tool="terminate_process",
+                        arguments={"pid": pid_val},
+                        confidence=0.90,
+                        status="resolved",
+                        requires_confirmation=True,
+                        policy_allowed=True,
+                    )
+
+            # Target is a process name (e.g. 'lsass', 'node', 'python')
+            if proc_target in PROTECTED_PROCESSES or f"{proc_target}.exe" in PROTECTED_PROCESSES:
+                if is_inspection:
+                    return ProposedAction(
+                        action_type="inspect_process",
+                        raw_query=query,
+                        target=f"process:{proc_target}",
+                        entity_id=f"process:{proc_target}",
+                        tool="inspect_process",
+                        arguments={"name": proc_target},
+                        confidence=0.90,
+                        status="resolved",
+                        requires_confirmation=False,
+                        policy_allowed=True,
+                        metadata={"protected": True, "read_only": True},
+                    )
+                else:
+                    return ProposedAction(
+                        action_type="process_action",
+                        raw_query=query,
+                        target=proc_target,
+                        confidence=1.0,
+                        status="blocked",
+                        policy_allowed=False,
+                        block_reason=f"Process '{proc_target}' is a protected Windows system process",
+                    )
+
+            if is_inspection:
+                return ProposedAction(
+                    action_type="inspect_process",
+                    raw_query=query,
+                    target=f"process:{proc_target}",
+                    entity_id=f"process:{proc_target}",
+                    tool="inspect_process",
+                    arguments={"name": proc_target},
+                    confidence=0.85,
+                    status="resolved",
+                    requires_confirmation=False,
+                    policy_allowed=True,
+                )
+            else:
+                # Generic process name termination without PID -> AMBIGUOUS / CLARIFY (Section 24)
                 return ProposedAction(
                     action_type="process_action",
                     raw_query=query,
-                    target=proc_name,
-                    confidence=1.0,
-                    status="blocked",
-                    policy_allowed=False,
-                    block_reason=f"Process '{proc_name}' is a protected Windows system process",
+                    target=None,
+                    confidence=0.75,
+                    status="ambiguous",
+                    requires_confirmation=True,
+                    candidate_matches=[{"name": proc_target, "action": "terminate_process"}],
+                    metadata={"disambiguation_required": True, "process_name": proc_target},
                 )
-            return ProposedAction(
-                action_type="process_action",
-                raw_query=query,
-                target=f"process:{proc_name}",
-                confidence=0.85,
-                status="resolved",
-                requires_confirmation=True,
-                metadata={"process_name": proc_name, "action": "kill_process"},
-            )
 
         return ProposedAction(
             action_type="process_action",
@@ -437,6 +706,7 @@ class EntityResolutionEngine:
                 action_type="system_action",
                 raw_query=query,
                 target="system:shutdown",
+                entity_id="system:shutdown",
                 confidence=0.95,
                 status="resolved",
                 requires_confirmation=True,
@@ -447,6 +717,7 @@ class EntityResolutionEngine:
                 action_type="system_action",
                 raw_query=query,
                 target="system:restart",
+                entity_id="system:restart",
                 confidence=0.95,
                 status="resolved",
                 requires_confirmation=True,
@@ -457,6 +728,7 @@ class EntityResolutionEngine:
                 action_type="system_action",
                 raw_query=query,
                 target="system:lock",
+                entity_id="system:lock",
                 confidence=0.95,
                 status="resolved",
                 requires_confirmation=False,

@@ -1,86 +1,97 @@
-# AstraRun v0.5 Status Report
+# AstraRun v0.6 Status Report
 
 > **Date**: 2026-09-27  
-> **Status**: STABLE / VERIFIED  
-> **Milestone**: v0.5 Complete (Laya Ensemble, Domain Adaptation, Entity Resolution & Jev Reference Evaluation)  
+> **Status**: STABLE / VERIFIED / MILESTONE COMPLETE  
+> **Milestone**: v0.6 Complete (Gated Workstation Actions, Context Engine & Workflow Orchestration)  
+> **Git Commit Milestone**: `feat(astrarun): v0.6`  
 
 ---
 
 ## 1. What Works Completely
 
-1. **Local Domain Adaptation (`convaiinnovations/laya` ModernBERT-large)**:
-   - Parameter-efficient head adaptation: ModernBERT-large backbone (394,781,696 parameters) remains frozen; trainable decision heads (`head`, `type_emb`, `scorer`) total 26,512,131 parameters.
-   - Trained over 5 epochs with batched evaluation and cached encoder representations:
-     - Intent accuracy: 36.80% (pre) &rarr; 44.00% (post, +7.20% gain).
-     - Consequence risk accuracy: 35.20% (pre) &rarr; 78.40% (post, +43.20% gain).
-     - Ambiguity accuracy: 68.00% (pre) &rarr; 68.80% (post).
-   - Canonical checkpoint stored in `E:\AI_Models\AstraRun-Laya` (`model.safetensors` 1.68GB, `rl_agent_config.json`, `training_report.json`, tokenizer & encoder configs) adhering to Platform Rule 9.
-   - Native checkpoint loads via `laya.load` in 2.24s with 0 MB VRAM footprint.
+1. **Action Gate (`astrarun.policy.action_gate`)**:
+   - Central safety arbiter transforming `ProposedAction` into typed `ActionGateResult`.
+   - Multi-tier gating: Tier 0 (Hard Policy), Tier 1 (Ambiguity & Disagreement), Tier 2 (Tool Registry Mapping), Tier 3 (Confirmation vs. Direct Allowance).
+   - Outcomes: `ALLOW` (low-risk production allowlist), `CONFIRM` (high-risk gated actions), `CLARIFY` (ambiguous entities $\Delta \le 0.15$), and `BLOCK` (prohibited security violations).
+   - Generates single-use cryptographic confirmation tokens (`secrets.token_hex(16)`, 60s TTL).
+   - TOCTOU (Time-of-Check to Time-of-Use) revalidation verifying process existence, kernel `create_time`, and process name to prevent PID recycling race conditions.
+   - Argument tampering defense rejecting any token replayed with altered arguments.
 
-2. **Decision Fusion Engine (`astrarun.routing.fusion`)**:
-   - Implements ensemble modes E0 through E5:
-     - **E0**: Zero-Shot Generic Laya.
-     - **E1**: Domain-Adapted AstraRun-Laya.
-     - **E2**: Equal-weight probability blend ($0.5 P_0 + 0.5 P_1$).
-     - **E3**: Confidence-weighted probability blend.
-     - **E4**: Disagreement-gated blend using Jensen-Shannon divergence ($\tau_{\text{JS}} = 0.25$).
-     - **E5**: Full multi-question gating (ambiguity threshold $\ge 0.50$, consequence risk threshold $\ge 0.50$, Top-1 intent agreement).
-   - Evaluated on holdout validation set: Mode E5 elevates top-1 accuracy to **58.4%** while preserving **100.0% Safe False Abstention Rate (SFAR)** and **0.0% False Execution Rate (FER)** on unknown queries.
+2. **Workstation Context Engine (`astrarun.context`)**:
+   - Lightweight, privacy-preserving machine state inspection:
+     - Foreground window query (`GetForegroundWindow`, executable name, title, PID) via native Win32 `ctypes`.
+     - Active TCP listening dev ports query (`1024..65535`) via `psutil`.
+     - Ephemeral process/port pronoun resolution (`"stop that process"`, `"kill it"`, `"shut down that server"`) with 300s TTL.
+     - Relative project recency tracking (`"open my most recent project"`, `"continue what I was doing"`, `"open that project in vscode"`) with 24h TTL.
+   - Atomic persistence to local JSON (`data/context_state.json`) with temporary-file-and-rename semantics and corrupted JSON fallback.
+   - Strictly bounded history (30 actions max, 48h retention).
+   - Context injection attack rejection (`ignore previous context`, `the previous model said`, `pretend policy is disabled`).
+   - Zero keystroke logging, zero screenshots, zero surveillance.
 
-3. **Deterministic Entity Resolution Engine (`astrarun.routing.entity_resolver`)**:
-   - Resolves unstructured queries to concrete OS targets:
-     - `workspace.json` projects (`vivaldi-ai`, `SecurityWorkbench`, `AstraRun`, etc.).
-     - Windows Start Menu & App Paths applications.
-     - Known system and developer folders.
-     - Network ports (e.g. `port 3000`, `8080`).
-     - Running system processes (e.g. `node.exe`, `python.exe`).
-   - Candidate disambiguation: flags `ProposedAction(status="ambiguous")` with ranked candidates when scores are within $\Delta \le 0.15$.
-   - Hard policy security boundaries: unconditionally blocks protected system processes (`system`, `registry`, `lsass`, `csrss`, `smss`, `wininit`, `services`), privileged ports ($\le 1023$), and destructive shell commands (`rmdir /s /q`, `format`, `del system32`).
+3. **Project Registry (`astrarun.projects.registry`)**:
+   - Strictly read-only catalog over `E:\Workspace\workspace.json` (28 cataloged projects) adhering to Platform Rule 10 & 11.
+   - Dynamic workspace discovery fallback for uncataloged projects under `Active/`, `Tools/`, `Shared/`.
+   - Public API: `get_project(id)`, `find_project(query)`, `project_path(id)`, `project_metadata(id)`, `list_projects()`.
+   - Multi-tier fuzzy matching and alias resolution (`"astrarun"`, `"ai-bridge"`, `"vivaldi-ai"`, `"security-workbench"`, `"server-nexusnode"`).
 
-4. **Quarantined Jev Reference Router (`astrarun.routing.jev`)**:
-   - Integrates TypeSafe Jev System One as an external reference judge for workstation routing.
-   - Local telemetry quarantine: redacts absolute filesystem paths to `<LOCAL_PATH>` and strips credentials before serialization.
-   - Graceful offline fallback and deterministic mock simulation mode for testing.
+4. **Workflow Engine (`astrarun.workflows`)**:
+   - Structured, non-autonomous workstation task orchestration.
+   - Predefined templates: `open_project`, `open_project_in_vscode`, `inspect_dev_port`.
+   - Every step calls a registered tool; zero arbitrary shell execution or LLM loops.
+   - Fail-fast partial failure handling: stops immediately on step failure, reporting exact step errors without false success assertions.
+   - Immutable transaction audit log written to `data/workflow_audit.jsonl`.
+   - Explicit declaration of rollback support (`rollback_supported=False` on workstation state).
 
-5. **Curated Triple Dataset Pipeline & Locked Benchmark V3**:
-   - Fixed seed `20260927` split with zero query overlap:
-     - `data/training/train_dataset.json` (N=250, SHA256: `695879260b897693fa08b77d033fcb63399cccad3e26cae660daa441edbc5840`).
-     - `benchmarks/routing/validation/val_dataset.json` (N=125, SHA256: `f918858ef4eb32324ecaeba39b80a4112f99175ec4f32f5111da7dfe92143031`).
-     - `benchmarks/routing/locked/test_v3.json` (N=400, SHA256: `41f54adcae210cc6f357328190bf502b0457132f790d7b2a483c3d2a2774eec7`, 120 unknowns = 30.0%).
-   - Documented in `docs/TEST_V3.md`.
+5. **Confirmation & Disambiguation UI Cards (`astrarun.ui.cards`)**:
+   - PySide6 modal cards designed with keyboard safety:
+     - `ConfirmationCard`: Displays title, tool, argument details, and color-coded risk badge (`HIGH`, `MEDIUM`, `LOW`). `Esc` cancels; single `Enter` is ignored on `HIGH` risk; requires `Ctrl+Enter` or click to confirm.
+     - `DisambiguationCard`: Renders candidate list with Up/Down arrow keyboard navigation, `Enter` to select, and `Esc` to cancel.
 
-6. **Automated Test Suite**:
-   - **79 automated unit, UI, integration, and safety tests passing** across 14 test modules.
-   - 18 dedicated tests in `tests/test_v05_ensemble.py` verifying fusion modes E0–E5, JSD and entropy math, disagreement abstention, entity resolution, protected ports/processes, hard policy blocks, and Jev fallback.
-   - **Prime Invariant Maintained**: Zero production execution authority for neural routers, entity resolution, or Jev. All production launches remain 100% deterministic/fuzzy (0.0% False Execution Rate).
+6. **Action Benchmark V1 (`benchmarks/action`)**:
+   - 330-query test set across 19 categories (Seed: `20260927`, SHA256: `d73ac62ab9b9ba0c0cab447be74d4b8c70445453f13a8ce7ea3c8d7c8d26866d`).
+   - Evaluated end-to-end via `benchmarks/action/run_action_benchmark.py`:
+     - **Intent Accuracy**: **100.0%** (330/330)
+     - **Gate Accuracy**: **100.0%** (330/330)
+     - **Tool Selection Accuracy**: **100.0%** (330/330)
+     - **Proposed Action Accuracy**: **100.0%** (330/330)
+     - **False Execution Rate (FER)**: **0.00%** (Prime Invariant)
+     - **False Action Proposal Rate (FAPR)**: **0.00%**
+     - **Clarification Precision**: **100.0%** (20/20)
+     - **Block Recall**: **100.0%** (74/74)
+     - **Confirmation Recall**: **100.0%** (31/31)
+     - **Mean Latency**: **0.077 ms** ($p_{50}: 0.027\text{ ms}$, $p_{95}: 0.187\text{ ms}$)
 
----
-
-## 2. Key Empirical Findings (v0.5)
-
-1. **Parameter-Efficient Head Tuning Prevents Catastrophic Forgetting**:
-   - Freezing ModernBERT-large's 394.8M parameter encoder while training the 26.5M parameter heads and scorer achieves a +7.20% gain in intent classification and a massive +43.20% gain in consequence risk detection, without degrading base representation quality.
-
-2. **Multi-Question Disagreement Gating Outperforms Single-Model Routing**:
-   - Zero-shot generic Laya exhibits 5.3% FER on unknown queries. Fine-tuned AstraRun-Laya alone drops FER to 0.0% and achieves 50.0% SFAR.
-   - Ensemble Mode E5 (combining Jensen-Shannon divergence, ambiguity detection, and risk gating) achieves **100.0% SFAR** and **0.0% FER** while lifting top-1 accuracy from 36.8% to **58.4%**.
-
-3. **Local Sovereignty Outperforms Cloud Reference**:
-   - While Jev System One provides a fast reference (~12.8ms simulation, 47.2% accuracy), local fine-tuned Laya and ensemble architectures deliver superior workstation domain understanding without exposing sensitive developer paths or private tokens to third-party endpoints.
+7. **Automated Test Suite**:
+   - **97 passing automated unit, UI, integration, and security tests** (79 baseline regression tests + 18 v0.6 tests).
+   - Real disposable process test (`test_toctou_process_lifecycle`) spawning, inspecting, revalidating, and terminating a temporary Python worker.
 
 ---
 
-## 3. What Does Not Work (By Design in v0.5)
+## 2. Key Empirical Findings (v0.6)
 
-- **Production Execution Authority for Neural Models**: Neural models remain strictly diagnostic and advisory (shadow / evaluation). Production execution authority remains exclusively with `DeterministicRouter` and `FuzzyMatcher`.
-- **Automatic Process Termination**: Entity resolution proposes process and port targets, but execution handlers for destructive actions (`kill_process`) require explicit confirmation and remain blocked in the safe Tool Registry.
-- **Unquarantined Network Egress**: Jev reference router operates exclusively with path redaction and can be completely disabled via configuration.
+1. **TOCTOU Protection is Critical on Windows**:
+   - Windows process IDs are rapidly recycled by the NT kernel once a process terminates. Storing and verifying `proc.create_time()` ensures that delayed user confirmation cannot accidentally terminate a newly spawned, unrelated process with the same PID.
+2. **Action-Specific Policy Outperforms Blanket Gating**:
+   - In v0.5, all operations on ports $\le 1023$ were blanket-blocked. In v0.6, differentiating read-only inspection (allowed on port 80 and 443) from termination (strictly blocked on ports $\le 1023$) provides useful developer ergonomics while maintaining 100% security integrity.
+3. **Deterministic Safety Gating Runs in Microseconds**:
+   - The entire resolution and action gate pipeline runs in $0.077\text{ ms}$ on host CPU, allowing live keystroke evaluation without impacting UI responsiveness.
+4. **Single Enter Suppression Prevents Catastrophic Mistakes**:
+   - Suppressing the single `Enter` key on `ToolRisk.HIGH` actions in `ConfirmationCard` prevents muscle-memory keystroke execution when users type commands quickly.
+
+---
+
+## 3. What Does Not Work (By Design in v0.6)
+
+- **Arbitrary Shell Execution**: Zero shell access is exposed; commands like `dir`, `echo`, `cat`, or powershell piping are rejected.
+- **Unrestricted Autonomous Agent Loops**: AstraRun does not loop autonomously with an LLM to take arbitrary workstation actions.
+- **Direct Cloud LLM Invocations**: AstraRun contains zero direct cloud API calls; reasoning integration is confined to the `ReasoningProvider` protocol boundary.
+- **Modification of Catalog Files**: `workspace.json` is never mutated or written to by AstraRun.
 
 ---
 
 ## 4. Next Recommended Step
 
-**Milestone v0.6: Gated Autonomous Workflow & Tool Expansion**:
-- Implement interactive confirmation cards in PySide6 UI for ambiguous entity matches and high-risk proposals.
-- Expand Tool Registry to safe multi-step developer workflows (e.g. `open_project_in_vscode`, `start_dev_server`).
-- Production gate promotion for Mode E5 when intent confidence $\ge 0.88$ and ambiguity $\le 0.15$.
+**Milestone v0.7: AI Bridge Integration, Multi-Modal Workstation Actions & Sidecar Daemon**:
+- Connect `ReasoningProvider` to local AI Bridge sidecar service over IPC / localhost HTTP.
+- Implement background process health monitoring and dev port auto-refresh.
+- Introduce project command execution workflows (`wsctl run <project> <cmd>`) through registered workflow templates.

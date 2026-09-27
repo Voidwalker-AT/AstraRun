@@ -8,6 +8,8 @@ from astrarun.core.logging import get_logger
 from astrarun.core.models import Decision, ToolMetadata, ToolRisk
 from astrarun.tools.apps import open_app
 from astrarun.tools.folders import open_folder
+from astrarun.tools.processes import inspect_port, inspect_process, terminate_process
+from astrarun.tools.projects import open_project_folder, open_project_in_vscode
 from astrarun.tools.web import open_url
 
 logger = get_logger("astrarun.tools.registry")
@@ -29,8 +31,12 @@ class ToolRegistry:
         """Retrieve tool metadata by name."""
         return self._tools.get(name)
 
+    def list_tools(self) -> list[ToolMetadata]:
+        """Return all registered tool metadata descriptors."""
+        return list(self._tools.values())
+
     def _register_default_tools(self) -> None:
-        """Register default v0.1 tools."""
+        """Register default v0.1-v0.6 tools."""
         self.register(
             ToolMetadata(
                 name="open_app",
@@ -38,6 +44,8 @@ class ToolRegistry:
                 risk=ToolRisk.LOW,
                 args_schema={"app": str, "path": str},
                 handler=open_app,
+                read_only=False,
+                requires_confirmation=False,
             )
         )
         self.register(
@@ -47,6 +55,8 @@ class ToolRegistry:
                 risk=ToolRisk.LOW,
                 args_schema={"folder": str},
                 handler=open_folder,
+                read_only=True,
+                requires_confirmation=False,
             )
         )
         self.register(
@@ -56,6 +66,8 @@ class ToolRegistry:
                 risk=ToolRisk.LOW,
                 args_schema={"url": str},
                 handler=open_url,
+                read_only=True,
+                requires_confirmation=False,
             )
         )
         self.register(
@@ -65,6 +77,81 @@ class ToolRegistry:
                 risk=ToolRisk.LOW,
                 args_schema={},
                 handler=lambda **_: True,
+                read_only=True,
+                requires_confirmation=False,
+            )
+        )
+        # v0.6 Workstation Tools
+        self.register(
+            ToolMetadata(
+                name="open_project_folder",
+                description="Open a verified project directory in File Explorer",
+                risk=ToolRisk.LOW,
+                args_schema={"project_id": str},
+                handler=open_project_folder,
+                read_only=True,
+                requires_confirmation=False,
+                context_effects=["project_opened"],
+            )
+        )
+        self.register(
+            ToolMetadata(
+                name="open_project_in_vscode",
+                description="Open a verified project directory in Visual Studio Code",
+                risk=ToolRisk.LOW,
+                args_schema={"project_id": str},
+                handler=open_project_in_vscode,
+                read_only=False,
+                requires_confirmation=False,
+                context_effects=["project_opened"],
+            )
+        )
+        self.register(
+            ToolMetadata(
+                name="open_project",
+                description="Open a verified project workspace (default: VS Code or Folder)",
+                risk=ToolRisk.LOW,
+                args_schema={"project_id": str},
+                handler=open_project_in_vscode,
+                read_only=False,
+                requires_confirmation=False,
+                context_effects=["project_opened"],
+            )
+        )
+        self.register(
+            ToolMetadata(
+                name="inspect_port",
+                description="Read-only query of process listening on a TCP network port",
+                risk=ToolRisk.LOW,
+                args_schema={"port": int},
+                handler=inspect_port,
+                read_only=True,
+                requires_confirmation=False,
+                context_effects=["port_inspected"],
+            )
+        )
+        self.register(
+            ToolMetadata(
+                name="inspect_process",
+                description="Read-only query of process metadata, CPU, memory, and ports",
+                risk=ToolRisk.LOW,
+                args_schema={"pid": int},
+                handler=inspect_process,
+                read_only=True,
+                requires_confirmation=False,
+                context_effects=["process_inspected"],
+            )
+        )
+        self.register(
+            ToolMetadata(
+                name="terminate_process",
+                description="Terminate a non-protected process with TOCTOU validation",
+                risk=ToolRisk.HIGH,
+                args_schema={"pid": int, "expected_create_time": float, "expected_name": str},
+                handler=terminate_process,
+                read_only=False,
+                requires_confirmation=True,
+                context_effects=["process_terminated"],
             )
         )
 
@@ -113,3 +200,42 @@ class ToolRegistry:
         except Exception as err:
             logger.error("Exception occurred while executing tool '%s': %s", decision.tool, err, exc_info=True)
             return False, "An unexpected error occurred while executing the command."
+
+    def execute_action(self, tool_name: str, arguments: dict[str, Any]) -> tuple[bool, str, Any]:
+        """
+        Execute a tool by name and keyword arguments.
+        
+        Returns:
+            (success: bool, message: str, result_data: Any)
+        """
+        tool_meta = self.get(tool_name)
+        if not tool_meta:
+            logger.warning("Attempted invocation of unregistered tool: %s", tool_name)
+            return False, f"Tool '{tool_name}' is not registered.", None
+
+        if tool_meta.risk == ToolRisk.BLOCKED:
+            logger.error("Execution blocked for prohibited tool: %s", tool_name)
+            return False, "This operation is prohibited by policy.", None
+
+        logger.info("Executing tool '%s' with args %s", tool_name, arguments)
+        try:
+            res = tool_meta.handler(**arguments)
+            # If handler returns bool
+            if isinstance(res, bool):
+                if res:
+                    return True, "Executed successfully.", res
+                else:
+                    return False, f"Tool '{tool_name}' execution returned failure.", res
+            # If handler returns dict (like inspect_port or inspect_process)
+            elif isinstance(res, dict):
+                msg = res.get("message", "Executed successfully.")
+                return True, msg, res
+            else:
+                return True, "Executed successfully.", res
+        except TypeError as err:
+            logger.error("Argument mismatch for '%s': %s", tool_name, err)
+            return False, f"Invalid arguments for tool '{tool_name}': {err}", None
+        except Exception as err:
+            logger.error("Error executing tool '%s': %s", tool_name, err, exc_info=True)
+            return False, f"Error executing tool '{tool_name}': {err}", None
+

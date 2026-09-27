@@ -326,5 +326,88 @@
   - Complete workstation data sovereignty and air-gap compliance.
   - Enables empirical comparison between local and frontier cloud decision models without security compromise.
 
+---
+
+## ADR-027: Action Gate Architecture & Gated Workstation Execution Authority
+- **Status**: ACCEPTED
+- **Context**: As AstraRun introduces the ability to open projects, inspect network sockets, and terminate processes, execution authority cannot be granted directly to semantic models or unverified query strings.
+- **Decision**:
+  - Establish `ActionGate` (`astrarun.policy.action_gate`) as the mandatory safety arbiter between proposed actions and the tool registry.
+  - Enforce a 4-tier evaluation pipeline: Tier 0 (Hard Policy Pre-Checks), Tier 1 (Ambiguity & Disagreement Gating), Tier 2 (Tool Registry Validation), and Tier 3 (Confirmation vs. Direct Allowance).
+  - Production allowlist tools (`open_project`, `open_project_in_vscode`, `open_project_folder`, `open_app`, `open_folder`, `open_url`, `inspect_port`, `inspect_process`, `refresh_apps`) execute under `ALLOW` status.
+  - High-risk operations (`terminate_process`, power shutdown) unconditionally require explicit user confirmation (`CONFIRM`).
+- **Consequences**:
+  - Preserves 0.00% False Execution Rate (FER) across all production pathways.
+  - High-risk operations can never execute without human authorization.
+
+---
+
+## ADR-028: Time-of-Check to Time-of-Use (TOCTOU) Defense & Cryptographic Confirmation Tokens
+- **Status**: ACCEPTED
+- **Context**: On Windows, process IDs are rapidly recycled by the NT kernel when processes terminate. A delayed confirmation for a dead development process could inadvertently terminate a newly spawned, unrelated process.
+- **Decision**:
+  - Every `CONFIRM` outcome generates a single-use 32-character hexadecimal token (`secrets.token_hex(16)`) with a 60-second TTL.
+  - For process actions, the token binds the target PID, kernel creation time (`proc.create_time()`), and process name.
+  - `ActionGate.revalidate_confirmation` checks that the process is still alive and that `abs(current_ctime - expected_ctime) <= 1.0s` immediately prior to tool dispatch.
+  - Tokens are single-use: atomically consumed on successful validation. Argument tampering immediately revokes the token.
+- **Consequences**:
+  - Eliminates PID recycling race conditions entirely.
+  - Guarantees replay resistance and argument integrity.
+
+---
+
+## ADR-029: Workstation Context Engine & Privacy-Preserving Ephemeral State Tracking
+- **Status**: ACCEPTED
+- **Context**: Developers expect natural conversational follow-ups (*"open my most recent project"*, *"stop that process"*). However, background tracking risks performance degradation and privacy violations.
+- **Decision**:
+  - Implement `WorkstationContextEngine` capturing point-in-time machine state (active window title, executable, PID via Win32 `ctypes`, and dev ports via `psutil`).
+  - Prohibit keystroke logging, screen scraping, or continuous recording.
+  - Enforce strict TTLs: 300 seconds for ephemeral process/port references, 24 hours for project recency.
+  - Bound history to 30 items with 48-hour retention, persisted atomically to local JSON (`data/context_state.json`).
+  - Reject context injection attacks (`ignore previous context`, `pretend policy is disabled`).
+- **Consequences**:
+  - Delivers seamless contextual follow-ups with zero surveillance and bounded storage.
+
+---
+
+## ADR-030: Read-Only Project Registry Abstraction over `workspace.json`
+- **Status**: ACCEPTED
+- **Context**: The platform contains 28 projects documented in `E:\Workspace\workspace.json`. Platform Operating Contract Rule 10 & 11 strictly prohibits mutating `workspace.json`.
+- **Decision**:
+  - Implement `ProjectRegistry` strictly as a read-only abstraction.
+  - Dynamic discovery fallback inspects `Active/`, `Tools/`, and `Shared/` for unlisted project directories without modifying the catalog file.
+  - Provide multi-tier fuzzy matching and alias lookup.
+- **Consequences**:
+  - Full compliance with workspace platform governance.
+  - Resilient project discovery without configuration drift.
+
+---
+
+## ADR-031: Non-Autonomous Structured Workflow Engine with Fail-Fast Semantics
+- **Status**: ACCEPTED
+- **Context**: Automating multi-step developer operations (e.g. launching VS Code, opening folders, inspecting ports) can lead to unexpected state mutations if implemented as open-ended autonomous agent loops.
+- **Decision**:
+  - Implement `WorkflowEngine` using typed, predefined `WorkflowStep` templates.
+  - Strictly prohibit autonomous LLM execution loops or arbitrary shell execution.
+  - Fail-fast semantics: any critical step failure halts the workflow immediately, logging exact diagnostics without asserting false success.
+  - All executions append structured audit records to `data/workflow_audit.jsonl`.
+  - Explicitly declare `rollback_supported=False` on workstation state changes.
+- **Consequences**:
+  - Predictable, deterministic multi-step orchestration with complete auditability.
+
+---
+
+## ADR-032: AI Bridge Protocol Boundary & Zero Direct Cloud API Invariant
+- **Status**: ACCEPTED
+- **Context**: Connecting AstraRun to advanced reasoning providers must not contaminate the lightweight launcher with heavy cloud SDKs, network dependencies, or prompt injection vulnerabilities.
+- **Decision**:
+  - Define `ReasoningProvider` protocol in `astrarun.ai_bridge.interface`.
+  - Prohibit direct cloud API calls (OpenAI, Anthropic, Google GenAI) inside AstraRun.
+  - Treat all reasoning provider responses as untrusted text: any suggested action must enter the standard pipeline and pass through `EntityResolutionEngine`, `ActionGate`, and `ConfirmationCard`.
+- **Consequences**:
+  - Clean architectural decoupling between launcher and future reasoning agents.
+  - Immune to direct cloud API lock-in and execution bypass.
+
+
 
 

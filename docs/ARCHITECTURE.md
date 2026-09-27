@@ -242,3 +242,59 @@ sequenceDiagram
 - Sanitizes all local file paths to `<LOCAL_PATH>` prior to transmission.
 - Degrades gracefully to safe offline simulation if `TYPESAFE_API_KEY` is not present.
 
+---
+
+## 7. Gated Workstation Actions, Context Engine & Workflow Orchestration (v0.6)
+
+### 7.1. Action Gate (`astrarun.policy.action_gate`)
+- Serves as the central safety arbiter in the execution pipeline.
+- Evaluates `ProposedAction` across four strict tiers:
+  - **Tier 0 (Hard Policy)**: Unconditional block of dangerous patterns, protected system processes, and privileged port modification.
+  - **Tier 1 (Ambiguity & Disagreement)**: Flags multiple candidate matches, ungrounded references, and model disagreement for user clarification.
+  - **Tier 2 (Tool Registry Validation)**: Verifies target tool registration and strongly typed arguments.
+  - **Tier 3 (Risk & Confirmation)**: Separates low-risk auto-allowed tools from high-risk tools requiring cryptographic confirmation.
+- Outcomes: `ALLOW`, `CONFIRM`, `CLARIFY`, `BLOCK`.
+- False Execution Rate (FER) Invariant: 0.00% across all production pathways.
+
+### 7.2. Workstation Context Engine (`astrarun.context`)
+- Captures privacy-preserving point-in-time machine state snapshots:
+  - Focused window title, executable name, and PID via Win32 `ctypes`.
+  - Active TCP listening dev ports (`1024..65535`) via `psutil`.
+  - Recent project interactions and recency ranking with 24-hour TTL.
+  - Ephemeral process/port context references (`_last_inspected_process`, `_last_inspected_port`) with 300-second TTL.
+- Atomic persistence to local JSON (`data/context_state.json`) with temporary-file-and-rename mechanics and corrupted state recovery.
+- Bounded history (limit 30, retention 48 hours).
+- Context attack rejection: nullifies references when prompt injection patterns (`ignore previous context`, `pretend policy is disabled`) are detected.
+- Zero keystroke logging, zero screen scraping.
+
+### 7.3. Project Registry (`astrarun.projects.registry`)
+- Read-only catalog abstraction over `E:\Workspace\workspace.json` (28 cataloged projects).
+- Strict non-mutation policy (Platform Rule 10 & 11): Never writes to or modifies `workspace.json`.
+- Dynamic discovery fallback for uncataloged project directories in `Active/`, `Tools/`, `Shared/`.
+- Public methods: `get_project(id)`, `find_project(query)`, `project_path(id)`, `project_metadata(id)`, `list_projects()`.
+- Multi-tier alias matching with exact, prefix, token, and fuzzy scoring.
+
+### 7.4. Workflow Engine (`astrarun.workflows`)
+- Orchestrates structured, non-autonomous workstation task execution.
+- Predefined workflow templates: `open_project`, `open_project_in_vscode`, `inspect_dev_port`.
+- Fail-fast execution semantics: stops immediately upon step failure, reporting exact step errors without false claims of success.
+- Appends immutable structured transaction records to `data/workflow_audit.jsonl`.
+- Explicit declaration of rollback support (`rollback_supported=False` on workstation state).
+
+### 7.5. UI Confirmation and Disambiguation Cards (`astrarun.ui.cards`)
+- Keyboard-safe PySide6 interactive components:
+  - `ConfirmationCard`: Color-coded risk badges (`HIGH`, `MEDIUM`, `LOW`). Escape key cancels; single `Enter` key is ignored on `HIGH` risk; requires `Ctrl+Enter` or click to confirm.
+  - `DisambiguationCard`: Keyboard arrow navigation (Up/Down) through multiple entity candidates, `Enter` to select, `Esc` to cancel.
+
+### 7.6. TOCTOU Process Protection
+- Every confirmed process action generates a single-use 32-character cryptographic token (`secrets.token_hex(16)`).
+- Binds target PID, kernel creation time (`proc.create_time()`), and process name.
+- Token revalidation immediately before execution aborts if process has terminated or if the PID was recycled by the OS kernel.
+- Argument tampering checks prevent replaying tokens with altered parameters.
+
+### 7.7. AI Bridge Interface Boundary (`astrarun.ai_bridge`)
+- Protocol boundary (`ReasoningProvider`) defining the contract for external reasoning providers.
+- Zero direct cloud model API calls exist inside AstraRun.
+- External model proposals must enter the standard pipeline and pass through `EntityResolutionEngine`, `ActionGate`, and `ConfirmationCard` prior to tool dispatch.
+
+

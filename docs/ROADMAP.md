@@ -90,28 +90,30 @@ flowchart LR
 
 ---
 
-### v0.5 — AI Bridge Integration
-- Direct integration with workstation AI Bridge (`Active/AI-Bridge`) for LLM assistance.
-- Conversational answers and code generation queries displayed directly in launcher widget.
-- Streaming responses inside expanded launcher card.
+---
+
+### v0.6 — Gated Workstation Actions, Context Engine & Workflow Orchestration (Complete — 2026-09-27)
+- **Action Gate Multi-Tier Safety Layer**: Evaluates every proposed action across Tier 0 (Hard Policy), Tier 1 (Ambiguity & Disagreement), Tier 2 (Tool Registry Validation), and Tier 3 (Confirmation vs. Direct Allowance).
+- **Workstation Context Engine**: Captures lightweight local machine state (foreground window, title, PID via Win32 ctypes, and dev listening ports via psutil). Tracks project recency (24h TTL) and ephemeral process/port references (300s TTL). Bounded storage (30 items, 48h retention) with zero surveillance (no keystroke logging, no screenshots). Rejects adversarial context injection.
+- **TOCTOU Process Protection**: Cryptographic confirmation tokens (`secrets.token_hex(16)`) binding target PID, kernel `create_time`, and process name. Revalidation immediately prior to execution prevents PID recycling race conditions and argument tampering.
+- **Project Registry**: Strictly read-only catalog over `E:\Workspace\workspace.json` (28 cataloged projects) with dynamic workspace discovery fallback and multi-tier fuzzy matching.
+- **Workflow Engine**: Structured execution of typed multi-step workflows (`open_project`, `open_project_in_vscode`, `inspect_dev_port`) with fail-fast partial failure handling and immutable audit logging in `data/workflow_audit.jsonl`.
+- **Confirmation & Disambiguation UI Cards**: Keyboard-safe PySide6 cards where single `Enter` is suppressed on HIGH risk (requires `Ctrl+Enter` or click), `Esc` cancels, and Up/Down arrows navigate ambiguous entity matches.
+- **AI Bridge Protocol Boundary**: Clean `ReasoningProvider` interface connecting AstraRun to external reasoning models with zero direct cloud API calls inside AstraRun.
+- **Action Benchmark V1 (330 queries)**: Achieved 100.0% Intent Accuracy, 100.0% Gate Accuracy, 100.0% Tool Accuracy, 0.00% False Execution Rate, 100.0% Block Recall, 100.0% Confirmation Recall, and 0.077 ms mean latency.
+- **97 Passing Automated Tests**: 79 baseline regression tests + 18 v0.6 tests passing cleanly in ~8.5s.
+- Formal architectural decision records ADR-027 through ADR-032.
 
 ---
 
-### v0.6 — Workspace & Project Orchestration
-- Direct integration with `workspace.json` and `wsctl`.
-- Project-aware commands:
-  - `start server` -> runs server development profile.
-  - `test securityworkbench` -> runs registered diagnostic tests.
-  - `switch to termux-ai` -> opens project workspace and activates its environment.
-
----
-
-### v0.7 — Controlled OS Management
-- Process inspection and safe termination (`kill port 3000`).
-- Display management (window snapping, monitor profile switching).
-- Audio and device volume controls.
+### v0.7 — AI Bridge Sidecar Integration & Command Workflows (Next Milestone)
+- Connect `ReasoningProvider` to local AI Bridge sidecar service over IPC / localhost HTTP.
+- Implement background process health monitoring and dev port auto-refresh.
+- Introduce project command execution workflows (`wsctl run <project> <cmd>`) through registered workflow templates.
+- Window management (focus switching, workspace snapping).
 
 ---
 
 ### Future — Workstation Intelligence Daemon
 - Resident daemon coordinating cross-workspace awareness, context synthesis, proactive assistance, and multi-modal screen reasoning.
+

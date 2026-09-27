@@ -1,0 +1,259 @@
+{
+  "action_synonyms": {
+    "open_project": [
+      "open project",
+      "load project",
+      "work on",
+      "bring up project",
+      "switch to project",
+      "go to project",
+      "launch project",
+      "open repo",
+      "open my project",
+      "open the project",
+      "open my",
+      "open"
+    ],
+    "open_app": [
+      "open",
+      "launch",
+      "start",
+      "run",
+      "bring up",
+      "execute"
+    ],
+    "inspect_port": [
+      "inspect port",
+      "check port",
+      "show port",
+      "what's on port",
+      "whats on port",
+      "what is on port",
+      "what's using port",
+      "whats using port",
+      "what is using port",
+      "who is using port",
+      "which process has port",
+      "process on port",
+      "process using port",
+      "listening on port",
+      "listen on port",
+      "listening on",
+      "port status",
+      "status of port",
+      "inspect dev port"
+    ],
+    "inspect_process": [
+      "inspect process",
+      "check process",
+      "inspect",
+      "show process",
+      "process info",
+      "process details",
+      "how much memory is it using",
+      "memory of process",
+      "cpu of process",
+      "status of process",
+      "process status",
+      "tell me about process"
+    ],
+    "terminate_process": [
+      "kill",
+      "stop",
+      "terminate",
+      "end process",
+      "kill process",
+      "stop process",
+      "terminate process",
+      "close process",
+      "abort process",
+      "shut down process",
+      "kill it",
+      "stop it"
+    ],
+    "find_file": [
+      "find",
+      "search file",
+      "look for",
+      "open file",
+      "open screenshot",
+      "open pdf",
+      "find the newest",
+      "find latest",
+      "find the latest",
+      "search for file",
+      "locate"
+    ],
+    "search_web": [
+      "search google for",
+      "search web for",
+      "search youtube for",
+      "google",
+      "search for",
+      "search",
+      "look up on web"
+    ],
+    "ai_query": [
+      "explain this",
+      "explain",
+      "summarize",
+      "why is this failing",
+      "why is port",
+      "why is it failing",
+      "write code for",
+      "how do i",
+      "what does this mean",
+      "diagnose"
+    ]
+  },
+  "conjunctions": {
+    "sequence": [
+      "and then",
+      "then",
+      "after that",
+      "afterwards",
+      "subsequently"
+    ],
+    "conjunction": [
+      "and",
+      "also",
+      "as well as",
+      "plus"
+    ],
+    "contrast": [
+      "but",
+      "however",
+      "except",
+      "without"
+    ],
+    "precedence_before": [
+      "before"
+    ],
+    "precedence_after": [
+      "after"
+    ]
+  },
+  "negation_markers": [
+    "don't",
+    "dont",
+    "do not",
+    "never",
+    "avoid",
+    "stop",
+    "not",
+    "without",
+    "except"
+  ],
+  "politeness_prefixes": [
+    "can you please",
+    "could you please",
+    "would you please",
+    "would you mind",
+    "can you",
+    "could you",
+    "please",
+    "kindly",
+    "help me",
+    "i want you to",
+    "i'd like to",
+    "id like to",
+    "i want to"
+  ],
+  "temporal_synonyms": {
+    "yesterday": [
+      "yesterday",
+      "prev day",
+      "previous day"
+    ],
+    "today": [
+      "today",
+      "this morning",
+      "this afternoon",
+      "earlier today"
+    ],
+    "last_night": [
+      "last night",
+      "yesterday evening"
+    ],
+    "recent": [
+      "recent",
+      "recently",
+      "earlier"
+    ],
+    "most_recent": [
+      "most recent",
+      "latest",
+      "newest",
+      "last",
+      "previous"
+    ],
+    "just_now": [
+      "just now",
+      "a moment ago",
+      "right now"
+    ]
+  },
+  "contextual_pronouns": {
+    "process": [
+      "that process",
+      "same process",
+      "the process",
+      "it",
+      "that"
+    ],
+    "project": [
+      "that project",
+      "same project",
+      "the project",
+      "this project",
+      "the previous project",
+      "the last project"
+    ],
+    "generic": [
+      "it",
+      "that",
+      "the previous one",
+      "the last one",
+      "this one",
+      "this"
+    ]
+  },
+  "developer_abbreviations": {
+    "repo": "repository",
+    "proj": "project",
+    "vsc": "vscode",
+    "proc": "process",
+    "pid": "process_id",
+    "env": "environment",
+    "venv": "virtual_environment",
+    "dev server": "development_server",
+    "doc": "document",
+    "docs": "documentation"
+  },
+  "constraint_markers": {
+    "no_startup": [
+      "don't start anything",
+      "dont start anything",
+      "without starting anything",
+      "don't run anything",
+      "without starting the server",
+      "don't start the server"
+    ],
+    "read_only": [
+      "just inspect",
+      "only inspect",
+      "read only",
+      "don't change anything",
+      "don't stop anything"
+    ],
+    "only": [
+      "only",
+      "just"
+    ],
+    "except": [
+      "except",
+      "without",
+      "excluding"
+    ]
+  }
+}

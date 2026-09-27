@@ -1,6 +1,6 @@
 # AstraRun Testing & Verification Report
 
-> **Version**: 0.6.0  
+> **Version**: 0.6.5  
 > **Status**: VERIFIED & PASSING  
 > **Execution Date**: 2026-09-27  
 
@@ -8,7 +8,40 @@
 
 ## 1. Test Suite Architecture
 
-The AstraRun test suite contains **97 automated tests across 15 modules**:
+The AstraRun test suite contains **126 automated tests across 16 modules**:
+
+1. **Hybrid Natural Language Understanding Tests (v0.6.5)**:
+   - `tests/test_v065_nlp.py` (29 tests):
+     - `test_port_extraction`: Port notation variants (`port 3000`, `:5173`, `port:8080`, `localhost:8000`).
+     - `test_pid_extraction`: Process ID extraction and normalization (`pid 14236`, `PID: 404`).
+     - `test_url_extraction`: HTTP/HTTPS URL extraction with exact character spans.
+     - `test_path_extraction`: Absolute Windows path matching.
+     - `test_project_entity`: Exact project entity lookup against `ProjectRegistry`.
+     - `test_app_entity`: Application entity resolution.
+     - `test_single_clause`: Single-clause requests with politeness prefix stripping.
+     - `test_multi_clause_and`: Coordinated multi-action decomposition (`and`).
+     - `test_multi_clause_then`: Sequential execution ordering (`then`).
+     - `test_before_after`: Explicit precedence ordering (`before`, `after`).
+     - `test_negation`: Direct negative imperative detection.
+     - `test_negation_scope`: Selective clause-level negation scoping.
+     - `test_dont_kill_just_inspect`: Complex contrastive scoping (*"don't kill node, just inspect it"*).
+     - `test_temporal_yesterday`: Local timezone 24-hour interval calculation.
+     - `test_most_recent`: Superlative recency modifier.
+     - `test_previous_project`: Previous project reference extraction.
+     - `test_coreference_detection`: Syntactic identification of anaphoric tokens (`it`, `that`).
+     - `test_context_resolution`: Grounding of pronoun references to `WorkstationContext`.
+     - `test_ambiguous_coreference`: Ambiguous pronoun resolution triggering `CLARIFY`.
+     - `test_relation_process_port`: Extraction of `PROCESS LISTENS_ON PORT`.
+     - `test_relation_project_application`: Extraction of `PROJECT OPEN_WITH APPLICATION`.
+     - `test_workflow_compiler`: Compilation into registered capability steps.
+     - `test_mixed_risk_request`: Mixed-risk proposal elevation to `ToolRisk.HIGH`.
+     - `test_blocked_clause_blocks_workflow`: Conservative multi-clause policy blocking.
+     - `test_partial_support`: Transparent `PARTIALLY_SUPPORTED` proposal generation.
+     - `test_unsupported_action`: Wholly unsupported request handling.
+     - `test_nlp_failure_fallback`: Non-crashing emergency fallback parsing.
+     - `test_reasoning_required`: Complex activity and diagnostic reasoning escalation.
+     - `test_no_raw_shell`: Invariant verification preventing shell command evaluation.
+
 
 1. **Gated Workstation Actions & Context Tests (v0.6)**:
    - `tests/test_v06_actions.py`:

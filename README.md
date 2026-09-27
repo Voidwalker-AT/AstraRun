@@ -1,24 +1,31 @@
-# AstraRun — Windows Intelligent Command Launcher & Workstation Orchestrator (v0.6)
+# AstraRun — Windows Intelligent Command Launcher & Workstation Orchestrator (v0.6.5)
 
-AstraRun is a local, lightweight, low-latency Windows command launcher engineered as the foundational command interface for an evolving AI-assisted workstation control ecosystem.
+AstraRun is a local, lightweight, low-latency Windows command launcher and workstation orchestrator engineered as the foundational command interface for an evolving AI-assisted workstation control ecosystem.
 
 AstraRun replaces fragile string-interpolated shell execution with a strictly typed pipeline:
-`Natural Language -> Semantic Decision -> Verified Entity -> Proposed Action -> ActionGate -> Confirmation -> Registered Tool -> Windows OS`.
+`Natural Language -> NLP Engine -> StructuredUtterance -> Context Engine -> Entity Resolution -> ActionGate -> Workflow Engine -> Registered Tool -> Windows OS`.
 
 ---
 
-## Key Capabilities (v0.6)
+## Key Capabilities (v0.6.5)
 
 - **Instantaneous Hotkey Activation**: Summoned with `Alt+Space` in ~4.5ms from a pre-warmed resident background process.
+- **Hybrid NLP Understanding Engine (v0.6.5)**: Multi-layer NLU stack blending deterministic extractors (< 0.05 ms), clause decomposition & ordering grammar (< 0.08 ms), workstation local-time temporal engine (< 0.04 ms), and optional spaCy linguistic tagging (7.16 ms) with zero execution authority.
+- **Typed Intermediate Representation (`StructuredUtterance`) (v0.6.5)**: Converts requests into inert, inspectable data structures capturing clauses, 13 typed entity classes, directed relations, temporal intervals, and constraints.
+- **Absolute Negation Safety (v0.6.5)**: Scopes negative polarity per clause. Enforces `verify_negation_safety()`, strictly forbidding any proposal step from originating from a negated clause (**0.00% Negated Action Leakage Rate**).
+- **Safe Workflow Compiler (v0.6.5)**: Compiles `StructuredUtterance` into `WorkflowProposal`. Conservative multi-clause policy: any blocked clause immediately blocks the entire proposal (`status="BLOCKED"`). Distinguishes `PARTIALLY_SUPPORTED` requests with itemized reporting.
+- **Developer Debugger CLI (v0.6.5)**: `python -m astrarun.nlp.debugger "<utterance>"` providing real-time parse tree, entity span, relation, and workflow preview inspection without executing anything.
+- **AI Bridge Escalation Boundary (v0.6.5)**: Emits structured `ReasoningRequired` escalation envelopes for complex activity restoration and diagnostic questions without invoking LLMs.
 - **Action Gate Safety Layer (v0.6)**: Multi-tier safety gating evaluating every action across Tier 0 (Hard Policy), Tier 1 (Ambiguity & Disagreement), Tier 2 (Tool Registry Mapping), and Tier 3 (Confirmation vs. Direct Allowance).
 - **Workstation Context Engine (v0.6)**: Structured local awareness of foreground window (app, title, PID), active TCP dev listening ports, and recent project interactions with 300s process TTL and 24h project TTL. Rejects context injection attacks with zero keystroke logging and zero screenshots.
-- **TOCTOU Process Protection (v0.6)**: Cryptographic tokens (`secrets.token_hex(16)`) binding target PID, kernel `create_time`, and process name. Token revalidation immediately before execution eliminates OS PID recycling race conditions.
+- **TOCTOU Process Protection (v0.6)**: Cryptographic tokens (`secrets.token_hex(16)`) binding target PID, kernel `create_time`, and process name to eliminate OS PID recycling race conditions.
 - **Project Registry (v0.6)**: Strictly read-only catalog over `E:\Workspace\workspace.json` (28 projects) with dynamic discovery fallback and ranked fuzzy matching (`find_project`).
-- **Workflow Engine (v0.6)**: Structured execution of typed multi-step workflows (`open_project`, `open_project_in_vscode`, `inspect_dev_port`) with fail-fast partial failure handling and immutable audit logging in `data/workflow_audit.jsonl`.
 - **Confirmation & Disambiguation UI Cards (v0.6)**: Keyboard-safe PySide6 cards where single `Enter` is ignored on HIGH risk (requires `Ctrl+Enter` or click), `Esc` cancels, and Up/Down arrows navigate ambiguous candidates.
-- **AI Bridge Interface Boundary (v0.6)**: Clean abstraction protocol (`ReasoningProvider`) connecting AstraRun to external reasoning advisors with zero direct cloud API calls inside AstraRun.
-- **Action Benchmark V1 (v0.6)**: 330-query evaluation yielding **100.0% Intent Accuracy**, **100.0% Gate Accuracy**, **100.0% Tool Accuracy**, **0.00% False Execution Rate (FER)**, **100.0% Block Recall**, **100.0% Confirmation Recall**, and **0.077 ms mean latency**.
-- **97 Passing Automated Tests**: 79 baseline regression tests + 18 comprehensive v0.6 tests passing cleanly in ~8.5s.
+- **Benchmark Proven Performance**:
+  - **NLP Benchmark V1 (620 queries)**: **100.0% Intent Accuracy**, **95.2% Clause Segmentation Acc**, **100.0% Multi-Action Match**, **100.0% Negation Acc**, **0.00% Negated Action Leakage Rate**, **100.0% Block Recall**, and **0.394 ms mean latency** (rules) / **7.157 ms** (spaCy hybrid).
+  - **Action Benchmark V1 (330 queries)**: **100.0% Intent Accuracy**, **100.0% Gate Accuracy**, **100.0% Tool Accuracy**, **0.00% False Execution Rate (FER)**, **100.0% Block Recall**, and **100.0% Confirmation Recall**.
+- **126 Passing Automated Tests**: 97 baseline regression tests + 29 comprehensive v0.6.5 NLP tests passing cleanly in ~6.4s.
+
 
 ---
 

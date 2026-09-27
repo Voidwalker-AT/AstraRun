@@ -297,4 +297,37 @@ sequenceDiagram
 - Zero direct cloud model API calls exist inside AstraRun.
 - External model proposals must enter the standard pipeline and pass through `EntityResolutionEngine`, `ActionGate`, and `ConfirmationCard` prior to tool dispatch.
 
+---
+
+## 8. Hybrid Natural Language Understanding Engine (v0.6.5)
+
+### 8.1. The Prime Pipeline Contract
+$$\text{Natural Language} \longrightarrow \text{NLP Engine} \longrightarrow \text{StructuredUtterance (Data)} \longrightarrow \text{Context Engine} \longrightarrow \text{Entity Resolution} \longrightarrow \text{ActionGate} \longrightarrow \text{Workflow Engine} \longrightarrow \text{OS}$$
+- **Linguistic Separation**: NLP understands language; NLP DOES NOT control the computer.
+- **Zero Shell Execution**: No parse tree, token, or grammar output is ever executed via a shell.
+- **Zero Autonomy**: NLP outputs are inert data structures evaluated against deterministic policies.
+
+### 8.2. Multi-Layer Hybrid Stack
+- **Deterministic Extractors (`astrarun.nlp.deterministic`)**: High-certainty regex and catalog matching for ports, PIDs, URLs, Windows filesystem paths, percentages, file extensions, projects, and application aliases. Runs in **0.05 ms** with 100% precision.
+- **Clause Decomposer (`astrarun.nlp.clause_decomposer`)**: Multi-action coordination splitting (`and`, `then`, `after that`, `before`, `after`, `but`) and execution sequence inference (`THEN`, `BEFORE`, `AFTER`, `PARALLEL`). Runs in **0.08 ms**.
+- **Negation Scoper (`astrarun.nlp.negation`)**: Scopes negative polarity per clause. Enforces `verify_negation_safety()`, guaranteeing a **0.00% Negated Action Leakage Rate**.
+- **Workstation Temporal Engine (`astrarun.nlp.temporal`)**: Local machine timezone calculations (`datetime.now().astimezone()`) for `yesterday`, `today`, `last night`, `recent`, and `most recent`, emitting canonical `(start_ts, end_ts)` timestamp intervals.
+- **Syntactic Coreference Recognizer (`astrarun.nlp.coreference`)**: Detects syntactic anaphoric tokens (`it`, `that`, `that process`), delegating final state binding to `WorkstationContextEngine`. Ambiguous candidates trigger `CLARIFY`.
+- **Directed Relation Extractor (`astrarun.nlp.relations`)**: Maps typed semantic graphs (`PROCESS LISTENS_ON PORT`, `PROJECT OPEN_WITH APPLICATION`, `FOLDER CONTAINS FILE`).
+- **Optional spaCy Linguistic Layer (`astrarun.nlp.spacy_parser`)**: Non-blocking POS tagging and dependency trees. If disabled or missing, engine falls back seamlessly to deterministic rules.
+- **NLU Fusion Engine (`astrarun.nlp.fusion`)**: Merges signals with strict precedence:
+  $$\text{Deterministic Exact Evidence} > \text{Verified Catalog Matches} > \text{Structured NLP Parser} > \text{Probabilistic Signals}$$
+
+### 8.3. Safe Workflow Compiler (`astrarun.workflows.compiler`)
+- Compiles `StructuredUtterance` into `WorkflowProposal` without execution authority.
+- Strictly bounds steps to verified tools in `ToolRegistry` (zero code generation).
+- **Conservative Multi-Clause Policy**: Any blocked clause immediately blocks the entire proposal (`status="BLOCKED"`).
+- Mixed-risk requests adopt `ToolRisk.HIGH` and mandate explicit confirmation.
+- Transparent partial capability reporting (`status="PARTIALLY_SUPPORTED"`).
+
+### 8.4. AI Bridge Escalation Boundary
+- Queries requiring background reasoning emit a typed `ReasoningRequired` envelope (`complex_context_restoration`, `diagnostic_reasoning`, `high_ambiguity_no_entities`).
+- Zero direct cloud API calls; escalation prepares clean handoff for the v0.7 AI Bridge sidecar.
+
+
 

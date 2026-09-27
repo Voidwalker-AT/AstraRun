@@ -17,6 +17,8 @@ class WorkflowStep:
     tool: str
     arguments: dict[str, Any] = field(default_factory=dict)
     critical: bool = True  # If true, failure halts remaining steps
+    source_clause_idx: int | None = None
+
 
 
 @dataclass
@@ -84,3 +86,36 @@ class WorkflowExecutionResult:
                 for s in self.step_results
             ],
         }
+
+
+@dataclass
+class WorkflowProposal:
+    """Compiled proposal representing planned actions before gating and execution."""
+    status: str  # "READY", "PARTIALLY_SUPPORTED", "UNSUPPORTED", "CLARIFY", "BLOCKED", "EMPTY"
+    steps: list[WorkflowStep] = field(default_factory=list)
+    overall_risk: ToolRisk = ToolRisk.LOW
+    requires_confirmation: bool = False
+    blocked_reasons: list[str] = field(default_factory=list)
+    unsupported_clauses: list[str] = field(default_factory=list)
+    preview: str = ""
+    utterance: Any = None
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "status": self.status,
+            "steps": [
+                {
+                    "step_id": s.step_id,
+                    "name": s.name,
+                    "tool": s.tool,
+                    "arguments": s.arguments,
+                }
+                for s in self.steps
+            ],
+            "overall_risk": self.overall_risk.value,
+            "requires_confirmation": self.requires_confirmation,
+            "blocked_reasons": self.blocked_reasons,
+            "unsupported_clauses": self.unsupported_clauses,
+            "preview": self.preview,
+        }
+

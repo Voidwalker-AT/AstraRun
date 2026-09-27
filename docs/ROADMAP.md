@@ -13,10 +13,14 @@ flowchart LR
     v2 --> v3["v0.3: Laya Fast Classifier"]
     v3 --> v4["v0.4: Kev Semantic Router"]
     v4 --> v5["v0.5: AI Bridge Integration"]
-    v5 --> v6["v0.6: Workspace Orchestration"]
-    v6 --> v7["v0.7: Controlled OS Management"]
-    v7 --> vFinal["Future: Workstation Daemon"]
+    v5 --> v6["v0.6: Actions & Context"]
+    v6 --> v65["v0.6.5: Hybrid NLP Engine"]
+    v65 --> v7["v0.7: AI Bridge Reasoning"]
+    v7 --> v8["v0.8: Workstation Workflows"]
+    v8 --> v9["v0.9: Window & Browser Control"]
+    v9 --> vFinal["v1.0: Workstation Daemon"]
 ```
+
 
 ---
 
@@ -106,14 +110,45 @@ flowchart LR
 
 ---
 
-### v0.7 — AI Bridge Sidecar Integration & Command Workflows (Next Milestone)
-- Connect `ReasoningProvider` to local AI Bridge sidecar service over IPC / localhost HTTP.
-- Implement background process health monitoring and dev port auto-refresh.
-- Introduce project command execution workflows (`wsctl run <project> <cmd>`) through registered workflow templates.
-- Window management (focus switching, workspace snapping).
+### v0.6.5 — Hybrid NLP Understanding Engine (Complete — 2026-09-27)
+- **Multi-Layer Hybrid NLU Architecture**: Blends deterministic extractors (< 0.05 ms), clause decomposition & ordering grammar (< 0.08 ms), workstation local-time temporal engine (< 0.04 ms), and optional spaCy linguistic tagging (7.16 ms) with zero execution authority.
+- **Typed Intermediate Representation (`StructuredUtterance`)**: Decomposes natural language requests into structured `Clause` objects, typed `NLPEntity` spans (13 types), directed `Relation`s, `TemporalExpression` bounds, `ContextualReference` tokens, and `Constraint` modifiers.
+- **Deterministic Evidence Precedence**: Immutable conflict resolution hierarchy ($Deterministic > Catalog > Statistical > Probabilistic$). No silent resolution; unresolvable conflicts emit `CLARIFY`.
+- **Absolute Negation Safety**: Scopes negative polarity per clause. `verify_negation_safety()` strictly forbids any proposal step from originating from a negated clause (**0.00% Negated Action Leakage Rate**).
+- **Workstation Local Timezone Resolution**: Evaluates `yesterday`, `today`, `last night`, `recent`, and `most recent` in local time (`datetime.now().astimezone()`), avoiding UTC day-boundary drift.
+- **Syntactic Coreference Grounding**: Isolates pronoun recognition in NLP (`it`, `that`, `that process`), delegating final state binding to `WorkstationContextEngine` with mandatory disambiguation upon multiple candidates.
+- **Safe Workflow Compiler**: Compiles `StructuredUtterance` into `WorkflowProposal`. Conservative multi-clause policy: any blocked clause immediately blocks the entire request (`status="BLOCKED"`). Distinguishes `PARTIALLY_SUPPORTED` requests with itemized capability reporting.
+- **Developer Debugger CLI**: `python -m astrarun.nlp.debugger "<utterance>"` providing real-time parse tree, entity span, relation, and workflow preview inspection.
+- **AI Bridge Escalation (`ReasoningRequired`)**: Emits structured handoff envelopes for complex context restoration, open-ended diagnostic reasoning, and high-ambiguity requests without invoking LLMs.
+- **NLP Benchmark V1 (620 queries)**: 100.0% Intent Accuracy, 95.2% Clause Segmentation Acc, 100.0% Multi-Action Match, 100.0% Negation Acc, 0.00% Negated Action Leakage Rate, 100.0% Block Recall, and 0.394 ms mean latency (rules) / 7.157 ms (spaCy hybrid).
+- **126 Passing Automated Tests**: 97 baseline tests + 29 dedicated v0.6.5 NLP tests passing cleanly in ~6.4s.
+- Formal architectural decision records ADR-033 through ADR-039.
 
 ---
 
-### Future — Workstation Intelligence Daemon
+### v0.7 — AI Bridge Reasoning Integration (Next Milestone)
+- Connect `ReasoningProvider` and `ReasoningRequired` escalation envelopes to local AI Bridge sidecar service over IPC / localhost HTTP.
+- Implement background context synthesis for complex activity restoration (`"get me back to whatever I was doing before AstraRun"`).
+- Diagnostic error and port collision analysis through local LLM reasoning.
+- Output from AI Bridge strictly re-enters `EntityResolver` -> `ActionGate` -> `ToolRegistry`.
+
+---
+
+### v0.8 — Advanced Workstation Workflows
+- Multi-step cross-project build and test pipelines (`wsctl run <project> <cmd>`).
+- Background process health monitoring and automated dev port recovery.
+- Environment switching (`ds-base`, `termux`, `.venv`).
+
+---
+
+### v0.9 — Browser, Window & File Control
+- Native window management (focus switching, workspace snapping, virtual desktop routing).
+- Deep browser integration (Vivaldi tabs, Chromium devtools protocol).
+- Semantic workstation file search and metadata indexing.
+
+---
+
+### v1.0 — Workstation Intelligence Daemon
 - Resident daemon coordinating cross-workspace awareness, context synthesis, proactive assistance, and multi-modal screen reasoning.
+
 

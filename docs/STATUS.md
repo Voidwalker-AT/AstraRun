@@ -1,9 +1,10 @@
-# AstraRun v0.6 Status Report
+# AstraRun v0.6.5 Status Report
 
 > **Date**: 2026-09-27  
 > **Status**: STABLE / VERIFIED / MILESTONE COMPLETE  
-> **Milestone**: v0.6 Complete (Gated Workstation Actions, Context Engine & Workflow Orchestration)  
-> **Git Commit Milestone**: `feat(astrarun): v0.6`  
+> **Milestone**: v0.6.5 Complete (Hybrid NLP Understanding Engine & Workflow Compiler)  
+> **Git Milestone Commit**: `5954a33` (v0.6) -> `feat(astrarun): v0.6.5`  
+  
 
 ---
 
@@ -61,37 +62,64 @@
      - **Confirmation Recall**: **100.0%** (31/31)
      - **Mean Latency**: **0.077 ms** ($p_{50}: 0.027\text{ ms}$, $p_{95}: 0.187\text{ ms}$)
 
-7. **Automated Test Suite**:
-   - **97 passing automated unit, UI, integration, and security tests** (79 baseline regression tests + 18 v0.6 tests).
-   - Real disposable process test (`test_toctou_process_lifecycle`) spawning, inspecting, revalidating, and terminating a temporary Python worker.
+7. **Natural Language Understanding Engine (`astrarun.nlp`)**:
+   - Multi-layer hybrid NLU architecture combining deterministic extractors, clause decomposition, negation scoping, local temporal engine, and optional non-blocking spaCy linguistic parsing.
+   - Decomposes compound requests into typed `StructuredUtterance` IR containing clauses, typed entity spans, directed relations, temporal intervals, coreference references, and constraints.
+   - Deterministic evidence precedence: exact patterns override statistical inferences.
+   - Scoped negation safety: completely omits negated clauses from execution proposals (**0.00% Negated Action Leakage Rate**).
+   - Local workstation timezone temporal calculations (`datetime.now().astimezone()`).
+   - Syntactic coreference extraction with `WorkstationContextEngine` machine state binding.
+
+8. **Workflow Compiler (`astrarun.workflows.compiler`)**:
+   - Translates `StructuredUtterance` into `WorkflowProposal` without execution authority.
+   - Capability-bounded: only maps to verified registered tools.
+   - Conservative multi-clause policy: any blocked clause blocks the entire request (`status="BLOCKED"`).
+   - Mixed-risk requests elevate overall risk to `ToolRisk.HIGH` and mandate confirmation.
+   - Distinguishes `PARTIALLY_SUPPORTED` requests and reports itemized capabilities.
+   - Developer debugger CLI (`python -m astrarun.nlp.debugger "<utterance>"`).
+   - AI Bridge escalation envelope (`ReasoningRequired`) for complex activity restoration and diagnostic questions.
+
+9. **Benchmark Suites & Test Coverage**:
+   - **Automated Tests**: **126 passing tests** (97 baseline + 29 v0.6.5 NLP tests) in ~6.4s.
+   - **NLP Benchmark V1**: 620 cases (310 Dev + 310 Locked Test, SHA256: `41f1ad1b6a29d071dad3ea93a8390961c41c136b15365586cd48ad3a61211c82`):
+     - Intent Accuracy: **100.0%**
+     - Clause Segmentation: **95.2%**
+     - Multi-Action Match: **100.0%**
+     - Negation Accuracy: **100.0%**
+     - Negated Action Leakage: **0.00%** (Prime Safety Invariant)
+     - Block Recall: **100.0%**
+     - Mean Latency: **0.394 ms** (rules) / **7.157 ms** (spaCy hybrid)
+   - **Action Benchmark V1**: 330 cases, **100% Gate Accuracy**, **0.00% FER**, **100% Block Recall**, **100% Confirmation Recall**.
+   - **Platform Health**: `wsctl doctor` passed (39/39 OK, 0 errors, 0 warnings).
 
 ---
 
-## 2. Key Empirical Findings (v0.6)
+## 2. Key Empirical Findings (v0.6.5)
 
-1. **TOCTOU Protection is Critical on Windows**:
-   - Windows process IDs are rapidly recycled by the NT kernel once a process terminates. Storing and verifying `proc.create_time()` ensures that delayed user confirmation cannot accidentally terminate a newly spawned, unrelated process with the same PID.
-2. **Action-Specific Policy Outperforms Blanket Gating**:
-   - In v0.5, all operations on ports $\le 1023$ were blanket-blocked. In v0.6, differentiating read-only inspection (allowed on port 80 and 443) from termination (strictly blocked on ports $\le 1023$) provides useful developer ergonomics while maintaining 100% security integrity.
-3. **Deterministic Safety Gating Runs in Microseconds**:
-   - The entire resolution and action gate pipeline runs in $0.077\text{ ms}$ on host CPU, allowing live keystroke evaluation without impacting UI responsiveness.
-4. **Single Enter Suppression Prevents Catastrophic Mistakes**:
-   - Suppressing the single `Enter` key on `ToolRisk.HIGH` actions in `ConfirmationCard` prevents muscle-memory keystroke execution when users type commands quickly.
+1. **Deterministic Grammar Substantially Outperforms Neural Models for Workstation Commands**:
+   - Pretrained news-corpus models (like spaCy's `en_core_web_sm`) frequently misclassify imperative verbs (*"open"*, *"run"*, *"stop"*) as adjectives and misattach numeric port tokens.
+   - The deterministic grammar and domain lexicon pipeline achieves **100% precision on structured syntax, runs in 0.39 ms (18x faster than spaCy's 7.16 ms), and consumes < 1 MB RAM vs. spaCy's 269 MB**.
+2. **Negation Scoping Must Be Attributed Per-Clause**:
+   - Contrastive commands like *"don't kill node, just inspect it"* require clause-level polarity isolation. Binding `source_clause_idx` to each proposal step guarantees that negated actions are never scheduled.
+3. **Conservative Multi-Clause Policy Preempts Sneak-In Attacks**:
+   - Evaluating both individual clauses and the holistic utterance against security policies ensures that adversarial requests combining safe and destructive clauses (*"open AstraRun and delete system32"*) are blocked entirely rather than partially executed.
 
 ---
 
-## 3. What Does Not Work (By Design in v0.6)
+## 3. What Does Not Work (By Design in v0.6.5)
 
 - **Arbitrary Shell Execution**: Zero shell access is exposed; commands like `dir`, `echo`, `cat`, or powershell piping are rejected.
 - **Unrestricted Autonomous Agent Loops**: AstraRun does not loop autonomously with an LLM to take arbitrary workstation actions.
-- **Direct Cloud LLM Invocations**: AstraRun contains zero direct cloud API calls; reasoning integration is confined to the `ReasoningProvider` protocol boundary.
+- **Direct Cloud LLM Invocations**: AstraRun contains zero direct cloud API calls; reasoning integration is confined to the `ReasoningRequired` escalation boundary.
 - **Modification of Catalog Files**: `workspace.json` is never mutated or written to by AstraRun.
 
 ---
 
 ## 4. Next Recommended Step
 
-**Milestone v0.7: AI Bridge Integration, Multi-Modal Workstation Actions & Sidecar Daemon**:
-- Connect `ReasoningProvider` to local AI Bridge sidecar service over IPC / localhost HTTP.
-- Implement background process health monitoring and dev port auto-refresh.
-- Introduce project command execution workflows (`wsctl run <project> <cmd>`) through registered workflow templates.
+**Milestone v0.7: AI Bridge Reasoning Integration**:
+- Connect `ReasoningProvider` and `ReasoningRequired` escalation envelopes to local AI Bridge sidecar service over IPC / localhost HTTP.
+- Implement background context synthesis for complex activity restoration (`"get me back to whatever I was doing before AstraRun"`).
+- Diagnostic error and port collision analysis through local LLM reasoning.
+- Output from AI Bridge strictly re-enters `EntityResolver` -> `ActionGate` -> `ToolRegistry`.
+

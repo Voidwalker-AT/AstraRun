@@ -247,3 +247,15 @@ class ProjectRegistry:
     def list_projects(self) -> list[ProjectMetadata]:
         """Return all cataloged projects."""
         return list(self._projects.values())
+
+
+_GLOBAL_PROJECT_REGISTRY: ProjectRegistry | None = None
+
+
+def get_project_registry() -> ProjectRegistry:
+    """Return the global cached ProjectRegistry singleton."""
+    global _GLOBAL_PROJECT_REGISTRY
+    if _GLOBAL_PROJECT_REGISTRY is None:
+        _GLOBAL_PROJECT_REGISTRY = ProjectRegistry()
+    return _GLOBAL_PROJECT_REGISTRY
+

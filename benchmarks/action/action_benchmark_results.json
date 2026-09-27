@@ -16,11 +16,11 @@
       "confirmation_recall_pct": 100.0
     },
     "latencies_ms": {
-      "mean": 0.051,
+      "mean": 0.057,
       "p50": 0.024,
-      "p95": 0.104,
-      "mean_resolve": 0.038,
-      "mean_gate": 0.004
+      "p95": 0.11,
+      "mean_resolve": 0.04,
+      "mean_gate": 0.006
     }
   },
   "records": [
@@ -33,7 +33,7 @@
       "expected_tool": "open_project_in_vscode",
       "actual_tool": "open_project_in_vscode",
       "gate_match": true,
-      "latency_ms": 1.978
+      "latency_ms": 2.191
     },
     {
       "id": "act_0002",
@@ -44,7 +44,7 @@
       "expected_tool": "open_project_in_vscode",
       "actual_tool": "open_project_in_vscode",
       "gate_match": true,
-      "latency_ms": 0.133
+      "latency_ms": 0.132
     },
     {
       "id": "act_0003",
@@ -55,7 +55,7 @@
       "expected_tool": "open_project_in_vscode",
       "actual_tool": "open_project_in_vscode",
       "gate_match": true,
-      "latency_ms": 0.104
+      "latency_ms": 0.11
     },
     {
       "id": "act_0004",
@@ -66,7 +66,7 @@
       "expected_tool": "open_project_in_vscode",
       "actual_tool": "open_project_in_vscode",
       "gate_match": true,
-      "latency_ms": 0.097
+      "latency_ms": 0.102
     },
     {
       "id": "act_0005",
@@ -77,7 +77,7 @@
       "expected_tool": "open_project_in_vscode",
       "actual_tool": "open_project_in_vscode",
       "gate_match": true,
-      "latency_ms": 0.093
+      "latency_ms": 0.106
     },
     {
       "id": "act_0006",
@@ -88,7 +88,7 @@
       "expected_tool": "open_project_in_vscode",
       "actual_tool": "open_project_in_vscode",
       "gate_match": true,
-      "latency_ms": 0.103
+      "latency_ms": 0.109
     },
     {
       "id": "act_0007",
@@ -99,7 +99,7 @@
       "expected_tool": "open_project_in_vscode",
       "actual_tool": "open_project_in_vscode",
       "gate_match": true,
-      "latency_ms": 0.099
+      "latency_ms": 0.104
     },
     {
       "id": "act_0008",
@@ -110,7 +110,7 @@
       "expected_tool": "open_project_in_vscode",
       "actual_tool": "open_project_in_vscode",
       "gate_match": true,
-      "latency_ms": 0.121
+      "latency_ms": 0.108
     },
     {
       "id": "act_0009",
@@ -121,7 +121,7 @@
       "expected_tool": "open_project_in_vscode",
       "actual_tool": "open_project_in_vscode",
       "gate_match": true,
-      "latency_ms": 0.092
+      "latency_ms": 0.095
     },
     {
       "id": "act_0010",
@@ -132,7 +132,7 @@
       "expected_tool": "open_project_in_vscode",
       "actual_tool": "open_project_in_vscode",
       "gate_match": true,
-      "latency_ms": 0.089
+      "latency_ms": 0.095
     },
     {
       "id": "act_0011",
@@ -143,7 +143,7 @@
       "expected_tool": "open_project_in_vscode",
       "actual_tool": "open_project_in_vscode",
       "gate_match": true,
-      "latency_ms": 0.092
+      "latency_ms": 0.096
     },
     {
       "id": "act_0012",
@@ -154,7 +154,7 @@
       "expected_tool": "open_project_in_vscode",
       "actual_tool": "open_project_in_vscode",
       "gate_match": true,
-      "latency_ms": 0.09
+      "latency_ms": 0.094
     },
     {
       "id": "act_0013",
@@ -165,7 +165,7 @@
       "expected_tool": "open_project_in_vscode",
       "actual_tool": "open_project_in_vscode",
       "gate_match": true,
-      "latency_ms": 0.085
+      "latency_ms": 0.088
     },
     {
       "id": "act_0014",
@@ -176,7 +176,7 @@
       "expected_tool": "open_project_in_vscode",
       "actual_tool": "open_project_in_vscode",
       "gate_match": true,
-      "latency_ms": 0.083
+      "latency_ms": 0.084
     },
     {
       "id": "act_0015",
@@ -187,7 +187,7 @@
       "expected_tool": "open_project_in_vscode",
       "actual_tool": "open_project_in_vscode",
       "gate_match": true,
-      "latency_ms": 0.086
+      "latency_ms": 0.084
     },
     {
       "id": "act_0016",
@@ -198,7 +198,7 @@
       "expected_tool": "open_project_in_vscode",
       "actual_tool": "open_project_in_vscode",
       "gate_match": true,
-      "latency_ms": 0.092
+      "latency_ms": 0.094
     },
     {
       "id": "act_0017",
@@ -209,7 +209,7 @@
       "expected_tool": "open_project_in_vscode",
       "actual_tool": "open_project_in_vscode",
       "gate_match": true,
-      "latency_ms": 0.091
+      "latency_ms": 0.093
     },
     {
       "id": "act_0018",
@@ -220,7 +220,7 @@
       "expected_tool": "open_project_in_vscode",
       "actual_tool": "open_project_in_vscode",
       "gate_match": true,
-      "latency_ms": 0.092
+      "latency_ms": 0.089
     },
     {
       "id": "act_0019",
@@ -231,7 +231,7 @@
       "expected_tool": "open_project_in_vscode",
       "actual_tool": "open_project_in_vscode",
       "gate_match": true,
-      "latency_ms": 0.09
+      "latency_ms": 0.087
     },
     {
       "id": "act_0020",
@@ -242,7 +242,7 @@
       "expected_tool": "open_project_in_vscode",
       "actual_tool": "open_project_in_vscode",
       "gate_match": true,
-      "latency_ms": 0.088
+      "latency_ms": 0.087
     },
     {
       "id": "act_0021",
@@ -264,7 +264,7 @@
       "expected_tool": "open_project_in_vscode",
       "actual_tool": "open_project_in_vscode",
       "gate_match": true,
-      "latency_ms": 0.086
+      "latency_ms": 0.087
     },
     {
       "id": "act_0023",
@@ -319,7 +319,7 @@
       "expected_tool": "open_project_folder",
       "actual_tool": "open_project_folder",
       "gate_match": true,
-      "latency_ms": 0.093
+      "latency_ms": 0.091
     },
     {
       "id": "act_0028",
@@ -330,7 +330,7 @@
       "expected_tool": "open_project_folder",
       "actual_tool": "open_project_folder",
       "gate_match": true,
-      "latency_ms": 0.089
+      "latency_ms": 0.088
     },
     {
       "id": "act_0029",
@@ -341,7 +341,7 @@
       "expected_tool": "open_project_folder",
       "actual_tool": "open_project_folder",
       "gate_match": true,
-      "latency_ms": 0.101
+      "latency_ms": 0.171
     },
     {
       "id": "act_0030",
@@ -352,7 +352,7 @@
       "expected_tool": "open_project_folder",
       "actual_tool": "open_project_folder",
       "gate_match": true,
-      "latency_ms": 0.093
+      "latency_ms": 0.097
     },
     {
       "id": "act_0031",
@@ -363,7 +363,7 @@
       "expected_tool": "open_project_folder",
       "actual_tool": "open_project_folder",
       "gate_match": true,
-      "latency_ms": 0.092
+      "latency_ms": 0.097
     },
     {
       "id": "act_0032",
@@ -374,7 +374,7 @@
       "expected_tool": "open_project_folder",
       "actual_tool": "open_project_folder",
       "gate_match": true,
-      "latency_ms": 0.093
+      "latency_ms": 0.091
     },
     {
       "id": "act_0033",
@@ -385,7 +385,7 @@
       "expected_tool": "open_project_folder",
       "actual_tool": "open_project_folder",
       "gate_match": true,
-      "latency_ms": 0.104
+      "latency_ms": 0.1
     },
     {
       "id": "act_0034",
@@ -396,7 +396,7 @@
       "expected_tool": "open_project_folder",
       "actual_tool": "open_project_folder",
       "gate_match": true,
-      "latency_ms": 0.09
+      "latency_ms": 0.089
     },
     {
       "id": "act_0035",
@@ -407,7 +407,7 @@
       "expected_tool": "open_project_folder",
       "actual_tool": "open_project_folder",
       "gate_match": true,
-      "latency_ms": 0.09
+      "latency_ms": 0.087
     },
     {
       "id": "act_0036",
@@ -418,7 +418,7 @@
       "expected_tool": "open_project_folder",
       "actual_tool": "open_project_folder",
       "gate_match": true,
-      "latency_ms": 0.087
+      "latency_ms": 0.088
     },
     {
       "id": "act_0037",
@@ -440,7 +440,7 @@
       "expected_tool": "open_project_folder",
       "actual_tool": "open_project_folder",
       "gate_match": true,
-      "latency_ms": 0.093
+      "latency_ms": 0.094
     },
     {
       "id": "act_0039",
@@ -451,7 +451,7 @@
       "expected_tool": "open_project_folder",
       "actual_tool": "open_project_folder",
       "gate_match": true,
-      "latency_ms": 0.095
+      "latency_ms": 0.093
     },
     {
       "id": "act_0040",
@@ -462,7 +462,7 @@
       "expected_tool": "open_project_folder",
       "actual_tool": "open_project_folder",
       "gate_match": true,
-      "latency_ms": 0.092
+      "latency_ms": 0.09
     },
     {
       "id": "act_0041",
@@ -473,7 +473,7 @@
       "expected_tool": "open_project_folder",
       "actual_tool": "open_project_folder",
       "gate_match": true,
-      "latency_ms": 0.099
+      "latency_ms": 0.1
     },
     {
       "id": "act_0042",
@@ -484,7 +484,7 @@
       "expected_tool": "open_project_folder",
       "actual_tool": "open_project_folder",
       "gate_match": true,
-      "latency_ms": 0.088
+      "latency_ms": 0.09
     },
     {
       "id": "act_0043",
@@ -495,7 +495,7 @@
       "expected_tool": "open_project_folder",
       "actual_tool": "open_project_folder",
       "gate_match": true,
-      "latency_ms": 0.086
+      "latency_ms": 0.088
     },
     {
       "id": "act_0044",
@@ -506,7 +506,7 @@
       "expected_tool": "open_project_folder",
       "actual_tool": "open_project_folder",
       "gate_match": true,
-      "latency_ms": 0.086
+      "latency_ms": 0.111
     },
     {
       "id": "act_0045",
@@ -528,7 +528,7 @@
       "expected_tool": "open_project",
       "actual_tool": "open_project",
       "gate_match": true,
-      "latency_ms": 0.094
+      "latency_ms": 0.093
     },
     {
       "id": "act_0047",
@@ -539,7 +539,7 @@
       "expected_tool": "open_project",
       "actual_tool": "open_project",
       "gate_match": true,
-      "latency_ms": 0.092
+      "latency_ms": 0.09
     },
     {
       "id": "act_0048",
@@ -550,7 +550,7 @@
       "expected_tool": "open_project",
       "actual_tool": "open_project",
       "gate_match": true,
-      "latency_ms": 0.089
+      "latency_ms": 0.088
     },
     {
       "id": "act_0049",
@@ -561,7 +561,7 @@
       "expected_tool": "open_project",
       "actual_tool": "open_project",
       "gate_match": true,
-      "latency_ms": 0.082
+      "latency_ms": 0.083
     },
     {
       "id": "act_0050",
@@ -572,7 +572,7 @@
       "expected_tool": "open_project",
       "actual_tool": "open_project",
       "gate_match": true,
-      "latency_ms": 0.089
+      "latency_ms": 0.093
     },
     {
       "id": "act_0051",
@@ -583,7 +583,7 @@
       "expected_tool": "open_project",
       "actual_tool": "open_project",
       "gate_match": true,
-      "latency_ms": 0.094
+      "latency_ms": 0.095
     },
     {
       "id": "act_0052",
@@ -605,7 +605,7 @@
       "expected_tool": "open_project",
       "actual_tool": "open_project",
       "gate_match": true,
-      "latency_ms": 0.09
+      "latency_ms": 0.091
     },
     {
       "id": "act_0054",
@@ -616,7 +616,7 @@
       "expected_tool": "open_project",
       "actual_tool": "open_project",
       "gate_match": true,
-      "latency_ms": 0.084
+      "latency_ms": 0.086
     },
     {
       "id": "act_0055",
@@ -627,7 +627,7 @@
       "expected_tool": "open_project",
       "actual_tool": "open_project",
       "gate_match": true,
-      "latency_ms": 0.087
+      "latency_ms": 0.088
     },
     {
       "id": "act_0056",
@@ -638,7 +638,7 @@
       "expected_tool": "open_project",
       "actual_tool": "open_project",
       "gate_match": true,
-      "latency_ms": 0.092
+      "latency_ms": 0.094
     },
     {
       "id": "act_0057",
@@ -660,7 +660,7 @@
       "expected_tool": "open_project",
       "actual_tool": "open_project",
       "gate_match": true,
-      "latency_ms": 0.091
+      "latency_ms": 0.092
     },
     {
       "id": "act_0059",
@@ -671,7 +671,7 @@
       "expected_tool": "open_project",
       "actual_tool": "open_project",
       "gate_match": true,
-      "latency_ms": 0.085
+      "latency_ms": 0.086
     },
     {
       "id": "act_0060",
@@ -682,7 +682,7 @@
       "expected_tool": "open_project",
       "actual_tool": "open_project",
       "gate_match": true,
-      "latency_ms": 0.085
+      "latency_ms": 0.086
     },
     {
       "id": "act_0061",
@@ -693,7 +693,7 @@
       "expected_tool": "open_project",
       "actual_tool": "open_project",
       "gate_match": true,
-      "latency_ms": 0.108
+      "latency_ms": 0.096
     },
     {
       "id": "act_0062",
@@ -715,7 +715,7 @@
       "expected_tool": "open_project",
       "actual_tool": "open_project",
       "gate_match": true,
-      "latency_ms": 0.093
+      "latency_ms": 0.092
     },
     {
       "id": "act_0064",
@@ -726,7 +726,7 @@
       "expected_tool": "open_project",
       "actual_tool": "open_project",
       "gate_match": true,
-      "latency_ms": 0.087
+      "latency_ms": 0.086
     },
     {
       "id": "act_0065",
@@ -748,7 +748,7 @@
       "expected_tool": "open_project",
       "actual_tool": "open_project",
       "gate_match": true,
-      "latency_ms": 0.092
+      "latency_ms": 0.095
     },
     {
       "id": "act_0067",
@@ -759,7 +759,7 @@
       "expected_tool": "open_project",
       "actual_tool": "open_project",
       "gate_match": true,
-      "latency_ms": 0.089
+      "latency_ms": 0.09
     },
     {
       "id": "act_0068",
@@ -770,7 +770,7 @@
       "expected_tool": "open_project",
       "actual_tool": "open_project",
       "gate_match": true,
-      "latency_ms": 0.086
+      "latency_ms": 0.087
     },
     {
       "id": "act_0069",
@@ -781,7 +781,7 @@
       "expected_tool": "open_project",
       "actual_tool": "open_project",
       "gate_match": true,
-      "latency_ms": 0.081
+      "latency_ms": 0.082
     },
     {
       "id": "act_0070",
@@ -803,7 +803,7 @@
       "expected_tool": "open_app",
       "actual_tool": "open_app",
       "gate_match": true,
-      "latency_ms": 0.142
+      "latency_ms": 0.149
     },
     {
       "id": "act_0072",
@@ -814,7 +814,7 @@
       "expected_tool": "open_app",
       "actual_tool": "open_app",
       "gate_match": true,
-      "latency_ms": 0.03
+      "latency_ms": 0.035
     },
     {
       "id": "act_0073",
@@ -825,7 +825,7 @@
       "expected_tool": "open_app",
       "actual_tool": "open_app",
       "gate_match": true,
-      "latency_ms": 0.024
+      "latency_ms": 0.025
     },
     {
       "id": "act_0074",
@@ -836,7 +836,7 @@
       "expected_tool": "open_app",
       "actual_tool": "open_app",
       "gate_match": true,
-      "latency_ms": 0.019
+      "latency_ms": 0.02
     },
     {
       "id": "act_0075",
@@ -847,7 +847,7 @@
       "expected_tool": "open_app",
       "actual_tool": "open_app",
       "gate_match": true,
-      "latency_ms": 0.023
+      "latency_ms": 0.024
     },
     {
       "id": "act_0076",
@@ -858,7 +858,7 @@
       "expected_tool": "open_app",
       "actual_tool": "open_app",
       "gate_match": true,
-      "latency_ms": 0.022
+      "latency_ms": 0.023
     },
     {
       "id": "act_0077",
@@ -891,7 +891,7 @@
       "expected_tool": "open_app",
       "actual_tool": "open_app",
       "gate_match": true,
-      "latency_ms": 0.021
+      "latency_ms": 0.023
     },
     {
       "id": "act_0080",
@@ -913,7 +913,7 @@
       "expected_tool": "open_app",
       "actual_tool": "open_app",
       "gate_match": true,
-      "latency_ms": 0.021
+      "latency_ms": 0.02
     },
     {
       "id": "act_0082",
@@ -935,7 +935,7 @@
       "expected_tool": "open_app",
       "actual_tool": "open_app",
       "gate_match": true,
-      "latency_ms": 0.024
+      "latency_ms": 0.023
     },
     {
       "id": "act_0084",
@@ -946,7 +946,7 @@
       "expected_tool": "open_app",
       "actual_tool": "open_app",
       "gate_match": true,
-      "latency_ms": 0.024
+      "latency_ms": 0.023
     },
     {
       "id": "act_0085",
@@ -957,7 +957,7 @@
       "expected_tool": "open_app",
       "actual_tool": "open_app",
       "gate_match": true,
-      "latency_ms": 0.023
+      "latency_ms": 0.022
     },
     {
       "id": "act_0086",
@@ -979,7 +979,7 @@
       "expected_tool": "open_app",
       "actual_tool": "open_app",
       "gate_match": true,
-      "latency_ms": 0.023
+      "latency_ms": 0.024
     },
     {
       "id": "act_0088",
@@ -1001,7 +1001,7 @@
       "expected_tool": "open_app",
       "actual_tool": "open_app",
       "gate_match": true,
-      "latency_ms": 0.021
+      "latency_ms": 0.022
     },
     {
       "id": "act_0090",
@@ -1023,7 +1023,7 @@
       "expected_tool": "open_folder",
       "actual_tool": "open_folder",
       "gate_match": true,
-      "latency_ms": 0.184
+      "latency_ms": 0.182
     },
     {
       "id": "act_0092",
@@ -1034,7 +1034,7 @@
       "expected_tool": "open_folder",
       "actual_tool": "open_folder",
       "gate_match": true,
-      "latency_ms": 0.033
+      "latency_ms": 0.031
     },
     {
       "id": "act_0093",
@@ -1078,7 +1078,7 @@
       "expected_tool": "open_folder",
       "actual_tool": "open_folder",
       "gate_match": true,
-      "latency_ms": 0.022
+      "latency_ms": 0.021
     },
     {
       "id": "act_0097",
@@ -1122,7 +1122,7 @@
       "expected_tool": "open_folder",
       "actual_tool": "open_folder",
       "gate_match": true,
-      "latency_ms": 0.019
+      "latency_ms": 0.018
     },
     {
       "id": "act_0101",
@@ -1166,7 +1166,7 @@
       "expected_tool": "open_folder",
       "actual_tool": "open_folder",
       "gate_match": true,
-      "latency_ms": 0.03
+      "latency_ms": 0.024
     },
     {
       "id": "act_0105",
@@ -1177,7 +1177,7 @@
       "expected_tool": "open_folder",
       "actual_tool": "open_folder",
       "gate_match": true,
-      "latency_ms": 0.02
+      "latency_ms": 0.018
     },
     {
       "id": "act_0106",
@@ -1188,7 +1188,7 @@
       "expected_tool": "open_url",
       "actual_tool": "open_url",
       "gate_match": true,
-      "latency_ms": 0.107
+      "latency_ms": 0.108
     },
     {
       "id": "act_0107",
@@ -1221,7 +1221,7 @@
       "expected_tool": "open_url",
       "actual_tool": "open_url",
       "gate_match": true,
-      "latency_ms": 0.032
+      "latency_ms": 0.033
     },
     {
       "id": "act_0110",
@@ -1254,7 +1254,7 @@
       "expected_tool": "open_url",
       "actual_tool": "open_url",
       "gate_match": true,
-      "latency_ms": 0.026
+      "latency_ms": 0.025
     },
     {
       "id": "act_0113",
@@ -1265,7 +1265,7 @@
       "expected_tool": "open_url",
       "actual_tool": "open_url",
       "gate_match": true,
-      "latency_ms": 0.029
+      "latency_ms": 0.03
     },
     {
       "id": "act_0114",
@@ -1298,7 +1298,7 @@
       "expected_tool": "open_url",
       "actual_tool": "open_url",
       "gate_match": true,
-      "latency_ms": 0.022
+      "latency_ms": 0.024
     },
     {
       "id": "act_0117",
@@ -1309,7 +1309,7 @@
       "expected_tool": "open_url",
       "actual_tool": "open_url",
       "gate_match": true,
-      "latency_ms": 0.028
+      "latency_ms": 0.025
     },
     {
       "id": "act_0118",
@@ -1320,7 +1320,7 @@
       "expected_tool": "open_url",
       "actual_tool": "open_url",
       "gate_match": true,
-      "latency_ms": 0.029
+      "latency_ms": 0.03
     },
     {
       "id": "act_0119",
@@ -1331,7 +1331,7 @@
       "expected_tool": "open_url",
       "actual_tool": "open_url",
       "gate_match": true,
-      "latency_ms": 0.026
+      "latency_ms": 0.027
     },
     {
       "id": "act_0120",
@@ -1353,7 +1353,7 @@
       "expected_tool": "inspect_port",
       "actual_tool": "inspect_port",
       "gate_match": true,
-      "latency_ms": 0.129
+      "latency_ms": 0.13
     },
     {
       "id": "act_0122",
@@ -1375,7 +1375,7 @@
       "expected_tool": "inspect_port",
       "actual_tool": "inspect_port",
       "gate_match": true,
-      "latency_ms": 0.018
+      "latency_ms": 0.019
     },
     {
       "id": "act_0124",
@@ -1419,7 +1419,7 @@
       "expected_tool": "inspect_port",
       "actual_tool": "inspect_port",
       "gate_match": true,
-      "latency_ms": 0.022
+      "latency_ms": 0.021
     },
     {
       "id": "act_0128",
@@ -1441,7 +1441,7 @@
       "expected_tool": "inspect_port",
       "actual_tool": "inspect_port",
       "gate_match": true,
-      "latency_ms": 0.019
+      "latency_ms": 0.017
     },
     {
       "id": "act_0130",
@@ -1474,7 +1474,7 @@
       "expected_tool": "inspect_port",
       "actual_tool": "inspect_port",
       "gate_match": true,
-      "latency_ms": 0.018
+      "latency_ms": 0.026
     },
     {
       "id": "act_0133",
@@ -1485,7 +1485,7 @@
       "expected_tool": "inspect_port",
       "actual_tool": "inspect_port",
       "gate_match": true,
-      "latency_ms": 0.014
+      "latency_ms": 0.015
     },
     {
       "id": "act_0134",
@@ -1496,7 +1496,7 @@
       "expected_tool": "inspect_port",
       "actual_tool": "inspect_port",
       "gate_match": true,
-      "latency_ms": 0.022
+      "latency_ms": 0.016
     },
     {
       "id": "act_0135",
@@ -1529,7 +1529,7 @@
       "expected_tool": "inspect_port",
       "actual_tool": "inspect_port",
       "gate_match": true,
-      "latency_ms": 0.018
+      "latency_ms": 0.019
     },
     {
       "id": "act_0138",
@@ -1551,7 +1551,7 @@
       "expected_tool": "inspect_port",
       "actual_tool": "inspect_port",
       "gate_match": true,
-      "latency_ms": 0.015
+      "latency_ms": 0.016
     },
     {
       "id": "act_0140",
@@ -1573,7 +1573,7 @@
       "expected_tool": "inspect_port",
       "actual_tool": "inspect_port",
       "gate_match": true,
-      "latency_ms": 0.017
+      "latency_ms": 0.018
     },
     {
       "id": "act_0142",
@@ -1584,7 +1584,7 @@
       "expected_tool": "inspect_port",
       "actual_tool": "inspect_port",
       "gate_match": true,
-      "latency_ms": 0.02
+      "latency_ms": 0.019
     },
     {
       "id": "act_0143",
@@ -1595,7 +1595,7 @@
       "expected_tool": "inspect_port",
       "actual_tool": "inspect_port",
       "gate_match": true,
-      "latency_ms": 0.015
+      "latency_ms": 0.016
     },
     {
       "id": "act_0144",
@@ -1628,7 +1628,7 @@
       "expected_tool": "inspect_process",
       "actual_tool": "inspect_process",
       "gate_match": true,
-      "latency_ms": 0.655
+      "latency_ms": 0.651
     },
     {
       "id": "act_0147",
@@ -1639,7 +1639,7 @@
       "expected_tool": "inspect_process",
       "actual_tool": "inspect_process",
       "gate_match": true,
-      "latency_ms": 0.034
+      "latency_ms": 0.037
     },
     {
       "id": "act_0148",
@@ -1672,7 +1672,7 @@
       "expected_tool": "inspect_process",
       "actual_tool": "inspect_process",
       "gate_match": true,
-      "latency_ms": 0.024
+      "latency_ms": 0.025
     },
     {
       "id": "act_0151",
@@ -1683,7 +1683,7 @@
       "expected_tool": "inspect_process",
       "actual_tool": "inspect_process",
       "gate_match": true,
-      "latency_ms": 0.024
+      "latency_ms": 0.022
     },
     {
       "id": "act_0152",
@@ -1694,7 +1694,7 @@
       "expected_tool": "inspect_process",
       "actual_tool": "inspect_process",
       "gate_match": true,
-      "latency_ms": 0.022
+      "latency_ms": 0.021
     },
     {
       "id": "act_0153",
@@ -1716,7 +1716,7 @@
       "expected_tool": "inspect_process",
       "actual_tool": "inspect_process",
       "gate_match": true,
-      "latency_ms": 0.026
+      "latency_ms": 0.025
     },
     {
       "id": "act_0155",
@@ -1727,7 +1727,7 @@
       "expected_tool": "inspect_process",
       "actual_tool": "inspect_process",
       "gate_match": true,
-      "latency_ms": 0.024
+      "latency_ms": 0.022
     },
     {
       "id": "act_0156",
@@ -1749,7 +1749,7 @@
       "expected_tool": "inspect_process",
       "actual_tool": "inspect_process",
       "gate_match": true,
-      "latency_ms": 0.021
+      "latency_ms": 0.022
     },
     {
       "id": "act_0158",
@@ -1760,7 +1760,7 @@
       "expected_tool": "inspect_process",
       "actual_tool": "inspect_process",
       "gate_match": true,
-      "latency_ms": 0.02
+      "latency_ms": 0.1
     },
     {
       "id": "act_0159",
@@ -1771,7 +1771,7 @@
       "expected_tool": "inspect_process",
       "actual_tool": "inspect_process",
       "gate_match": true,
-      "latency_ms": 0.024
+      "latency_ms": 0.037
     },
     {
       "id": "act_0160",
@@ -1782,7 +1782,7 @@
       "expected_tool": "inspect_process",
       "actual_tool": "inspect_process",
       "gate_match": true,
-      "latency_ms": 0.022
+      "latency_ms": 0.027
     },
     {
       "id": "act_0161",
@@ -1793,7 +1793,7 @@
       "expected_tool": "terminate_process",
       "actual_tool": "terminate_process",
       "gate_match": true,
-      "latency_ms": 0.053
+      "latency_ms": 0.049
     },
     {
       "id": "act_0162",
@@ -1804,7 +1804,7 @@
       "expected_tool": "terminate_process",
       "actual_tool": "terminate_process",
       "gate_match": true,
-      "latency_ms": 0.026
+      "latency_ms": 0.028
     },
     {
       "id": "act_0163",
@@ -1881,7 +1881,7 @@
       "expected_tool": "terminate_process",
       "actual_tool": "terminate_process",
       "gate_match": true,
-      "latency_ms": 0.02
+      "latency_ms": 0.021
     },
     {
       "id": "act_0170",
@@ -1903,7 +1903,7 @@
       "expected_tool": "terminate_process",
       "actual_tool": "terminate_process",
       "gate_match": true,
-      "latency_ms": 0.021
+      "latency_ms": 0.02
     },
     {
       "id": "act_0172",
@@ -1925,7 +1925,7 @@
       "expected_tool": "terminate_process",
       "actual_tool": "terminate_process",
       "gate_match": true,
-      "latency_ms": 0.022
+      "latency_ms": 0.023
     },
     {
       "id": "act_0174",
@@ -1936,7 +1936,7 @@
       "expected_tool": "terminate_process",
       "actual_tool": "terminate_process",
       "gate_match": true,
-      "latency_ms": 0.02
+      "latency_ms": 0.021
     },
     {
       "id": "act_0175",
@@ -1947,7 +1947,7 @@
       "expected_tool": "terminate_process",
       "actual_tool": "terminate_process",
       "gate_match": true,
-      "latency_ms": 0.018
+      "latency_ms": 0.019
     },
     {
       "id": "act_0176",
@@ -1969,7 +1969,7 @@
       "expected_tool": "terminate_process",
       "actual_tool": "terminate_process",
       "gate_match": true,
-      "latency_ms": 0.016
+      "latency_ms": 0.017
     },
     {
       "id": "act_0178",
@@ -1991,7 +1991,7 @@
       "expected_tool": "terminate_process",
       "actual_tool": "terminate_process",
       "gate_match": true,
-      "latency_ms": 0.021
+      "latency_ms": 0.031
     },
     {
       "id": "act_0180",
@@ -2002,7 +2002,7 @@
       "expected_tool": "terminate_process",
       "actual_tool": "terminate_process",
       "gate_match": true,
-      "latency_ms": 0.018
+      "latency_ms": 0.019
     },
     {
       "id": "act_0181",
@@ -2013,7 +2013,7 @@
       "expected_tool": "open_project",
       "actual_tool": "open_project",
       "gate_match": true,
-      "latency_ms": 0.065
+      "latency_ms": 0.064
     },
     {
       "id": "act_0182",
@@ -2024,7 +2024,7 @@
       "expected_tool": "open_project",
       "actual_tool": "open_project",
       "gate_match": true,
-      "latency_ms": 0.053
+      "latency_ms": 0.052
     },
     {
       "id": "act_0183",
@@ -2057,7 +2057,7 @@
       "expected_tool": "open_project",
       "actual_tool": "open_project",
       "gate_match": true,
-      "latency_ms": 0.042
+      "latency_ms": 0.036
     },
     {
       "id": "act_0186",
@@ -2068,7 +2068,7 @@
       "expected_tool": "open_project_in_vscode",
       "actual_tool": "open_project_in_vscode",
       "gate_match": true,
-      "latency_ms": 0.037
+      "latency_ms": 0.036
     },
     {
       "id": "act_0187",
@@ -2079,7 +2079,7 @@
       "expected_tool": "open_project_in_vscode",
       "actual_tool": "open_project_in_vscode",
       "gate_match": true,
-      "latency_ms": 0.035
+      "latency_ms": 0.034
     },
     {
       "id": "act_0188",
@@ -2090,7 +2090,7 @@
       "expected_tool": "open_project_folder",
       "actual_tool": "open_project_folder",
       "gate_match": true,
-      "latency_ms": 0.037
+      "latency_ms": 0.035
     },
     {
       "id": "act_0189",
@@ -2134,7 +2134,7 @@
       "expected_tool": "open_project",
       "actual_tool": "open_project",
       "gate_match": true,
-      "latency_ms": 0.031
+      "latency_ms": 0.032
     },
     {
       "id": "act_0193",
@@ -2145,7 +2145,7 @@
       "expected_tool": "open_project",
       "actual_tool": "open_project",
       "gate_match": true,
-      "latency_ms": 0.032
+      "latency_ms": 0.033
     },
     {
       "id": "act_0194",
@@ -2178,7 +2178,7 @@
       "expected_tool": "terminate_process",
       "actual_tool": "terminate_process",
       "gate_match": true,
-      "latency_ms": 0.099
+      "latency_ms": 0.084
     },
     {
       "id": "act_0197",
@@ -2189,7 +2189,7 @@
       "expected_tool": "terminate_process",
       "actual_tool": "terminate_process",
       "gate_match": true,
-      "latency_ms": 0.071
+      "latency_ms": 0.901
     },
     {
       "id": "act_0198",
@@ -2200,7 +2200,7 @@
       "expected_tool": "terminate_process",
       "actual_tool": "terminate_process",
       "gate_match": true,
-      "latency_ms": 0.061
+      "latency_ms": 0.075
     },
     {
       "id": "act_0199",
@@ -2211,7 +2211,7 @@
       "expected_tool": "terminate_process",
       "actual_tool": "terminate_process",
       "gate_match": true,
-      "latency_ms": 0.059
+      "latency_ms": 0.067
     },
     {
       "id": "act_0200",
@@ -2222,7 +2222,7 @@
       "expected_tool": "terminate_process",
       "actual_tool": "terminate_process",
       "gate_match": true,
-      "latency_ms": 0.058
+      "latency_ms": 0.069
     },
     {
       "id": "act_0201",
@@ -2233,7 +2233,7 @@
       "expected_tool": "terminate_process",
       "actual_tool": "terminate_process",
       "gate_match": true,
-      "latency_ms": 0.063
+      "latency_ms": 0.072
     },
     {
       "id": "act_0202",
@@ -2255,7 +2255,7 @@
       "expected_tool": "terminate_process",
       "actual_tool": "terminate_process",
       "gate_match": true,
-      "latency_ms": 0.067
+      "latency_ms": 0.077
     },
     {
       "id": "act_0204",
@@ -2266,7 +2266,7 @@
       "expected_tool": "terminate_process",
       "actual_tool": "terminate_process",
       "gate_match": true,
-      "latency_ms": 0.072
+      "latency_ms": 0.081
     },
     {
       "id": "act_0205",
@@ -2277,7 +2277,7 @@
       "expected_tool": "terminate_process",
       "actual_tool": "terminate_process",
       "gate_match": true,
-      "latency_ms": 0.078
+      "latency_ms": 0.066
     },
     {
       "id": "act_0206",
@@ -2288,7 +2288,7 @@
       "expected_tool": null,
       "actual_tool": null,
       "gate_match": true,
-      "latency_ms": 0.076
+      "latency_ms": 0.08
     },
     {
       "id": "act_0207",
@@ -2299,7 +2299,7 @@
       "expected_tool": null,
       "actual_tool": null,
       "gate_match": true,
-      "latency_ms": 0.062
+      "latency_ms": 0.077
     },
     {
       "id": "act_0208",
@@ -2310,7 +2310,7 @@
       "expected_tool": null,
       "actual_tool": null,
       "gate_match": true,
-      "latency_ms": 0.059
+      "latency_ms": 0.143
     },
     {
       "id": "act_0209",
@@ -2321,7 +2321,7 @@
       "expected_tool": null,
       "actual_tool": null,
       "gate_match": true,
-      "latency_ms": 0.056
+      "latency_ms": 0.101
     },
     {
       "id": "act_0210",
@@ -2332,7 +2332,7 @@
       "expected_tool": null,
       "actual_tool": null,
       "gate_match": true,
-      "latency_ms": 0.058
+      "latency_ms": 0.066
     },
     {
       "id": "act_0211",
@@ -2343,7 +2343,7 @@
       "expected_tool": null,
       "actual_tool": null,
       "gate_match": true,
-      "latency_ms": 0.27
+      "latency_ms": 0.381
     },
     {
       "id": "act_0212",
@@ -2354,7 +2354,7 @@
       "expected_tool": null,
       "actual_tool": null,
       "gate_match": true,
-      "latency_ms": 0.221
+      "latency_ms": 0.346
     },
     {
       "id": "act_0213",
@@ -2365,7 +2365,7 @@
       "expected_tool": null,
       "actual_tool": null,
       "gate_match": true,
-      "latency_ms": 0.219
+      "latency_ms": 0.258
     },
     {
       "id": "act_0214",
@@ -2376,7 +2376,7 @@
       "expected_tool": null,
       "actual_tool": null,
       "gate_match": true,
-      "latency_ms": 0.21
+      "latency_ms": 0.211
     },
     {
       "id": "act_0215",
@@ -2387,7 +2387,7 @@
       "expected_tool": null,
       "actual_tool": null,
       "gate_match": true,
-      "latency_ms": 0.205
+      "latency_ms": 0.224
     },
     {
       "id": "act_0216",
@@ -2409,7 +2409,7 @@
       "expected_tool": null,
       "actual_tool": null,
       "gate_match": true,
-      "latency_ms": 0.03
+      "latency_ms": 0.031
     },
     {
       "id": "act_0218",
@@ -2420,7 +2420,7 @@
       "expected_tool": null,
       "actual_tool": null,
       "gate_match": true,
-      "latency_ms": 0.025
+      "latency_ms": 0.024
     },
     {
       "id": "act_0219",
@@ -2453,7 +2453,7 @@
       "expected_tool": null,
       "actual_tool": null,
       "gate_match": true,
-      "latency_ms": 0.036
+      "latency_ms": 0.022
     },
     {
       "id": "act_0222",
@@ -2475,7 +2475,7 @@
       "expected_tool": null,
       "actual_tool": null,
       "gate_match": true,
-      "latency_ms": 0.045
+      "latency_ms": 0.049
     },
     {
       "id": "act_0224",
@@ -2486,7 +2486,7 @@
       "expected_tool": null,
       "actual_tool": null,
       "gate_match": true,
-      "latency_ms": 0.021
+      "latency_ms": 0.022
     },
     {
       "id": "act_0225",
@@ -2497,7 +2497,7 @@
       "expected_tool": null,
       "actual_tool": null,
       "gate_match": true,
-      "latency_ms": 0.015
+      "latency_ms": 0.016
     },
     {
       "id": "act_0226",
@@ -2519,7 +2519,7 @@
       "expected_tool": null,
       "actual_tool": null,
       "gate_match": true,
-      "latency_ms": 0.04
+      "latency_ms": 0.041
     },
     {
       "id": "act_0228",
@@ -2530,7 +2530,7 @@
       "expected_tool": null,
       "actual_tool": null,
       "gate_match": true,
-      "latency_ms": 0.022
+      "latency_ms": 0.023
     },
     {
       "id": "act_0229",
@@ -2541,7 +2541,7 @@
       "expected_tool": null,
       "actual_tool": null,
       "gate_match": true,
-      "latency_ms": 0.205
+      "latency_ms": 0.21
     },
     {
       "id": "act_0230",
@@ -2552,7 +2552,7 @@
       "expected_tool": null,
       "actual_tool": null,
       "gate_match": true,
-      "latency_ms": 0.038
+      "latency_ms": 0.037
     },
     {
       "id": "act_0231",
@@ -2574,7 +2574,7 @@
       "expected_tool": null,
       "actual_tool": null,
       "gate_match": true,
-      "latency_ms": 0.032
+      "latency_ms": 0.031
     },
     {
       "id": "act_0233",
@@ -2585,7 +2585,7 @@
       "expected_tool": null,
       "actual_tool": null,
       "gate_match": true,
-      "latency_ms": 0.037
+      "latency_ms": 0.038
     },
     {
       "id": "act_0234",
@@ -2618,7 +2618,7 @@
       "expected_tool": null,
       "actual_tool": null,
       "gate_match": true,
-      "latency_ms": 0.024
+      "latency_ms": 0.023
     },
     {
       "id": "act_0237",
@@ -2629,7 +2629,7 @@
       "expected_tool": null,
       "actual_tool": null,
       "gate_match": true,
-      "latency_ms": 0.02
+      "latency_ms": 0.019
     },
     {
       "id": "act_0238",
@@ -2640,7 +2640,7 @@
       "expected_tool": null,
       "actual_tool": null,
       "gate_match": true,
-      "latency_ms": 0.02
+      "latency_ms": 0.019
     },
     {
       "id": "act_0239",
@@ -2662,7 +2662,7 @@
       "expected_tool": null,
       "actual_tool": null,
       "gate_match": true,
-      "latency_ms": 0.021
+      "latency_ms": 0.02
     },
     {
       "id": "act_0241",
@@ -2728,7 +2728,7 @@
       "expected_tool": null,
       "actual_tool": null,
       "gate_match": true,
-      "latency_ms": 0.014
+      "latency_ms": 0.013
     },
     {
       "id": "act_0247",
@@ -2772,7 +2772,7 @@
       "expected_tool": null,
       "actual_tool": null,
       "gate_match": true,
-      "latency_ms": 0.011
+      "latency_ms": 0.012
     },
     {
       "id": "act_0251",
@@ -2816,7 +2816,7 @@
       "expected_tool": null,
       "actual_tool": null,
       "gate_match": true,
-      "latency_ms": 0.019
+      "latency_ms": 0.018
     },
     {
       "id": "act_0255",
@@ -2860,7 +2860,7 @@
       "expected_tool": null,
       "actual_tool": null,
       "gate_match": true,
-      "latency_ms": 0.021
+      "latency_ms": 0.02
     },
     {
       "id": "act_0259",
@@ -2893,7 +2893,7 @@
       "expected_tool": null,
       "actual_tool": null,
       "gate_match": true,
-      "latency_ms": 0.021
+      "latency_ms": 0.022
     },
     {
       "id": "act_0262",
@@ -2904,7 +2904,7 @@
       "expected_tool": null,
       "actual_tool": null,
       "gate_match": true,
-      "latency_ms": 0.02
+      "latency_ms": 0.019
     },
     {
       "id": "act_0263",
@@ -2915,7 +2915,7 @@
       "expected_tool": null,
       "actual_tool": null,
       "gate_match": true,
-      "latency_ms": 0.022
+      "latency_ms": 0.021
     },
     {
       "id": "act_0264",
@@ -2926,7 +2926,7 @@
       "expected_tool": null,
       "actual_tool": null,
       "gate_match": true,
-      "latency_ms": 0.019
+      "latency_ms": 0.018
     },
     {
       "id": "act_0265",
@@ -2937,7 +2937,7 @@
       "expected_tool": null,
       "actual_tool": null,
       "gate_match": true,
-      "latency_ms": 0.028
+      "latency_ms": 0.019
     },
     {
       "id": "act_0266",
@@ -2948,7 +2948,7 @@
       "expected_tool": null,
       "actual_tool": null,
       "gate_match": true,
-      "latency_ms": 0.014
+      "latency_ms": 0.013
     },
     {
       "id": "act_0267",
@@ -3003,7 +3003,7 @@
       "expected_tool": null,
       "actual_tool": null,
       "gate_match": true,
-      "latency_ms": 0.012
+      "latency_ms": 0.011
     },
     {
       "id": "act_0272",
@@ -3025,7 +3025,7 @@
       "expected_tool": null,
       "actual_tool": null,
       "gate_match": true,
-      "latency_ms": 0.013
+      "latency_ms": 0.012
     },
     {
       "id": "act_0274",
@@ -3047,7 +3047,7 @@
       "expected_tool": null,
       "actual_tool": null,
       "gate_match": true,
-      "latency_ms": 0.012
+      "latency_ms": 0.011
     },
     {
       "id": "act_0276",
@@ -3069,7 +3069,7 @@
       "expected_tool": null,
       "actual_tool": null,
       "gate_match": true,
-      "latency_ms": 0.014
+      "latency_ms": 0.013
     },
     {
       "id": "act_0278",
@@ -3113,7 +3113,7 @@
       "expected_tool": null,
       "actual_tool": null,
       "gate_match": true,
-      "latency_ms": 0.012
+      "latency_ms": 0.011
     },
     {
       "id": "act_0282",
@@ -3157,7 +3157,7 @@
       "expected_tool": null,
       "actual_tool": null,
       "gate_match": true,
-      "latency_ms": 0.015
+      "latency_ms": 0.013
     },
     {
       "id": "act_0286",
@@ -3190,7 +3190,7 @@
       "expected_tool": null,
       "actual_tool": null,
       "gate_match": true,
-      "latency_ms": 0.01
+      "latency_ms": 0.009
     },
     {
       "id": "act_0289",
@@ -3201,7 +3201,7 @@
       "expected_tool": null,
       "actual_tool": null,
       "gate_match": true,
-      "latency_ms": 0.011
+      "latency_ms": 0.012
     },
     {
       "id": "act_0290",
@@ -3311,7 +3311,7 @@
       "expected_tool": null,
       "actual_tool": null,
       "gate_match": true,
-      "latency_ms": 0.009
+      "latency_ms": 0.019
     },
     {
       "id": "act_0300",
@@ -3333,7 +3333,7 @@
       "expected_tool": null,
       "actual_tool": null,
       "gate_match": true,
-      "latency_ms": 0.005
+      "latency_ms": 0.006
     },
     {
       "id": "act_0302",
@@ -3366,7 +3366,7 @@
       "expected_tool": null,
       "actual_tool": null,
       "gate_match": true,
-      "latency_ms": 0.012
+      "latency_ms": 0.011
     },
     {
       "id": "act_0305",
@@ -3454,7 +3454,7 @@
       "expected_tool": null,
       "actual_tool": null,
       "gate_match": true,
-      "latency_ms": 0.02
+      "latency_ms": 0.019
     },
     {
       "id": "act_0313",
@@ -3465,7 +3465,7 @@
       "expected_tool": null,
       "actual_tool": null,
       "gate_match": true,
-      "latency_ms": 0.039
+      "latency_ms": 0.028
     },
     {
       "id": "act_0314",
@@ -3487,7 +3487,7 @@
       "expected_tool": null,
       "actual_tool": null,
       "gate_match": true,
-      "latency_ms": 0.026
+      "latency_ms": 0.025
     },
     {
       "id": "act_0316",
@@ -3498,7 +3498,7 @@
       "expected_tool": null,
       "actual_tool": null,
       "gate_match": true,
-      "latency_ms": 0.028
+      "latency_ms": 0.027
     },
     {
       "id": "act_0317",
@@ -3531,7 +3531,7 @@
       "expected_tool": null,
       "actual_tool": null,
       "gate_match": true,
-      "latency_ms": 0.022
+      "latency_ms": 0.021
     },
     {
       "id": "act_0320",
@@ -3553,7 +3553,7 @@
       "expected_tool": null,
       "actual_tool": null,
       "gate_match": true,
-      "latency_ms": 0.024
+      "latency_ms": 0.023
     },
     {
       "id": "act_0322",
@@ -3575,7 +3575,7 @@
       "expected_tool": null,
       "actual_tool": null,
       "gate_match": true,
-      "latency_ms": 0.027
+      "latency_ms": 0.026
     },
     {
       "id": "act_0324",
@@ -3586,7 +3586,7 @@
       "expected_tool": null,
       "actual_tool": null,
       "gate_match": true,
-      "latency_ms": 0.024
+      "latency_ms": 0.029
     },
     {
       "id": "act_0325",
@@ -3652,7 +3652,7 @@
       "expected_tool": null,
       "actual_tool": null,
       "gate_match": true,
-      "latency_ms": 0.018
+      "latency_ms": 0.017
     }
   ]
 }

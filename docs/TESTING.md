@@ -1,6 +1,6 @@
 # AstraRun Testing & Verification Report
 
-> **Version**: 0.7.0  
+> **Version**: 0.8.0  
 > **Status**: VERIFIED & PASSING  
 > **Execution Date**: 2026-09-27  
 
@@ -8,9 +8,40 @@
 
 ## 1. Test Suite Architecture
 
-The AstraRun test suite contains **169 automated tests across 17 modules**:
+The AstraRun test suite contains **197 automated tests across 18 modules**:
 
-1. **Workstation Capability Tests (v0.7)**:
+1. **Task Runtime, Activity & History Tests (v0.8)**:
+   - `tests/test_v08_tasks.py` (28 tests):
+     - `test_task_status_properties`: 14 formal states, `is_terminal`, `is_active`, `is_waiting`.
+     - `test_fsm_valid_transitions`: Legal state transitions verified.
+     - `test_fsm_invalid_transitions`: Illegal transitions throw `InvalidStateTransitionError`.
+     - `test_task_model_lifecycle`: Timing, duration calculation, and dict serialization.
+     - `test_task_event_immutability`: Frozen dataclass immutability.
+     - `test_cancellation_token_basics`: Cooperative token cancellation, reasons, and callbacks.
+     - `test_task_event_bus`: Pub/sub registration, task filtering, and unsubscription.
+     - `test_task_event_bus_exception_safety`: Subscriber callback error isolation.
+     - `test_sanitize_request_redaction`: Regex redaction of API keys, bearer tokens, passwords.
+     - `test_hash_request`: Deterministic SHA-256 request hashing.
+     - `test_sanitize_capability_payload`: Bounded payload extraction (processes, files).
+     - `test_generate_task_title`: Natural deterministic title generation.
+     - `test_ledger_schema_and_pragmas`: SQLite WAL mode, foreign keys, user_version = 1.
+     - `test_ledger_task_crud`: Complete task and event persistence and rehydration.
+     - `test_ledger_queries`: Recent, status, capability, range, and search queries.
+     - `test_ledger_crash_recovery`: Dangling active tasks marked `INTERRUPTED`.
+     - `test_ledger_corruption_recovery`: Automatic corrupt file backup and fresh DB regeneration.
+     - `test_ledger_retention_and_clear`: Retention pruning and total history clearing.
+     - `test_ledger_export_task`: Complete JSON export of task metadata and timeline.
+     - `test_task_manager_lifecycle`: Full lifecycle orchestration and active task cleanup.
+     - `test_task_manager_block_and_fail`: Policy blocking and structured error recording.
+     - `test_task_manager_execute_capability`: Capability dispatch, timing, and event emission.
+     - `test_task_manager_cancellation_interception`: Pre-dispatch cancellation check.
+     - `test_semantic_rerun_safety`: **CRITICAL INVARIANT**: new task spawned from request text; zero stale argument replay.
+     - `test_task_activity_view`: PySide6 `TaskActivityView` event rendering, status badge, and cancel signal.
+     - `test_history_view`: PySide6 `HistoryView` list, search, filter chips, and re-run signal.
+     - `test_sql_injection_defense`: Parameterized SQL queries immune to SQL injection.
+     - `test_zero_raw_shell_execution_invariant`: Zero shell execution calls across tasks subsystem.
+
+2. **Workstation Capability Tests (v0.7)**:
    - `tests/test_v07_capabilities.py` (43 tests):
      - `test_capability_registry_init_and_listing`: Registry population (47 capabilities, 9 categories).
      - `test_capability_registry_execute_success`: Clean dispatch, observation recording, latency profiling.
@@ -288,14 +319,36 @@ tests/test_ai_bridge_protocol PASSED                                     [100%]
 ```
 
 ### Results Summary
-- **Total Tests Collected**: **169**
-- **Passed**: **169**
+- **Total Tests Collected**: **197**
+- **Passed**: **197**
 - **Failed**: **0**
-- **Duration**: **9.03s**
+- **Duration**: **12.41s**
 
 ---
 
-## 3. Capability Benchmark V1 Evaluation (520 Cases)
+## 3. Task Benchmark V1 Evaluation (300 Lifecycle Cases)
+
+```powershell
+.venv\Scripts\python -u benchmarks\tasks\run_task_benchmark.py
+```
+
+### Evaluation Results
+- **Cases Evaluated**: **300**
+- **Dataset SHA256**: `7979fb8dd6361aa6406f4ae318beae2901724c20671df68d34ad34c24378b4d4`
+- **Status Accuracy**: **100.0%** (300 / 300)
+- **Sequence Accuracy**: **100.0%** (300 / 300)
+- **Persistence Accuracy**: **100.0%** (300 / 300)
+- **Mean Latency**: **64.636 ms** (p50: 9.634 ms, p95: 256.514 ms)
+
+### Scale Stress Benchmark (10,000 Tasks & 100,000 Events)
+- **Bulk Ingestion Speed**: **99,757 rows/sec** (1.10 s total)
+- **Fetch 50 Recent Tasks**: **1.264 ms**
+- **10k Task Substring Search**: **7.429 ms**
+- **Retention Pruning (5,000 tasks)**: **339.590 ms**
+
+---
+
+## 4. Capability Benchmark V1 Evaluation (520 Cases)
 
 ```powershell
 .venv\Scripts\python benchmarks\capabilities\run_capability_benchmark.py

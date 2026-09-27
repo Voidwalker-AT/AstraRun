@@ -267,6 +267,35 @@ AstraRun v0.6 introduces concrete workstation action execution under strict arch
 ### 12.7. Decoupled External Reasoning Guarantee
 - AstraRun maintains zero dependencies on cloud APIs or external LLMs. The `ReasoningProvider` interface is intentionally unconfigured, ensuring 100% local, deterministic execution.
 
+---
+
+## 13. Task Runtime, Event Bus & History Security Invariants (v0.8)
+
+### 13.1. Zero Raw Shell Ingestion in Task Runtime
+- The `TaskManager`, `TaskLedger`, `TaskEventBus`, and cancellation subsystems contain zero calls to `os.system()`, `subprocess.Popen(shell=True)`, `cmd.exe`, or `powershell.exe`.
+- All capability execution passes through typed, validated Python handlers with structured arguments.
+
+### 13.2. 100% Parameterized SQLite Queries
+- All SQL statements in `TaskLedger` use parameterized queries with `?` bind markers.
+- String concatenation and dynamic SQL formatting are strictly prohibited, eliminating SQL injection vulnerabilities.
+
+### 13.3. Stored HTML & Injection Defense in UI
+- Historical summaries and user requests rendered in Qt widgets (`QLabel`, `QListWidget`) treat content strictly as literal plain text, preventing stored XSS or formatting injection.
+
+### 13.4. Observation-Only Event Bus (Rule #59)
+- Events published on `TaskEventBus` are strictly observational. Subscribers cannot execute capabilities, mutate system state, or grant execution authority.
+- The activity timeline reflects real verified events; artificial delay loops and simulated thinking are prohibited.
+
+### 13.5. Semantic Re-Run Invariant (Rules #35, #36)
+- Re-running historical tasks creates a **brand-new** task with the original user request text.
+- Re-evaluates live system state through NLP and ActionGate; strictly prohibits replaying stale PIDs, ports, or arguments.
+
+### 13.6. Privacy Redaction & Payload Bounding
+- Automatic regex redaction of API keys, bearer tokens, and passwords prior to SQLite storage.
+- Deterministic SHA-256 request hashing (`request_hash`) allows query suppression (`store_raw_requests: false`).
+- Bounded capability payload sanitization (process lists capped at 50, file lists capped at top 3, binary streams omitted).
+
+
 
 
 

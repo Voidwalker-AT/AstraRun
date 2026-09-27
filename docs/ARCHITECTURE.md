@@ -362,6 +362,39 @@ $$\text{Natural Language} \longrightarrow \text{NLP Engine} \longrightarrow \tex
 - `ResultCard`: Clean key-value diagnostic layout with status badge and capability action triggers.
 - `ListResultCard`: Selectable list presentation with keyboard navigation and Esc dismissal.
 
+---
+
+## 10. Task Runtime, Activity Timeline & Conversation History (v0.8)
+
+### 10.1. Task Lifecycle Authority (`astrarun.tasks.manager`)
+- Centrally governs workstation operations as persistent `Task` entities governed by an explicit 14-state directed Finite State Machine (`TaskStatus`).
+- Transition validation table (`VALID_TRANSITIONS`) strictly prohibits illegal jumps (e.g. attempting to resume a terminal task raises `InvalidStateTransitionError`).
+- Directly instruments `CapabilityRegistry` calls, profiling execution duration and emitting typed `CAPABILITY_STARTED`, `CAPABILITY_COMPLETED`, or `CAPABILITY_FAILED` records.
+
+### 10.2. Cooperative Cancellation (`astrarun.tasks.cancellation`)
+- Safe cancellation pattern using `CancellationToken` checkpoints instead of abrupt thread termination.
+- Checkpoints evaluated pre-dispatch and post-dispatch across workflows and loops.
+
+### 10.3. Observable Event Bus (`astrarun.tasks.events`)
+- In-memory event broker (`TaskEventBus`) decoupling runtime mechanics from UI presentation.
+- Supports 31 typed observable events (`TaskEventType`).
+- **Rule #59 Invariant**: Observation-only dispatch. Events never grant execution authority. Zero fake progress or fabricated thinking.
+
+### 10.4. Persistent SQLite Task Ledger (`astrarun.tasks.ledger`)
+- High-performance SQLite engine at `data/astra_history.db` with Write-Ahead Logging (WAL) and foreign keys enabled.
+- Automatic database corruption detection, backup (`astra_history.db.corrupt.<ts>`), and fresh initialization.
+- Startup crash recovery (`recover_interrupted_tasks()`) marking lingering active tasks as `INTERRUPTED`.
+- High-throughput indexing supporting query execution in < 1.3 ms across 10,000 tasks.
+
+### 10.5. Semantic Re-Run Safety Invariant
+- Re-running historical tasks creates a **brand-new** task with the original user request text.
+- Re-evaluates live system state through NLP and ActionGate; strictly prohibits replaying stale PIDs, ports, or arguments.
+
+### 10.6. UI Subsystems (`astrarun.ui.activity` & `astrarun.ui.history`)
+- `TaskActivityView`: Real-time Catppuccin Mocha activity feed rendering verified internal events with duration profiling and responsive cancellation.
+- `HistoryView`: Interactive split-view with instant substring search across past requests, quick date/status filter chips, timeline inspection, and safe semantic re-runs.
+
+
 
 
 

@@ -1,0 +1,19 @@
+{
+  "benchmark_name": "AstraRun Task Benchmark V1",
+  "case_count": 300,
+  "dataset_sha256": "7979fb8dd6361aa6406f4ae318beae2901724c20671df68d34ad34c24378b4d4",
+  "status_accuracy": 100.0,
+  "sequence_accuracy": 100.0,
+  "persistence_accuracy": 100.0,
+  "mean_latency_ms": 64.63569833353783,
+  "p50_latency_ms": 9.63350001256913,
+  "p95_latency_ms": 256.51410000864416,
+  "scale_test": {
+    "tasks_count": 10000,
+    "events_count": 100000,
+    "insert_duration_s": 1.1026743999973405,
+    "recent_query_ms": 1.2636000174097717,
+    "search_latency_ms": 7.429400022374466,
+    "cleanup_latency_ms": 339.5903999917209
+  }
+}

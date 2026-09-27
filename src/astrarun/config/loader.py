@@ -58,6 +58,14 @@ DEFAULT_SETTINGS: dict[str, Any] = {
         "file": "logs/astrarun.log",
         "max_bytes": 10485760,
         "backup_count": 3
+    },
+    "history": {
+        "enabled": True,
+        "db_path": "data/astra_history.db",
+        "store_raw_requests": True,
+        "retention_days": 30,
+        "max_tasks": 5000,
+        "store_result_payloads": False
     }
 }
 

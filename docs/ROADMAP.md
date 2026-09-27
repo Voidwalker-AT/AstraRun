@@ -17,8 +17,8 @@ flowchart LR
     v5 --> v6["v0.6: Actions & Context Engine"]
     v6 --> v65["v0.6.5: Hybrid NLP Engine"]
     v65 --> v7["v0.7: Workstation Capabilities"]
-    v7 --> v8["v0.8: Window Management"]
-    v8 --> v9["v0.9: Browser & File Intelligence"]
+    v7 --> v8["v0.8: Task Runtime & History"]
+    v8 --> v9["v0.9: Window Management"]
     v9 --> v10["v0.10: Application Interaction"]
     v10 --> v11["v0.11: Daemon & Rich Context"]
     v11 --> v12["v0.12: Optional Reasoning Providers"]
@@ -127,7 +127,7 @@ flowchart LR
 
 ---
 
-### v0.7 — Workstation Capability Expansion (Current Milestone)
+### v0.7 — Workstation Capability Expansion (Complete — 2026-09-27)
 - Expand deterministic, typed, policy-controlled OS capabilities across Applications, Files, Processes, Network, System, and Projects.
 - **Capability Registry**: Evolved typed abstraction with risk metadata, read-only flags, confirmation requirements, context effects, and unified `CapabilityResult`.
 - **Read-Only First Principle**: Focus on discover, inspect, and query before modify or terminate.
@@ -135,14 +135,30 @@ flowchart LR
 - **Bounded File Discovery**: Metadata-only index over user roots (`Workspace`, `Downloads`, `Documents`, `Desktop`, `Pictures`). Screenshot discovery, document & source code search, recent/latest modifiers. Generic file opening blocks executable scripts (`.exe`, `.bat`, `.ps1`). Reparse point / junction traversal protection.
 - **Process & Network Capabilities**: Extended resource metrics (CPU%, RSS, threads, start time), process sorting, parent/child relationships, listening port discovery, sanitized command line privacy.
 - **System & Audio Status**: Structured CPU/RAM/disk metrics, graceful GPU & battery fallback, safe audio volume inspection foundation.
-- **Window Discovery Foundation**: Read-only enumeration (`WindowEntity`) preparing for v0.8 window management.
+- **Window Discovery Foundation**: Read-only enumeration (`WindowEntity`) preparing for v0.9 window management.
 - **ResultCard UI**: Compact informational presentation mode with keyboard dismissal and safe action buttons.
 - **Observation Model**: Structured OS observations stored in-memory for future reasoning handoffs.
 - **Zero Raw Shell & Zero Reasoning Invocation**: All operations are typed adapters; no external reasoning calls.
+- **Capability Benchmark V1 (520 cases)**: 100.0% Capability Acc, 100.0% Permission Acc, 100.0% Block Recall, 0.561 ms latency.
+- **169 Passing Automated Tests**.
 
 ---
 
-### v0.8 — Window Management
+### v0.8 — Task Runtime, Activity Timeline & Conversation History (Complete — 2026-09-27)
+- **Task Runtime & Lifecycle Authority**: Centrally governed by `TaskManager` across a formal 14-state directed Finite State Machine (`TaskStatus`).
+- **Cooperative Cancellation**: Graceful abort mechanism governed by `CancellationToken` checkpoints.
+- **Observable Event Bus**: High-performance in-memory event broker (`TaskEventBus`) supporting 31 strongly-typed observable events (`TaskEventType`). Strict observation-only invariant (Rule #59).
+- **Persistent SQLite Task Ledger**: Production SQLite engine (`data/astra_history.db`) in Write-Ahead Logging (WAL) mode supporting 99,000+ rows/sec ingestion, startup crash recovery (`INTERRUPTED` states), and automatic corruption repair.
+- **Conversation & Message History**: Multi-turn dialogue threading (`Conversation`) and chronological audit messaging (`ConversationMessage`).
+- **Dedicated History & Audit UI**: Split-view `HistoryView` featuring instant substring search across past requests, quick date/status filter chips, timeline inspection, and safe semantic re-runs.
+- **Semantic Re-Run Safety Invariant**: Historical re-runs strictly spawn a brand-new task using the original semantic request text, re-evaluating against real-time workstation state with zero stale argument replay.
+- **Privacy & Redaction Controls**: Automatic regex redaction of API keys, tokens, and passwords; SHA-256 request hashing; and bounded capability payloads.
+- **Task Benchmark V1 (300 cases)**: 100.0% Status Accuracy, 100.0% Sequence Accuracy, 100.0% Persistence Accuracy.
+- **197 Passing Automated Tests**.
+
+---
+
+### v0.9 — Window Management & Desktop Control
 - Native window management (focus switching, workspace snapping, tiling, multi-monitor geometry, virtual desktop routing).
 - Window state mutation (minimize, maximize, restore) via verified HWND handles.
 

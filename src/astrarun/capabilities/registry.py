@@ -52,10 +52,18 @@ class CapabilityRegistry:
             return [c for c in self._capabilities.values() if c.category == category]
         return list(self._capabilities.values())
 
-    def execute(self, capability_id: str, arguments: Optional[dict[str, Any]] = None) -> CapabilityResult:
+    def execute(
+        self,
+        capability_id: str,
+        arguments: Optional[dict[str, Any]] = None,
+        task_id: Optional[str] = None,
+        conversation_id: Optional[str] = None,
+        correlation_id: Optional[str] = None,
+    ) -> CapabilityResult:
         """
         Safely execute a capability by ID with typed arguments.
         Enforces permissions, catches exceptions, records observations, and emits a CapabilityResult.
+        Optionally accepts task_id, conversation_id, and correlation_id for tracing.
         """
         t0 = time.perf_counter()
         args = arguments or {}
@@ -78,7 +86,17 @@ class CapabilityRegistry:
                 error_code=CapabilityErrorCode.BLOCKED,
             )
 
-        logger.info("Executing capability '%s' with args %s", capability_id, args)
+        if task_id:
+            logger.info(
+                "Executing capability '%s' [task_id=%s, conv_id=%s, corr_id=%s] with args %s",
+                capability_id,
+                task_id,
+                conversation_id,
+                correlation_id,
+                args,
+            )
+        else:
+            logger.info("Executing capability '%s' with args %s", capability_id, args)
 
         try:
             raw_res = cap.handler(**args)

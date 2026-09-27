@@ -42,9 +42,16 @@ def find_file(
     location: Optional[str] = None,
     file_type: Optional[str] = None,
     limit: int = 10,
+    pattern: Optional[str] = None,
 ) -> CapabilityResult:
-    """Find files by substring, extension, or location."""
+    """Find files by substring, extension, pattern, or location."""
     t0 = time.perf_counter()
+    if pattern:
+        if pattern.startswith("*."):
+            extension = extension or pattern[2:]
+        else:
+            query = query or pattern
+
     index = get_file_index()
     candidates = index.search(
         query=query,
@@ -58,7 +65,7 @@ def find_file(
     if not candidates:
         return CapabilityResult.fail(
             capability="find_file",
-            message=f"No files matching '{query or extension or location}' found.",
+            message=f"No files matching '{query or extension or location or pattern}' found.",
             error_code=CapabilityErrorCode.NOT_FOUND,
             latency_ms=latency,
         )
@@ -86,9 +93,18 @@ def find_latest_file(
     extension: Optional[str] = None,
     location: Optional[str] = None,
     file_type: Optional[str] = None,
+    pattern: Optional[str] = None,
 ) -> CapabilityResult:
     """Find the single most recently modified file matching constraints."""
     t0 = time.perf_counter()
+    if pattern:
+        if pattern.startswith("*."):
+            extension = extension or pattern[2:]
+        elif "screenshot" in pattern.lower():
+            file_type = file_type or "screenshot"
+        else:
+            file_type = file_type or pattern
+
     index = get_file_index()
     candidates = index.search(
         query="",

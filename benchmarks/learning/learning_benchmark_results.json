@@ -15,7 +15,7 @@
     "skill_mining": 100.0,
     "security_invariants": 100.0
   },
-  "mean_latency_ms": 25.285,
-  "p50_latency_ms": 0.097,
-  "p95_latency_ms": 137.51
+  "mean_latency_ms": 24.567,
+  "p50_latency_ms": 0.207,
+  "p95_latency_ms": 137.718
 }

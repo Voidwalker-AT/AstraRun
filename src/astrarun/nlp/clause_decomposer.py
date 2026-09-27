@@ -43,6 +43,19 @@ _ACTION_PATTERNS: list[tuple[re.Pattern, str, str]] = [
     (re.compile(r'\b(?:show\s+all\s+listening\s+ports|show\s+listening\s+ports|list\s+listening\s+ports|all\s+listening\s+ports)\b', re.I), "list_listening_ports", "network_action"),
     (re.compile(r'\b(?:show\s+(?:node|python|all)?\s*processes|list\s+processes|running\s+processes|highest\s+cpu\s+process|process\s+using\s+(?:the\s+)?most\s+memory)\b', re.I), "list_processes", "process_action"),
     (re.compile(r'\b(?:show\s+windows\s+for|windows\s+for)\b', re.I), "windows_for_application", "window_action"),
+    (re.compile(r'\b(?:list\s+windows|show\s+windows|all\s+windows|desktop\s+windows)\b', re.I), "list_windows", "window_action"),
+    (re.compile(r'\b(?:foreground\s+window|active\s+window|current\s+window)\b', re.I), "foreground_window", "window_action"),
+    (re.compile(r'\b(?:snap\s+.*(?:left|half\s+left)|tile\s+left)\b', re.I), "snap_window_left", "window_action"),
+    (re.compile(r'\b(?:snap\s+.*(?:right|half\s+right)|tile\s+right)\b', re.I), "snap_window_right", "window_action"),
+    (re.compile(r'\b(?:minimize\s+(?:window|this)|minimize)\b', re.I), "minimize_window", "window_action"),
+    (re.compile(r'\b(?:maximize\s+(?:window|this)|maximize)\b', re.I), "maximize_window", "window_action"),
+    (re.compile(r'\b(?:restore\s+(?:window|this)|restore)\b', re.I), "restore_window", "window_action"),
+    (re.compile(r'\b(?:move\s+.*to\s+monitor|move\s+to\s+monitor|send\s+to\s+monitor)\b', re.I), "move_window_to_monitor", "window_action"),
+    (re.compile(r'\b(?:move\s+window|position\s+window)\b', re.I), "move_window", "window_action"),
+    (re.compile(r'\b(?:resize\s+window)\b', re.I), "resize_window", "window_action"),
+    (re.compile(r'\b(?:close\s+(?:this\s+)?window|close\s+this)\b', re.I), "close_window", "window_action"),
+    (re.compile(r'\b(?:arrange\s+desktop|tile\s+windows|tile\s+all)\b', re.I), "arrange_desktop", "window_action"),
+    (re.compile(r'\b(?:undo\s+window|undo\s+layout|undo\s+last\s+window)\b', re.I), "undo_last_window_move", "window_action"),
     (re.compile(r'\b(?:what(?:\'s|\s+is|\s+are)\s+(?:using|on|running\s+on)|who\s+is\s+using|which\s+process\s+has|inspect\s+port|check\s+port|show\s+port|status\s+of\s+port|port\s+\d+\s+status)\b', re.I), "inspect_port", "inspect_action"),
     (re.compile(r'\b(?:how\s+much\s+memory|inspect\s+process|check\s+process|process\s+info|process\s+details|process\s+status)\b', re.I), "inspect_process", "inspect_action"),
     (re.compile(r'\b(?:inspect|check|show)\b', re.I), "inspect_port", "inspect_action"), # Default to inspection if ambiguous
@@ -81,7 +94,7 @@ def infer_action_and_intent(
     text_clean = clause_text.strip()
     
     # 1. Check for AI query semantics (questions like "why is port 3000 busy")
-    if re.search(r'\b(?:why\s+is|explain|how\s+do\s+i|write\s+code|why\s+did\s+my\s+server|figure\s+out|fix\s+my|decide\s+which)\b', text_clean, re.I):
+    if re.search(r'\b(?:why\s+is|explain|diagnose|analyze|how\s+do\s+i|write\s+code|why\s+did\s+my\s+server|figure\s+out|fix\s+my|decide\s+which)\b', text_clean, re.I):
         return ("ai_query", "ai_query", 0.95)
 
     # 2. Check for process termination
@@ -106,6 +119,46 @@ def infer_action_and_intent(
     if has_app and re.search(r'\b(?:show\s+windows\s+for|windows\s+for)\b', text_clean, re.I):
         return ("windows_for_application", "window_action", 0.95)
 
+    # 3b. Window Management Capabilities (v0.9)
+    if re.search(r'\b(?:list\s+windows|show\s+windows|all\s+windows|desktop\s+windows|open\s+windows)\b', text_clean, re.I):
+        return ("list_windows", "window_action", 0.98)
+
+    if re.search(r'\b(?:foreground\s+window|active\s+window|current\s+window)\b', text_clean, re.I):
+        return ("foreground_window", "window_action", 0.98)
+
+    if re.search(r'\b(?:snap\s+.*(?:left|half\s+left)|tile\s+left)\b', text_clean, re.I):
+        return ("snap_window_left", "window_action", 0.95)
+
+    if re.search(r'\b(?:snap\s+.*(?:right|half\s+right)|tile\s+right)\b', text_clean, re.I):
+        return ("snap_window_right", "window_action", 0.95)
+
+    if re.search(r'\b(?:minimize\s+(?:window|this)|minimize)\b', text_clean, re.I):
+        return ("minimize_window", "window_action", 0.95)
+
+    if re.search(r'\b(?:maximize\s+(?:window|this)|maximize)\b', text_clean, re.I):
+        return ("maximize_window", "window_action", 0.95)
+
+    if re.search(r'\b(?:restore\s+(?:window|this)|restore)\b', text_clean, re.I):
+        return ("restore_window", "window_action", 0.95)
+
+    if re.search(r'\b(?:move\s+.*to\s+monitor|move\s+to\s+monitor|send\s+to\s+monitor)\b', text_clean, re.I):
+        return ("move_window_to_monitor", "window_action", 0.95)
+
+    if re.search(r'\b(?:move\s+window|position\s+window)\b', text_clean, re.I):
+        return ("move_window", "window_action", 0.95)
+
+    if re.search(r'\b(?:resize\s+window)\b', text_clean, re.I):
+        return ("resize_window", "window_action", 0.95)
+
+    if re.search(r'\b(?:close\s+(?:this\s+)?window|close\s+this)\b', text_clean, re.I):
+        return ("close_window", "window_action", 0.95)
+
+    if re.search(r'\b(?:arrange\s+desktop|tile\s+windows|tile\s+all)\b', text_clean, re.I):
+        return ("arrange_desktop", "window_action", 0.95)
+
+    if re.search(r'\b(?:undo\s+window|undo\s+layout|undo\s+last\s+window)\b', text_clean, re.I):
+        return ("undo_last_window_move", "window_action", 0.98)
+
     # 4. Check for system health status queries
     if re.search(r'\b(?:system\s+status|system\s+summary|workstation\s+status|system\s+info)\b', text_clean, re.I):
         return ("system_summary", "system_action", 0.98)
@@ -119,9 +172,21 @@ def infer_action_and_intent(
     if re.search(r'\b(?:cpu\s+status|cpu\s+usage|show\s+cpu|cpu\s+utilization)\b', text_clean, re.I):
         return ("cpu_status", "system_action", 0.98)
 
+    if re.search(r'\b(?:disk\s+status|disk\s+usage|show\s+disk|free\s+disk|storage\s+status)\b', text_clean, re.I):
+        return ("disk_status", "system_action", 0.98)
+
+    if re.search(r'\b(?:battery\s+status|battery\s+level|show\s+battery|battery\s+health)\b', text_clean, re.I):
+        return ("battery_status", "system_action", 0.98)
+
+    if re.search(r'\b(?:audio\s+status|volume\s+status|sound\s+status|show\s+audio)\b', text_clean, re.I):
+        return ("audio_status", "system_action", 0.98)
+
     # 5. Check for network listing
-    if re.search(r'\b(?:show\s+all\s+listening\s+ports|show\s+listening\s+ports|list\s+listening\s+ports|all\s+listening\s+ports)\b', text_clean, re.I):
+    if re.search(r'\b(?:(?:show\s+all\s+|list\s+all\s+|show\s+|list\s+|all\s+)?(?:listening\s+ports|open\s+ports))\b', text_clean, re.I):
         return ("list_listening_ports", "network_action", 0.98)
+
+    if re.search(r'\b(?:network\s+connections|list\s+network\s+connections|network\s+status|show\s+network\s+connections)\b', text_clean, re.I):
+        return ("list_network_connections", "network_action", 0.98)
 
     # 6. Check for process listing
     if re.search(r'\b(?:show\s+(?:node|python|all)?\s*processes|list\s+processes|running\s+processes|highest\s+cpu\s+process|process\s+using\s+(?:the\s+)?most\s+memory)\b', text_clean, re.I):

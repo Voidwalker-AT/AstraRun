@@ -1,0 +1,44 @@
+{
+  "benchmark_file": "benchmarks/product/product_benchmark_v1.json",
+  "dataset_sha256": "a417eacbe201ce4b095286682013c043129ed8d188f56b30b5567d5ff2abb395",
+  "sha256_match": true,
+  "total_cases": 220,
+  "total_passed": 220,
+  "accuracy_pct": 100.0,
+  "false_execution_rate": 0.0,
+  "safety_violations": 0,
+  "mean_latency_ms": 141.8788,
+  "mean_fast_path_routing_latency_ms": 0.4699,
+  "category_results": {
+    "fast_path": {
+      "total": 50,
+      "passed": 50,
+      "accuracy_pct": 100.0
+    },
+    "direct_ui_command": {
+      "total": 40,
+      "passed": 40,
+      "accuracy_pct": 100.0
+    },
+    "window_management": {
+      "total": 40,
+      "passed": 40,
+      "accuracy_pct": 100.0
+    },
+    "system_inspection": {
+      "total": 40,
+      "passed": 40,
+      "accuracy_pct": 100.0
+    },
+    "safety_policies": {
+      "total": 25,
+      "passed": 25,
+      "accuracy_pct": 100.0
+    },
+    "reasoning_escalation": {
+      "total": 25,
+      "passed": 25,
+      "accuracy_pct": 100.0
+    }
+  }
+}

@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import time
-from typing import Any, Callable, Dict, List, Optional
+from typing import Any, Callable, Dict, List, Optional, Union
 
 from astrarun.capabilities.models import (
     Capability,
@@ -195,10 +195,23 @@ class CapabilityRegistry:
         from astrarun.tools.folders import open_folder
         from astrarun.tools.projects import open_project_folder, open_project_in_vscode
         from astrarun.tools.web import open_url
-        from astrarun.windows.discovery import (
+        from astrarun.windows import (
+            arrange_desktop,
+            close_window,
             find_window,
+            focus_window,
             foreground_window,
             list_windows,
+            maximize_window,
+            minimize_window,
+            move_window,
+            move_window_to_monitor,
+            resize_window,
+            restore_window,
+            snap_window,
+            snap_window_left,
+            snap_window_right,
+            undo_last_window_move,
             windows_for_application,
         )
 
@@ -631,7 +644,7 @@ class CapabilityRegistry:
         ))
 
         # ---------------------------------------------------------
-        # WINDOW CAPABILITIES (Discovery Foundation)
+        # WINDOW CAPABILITIES (Intelligence & Desktop Control)
         # ---------------------------------------------------------
         self.register(Capability(
             id="list_windows",
@@ -672,6 +685,138 @@ class CapabilityRegistry:
             read_only=True,
             handler=windows_for_application,
             permission=CapabilityPermission.AUTO,
+        ))
+        self.register(Capability(
+            id="focus_window",
+            category=CapabilityCategory.WINDOW,
+            description="Bring a target window to foreground focus",
+            args_schema={"hwnd": int, "pid": Optional[int]},
+            risk=ToolRisk.LOW,
+            read_only=False,
+            handler=focus_window,
+            permission=CapabilityPermission.AUTO,
+            context_effects=["window_focused"],
+        ))
+        self.register(Capability(
+            id="minimize_window",
+            category=CapabilityCategory.WINDOW,
+            description="Minimize an open desktop window",
+            args_schema={"hwnd": int, "pid": Optional[int]},
+            risk=ToolRisk.LOW,
+            read_only=False,
+            handler=minimize_window,
+            permission=CapabilityPermission.AUTO,
+            context_effects=["window_minimized"],
+        ))
+        self.register(Capability(
+            id="maximize_window",
+            category=CapabilityCategory.WINDOW,
+            description="Maximize an open desktop window to fill monitor work area",
+            args_schema={"hwnd": int, "pid": Optional[int]},
+            risk=ToolRisk.LOW,
+            read_only=False,
+            handler=maximize_window,
+            permission=CapabilityPermission.AUTO,
+            context_effects=["window_maximized"],
+        ))
+        self.register(Capability(
+            id="restore_window",
+            category=CapabilityCategory.WINDOW,
+            description="Restore a minimized or maximized window to normal size",
+            args_schema={"hwnd": int, "pid": Optional[int]},
+            risk=ToolRisk.LOW,
+            read_only=False,
+            handler=restore_window,
+            permission=CapabilityPermission.AUTO,
+            context_effects=["window_restored"],
+        ))
+        self.register(Capability(
+            id="move_window",
+            category=CapabilityCategory.WINDOW,
+            description="Move and optionally resize a desktop window",
+            args_schema={"hwnd": int, "x": int, "y": int, "width": Optional[int], "height": Optional[int], "pid": Optional[int]},
+            risk=ToolRisk.LOW,
+            read_only=False,
+            handler=move_window,
+            permission=CapabilityPermission.AUTO,
+            context_effects=["window_moved"],
+        ))
+        self.register(Capability(
+            id="resize_window",
+            category=CapabilityCategory.WINDOW,
+            description="Resize an open desktop window preserving top-left position",
+            args_schema={"hwnd": int, "width": int, "height": int, "pid": Optional[int]},
+            risk=ToolRisk.LOW,
+            read_only=False,
+            handler=resize_window,
+            permission=CapabilityPermission.AUTO,
+            context_effects=["window_resized"],
+        ))
+        self.register(Capability(
+            id="move_window_to_monitor",
+            category=CapabilityCategory.WINDOW,
+            description="Move a desktop window to a target display monitor",
+            args_schema={"hwnd": int, "monitor_spec": Union[str, int], "pid": Optional[int]},
+            risk=ToolRisk.LOW,
+            read_only=False,
+            handler=move_window_to_monitor,
+            permission=CapabilityPermission.AUTO,
+            context_effects=["window_moved_monitor"],
+        ))
+        self.register(Capability(
+            id="snap_window_left",
+            category=CapabilityCategory.WINDOW,
+            description="Snap a window to the left half of the monitor",
+            args_schema={"hwnd": int, "monitor_spec": Optional[Union[str, int]], "pid": Optional[int]},
+            risk=ToolRisk.LOW,
+            read_only=False,
+            handler=snap_window_left,
+            permission=CapabilityPermission.AUTO,
+            context_effects=["window_snapped_left"],
+        ))
+        self.register(Capability(
+            id="snap_window_right",
+            category=CapabilityCategory.WINDOW,
+            description="Snap a window to the right half of the monitor",
+            args_schema={"hwnd": int, "monitor_spec": Optional[Union[str, int]], "pid": Optional[int]},
+            risk=ToolRisk.LOW,
+            read_only=False,
+            handler=snap_window_right,
+            permission=CapabilityPermission.AUTO,
+            context_effects=["window_snapped_right"],
+        ))
+        self.register(Capability(
+            id="close_window",
+            category=CapabilityCategory.WINDOW,
+            description="Gracefully close a window via standard WM_CLOSE messaging (no process termination)",
+            args_schema={"hwnd": int, "pid": Optional[int]},
+            risk=ToolRisk.MEDIUM,
+            read_only=False,
+            handler=close_window,
+            permission=CapabilityPermission.AUTO,
+            context_effects=["window_closed"],
+        ))
+        self.register(Capability(
+            id="undo_window_layout",
+            category=CapabilityCategory.WINDOW,
+            description="Undo the last window movement or geometry change from the restore stack",
+            args_schema={},
+            risk=ToolRisk.LOW,
+            read_only=False,
+            handler=undo_last_window_move,
+            permission=CapabilityPermission.AUTO,
+            context_effects=["window_undone"],
+        ))
+        self.register(Capability(
+            id="arrange_desktop",
+            category=CapabilityCategory.WINDOW,
+            description="Arrange multiple windows atomically according to a composition plan",
+            args_schema={"plan": list},
+            risk=ToolRisk.LOW,
+            read_only=False,
+            handler=arrange_desktop,
+            permission=CapabilityPermission.AUTO,
+            context_effects=["desktop_arranged"],
         ))
 
         # ---------------------------------------------------------

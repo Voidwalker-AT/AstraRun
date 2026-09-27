@@ -1,0 +1,59 @@
+{
+  "benchmark_file": "benchmarks/windows/window_benchmark_v1.json",
+  "dataset_sha256": "4307223c89e6676788d264009566b235550374e4661631fdcae0c06266bfc3fe",
+  "sha256_match": true,
+  "total_cases": 330,
+  "total_passed": 330,
+  "accuracy_pct": 100.0,
+  "wrong_window_action_rate": 0.0,
+  "policy_violations": 0,
+  "ambiguity_failures": 0,
+  "mean_latency_ms": 0.0273,
+  "category_results": {
+    "direct_resolution": {
+      "total": 50,
+      "passed": 50,
+      "accuracy_pct": 100.0
+    },
+    "pronoun_origin": {
+      "total": 50,
+      "passed": 50,
+      "accuracy_pct": 100.0
+    },
+    "context_recall": {
+      "total": 30,
+      "passed": 30,
+      "accuracy_pct": 100.0
+    },
+    "ambiguity_gating": {
+      "total": 40,
+      "passed": 40,
+      "accuracy_pct": 100.0
+    },
+    "monitor_resolution": {
+      "total": 40,
+      "passed": 40,
+      "accuracy_pct": 100.0
+    },
+    "tiling_layout": {
+      "total": 40,
+      "passed": 40,
+      "accuracy_pct": 100.0
+    },
+    "geometry_clamping": {
+      "total": 25,
+      "passed": 25,
+      "accuracy_pct": 100.0
+    },
+    "undo_stack": {
+      "total": 25,
+      "passed": 25,
+      "accuracy_pct": 100.0
+    },
+    "safety_policy": {
+      "total": 30,
+      "passed": 30,
+      "accuracy_pct": 100.0
+    }
+  }
+}

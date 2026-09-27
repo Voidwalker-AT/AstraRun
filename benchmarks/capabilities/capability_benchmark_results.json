@@ -7,7 +7,7 @@
   "permission_accuracy": 1.0,
   "block_recall": 1.0,
   "confirm_recall": 1.0,
-  "latency_mean_ms": 0.5764,
-  "latency_p50_ms": 0.4732,
-  "latency_p95_ms": 1.0617
+  "latency_mean_ms": 0.7828,
+  "latency_p50_ms": 0.5786,
+  "latency_p95_ms": 1.6357
 }

@@ -20,6 +20,7 @@ from astrarun.capabilities.models import (
     WindowEntity,
 )
 from astrarun.core.logging import get_logger
+from astrarun.windows.policy import is_simulated_window_validation
 
 logger = get_logger("astrarun.windows.discovery")
 
@@ -103,6 +104,21 @@ def list_windows(limit: int = 30) -> CapabilityResult:
 def foreground_window() -> CapabilityResult:
     """Retrieve the currently focused foreground window."""
     t0 = time.perf_counter()
+    if is_simulated_window_validation():
+        return CapabilityResult.ok(
+            capability="foreground_window",
+            message="Foreground window is 'Visual Studio Code - AstraRun' (simulated).",
+            data={
+                "hwnd": 1002,
+                "title": "Visual Studio Code - AstraRun",
+                "pid": 1100,
+                "app_id": "code.exe",
+                "bounds": (0, 0, 1920, 1080),
+                "state": "maximized",
+            },
+            latency_ms=1.0,
+        )
+
     if sys.platform != "win32":
         return CapabilityResult.fail(
             capability="foreground_window",

@@ -102,8 +102,10 @@ class ActionGate:
         self,
         tool_registry: Optional[ToolRegistry] = None,
         config: Optional[ActionGateConfig] = None,
+        capability_registry: Any = None,
     ) -> None:
         self.tool_registry = tool_registry or ToolRegistry()
+        self.capability_registry = capability_registry
         self.config = config or ActionGateConfig()
         self._active_tokens: dict[str, ConfirmationToken] = {}
 
@@ -292,7 +294,10 @@ class ActionGate:
                 latency_ms=lat,
             )
 
-        tool_meta = self.tool_registry.get(tool_name)
+        tool_meta = self.tool_registry.get(tool_name) if hasattr(self.tool_registry, "get") else None
+        if not tool_meta and self.capability_registry and hasattr(self.capability_registry, "get"):
+            tool_meta = self.capability_registry.get(tool_name)
+
         if not tool_meta:
             lat = (time.perf_counter() - t0) * 1000.0
             return ActionGateResult(
@@ -306,19 +311,23 @@ class ActionGate:
             )
 
         # Check configured permission
-        configured_perm = self.config.permissions.get(tool_name, "CONFIRM")
+        configured_perm = self.config.permissions.get(tool_name)
+        if configured_perm is None:
+            if hasattr(tool_meta, "permission"):
+                configured_perm = "AUTO" if getattr(tool_meta.permission, "value", str(tool_meta.permission)).upper() == "AUTO" else "CONFIRM"
+            elif getattr(tool_meta, "risk", ToolRisk.LOW) == ToolRisk.LOW:
+                configured_perm = "AUTO"
+            else:
+                configured_perm = "CONFIRM"
 
         # ---------------------------------------------------------------------
         # Tier 3: Confirmation vs. Direct Allowance
         # ---------------------------------------------------------------------
-        # Actions requiring confirmation:
-        # 1. Any HIGH risk tool (e.g. terminate_process)
-        # 2. Any tool explicitly declaring requires_confirmation
-        # 3. Any tool configured as CONFIRM
-        # 4. Any power action (shutdown, restart)
+        tool_risk = getattr(tool_meta, "risk", ToolRisk.LOW)
+        tool_req_confirm = getattr(tool_meta, "requires_confirmation", False)
         needs_confirm = (
-            tool_meta.risk == ToolRisk.HIGH
-            or tool_meta.requires_confirmation
+            tool_risk == ToolRisk.HIGH
+            or tool_req_confirm
             or proposed_action.requires_confirmation
             or configured_perm == "CONFIRM"
             or "kill" in intent

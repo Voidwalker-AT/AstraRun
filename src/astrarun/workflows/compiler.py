@@ -336,7 +336,43 @@ class WorkflowCompiler:
                 preview_lines.append(f"{step_counter}. Show CPU status")
                 step_counter += 1
 
-            # G. Network Port Listing
+            elif clause.action == "disk_status":
+                steps.append(WorkflowStep(
+                    step_id=f"step_{step_counter}",
+                    name="Disk status",
+                    tool="disk_status",
+                    arguments={},
+                    critical=True,
+                    source_clause_idx=clause.idx,
+                ))
+                preview_lines.append(f"{step_counter}. Show disk status")
+                step_counter += 1
+
+            elif clause.action == "battery_status":
+                steps.append(WorkflowStep(
+                    step_id=f"step_{step_counter}",
+                    name="Battery status",
+                    tool="battery_status",
+                    arguments={},
+                    critical=True,
+                    source_clause_idx=clause.idx,
+                ))
+                preview_lines.append(f"{step_counter}. Show battery status")
+                step_counter += 1
+
+            elif clause.action == "audio_status":
+                steps.append(WorkflowStep(
+                    step_id=f"step_{step_counter}",
+                    name="Audio status",
+                    tool="audio_status",
+                    arguments={},
+                    critical=True,
+                    source_clause_idx=clause.idx,
+                ))
+                preview_lines.append(f"{step_counter}. Show audio status")
+                step_counter += 1
+
+            # G. Network Port Listing & Connections
             elif clause.action == "list_listening_ports":
                 steps.append(WorkflowStep(
                     step_id=f"step_{step_counter}",
@@ -347,6 +383,18 @@ class WorkflowCompiler:
                     source_clause_idx=clause.idx,
                 ))
                 preview_lines.append(f"{step_counter}. List listening ports")
+                step_counter += 1
+
+            elif clause.action in ("list_network_connections", "network_connections"):
+                steps.append(WorkflowStep(
+                    step_id=f"step_{step_counter}",
+                    name="List network connections",
+                    tool="list_network_connections",
+                    arguments={"limit": 20},
+                    critical=True,
+                    source_clause_idx=clause.idx,
+                ))
+                preview_lines.append(f"{step_counter}. List network connections")
                 step_counter += 1
 
             # H. Process Listing
@@ -429,6 +477,164 @@ class WorkflowCompiler:
                     ))
                     preview_lines.append(f"{step_counter}. List desktop windows")
                     step_counter += 1
+
+            elif clause.action == "foreground_window":
+                steps.append(WorkflowStep(
+                    step_id=f"step_{step_counter}",
+                    name="Get foreground window",
+                    tool="foreground_window",
+                    arguments={},
+                    critical=True,
+                    source_clause_idx=clause.idx,
+                ))
+                preview_lines.append(f"{step_counter}. Get active foreground window")
+                step_counter += 1
+
+            elif clause.action == "focus_window":
+                steps.append(WorkflowStep(
+                    step_id=f"step_{step_counter}",
+                    name="Focus window",
+                    tool="focus_window",
+                    arguments={},
+                    critical=True,
+                    source_clause_idx=clause.idx,
+                ))
+                preview_lines.append(f"{step_counter}. Focus window")
+                step_counter += 1
+
+            elif clause.action == "minimize_window":
+                steps.append(WorkflowStep(
+                    step_id=f"step_{step_counter}",
+                    name="Minimize window",
+                    tool="minimize_window",
+                    arguments={},
+                    critical=True,
+                    source_clause_idx=clause.idx,
+                ))
+                preview_lines.append(f"{step_counter}. Minimize window")
+                step_counter += 1
+
+            elif clause.action == "maximize_window":
+                steps.append(WorkflowStep(
+                    step_id=f"step_{step_counter}",
+                    name="Maximize window",
+                    tool="maximize_window",
+                    arguments={},
+                    critical=True,
+                    source_clause_idx=clause.idx,
+                ))
+                preview_lines.append(f"{step_counter}. Maximize window")
+                step_counter += 1
+
+            elif clause.action == "restore_window":
+                steps.append(WorkflowStep(
+                    step_id=f"step_{step_counter}",
+                    name="Restore window",
+                    tool="restore_window",
+                    arguments={},
+                    critical=True,
+                    source_clause_idx=clause.idx,
+                ))
+                preview_lines.append(f"{step_counter}. Restore window size and position")
+                step_counter += 1
+
+            elif clause.action == "snap_window_left":
+                steps.append(WorkflowStep(
+                    step_id=f"step_{step_counter}",
+                    name="Snap window left",
+                    tool="snap_window_left",
+                    arguments={},
+                    critical=True,
+                    source_clause_idx=clause.idx,
+                ))
+                preview_lines.append(f"{step_counter}. Snap window to left half")
+                step_counter += 1
+
+            elif clause.action == "snap_window_right":
+                steps.append(WorkflowStep(
+                    step_id=f"step_{step_counter}",
+                    name="Snap window right",
+                    tool="snap_window_right",
+                    arguments={},
+                    critical=True,
+                    source_clause_idx=clause.idx,
+                ))
+                preview_lines.append(f"{step_counter}. Snap window to right half")
+                step_counter += 1
+
+            elif clause.action == "move_window_to_monitor":
+                mon_match = re.search(r'\b(?:monitor|screen)\s*(\d+|left|right|primary|secondary)\b', clause.text, re.I)
+                mon_spec = mon_match.group(1) if mon_match else "next"
+                steps.append(WorkflowStep(
+                    step_id=f"step_{step_counter}",
+                    name=f"Move window to monitor {mon_spec}",
+                    tool="move_window_to_monitor",
+                    arguments={"monitor_spec": mon_spec},
+                    critical=True,
+                    source_clause_idx=clause.idx,
+                ))
+                preview_lines.append(f"{step_counter}. Move window to monitor {mon_spec}")
+                step_counter += 1
+
+            elif clause.action == "move_window":
+                steps.append(WorkflowStep(
+                    step_id=f"step_{step_counter}",
+                    name="Move window",
+                    tool="move_window",
+                    arguments={"x": 100, "y": 100, "width": 800, "height": 600},
+                    critical=True,
+                    source_clause_idx=clause.idx,
+                ))
+                preview_lines.append(f"{step_counter}. Move window")
+                step_counter += 1
+
+            elif clause.action == "resize_window":
+                steps.append(WorkflowStep(
+                    step_id=f"step_{step_counter}",
+                    name="Resize window",
+                    tool="resize_window",
+                    arguments={"width": 800, "height": 600},
+                    critical=True,
+                    source_clause_idx=clause.idx,
+                ))
+                preview_lines.append(f"{step_counter}. Resize window")
+                step_counter += 1
+
+            elif clause.action == "close_window":
+                steps.append(WorkflowStep(
+                    step_id=f"step_{step_counter}",
+                    name="Close window",
+                    tool="close_window",
+                    arguments={},
+                    critical=True,
+                    source_clause_idx=clause.idx,
+                ))
+                preview_lines.append(f"{step_counter}. Close window gracefully")
+                step_counter += 1
+
+            elif clause.action == "arrange_desktop":
+                steps.append(WorkflowStep(
+                    step_id=f"step_{step_counter}",
+                    name="Arrange desktop windows",
+                    tool="arrange_desktop",
+                    arguments={"layout": "tile_grid"},
+                    critical=True,
+                    source_clause_idx=clause.idx,
+                ))
+                preview_lines.append(f"{step_counter}. Arrange desktop windows")
+                step_counter += 1
+
+            elif clause.action == "undo_last_window_move":
+                steps.append(WorkflowStep(
+                    step_id=f"step_{step_counter}",
+                    name="Undo window layout",
+                    tool="undo_last_window_move",
+                    arguments={},
+                    critical=True,
+                    source_clause_idx=clause.idx,
+                ))
+                preview_lines.append(f"{step_counter}. Undo last window layout")
+                step_counter += 1
 
             # K. Unsupported / Open-ended action
             else:

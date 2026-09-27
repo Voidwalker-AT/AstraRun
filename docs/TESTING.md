@@ -1,6 +1,6 @@
 # AstraRun Testing & Verification Report
 
-> **Version**: 0.8.5  
+> **Version**: 0.9  
 > **Status**: VERIFIED & PASSING  
 > **Execution Date**: 2026-09-27  
 
@@ -8,9 +8,49 @@
 
 ## 1. Test Suite Architecture
 
-The AstraRun test suite contains **215 automated tests across 19 modules**:
+The AstraRun test suite contains **252 automated tests across 20 modules**:
 
-1. **Memory, Learning & Skill Foundation Tests (v0.8.5)**:
+1. **Daily Driver Integration & Window Intelligence Tests (v0.9)**:
+   - `tests/test_v09_daily_driver.py` (37 tests):
+     - `test_window_resolver_direct_match`: Resolves exact window title and app name.
+     - `test_window_resolver_pronoun_to_origin`: Grounds "this window", "current window", "it" to origin window.
+     - `test_window_resolver_context_anaphora`: Grounds "that window" to last inspected window.
+     - `test_window_resolver_ambiguity_gating`: Ambiguous query yields WAITING_CLARIFICATION.
+     - `test_window_resolver_exact_title_break_ambiguity`: Exact title matches resolve disambiguation.
+     - `test_desktop_layout_engine_half_splits`: Verifies mathematical boundaries for left/right/top/bottom splits.
+     - `test_desktop_layout_engine_quad_corners`: Verifies 2x2 quadrant geometries.
+     - `test_desktop_layout_engine_two_thirds_and_one_third`: Verifies coding focus split.
+     - `test_geometry_clamping`: Clamps window to visible work area with min 300x200.
+     - `test_window_restore_stack_lifo`: Verifies LIFO restore stack popping.
+     - `test_window_restore_stack_bounded_depth`: Verifies bounded depth (max 20).
+     - `test_window_restore_stack_ttl_expiration`: Verifies 600s TTL pruning.
+     - `test_astrarun_self_window_protection`: `_ASTRARUN_HWNDS` self-targeting protection.
+     - `test_validate_window_identity_null_or_negative`: Rejects invalid HWNDs.
+     - `test_validate_window_identity_toctou_pid_mismatch`: Rejects recycled HWNDs.
+     - `test_monitor_resolution_natural_language`: Resolves "monitor 2", "second monitor", "main display".
+     - `test_astra_application_initialization`: Initializes all 14 platform subsystems.
+     - `test_handle_request_fast_path`: Verifies sub-3ms fast path routing.
+     - `test_handle_request_direct_ui_commands`: Verifies instant UI navigation commands.
+     - `test_handle_request_window_snapping_and_undo`: Verifies snapping and undo through handle_request.
+     - `test_handle_request_system_inspection`: Verifies hardware telemetry queries.
+     - `test_handle_request_safety_confirmation_gate`: Verifies ActionGate confirmation gating.
+     - `test_handle_request_reasoning_escalation`: Verifies AI bridge boundary escalation.
+     - `test_handle_request_empty_query`: Handles whitespace or empty requests safely.
+     - `test_single_instance_lock`: Verifies named Win32 mutex lock.
+     - `test_window_layout_snapshot_serialization`: Snapshot round-trip serialization.
+     - `test_monitor_entity_serialization`: Monitor entity serialization.
+     - `test_window_bounds_dataclass`: WindowBounds to_tuple and to_dict.
+     - `test_layout_type_parsing_variations`: Normalization of layout string variants.
+     - `test_window_restore_stack_clear`: Stack clearing logic.
+     - `test_window_resolution_dataclass`: WindowResolution serialization.
+     - `test_controller_move_and_resize_simulation`: Verifies window movement simulation.
+     - `test_controller_move_to_monitor_simulation`: Verifies cross-monitor movement simulation.
+     - `test_controller_close_window_simulation`: Verifies graceful WM_CLOSE simulation.
+     - `test_controller_arrange_desktop_simulation`: Verifies multi-window desktop arrangement.
+     - `test_diagnostics_dialog_data_collection`: Verifies system diagnostics telemetry.
+     - `test_settings_dialog_preferences_io`: Verifies settings loading and saving.
+
+2. **Memory, Learning & Skill Foundation Tests (v0.8.5)**:
    - `tests/test_v085_learning.py` (18 tests):
      - `test_memory_models_and_enums`: Dataclass immutability, enum mapping, serialization.
      - `test_confidence_calculator_math`: Formula checks, positive weights, double contradiction penalty, asymptotic saturation.
@@ -465,6 +505,39 @@ tests/test_ai_bridge_protocol PASSED                                     [100%]
 - **Unresolved Rejection Accuracy**: **100.0%** (18 / 18)
 - **FALSE EXECUTION RATE**: **0.0%** (0 / 18 false triggers)
 - **Mean Search Latency**: **3.03 ms**
+
+---
+
+## 8.1. Window Benchmark V1 Evaluation (330 Test Cases)
+
+```powershell
+.venv\Scripts\python benchmarks\windows\run_window_benchmark.py
+```
+
+### Evaluation Results
+- **Total Cases Evaluated**: **330**
+- **Dataset SHA256**: `4307223c89e6676788d264009566b235550374e4661631fdcae0c06266bfc3fe`
+- **Overall Accuracy**: **100.0%** (330 / 330)
+- **WRONG WINDOW ACTION RATE**: **0.00%** (Prime Safety Invariant)
+- **Policy Violations**: **0**
+- **Ambiguity Failures**: **0**
+- **Mean Evaluation Latency**: **0.0229 ms**
+
+---
+
+## 8.2. Product Benchmark V1 Evaluation (220 Test Cases)
+
+```powershell
+.venv\Scripts\python benchmarks\product\run_product_benchmark.py
+```
+
+### Evaluation Results
+- **Total Cases Evaluated**: **220**
+- **Dataset SHA256**: `a417eacbe201ce4b095286682013c043129ed8d188f56b30b5567d5ff2abb395`
+- **Overall Accuracy**: **100.0%** (220 / 220)
+- **FALSE EXECUTION RATE**: **0.00%** (Prime Architectural Invariant)
+- **Mean Fast-Path Routing Latency**: **0.4699 ms** (< 3ms Invariant Verified)
+- **Mean End-to-End Latency**: **141.88 ms**
 
 ---
 

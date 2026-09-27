@@ -802,6 +802,120 @@
 - **Consequences**:
   - Safe, privacy-compliant training dataset generation with zero cloud leakage.
 
+---
+
+## ADR-066: Native Win32 Window Intelligence Subsystem Architecture
+- **Status**: ACCEPTED
+- **Context**: Window positioning and tiling tools frequently depend on heavy external GUI automation packages or node-based frameworks, introducing high latency and memory bloat.
+- **Decision**:
+  - Implement the entire window management subsystem using native Win32 `User32`/`Gdi32`/`Shcore` APIs via `ctypes.windll`.
+  - Zero external GUI automation dependencies.
+- **Consequences**:
+  - Microsecond-level window queries and geometric modifications with zero process spawning overhead.
+
+---
+
+## ADR-067: The Origin Window Invariant and Pre-Focus HWND Capture
+- **Status**: ACCEPTED
+- **Context**: Triggering the launcher via `Alt+Space` steals foreground keyboard focus, preventing the system from identifying the user's active window.
+- **Decision**:
+  - Capture `GetForegroundWindow()` synchronously inside the hotkey handler before displaying or focusing the launcher window.
+  - Store the captured handle as `origin_window` and ground all implicit or pronoun-based window actions to it.
+  - Restore focus to `origin_window` upon command completion.
+- **Consequences**:
+  - Seamless, natural desktop window operations (`snap left`, `maximize window`) without requiring the user to specify window titles.
+
+---
+
+## ADR-068: Self-Targeting Window Immunity (`_ASTRARUN_HWNDS`)
+- **Status**: ACCEPTED
+- **Context**: A window assistant could accidentally snap, resize, minimize, or close its own resident launcher or dialog windows.
+- **Decision**:
+  - Maintain a process-wide registry `_ASTRARUN_HWNDS` in `policy.py`.
+  - Automatically register all AstraRun window handles on creation and unregister on destruction.
+  - Unconditionally reject any window manipulation or termination targeting an AstraRun HWND.
+- **Consequences**:
+  - AstraRun is mathematically immune to self-modification or self-closure via natural language commands.
+
+---
+
+## ADR-069: Multi-Monitor Geometry Modeling with Work Area and DPI Awareness
+- **Status**: ACCEPTED
+- **Context**: Heterogeneous multi-monitor configurations with mixed DPI scaling and taskbars cause window misplacement and clipping.
+- **Decision**:
+  - Enforce `DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2` upon startup.
+  - Enumerate monitors via `EnumDisplayMonitors` and compute usable bounds using `GetMonitorInfoW.rcWork` (excluding taskbars and appbars).
+  - Deterministically sort displays with Primary as Monitor 1, followed by secondary monitors geometrically ordered left-to-right.
+- **Consequences**:
+  - Pixel-perfect window placement across diverse multi-monitor setups without taskbar overlap.
+
+---
+
+## ADR-070: Eleven Deterministic Desktop Tiling Layouts
+- **Status**: ACCEPTED
+- **Context**: Users require standard tiling arrangements (halves, quadrants, two-thirds coding splits) that snap cleanly into place.
+- **Decision**:
+  - Define 11 exact geometric layouts in `DesktopLayoutEngine` (`FULL`, `LEFT_HALF`, `RIGHT_HALF`, `TOP_HALF`, `BOTTOM_HALF`, `TOP_LEFT`, `TOP_RIGHT`, `BOTTOM_LEFT`, `BOTTOM_RIGHT`, `LEFT_TWO_THIRDS`, `RIGHT_ONE_THIRD`).
+  - Calculate boundaries using integer arithmetic and remainder allocation to guarantee zero 1px gaps or overspills.
+- **Consequences**:
+  - Clean, predictable window tiling matching modern operating system snap mechanics.
+
+---
+
+## ADR-071: Bounded LIFO Window Restore Stack for Reversible Operations
+- **Status**: ACCEPTED
+- **Context**: Accidental window movement disrupts the user's desktop layout and creates frustration if irreversible.
+- **Decision**:
+  - Implement `WindowRestoreStack` with a bounded depth of 20 snapshots and 600-second TTL pruning.
+  - Capture pre-mutation snapshots before any `SetWindowPos` call.
+  - Expose `undo` / `undo last window move` to immediately restore geometry.
+- **Consequences**:
+  - Complete operational reversibility with negligible memory footprint (< 6 KB).
+
+---
+
+## ADR-072: Canonical Application Pipeline Composition Root (`AstraApplication`)
+- **Status**: ACCEPTED
+- **Context**: Multiple entry points (hotkey, tray, CLI, tests) previously accessed subsystems directly, leading to inconsistent safety checks.
+- **Decision**:
+  - Establish `AstraApplication.handle_request()` as the single canonical entry point for all natural language and launcher requests.
+  - Pipeline enforces: Direct Navigation -> Fast Path (< 3ms) -> Rich NLP -> Window Grounding -> ActionGate -> Execution -> Learning Ingestion.
+- **Consequences**:
+  - 100% architectural consistency and unified safety enforcement across all interfaces.
+
+---
+
+## ADR-073: Named Win32 Mutex Single-Instance Lock
+- **Status**: ACCEPTED
+- **Context**: Running multiple instances of a global hotkey launcher causes hotkey collisions and corrupted SQLite ledger writes.
+- **Decision**:
+  - Acquire a Windows named mutex (`Local\AstraRun_SingleInstance_Mutex`) via `CreateMutexW` upon startup.
+  - If `ERROR_ALREADY_EXISTS` is encountered, cleanly notify the user and exit immediately.
+- **Consequences**:
+  - Robust single-instance enforcement with automatic kernel cleanup on abnormal termination.
+
+---
+
+## ADR-074: Programmatic High-DPI System Tray Icon Painting
+- **Status**: ACCEPTED
+- **Context**: Raster `.ico` or `.png` tray assets become blurry or artifacted when Windows displays undergo dynamic DPI scaling (100% to 200%).
+- **Decision**:
+  - Programmatically render the Catppuccin Mocha themed icon onto a high-DPI `QPixmap` using anti-aliased vector operations in `QPainter`.
+- **Consequences**:
+  - Sharp, pristine visual assets across all display scales without bundling external image files.
+
+---
+
+## ADR-075: Safe Window Termination Protocol via `WM_CLOSE`
+- **Status**: ACCEPTED
+- **Context**: Forcibly terminating a process to close a window causes immediate data loss and unsaved file corruption.
+- **Decision**:
+  - Window closure sends `PostMessageW(hwnd, WM_CLOSE, 0, 0)`.
+  - Applications receive standard close signals, allowing native "Save Changes?" prompts to appear.
+- **Consequences**:
+  - Graceful, user-safe window closing with zero data destruction.
+
+
 
 
 

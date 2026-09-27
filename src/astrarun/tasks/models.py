@@ -373,6 +373,11 @@ class Task:
             import hashlib
             self.request_hash = hashlib.sha256(self.request_text.strip().encode("utf-8")).hexdigest()
 
+    @property
+    def task_id(self) -> str:
+        """Alias for id for backwards and callers compatibility."""
+        return self.id
+
     def transition_to(self, new_status: TaskStatus) -> None:
         """Validate and apply a finite state transition."""
         validate_transition(self.status, new_status)

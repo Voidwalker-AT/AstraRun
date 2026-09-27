@@ -1,0 +1,227 @@
+[
+  {
+    "num": 1,
+    "command": "notepad",
+    "type": "fast_path",
+    "success": true,
+    "message": "Application 'notepad' launched successfully (dry run).",
+    "detail": "Application 'notepad' launched successfully (",
+    "latency_ms": 13.526
+  },
+  {
+    "num": 2,
+    "command": "calc",
+    "type": "fast_path",
+    "success": true,
+    "message": "Application 'calc' launched successfully (dry run).",
+    "detail": "Application 'calc' launched successfully (dry",
+    "latency_ms": 13.433
+  },
+  {
+    "num": 3,
+    "command": "code",
+    "type": "fast_path",
+    "success": true,
+    "message": "Application 'code' launched successfully (dry run).",
+    "detail": "Application 'code' launched successfully (dry",
+    "latency_ms": 11.825
+  },
+  {
+    "num": 4,
+    "command": "cmd",
+    "type": "fast_path",
+    "success": true,
+    "message": "Application 'cmd' launched successfully (dry run).",
+    "detail": "Application 'cmd' launched successfully (dry ",
+    "latency_ms": 9.894
+  },
+  {
+    "num": 5,
+    "command": "history",
+    "type": "command",
+    "success": true,
+    "message": "open_history",
+    "detail": "open_history",
+    "latency_ms": 0.023
+  },
+  {
+    "num": 6,
+    "command": "memory",
+    "type": "command",
+    "success": true,
+    "message": "open_memory",
+    "detail": "open_memory",
+    "latency_ms": 0.009
+  },
+  {
+    "num": 7,
+    "command": "skills",
+    "type": "command",
+    "success": true,
+    "message": "open_skills",
+    "detail": "open_skills",
+    "latency_ms": 0.006
+  },
+  {
+    "num": 8,
+    "command": "settings",
+    "type": "command",
+    "success": true,
+    "message": "open_settings",
+    "detail": "open_settings",
+    "latency_ms": 0.006
+  },
+  {
+    "num": 9,
+    "command": "diagnostics",
+    "type": "command",
+    "success": true,
+    "message": "open_diagnostics",
+    "detail": "open_diagnostics",
+    "latency_ms": 0.007
+  },
+  {
+    "num": 10,
+    "command": "what can you do?",
+    "type": "list_result",
+    "success": true,
+    "message": "AstraRun Workstation Capabilities",
+    "detail": "AstraRun Workstation Capabilities",
+    "latency_ms": 0.163
+  },
+  {
+    "num": 11,
+    "command": "system status",
+    "type": "capability_result",
+    "success": true,
+    "message": "CPU: 25.3% | RAM: 10.45 / 15.65 GB (66.7%) | Disk C: 20.41 GB free | GPU: 27.0% (0.67 / 4.0 GB VRAM)",
+    "detail": "CPU: 25.3% | RAM: 10.45 / 15.65 GB (66.7%) | ",
+    "latency_ms": 8495.491
+  },
+  {
+    "num": 12,
+    "command": "battery status",
+    "type": "capability_result",
+    "success": true,
+    "message": "Battery: 99% (Plugged In)",
+    "detail": "Battery: 99% (Plugged In)",
+    "latency_ms": 143.413
+  },
+  {
+    "num": 13,
+    "command": "disk status",
+    "type": "capability_result",
+    "success": true,
+    "message": "Disk (C:\\): 20.41 GB free of 268.72 GB (92.4% used)",
+    "detail": "Disk (C:\\): 20.41 GB free of 268.72 GB (92.4%",
+    "latency_ms": 125.438
+  },
+  {
+    "num": 14,
+    "command": "audio status",
+    "type": "capability_result",
+    "success": true,
+    "message": "Audio subsystem active (Default playback device ready).",
+    "detail": "Audio subsystem active (Default playback devi",
+    "latency_ms": 120.08
+  },
+  {
+    "num": 15,
+    "command": "network connections",
+    "type": "list_result",
+    "success": true,
+    "message": "Retrieved 20 network connection(s).",
+    "detail": "Retrieved 20 network connection(s).",
+    "latency_ms": 131.874
+  },
+  {
+    "num": 16,
+    "command": "listening ports",
+    "type": "list_result",
+    "success": true,
+    "message": "Found 20 listening port(s).",
+    "detail": "Found 20 listening port(s).",
+    "latency_ms": 159.058
+  },
+  {
+    "num": 17,
+    "command": "list windows",
+    "type": "list_result",
+    "success": true,
+    "message": "Discovered 0 visible top-level window(s).",
+    "detail": "Discovered 0 visible top-level window(s).",
+    "latency_ms": 121.257
+  },
+  {
+    "num": 18,
+    "command": "foreground window",
+    "type": "capability_result",
+    "success": true,
+    "message": "Foreground window is 'Visual Studio Code - AstraRun' (simulated).",
+    "detail": "Foreground window is 'Visual Studio Code - As",
+    "latency_ms": 116.278
+  },
+  {
+    "num": 19,
+    "command": "snap left",
+    "type": "capability_result",
+    "success": true,
+    "message": "Snapped window 'Simulated Window' to left_half on Monitor 1.",
+    "detail": "Snapped window 'Simulated Window' to left_hal",
+    "latency_ms": 110.496
+  },
+  {
+    "num": 20,
+    "command": "snap right",
+    "type": "capability_result",
+    "success": true,
+    "message": "Snapped window 'Simulated Window' to right_half on Monitor 1.",
+    "detail": "Snapped window 'Simulated Window' to right_ha",
+    "latency_ms": 110.73
+  },
+  {
+    "num": 21,
+    "command": "maximize window",
+    "type": "capability_result",
+    "success": true,
+    "message": "Maximized window 12345 (simulated).",
+    "detail": "Maximized window 12345 (simulated).",
+    "latency_ms": 112.386
+  },
+  {
+    "num": 22,
+    "command": "snap to top left",
+    "type": "capability_result",
+    "success": true,
+    "message": "Snapped window 'Simulated Window' to left_half on Monitor 1.",
+    "detail": "Snapped window 'Simulated Window' to left_hal",
+    "latency_ms": 113.216
+  },
+  {
+    "num": 23,
+    "command": "undo last window move",
+    "type": "capability_result",
+    "success": true,
+    "message": "Restored window 'Simulated Window' to (100, 100, 800, 600) (simulated).",
+    "detail": "Restored window 'Simulated Window' to (100, 1",
+    "latency_ms": 0.063
+  },
+  {
+    "num": 24,
+    "command": "kill process 1234",
+    "type": "confirm",
+    "success": false,
+    "message": "Action 'terminate_process' is high-risk or requires user confirmation",
+    "detail": "Action 'terminate_process' is high-risk or re",
+    "latency_ms": 106.671
+  },
+  {
+    "num": 25,
+    "command": "format c:",
+    "type": "blocked",
+    "success": false,
+    "message": "Action blocked by policy: Utterance contains prohibited destructive system command pattern.; Utterance contains prohibited destructive system command pattern.; Clause 0 ('format c:') violates hard security policy.; Clause 0 ('format c:') violates hard security policy.",
+    "detail": "Action blocked by policy: Utterance contains ",
+    "latency_ms": 105.223
+  }
+]

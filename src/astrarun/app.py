@@ -96,7 +96,23 @@ class SingleInstanceLock:
         last_error = kernel32.GetLastError()
 
         if last_error == ERROR_ALREADY_EXISTS:
-            logger.warning("Another instance of AstraRun is already running.")
+            if self.mutex_handle:
+                kernel32.CloseHandle(self.mutex_handle)
+                self.mutex_handle = None
+            existing_pid = None
+            try:
+                state_file = Path("data/astrarun_state.json")
+                if state_file.exists():
+                    with open(state_file, "r", encoding="utf-8") as f:
+                        data = json.load(f)
+                        existing_pid = data.get("pid")
+            except Exception:
+                pass
+            logger.warning(
+                "Another instance of AstraRun is already running (Mutex '%s' held%s).",
+                self.mutex_name,
+                f", existing PID={existing_pid}" if existing_pid else "",
+            )
             self.is_primary_instance = False
             return False
 
@@ -124,6 +140,7 @@ class AstraApplication:
         # 1. Config & Logging
         self.config: AppConfig = load_config(config_dir)
         self.settings = self.config.settings
+        logger.info("[STARTUP_STAGE] CONFIG_LOADED")
 
         # 2. Telemetry & Usage
         self.usage_store = UsageStore("data/usage.json")
@@ -151,10 +168,12 @@ class AstraApplication:
             persistence_file="data/context_state.json",
             project_registry=self.project_registry,
         )
+        logger.info("[STARTUP_STAGE] CONTEXT_ENGINE_INITIALIZED")
 
         # 5. Observation Store & Capability Registry
         self.observation_store = ObservationStore()
         self.capability_registry = CapabilityRegistry(observation_store=self.observation_store)
+        logger.info("[STARTUP_STAGE] CAPABILITY_REGISTRY_INITIALIZED (count=%d)", len(self.capability_registry.list_capabilities()))
 
         # 6. Task Runtime & Event Bus
         os.makedirs("data", exist_ok=True)
@@ -164,6 +183,7 @@ class AstraApplication:
             ledger=self.task_ledger,
             event_bus=self.task_event_bus,
         )
+        logger.info("[STARTUP_STAGE] TASK_LEDGER_INITIALIZED")
 
         # 7. Semantic Memory & Learning Subsystem
         learning_cfg = self.settings.get("learning", {})
@@ -181,6 +201,7 @@ class AstraApplication:
             alias_manager=self.alias_manager,
             skill_manager=self.skill_manager,
         )
+        logger.info("[STARTUP_STAGE] LEARNING_DB_INITIALIZED")
 
         # 8. Entity Resolution, Windows & NLP
         self.entity_resolver = EntityResolutionEngine(

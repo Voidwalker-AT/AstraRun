@@ -1,6 +1,6 @@
 {
   "milestone": "AstraRun v0.10.1",
-  "timestamp": "2026-09-28 10:28:49",
+  "timestamp": "2026-09-28 10:54:40",
   "total_steps": 30,
   "passed_steps": 30,
   "failed_steps": 0,
@@ -13,7 +13,7 @@
       "verification_level": "SIMULATED",
       "passed": true,
       "detail": "mod=0x4001, vk=0x20",
-      "latency_ms": 0.009400013368576765
+      "latency_ms": 0.008200004231184721
     },
     {
       "step": 2,
@@ -22,7 +22,7 @@
       "verification_level": "SIMULATED",
       "passed": true,
       "detail": "key=Space, modifiers=['Alt']",
-      "latency_ms": 0.0667999847792089
+      "latency_ms": 0.058900011936202645
     },
     {
       "step": 3,
@@ -31,7 +31,7 @@
       "verification_level": "SIMULATED",
       "passed": true,
       "detail": "captured_hwnd=4096",
-      "latency_ms": 0.10209999163635075
+      "latency_ms": 0.10030000703409314
     },
     {
       "step": 4,
@@ -40,7 +40,7 @@
       "verification_level": "LIVE_WORKSTATION",
       "passed": true,
       "detail": "force_foreground_activation returned True",
-      "latency_ms": 741.8869000102859
+      "latency_ms": 1144.0314000064973
     },
     {
       "step": 5,
@@ -49,7 +49,7 @@
       "verification_level": "SIMULATED",
       "passed": true,
       "detail": "Verified 4 DPR scales: [True, True, True, True]",
-      "latency_ms": 0.012900010915473104
+      "latency_ms": 0.011600001016631722
     },
     {
       "step": 6,
@@ -58,7 +58,7 @@
       "verification_level": "SIMULATED",
       "passed": true,
       "detail": "Computed (428, 48) in work area (1536x816)",
-      "latency_ms": 0.0942000187933445
+      "latency_ms": 0.09289997979067266
     },
     {
       "step": 7,
@@ -67,7 +67,7 @@
       "verification_level": "LIVE_WORKSTATION",
       "passed": true,
       "detail": "Launcher visible at (428, 23)",
-      "latency_ms": 21.30709998891689
+      "latency_ms": 16.26479998230934
     },
     {
       "step": 8,
@@ -76,7 +76,7 @@
       "verification_level": "LIVE_WORKSTATION",
       "passed": true,
       "detail": "Launcher hidden successfully: True",
-      "latency_ms": 309.0869000006933
+      "latency_ms": 301.2788000050932
     },
     {
       "step": 9,
@@ -85,7 +85,7 @@
       "verification_level": "LIVE_WORKSTATION",
       "passed": true,
       "detail": "Input field hasFocus: True",
-      "latency_ms": 9.038500022143126
+      "latency_ms": 11.719199974322692
     },
     {
       "step": 10,
@@ -94,7 +94,7 @@
       "verification_level": "SIMULATED",
       "passed": true,
       "detail": "Guards present: _is_animating=False, _has_been_active=True",
-      "latency_ms": 4.893599980277941
+      "latency_ms": 5.650100007187575
     },
     {
       "step": 11,
@@ -103,7 +103,7 @@
       "verification_level": "SIMULATED",
       "passed": true,
       "detail": "Flags: WindowDoesNotAcceptFocus=True",
-      "latency_ms": 0.2877000079024583
+      "latency_ms": 0.19719998817890882
     },
     {
       "step": 12,
@@ -112,7 +112,7 @@
       "verification_level": "SIMULATED",
       "passed": true,
       "detail": "WA_ShowWithoutActivating=True",
-      "latency_ms": 0.051099981646984816
+      "latency_ms": 0.028099981136620045
     },
     {
       "step": 13,
@@ -121,7 +121,7 @@
       "verification_level": "LIVE_WORKSTATION",
       "passed": true,
       "detail": "WS_EX_NOACTIVATE present: True (ex_style=0x8080088)",
-      "latency_ms": 0.08220001473091543
+      "latency_ms": 0.25209999876096845
     },
     {
       "step": 14,
@@ -130,7 +130,7 @@
       "verification_level": "SIMULATED",
       "passed": true,
       "detail": "Computed (1152, 24) in work area (1536x816)",
-      "latency_ms": 0.04849999095313251
+      "latency_ms": 0.09350001346319914
     },
     {
       "step": 15,
@@ -138,8 +138,8 @@
       "section": "Floating Task HUD",
       "verification_level": "SIMULATED",
       "passed": true,
-      "detail": "Controller bound to bus ID 1806548939984",
-      "latency_ms": 0.3354000218678266
+      "detail": "Controller bound to bus ID 2723017733328",
+      "latency_ms": 0.34339999547228217
     },
     {
       "step": 16,
@@ -148,7 +148,7 @@
       "verification_level": "LIVE_WORKSTATION",
       "passed": true,
       "detail": "HUD state: PASSIVE_PROGRESS, visible: True",
-      "latency_ms": 69.26980000571348
+      "latency_ms": 69.30580001790076
     },
     {
       "step": 17,
@@ -157,7 +157,7 @@
       "verification_level": "LIVE_WORKSTATION",
       "passed": true,
       "detail": "HUD state: SUCCESS, title: 'Completed'",
-      "latency_ms": 53.85830000159331
+      "latency_ms": 53.810999990673736
     },
     {
       "step": 18,
@@ -166,7 +166,7 @@
       "verification_level": "LIVE_WORKSTATION",
       "passed": true,
       "detail": "HUD state: ERROR, title: 'Failed'",
-      "latency_ms": 58.56770000536926
+      "latency_ms": 57.921100000385195
     },
     {
       "step": 19,
@@ -175,7 +175,7 @@
       "verification_level": "LIVE_WORKSTATION",
       "passed": true,
       "detail": "HUD state: WAITING_CONFIRMATION, action_container visible: True",
-      "latency_ms": 67.63020000653341
+      "latency_ms": 70.8396999980323
     },
     {
       "step": 20,
@@ -184,7 +184,7 @@
       "verification_level": "SIMULATED",
       "passed": true,
       "detail": "Timer configured: True",
-      "latency_ms": 7.589499989990145
+      "latency_ms": 8.328900003107265
     },
     {
       "step": 21,
@@ -193,7 +193,7 @@
       "verification_level": "LIVE_WORKSTATION",
       "passed": true,
       "detail": "open_application('notepad') -> Application 'notepad' launched successfully.",
-      "latency_ms": 706.3426999957301
+      "latency_ms": 669.8516000178643
     },
     {
       "step": 22,
@@ -201,8 +201,8 @@
       "section": "Real Notepad Gate",
       "verification_level": "LIVE_WORKSTATION",
       "passed": true,
-      "detail": "Notepad window found: HWND 855444 ('Untitled - Notepad')",
-      "latency_ms": 610.43279999285
+      "detail": "Notepad window found: HWND 18155952 ('Untitled - Notepad')",
+      "latency_ms": 602.9909999924712
     },
     {
       "step": 23,
@@ -210,8 +210,8 @@
       "section": "Real Notepad Gate",
       "verification_level": "LIVE_WORKSTATION",
       "passed": true,
-      "detail": "Pre-captured origin: 'Notepad' (HWND 855444)",
-      "latency_ms": 0.04640000406652689
+      "detail": "Pre-captured origin: 'Notepad' (HWND 18155952)",
+      "latency_ms": 0.034500000765547156
     },
     {
       "step": 24,
@@ -220,7 +220,7 @@
       "verification_level": "LIVE_WORKSTATION",
       "passed": true,
       "detail": "Launcher presented at (448, 48) on active monitor",
-      "latency_ms": 19.57060000859201
+      "latency_ms": 6.734499998856336
     },
     {
       "step": 25,
@@ -229,7 +229,7 @@
       "verification_level": "LIVE_WORKSTATION",
       "passed": true,
       "detail": "ExecutionResult: capability_result \u2014 Typed 19 characters (simulated).",
-      "latency_ms": 74.9521000252571
+      "latency_ms": 67.39260000176728
     },
     {
       "step": 26,
@@ -238,7 +238,7 @@
       "verification_level": "LIVE_WORKSTATION",
       "passed": true,
       "detail": "Launcher dismissed: True",
-      "latency_ms": 4.954999982146546
+      "latency_ms": 3.6199000023771077
     },
     {
       "step": 27,
@@ -247,7 +247,7 @@
       "verification_level": "LIVE_WORKSTATION",
       "passed": true,
       "detail": "Task HUD active: True",
-      "latency_ms": 0.005799985956400633
+      "latency_ms": 0.0048999791033566
     },
     {
       "step": 28,
@@ -256,7 +256,7 @@
       "verification_level": "LIVE_WORKSTATION",
       "passed": true,
       "detail": "Text typed without stealing focus. Target application state restored.",
-      "latency_ms": 2.1407000022009015
+      "latency_ms": 1.354899985017255
     },
     {
       "step": 29,
@@ -265,7 +265,7 @@
       "verification_level": "SIMULATED",
       "passed": true,
       "detail": "Compiled 2 steps: open_application + type_text",
-      "latency_ms": 6664.447899995139
+      "latency_ms": 4447.297399980016
     },
     {
       "step": 30,
@@ -274,7 +274,7 @@
       "verification_level": "LIVE_WORKSTATION",
       "passed": true,
       "detail": "Telemetry OK: ['Alt']+Space, triggers=0",
-      "latency_ms": 0.022199994418770075
+      "latency_ms": 0.02929999027401209
     }
   ]
 }

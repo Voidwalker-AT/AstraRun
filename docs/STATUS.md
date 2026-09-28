@@ -49,16 +49,18 @@
 ## 2. Verification & Benchmark Results
 
 ### 2.1 Automated Unit & Integration Tests
-- **Status**: **319 / 319 PASSED** in **41.69s**
+- **Status**: **327 / 327 PASSED** in **44.65s**
 - **Regressions**: **0**
 - 14 dedicated tests in `tests/test_v0101_launcher_hud.py` verifying hotkey parsing, thread priming, origin pre-capture, DPI positioning, HUD non-focus flags, HUD state transitions, controller event bus, presentation lifecycle, diagnostics, and compound workflows.
 - 12 dedicated hotfix tests in `tests/test_v0101_hotfix_dwell.py` verifying focus transition survival, Alt release survival, 2s/5s/10s dwell times, intentional Escape dismissal, toggle dismissal, enter dismissal, human typing simulation, and 100-cycle stability.
+- 8 dedicated resident lifecycle tests in `tests/test_v0101_resident_lifecycle.py` verifying `QApplication` quit prevention when windows are hidden, UI strong reference retention, idle residency, single-instance mutex cleanup, and atomic readiness state file protocol.
 
 ### 2.2 Premature Dismissal & Dwell Stability (Hotfix Verified)
 - **Premature Launcher Dismissal Rate**: **0.00%** (100-cycle automated stress test)
 - **10-Second Dwell Survival Rate**: **100.0%**
 - **Human Typing Dwell Survival**: **100.0%**
 - **Alt Release Dismissal Rate**: **0.00%**
+- **Resident Startup & Readiness Protocol**: Verified (`data/astrarun_state.json`) with zero false-positive service start reports.
 - Fully documented in `docs/V0.10.1_HOTFIX.md`.
 
 ### 2.3 Live Acceptance Suite (30 / 30 Passed)

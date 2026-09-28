@@ -1,10 +1,14 @@
-"""Main entry point for AstraRun v0.9 Daily Driver & Window Intelligence."""
+"""Main entry point for AstraRun Resident Service & Daily Driver."""
 
 from __future__ import annotations
 
 import argparse
+import json
+import os
 import signal
 import sys
+import time
+from datetime import datetime
 from pathlib import Path
 
 # Ensure src/ is on sys.path for direct script invocation
@@ -15,6 +19,7 @@ if str(SRC_DIR) not in sys.path:
 from PySide6.QtCore import QTimer
 from PySide6.QtWidgets import QApplication
 
+from astrarun import __version__
 from astrarun.app import AstraApplication, SingleInstanceLock
 from astrarun.core.logging import get_logger, setup_logging
 from astrarun.hotkeys.manager import HotkeyManager
@@ -47,14 +52,47 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
+def write_state_file(
+    status: str,
+    ready: bool,
+    stage: str,
+    modifiers: list[str] | None = None,
+    key: str = "Space",
+    exit_code: int | None = None,
+    started_at: str | None = None,
+) -> None:
+    """Write machine-readable runtime state file for wrapper process verification."""
+    try:
+        os.makedirs("data", exist_ok=True)
+        state_path = Path("data/astrarun_state.json")
+        hk_str = f"{'+'.join(modifiers)}+{key}" if modifiers else "Alt+Space"
+        state_data = {
+            "pid": os.getpid(),
+            "version": __version__,
+            "status": status,
+            "ready": ready,
+            "timestamp": time.time(),
+            "started_at": started_at or datetime.now().isoformat(),
+            "hotkey": hk_str,
+            "tray": True,
+            "stage": stage,
+            "exit_code": exit_code,
+        }
+        tmp_path = Path(f"data/astrarun_state_{os.getpid()}.tmp")
+        with open(tmp_path, "w", encoding="utf-8") as f:
+            json.dump(state_data, f, indent=2)
+        tmp_path.replace(state_path)
+    except Exception as err:
+        logging.getLogger("astrarun.main").warning("Could not write state file: %s", err)
+
+
 def main() -> int:
     """Initialize composition root, single-instance enforcement, tray, hotkeys, and Qt event loop."""
+    start_iso = datetime.now().isoformat()
     args = parse_args()
 
-    # 1. Instantiate Application Composition Root
+    # 1. Setup logging first to ensure all subsequent stages are captured
     astra_app = AstraApplication(config_dir=args.config_dir)
-
-    # 2. Setup logging
     log_cfg = astra_app.settings.get("logging", {})
     setup_logging(
         log_file=log_cfg.get("file", "logs/astrarun.log"),
@@ -63,9 +101,20 @@ def main() -> int:
         backup_count=int(log_cfg.get("backup_count", 3)),
     )
     logger = get_logger("astrarun.main")
-    logger.info("Initializing AstraRun v0.10.1-hotfix (Real Alt+Space Launcher)... PID=%d", os.getpid())
 
-    # 3. Headless CLI command execution mode
+    # Global uncaught exception logger to guard pythonw.exe silent exits
+    def handle_exception(exc_type, exc_value, exc_traceback):
+        if issubclass(exc_type, KeyboardInterrupt):
+            sys.__excepthook__(exc_type, exc_value, exc_traceback)
+            return
+        logger.critical("Uncaught exception in AstraRun main process:", exc_info=(exc_type, exc_value, exc_traceback))
+
+    sys.excepthook = handle_exception
+
+    logger.info("[STARTUP_STAGE] STARTUP_BEGIN (PID=%d, version=%s)", os.getpid(), __version__)
+    logger.info("Initializing AstraRun v%s (Real Alt+Space Launcher)... PID=%d", __version__, os.getpid())
+
+    # 2. Headless CLI command execution mode
     if args.run_command:
         logger.info("Headless command execution mode: '%s'", args.run_command)
         res = astra_app.handle_request(args.run_command)
@@ -75,43 +124,52 @@ def main() -> int:
         astra_app.shutdown()
         return 0 if res.success else 1
 
-    # 4. Single-Instance Enforcement
+    # 3. Single-Instance Enforcement
     if not astra_app.single_instance.acquire():
-        logger.warning("Another instance of AstraRun is already running. Exiting cleanly.")
+        logger.warning("[STARTUP_STAGE] SINGLE_INSTANCE_FAILED. Another instance is active. Exiting cleanly.")
         print("[ASTRARUN] Another instance of AstraRun is already running. Exiting.")
         return 0
+    logger.info("[STARTUP_STAGE] SINGLE_INSTANCE_ACQUIRED (mutex=%s)", astra_app.single_instance.mutex_name)
 
-    # 5. Initialize PySide6 GUI Application
+    # 4. Initialize PySide6 GUI Application
     qapp = QApplication(sys.argv)
     qapp.setApplicationName("AstraRun")
     qapp.setOrganizationName("Astra")
     # AstraRun runs resident in background; do not quit when launcher is hidden
     qapp.setQuitOnLastWindowClosed(False)
+    logger.info("[STARTUP_STAGE] QT_APPLICATION_CREATED (quitOnLastWindowClosed=False)")
 
-    # 6. Instantiate Floating Task HUD & HUD Controller
+    # 5. Instantiate Floating Task HUD & HUD Controller
     hud = FloatingTaskHUD()
     hud_controller = TaskHUDController(hud=hud, event_bus=astra_app.task_event_bus, app=astra_app)
+    logger.info("[STARTUP_STAGE] HUD_CREATED")
 
-    # 7. Instantiate Launcher Window (Top-Center Floating Command Bar)
+    # 6. Instantiate Launcher Window (Top-Center Floating Command Bar)
     launcher = LauncherWindow(app=astra_app, hud=hud)
+    logger.info("[STARTUP_STAGE] LAUNCHER_CREATED")
 
-    # 8. Setup Global Hotkey Manager & Presentation Controller
+    # 7. Setup Global Hotkey Manager & Presentation Controller
     hotkey_cfg = astra_app.settings.get("hotkey", {})
     modifiers = hotkey_cfg.get("modifiers", ["Alt"])
     key = hotkey_cfg.get("key", "Space")
 
     hotkey_manager = HotkeyManager(config_modifiers=modifiers, config_key=key)
-    astra_app.hotkey_manager = hotkey_manager  # type: ignore
-
     presentation_controller = LauncherPresentationController(
         launcher=launcher,
         hud=hud,
         app=astra_app,
         hotkey_manager=hotkey_manager,
     )
-    astra_app.presentation_controller = presentation_controller  # type: ignore
+    logger.info("[STARTUP_STAGE] HOTKEY_MANAGER_CREATED")
 
-    # 9. Instantiate System Tray Icon
+    # Retain strong references on composition root to prevent GC
+    astra_app.launcher = launcher  # type: ignore
+    astra_app.hud = hud  # type: ignore
+    astra_app.hud_controller = hud_controller  # type: ignore
+    astra_app.presentation_controller = presentation_controller  # type: ignore
+    astra_app.hotkey_manager = hotkey_manager  # type: ignore
+
+    # 8. Instantiate System Tray Icon
     tray_icon = AstraTrayIcon(parent=launcher)
     tray_icon.toggle_launcher_requested.connect(presentation_controller.toggle_presentation)
     tray_icon.open_history_requested.connect(launcher.open_history)
@@ -121,8 +179,10 @@ def main() -> int:
     tray_icon.open_diagnostics_requested.connect(launcher.open_diagnostics)
     tray_icon.exit_requested.connect(qapp.quit)
     tray_icon.show()
+    astra_app.tray_icon = tray_icon  # type: ignore
+    logger.info("[STARTUP_STAGE] TRAY_CREATED (tooltip='%s')", tray_icon.toolTip())
 
-    # 10. Wire up Hotkey Manager to Presentation Controller
+    # 9. Wire up Hotkey Manager to Presentation Controller
     hotkey_manager.hotkey_activated.connect(presentation_controller.toggle_presentation)
 
     def on_hotkey_error(err_msg: str):
@@ -132,16 +192,30 @@ def main() -> int:
 
     hotkey_manager.error_occurred.connect(on_hotkey_error)
     hotkey_manager.start()
+    logger.info("[STARTUP_STAGE] HOTKEY_REGISTERED (%s+%s)", "+".join(modifiers), key)
 
-    # Clean shutdown hook
+    # 10. Clean shutdown hook
     def cleanup():
-        logger.info("AstraRun shutting down...")
+        logger.info("[SHUTDOWN_STAGE] SHUTDOWN_REQUESTED (reason='aboutToQuit')")
         try:
+            write_state_file(
+                status="STOPPED",
+                ready=False,
+                stage="SHUTDOWN_COMPLETED",
+                modifiers=modifiers,
+                key=key,
+                exit_code=0,
+                started_at=start_iso,
+            )
             hotkey_manager.stop()
             hud_controller.stop()
             hud.hide()
             tray_icon.hide()
             astra_app.shutdown()
+            # Clean up state file on normal exit
+            state_path = Path("data/astrarun_state.json")
+            if state_path.exists():
+                state_path.unlink(missing_ok=True)
         except Exception as e:
             logger.error("Error during cleanup: %s", e)
 
@@ -155,12 +229,33 @@ def main() -> int:
     heartbeat = QTimer()
     heartbeat.timeout.connect(lambda: None)
     heartbeat.start(500)
+    astra_app.heartbeat = heartbeat  # type: ignore
 
     if args.show_now:
         presentation_controller.present()
 
-    logger.info("AstraRun v0.10.1-hotfix is resident and listening for %s+%s. (PID=%d)", "+".join(modifiers), key, os.getpid())
-    return qapp.exec()
+    # 11. Write readiness state file and log stage entering event loop
+    logger.info("[STARTUP_STAGE] EVENT_LOOP_ENTERING")
+    write_state_file(
+        status="READY",
+        ready=True,
+        stage="EVENT_LOOP_ENTERING",
+        modifiers=modifiers,
+        key=key,
+        started_at=start_iso,
+    )
+
+    logger.info(
+        "AstraRun v%s is resident and listening for %s+%s. (PID=%d)",
+        __version__,
+        "+".join(modifiers),
+        key,
+        os.getpid(),
+    )
+    exit_code = qapp.exec()
+    logger.info("[SHUTDOWN_STAGE] EVENT_LOOP_EXITED (code=%d)", exit_code)
+    logger.info("[SHUTDOWN_STAGE] PROCESS_EXIT_CODE: %d", exit_code)
+    return exit_code
 
 
 if __name__ == "__main__":

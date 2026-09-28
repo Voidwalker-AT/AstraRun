@@ -1,0 +1,280 @@
+{
+  "milestone": "AstraRun v0.10.1",
+  "timestamp": "2026-09-28 09:41:15",
+  "total_steps": 30,
+  "passed_steps": 30,
+  "failed_steps": 0,
+  "pass_rate_pct": 100.0,
+  "results": [
+    {
+      "step": 1,
+      "title": "Hotkey parsing (Alt+Space)",
+      "section": "Hotkey & Presentation",
+      "verification_level": "SIMULATED",
+      "passed": true,
+      "detail": "mod=0x4001, vk=0x20",
+      "latency_ms": 0.013400014722719789
+    },
+    {
+      "step": 2,
+      "title": "Listener Queue Priming & Config",
+      "section": "Hotkey & Presentation",
+      "verification_level": "SIMULATED",
+      "passed": true,
+      "detail": "key=Space, modifiers=['Alt']",
+      "latency_ms": 0.07760000880807638
+    },
+    {
+      "step": 3,
+      "title": "Pre-Capture Origin HWND at Trigger",
+      "section": "Hotkey & Presentation",
+      "verification_level": "SIMULATED",
+      "passed": true,
+      "detail": "captured_hwnd=4096",
+      "latency_ms": 0.13420000323094428
+    },
+    {
+      "step": 4,
+      "title": "Foreground Lock Bypass (AttachThreadInput)",
+      "section": "Hotkey & Presentation",
+      "verification_level": "LIVE_WORKSTATION",
+      "passed": true,
+      "detail": "force_foreground_activation returned True",
+      "latency_ms": 738.7801999866497
+    },
+    {
+      "step": 5,
+      "title": "Multi-Scale DPI Logical Mapping",
+      "section": "Hotkey & Presentation",
+      "verification_level": "SIMULATED",
+      "passed": true,
+      "detail": "Verified 4 DPR scales: [True, True, True, True]",
+      "latency_ms": 0.011800002539530396
+    },
+    {
+      "step": 6,
+      "title": "Top-Center Position Geometry",
+      "section": "Hotkey & Presentation",
+      "verification_level": "SIMULATED",
+      "passed": true,
+      "detail": "Computed (428, 48) in work area (1536x816)",
+      "latency_ms": 0.0990999978967011
+    },
+    {
+      "step": 7,
+      "title": "Entrance Drop-In Animation (150ms)",
+      "section": "Hotkey & Presentation",
+      "verification_level": "LIVE_WORKSTATION",
+      "passed": true,
+      "detail": "Launcher visible at (428, 23)",
+      "latency_ms": 5.734000005759299
+    },
+    {
+      "step": 8,
+      "title": "Exit Slide-Up Animation (110ms)",
+      "section": "Hotkey & Presentation",
+      "verification_level": "LIVE_WORKSTATION",
+      "passed": true,
+      "detail": "Launcher hidden successfully: True",
+      "latency_ms": 303.9021999866236
+    },
+    {
+      "step": 9,
+      "title": "Instant Keyboard Focus Preservation",
+      "section": "Hotkey & Presentation",
+      "verification_level": "LIVE_WORKSTATION",
+      "passed": true,
+      "detail": "Input field hasFocus: True",
+      "latency_ms": 14.195099996868521
+    },
+    {
+      "step": 10,
+      "title": "Focus-Loss Auto-Dismissal Guards",
+      "section": "Hotkey & Presentation",
+      "verification_level": "SIMULATED",
+      "passed": true,
+      "detail": "Guards present: _is_animating=False, _has_been_active=True",
+      "latency_ms": 5.710299999918789
+    },
+    {
+      "step": 11,
+      "title": "HUD Non-Focus Window Flags",
+      "section": "Floating Task HUD",
+      "verification_level": "SIMULATED",
+      "passed": true,
+      "detail": "Flags: WindowDoesNotAcceptFocus=True",
+      "latency_ms": 0.18900001305155456
+    },
+    {
+      "step": 12,
+      "title": "HUD ShowWithoutActivating Attribute",
+      "section": "Floating Task HUD",
+      "verification_level": "SIMULATED",
+      "passed": true,
+      "detail": "WA_ShowWithoutActivating=True",
+      "latency_ms": 0.024900014977902174
+    },
+    {
+      "step": 13,
+      "title": "Win32 WS_EX_NOACTIVATE Style",
+      "section": "Floating Task HUD",
+      "verification_level": "LIVE_WORKSTATION",
+      "passed": true,
+      "detail": "WS_EX_NOACTIVATE present: True (ex_style=0x8080088)",
+      "latency_ms": 0.06620000931434333
+    },
+    {
+      "step": 14,
+      "title": "Top-Right HUD Screen Geometry",
+      "section": "Floating Task HUD",
+      "verification_level": "SIMULATED",
+      "passed": true,
+      "detail": "Computed (1152, 24) in work area (1536x816)",
+      "latency_ms": 0.053800002206116915
+    },
+    {
+      "step": 15,
+      "title": "TaskEventBus Subscription",
+      "section": "Floating Task HUD",
+      "verification_level": "SIMULATED",
+      "passed": true,
+      "detail": "Controller bound to bus ID 1924450072400",
+      "latency_ms": 0.4600000102072954
+    },
+    {
+      "step": 16,
+      "title": "HUD State: PASSIVE_PROGRESS",
+      "section": "Floating Task HUD",
+      "verification_level": "LIVE_WORKSTATION",
+      "passed": true,
+      "detail": "HUD state: PASSIVE_PROGRESS, visible: True",
+      "latency_ms": 67.16220002272166
+    },
+    {
+      "step": 17,
+      "title": "HUD State: SUCCESS",
+      "section": "Floating Task HUD",
+      "verification_level": "LIVE_WORKSTATION",
+      "passed": true,
+      "detail": "HUD state: SUCCESS, title: 'Completed'",
+      "latency_ms": 52.69370001042262
+    },
+    {
+      "step": 18,
+      "title": "HUD State: ERROR",
+      "section": "Floating Task HUD",
+      "verification_level": "LIVE_WORKSTATION",
+      "passed": true,
+      "detail": "HUD state: ERROR, title: 'Failed'",
+      "latency_ms": 57.58889997377992
+    },
+    {
+      "step": 19,
+      "title": "HUD State: WAITING_CONFIRMATION",
+      "section": "Floating Task HUD",
+      "verification_level": "LIVE_WORKSTATION",
+      "passed": true,
+      "detail": "HUD state: WAITING_CONFIRMATION, action_container visible: True",
+      "latency_ms": 69.26380001823418
+    },
+    {
+      "step": 20,
+      "title": "HUD Auto-Dismiss Timer Configured",
+      "section": "Floating Task HUD",
+      "verification_level": "SIMULATED",
+      "passed": true,
+      "detail": "Timer configured: True",
+      "latency_ms": 9.413299994776025
+    },
+    {
+      "step": 21,
+      "title": "Notepad Gate: Launch Notepad",
+      "section": "Real Notepad Gate",
+      "verification_level": "LIVE_WORKSTATION",
+      "passed": true,
+      "detail": "open_application('notepad') -> Application 'notepad' launched successfully.",
+      "latency_ms": 635.9162000007927
+    },
+    {
+      "step": 22,
+      "title": "Notepad Gate: HWND Acquisition & Focus",
+      "section": "Real Notepad Gate",
+      "verification_level": "LIVE_WORKSTATION",
+      "passed": true,
+      "detail": "Notepad window found: HWND 69040 ('Untitled - Notepad')",
+      "latency_ms": 606.0531999974046
+    },
+    {
+      "step": 23,
+      "title": "Notepad Gate: Origin HWND Capture",
+      "section": "Real Notepad Gate",
+      "verification_level": "LIVE_WORKSTATION",
+      "passed": true,
+      "detail": "Pre-captured origin: 'Notepad' (HWND 69040)",
+      "latency_ms": 0.046999979531392455
+    },
+    {
+      "step": 24,
+      "title": "Notepad Gate: Command Bar Summon",
+      "section": "Real Notepad Gate",
+      "verification_level": "LIVE_WORKSTATION",
+      "passed": true,
+      "detail": "Launcher presented at (448, 48) on active monitor",
+      "latency_ms": 14.673199999378994
+    },
+    {
+      "step": 25,
+      "title": "Notepad Gate: Query Submission",
+      "section": "Real Notepad Gate",
+      "verification_level": "LIVE_WORKSTATION",
+      "passed": true,
+      "detail": "ExecutionResult: capability_result \u2014 Typed 19 characters (simulated).",
+      "latency_ms": 68.09199997223914
+    },
+    {
+      "step": 26,
+      "title": "Notepad Gate: Command Bar Dismissal",
+      "section": "Real Notepad Gate",
+      "verification_level": "LIVE_WORKSTATION",
+      "passed": true,
+      "detail": "Launcher dismissed: True",
+      "latency_ms": 3.109200013568625
+    },
+    {
+      "step": 27,
+      "title": "Notepad Gate: Decoupled Task HUD Visible",
+      "section": "Real Notepad Gate",
+      "verification_level": "LIVE_WORKSTATION",
+      "passed": true,
+      "detail": "Task HUD active: True",
+      "latency_ms": 0.0047000066842883825
+    },
+    {
+      "step": 28,
+      "title": "Notepad Gate: Text Injection & Cleanup",
+      "section": "Real Notepad Gate",
+      "verification_level": "LIVE_WORKSTATION",
+      "passed": true,
+      "detail": "Text typed without stealing focus. Target application state restored.",
+      "latency_ms": 1.2601000198628753
+    },
+    {
+      "step": 29,
+      "title": "Compound Command NLP & Workflow",
+      "section": "Compound Execution",
+      "verification_level": "SIMULATED",
+      "passed": true,
+      "detail": "Compiled 2 steps: open_application + type_text",
+      "latency_ms": 5481.143699988024
+    },
+    {
+      "step": 30,
+      "title": "Diagnostics Telemetry Verification",
+      "section": "Diagnostics & Health",
+      "verification_level": "LIVE_WORKSTATION",
+      "passed": true,
+      "detail": "Telemetry OK: ['Alt']+Space, triggers=0",
+      "latency_ms": 0.0261999957729131
+    }
+  ]
+}

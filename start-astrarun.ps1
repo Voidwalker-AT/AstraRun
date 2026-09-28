@@ -1,8 +1,8 @@
 <#
 .SYNOPSIS
-    Launches or controls AstraRun v0.9 resident background process.
+    Launches or controls AstraRun v0.10.1 resident background process.
 .DESCRIPTION
-    Starts AstraRun with native system tray icon and global Alt+Space hotkey.
+    Starts AstraRun with native system tray icon, top-center command bar, and floating task HUD.
     Uses pythonw.exe by default to avoid keeping a terminal window open.
 .PARAMETER Foreground
     If set, runs in the current console with standard output visible (useful for debugging).
@@ -10,13 +10,16 @@
     Terminates any running AstraRun resident instances.
 .PARAMETER Status
     Checks whether AstraRun is currently running.
+.PARAMETER Restart
+    Gracefully stops any running AstraRun instances and starts a fresh instance.
 #>
 
 [CmdletBinding()]
 param (
     [switch]$Foreground,
     [switch]$Stop,
-    [switch]$Status
+    [switch]$Status,
+    [switch]$Restart
 )
 
 $PSScriptRoot = Split-Path -Parent $MyInvocation.MyCommand.Path
@@ -31,8 +34,8 @@ if (-not (Test-Path $VenvPython)) {
     exit 1
 }
 
-# 1. Stop command
-if ($Stop) {
+# 1. Stop / Restart command: Terminate existing instances
+if ($Stop -or $Restart) {
     Write-Host "[AstraRun] Looking for running AstraRun processes..." -ForegroundColor Cyan
     $procs = Get-CimInstance Win32_Process | Where-Object {
         $_.CommandLine -like "*astrarun*main.py*" -or $_.CommandLine -like "*AstraRun*main.py*"
@@ -42,11 +45,14 @@ if ($Stop) {
             Write-Host "[AstraRun] Stopping process PID $($p.ProcessId)..." -ForegroundColor Yellow
             Stop-Process -Id $p.ProcessId -Force
         }
+        Start-Sleep -Milliseconds 800
         Write-Host "[AstraRun] All resident instances stopped." -ForegroundColor Green
     } else {
         Write-Host "[AstraRun] No running AstraRun instances found." -ForegroundColor DarkGray
     }
-    exit 0
+    if ($Stop) {
+        exit 0
+    }
 }
 
 # 2. Status command
@@ -62,13 +68,13 @@ if ($Status) {
     exit 0
 }
 
-# 3. Check if already running
+# 3. Check if already running (unless restarting)
 $running = Get-CimInstance Win32_Process | Where-Object {
     $_.CommandLine -like "*astrarun*main.py*" -or $_.CommandLine -like "*AstraRun*main.py*"
 }
 if ($running) {
     Write-Host "[AstraRun] An instance is already running (PID: $($running.ProcessId -join ', '))." -ForegroundColor Yellow
-    Write-Host "Press Alt+Space to summon the launcher, or run .\start-astrarun.ps1 -Stop to terminate it." -ForegroundColor Cyan
+    Write-Host "Press Alt+Space to summon the launcher, or run .\start-astrarun.ps1 -Restart to restart it." -ForegroundColor Cyan
     exit 0
 }
 

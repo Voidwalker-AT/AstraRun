@@ -3,12 +3,24 @@
 from __future__ import annotations
 
 import sys
+import time
 from typing import TYPE_CHECKING, Any, Callable, Optional
-from PySide6.QtCore import QEvent, QPoint, QRect, Qt, QTimer, Signal
+from PySide6.QtCore import (
+    QEasingCurve,
+    QEvent,
+    QParallelAnimationGroup,
+    QPoint,
+    QPropertyAnimation,
+    QRect,
+    Qt,
+    QTimer,
+    Signal,
+)
 from PySide6.QtGui import QColor, QCursor, QFont, QGuiApplication, QKeyEvent
 from PySide6.QtWidgets import (
     QDialog,
     QGraphicsDropShadowEffect,
+    QGraphicsOpacityEffect,
     QHBoxLayout,
     QLabel,
     QLineEdit,
@@ -98,9 +110,15 @@ class LauncherWindow(QDialog):
         settings: dict | None = None,
         on_refresh_callback: Callable[[], None] | None = None,
         app: Optional[AstraApplication] = None,
+        hud: Optional[Any] = None,
+        animations_enabled: bool = True,
     ):
         super().__init__()
         self.app = app
+        self.hud = hud
+        self.animations_enabled = animations_enabled
+        self._is_animating: bool = False
+        self._has_been_active: bool = False
 
         # Support both new unified AstraApplication composition and legacy parameters
         if self.app is not None:
@@ -140,6 +158,7 @@ class LauncherWindow(QDialog):
 
         self._init_window()
         self._init_ui()
+        self._init_animations()
         self._init_timer()
 
         # Register self HWND so AstraRun never targets its own windows for window actions
@@ -271,6 +290,102 @@ class LauncherWindow(QDialog):
         self.error_timer.setSingleShot(True)
         self.error_timer.timeout.connect(self._clear_status)
 
+    def _init_animations(self) -> None:
+        """Setup slide and opacity animations for entrance and dismissal."""
+        self.opacity_effect = QGraphicsOpacityEffect(self)
+        self.setGraphicsEffect(self.opacity_effect)
+        self.opacity_effect.setOpacity(1.0)
+
+        self.pos_anim = QPropertyAnimation(self, b"pos")
+        self.pos_anim.setDuration(150)
+        self.pos_anim.setEasingCurve(QEasingCurve.Type.OutCubic)
+
+        self.opacity_anim = QPropertyAnimation(self.opacity_effect, b"opacity")
+        self.opacity_anim.setDuration(150)
+        self.opacity_anim.setEasingCurve(QEasingCurve.Type.OutCubic)
+
+        self.anim_group = QParallelAnimationGroup(self)
+        self.anim_group.addAnimation(self.pos_anim)
+        self.anim_group.addAnimation(self.opacity_anim)
+        self.anim_group.finished.connect(self._on_animation_finished)
+
+    def _on_animation_finished(self) -> None:
+        """Handle animation completion."""
+        self._is_animating = False
+        if self.opacity_effect.opacity() <= 0.05:
+            self.hide()
+            self._clear_status()
+            self.clear_card()
+
+    def present_animated(self, target_geometry: QRect, target_screen: Any = None) -> None:
+        """
+        Show the command bar with gentle slide/drop from above (120-180ms, OutCubic).
+        Prewarmed and kept resident.
+        """
+        self._is_animating = True
+        self._has_been_active = False
+
+        self.input_field.clear()
+        self._clear_status()
+        self.clear_card()
+        self.suggestions_list.hide()
+        self._adjust_height(expanded=False)
+
+        target_pos = target_geometry.topLeft()
+        if not self.animations_enabled:
+            self.move(target_pos)
+            self.opacity_effect.setOpacity(1.0)
+            self.show()
+            self.raise_()
+            self.activateWindow()
+            self.input_field.setFocus()
+            self._is_animating = False
+            return
+
+        start_pos = QPoint(target_pos.x(), target_pos.y() - 25)
+        self.move(start_pos)
+        self.opacity_effect.setOpacity(0.0)
+        self.show()
+        self.raise_()
+        self.activateWindow()
+        self.input_field.setFocus()
+
+        self.pos_anim.setDuration(150)
+        self.pos_anim.setEasingCurve(QEasingCurve.Type.OutCubic)
+        self.pos_anim.setStartValue(start_pos)
+        self.pos_anim.setEndValue(target_pos)
+
+        self.opacity_anim.setDuration(150)
+        self.opacity_anim.setEasingCurve(QEasingCurve.Type.OutCubic)
+        self.opacity_anim.setStartValue(0.0)
+        self.opacity_anim.setEndValue(1.0)
+
+        self.anim_group.start()
+
+    def dismiss_animated(self) -> None:
+        """Dismiss command bar smoothly with slide up/fade (90-140ms)."""
+        if not self.isVisible():
+            return
+
+        if not self.animations_enabled:
+            self.dismiss()
+            return
+
+        self._is_animating = True
+        end_pos = QPoint(self.x(), self.y() - 20)
+
+        self.pos_anim.setDuration(110)
+        self.pos_anim.setEasingCurve(QEasingCurve.Type.InCubic)
+        self.pos_anim.setStartValue(self.pos())
+        self.pos_anim.setEndValue(end_pos)
+
+        self.opacity_anim.setDuration(110)
+        self.opacity_anim.setEasingCurve(QEasingCurve.Type.InCubic)
+        self.opacity_anim.setStartValue(self.opacity_effect.opacity())
+        self.opacity_anim.setEndValue(0.0)
+
+        self.anim_group.start()
+
     def position_on_active_screen(self) -> None:
         """Position window upper-middle centered on the monitor hosting the active window."""
         pos = compute_launcher_position(self.width(), self.height())
@@ -278,26 +393,18 @@ class LauncherWindow(QDialog):
 
     def show_and_activate(self) -> None:
         """Bring the launcher to foreground on the active screen and focus the input."""
-        # Capture origin window immediately before stealing focus
         if self.app is not None:
             self.app.capture_origin_window()
 
-        self.position_on_active_screen()
-        self.input_field.clear()
-        self._clear_status()
-        self.clear_card()
-        self.suggestions_list.hide()
-        self._adjust_height(expanded=False)
-
-        self.show()
-        self.raise_()
-        self.activateWindow()
-        self.input_field.setFocus()
+        pos = compute_launcher_position(self.width(), self.height())
+        geom = QRect(pos.x(), pos.y(), self.width(), self.height())
+        self.present_animated(geom)
         logger.debug("Launcher shown and activated.")
 
     def dismiss(self) -> None:
-        """Dismiss the launcher window."""
+        """Dismiss the launcher window immediately."""
         self.hide()
+        self._is_animating = False
         self._clear_status()
         self.clear_card()
         logger.debug("Launcher dismissed.")
@@ -305,7 +412,7 @@ class LauncherWindow(QDialog):
     def toggle_visibility(self) -> None:
         """Toggle between visible/active and hidden states."""
         if self.isVisible() and self.isActiveWindow():
-            self.dismiss()
+            self.dismiss_animated()
         else:
             self.show_and_activate()
 
@@ -533,6 +640,9 @@ class LauncherWindow(QDialog):
             self.mount_card(card, target_height=200)
 
         elif res.type == "list_result":
+            if self.hud:
+                self.dismiss_animated()
+                return
             from astrarun.ui.cards import ListResultCard
             items = []
             if res.data and "grouped_capabilities" in res.data:
@@ -555,6 +665,9 @@ class LauncherWindow(QDialog):
             self.mount_card(card, target_height=240)
 
         elif res.type == "capability_result":
+            if self.hud:
+                self.dismiss_animated()
+                return
             from astrarun.ui.cards import ResultCard
             rows = []
             if res.data and isinstance(res.data, dict):
@@ -580,7 +693,10 @@ class LauncherWindow(QDialog):
 
         else:
             if res.success:
-                self.show_feedback(res.message, is_error=False)
+                if self.hud:
+                    self.dismiss_animated()
+                else:
+                    self.show_feedback(res.message, is_error=False)
             else:
                 self.show_feedback(res.message or "Command failed", is_error=True)
 
@@ -655,8 +771,11 @@ class LauncherWindow(QDialog):
 
     def open_diagnostics(self) -> None:
         """Open DiagnosticsDialog."""
+        if not self.app:
+            self.show_feedback("Application context not available.", is_error=True)
+            return
         from astrarun.ui.diagnostics import DiagnosticsDialog
-        dlg = DiagnosticsDialog(app=self.app, parent=self)
+        dlg = DiagnosticsDialog(app_instance=self.app, start_time=time.time(), parent=self)
         dlg.exec()
 
     def keyPressEvent(self, event: QKeyEvent) -> None:
@@ -706,9 +825,16 @@ class LauncherWindow(QDialog):
         super().keyPressEvent(event)
 
     def changeEvent(self, event: QEvent) -> None:
-        """Hide window on focus loss if configured, except when interacting with internal dialogs."""
+        """Hide window on focus loss if configured, except when animating or interacting with cards."""
         if event.type() == QEvent.Type.ActivationChange:
-            if not self.isActiveWindow() and self.isVisible():
-                if self.hide_on_focus_loss and self.active_card is None:
-                    self.dismiss()
+            if self.isActiveWindow():
+                self._has_been_active = True
+            elif self.isVisible():
+                if (
+                    self.hide_on_focus_loss
+                    and self._has_been_active
+                    and not self._is_animating
+                    and self.active_card is None
+                ):
+                    self.dismiss_animated()
         super().changeEvent(event)

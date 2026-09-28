@@ -18,7 +18,9 @@ from PySide6.QtWidgets import QApplication
 from astrarun.app import AstraApplication, SingleInstanceLock
 from astrarun.core.logging import get_logger, setup_logging
 from astrarun.hotkeys.manager import HotkeyManager
+from astrarun.ui.hud import FloatingTaskHUD, TaskHUDController
 from astrarun.ui.launcher import LauncherWindow
+from astrarun.ui.presentation import LauncherPresentationController
 from astrarun.ui.tray import AstraTrayIcon
 
 
@@ -61,7 +63,7 @@ def main() -> int:
         backup_count=int(log_cfg.get("backup_count", 3)),
     )
     logger = get_logger("astrarun.main")
-    logger.info("Initializing AstraRun v0.9 (Daily Driver & Window Intelligence)...")
+    logger.info("Initializing AstraRun v0.10.1 (Real Alt+Space Launcher & Floating Task HUD)...")
 
     # 3. Headless CLI command execution mode
     if args.run_command:
@@ -86,12 +88,32 @@ def main() -> int:
     # AstraRun runs resident in background; do not quit when launcher is hidden
     qapp.setQuitOnLastWindowClosed(False)
 
-    # 6. Instantiate Launcher Window
-    launcher = LauncherWindow(app=astra_app)
+    # 6. Instantiate Floating Task HUD & HUD Controller
+    hud = FloatingTaskHUD()
+    hud_controller = TaskHUDController(hud=hud, event_bus=astra_app.task_event_bus, app=astra_app)
 
-    # 7. Instantiate System Tray Icon
+    # 7. Instantiate Launcher Window (Top-Center Floating Command Bar)
+    launcher = LauncherWindow(app=astra_app, hud=hud)
+
+    # 8. Setup Global Hotkey Manager & Presentation Controller
+    hotkey_cfg = astra_app.settings.get("hotkey", {})
+    modifiers = hotkey_cfg.get("modifiers", ["Alt"])
+    key = hotkey_cfg.get("key", "Space")
+
+    hotkey_manager = HotkeyManager(config_modifiers=modifiers, config_key=key)
+    astra_app.hotkey_manager = hotkey_manager  # type: ignore
+
+    presentation_controller = LauncherPresentationController(
+        launcher=launcher,
+        hud=hud,
+        app=astra_app,
+        hotkey_manager=hotkey_manager,
+    )
+    astra_app.presentation_controller = presentation_controller  # type: ignore
+
+    # 9. Instantiate System Tray Icon
     tray_icon = AstraTrayIcon(parent=launcher)
-    tray_icon.toggle_launcher_requested.connect(launcher.toggle_visibility)
+    tray_icon.toggle_launcher_requested.connect(presentation_controller.toggle_presentation)
     tray_icon.open_history_requested.connect(launcher.open_history)
     tray_icon.open_memory_requested.connect(launcher.open_memory)
     tray_icon.open_skills_requested.connect(launcher.open_skills)
@@ -100,23 +122,12 @@ def main() -> int:
     tray_icon.exit_requested.connect(qapp.quit)
     tray_icon.show()
 
-    # 8. Setup Global Hotkey Manager with Origin Window capture
-    hotkey_cfg = astra_app.settings.get("hotkey", {})
-    modifiers = hotkey_cfg.get("modifiers", ["Alt"])
-    key = hotkey_cfg.get("key", "Space")
-
-    hotkey_manager = HotkeyManager(config_modifiers=modifiers, config_key=key)
-
-    def on_hotkey_pressed():
-        # Pre-capture origin window before launcher window steals focus
-        astra_app.capture_origin_window()
-        launcher.toggle_visibility()
-
-    hotkey_manager.hotkey_activated.connect(on_hotkey_pressed)
+    # 10. Wire up Hotkey Manager to Presentation Controller
+    hotkey_manager.hotkey_activated.connect(presentation_controller.toggle_presentation)
 
     def on_hotkey_error(err_msg: str):
         logger.warning("Hotkey registration issue: %s", err_msg)
-        launcher.show_and_activate()
+        presentation_controller.present()
         launcher.show_feedback("Hotkey conflict: check logs/astrarun.log", is_error=True)
 
     hotkey_manager.error_occurred.connect(on_hotkey_error)
@@ -127,6 +138,8 @@ def main() -> int:
         logger.info("AstraRun shutting down...")
         try:
             hotkey_manager.stop()
+            hud_controller.stop()
+            hud.hide()
             tray_icon.hide()
             astra_app.shutdown()
         except Exception as e:
@@ -144,9 +157,9 @@ def main() -> int:
     heartbeat.start(500)
 
     if args.show_now:
-        launcher.show_and_activate()
+        presentation_controller.present()
 
-    logger.info("AstraRun v0.9 is resident and listening for %s+%s.", "+".join(modifiers), key)
+    logger.info("AstraRun v0.10.1 is resident and listening for %s+%s.", "+".join(modifiers), key)
     return qapp.exec()
 
 

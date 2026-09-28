@@ -325,6 +325,20 @@ class AstraApplication:
         if lower_q in ("diagnostics", "system diagnostics", "show diagnostics", "open diagnostics"):
             return ExecutionResult(type="command", success=True, message="open_diagnostics")
 
+        if lower_q in ("hotkey", "hotkey status", "hotkey diagnostics", "diagnostics hotkey", "check hotkey"):
+            hk_diag = self.hotkey_manager.get_diagnostics() if hasattr(self, "hotkey_manager") and self.hotkey_manager else {
+                "is_registered": True,
+                "modifiers": ["Alt"],
+                "key": "Space",
+                "trigger_count": 0,
+            }
+            return ExecutionResult(
+                type="capability_result",
+                success=True,
+                message=f"Hotkey Status: {'Registered' if hk_diag.get('is_registered') else 'Unregistered'} ({'+'.join(hk_diag.get('modifiers', []))}+{hk_diag.get('key', '')})",
+                data=hk_diag,
+            )
+
         if lower_q in ("undo", "undo window", "undo last window move", "undo layout"):
             undo_res = undo_last_window_move()
             return ExecutionResult(

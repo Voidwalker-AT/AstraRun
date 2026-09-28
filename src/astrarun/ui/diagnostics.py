@@ -25,12 +25,18 @@ from astrarun.windows.monitors import enumerate_monitors
 class DiagnosticsDialog(QDialog):
     """Clean diagnostic overview modal for AstraRun runtime inspection."""
 
-    def __init__(self, app_instance: Any, start_time: float, parent: Optional[QWidget] = None) -> None:
+    def __init__(
+        self,
+        app_instance: Any = None,
+        start_time: float | None = None,
+        parent: Optional[QWidget] = None,
+        app: Any = None,
+    ) -> None:
         super().__init__(parent)
-        self.app = app_instance
-        self.start_time = start_time
+        self.app = app_instance or app
+        self.start_time = start_time or time.time()
         self.setWindowTitle("AstraRun Diagnostics")
-        self.setFixedSize(540, 460)
+        self.setFixedSize(580, 520)
         self.setStyleSheet("""
             QDialog {
                 background-color: #1e1e2e;
@@ -53,7 +59,7 @@ class DiagnosticsDialog(QDialog):
         header.addWidget(title)
         header.addStretch(1)
 
-        ver_lbl = QLabel("v0.9.0", self)
+        ver_lbl = QLabel("v0.10.1", self)
         ver_lbl.setStyleSheet("font-size: 11px; font-weight: bold; background-color: #313244; color: #a6e3a1; border-radius: 4px; padding: 2px 6px;")
         header.addWidget(ver_lbl)
         layout.addLayout(header)
@@ -78,8 +84,15 @@ class DiagnosticsDialog(QDialog):
         uptime_str = f"{hours}h {mins}m {secs}s" if hours else f"{mins}m {secs}s"
 
         caps_count = len(self.app.capability_registry.list_capabilities()) if hasattr(self.app, "capability_registry") else 0
-        hotkey_str = "Alt+Space (Active)"
         
+        # Hotkey diagnostics
+        hotkey_str = "Alt+Space (Active)"
+        if hasattr(self.app, "hotkey_manager") and self.app.hotkey_manager:
+            hk_diag = self.app.hotkey_manager.get_diagnostics()
+            trig_cnt = hk_diag.get("trigger_count", 0)
+            is_reg = hk_diag.get("is_registered", False)
+            hotkey_str = f"Alt+Space ({'Active' if is_reg else 'Failed'}, {trig_cnt} triggers)"
+
         # Database checks
         hist_db = "data/astra_history.db"
         hist_status = "Connected (WAL)" if os.path.exists(hist_db) else "Ready"
@@ -92,15 +105,16 @@ class DiagnosticsDialog(QDialog):
         mon_str = f"{len(monitors)} monitor(s) detected"
 
         # Origin window
-        origin_str = self.app.origin_window.title if self.app.origin_window else "None"
+        origin_str = self.app.origin_window.title if hasattr(self.app, "origin_window") and self.app.origin_window else "None"
         if len(origin_str) > 30:
             origin_str = origin_str[:28] + "..."
 
         rows = [
-            ("Version", "0.9.0 (Daily Driver + Window Intelligence)"),
+            ("Version", "v0.10.1 (Real Alt+Space Launcher & Floating Task HUD)"),
             ("Uptime", uptime_str),
             ("Registered Capabilities", f"{caps_count} capabilities (9 domains)"),
-            ("Global Hotkey", hotkey_str),
+            ("Global Hotkey Pipeline", hotkey_str),
+            ("Floating Task HUD", "Active (Non-Focus-Stealing WS_EX_NOACTIVATE)"),
             ("Task Ledger Database", hist_status),
             ("Semantic Learning Store", learn_status),
             ("Displays & Monitors", mon_str),

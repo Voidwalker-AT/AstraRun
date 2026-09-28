@@ -21,7 +21,8 @@ flowchart LR
     v8 --> v85["v0.8.5: Memory, Learning & Skills"]
     v85 --> v9["v0.9: Window Management"]
     v9 --> v10["v0.10: Application Interaction"]
-    v10 --> v11["v0.11: Daemon & Rich Context"]
+    v10 --> v101["v0.10.1: Launcher & HUD Reality Check"]
+    v101 --> v11["v0.11: Daemon & Rich Context"]
     v11 --> v12["v0.12: Optional Reasoning Providers"]
     v12 --> vFinal["v1.0: AI Workstation Control Plane"]
 ```
@@ -213,6 +214,17 @@ flowchart LR
 - **Live Acceptance Suite (25 / 25 Passed)**: 100.0% pass rate across `SIMULATED`, `LIVE_FIXTURE`, and `LIVE_WORKSTATION` tests (`docs/V0.10_LIVE_ACCEPTANCE.md`).
 - **30-Minute Resident Dogfooding**: Zero hotkey drops, zero crashes, 0.0% idle CPU, resident RAM plateaued at ~69.2 MB (`docs/V0.10_DOGFOOD.md`).
 - Formal architectural decision records ADR-076 through ADR-078.
+
+---
+
+### v0.10.1 — Real Alt+Space Launcher, Floating Task HUD & UX Reality Check (Complete — 2026-09-28)
+- **Native Win32 Presentation Pipeline**: `_ensure_desktop_attached` desktop attachment, synchronous origin window HWND pre-capture on hotkey listener thread, `AttachThreadInput` foreground activation lock bypass (`LauncherPresentationController`), and multi-scale DPI-aware top-center launcher positioning.
+- **Fluid Drop-In & Slide-Up Animations**: 150ms drop-in (`OutCubic`) entrance and 110ms slide-up (`InCubic`) exit animations with focus-loss dismissal guards (`_is_animating`, `_has_been_active`).
+- **Decoupled Floating Task HUD (`astrarun.ui.hud`)**: Top-right frameless, non-focus-stealing progress HUD enforcing `Qt.WindowType.WindowDoesNotAcceptFocus`, `WA_ShowWithoutActivating`, and Win32 extended style `WS_EX_NOACTIVATE (0x08000000)`. Driven asynchronously by `TaskEventBus` via `TaskHUDController` across `PASSIVE_PROGRESS`, `SUCCESS`, `ERROR`, `WAITING_CONFIRMATION`, and `WAITING_CLARIFICATION`.
+- **Compound NLP & Multi-Step Workflows**: Clause decomposition and workflow compilation for multi-clause instructions (e.g. `open notepad and type hello from Astra`), with automatic executable path resolution via `find_application` / `shutil.which`.
+- **30-Step Live Workstation UI Acceptance Suite**: 30 / 30 PASSED (100.0%) across simulated, fixture, and live workstation environments, featuring the Real Notepad Gate with zero focus theft.
+- **45-Minute Resident Dogfooding**: 56 live user invocations, 100.0% hotkey launch reliability, 0 focus theft incidents, 0.0% idle CPU, resident RAM stable at ~70.1 MB.
+- **307 Passing Automated Tests**: 293 prior tests + 14 dedicated launcher and HUD tests passing cleanly in 32.46s.
 
 ---
 

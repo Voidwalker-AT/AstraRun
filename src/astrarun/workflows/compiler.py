@@ -287,6 +287,27 @@ class WorkflowCompiler:
                 preview_lines.append(f"{step_counter}. List running applications")
                 step_counter += 1
 
+            elif clause.action == "open_app":
+                app_ent = next((e for e in clause.entities if e.type == NLPEntityType.APPLICATION), None)
+                app_name = app_ent.normalized if app_ent else None
+                if not app_name:
+                    m = re.search(r'\b(?:open|launch|start|run)\s+([a-zA-Z0-9_\-\.]+)', clause.text, re.I)
+                    if m:
+                        app_name = m.group(1).lower()
+                if app_name:
+                    steps.append(WorkflowStep(
+                        step_id=f"step_{step_counter}",
+                        name=f"Open {app_name}",
+                        tool="open_application",
+                        arguments={"app": app_name},
+                        critical=True,
+                        source_clause_idx=clause.idx,
+                    ))
+                    preview_lines.append(f"{step_counter}. Open application {app_name}")
+                    step_counter += 1
+                else:
+                    unsupported_clauses.append(clause.text)
+
             # F. System Health & Performance
             elif clause.action == "system_summary":
                 steps.append(WorkflowStep(
@@ -636,7 +657,62 @@ class WorkflowCompiler:
                 preview_lines.append(f"{step_counter}. Undo last window layout")
                 step_counter += 1
 
-            # K. Unsupported / Open-ended action
+            # L. UI Automation & Control Grounding (v0.10)
+            elif clause.action == "type_text":
+                raw = clause.text
+                if " into " in raw.lower():
+                    parts = re.split(r'\s+into\s+', raw, flags=re.I)
+                    val = re.sub(r'^(?:type|enter text)\s+', '', parts[0], flags=re.I).strip().strip('"\'')
+                    target_field = parts[1].strip()
+                    steps.append(WorkflowStep(
+                        step_id=f"step_{step_counter}",
+                        name=f"Set text in {target_field}",
+                        tool="set_ui_element_value",
+                        arguments={"target": target_field, "value": val},
+                        critical=True,
+                        source_clause_idx=clause.idx,
+                    ))
+                    preview_lines.append(f"{step_counter}. Set '{val}' in {target_field}")
+                else:
+                    val = re.sub(r'^(?:type|enter text)\s+', '', raw, flags=re.I).strip().strip('"\'')
+                    steps.append(WorkflowStep(
+                        step_id=f"step_{step_counter}",
+                        name=f"Type '{val}'",
+                        tool="type_text",
+                        arguments={"text": val},
+                        critical=True,
+                        source_clause_idx=clause.idx,
+                    ))
+                    preview_lines.append(f"{step_counter}. Type '{val}'")
+                step_counter += 1
+
+            elif clause.action == "press_keyboard_shortcut":
+                sc_val = re.sub(r'^(?:press|shortcut)\s+', '', clause.text, flags=re.I).strip()
+                steps.append(WorkflowStep(
+                    step_id=f"step_{step_counter}",
+                    name=f"Press {sc_val}",
+                    tool="press_keyboard_shortcut",
+                    arguments={"shortcut": sc_val},
+                    critical=True,
+                    source_clause_idx=clause.idx,
+                ))
+                preview_lines.append(f"{step_counter}. Press shortcut {sc_val}")
+                step_counter += 1
+
+            elif clause.action == "click_ui_element":
+                target_btn = re.sub(r'^(?:click)\s+', '', clause.text, flags=re.I).strip()
+                steps.append(WorkflowStep(
+                    step_id=f"step_{step_counter}",
+                    name=f"Click '{target_btn}'",
+                    tool="click_ui_element",
+                    arguments={"target": target_btn, "force": False},
+                    critical=True,
+                    source_clause_idx=clause.idx,
+                ))
+                preview_lines.append(f"{step_counter}. Click '{target_btn}'")
+                step_counter += 1
+
+            # M. Unsupported / Open-ended action
             else:
                 unsupported_clauses.append(clause.text)
 

@@ -61,6 +61,9 @@ _ACTION_PATTERNS: list[tuple[re.Pattern, str, str]] = [
     (re.compile(r'\b(?:inspect|check|show)\b', re.I), "inspect_port", "inspect_action"), # Default to inspection if ambiguous
     (re.compile(r'\b(?:find|search|look\s+for|locate|newest\s+pdf|latest\s+screenshot|recent\s+files)\b', re.I), "find_file", "search_action"),
     (re.compile(r'\b(?:search\s+google|google|search\s+web|search\s+youtube)\b', re.I), "search_web", "web_action"),
+    (re.compile(r'\b(?:type\s+|enter\s+text\s+)\b', re.I), "type_text", "interaction_action"),
+    (re.compile(r'\b(?:press\s+|shortcut\s+)\b', re.I), "press_keyboard_shortcut", "interaction_action"),
+    (re.compile(r'\b(?:click\s+)\b', re.I), "click_ui_element", "interaction_action"),
     (re.compile(r'\b(?:open\s+(?:project|repo|my\s+project)|bring\s+up\s+project|switch\s+to\s+project|load\s+project)\b', re.I), "open_project", "project_action"),
     (re.compile(r'\b(?:open|launch|start|run|bring\s+up)\b', re.I), "open_project", "launcher_action"),
 ]
@@ -158,6 +161,16 @@ def infer_action_and_intent(
 
     if re.search(r'\b(?:undo\s+window|undo\s+layout|undo\s+last\s+window)\b', text_clean, re.I):
         return ("undo_last_window_move", "window_action", 0.98)
+
+    # 3c. UI Interaction Capabilities (v0.10)
+    if re.search(r'\b(?:type\s+|enter\s+text\s+)\b', text_clean, re.I):
+        return ("type_text", "interaction_action", 0.95)
+
+    if re.search(r'\b(?:press\s+|shortcut\s+)\b', text_clean, re.I):
+        return ("press_keyboard_shortcut", "interaction_action", 0.95)
+
+    if re.search(r'\b(?:click\s+)\b', text_clean, re.I):
+        return ("click_ui_element", "interaction_action", 0.95)
 
     # 4. Check for system health status queries
     if re.search(r'\b(?:system\s+status|system\s+summary|workstation\s+status|system\s+info)\b', text_clean, re.I):

@@ -25,6 +25,20 @@ from astrarun.windows.policy import is_simulated_window_validation
 logger = get_logger("astrarun.windows.discovery")
 
 
+def _ensure_desktop_attached() -> None:
+    """Ensure current thread is attached to the interactive Default desktop."""
+    if sys.platform != "win32":
+        return
+    try:
+        user32 = ctypes.windll.user32
+        DESKTOP_ALL = 0x01FF
+        hdesk = user32.OpenDesktopW("Default", 0, False, DESKTOP_ALL)
+        if hdesk:
+            user32.SetThreadDesktop(hdesk)
+    except Exception:
+        pass
+
+
 def list_windows(limit: int = 30) -> CapabilityResult:
     """Enumerate visible top-level desktop windows."""
     t0 = time.perf_counter()
@@ -35,6 +49,7 @@ def list_windows(limit: int = 30) -> CapabilityResult:
             error_code=CapabilityErrorCode.UNAVAILABLE,
         )
 
+    _ensure_desktop_attached()
     windows: list[WindowEntity] = []
     user32 = ctypes.windll.user32
     WNDENUMPROC = ctypes.WINFUNCTYPE(ctypes.wintypes.BOOL, ctypes.wintypes.HWND, ctypes.wintypes.LPARAM)

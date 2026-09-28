@@ -26,11 +26,26 @@ SW_RESTORE = 9
 WM_CLOSE = 0x0010
 
 
+def _ensure_desktop_attached() -> None:
+    """Ensure current thread is attached to the interactive Default desktop."""
+    if sys.platform != "win32":
+        return
+    try:
+        user32 = ctypes.windll.user32
+        DESKTOP_ALL = 0x01FF
+        hdesk = user32.OpenDesktopW("Default", 0, False, DESKTOP_ALL)
+        if hdesk:
+            user32.SetThreadDesktop(hdesk)
+    except Exception:
+        pass
+
+
 def _get_top_level_windows() -> list[WindowEntity]:
     """Enumerate visible top-level desktop windows."""
     if sys.platform != "win32":
         return []
 
+    _ensure_desktop_attached()
     windows: list[WindowEntity] = []
     user32 = ctypes.windll.user32
 
@@ -193,14 +208,25 @@ def find_application(name: str) -> CapabilityResult:
 def open_application(app: str, path: Optional[str] = None) -> CapabilityResult:
     """Launch a verified local application."""
     t0 = time.perf_counter()
-    success = open_app(app=app, path=path or "")
+    resolved_path = path
+    if not resolved_path:
+        find_res = find_application(app)
+        if find_res.success and find_res.data and find_res.data.get("path"):
+            resolved_path = find_res.data["path"]
+        else:
+            import shutil
+            which_path = shutil.which(app) or shutil.which(f"{app}.exe")
+            if which_path:
+                resolved_path = which_path
+
+    success = open_app(app=app, path=resolved_path or "")
     latency = (time.perf_counter() - t0) * 1000
 
     if success:
         return CapabilityResult.ok(
             capability="open_application",
             message=f"Application '{app}' launched successfully.",
-            data={"app": app, "path": path},
+            data={"app": app, "path": resolved_path},
             context_updates=[{"type": "application_opened", "app": app}],
             latency_ms=latency,
         )

@@ -1,4 +1,4 @@
-# AstraRun — Windows Intelligent Command Launcher & Workstation Control Plane (v0.10)
+# AstraRun — Windows Intelligent Command Launcher & Workstation Control Plane (v0.10.1)
 
 AstraRun is a local, lightweight, low-latency Windows command launcher and workstation orchestrator engineered as the foundational command interface for an evolving AI-assisted workstation control ecosystem.
 
@@ -7,18 +7,20 @@ AstraRun replaces fragile string-interpolated shell execution with a strictly ty
 
 ---
 
-## Key Capabilities (v0.10)
+## Key Capabilities (v0.10.1)
 
-- **Semantic UI Automation Subsystem (v0.10)**: 11 new capabilities expanding the platform to **70 typed workstation capabilities** across 10 OS categories with direct Microsoft UI Automation (`IUIAutomation`) tree inspection and control manipulation.
+- **Real Alt+Space Launcher & Win32 Presentation Pipeline (v0.10.1)**: Summoned reliably with `Alt+Space` in ~4.5ms from a pre-warmed resident background process. Uses `AttachThreadInput` to defeat Windows 11 `LockSetForegroundWindow` restrictions, captures origin window HWND synchronously before UI spawn, and drops in smoothly with 150ms `OutCubic` entrance and 110ms `InCubic` exit animations.
+- **Decoupled Floating Task HUD & Non-Focus-Stealing Invariant (v0.10.1)**: Lightweight, frameless top-right HUD tracking asynchronous task progress (`PASSIVE_PROGRESS`, `SUCCESS`, `ERROR`, `WAITING_CONFIRMATION`). Enforces Win32 `WS_EX_NOACTIVATE (0x08000000)`, `Qt.WindowType.WindowDoesNotAcceptFocus`, and `Qt.WidgetAttribute.WA_ShowWithoutActivating` to ensure background tasks NEVER steal keyboard focus from active target applications (e.g. Notepad, VS Code, Browser).
+- **Compound NLP & Multi-Step Workflows (v0.10.1)**: Clause decomposition and workflow compilation transforming multi-clause instructions (e.g. `open notepad and type hello from Astra`) into sequential execution pipelines with auto-resolved application paths.
+- **Semantic UI Automation Subsystem (v0.10)**: 11 capabilities expanding the platform to **70 typed workstation capabilities** across 10 OS categories with direct Microsoft UI Automation (`IUIAutomation`) tree inspection and control manipulation.
 - **Dedicated COM MTA Worker Thread (v0.10)**: Isolates heavy COM accessibility traversals onto a dedicated background thread, eliminating GUI thread deadlocks and message pump freezes.
-- **Strict Control Mutation Invariant (v0.10)**:
+- **Strict Control Mutation Invariant**:
   $$\text{UIA Semantic Pattern} > \text{Win32 Control Message} > \text{Keyboard Shortcut} > \text{Coordinate Interaction (PERMANENTLY PROHIBITED)}$$
   Zero blind coordinate clicking (`pyautogui.click(x, y)`). All control manipulations use strongly-typed UIA patterns (`InvokePattern`, `ValuePattern`, `TogglePattern`, `SelectionItemPattern`, `ScrollPattern`).
-- **Safe 64-bit SendInput & Clipboard Memory ABI (v0.10)**: Full 40-byte union alignment (`sizeof(INPUT) == 40`) for reliable Unicode keystroke typing and shortcut dispatch (`Ctrl+C`, `Ctrl+V`, `Alt+F4`), plus safe 64-bit global memory handle copying for clipboard operations.
-- **Text Payload as Data Invariant (v0.10)**: Text entry (`type "format c:" into notepad`) is treated strictly as literal data, never evaluated as shell commands.
-- **Password Masking & Privacy Invariant (v0.10)**: Controls marked `IsPassword` or matching credential heuristics have their values completely masked; secrets are never logged, persisted in SQLite, or exported in telemetry.
-- **Destructive Button Gating (v0.10)**: High-risk control actions (`delete`, `remove`, `format`, `drop`, `wipe`, `purge`, `reset`, `buy`, `terminate`) are gated behind `ActionGate` user confirmation prompts.
-- **Instantaneous Hotkey Activation**: Summoned with `Alt+Space` in ~4.5ms from a pre-warmed resident background process.
+- **Safe 64-bit SendInput & Clipboard Memory ABI**: Full 40-byte union alignment (`sizeof(INPUT) == 40`) for reliable Unicode keystroke typing and shortcut dispatch (`Ctrl+C`, `Ctrl+V`, `Alt+F4`), plus safe 64-bit global memory handle copying for clipboard operations.
+- **Text Payload as Data Invariant**: Text entry (`type "format c:" into notepad`) is treated strictly as literal data, never evaluated as shell commands.
+- **Password Masking & Privacy Invariant**: Controls marked `IsPassword` or matching credential heuristics have their values completely masked; secrets are never logged, persisted in SQLite, or exported in telemetry.
+- **Destructive Button Gating**: High-risk control actions (`delete`, `remove`, `format`, `drop`, `wipe`, `purge`, `reset`, `buy`, `terminate`) are gated behind `ActionGate` user confirmation prompts.
 - **Window Intelligence & Native Win32 Subsystem (v0.9)**: Ground-truth window management with the Origin Window Invariant, 11 deterministic tiling layouts, bounded LIFO undo stack (0.06 ms restore), and multi-monitor DPI awareness.
 - **Self-Targeting Window Immunity**: Process-wide `_ASTRARUN_HWNDS` registry unconditionally prevents AstraRun from modifying, snapping, or closing its own resident windows.
 - **Canonical Composition Root (`AstraApplication`)**: Single pipeline unifying all 15 platform subsystems, enforcing direct navigation, sub-3ms fast-path launcher routing (0.47 ms measured), rich NLP, ActionGate safety, and background learning.
@@ -26,6 +28,7 @@ AstraRun replaces fragile string-interpolated shell execution with a strictly ty
 - **Memory, Learning & Skill Foundation (v0.8.5)**: Durable workstation semantic memory, natural language teaching parser, and candidate skill discovery operating strictly off the interactive hot path in background threads.
 - **Task Runtime & Lifecycle Authority (v0.8)**: Centrally governed by `TaskManager` across a formal 14-state directed Finite State Machine (`TaskStatus`) with persistent SQLite Task Ledger.
 - **Benchmark-Proven Performance**:
+  - **Live UI Acceptance Suite (30 cases)**: **100.0% Pass Rate** (30 / 30), **0.00% Focus Theft**, **0.00% FER** (`docs/V0.10.1_LIVE_UI_ACCEPTANCE.md`).
   - **Interaction Benchmark V1 (405 cases)**: **100.0% Accuracy**, **0.00% WEAR**, **0 password leaks**, **100.0% destructive block recall**, **0.0621 ms mean latency**.
   - **Product Benchmark V2 (280 cases)**: **100.0% Accuracy**, **0.00% False Execution Rate**, **0.5983 ms fast-path routing latency** (< 3ms invariant verified).
   - **Window Benchmark V1 (330 cases)**: **100.0% Accuracy**, **0.00% Wrong Window Action Rate**, **0.0169 ms mean latency**.
@@ -34,7 +37,7 @@ AstraRun replaces fragile string-interpolated shell execution with a strictly ty
   - **Capability Benchmark V1 (520 cases)**: **100.0% Capability Accuracy**, **100.0% Permission Accuracy**, **100.0% Block Recall**, **0.624 ms mean latency**.
   - **Action Benchmark V1 (330 cases)**: **100.0% Intent Accuracy**, **100.0% Gate Accuracy**, **0.00% False Execution Rate (FER)**, **0.094 ms mean latency**.
   - **NLP Benchmark V1 (620 cases)**: **100.0% Intent Accuracy**, **95.2% Clause Acc**, **0.00% Negated Action Leakage Rate**, **7.275 ms mean latency**.
-- **293 Passing Automated Tests**: 100% test pass rate across 21 test modules in ~30.76s.
+- **307 Passing Automated Tests**: 100% test pass rate across 22 test modules in ~32.46s.
 
 ---
 

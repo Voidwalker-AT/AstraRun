@@ -49,11 +49,19 @@
 ## 2. Verification & Benchmark Results
 
 ### 2.1 Automated Unit & Integration Tests
-- **Status**: **307 / 307 PASSED** in **32.46s**
+- **Status**: **319 / 319 PASSED** in **41.69s**
 - **Regressions**: **0**
-- 14 new dedicated tests in `tests/test_v0101_launcher_hud.py` verifying hotkey parsing, thread priming, origin pre-capture, DPI positioning, HUD non-focus flags, HUD state transitions, controller event bus, presentation lifecycle, diagnostics, and compound workflows.
+- 14 dedicated tests in `tests/test_v0101_launcher_hud.py` verifying hotkey parsing, thread priming, origin pre-capture, DPI positioning, HUD non-focus flags, HUD state transitions, controller event bus, presentation lifecycle, diagnostics, and compound workflows.
+- 12 dedicated hotfix tests in `tests/test_v0101_hotfix_dwell.py` verifying focus transition survival, Alt release survival, 2s/5s/10s dwell times, intentional Escape dismissal, toggle dismissal, enter dismissal, human typing simulation, and 100-cycle stability.
 
-### 2.2 Live Acceptance Suite (30 / 30 Passed)
+### 2.2 Premature Dismissal & Dwell Stability (Hotfix Verified)
+- **Premature Launcher Dismissal Rate**: **0.00%** (100-cycle automated stress test)
+- **10-Second Dwell Survival Rate**: **100.0%**
+- **Human Typing Dwell Survival**: **100.0%**
+- **Alt Release Dismissal Rate**: **0.00%**
+- Fully documented in `docs/V0.10.1_HOTFIX.md`.
+
+### 2.3 Live Acceptance Suite (30 / 30 Passed)
 - Executed against live Windows 11 workstation (`benchmarks/v0101_live_acceptance_results.json`).
 - Verified all 3 categories: Hotkey Presentation (10/10), Floating Task HUD (10/10), Real Notepad Gate (10/10).
 - Pass Rate: **100.0%**. Documented in `docs/V0.10.1_LIVE_UI_ACCEPTANCE.md`.

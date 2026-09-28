@@ -13,7 +13,7 @@ import time
 from ctypes import wintypes
 from typing import Any, Optional
 
-from PySide6.QtCore import QObject, QPoint, QRect, Qt, Signal
+from PySide6.QtCore import QObject, QPoint, QRect, Qt, QTimer, Signal
 from PySide6.QtGui import QGuiApplication, QScreen
 
 from astrarun.core.logging import get_logger
@@ -156,6 +156,7 @@ class LauncherPresentationController(QObject):
 
         # 4. Trigger animated presentation on the launcher window
         self.presentation_started.emit(self._last_origin_hwnd)
+        self.launcher._last_origin_hwnd = self._last_origin_hwnd
         self.launcher.present_animated(geom, target_screen=target_screen)
 
         # 5. Enforce foreground activation
@@ -166,18 +167,59 @@ class LauncherPresentationController(QObject):
         self.launcher.input_field.setFocus()
         self.presentation_finished.emit()
 
-    def dismiss(self) -> None:
+        # 7. Verification probes (Section 7: immediately, +25ms, +50ms, +100ms, +200ms, +400ms)
+        self._schedule_activation_probes()
+
+    def _schedule_activation_probes(self) -> None:
+        """Schedule verification probes to detect transient foreground returns."""
+        for delay in (0, 25, 50, 100, 200, 400):
+            if delay == 0:
+                self._record_probe(0)
+            else:
+                QTimer.singleShot(delay, lambda d=delay: self._record_probe(d))
+
+    def _record_probe(self, delay_ms: int) -> None:
+        if sys.platform != "win32":
+            return
+        try:
+            user32 = ctypes.windll.user32
+            fg_hwnd = user32.GetForegroundWindow() or 0
+            win_id = int(self.launcher.winId()) if self.launcher else 0
+            qapp = QGuiApplication.instance()
+            act_win = qapp.activeWindow() if hasattr(qapp, "activeWindow") else None
+            is_act = self.launcher.isActiveWindow() if self.launcher else False
+            has_focus = self.launcher.input_field.hasFocus() if self.launcher else False
+            msg = (
+                f"[PROBE +{delay_ms:>3}ms] fg_hwnd={fg_hwnd:<8} (match={fg_hwnd == win_id}) "
+                f"activeWin={act_win is not None} is_active={is_act} input_focus={has_focus}"
+            )
+            logger.debug(msg)
+            if getattr(self.launcher, "launcher_debug", False):
+                print(msg, flush=True)
+        except Exception as e:
+            logger.debug("Probe error at +%dms: %s", delay_ms, e)
+
+    def dismiss(self, reason: str = "presentation_controller") -> None:
         """Dismiss the command bar smoothly."""
-        logger.debug("Dismissing launcher via presentation controller.")
-        self.launcher.dismiss_animated()
+        logger.debug("Dismissing launcher via presentation controller (reason=%s).", reason)
+        self.launcher.dismiss_animated(reason=reason)
         self.dismissal_finished.emit()
 
     def toggle_presentation(self, origin_hwnd: int | None = None) -> None:
-        """Toggle launcher visibility based on active and visible state."""
-        if self.launcher.isVisible() and self.launcher.isActiveWindow():
-            self.dismiss()
+        """Toggle launcher visibility based on explicit state machine."""
+        from astrarun.ui.launcher import LauncherState
+        if hasattr(self.launcher, "state"):
+            if self.launcher.state == LauncherState.INTERACTIVE and self.launcher.isVisible():
+                self.dismiss(reason="hotkey_toggle")
+            elif self.launcher.state in (LauncherState.ENTERING, LauncherState.ACTIVATING):
+                logger.debug("Hotkey received during presentation state; ignoring duplicate toggle.")
+            else:
+                self.present(origin_hwnd=origin_hwnd)
         else:
-            self.present(origin_hwnd=origin_hwnd)
+            if self.launcher.isVisible() and self.launcher.isActiveWindow():
+                self.dismiss(reason="hotkey_toggle")
+            else:
+                self.present(origin_hwnd=origin_hwnd)
 
     def get_diagnostics(self) -> dict[str, Any]:
         """Aggregate diagnostic state across hotkey, launcher, and HUD subsystems."""

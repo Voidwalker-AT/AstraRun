@@ -59,7 +59,7 @@ class DiagnosticsDialog(QDialog):
         header.addWidget(title)
         header.addStretch(1)
 
-        ver_lbl = QLabel("v0.10.1", self)
+        ver_lbl = QLabel("v0.10.1-hotfix", self)
         ver_lbl.setStyleSheet("font-size: 11px; font-weight: bold; background-color: #313244; color: #a6e3a1; border-radius: 4px; padding: 2px 6px;")
         header.addWidget(ver_lbl)
         layout.addLayout(header)
@@ -85,6 +85,16 @@ class DiagnosticsDialog(QDialog):
 
         caps_count = len(self.app.capability_registry.list_capabilities()) if hasattr(self.app, "capability_registry") else 0
         
+        # Git commit & PID
+        git_commit = "5a2b139"
+        try:
+            import subprocess
+            proc = subprocess.run(["git", "rev-parse", "--short", "HEAD"], capture_output=True, text=True, timeout=1)
+            if proc.returncode == 0:
+                git_commit = proc.stdout.strip()
+        except Exception:
+            pass
+
         # Hotkey diagnostics
         hotkey_str = "Alt+Space (Active)"
         if hasattr(self.app, "hotkey_manager") and self.app.hotkey_manager:
@@ -110,7 +120,9 @@ class DiagnosticsDialog(QDialog):
             origin_str = origin_str[:28] + "..."
 
         rows = [
-            ("Version", "v0.10.1 (Real Alt+Space Launcher & Floating Task HUD)"),
+            ("Version", "AstraRun v0.10.1-hotfix"),
+            ("Git Commit", git_commit),
+            ("Process PID", str(os.getpid())),
             ("Uptime", uptime_str),
             ("Registered Capabilities", f"{caps_count} capabilities (9 domains)"),
             ("Global Hotkey Pipeline", hotkey_str),

@@ -63,7 +63,7 @@ def main() -> int:
         backup_count=int(log_cfg.get("backup_count", 3)),
     )
     logger = get_logger("astrarun.main")
-    logger.info("Initializing AstraRun v0.10.1 (Real Alt+Space Launcher & Floating Task HUD)...")
+    logger.info("Initializing AstraRun v0.10.1-hotfix (Real Alt+Space Launcher)... PID=%d", os.getpid())
 
     # 3. Headless CLI command execution mode
     if args.run_command:
@@ -159,7 +159,7 @@ def main() -> int:
     if args.show_now:
         presentation_controller.present()
 
-    logger.info("AstraRun v0.10.1 is resident and listening for %s+%s.", "+".join(modifiers), key)
+    logger.info("AstraRun v0.10.1-hotfix is resident and listening for %s+%s. (PID=%d)", "+".join(modifiers), key, os.getpid())
     return qapp.exec()
 
 

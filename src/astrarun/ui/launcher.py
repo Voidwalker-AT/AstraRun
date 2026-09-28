@@ -2,10 +2,15 @@
 
 from __future__ import annotations
 
+import ctypes
 import sys
 import time
+from ctypes import wintypes
+from datetime import datetime
+from enum import Enum
 from typing import TYPE_CHECKING, Any, Callable, Optional
 from PySide6.QtCore import (
+    QByteArray,
     QEasingCurve,
     QEvent,
     QParallelAnimationGroup,
@@ -20,7 +25,6 @@ from PySide6.QtGui import QColor, QCursor, QFont, QGuiApplication, QKeyEvent
 from PySide6.QtWidgets import (
     QDialog,
     QGraphicsDropShadowEffect,
-    QGraphicsOpacityEffect,
     QHBoxLayout,
     QLabel,
     QLineEdit,
@@ -36,12 +40,22 @@ from astrarun.routing.base import BaseRouter
 from astrarun.search.models import CandidateCategory, SearchResult
 from astrarun.tools.registry import ToolRegistry
 from astrarun.ui.positioning import compute_launcher_position
-from astrarun.windows.policy import register_astrarun_hwnd
+from astrarun.windows.policy import register_astrarun_hwnd, unregister_astrarun_hwnd
 
 if TYPE_CHECKING:
     from astrarun.app import AstraApplication, ExecutionResult
 
 logger = get_logger("astrarun.ui.launcher")
+
+
+class LauncherState(str, Enum):
+    """Explicit lifecycle state machine for command bar presentation and interaction."""
+    HIDDEN = "HIDDEN"
+    ENTERING = "ENTERING"
+    ACTIVATING = "ACTIVATING"
+    INTERACTIVE = "INTERACTIVE"
+    SUBMITTING = "SUBMITTING"
+    EXITING = "EXITING"
 
 
 class SuggestionRowWidget(QWidget):
@@ -150,8 +164,17 @@ class LauncherWindow(QDialog):
         self.launcher_width = int(ui_cfg.get("width", 640))
         self.launcher_height = int(ui_cfg.get("height", 56))
         self.placeholder_text = str(ui_cfg.get("placeholder", "What do you want to do?"))
-        self.hide_on_focus_loss = bool(ui_cfg.get("hide_on_focus_loss", True))
+        # Section 4: remove "focus loss = immediate dismiss" as architectural invariant
+        self.hide_on_focus_loss = bool(ui_cfg.get("hide_on_focus_loss", False))
+        self.launcher_debug = bool(ui_cfg.get("launcher_debug", True))
         self.max_suggestions = int(ui_cfg.get("max_suggestions", 5))
+
+        # Explicit State Machine and Telemetry
+        self.state: LauncherState = LauncherState.HIDDEN
+        self._last_origin_hwnd: int = 0
+        self._activation_timer = QTimer(self)
+        self._activation_timer.setSingleShot(True)
+        self._activation_timer.timeout.connect(self._stabilize_activation)
 
         self.active_card: Optional[QWidget] = None
         self._memory_view_ref: Optional[QWidget] = None
@@ -161,10 +184,12 @@ class LauncherWindow(QDialog):
         self._init_animations()
         self._init_timer()
 
+        self._registered_hwnd: int | None = None
         # Register self HWND so AstraRun never targets its own windows for window actions
         if sys.platform == "win32":
             try:
-                register_astrarun_hwnd(int(self.winId()))
+                self._registered_hwnd = int(self.winId())
+                register_astrarun_hwnd(self._registered_hwnd)
             except Exception as err:
                 logger.debug("Could not register launcher HWND: %s", err)
 
@@ -290,17 +315,56 @@ class LauncherWindow(QDialog):
         self.error_timer.setSingleShot(True)
         self.error_timer.timeout.connect(self._clear_status)
 
+    def _log_lifecycle(self, event_name: str, reason: str = "", extra: str = "") -> None:
+        """Log granular high-resolution lifecycle events for launcher debugging."""
+        ts = datetime.now().strftime("%H:%M:%S.%f")
+        fg_hwnd = 0
+        if sys.platform == "win32":
+            try:
+                fg_hwnd = ctypes.windll.user32.GetForegroundWindow() or 0
+            except Exception:
+                pass
+
+        parts = [
+            f"[LIFECYCLE {ts}]",
+            f"{event_name:<24}",
+            f"state={self.state.value:<11}",
+            f"vis={self.isVisible()}",
+            f"act={self.isActiveWindow()}",
+            f"focus={self.input_field.hasFocus()}",
+            f"fg_hwnd={fg_hwnd}",
+            f"origin={self._last_origin_hwnd}",
+            f"anim={self._is_animating}",
+            f"has_act={self._has_been_active}",
+        ]
+        if reason:
+            parts.append(f"reason='{reason}'")
+        if extra:
+            parts.append(f"extra='{extra}'")
+        line = " | ".join(parts)
+        logger.info(line)
+        if getattr(self, "launcher_debug", False):
+            print(line, flush=True)
+
+    def _transition_state(self, new_state: LauncherState, reason: str = "") -> None:
+        """Explicit state transition with lifecycle logging."""
+        old_state = self.state
+        self.state = new_state
+        self._log_lifecycle(
+            f"STATE_{new_state.value}",
+            reason=reason,
+            extra=f"from={old_state.value}",
+        )
+
     def _init_animations(self) -> None:
-        """Setup slide and opacity animations for entrance and dismissal."""
-        self.opacity_effect = QGraphicsOpacityEffect(self)
-        self.setGraphicsEffect(self.opacity_effect)
-        self.opacity_effect.setOpacity(1.0)
+        """Setup slide and native windowOpacity animations without nested QGraphicsEffect."""
+        self.setWindowOpacity(1.0)
 
         self.pos_anim = QPropertyAnimation(self, b"pos")
         self.pos_anim.setDuration(150)
         self.pos_anim.setEasingCurve(QEasingCurve.Type.OutCubic)
 
-        self.opacity_anim = QPropertyAnimation(self.opacity_effect, b"opacity")
+        self.opacity_anim = QPropertyAnimation(self, b"windowOpacity")
         self.opacity_anim.setDuration(150)
         self.opacity_anim.setEasingCurve(QEasingCurve.Type.OutCubic)
 
@@ -312,16 +376,34 @@ class LauncherWindow(QDialog):
     def _on_animation_finished(self) -> None:
         """Handle animation completion."""
         self._is_animating = False
-        if self.opacity_effect.opacity() <= 0.05:
+        self._log_lifecycle("ANIMATION_FINISHED", extra=f"state={self.state.value}")
+        if self.state == LauncherState.ENTERING:
+            self._transition_state(LauncherState.ACTIVATING, reason="entrance_animation_finished")
+            # Explicit activation grace period (150ms after animation = ~300ms total)
+            self._activation_timer.start(150)
+        elif self.state == LauncherState.EXITING or self.windowOpacity() <= 0.05:
             self.hide()
             self._clear_status()
             self.clear_card()
+            self._transition_state(LauncherState.HIDDEN, reason="exit_animation_finished")
+            self._log_lifecycle("HIDE_EVENT")
+
+    def _stabilize_activation(self) -> None:
+        """Reinforce input focus and transition to INTERACTIVE after grace period."""
+        if self.state != LauncherState.ACTIVATING or not self.isVisible():
+            return
+        self.raise_()
+        self.activateWindow()
+        self.input_field.setFocus()
+        self._transition_state(LauncherState.INTERACTIVE, reason="activation_grace_period_ended")
+        self._log_lifecycle("INPUT_FOCUS_IN", extra="interactive_ready")
 
     def present_animated(self, target_geometry: QRect, target_screen: Any = None) -> None:
         """
-        Show the command bar with gentle slide/drop from above (120-180ms, OutCubic).
+        Show the command bar with gentle slide/drop from above (150ms, OutCubic).
         Prewarmed and kept resident.
         """
+        self._log_lifecycle("PRESENT_REQUESTED")
         self._is_animating = True
         self._has_been_active = False
 
@@ -334,17 +416,22 @@ class LauncherWindow(QDialog):
         target_pos = target_geometry.topLeft()
         if not self.animations_enabled:
             self.move(target_pos)
-            self.opacity_effect.setOpacity(1.0)
+            self.setWindowOpacity(1.0)
+            self._log_lifecycle("SHOW_CALLED")
             self.show()
             self.raise_()
             self.activateWindow()
             self.input_field.setFocus()
             self._is_animating = False
+            self._transition_state(LauncherState.INTERACTIVE, reason="animations_disabled")
             return
 
+        self._transition_state(LauncherState.ENTERING, reason="present_animated_start")
         start_pos = QPoint(target_pos.x(), target_pos.y() - 25)
         self.move(start_pos)
-        self.opacity_effect.setOpacity(0.0)
+        self.setWindowOpacity(0.0)
+
+        self._log_lifecycle("SHOW_CALLED")
         self.show()
         self.raise_()
         self.activateWindow()
@@ -360,18 +447,27 @@ class LauncherWindow(QDialog):
         self.opacity_anim.setStartValue(0.0)
         self.opacity_anim.setEndValue(1.0)
 
+        self._log_lifecycle("ANIMATION_STARTED")
         self.anim_group.start()
 
-    def dismiss_animated(self) -> None:
-        """Dismiss command bar smoothly with slide up/fade (90-140ms)."""
+    def dismiss_animated(self, reason: str = "unspecified") -> None:
+        """Dismiss command bar smoothly with slide up/fade (110ms, InCubic)."""
+        self._log_lifecycle("DISMISS_REQUESTED", reason=reason)
         if not self.isVisible():
+            self._log_lifecycle("DISMISS_BLOCKED", reason="already_hidden")
+            return
+
+        if self.state == LauncherState.EXITING:
+            self._log_lifecycle("DISMISS_BLOCKED", reason="already_exiting")
             return
 
         if not self.animations_enabled:
-            self.dismiss()
+            self.dismiss(reason=reason)
             return
 
+        self._transition_state(LauncherState.EXITING, reason=reason)
         self._is_animating = True
+        self._activation_timer.stop()
         end_pos = QPoint(self.x(), self.y() - 20)
 
         self.pos_anim.setDuration(110)
@@ -381,9 +477,10 @@ class LauncherWindow(QDialog):
 
         self.opacity_anim.setDuration(110)
         self.opacity_anim.setEasingCurve(QEasingCurve.Type.InCubic)
-        self.opacity_anim.setStartValue(self.opacity_effect.opacity())
+        self.opacity_anim.setStartValue(self.windowOpacity())
         self.opacity_anim.setEndValue(0.0)
 
+        self._log_lifecycle("EXIT_ANIMATION_STARTED", reason=reason)
         self.anim_group.start()
 
     def position_on_active_screen(self) -> None:
@@ -401,18 +498,24 @@ class LauncherWindow(QDialog):
         self.present_animated(geom)
         logger.debug("Launcher shown and activated.")
 
-    def dismiss(self) -> None:
+    def dismiss(self, reason: str = "unspecified") -> None:
         """Dismiss the launcher window immediately."""
+        self._log_lifecycle("HIDE_REQUESTED", reason=reason)
+        self._activation_timer.stop()
         self.hide()
         self._is_animating = False
         self._clear_status()
         self.clear_card()
+        self._transition_state(LauncherState.HIDDEN, reason=reason)
+        self._log_lifecycle("HIDE_EVENT", reason=reason)
         logger.debug("Launcher dismissed.")
 
     def toggle_visibility(self) -> None:
         """Toggle between visible/active and hidden states."""
-        if self.isVisible() and self.isActiveWindow():
-            self.dismiss_animated()
+        if self.isVisible() and self.state == LauncherState.INTERACTIVE:
+            self.dismiss_animated(reason="toggle_visibility")
+        elif self.state in (LauncherState.ENTERING, LauncherState.ACTIVATING):
+            logger.debug("Toggle ignored during presentation state.")
         else:
             self.show_and_activate()
 
@@ -533,7 +636,7 @@ class LauncherWindow(QDialog):
         if self.app is not None:
             exec_res = self.app.handle_request(res.matched_alias or res.name)
             if exec_res.success:
-                self.dismiss()
+                self.dismiss(reason="suggestion_fast_path")
             else:
                 self.show_feedback(exec_res.message, is_error=True)
             return
@@ -542,7 +645,7 @@ class LauncherWindow(QDialog):
         if success:
             if self.context and self.context.usage_store:
                 self.context.usage_store.record_launch(res.id)
-            self.dismiss()
+            self.dismiss(reason="suggestion_executed")
         else:
             self.show_feedback(msg, is_error=True)
 
@@ -582,7 +685,7 @@ class LauncherWindow(QDialog):
         success, message = self.registry.execute(decision)
         if success:
             logger.info("Command executed successfully: '%s'", query)
-            self.dismiss()
+            self.dismiss(reason="command_executed")
         else:
             logger.warning("Command execution failed: '%s' -> %s", query, message)
             self.show_feedback(message, is_error=True)
@@ -592,7 +695,7 @@ class LauncherWindow(QDialog):
         if res.type == "fast_path":
             if res.success:
                 logger.info("Fast path command executed successfully: '%s'", query)
-                self.dismiss()
+                self.dismiss(reason="fast_path_executed")
             else:
                 self.show_feedback(res.message, is_error=True)
 
@@ -641,7 +744,7 @@ class LauncherWindow(QDialog):
 
         elif res.type == "list_result":
             if self.hud:
-                self.dismiss_animated()
+                self.dismiss_animated(reason="list_result_hud")
                 return
             from astrarun.ui.cards import ListResultCard
             items = []
@@ -666,7 +769,7 @@ class LauncherWindow(QDialog):
 
         elif res.type == "capability_result":
             if self.hud:
-                self.dismiss_animated()
+                self.dismiss_animated(reason="capability_result_hud")
                 return
             from astrarun.ui.cards import ResultCard
             rows = []
@@ -694,7 +797,7 @@ class LauncherWindow(QDialog):
         else:
             if res.success:
                 if self.hud:
-                    self.dismiss_animated()
+                    self.dismiss_animated(reason="task_success_hud")
                 else:
                     self.show_feedback(res.message, is_error=False)
             else:
@@ -778,16 +881,66 @@ class LauncherWindow(QDialog):
         dlg = DiagnosticsDialog(app_instance=self.app, start_time=time.time(), parent=self)
         dlg.exec()
 
+    def showEvent(self, event: Any) -> None:
+        self._log_lifecycle("SHOW_EVENT")
+        super().showEvent(event)
+
+    def hideEvent(self, event: Any) -> None:
+        self._log_lifecycle("HIDE_EVENT")
+        super().hideEvent(event)
+
+    def closeEvent(self, event: Any) -> None:
+        if hasattr(self, "_registered_hwnd") and self._registered_hwnd:
+            unregister_astrarun_hwnd(self._registered_hwnd)
+            self._registered_hwnd = None
+        super().closeEvent(event)
+
+    def focusInEvent(self, event: Any) -> None:
+        self._log_lifecycle("FOCUS_IN")
+        try:
+            super().focusInEvent(event)
+        except Exception:
+            pass
+
+    def focusOutEvent(self, event: Any) -> None:
+        if self.state in (LauncherState.ENTERING, LauncherState.ACTIVATING):
+            self._log_lifecycle("FOCUS_OUT", reason="transient_ignored_in_activation")
+        else:
+            self._log_lifecycle("FOCUS_OUT")
+        try:
+            super().focusOutEvent(event)
+        except Exception:
+            pass
+
+    def nativeEvent(self, eventType: QByteArray | bytes, message: int | Any) -> tuple[bool, int]:
+        """Intercept Win32 system menu invocations to prevent Alt key from triggering menu mode."""
+        if sys.platform == "win32" and eventType in (b"windows_generic_MSG", "windows_generic_MSG"):
+            try:
+                msg = wintypes.MSG.from_address(int(message))
+                WM_SYSCOMMAND = 0x0112
+                SC_KEYMENU = 0xF100
+                if msg.message == WM_SYSCOMMAND and (msg.wParam & 0xFFF0) == SC_KEYMENU:
+                    self._log_lifecycle("SC_KEYMENU_SWALLOWED", extra="Alt_system_menu_blocked")
+                    return True, 0
+            except Exception:
+                pass
+        return super().nativeEvent(eventType, message)
+
     def keyPressEvent(self, event: QKeyEvent) -> None:
         """Handle keyboard-first navigation."""
         key = event.key()
+
+        # Swallow Alt presses so they don't trigger Windows system menu
+        if key in (Qt.Key.Key_Alt, Qt.Key.Key_AltGr):
+            event.accept()
+            return
 
         # Escape dismisses active card first, then dismisses launcher
         if key == Qt.Key.Key_Escape:
             if self.active_card is not None:
                 self.clear_card()
             else:
-                self.dismiss()
+                self.dismiss(reason="escape_key")
             event.accept()
             return
 
@@ -824,17 +977,35 @@ class LauncherWindow(QDialog):
 
         super().keyPressEvent(event)
 
+    def keyReleaseEvent(self, event: QKeyEvent) -> None:
+        """Swallow standalone Alt release so it does not trigger Windows menu loop."""
+        key = event.key()
+        if key in (Qt.Key.Key_Alt, Qt.Key.Key_AltGr):
+            event.accept()
+            return
+        super().keyReleaseEvent(event)
+
     def changeEvent(self, event: QEvent) -> None:
-        """Hide window on focus loss if configured, except when animating or interacting with cards."""
+        """Handle window activation changes with explicit state machine guards."""
         if event.type() == QEvent.Type.ActivationChange:
-            if self.isActiveWindow():
+            is_act = self.isActiveWindow()
+            self._log_lifecycle("ACTIVATION_CHANGE", extra=f"isActiveWindow={is_act}")
+            if is_act:
                 self._has_been_active = True
-            elif self.isVisible():
-                if (
-                    self.hide_on_focus_loss
-                    and self._has_been_active
-                    and not self._is_animating
-                    and self.active_card is None
-                ):
-                    self.dismiss_animated()
+                self._log_lifecycle("WINDOW_ACTIVATE")
+            else:
+                self._log_lifecycle("WINDOW_DEACTIVATE")
+                # In ENTERING or ACTIVATING: strictly block dismissal
+                if self.state in (LauncherState.ENTERING, LauncherState.ACTIVATING):
+                    self._log_lifecycle("DISMISS_BLOCKED", reason=f"protected_in_{self.state.value.lower()}")
+                    super().changeEvent(event)
+                    return
+
+                # In INTERACTIVE: only dismiss if hide_on_focus_loss is explicitly True
+                if self.state == LauncherState.INTERACTIVE:
+                    if self.hide_on_focus_loss and self.active_card is None:
+                        self.dismiss_animated(reason="focus_loss")
+                    else:
+                        self._log_lifecycle("DISMISS_BLOCKED", reason="focus_loss_dismissal_disabled")
+
         super().changeEvent(event)

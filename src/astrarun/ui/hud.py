@@ -39,7 +39,7 @@ from astrarun.core.logging import get_logger
 from astrarun.tasks.events import TaskEventBus
 from astrarun.tasks.models import TaskEvent, TaskEventType
 from astrarun.ui.positioning import compute_task_hud_position, get_screen_for_hwnd
-from astrarun.windows.policy import register_astrarun_hwnd
+from astrarun.windows.policy import register_astrarun_hwnd, unregister_astrarun_hwnd
 
 logger = get_logger("astrarun.ui.hud")
 
@@ -86,10 +86,12 @@ class FloatingTaskHUD(QWidget):
         self._init_animations()
         self._init_timers()
 
+        self._registered_hwnd: int | None = None
         # Register HWND so window management policy ignores this widget
         if sys.platform == "win32":
             try:
-                register_astrarun_hwnd(int(self.winId()))
+                self._registered_hwnd = int(self.winId())
+                register_astrarun_hwnd(self._registered_hwnd)
             except Exception as err:
                 logger.debug("Could not register HUD HWND: %s", err)
 
@@ -291,6 +293,12 @@ class FloatingTaskHUD(QWidget):
             self.hide()
             self.current_state = HUDState.IDLE
             self.dismissed.emit()
+
+    def closeEvent(self, event: Any) -> None:
+        if hasattr(self, "_registered_hwnd") and self._registered_hwnd:
+            unregister_astrarun_hwnd(self._registered_hwnd)
+            self._registered_hwnd = None
+        super().closeEvent(event)
 
     # =========================================================================
     # STATE TRANSITION METHODS

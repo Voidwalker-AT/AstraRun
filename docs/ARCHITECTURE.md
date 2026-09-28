@@ -426,6 +426,38 @@ $$\text{Natural Language} \longrightarrow \text{NLP Engine} \longrightarrow \tex
 - Zero live model fine-tuning or prompt mutation.
 - Non-learnable security policies: ActionGate permissions, confirmation requirements, and protected system processes (`lsass.exe`, `csrss.exe`) are mathematically immune to habit drift.
 
+---
+
+## 12. Semantic UI Automation Subsystem (v0.10)
+
+- **Dedicated COM MTA Worker Thread**: UI Automation tree traversals are isolated onto a dedicated MTA thread, keeping the GUI thread and hotkey listener completely responsive.
+- **Strict Control Mutation Invariant**:
+  $$\text{UIA Semantic Pattern} > \text{Win32 Control Message} > \text{Keyboard Shortcut} > \text{Coordinate Interaction (PERMANENTLY PROHIBITED)}$$
+  Zero blind coordinate clicking (`pyautogui.click(x, y)`). Control manipulations use strongly-typed UIA patterns (`InvokePattern`, `ValuePattern`, `TogglePattern`, `SelectionItemPattern`, `ScrollPattern`).
+- **Safe 64-bit SendInput & Clipboard Memory ABI**: Full 40-byte union alignment (`sizeof(INPUT) == 40`) for reliable Unicode keystroke typing and shortcut dispatch (`Ctrl+C`, `Ctrl+V`, `Alt+F4`), plus safe 64-bit global memory handle copying for clipboard operations.
+
+---
+
+## 13. Decoupled Floating Task HUD & Resident Presentation (v0.10.1)
+
+- **Non-Focus-Stealing Invariant**: Enforces Win32 `WS_EX_NOACTIVATE (0x08000000)`, `Qt.WindowType.WindowDoesNotAcceptFocus`, and `Qt.WidgetAttribute.WA_ShowWithoutActivating` to ensure background tasks NEVER steal keyboard focus from active target applications.
+- **Resident Background Lifecycle**: Windows named mutex single-instance lock (`Local\AstraRun_SingleInstance_Mutex`), programmatically rendered high-DPI Catppuccin Mocha tray icon, atomic state file readiness protocol (`data/astrarun_state.json`), and clean SIGINT/SIGTERM handlers.
+- **Top-Center Launcher Presentation**: 150ms `OutCubic` drop-in and 110ms `InCubic` exit animations with monitor-aware DPI positioning based on the synchronous origin window HWND.
+
+---
+
+## 14. Synchronized Compound Workflow Pipeline (v0.10.2)
+
+- **Compound-Aware Suggestion Suppression**: `has_compound_indicators()` detects syntactic conjunctions (`and`, `then`, `&`, `;`) and multi-clause verbs, automatically suppressing autocomplete suggestions so that Enter dispatches the complete natural-language instruction without truncation.
+- **4-Step Sequential Synchronization Pipeline**: Automatically expands application launch + typing requests (`open <app> and type <text>`) into 4 synchronized steps:
+  1. `open_application`: Launches application using execution aliases or absolute path without detached shell wrappers.
+  2. `wait_for_window`: Bounded polling (50ms intervals) until a visible top-level window handle (`HWND`) is materialized and verified.
+  3. `resolve_editable_element`: Traverses UIA accessibility tree to locate the primary editable control (`ControlType.DOCUMENT` or `ControlType.EDIT`, e.g. `RichEditD2DPT`).
+  4. `type_text`: Performs 6-point focus verification and injects keystrokes via `SendInput` Unicode events without shell interpolation.
+- **WorkflowContext State Propagation**: Tracks mutable runtime entities (`last_opened_application`, `last_opened_window` HWND, `last_ui_element`) across sequential steps, enabling downstream operations to automatically bind handles discovered upstream.
+- **Win32 Interactive Input Desktop Attachment**: `_ensure_desktop_attached()` attaches the calling thread to `user32.OpenInputDesktop(0, False, 0x01FF)`, resolving background runner desktop isolation.
+- **Bypass of LockSetForegroundWindow**: `force_foreground_activation` uses `AttachThreadInput` across caller, foreground, and target threads, `AllowSetForegroundWindow(-1)`, and `VK_MENU` (Alt) key pulse to release foreground lock timeout restrictions on Windows 11.
+
 
 
 

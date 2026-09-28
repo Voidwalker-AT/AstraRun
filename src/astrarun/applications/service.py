@@ -27,13 +27,15 @@ WM_CLOSE = 0x0010
 
 
 def _ensure_desktop_attached() -> None:
-    """Ensure current thread is attached to the interactive Default desktop."""
+    """Ensure current thread is attached to the interactive input desktop."""
     if sys.platform != "win32":
         return
     try:
         user32 = ctypes.windll.user32
         DESKTOP_ALL = 0x01FF
-        hdesk = user32.OpenDesktopW("Default", 0, False, DESKTOP_ALL)
+        hdesk = user32.OpenInputDesktop(0, False, DESKTOP_ALL)
+        if not hdesk:
+            hdesk = user32.OpenDesktopW("Default", 0, False, DESKTOP_ALL)
         if hdesk:
             user32.SetThreadDesktop(hdesk)
     except Exception:

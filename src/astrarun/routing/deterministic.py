@@ -46,6 +46,15 @@ def normalize_request(request: str) -> tuple[str, str]:
     return "", cleaned
 
 
+def has_compound_indicators(text: str) -> bool:
+    """Check if the text contains compound conjunctions or chained clauses."""
+    lower = f" {text.lower()} "
+    for conj in (" and ", " then ", " with ", " & ", ";", ", then ", ", and "):
+        if conj in lower:
+            return True
+    return False
+
+
 class DeterministicRouter(BaseRouter):
     """
     Fast deterministic router augmented with strict fuzzy discovery.
@@ -64,6 +73,9 @@ class DeterministicRouter(BaseRouter):
         raw_text = request.strip()
         if not raw_text:
             return Decision.unknown("", "Empty input")
+
+        if has_compound_indicators(raw_text):
+            return Decision.unknown(raw_text, "Compound or multi-clause request requires NLP/Workflow engine")
 
         verb, target = normalize_request(raw_text)
         decision: Decision | None = None

@@ -178,6 +178,7 @@ class LauncherWindow(QDialog):
 
         self.active_card: Optional[QWidget] = None
         self._memory_view_ref: Optional[QWidget] = None
+        self._user_navigated_suggestions: bool = False
 
         self._init_window()
         self._init_ui()
@@ -406,6 +407,7 @@ class LauncherWindow(QDialog):
         self._log_lifecycle("PRESENT_REQUESTED")
         self._is_animating = True
         self._has_been_active = False
+        self._user_navigated_suggestions = False
 
         self.input_field.clear()
         self._clear_status()
@@ -566,12 +568,25 @@ class LauncherWindow(QDialog):
         self.card_container.hide()
         self._adjust_height(expanded=False)
 
+    def _is_compound_or_nlp_query(self, query: str) -> bool:
+        """Check if query is compound, contains conjunctions, or action verbs with multiple clauses."""
+        clean = query.strip()
+        lower = f" {clean.lower()} "
+        for conj in (" and ", " then ", " with ", " & ", ";", ", then ", ", and "):
+            if conj in lower:
+                return True
+        words = clean.split()
+        if len(words) > 1 and words[0].lower() in ("type", "press", "click", "toggle", "focus", "select", "snap"):
+            return True
+        return False
+
     def _on_text_changed(self, text: str) -> None:
         """Query unified search index and update ranked interactive suggestions."""
         self._clear_status()
         self.clear_card()
+        self._user_navigated_suggestions = False
         clean = text.strip()
-        if not clean:
+        if not clean or self._is_compound_or_nlp_query(clean):
             self.suggestions_list.hide()
             self._adjust_height(expanded=False)
             return
@@ -651,21 +666,35 @@ class LauncherWindow(QDialog):
 
     def execute_command(self) -> None:
         """Execute selected suggestion if present, or route typed input."""
-        # 1. If an item is highlighted in the suggestions list, execute it!
+        query = self.input_field.text().strip()
+        if not query:
+            return
+
+        # 1. If query is compound or NLP command, bypass suggestions list completely
+        if self._is_compound_or_nlp_query(query):
+            self.suggestions_list.hide()
+            self._adjust_height(expanded=False)
+            if self.app is not None:
+                exec_res = self.app.handle_request(query)
+                self._handle_execution_result(exec_res, query)
+                return
+
+        # 2. If suggestions list is visible and user navigated to an item, or input closely matches
         current_row = self.suggestions_list.currentRow()
         if self.suggestions_list.isVisible() and current_row >= 0:
             item = self.suggestions_list.item(current_row)
             if item:
                 res = item.data(Qt.ItemDataRole.UserRole)
                 if res and isinstance(res, SearchResult):
-                    self._execute_result(res)
-                    return
+                    # Execute suggestion if user explicitly used arrow keys or query matches/prefixes suggestion
+                    q_lower = query.lower()
+                    name_lower = res.name.lower()
+                    alias_lower = (res.matched_alias or "").lower()
+                    if getattr(self, "_user_navigated_suggestions", False) or q_lower in name_lower or q_lower in alias_lower or name_lower.startswith(q_lower):
+                        self._execute_result(res)
+                        return
 
-        # 2. Otherwise route raw typed command
-        query = self.input_field.text().strip()
-        if not query:
-            return
-
+        # 3. Otherwise route raw typed command
         logger.info("Processing command: '%s'", query)
 
         # Canonical execution through AstraApplication composition root
@@ -676,6 +705,7 @@ class LauncherWindow(QDialog):
 
         # Fallback to legacy router
         decision: Decision = self.router.route(query, self.context)
+
         if decision.tool == "refresh_apps":
             if self.on_refresh_callback:
                 self.on_refresh_callback()
@@ -946,6 +976,7 @@ class LauncherWindow(QDialog):
 
         # Down arrow: move selection down in suggestions
         if key == Qt.Key.Key_Down and self.suggestions_list.isVisible():
+            self._user_navigated_suggestions = True
             count = self.suggestions_list.count()
             if count > 0:
                 current = self.suggestions_list.currentRow()
@@ -956,6 +987,7 @@ class LauncherWindow(QDialog):
 
         # Up arrow: move selection up in suggestions
         if key == Qt.Key.Key_Up and self.suggestions_list.isVisible():
+            self._user_navigated_suggestions = True
             count = self.suggestions_list.count()
             if count > 0:
                 current = self.suggestions_list.currentRow()

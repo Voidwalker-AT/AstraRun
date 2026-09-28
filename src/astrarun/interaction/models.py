@@ -183,3 +183,8 @@ class ResolutionResult:
     candidates: list[ResolutionCandidate] = field(default_factory=list)
     ambiguous: bool = False
     clarification_prompt: Optional[str] = None
+
+    @property
+    def is_resolved(self) -> bool:
+        """Return True if a unique unambiguous element was resolved."""
+        return self.element is not None and not self.ambiguous

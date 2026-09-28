@@ -327,9 +327,12 @@ def test_compound_nlp_and_workflow_execution(astra_app):
 
     proposal = astra_app.workflow_compiler.compile(utterance)
     assert proposal.status == "READY"
-    assert len(proposal.steps) == 2
+    assert len(proposal.steps) == 4
     assert proposal.steps[0].tool == "open_application"
     assert proposal.steps[0].arguments["app"] == "notepad"
-    assert proposal.steps[1].tool == "type_text"
-    assert proposal.steps[1].arguments["text"] == "hello from Astra"
+    assert proposal.steps[1].tool == "wait_for_window"
+    assert proposal.steps[2].tool == "resolve_editable_element"
+    assert proposal.steps[3].tool == "type_text"
+    assert proposal.steps[3].arguments["text"] == "hello from Astra"
+
 

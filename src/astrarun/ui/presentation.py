@@ -35,32 +35,64 @@ def force_foreground_activation(hwnd: int) -> bool:
     user32 = ctypes.windll.user32
     kernel32 = ctypes.windll.kernel32
 
+    try:
+        from astrarun.windows.discovery import _ensure_desktop_attached
+        _ensure_desktop_attached()
+    except Exception:
+        pass
+
     # Constants
     SW_SHOW = 5
+    SW_RESTORE = 9
     HWND_TOPMOST = -1
+    HWND_NOTOPMOST = -2
     SWP_NOSIZE = 0x0001
     SWP_NOMOVE = 0x0002
     SWP_SHOWWINDOW = 0x0040
 
     try:
-        user32.ShowWindow(hwnd, SW_SHOW)
-        user32.SetWindowPos(hwnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE | SWP_SHOWWINDOW)
+        if not user32.IsWindow(hwnd):
+            return False
 
-        fg_hwnd = user32.GetForegroundWindow()
-        if fg_hwnd and fg_hwnd != hwnd:
-            fg_thread = user32.GetWindowThreadProcessId(fg_hwnd, None)
-            cur_thread = kernel32.GetCurrentThreadId()
-            if fg_thread != cur_thread:
-                user32.AttachThreadInput(cur_thread, fg_thread, True)
-                user32.SetForegroundWindow(hwnd)
-                user32.BringWindowToTop(hwnd)
-                user32.AttachThreadInput(cur_thread, fg_thread, False)
-            else:
-                user32.SetForegroundWindow(hwnd)
-                user32.BringWindowToTop(hwnd)
+        if user32.IsIconic(hwnd):
+            user32.ShowWindow(hwnd, SW_RESTORE)
         else:
+            user32.ShowWindow(hwnd, SW_SHOW)
+
+        user32.SetWindowPos(hwnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE | SWP_SHOWWINDOW)
+        user32.SetWindowPos(hwnd, HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE | SWP_SHOWWINDOW)
+
+        cur_thread = kernel32.GetCurrentThreadId()
+        fg_hwnd = user32.GetForegroundWindow()
+        fg_thread = user32.GetWindowThreadProcessId(fg_hwnd, None) if fg_hwnd else 0
+        target_thread = user32.GetWindowThreadProcessId(hwnd, None)
+
+        attached_fg = False
+        attached_target = False
+        if fg_thread and fg_thread != cur_thread:
+            attached_fg = bool(user32.AttachThreadInput(cur_thread, fg_thread, True))
+        if target_thread and target_thread != cur_thread:
+            attached_target = bool(user32.AttachThreadInput(cur_thread, target_thread, True))
+
+        user32.AllowSetForegroundWindow(-1)
+        res = user32.SetForegroundWindow(hwnd)
+        user32.BringWindowToTop(hwnd)
+        user32.SetFocus(hwnd)
+
+        if not res:
+            VK_MENU = 0x12
+            KEYEVENTF_KEYUP = 0x0002
+            user32.keybd_event(VK_MENU, 0, 0, 0)
+            user32.keybd_event(VK_MENU, 0, KEYEVENTF_KEYUP, 0)
             user32.SetForegroundWindow(hwnd)
             user32.BringWindowToTop(hwnd)
+            user32.SetFocus(hwnd)
+
+        if attached_fg:
+            user32.AttachThreadInput(cur_thread, fg_thread, False)
+        if attached_target:
+            user32.AttachThreadInput(cur_thread, target_thread, False)
+
         return True
     except Exception as err:
         logger.debug("Error during force_foreground_activation: %s", err)

@@ -2,6 +2,7 @@
 
 from astrarun.workflows.engine import WorkflowEngine
 from astrarun.workflows.compiler import WorkflowCompiler
+from astrarun.workflows.context import WorkflowContext
 from astrarun.workflows.models import (
     Workflow,
     WorkflowExecutionResult,
@@ -13,6 +14,7 @@ from astrarun.workflows.models import (
 __all__ = [
     "WorkflowEngine",
     "WorkflowCompiler",
+    "WorkflowContext",
     "Workflow",
     "WorkflowProposal",
     "WorkflowStep",

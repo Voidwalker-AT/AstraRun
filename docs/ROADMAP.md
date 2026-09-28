@@ -228,6 +228,17 @@ flowchart LR
 
 ---
 
+### v0.10.2 — Capability Integration & Real Natural-Language Execution (Complete — 2026-09-28)
+- **Compound-Aware Suggestion Suppression**: Prevents fast-path autocomplete from preselecting recommendations on compound queries, ensuring Enter dispatches the literal user request without truncation.
+- **Synchronized 4-Step Pipeline**: Expands `open <app> and type <text>` into `open_application` -> `wait_for_window` -> `resolve_editable_element` -> `type_text`, eliminating race conditions with packaged Windows 11 apps.
+- **WorkflowContext State Propagation**: Implements implicit entity propagation (`last_opened_application`, `last_opened_window` HWND, `last_ui_element`) across multi-step execution chains.
+- **Win32 Interactive Input Desktop Attachment**: Attaches calling threads to `user32.OpenInputDesktop(0, False, 0x01FF)` and leverages `AttachThreadInput`, `AllowSetForegroundWindow(-1)`, and `VK_MENU` pulse in `force_foreground_activation`.
+- **Compound Workflow Benchmark V1 (50 cases)**: 100.0% Pass Rate (50 / 50), 100.0% Clause Recall, 0.00% Truncation Rate, 206.72ms mean latency.
+- **30-Step Live Workstation Acceptance Suite**: 30 / 30 PASSED (100.0%) featuring the physical Windows 11 Notepad Gate with literal typing (`pqr`) and clean post-test cleanup.
+- **337 Passing Automated Tests**: 337 / 337 tests passing cleanly in ~45.76s.
+
+---
+
 ### v0.11 — Workstation Daemon / Rich Context
 - Resident system tray daemon with background event monitoring, context synthesis, proactive alerts, and dev port recovery.
 

@@ -50,6 +50,7 @@ class CapabilityErrorCode(str, Enum):
     OS_ERROR = "OS_ERROR"
     TIMEOUT = "TIMEOUT"
     UNSUPPORTED_UI = "UNSUPPORTED_UI"
+    FOCUS_FAILED = "FOCUS_FAILED"
 
 
 @dataclass

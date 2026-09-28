@@ -348,7 +348,9 @@ def snap_window_left(
     pid: Optional[int] = None,
 ) -> CapabilityResult:
     """Snap a window to the left half of its monitor."""
-    return snap_window(hwnd=hwnd, layout=LayoutType.LEFT_HALF, monitor_spec=monitor_spec, pid=pid)
+    res = snap_window(hwnd=hwnd, layout=LayoutType.LEFT_HALF, monitor_spec=monitor_spec, pid=pid)
+    res.capability = "snap_window_left"
+    return res
 
 
 def snap_window_right(
@@ -357,7 +359,9 @@ def snap_window_right(
     pid: Optional[int] = None,
 ) -> CapabilityResult:
     """Snap a window to the right half of its monitor."""
-    return snap_window(hwnd=hwnd, layout=LayoutType.RIGHT_HALF, monitor_spec=monitor_spec, pid=pid)
+    res = snap_window(hwnd=hwnd, layout=LayoutType.RIGHT_HALF, monitor_spec=monitor_spec, pid=pid)
+    res.capability = "snap_window_right"
+    return res
 
 
 def close_window(hwnd: int, pid: int | None = None) -> CapabilityResult:
@@ -493,21 +497,4 @@ def arrange_desktop(plan: list[dict[str, Any]]) -> CapabilityResult:
         latency_ms=latency,
     )
 
-
-def snap_window_left(
-    hwnd: int,
-    monitor_spec: Optional[str | int] = None,
-    pid: Optional[int] = None,
-) -> CapabilityResult:
-    """Snap a window to the left half of the monitor."""
-    return snap_window(hwnd, layout=LayoutType.LEFT_HALF, monitor_spec=monitor_spec, pid=pid)
-
-
-def snap_window_right(
-    hwnd: int,
-    monitor_spec: Optional[str | int] = None,
-    pid: Optional[int] = None,
-) -> CapabilityResult:
-    """Snap a window to the right half of the monitor."""
-    return snap_window(hwnd, layout=LayoutType.RIGHT_HALF, monitor_spec=monitor_spec, pid=pid)
 

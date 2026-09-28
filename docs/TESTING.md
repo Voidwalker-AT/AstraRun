@@ -1,6 +1,6 @@
 # AstraRun Testing & Verification Report
 
-> **Version**: 0.10  
+> **Version**: 0.10.2  
 > **Status**: VERIFIED & PASSING  
 > **Execution Date**: 2026-09-28  
 
@@ -8,7 +8,20 @@
 
 ## 1. Test Suite Architecture
 
-The AstraRun test suite contains **293 automated tests across 21 modules**:
+The AstraRun test suite contains **337 automated tests across 23 modules**:
+
+1. **Compound Pipeline & Reachability Tests (v0.10.2)**:
+   - `tests/test_v0102_compound_pipeline.py` (10 tests):
+     - `test_has_compound_indicators`: Detection of conjunctions (`and`, `then`, `&`, `;`) and multi-clause verbs.
+     - `test_has_compound_indicators_false_for_simple`: Validates simple queries do not trigger compound indicators.
+     - `test_router_escalates_compound_queries`: Verifies compound queries bypass single-app fast path.
+     - `test_clause_decomposition_app_and_text`: Validates IR decomposition of `open notepad and type pqr`.
+     - `test_workflow_context_implicit_binding`: State propagation across `last_opened_application` and `last_opened_window`.
+     - `test_workflow_compiler_expands_to_4_steps`: Sequential expansion to `open_app` -> `wait_window` -> `resolve_element` -> `type_text`.
+     - `test_workflow_compiler_expands_app_and_window`: Expansion to `open_app` -> `wait_window` -> `maximize_window`.
+     - `test_workflow_compiler_shortcut_chaining`: Resolution of sequential keyboard shortcut chords.
+     - `test_launcher_suppresses_suggestions_on_compound_query`: Validates suggestion list is cleared and hidden on compound input.
+     - `test_end_to_end_compound_handle_request`: End-to-end execution of compound commands in simulated environment.
 
 1. **Application Interaction & Control Grounding Tests (v0.10)**:
    - `tests/test_v010_interaction.py` (41 tests):

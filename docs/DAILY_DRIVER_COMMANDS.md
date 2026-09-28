@@ -1,28 +1,28 @@
 # DAILY_DRIVER_COMMANDS.md — Daily Driver Command Catalog
 
-> **Milestone**: AstraRun v0.9 (Daily Driver Integration & Window Intelligence)  
+> **Milestone**: AstraRun v0.10.2 (Capability Integration & Compound Natural Language Execution)  
 > **Status**: VERIFIED & BENCHMARKED  
 > **Target Audience**: AstraRun Users, Systems Engineers, and Workstation Operators  
-> **Last Updated**: 2026-09-27  
+> **Last Updated**: 2026-09-28  
 
 ---
 
 ## 1. Overview & Invocation Model
 
-AstraRun v0.9 functions as an ambient, resident workstation assistant. It is invoked via:
+AstraRun v0.10.2 functions as an ambient, resident workstation assistant. It is invoked via:
 1. **Global Hotkey**: `Alt+Space` (captures foreground origin window and toggles launcher overlay).
 2. **System Tray Icon**: Context menu or double-click.
 3. **Headless / CLI Mode**: `python src/astrarun/main.py --run-command "<utterance>"`
-4. **PowerShell Service Wrapper**: `.\start-astrarun.ps1 -Foreground`
+4. **PowerShell Service Wrapper**: `.\start-astrarun.ps1 -Restart` / `.\start-astrarun.ps1 -Status`
 
 All commands are processed through the canonical `AstraApplication.handle_request()` pipeline:
-- **Fast-Path Launcher**: Sub-3ms pure deterministic routing for direct application launching and file navigation.
+- **Fast-Path Launcher**: Sub-15ms pure deterministic routing for direct application launching, folder navigation, and system status queries.
 - **Direct Navigation Commands**: Sub-millisecond instant switching to dedicated workstation views (History, Memory, Skills, Settings, Diagnostics).
-- **Rich NLP & Workflow Pipeline**: Hybrid NLP parsing, coreference/pronoun resolution, multi-window layout computation, and ActionGate safety verification.
+- **Synchronized Compound Workflow Pipeline**: Multi-clause NLP parsing, automatic 4-step execution expansion, `WorkflowContext` implicit state propagation, and non-focus-stealing `FloatingTaskHUD` progress tracking.
 
 ---
 
-## 2. Fast-Path Application Launchers (Sub-3ms)
+## 2. Fast-Path Application Launchers (Sub-15ms)
 
 | Command | Route Type | Executed Tool | Description |
 | :--- | :--- | :--- | :--- |
@@ -53,7 +53,7 @@ All commands are processed through the canonical `AstraApplication.handle_reques
 | `settings` | `open_settings` | Settings Dialog | Configuration dialog for theme, hotkey bindings, search index, and startup settings. |
 | `preferences` | `open_settings` | Settings Dialog | Synonym for settings dialog. |
 | `diagnostics` | `open_diagnostics` | Diagnostics Dialog | Real-time platform telemetry: hardware specs, active monitors, capability count, hotkey status. |
-| `what can you do?` | `list_result` | Capability Catalog | Displays all 59 registered workstation capabilities across 9 categories. |
+| `what can you do?` | `list_result` | Capability Catalog | Displays all 72 registered workstation capabilities across 10 categories. |
 | `capabilities` | `list_result` | Capability Catalog | Synonym for workstation capabilities query. |
 
 ---
@@ -99,7 +99,26 @@ All commands implicitly target the **origin window** (the window that had focus 
 
 ---
 
-## 6. Workstation Telemetry & System Status
+## 6. Synchronized Compound Natural-Language Commands (v0.10.2)
+
+Compound queries containing conjunctions (`and`, `then`, `&`, `;`) are decomposed by `ClauseDecomposer`, compiled into synchronized multi-step execution plans by `WorkflowCompiler`, and bound with implicit context by `WorkflowContext`. Suggestion popups are automatically suppressed to allow full sentence submission.
+
+| Command | Decomposed Steps | Synchronized Plan | Telemetry & Result |
+| :--- | :--- | :--- | :--- |
+| `open notepad and type pqr` | Launch App + Type Text | `open_application` -> `wait_for_window` -> `resolve_editable_element` -> `type_text` | Launches Notepad, waits for HWND, resolves `RichEditD2DPT`, types `"pqr"` via `SendInput`. |
+| `launch notepad and type meeting notes` | Launch App + Type Text | `open_application` -> `wait_for_window` -> `resolve_editable_element` -> `type_text` | Injects literal string `"meeting notes"` into document. |
+| `open notepad and maximize window` | Launch App + Layout | `open_application` -> `wait_for_window` -> `maximize_window` | Launches Notepad, awaits ready state, then maximizes window. |
+| `launch terminal and snap left` | Launch App + Layout | `open_application` -> `wait_for_window` -> `snap_window_left` | Launches Terminal, awaits ready state, snaps to left half. |
+| `open code and snap right` | Launch App + Layout | `open_application` -> `wait_for_window` -> `snap_window_right` | Launches VS Code, awaits ready state, snaps to right half. |
+| `snap window left and maximize` | Window Chaining | `snap_window_left` -> `maximize_window` | Chains window operations on origin window. |
+| `press ctrl+a and copy` | Shortcut Chaining | `press_keyboard_shortcut(Ctrl+A)` -> `press_keyboard_shortcut(Ctrl+C)` | Selects all text and copies to system clipboard. |
+| `copy and paste here` | Shortcut Chaining | `press_keyboard_shortcut(Ctrl+C)` -> `press_keyboard_shortcut(Ctrl+V)` | Replicates standard copy-paste pipeline. |
+| `select all and press delete` | Shortcut Chaining | `press_keyboard_shortcut(Ctrl+A)` -> `press_keyboard_shortcut(Delete)` | Selects all and deletes in active control. |
+| `press enter and type confirmed` | Shortcut + Typing | `press_keyboard_shortcut(Enter)` -> `type_text(confirmed)` | Dispatches Enter key and types `"confirmed"`. |
+
+---
+
+## 7. Workstation Telemetry & System Status
 
 | Command | Capability | Returned Telemetry |
 | :--- | :--- | :--- |
@@ -116,7 +135,7 @@ All commands implicitly target the **origin window** (the window that had focus 
 
 ---
 
-## 7. Safety-Gated & Policy-Protected Operations
+## 8. Safety-Gated & Policy-Protected Operations
 
 | Command | Safety Status | Triggered Gate | Safety Mechanism |
 | :--- | :--- | :--- | :--- |

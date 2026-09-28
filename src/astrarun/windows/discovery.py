@@ -26,13 +26,15 @@ logger = get_logger("astrarun.windows.discovery")
 
 
 def _ensure_desktop_attached() -> None:
-    """Ensure current thread is attached to the interactive Default desktop."""
+    """Ensure current thread is attached to the interactive input desktop."""
     if sys.platform != "win32":
         return
     try:
         user32 = ctypes.windll.user32
         DESKTOP_ALL = 0x01FF
-        hdesk = user32.OpenDesktopW("Default", 0, False, DESKTOP_ALL)
+        hdesk = user32.OpenInputDesktop(0, False, DESKTOP_ALL)
+        if not hdesk:
+            hdesk = user32.OpenDesktopW("Default", 0, False, DESKTOP_ALL)
         if hdesk:
             user32.SetThreadDesktop(hdesk)
     except Exception:
@@ -241,3 +243,99 @@ def windows_for_application(app: str) -> CapabilityResult:
     """Find all open top-level windows for an application."""
     clean = app.strip().lower().replace(".exe", "")
     return find_window(clean)
+
+
+def wait_for_window(
+    app: str = "",
+    timeout: float = 5.0,
+    hwnd: Optional[int] = None,
+) -> CapabilityResult:
+    """
+    Wait for an application window to become visible and ready.
+    Uses bounded polling (50ms intervals) up to timeout seconds.
+    """
+    t0 = time.perf_counter()
+    clean_app = app.strip().lower().replace(".exe", "")
+
+    # Fast path for simulated tests
+    if is_simulated_window_validation():
+        return CapabilityResult.ok(
+            capability="wait_for_window",
+            message=f"Application window for '{app or hwnd}' is ready (simulated).",
+            data={
+                "hwnd": hwnd or 1001,
+                "title": f"{app.title() or 'Target'} Window",
+                "pid": 1000,
+                "app": clean_app or "app",
+                "bounds": (100, 100, 800, 600),
+            },
+            context_updates=[{"type": "window_ready", "hwnd": hwnd or 1001, "app": clean_app}],
+            latency_ms=1.0,
+        )
+
+    if sys.platform != "win32":
+        return CapabilityResult.fail(
+            capability="wait_for_window",
+            message="Window waiting is only supported on Windows.",
+            error_code=CapabilityErrorCode.UNAVAILABLE,
+        )
+
+    _ensure_desktop_attached()
+    user32 = ctypes.windll.user32
+    deadline = t0 + max(0.5, float(timeout))
+
+    while time.perf_counter() < deadline:
+        # Check specific HWND if supplied
+        if hwnd and hwnd > 0:
+            if user32.IsWindow(hwnd) and user32.IsWindowVisible(hwnd):
+                rect = ctypes.wintypes.RECT()
+                user32.GetWindowRect(hwnd, ctypes.byref(rect))
+                w = rect.right - rect.left
+                h = rect.bottom - rect.top
+                if w > 50 and h > 50:
+                    length = user32.GetWindowTextLengthW(hwnd)
+                    buf = ctypes.create_unicode_buffer(length + 1)
+                    user32.GetWindowTextW(hwnd, buf, length + 1)
+                    title = buf.value.strip()
+
+                    pid_buf = ctypes.wintypes.DWORD()
+                    user32.GetWindowThreadProcessId(hwnd, ctypes.byref(pid_buf))
+                    pid = pid_buf.value
+
+                    latency = (time.perf_counter() - t0) * 1000
+                    return CapabilityResult.ok(
+                        capability="wait_for_window",
+                        message=f"Target window HWND {hwnd} is ready.",
+                        data={"hwnd": hwnd, "title": title, "pid": pid, "app": clean_app, "bounds": (rect.left, rect.top, w, h)},
+                        context_updates=[{"type": "window_ready", "hwnd": hwnd, "title": title}],
+                        latency_ms=latency,
+                    )
+
+        # Check by application name or alias
+        if clean_app:
+            res = list_windows(limit=50)
+            if res.success and res.data:
+                for win in res.data.get("windows", []):
+                    w_title = win.get("title", "").lower()
+                    w_app = win.get("app_id", "").lower()
+                    if clean_app in w_app or clean_app in w_title:
+                        latency = (time.perf_counter() - t0) * 1000
+                        return CapabilityResult.ok(
+                            capability="wait_for_window",
+                            message=f"Application window '{win.get('title')}' is ready (HWND {win.get('hwnd')}).",
+                            data=win,
+                            context_updates=[{"type": "window_ready", "hwnd": win.get("hwnd"), "title": win.get("title"), "app": clean_app}],
+                            latency_ms=latency,
+                        )
+
+        time.sleep(0.05)
+
+    latency = (time.perf_counter() - t0) * 1000
+    target_desc = f"HWND {hwnd}" if hwnd else f"application '{app}'"
+    return CapabilityResult.fail(
+        capability="wait_for_window",
+        message=f"Timed out waiting for {target_desc} window to become ready ({timeout:.1f}s).",
+        error_code=CapabilityErrorCode.TIMEOUT,
+        latency_ms=latency,
+    )
+

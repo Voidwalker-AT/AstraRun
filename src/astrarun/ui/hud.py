@@ -266,13 +266,14 @@ class FloatingTaskHUD(QWidget):
         self.opacity_anim.setEndValue(1.0)
         self.anim_group.start()
 
-    def dismiss(self) -> None:
+    def dismiss(self, immediate: bool = False) -> None:
         """Animate out and hide HUD."""
         self.dismiss_timer.stop()
         if not self.isVisible():
+            self.current_state = HUDState.IDLE
             return
 
-        if not self.animations_enabled:
+        if immediate or not self.animations_enabled:
             self.hide()
             self.current_state = HUDState.IDLE
             self.dismissed.emit()

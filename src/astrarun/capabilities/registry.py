@@ -212,6 +212,7 @@ class CapabilityRegistry:
             snap_window_left,
             snap_window_right,
             undo_last_window_move,
+            wait_for_window,
             windows_for_application,
         )
 
@@ -687,6 +688,17 @@ class CapabilityRegistry:
             permission=CapabilityPermission.AUTO,
         ))
         self.register(Capability(
+            id="wait_for_window",
+            category=CapabilityCategory.WINDOW,
+            description="Wait for an application window to become visible and ready",
+            args_schema={"app": str, "timeout": float, "hwnd": Optional[int]},
+            risk=ToolRisk.LOW,
+            read_only=True,
+            handler=wait_for_window,
+            permission=CapabilityPermission.AUTO,
+            context_effects=["window_ready"],
+        ))
+        self.register(Capability(
             id="focus_window",
             category=CapabilityCategory.WINDOW,
             description="Bring a target window to foreground focus",
@@ -878,6 +890,7 @@ class CapabilityRegistry:
             get_clipboard,
             inspect_ui,
             press_shortcut,
+            resolve_editable_element,
             scroll_control,
             select_tab,
             set_clipboard,
@@ -895,6 +908,17 @@ class CapabilityRegistry:
             read_only=True,
             handler=inspect_ui,
             permission=CapabilityPermission.AUTO,
+        ))
+        self.register(Capability(
+            id="resolve_editable_element",
+            category=CapabilityCategory.INTERACTION,
+            description="Inspect target window UIA tree and resolve primary editable document or text input",
+            args_schema={"hwnd": int, "window": str, "target": str},
+            risk=ToolRisk.LOW,
+            read_only=True,
+            handler=resolve_editable_element,
+            permission=CapabilityPermission.AUTO,
+            context_effects=["editor_resolved"],
         ))
         self.register(Capability(
             id="click_ui_element",

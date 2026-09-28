@@ -287,7 +287,7 @@ class WorkflowCompiler:
                 preview_lines.append(f"{step_counter}. List running applications")
                 step_counter += 1
 
-            elif clause.action == "open_app":
+            elif clause.action in ("open_app", "open_application"):
                 app_ent = next((e for e in clause.entities if e.type == NLPEntityType.APPLICATION), None)
                 app_name = app_ent.normalized if app_ent else None
                 if not app_name:
@@ -305,6 +305,47 @@ class WorkflowCompiler:
                     ))
                     preview_lines.append(f"{step_counter}. Open application {app_name}")
                     step_counter += 1
+
+                    # Check for subsequent dependent interaction or window actions
+                    subsequent_clauses = [c for c in utterance.clauses if c.idx > clause.idx]
+                    has_subsequent_interaction = any(
+                        c.action in ("type_text", "press_keyboard_shortcut", "click_ui_element", "set_ui_element_value", "toggle_ui_element", "select_ui_element", "focus_ui_element")
+                        for c in subsequent_clauses
+                    )
+                    has_subsequent_window_action = any(
+                        c.action in ("maximize_window", "minimize_window", "restore_window", "snap_window_left", "snap_window_right", "move_window", "move_window_to_monitor", "close_window")
+                        for c in subsequent_clauses
+                    )
+                    has_subsequent_text_entry = any(
+                        c.action in ("type_text", "set_ui_element_value")
+                        for c in subsequent_clauses
+                    )
+
+                    if has_subsequent_interaction or has_subsequent_window_action:
+                        # 1. Bounded window readiness synchronization
+                        steps.append(WorkflowStep(
+                            step_id=f"step_{step_counter}",
+                            name=f"Wait for {app_name} window",
+                            tool="wait_for_window",
+                            arguments={"app": app_name},
+                            critical=True,
+                            source_clause_idx=clause.idx,
+                        ))
+                        preview_lines.append(f"{step_counter}. Wait for {app_name} window")
+                        step_counter += 1
+
+                        # 2. Text editing control resolution (for type_text / set_ui_element_value)
+                        if has_subsequent_text_entry:
+                            steps.append(WorkflowStep(
+                                step_id=f"step_{step_counter}",
+                                name=f"Resolve editor in {app_name}",
+                                tool="resolve_editable_element",
+                                arguments={"window": app_name},
+                                critical=True,
+                                source_clause_idx=clause.idx,
+                            ))
+                            preview_lines.append(f"{step_counter}. Resolve editor in {app_name}")
+                            step_counter += 1
                 else:
                     unsupported_clauses.append(clause.text)
 
@@ -687,7 +728,18 @@ class WorkflowCompiler:
                 step_counter += 1
 
             elif clause.action == "press_keyboard_shortcut":
-                sc_val = re.sub(r'^(?:press|shortcut)\s+', '', clause.text, flags=re.I).strip()
+                raw_sc = clause.text.strip().lower()
+                if "copy" in raw_sc:
+                    sc_val = "Ctrl+C"
+                elif "paste" in raw_sc:
+                    sc_val = "Ctrl+V"
+                elif "select all" in raw_sc:
+                    sc_val = "Ctrl+A"
+                elif "delete" in raw_sc:
+                    sc_val = "Delete"
+                else:
+                    sc_val = re.sub(r'^(?:press|shortcut)\s+', '', clause.text, flags=re.I).strip()
+
                 steps.append(WorkflowStep(
                     step_id=f"step_{step_counter}",
                     name=f"Press {sc_val}",

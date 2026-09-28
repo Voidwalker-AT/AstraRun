@@ -21,6 +21,7 @@ from astrarun.windows.discovery import (
     find_window,
     foreground_window,
     list_windows,
+    wait_for_window,
     windows_for_application,
 )
 from astrarun.windows.layouts import DesktopLayoutEngine
@@ -59,6 +60,7 @@ __all__ = [
     "list_windows",
     "foreground_window",
     "find_window",
+    "wait_for_window",
     "windows_for_application",
     # Controller
     "focus_window",

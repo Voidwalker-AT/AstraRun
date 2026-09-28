@@ -36,6 +36,7 @@ from astrarun.interaction.service import (
     get_clipboard,
     inspect_ui,
     press_shortcut,
+    resolve_editable_element,
     scroll_control,
     select_tab,
     set_clipboard,
@@ -86,6 +87,7 @@ __all__ = [
     "scroll_control",
     "press_shortcut",
     "type_literal_text",
+    "resolve_editable_element",
     "get_clipboard",
     "set_clipboard",
     # Worker

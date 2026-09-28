@@ -56,6 +56,7 @@ from astrarun.windows.policy import is_astrarun_window, register_astrarun_hwnd
 from astrarun.windows.resolver import WindowResolution, WindowResolver
 from astrarun.windows.undo import WindowRestoreStack, restore_stack
 from astrarun.workflows.compiler import WorkflowCompiler
+from astrarun.workflows.context import WorkflowContext
 from astrarun.workflows.engine import WorkflowEngine
 from astrarun.workflows.models import WorkflowProposal
 
@@ -317,8 +318,19 @@ class AstraApplication:
         if not clean:
             return ExecutionResult(type="error", success=False, message="Empty query.")
 
+        words = clean.split()
+        from astrarun.routing.deterministic import has_compound_indicators
+        has_compound = has_compound_indicators(clean)
+
         active_origin = origin_window or self.origin_window
-        if isinstance(active_origin, int):
+        if active_origin is None and dry_run:
+            active_origin = WindowEntity(
+                hwnd=1001,
+                title="Active Mock Window",
+                pid=9999,
+                app_id="mock_app",
+            )
+        elif isinstance(active_origin, int):
             active_origin = WindowEntity(
                 hwnd=active_origin,
                 title=f"Window {active_origin}",
@@ -386,9 +398,9 @@ class AstraApplication:
         # 1.5 UI INTERACTION & CONTROL GROUNDING (v0.10)
         # -------------------------------------------------------------
         shortcut_obj = None
-        if lower_q.startswith("press "):
+        if not has_compound and lower_q.startswith("press "):
             shortcut_obj = parse_shortcut(lower_q[6:])
-        elif "+" in lower_q and len(words) == 1:
+        elif not has_compound and "+" in lower_q and len(words) == 1:
             shortcut_obj = parse_shortcut(lower_q)
 
         if shortcut_obj:
@@ -407,25 +419,25 @@ class AstraApplication:
                 self._fail_task(task, cap_res.message, capability="press_keyboard_shortcut")
                 return ExecutionResult(type="error", success=False, message=cap_res.message, task=task, capability_result=cap_res)
 
-        if lower_q in ("copy", "copy this", "copy selection"):
+        if not has_compound and lower_q in ("copy", "copy this", "copy selection"):
             target_hwnd = active_origin.hwnd if active_origin else None
             cap_res = self.capability_registry.execute("press_keyboard_shortcut", {"shortcut": "Ctrl+C", "hwnd": target_hwnd})
             return ExecutionResult(type="capability_result", success=cap_res.success, message=cap_res.message, capability_result=cap_res)
-        if lower_q in ("paste", "paste here", "paste text"):
+        if not has_compound and lower_q in ("paste", "paste here", "paste text"):
             target_hwnd = active_origin.hwnd if active_origin else None
             cap_res = self.capability_registry.execute("press_keyboard_shortcut", {"shortcut": "Ctrl+V", "hwnd": target_hwnd})
             return ExecutionResult(type="capability_result", success=cap_res.success, message=cap_res.message, capability_result=cap_res)
-        if lower_q in ("select all", "select all text"):
+        if not has_compound and lower_q in ("select all", "select all text"):
             target_hwnd = active_origin.hwnd if active_origin else None
             cap_res = self.capability_registry.execute("press_keyboard_shortcut", {"shortcut": "Ctrl+A", "hwnd": target_hwnd})
             return ExecutionResult(type="capability_result", success=cap_res.success, message=cap_res.message, capability_result=cap_res)
 
-        if lower_q in ("inspect ui", "inspect window ui", "what buttons are in this window?", "what controls are in this window?", "show controls", "list buttons"):
+        if not has_compound and lower_q in ("inspect ui", "inspect window ui", "what buttons are in this window?", "what controls are in this window?", "show controls", "list buttons"):
             target_hwnd = active_origin.hwnd if active_origin else None
             cap_res = self.capability_registry.execute("inspect_window_ui", {"hwnd": target_hwnd})
             return ExecutionResult(type="capability_result", success=cap_res.success, message=cap_res.message, capability_result=cap_res, data=cap_res.data)
 
-        if lower_q.startswith("click "):
+        if not has_compound and lower_q.startswith("click "):
             target = clean[6:].strip()
             target_hwnd = active_origin.hwnd if active_origin else None
             task = self.task_manager.create_task(request_text=clean, source="user_interaction")
@@ -462,7 +474,7 @@ class AstraApplication:
                 self._fail_task(task, cap_res.message, capability="click_ui_element")
                 return ExecutionResult(type="error", success=False, message=cap_res.message, task=task, capability_result=cap_res)
 
-        if lower_q.startswith("type "):
+        if not has_compound and lower_q.startswith("type "):
             type_args = clean[5:].strip()
             target_hwnd = active_origin.hwnd if active_origin else None
             task = self.task_manager.create_task(request_text=clean, source="user_interaction")
@@ -491,7 +503,7 @@ class AstraApplication:
                 self._fail_task(task, cap_res.message, capability="type_text")
                 return ExecutionResult(type="error", success=False, message=cap_res.message, task=task, capability_result=cap_res)
 
-        if lower_q.startswith("toggle "):
+        if not has_compound and lower_q.startswith("toggle "):
             target = clean[7:].strip()
             target_hwnd = active_origin.hwnd if active_origin else None
             task = self.task_manager.create_task(request_text=clean, source="user_interaction")
@@ -508,7 +520,7 @@ class AstraApplication:
                 self._fail_task(task, cap_res.message, capability="toggle_ui_element")
                 return ExecutionResult(type="error", success=False, message=cap_res.message, task=task, capability_result=cap_res)
 
-        if lower_q.startswith("focus ") and not any(w in lower_q for w in ("window", "code", "notepad", "vivaldi", "terminal", "calc")):
+        if not has_compound and lower_q.startswith("focus ") and not any(w in lower_q for w in ("window", "code", "notepad", "vivaldi", "terminal", "calc")):
             target = clean[6:].strip()
             target_hwnd = active_origin.hwnd if active_origin else None
             task = self.task_manager.create_task(request_text=clean, source="user_interaction")
@@ -525,7 +537,7 @@ class AstraApplication:
                 self._fail_task(task, cap_res.message, capability="focus_ui_element")
                 return ExecutionResult(type="error", success=False, message=cap_res.message, task=task, capability_result=cap_res)
 
-        if lower_q.startswith("select tab ") or (lower_q.startswith("select ") and "tab" in lower_q):
+        if not has_compound and (lower_q.startswith("select tab ") or (lower_q.startswith("select ") and "tab" in lower_q)):
             target = clean[11:].strip() if lower_q.startswith("select tab ") else clean[7:].replace("tab", "").strip()
             target_hwnd = active_origin.hwnd if active_origin else None
             task = self.task_manager.create_task(request_text=clean, source="user_interaction")
@@ -542,13 +554,16 @@ class AstraApplication:
                 self._fail_task(task, cap_res.message, capability="select_ui_element")
                 return ExecutionResult(type="error", success=False, message=cap_res.message, task=task, capability_result=cap_res)
 
+
+
         # -------------------------------------------------------------
         # 2. FAST PATH: Instant Deterministic Routing (< 3ms)
         # -------------------------------------------------------------
-        # Check if the query is a simple prefix or single-word app launch
+        # Check if the query is a simple prefix or single-word app launch (rejecting compound requests)
         words = clean.split()
-        is_simple_verb = words[0].lower() in ("open", "launch", "start", "show", "go", "run") and len(words) <= 3
-        is_single_term = len(words) == 1 and not re.search(r"[:#\d]", clean)
+        has_compound = any(c in f" {clean.lower()} " for c in (" and ", " then ", " with ", " & ", ";", ", then ", ", and "))
+        is_simple_verb = not has_compound and words[0].lower() in ("open", "launch", "start", "show", "go", "run") and len(words) <= 3
+        is_single_term = not has_compound and len(words) == 1 and not re.search(r"[:#\d]", clean)
 
         if is_simple_verb or is_single_term:
             decision = self.deterministic_router.route(clean, self.routing_context)
@@ -731,37 +746,130 @@ class AstraApplication:
             # ALLOW: Safe execution path
             self.task_manager.transition_status(task.id, TaskStatus.RUNNING)
 
-            # Execute steps
+            wf_context = WorkflowContext(origin_window=active_origin)
+            step_results = []
+            all_ok = True
+            last_msg = ""
+            failed_step = None
+
             if len(proposal.steps) == 1:
                 step = proposal.steps[0]
-                cap_res = self.task_manager.execute_capability(
-                    task_id=task.id,
-                    capability_id=step.tool,
-                    arguments=step.arguments,
-                    registry=self.capability_registry,
-                )
-            else:
-                step_results = []
-                all_ok = True
-                last_msg = ""
-                for step in proposal.steps:
-                    s_res = self.task_manager.execute_capability(
+                wf_context.bind_step_arguments(step)
+                if dry_run and step.tool == "open_application":
+                    cap_res = CapabilityResult.ok(
+                        capability="open_application",
+                        message=f"Application '{step.arguments.get('app', '')}' launched successfully (dry run).",
+                        data=step.arguments,
+                    )
+                elif dry_run and step.tool == "focus_application":
+                    app_name = step.arguments.get("app", "app")
+                    cap_res = CapabilityResult.ok(
+                        capability="focus_application",
+                        message=f"Focused application '{app_name}' (dry run).",
+                        data={"hwnd": 1001, "title": f"{app_name.title()} Window", "pid": 1000},
+                        context_updates=[{"type": "application_focused", "app": app_name, "hwnd": 1001}],
+                    )
+                else:
+                    cap_res = self.task_manager.execute_capability(
                         task_id=task.id,
                         capability_id=step.tool,
                         arguments=step.arguments,
                         registry=self.capability_registry,
                     )
+            else:
+                step_results = []
+                all_ok = True
+                last_msg = ""
+                failed_step = None
+
+                for step in proposal.steps:
+                    # Bind target HWND, window, and editable element from preceding steps
+                    wf_context.bind_step_arguments(step)
+
+                    # Simulated dry run support for headless verification
+                    if dry_run:
+                        if step.tool == "open_application":
+                            s_res = CapabilityResult.ok(
+                                capability="open_application",
+                                message=f"Application '{step.arguments.get('app', '')}' launched successfully (dry run).",
+                                data=step.arguments,
+                            )
+                        elif step.tool == "wait_for_window":
+                            s_res = CapabilityResult.ok(
+                                capability="wait_for_window",
+                                message=f"Target window for '{step.arguments.get('app', '')}' is ready (dry run).",
+                                data={"hwnd": 1001, "title": f"{step.arguments.get('app', 'App').title()} Window", "pid": 1000},
+                                context_updates=[{"type": "window_ready", "hwnd": 1001}],
+                            )
+                        elif step.tool == "resolve_editable_element":
+                            s_res = CapabilityResult.ok(
+                                capability="resolve_editable_element",
+                                message="Resolved editable element in window (dry run).",
+                                data={"element": {"name": "Text Editor", "control_type": "Document", "class_name": "Edit"}, "hwnd": step.arguments.get("hwnd", 1001)},
+                                context_updates=[{"type": "element_resolved", "hwnd": step.arguments.get("hwnd", 1001)}],
+                            )
+                        elif step.tool == "type_text":
+                            t_len = len(step.arguments.get("text", ""))
+                            s_res = CapabilityResult.ok(
+                                capability="type_text",
+                                message=f"Entered {t_len} characters.",
+                                data={"characters_typed": t_len},
+                            )
+                        elif step.tool == "focus_application":
+                            app_name = step.arguments.get("app", "app")
+                            s_res = CapabilityResult.ok(
+                                capability="focus_application",
+                                message=f"Focused application '{app_name}' (dry run).",
+                                data={"hwnd": 1001, "title": f"{app_name.title()} Window", "pid": 1000},
+                                context_updates=[{"type": "application_focused", "app": app_name, "hwnd": 1001}],
+                            )
+                        else:
+                            s_res = self.task_manager.execute_capability(
+                                task_id=task.id,
+                                capability_id=step.tool,
+                                arguments=step.arguments,
+                                registry=self.capability_registry,
+                            )
+                    else:
+                        s_res = self.task_manager.execute_capability(
+                            task_id=task.id,
+                            capability_id=step.tool,
+                            arguments=step.arguments,
+                            registry=self.capability_registry,
+                        )
+
                     step_results.append(s_res)
+                    wf_context.record_step_result(step, s_res)
                     last_msg = s_res.message
                     if not s_res.success:
                         all_ok = False
+                        failed_step = step
                         break
-                cap_res = CapabilityResult(
-                    success=all_ok,
-                    capability="workflow",
-                    message=f"Workflow executed {len(step_results)} step(s): {last_msg}",
-                    data={"steps": [s.to_dict() for s in step_results]},
-                )
+
+                if all_ok:
+                    cap_res = CapabilityResult(
+                        success=True,
+                        capability="workflow",
+                        message=f"Workflow executed {len(step_results)} step(s): {last_msg}",
+                        data={"steps": [s.to_dict() for s in step_results]},
+                    )
+                else:
+                    num_succeeded = sum(1 for s in step_results if s.success)
+                    fail_tool = failed_step.tool if failed_step else "unknown"
+                    if num_succeeded > 0:
+                        self.task_manager.transition_status(task.id, TaskStatus.PARTIALLY_COMPLETED)
+                        err_msg = f"Workflow partially completed ({num_succeeded}/{len(proposal.steps)} steps succeeded): {last_msg}"
+                    else:
+                        self._fail_task(task, last_msg, capability=fail_tool)
+                        err_msg = last_msg
+
+                    cap_res = CapabilityResult(
+                        success=False,
+                        capability=fail_tool,
+                        message=err_msg,
+                        data={"steps": [s.to_dict() for s in step_results]},
+                        error_code=s_res.error_code if s_res else CapabilityErrorCode.EXECUTION_FAILED,
+                    )
 
             if cap_res.success:
                 self._complete_task(task, cap_res)
@@ -776,14 +884,17 @@ class AstraApplication:
                     data=cap_res.data,
                 )
             else:
-                self._fail_task(task, cap_res.message, capability=cap_res.capability)
+                if len(proposal.steps) == 1:
+                    self._fail_task(task, cap_res.message, capability=cap_res.capability)
                 return ExecutionResult(
                     type="error",
                     success=False,
                     message=cap_res.message,
                     task=task,
                     capability_result=cap_res,
+                    data=cap_res.data,
                 )
+
 
         except Exception as err:
             logger.exception("Unexpected error processing request '%s': %s", clean, err)

@@ -41,6 +41,16 @@ def open_app(app: str, path: str | None = None, target: str | None = None) -> bo
             if exe_path.suffix.lower() == ".lnk":
                 os.startfile(str(exe_path))
                 return True
+            # Modern Windows 11 Store/MSIX applications cannot be spawned via raw detached Popen;
+            # they require AppX execution alias or os.startfile to initialize an interactive window.
+            if "windowsapps" in str(exe_path).lower():
+                alias = f"{app}.exe" if not app.endswith(".exe") else app
+                try:
+                    os.startfile(alias)
+                    return True
+                except Exception:
+                    os.startfile(str(exe_path))
+                    return True
             # DETACHED_PROCESS (0x00000008) or CREATE_NEW_PROCESS_GROUP (0x00000200)
             # avoids holding child process handles
             creationflags = 0x00000008 | 0x00000200

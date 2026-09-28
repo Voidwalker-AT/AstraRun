@@ -1,6 +1,6 @@
 # AstraRun Security Specification
 
-> **Version**: 0.7.0  
+> **Version**: 0.10.2  
 > **Status**: APPROVED  
 
 ---
@@ -324,9 +324,18 @@ AstraRun v0.6 introduces concrete workstation action execution under strict arch
 - Dataset export is disabled by default (`allow_training_dataset_export: false`).
 - Exported records automatically redact detected API keys, bearer tokens, passwords, and user profile directories.
 
+---
 
+## 15. Compound Workflow & Keystroke Injection Security Invariants (v0.10.2)
 
+### 15.1. Text Payload as Data Invariant
+- Text typing requests (`open notepad and type format c: /y`) treat the text payload strictly as Unicode data (`SendInput(KEYEVENTF_UNICODE)`).
+- Under no circumstances is the text evaluated as shell script or executed via command interpreter (`cmd.exe`, `powershell.exe`, `os.system()`).
+- Keystrokes are directed only to validated, visible desktop application controls (`RichEditD2DPT`, `Document`, `Edit`).
 
+### 15.2. ActionGate Evaluation Across Compound Clauses
+- Every clause within a decomposed compound query is evaluated independently through `ActionGate`.
+- If any clause attempts a dangerous or gated operation (e.g. `open notepad and terminate process csrss`), the dangerous clause is blocked or gated behind confirmation. The presence of benign sibling clauses (`open notepad`) never grants bypass authority for gated clauses.
 
-
-
+### 15.3. Process Safety Invariant
+- System-critical processes (`csrss.exe`, `lsass.exe`, `wininit.exe`, `smss.exe`) are hardcoded in the protection table and cannot be terminated or targeted by automated workflows.

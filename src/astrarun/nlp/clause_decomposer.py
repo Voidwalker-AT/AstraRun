@@ -60,7 +60,12 @@ _ACTION_PATTERNS: list[tuple[re.Pattern, str, str]] = [
     (re.compile(r'\b(?:how\s+much\s+memory|inspect\s+process|check\s+process|process\s+info|process\s+details|process\s+status)\b', re.I), "inspect_process", "inspect_action"),
     (re.compile(r'\b(?:inspect|check|show)\b', re.I), "inspect_port", "inspect_action"), # Default to inspection if ambiguous
     (re.compile(r'\b(?:find|search|look\s+for|locate|newest\s+pdf|latest\s+screenshot|recent\s+files)\b', re.I), "find_file", "search_action"),
-    (re.compile(r'\b(?:search\s+google|google|search\s+web|search\s+youtube)\b', re.I), "search_web", "web_action"),
+    (re.compile(r'\b(?:focus\s+(?:window|this)|switch\s+to\s+window|activate\s+window)\b', re.I), "focus_window", "window_action"),
+    (re.compile(r'\b(?:copy(?:\s+this|\s+selection)?)\b', re.I), "press_keyboard_shortcut", "interaction_action"),
+    (re.compile(r'\b(?:paste(?:\s+here|\s+text)?)\b', re.I), "press_keyboard_shortcut", "interaction_action"),
+    (re.compile(r'\b(?:select\s+all(?:\s+text)?)\b', re.I), "press_keyboard_shortcut", "interaction_action"),
+    (re.compile(r'^(?:type|enter text)$', re.I), "type_text", "interaction_action"),
+    (re.compile(r'^(?:snap|tile)$', re.I), "snap_window_left", "window_action"),
     (re.compile(r'\b(?:type\s+|enter\s+text\s+)\b', re.I), "type_text", "interaction_action"),
     (re.compile(r'\b(?:press\s+|shortcut\s+)\b', re.I), "press_keyboard_shortcut", "interaction_action"),
     (re.compile(r'\b(?:click\s+)\b', re.I), "click_ui_element", "interaction_action"),
@@ -161,6 +166,24 @@ def infer_action_and_intent(
 
     if re.search(r'\b(?:undo\s+window|undo\s+layout|undo\s+last\s+window)\b', text_clean, re.I):
         return ("undo_last_window_move", "window_action", 0.98)
+
+    if re.search(r'\b(?:focus\s+(?:window|this)|switch\s+to\s+window|activate\s+window)\b', text_clean, re.I):
+        return ("focus_window", "window_action", 0.95)
+
+    if re.search(r'\b(?:copy(?:\s+this|\s+selection)?)\b', text_clean, re.I):
+        return ("press_keyboard_shortcut", "interaction_action", 0.95)
+
+    if re.search(r'\b(?:paste(?:\s+here|\s+text)?)\b', text_clean, re.I):
+        return ("press_keyboard_shortcut", "interaction_action", 0.95)
+
+    if re.search(r'\b(?:select\s+all(?:\s+text)?)\b', text_clean, re.I):
+        return ("press_keyboard_shortcut", "interaction_action", 0.95)
+
+    if text_clean.lower() in ("type", "type text"):
+        return ("type_text", "interaction_action", 0.90)
+
+    if text_clean.lower() in ("snap", "snap window"):
+        return ("snap_window_left", "window_action", 0.90)
 
     # 3c. UI Interaction Capabilities (v0.10)
     if re.search(r'\b(?:type\s+|enter\s+text\s+)\b', text_clean, re.I):

@@ -477,8 +477,17 @@ $$\text{Natural Language} \longrightarrow \text{NLP Engine} \longrightarrow \tex
   3. `resolve_editable_element`: Traverses UIA accessibility tree to locate the primary editable control (`ControlType.DOCUMENT` or `ControlType.EDIT`, e.g. `RichEditD2DPT`).
   4. `type_text`: Performs 6-point focus verification and injects keystrokes via `SendInput` Unicode events without shell interpolation.
 - **WorkflowContext State Propagation**: Tracks mutable runtime entities (`last_opened_application`, `last_opened_window` HWND, `last_ui_element`) across sequential steps, enabling downstream operations to automatically bind handles discovered upstream.
-- **Win32 Interactive Input Desktop Attachment**: `_ensure_desktop_attached()` attaches the calling thread to `user32.OpenInputDesktop(0, False, 0x01FF)`, resolving background runner desktop isolation.
-- **Bypass of LockSetForegroundWindow**: `force_foreground_activation` uses `AttachThreadInput` across caller, foreground, and target threads, `AllowSetForegroundWindow(-1)`, and `VK_MENU` (Alt) key pulse to release foreground lock timeout restrictions on Windows 11.
+## 15. Dynamic Workstation Agent Runtime (v0.11)
+
+- **Closed-Loop Execution**: Executes the autonomous loop:
+  $$\text{UNDERSTAND GOAL} \longrightarrow \text{PLAN} \longrightarrow \text{ACT} \longrightarrow \text{OBSERVE} \longrightarrow \text{VERIFY} \longrightarrow \text{REPLAN} \longrightarrow \text{COMPLETED}$$
+- **Goal & Task DAG Model**: Transitions from static commands to dynamic `UserGoal` abstractions. Plans are modeled as directed acyclic graphs (`ExecutionGraph`) with cycle validation, topological readiness, and output data mapping propagation.
+- **Machine-Readable Capability Schemas**: 77 registered capabilities exporting machine-readable schemas, parameter constraints, privilege requirements, side-effects, and verification strategies.
+- **Native Wi-Fi Subsystem (Tier A)**: Direct C-API integration with `wlanapi.dll` (`WlanOpenHandle`, `WlanEnumInterfaces`, `WlanGetAvailableNetworkList`, `WlanConnect`). Fuzzy SSID matching via `WiFiResolver`. Zero child processes, zero credential logging.
+- **System Utility Adapters (Tier B)**: Strictly validated argument lists (`shell=False`) for trusted Windows tools, including `powercfg.exe` battery reporting with portable Downloads resolution.
+- **Resource Locking Engine**: `ResourceLockManager` providing mutual exclusion across `WINDOW:<hwnd>`, `FILE:<path>`, `NETWORK:WIFI`, and `PROCESS:<pid>`.
+- **Centralized Motion System & Live Task HUD V2**: `MotionTokens` system defining standardized animation durations and easing curves with automatic Windows reduced-motion zeroing (`SPI_GETCLIENTAREAANIMATION`). Live Task HUD V2 featuring honest progress modes (`INSTANT`, `DETERMINATE`, `INDETERMINATE`, `EVENT_DRIVEN`), `TaskETAEstimator`, dynamic step list, and cooperative cancellation. Non-focus-stealing invariant strictly preserved (`WS_EX_NOACTIVATE`).
+
 
 
 

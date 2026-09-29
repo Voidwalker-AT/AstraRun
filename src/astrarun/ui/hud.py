@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import ctypes
 import sys
+import time
 from ctypes import wintypes
 from enum import Enum
 from typing import Any, Callable, Dict, List, Optional
@@ -30,6 +31,7 @@ from PySide6.QtWidgets import (
     QGraphicsOpacityEffect,
     QHBoxLayout,
     QLabel,
+    QProgressBar,
     QPushButton,
     QVBoxLayout,
     QWidget,
@@ -38,10 +40,47 @@ from PySide6.QtWidgets import (
 from astrarun.core.logging import get_logger
 from astrarun.tasks.events import TaskEventBus
 from astrarun.tasks.models import TaskEvent, TaskEventType
+from astrarun.ui.motion import MotionTokens
 from astrarun.ui.positioning import compute_task_hud_position, get_screen_for_hwnd
 from astrarun.windows.policy import register_astrarun_hwnd, unregister_astrarun_hwnd
 
 logger = get_logger("astrarun.ui.hud")
+
+
+class TaskETAEstimator:
+    """Estimates remaining duration for multi-step agent tasks based on real measurements."""
+
+    def __init__(self):
+        self.step_start_times: dict[str, float] = {}
+        self.completed_durations: list[float] = []
+
+    def record_step_start(self, step_id: str) -> None:
+        self.step_start_times[step_id] = time.time()
+
+    def record_step_end(self, step_id: str) -> None:
+        start = self.step_start_times.get(step_id)
+        if start:
+            self.completed_durations.append(time.time() - start)
+
+    def estimate_remaining_s(self, completed_steps: int, total_steps: int) -> Optional[float]:
+        if total_steps <= 0 or completed_steps >= total_steps:
+            return 0.0
+        if not self.completed_durations:
+            return None
+        avg_dur = sum(self.completed_durations) / len(self.completed_durations)
+        remaining_steps = total_steps - completed_steps
+        return round(avg_dur * remaining_steps, 1)
+
+    def format_eta(self, remaining_s: Optional[float]) -> str:
+        if remaining_s is None or remaining_s <= 0:
+            return ""
+        if remaining_s < 1.0:
+            return "< 1s"
+        if remaining_s < 60:
+            return f"~{remaining_s:.1f}s"
+        mins = int(remaining_s // 60)
+        secs = int(remaining_s % 60)
+        return f"~{mins}m {secs}s"
 
 
 class HUDState(str, Enum):
@@ -76,6 +115,7 @@ class FloatingTaskHUD(QWidget):
         self.animations_enabled = animations_enabled
         self.current_state = HUDState.IDLE
         self.current_task_id: Optional[str] = None
+        self.eta_estimator = TaskETAEstimator()
         self.hud_width = 380
         self.hud_min_height = 80
         self._target_point = QPoint(0, 0)
@@ -166,7 +206,37 @@ class FloatingTaskHUD(QWidget):
         """)
         header_row.addWidget(self.title_label, stretch=1)
 
-        # Dismiss / Close Button
+        # ETA Label
+        self.eta_label = QLabel("", self.card)
+        self.eta_label.setStyleSheet("""
+            color: #fab387;
+            font-size: 11px;
+            font-weight: 500;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        """)
+        header_row.addWidget(self.eta_label)
+
+        # Expand / Steps toggle
+        self.expand_btn = QPushButton("▾ Steps", self.card)
+        self.expand_btn.setFixedSize(50, 18)
+        self.expand_btn.setStyleSheet("""
+            QPushButton {
+                background: transparent;
+                border: 1px solid #313244;
+                color: #a6adc8;
+                font-size: 10px;
+                border-radius: 4px;
+            }
+            QPushButton:hover {
+                background-color: #313244;
+                color: #cdd6f4;
+            }
+        """)
+        self.expand_btn.clicked.connect(self.toggle_steps_expansion)
+        self.expand_btn.hide()
+        header_row.addWidget(self.expand_btn)
+
+        # Dismiss / Cancel Button
         self.close_btn = QPushButton("✕", self.card)
         self.close_btn.setFixedSize(18, 18)
         self.close_btn.setStyleSheet("""
@@ -183,7 +253,7 @@ class FloatingTaskHUD(QWidget):
                 color: #f38ba8;
             }
         """)
-        self.close_btn.clicked.connect(self.dismiss)
+        self.close_btn.clicked.connect(self._on_close_clicked)
         header_row.addWidget(self.close_btn)
 
         self.card_layout.addLayout(header_row)
@@ -198,6 +268,31 @@ class FloatingTaskHUD(QWidget):
         """)
         self.card_layout.addWidget(self.detail_label)
 
+        # Authentic Progress Bar
+        self.progress_bar = QProgressBar(self.card)
+        self.progress_bar.setFixedHeight(4)
+        self.progress_bar.setTextVisible(False)
+        self.progress_bar.setStyleSheet("""
+            QProgressBar {
+                background-color: #313244;
+                border: none;
+                border-radius: 2px;
+            }
+            QProgressBar::chunk {
+                background-color: #89b4fa;
+                border-radius: 2px;
+            }
+        """)
+        self.card_layout.addWidget(self.progress_bar)
+
+        # Dynamic Steps Container
+        self.steps_container = QWidget(self.card)
+        self.steps_layout = QVBoxLayout(self.steps_container)
+        self.steps_layout.setContentsMargins(4, 4, 4, 4)
+        self.steps_layout.setSpacing(4)
+        self.steps_container.hide()
+        self.card_layout.addWidget(self.steps_container)
+
         # Interactive Container (for Confirmation / Disambiguation)
         self.action_container = QWidget(self.card)
         self.action_layout = QHBoxLayout(self.action_container)
@@ -209,20 +304,22 @@ class FloatingTaskHUD(QWidget):
         self.root_layout.addWidget(self.card)
 
     def _init_animations(self) -> None:
-        """Setup slide and opacity animations."""
+        """Setup slide and opacity animations respecting MotionTokens."""
         self.opacity_effect = QGraphicsOpacityEffect(self)
         self.setGraphicsEffect(self.opacity_effect)
         self.opacity_effect.setOpacity(1.0)
 
+        enter_ms = MotionTokens.get_enter_duration() if self.animations_enabled else 0
+
         # Position Animation
         self.pos_anim = QPropertyAnimation(self, b"pos")
-        self.pos_anim.setDuration(140)
-        self.pos_anim.setEasingCurve(QEasingCurve.Type.OutCubic)
+        self.pos_anim.setDuration(enter_ms)
+        self.pos_anim.setEasingCurve(MotionTokens.EASING_ENTER)
 
         # Opacity Animation
         self.opacity_anim = QPropertyAnimation(self.opacity_effect, b"opacity")
-        self.opacity_anim.setDuration(140)
-        self.opacity_anim.setEasingCurve(QEasingCurve.Type.OutCubic)
+        self.opacity_anim.setDuration(enter_ms)
+        self.opacity_anim.setEasingCurve(MotionTokens.EASING_ENTER)
 
         # Group
         self.anim_group = QParallelAnimationGroup(self)
@@ -305,6 +402,125 @@ class FloatingTaskHUD(QWidget):
     # STATE TRANSITION METHODS
     # =========================================================================
 
+    def _on_close_clicked(self) -> None:
+        """Handle user clicking close / cancel button on HUD."""
+        if self.current_state in (HUDState.PASSIVE_PROGRESS, HUDState.WAITING_CONFIRMATION, HUDState.WAITING_CLARIFICATION):
+            logger.info("HUD cancel button clicked for task %s", self.current_task_id)
+            self.cancelled.emit()
+            self.detail_label.setText("Cancelling task...")
+            self.status_icon.setText("○")
+            self.status_icon.setStyleSheet("color: #fab387; font-size: 15px; font-weight: bold;")
+        else:
+            self.dismiss()
+
+    def set_progress_mode(self, mode: str, progress_pct: float = 0.0) -> None:
+        """Configure authentic progress bar mode (INSTANT, DETERMINATE, INDETERMINATE, EVENT_DRIVEN)."""
+        mode_upper = str(mode).upper()
+        if "INSTANT" in mode_upper:
+            self.progress_bar.hide()
+            self.eta_label.setText("")
+        elif "INDETERMINATE" in mode_upper or "EVENT" in mode_upper:
+            self.progress_bar.show()
+            self.progress_bar.setRange(0, 0)
+        elif "DETERMINATE" in mode_upper:
+            self.progress_bar.show()
+            self.progress_bar.setRange(0, 100)
+            self.progress_bar.setValue(max(0, min(100, int(progress_pct))))
+        else:
+            self.progress_bar.show()
+            self.progress_bar.setRange(0, 0)
+
+    def set_steps(self, steps: list[dict[str, Any]]) -> None:
+        """Populate dynamic task graph step list."""
+        self._clear_steps()
+        self._step_widgets: dict[str, dict[str, Any]] = {}
+
+        if not steps:
+            self.expand_btn.hide()
+            return
+
+        for step in steps:
+            sid = step.get("step_id", "")
+            desc = step.get("description", sid)
+            state = step.get("state", "PENDING")
+
+            row = QWidget(self.steps_container)
+            h_layout = QHBoxLayout(row)
+            h_layout.setContentsMargins(2, 1, 2, 1)
+            h_layout.setSpacing(6)
+
+            glyph = QLabel("●", row)
+            glyph.setStyleSheet("color: #6c7086; font-size: 10px;")
+            h_layout.addWidget(glyph)
+
+            lbl = QLabel(desc, row)
+            lbl.setStyleSheet("color: #a6adc8; font-size: 11px;")
+            lbl.setWordWrap(True)
+            h_layout.addWidget(lbl, stretch=1)
+
+            self.steps_layout.addWidget(row)
+            self._step_widgets[sid] = {"row": row, "glyph": glyph, "label": lbl, "desc": desc}
+
+        if len(steps) > 1:
+            self.expand_btn.show()
+        else:
+            self.expand_btn.hide()
+
+    def update_step_state(self, step_id: str, state: str, description: str = "") -> None:
+        """Update glyph, style, and ETA for a specific plan step."""
+        state_upper = state.upper()
+        step_entry = getattr(self, "_step_widgets", {}).get(step_id)
+
+        if step_entry:
+            glyph = step_entry["glyph"]
+            lbl = step_entry["label"]
+            if description:
+                lbl.setText(description)
+
+            if "RUNNING" in state_upper:
+                glyph.setText("►")
+                glyph.setStyleSheet("color: #89b4fa; font-size: 11px; font-weight: bold;")
+                lbl.setStyleSheet("color: #cdd6f4; font-size: 11px; font-weight: 500;")
+                self.eta_estimator.record_step_start(step_id)
+            elif "COMPLETED" in state_upper:
+                glyph.setText("✓")
+                glyph.setStyleSheet("color: #a6e3a1; font-size: 11px; font-weight: bold;")
+                lbl.setStyleSheet("color: #a6adc8; font-size: 11px;")
+                self.eta_estimator.record_step_end(step_id)
+            elif "FAILED" in state_upper:
+                glyph.setText("✗")
+                glyph.setStyleSheet("color: #f38ba8; font-size: 11px; font-weight: bold;")
+                lbl.setStyleSheet("color: #f38ba8; font-size: 11px;")
+            elif "CANCELLED" in state_upper:
+                glyph.setText("○")
+                glyph.setStyleSheet("color: #fab387; font-size: 11px;")
+                lbl.setStyleSheet("color: #6c7086; font-size: 11px;")
+
+        # Update ETA if we have step widgets
+        if hasattr(self, "_step_widgets") and self._step_widgets:
+            total = len(self._step_widgets)
+            completed = len(self.eta_estimator.completed_durations)
+            rem = self.eta_estimator.estimate_remaining_s(completed, total)
+            self.eta_label.setText(self.eta_estimator.format_eta(rem))
+
+    def toggle_steps_expansion(self) -> None:
+        """Toggle step list expansion visibility."""
+        is_hidden = self.steps_container.isHidden()
+        self.steps_container.setVisible(is_hidden)
+        self.expand_btn.setText("▴ Steps" if is_hidden else "▾ Steps")
+        self.adjustSize()
+
+    def _clear_steps(self) -> None:
+        """Clear dynamic steps list."""
+        while self.steps_layout.count():
+            item = self.steps_layout.takeAt(0)
+            widget = item.widget()
+            if widget:
+                widget.deleteLater()
+        self.steps_container.hide()
+        self.expand_btn.hide()
+        self.expand_btn.setText("▾ Steps")
+
     def show_progress(
         self,
         task_id: str,
@@ -312,10 +528,14 @@ class FloatingTaskHUD(QWidget):
         message: str = "Processing...",
         target_screen: Any = None,
         origin_hwnd: int | None = None,
+        progress_mode: str = "INDETERMINATE",
+        progress_pct: float = 0.0,
     ) -> None:
         """Transition to PASSIVE_PROGRESS state (never steals focus)."""
         self.dismiss_timer.stop()
         self._clear_actions()
+        self.eta_estimator = TaskETAEstimator()
+        self.eta_label.setText("")
         self.current_state = HUDState.PASSIVE_PROGRESS
         self.current_task_id = task_id
 
@@ -324,19 +544,28 @@ class FloatingTaskHUD(QWidget):
         self.title_label.setText(title or "Executing Task")
         self.detail_label.setText(message)
 
+        self.set_progress_mode(progress_mode, progress_pct)
+
         if not self.isVisible():
             self.present_animated(target_screen=target_screen, origin_hwnd=origin_hwnd)
 
-    def update_progress(self, task_id: str, message: str) -> None:
-        """Update active progress message without activating or shifting focus."""
+    def update_progress(self, task_id: str, message: str, progress_pct: Optional[float] = None) -> None:
+        """Update active progress message and progress bar percentage without focus theft."""
         if self.current_task_id == task_id or not self.current_task_id:
             self.detail_label.setText(message)
+            if progress_pct is not None:
+                self.progress_bar.setRange(0, 100)
+                self.progress_bar.setValue(max(0, min(100, int(progress_pct))))
 
     def show_success(self, task_id: str, message: str = "Task completed successfully.") -> None:
         """Transition to SUCCESS state with automatic dismissal (2.5s)."""
         self._clear_actions()
         self.current_state = HUDState.SUCCESS
         self.current_task_id = task_id
+        self.eta_label.setText("")
+
+        self.progress_bar.setRange(0, 100)
+        self.progress_bar.setValue(100)
 
         self.status_icon.setText("✓")
         self.status_icon.setStyleSheet("color: #a6e3a1; font-size: 15px; font-weight: bold;")
@@ -354,6 +583,9 @@ class FloatingTaskHUD(QWidget):
         self._clear_actions()
         self.current_state = HUDState.ERROR
         self.current_task_id = task_id
+        self.eta_label.setText("")
+
+        self.progress_bar.hide()
 
         self.status_icon.setText("✗")
         self.status_icon.setStyleSheet("color: #f38ba8; font-size: 15px; font-weight: bold;")
@@ -600,3 +832,55 @@ class TaskHUDController(QObject):
         if self.event_bus and self._sub_id is not None:
             self.event_bus.unsubscribe(self._sub_id)
             self._sub_id = None
+
+
+class AgentTaskHUDListener:
+    """
+    Bridges AgentExecutionEngine callbacks to FloatingTaskHUD methods for real-time Live Task HUD V2 display.
+    """
+
+    def __init__(self, hud: FloatingTaskHUD):
+        self.hud = hud
+
+    def on_task_started(self, task: Any) -> None:
+        steps_data = [
+            {"step_id": s.step_id, "description": s.description, "state": s.state.value}
+            for s in task.plan.steps
+        ]
+        self.hud.set_steps(steps_data)
+        mode = getattr(task.progress_mode, "value", str(task.progress_mode))
+        self.hud.show_progress(
+            task_id=task.task_id,
+            title=task.goal.intent or "Agent Task",
+            message=task.goal.raw_prompt or "Executing...",
+            progress_mode=mode,
+            progress_pct=task.progress_pct,
+        )
+
+    def on_task_progress(self, task: Any, progress_pct: float, message: str) -> None:
+        self.hud.update_progress(task.task_id, message, progress_pct=progress_pct)
+
+    def on_step_started(self, task: Any, step: Any) -> None:
+        self.hud.update_step_state(step.step_id, "RUNNING", step.description)
+        self.hud.update_progress(task.task_id, f"Running: {step.description}", task.progress_pct)
+
+    def on_step_completed(self, task: Any, step: Any, verification: Any) -> None:
+        self.hud.update_step_state(step.step_id, "COMPLETED")
+        self.hud.update_progress(task.task_id, f"Verified: {step.description}", task.progress_pct)
+
+    def on_step_failed(self, task: Any, step: Any, error: str) -> None:
+        self.hud.update_step_state(step.step_id, "FAILED")
+        self.hud.show_error(task.task_id, f"Failed: {step.description} ({error})")
+
+    def on_replan(self, task: Any, event: Any) -> None:
+        self.hud.update_progress(task.task_id, f"Replanning: {event.reason}", task.progress_pct)
+
+    def on_task_completed(self, task: Any) -> None:
+        self.hud.show_success(task.task_id, f"Goal achieved: {task.goal.intent or 'Complete'}")
+
+    def on_task_failed(self, task: Any, error: str) -> None:
+        self.hud.show_error(task.task_id, error or "Task failed")
+
+    def on_task_cancelled(self, task: Any) -> None:
+        self.hud.show_error(task.task_id, "Task was cancelled by user.")
+

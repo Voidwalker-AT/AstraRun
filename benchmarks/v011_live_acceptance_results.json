@@ -1,0 +1,31 @@
+{
+  "version": "0.11.0",
+  "timestamp": 1790658125.514327,
+  "all_passed": true,
+  "results": [
+    {
+      "name": "Gate 1: Autonomous Battery Report Goal",
+      "passed": true,
+      "details": "Battery report generated and verified at C:\\Users\\hp\\Downloads\\astra-battery.html (155519 bytes in 3157.5ms).",
+      "elapsed_ms": 3157.5096999877132
+    },
+    {
+      "name": "Gate 2: Native Wi-Fi Management (Tier A)",
+      "passed": true,
+      "details": "Native Wi-Fi verified: Connected to Wi-Fi 'Galaxy A14*' (97% signal). (1 networks scanned in 119.7ms).",
+      "elapsed_ms": 119.72399998921901
+    },
+    {
+      "name": "Gate 3: Workstation Resource Locking",
+      "passed": true,
+      "details": "Resource locking verified: mutual exclusion, re-entrancy, and cleanup validated in 54.4ms.",
+      "elapsed_ms": 54.44750003516674
+    },
+    {
+      "name": "Gate 4: Motion System & Live Task HUD V2 Architecture",
+      "passed": true,
+      "details": "MotionTokens (200ms standard / 0ms reduced) and ETA engine verified in 76.0ms.",
+      "elapsed_ms": 76.04280003579333
+    }
+  ]
+}

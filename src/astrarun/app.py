@@ -242,6 +242,10 @@ class AstraApplication:
         self.neural_structure_engine = NeuralStructureEngine()
         self.decision_fusion = DecisionFusionEngine()
 
+        # 11. Autonomous Agent Execution Engine (v0.11)
+        from astrarun.agent.loop import AgentExecutionEngine
+        self.agent_engine = AgentExecutionEngine(registry=self.capability_registry)
+
         # Single instance lock
         self.single_instance = SingleInstanceLock()
 
@@ -418,6 +422,31 @@ class AstraApplication:
                 message="AstraRun Workstation Capabilities",
                 data={"grouped_capabilities": grouped, "count": len(caps)},
             )
+
+        # -------------------------------------------------------------
+        # 1.25 AUTONOMOUS WORKSTATION AGENT GOALS (v0.11)
+        # -------------------------------------------------------------
+        from astrarun.agent.models import AgentTaskStatus
+        import re
+        if re.search(r"\bbattery\s+report\b", clean, re.IGNORECASE) or re.search(r"\b(?:scan|check|show|connect|disconnect).*wifi\b|\bwifi\b", clean, re.IGNORECASE):
+            agent_task = self.agent_engine.execute_goal(clean)
+            if agent_task.status == AgentTaskStatus.COMPLETED:
+                last_step = agent_task.plan.steps[-1] if agent_task.plan.steps else None
+                res_data = last_step.result.data if (last_step and last_step.result) else {}
+                msg = last_step.result.message if (last_step and last_step.result) else "Task completed successfully."
+                return ExecutionResult(
+                    type="capability_result",
+                    success=True,
+                    message=msg,
+                    data=res_data,
+                    capability_result=last_step.result if last_step else None,
+                )
+            else:
+                return ExecutionResult(
+                    type="error",
+                    success=False,
+                    message=agent_task.error or "Agent goal execution failed.",
+                )
 
         # -------------------------------------------------------------
         # 1.5 UI INTERACTION & CONTROL GROUNDING (v0.10)

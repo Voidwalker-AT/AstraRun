@@ -52,6 +52,86 @@ class CapabilityRegistry:
             return [c for c in self._capabilities.values() if c.category == category]
         return list(self._capabilities.values())
 
+    def get_capability_schema(self, capability_id: str) -> Optional[Any]:
+        """Export machine-readable CapabilitySchema for a registered capability."""
+        cap = self.get(capability_id)
+        if not cap:
+            return None
+
+        from astrarun.capabilities.schema import (
+            CapabilityFamily,
+            CapabilitySchema,
+            InteractionTier,
+            ParameterSchema,
+            PrivilegeLevel,
+            SideEffect,
+            VerifierStrategy,
+        )
+
+        # Infer family
+        family_map = {
+            CapabilityCategory.SYSTEM: CapabilityFamily.SYSTEM_DIAGNOSTICS,
+            CapabilityCategory.NETWORK: CapabilityFamily.NETWORK_MANAGEMENT,
+            CapabilityCategory.WINDOW: CapabilityFamily.WINDOW_CONTROL,
+            CapabilityCategory.APPLICATION: CapabilityFamily.APPLICATION_LIFECYCLE,
+            CapabilityCategory.INTERACTION: CapabilityFamily.UI_INTERACTION,
+            CapabilityCategory.FILE: CapabilityFamily.FILE_MANAGEMENT,
+            CapabilityCategory.PROJECT: CapabilityFamily.DEVELOPER_TOOLS,
+            CapabilityCategory.WORKFLOW: CapabilityFamily.WORKFLOW_AUTOMATION,
+        }
+        family = family_map.get(cap.category, CapabilityFamily.SYSTEM_DIAGNOSTICS)
+
+        # Infer tier
+        if cap.id == "generate_battery_report":
+            tier = InteractionTier.TIER_B_STRUCTURED_CLI
+        elif cap.category == CapabilityCategory.INTERACTION:
+            tier = InteractionTier.TIER_C_UI_AUTOMATION
+        else:
+            tier = InteractionTier.TIER_A_NATIVE
+
+        # Infer verifier strategy
+        if "file" in cap.id or "report" in cap.id:
+            verifier_strat = VerifierStrategy.FILE_EXISTS if cap.read_only else VerifierStrategy.FILE_NON_EMPTY
+        elif "window" in cap.id or "application" in cap.id:
+            verifier_strat = VerifierStrategy.WINDOW_READY
+        elif "wifi" in cap.id and "connect" in cap.id:
+            verifier_strat = VerifierStrategy.NETWORK_SSID
+        else:
+            verifier_strat = VerifierStrategy.RETURN_CODE_ONLY
+
+        params = []
+        for name, p_type in cap.args_schema.items():
+            type_str = getattr(p_type, "__name__", str(p_type))
+            is_req = not ("Optional" in str(p_type) or "None" in str(p_type))
+            params.append(ParameterSchema(name=name, type_name=type_str, description=f"Parameter {name}", required=is_req))
+
+        effects = [SideEffect.READ_ONLY] if cap.read_only else [SideEffect.SYSTEM_STATE]
+        if "file" in cap.id or "report" in cap.id:
+            effects = [SideEffect.CREATES_FILE] if not cap.read_only else [SideEffect.READ_ONLY]
+
+        return CapabilitySchema(
+            id=cap.id,
+            family=family,
+            category=cap.category,
+            interaction_tier=tier,
+            description=cap.description,
+            parameters=params,
+            side_effects=effects,
+            privilege_level=PrivilegeLevel.STANDARD_USER,
+            risk=cap.risk,
+            reversibility=cap.reversible,
+            verifier_strategy=verifier_strat,
+        )
+
+    def get_capability_schemas(self) -> list[Any]:
+        """Export machine-readable CapabilitySchemas for all registered capabilities."""
+        schemas = []
+        for cap_id in self._capabilities:
+            schema = self.get_capability_schema(cap_id)
+            if schema:
+                schemas.append(schema)
+        return schemas
+
     def execute(
         self,
         capability_id: str,
@@ -1019,4 +1099,65 @@ class CapabilityRegistry:
             read_only=False,
             handler=set_clipboard,
             permission=CapabilityPermission.AUTO,
+        ))
+
+        # ---------------------------------------------------------
+        # V0.11 NATIVE WI-FI & SYSTEM UTILITY CAPABILITIES
+        # ---------------------------------------------------------
+        from astrarun.tools.system_adapter import PowerCfgAdapter
+        powercfg_adapter = PowerCfgAdapter()
+        self.register(Capability(
+            id="generate_battery_report",
+            category=CapabilityCategory.SYSTEM,
+            description="Generate comprehensive Windows battery health report via powercfg.exe",
+            args_schema={"output_path": Optional[str]},
+            risk=ToolRisk.LOW,
+            read_only=False,
+            handler=powercfg_adapter.generate_battery_report,
+            permission=CapabilityPermission.AUTO,
+            context_effects=["battery_report_generated"],
+        ))
+
+        from astrarun.tools.wifi import wifi_connect, wifi_disconnect, wifi_scan, wifi_status
+        self.register(Capability(
+            id="wifi_scan",
+            category=CapabilityCategory.NETWORK,
+            description="Scan and enumerate available 802.11 wireless networks using Native Wi-Fi API",
+            args_schema={},
+            risk=ToolRisk.LOW,
+            read_only=True,
+            handler=wifi_scan,
+            permission=CapabilityPermission.AUTO,
+        ))
+        self.register(Capability(
+            id="wifi_status",
+            category=CapabilityCategory.NETWORK,
+            description="Query Wi-Fi adapter connection state and active SSID",
+            args_schema={},
+            risk=ToolRisk.LOW,
+            read_only=True,
+            handler=wifi_status,
+            permission=CapabilityPermission.AUTO,
+        ))
+        self.register(Capability(
+            id="wifi_connect",
+            category=CapabilityCategory.NETWORK,
+            description="Connect to a Wi-Fi network profile using fuzzy SSID matching",
+            args_schema={"ssid": str},
+            risk=ToolRisk.LOW,
+            read_only=False,
+            handler=wifi_connect,
+            permission=CapabilityPermission.AUTO,
+            context_effects=["wifi_connected"],
+        ))
+        self.register(Capability(
+            id="wifi_disconnect",
+            category=CapabilityCategory.NETWORK,
+            description="Disconnect active Wi-Fi wireless connection",
+            args_schema={},
+            risk=ToolRisk.LOW,
+            read_only=False,
+            handler=wifi_disconnect,
+            permission=CapabilityPermission.AUTO,
+            context_effects=["wifi_disconnected"],
         ))

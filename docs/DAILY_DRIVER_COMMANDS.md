@@ -1,6 +1,6 @@
 # DAILY_DRIVER_COMMANDS.md — Daily Driver Command Catalog
 
-> **Milestone**: AstraRun v0.10.3 (Neural NLP Sandwich & True Background Application Mode)  
+> **Milestone**: AstraRun v0.11 (Dynamic Workstation Agent Runtime: Closed-Loop Planning & HUD V2)  
 > **Status**: VERIFIED & BENCHMARKED  
 > **Target Audience**: AstraRun Users, Systems Engineers, and Workstation Operators  
 > **Last Updated**: 2026-09-29  
@@ -9,7 +9,7 @@
 
 ## 1. Overview & Invocation Model
 
-AstraRun v0.10.3 functions as an ambient, resident workstation assistant. It is invoked via:
+AstraRun v0.11 functions as an ambient, resident workstation assistant and autonomous agent runtime. It is invoked via:
 1. **Global Hotkey**: `Alt+Space` (captures foreground origin window and toggles launcher overlay).
 2. **System Tray Icon**: Context menu (Restart AstraRun, Exit AstraRun) or click.
 3. **Headless / CLI Mode**: `python src/astrarun/main.py --run-command "<utterance>"`
@@ -19,6 +19,7 @@ AstraRun v0.10.3 functions as an ambient, resident workstation assistant. It is 
 All commands are processed through the canonical `AstraApplication.handle_request()` pipeline:
 - **Fast-Path Launcher**: Sub-15ms pure deterministic routing for direct application launching, folder navigation, and system status queries.
 - **Direct Navigation Commands**: Sub-millisecond instant switching to dedicated workstation views (History, Memory, Skills, Settings, Diagnostics).
+- **Dynamic Agent Runtime Loop**: Autonomous goal understanding, DAG plan composition, closed-loop execution, machine observation, empirical verification (`FILE_NON_EMPTY`, `NETWORK_SSID`, `WINDOW_READY`), resource locking, and real-time Live Task HUD V2 tracking with reduced-motion compliance.
 - **Neural NLP Sandwich Pipeline**: Multi-clause NLP parsing via spaCy dependency engine embedded between semantic Laya stages with 0 duplicate model weights, 100% literal preservation, and automatic 4-step execution expansion.
 
 
@@ -55,7 +56,7 @@ All commands are processed through the canonical `AstraApplication.handle_reques
 | `settings` | `open_settings` | Settings Dialog | Configuration dialog for theme, hotkey bindings, search index, and startup settings. |
 | `preferences` | `open_settings` | Settings Dialog | Synonym for settings dialog. |
 | `diagnostics` | `open_diagnostics` | Diagnostics Dialog | Real-time platform telemetry: hardware specs, active monitors, capability count, hotkey status. |
-| `what can you do?` | `list_result` | Capability Catalog | Displays all 72 registered workstation capabilities across 10 categories. |
+| `what can you do?` | `list_result` | Capability Catalog | Displays all 77 registered workstation capabilities across 10 categories. |
 | `capabilities` | `list_result` | Capability Catalog | Synonym for workstation capabilities query. |
 
 ---
@@ -120,7 +121,24 @@ Compound queries containing conjunctions (`and`, `then`, `&`, `;`) are decompose
 
 ---
 
-## 7. Workstation Telemetry & System Status
+## 7. Dynamic Workstation Agent Goals (v0.11)
+
+AstraRun v0.11 executes natural language goals via autonomous closed-loop planning:
+$$\text{UNDERSTAND GOAL} \longrightarrow \text{PLAN (DAG)} \longrightarrow \text{ACT} \longrightarrow \text{OBSERVE} \longrightarrow \text{VERIFY} \longrightarrow \text{COMPLETED}$$
+
+Goals execute through structured interaction surfaces (Tier A Native Win32/WLAN > Tier B Structured CLI > Tier C UI Automation) with empirical verification and live Task HUD V2 tracking:
+
+| Natural Language Goal | Intent / Capability | Interaction Tier | Verifier Strategy | Description & Output |
+| :--- | :--- | :--- | :--- | :--- |
+| `run a battery report and save it in Downloads as astra-battery.html` | `generate_battery_report` | Tier B (Structured CLI) | `FILE_NON_EMPTY` | Generates official Windows battery report via `powercfg /batteryreport`, normalizes path to user Downloads folder, and verifies non-empty HTML output. |
+| `scan wifi` / `list available wifi` | `wifi_scan` | Tier A (Native Win32) | `RETURN_CODE_ONLY` | Scans available 802.11 BSS networks directly in-process via `wlanapi.dll` with 0 subprocesses. Displays SSIDs and signal qualities. |
+| `check wifi status` | `wifi_status` | Tier A (Native Win32) | `RETURN_CODE_ONLY` | Queries native WLAN interface state, active SSID connection, BSS type, and signal quality. |
+| `connect to wifi <ssid>` | `wifi_connect` | Tier A (Native Win32) | `NETWORK_SSID` | Connects to targeted SSID using fuzzy/case-insensitive profile matching (`WiFiResolver`) with empirical network verification. |
+| `disconnect wifi` | `wifi_disconnect` | Tier A (Native Win32) | `RETURN_CODE_ONLY` | Gracefully disconnects WLAN interface via native `WlanDisconnect`. |
+
+---
+
+## 8. Workstation Telemetry & System Status
 
 | Command | Capability | Returned Telemetry |
 | :--- | :--- | :--- |
@@ -137,7 +155,7 @@ Compound queries containing conjunctions (`and`, `then`, `&`, `;`) are decompose
 
 ---
 
-## 8. Safety-Gated & Policy-Protected Operations
+## 9. Safety-Gated & Policy-Protected Operations
 
 | Command | Safety Status | Triggered Gate | Safety Mechanism |
 | :--- | :--- | :--- | :--- |

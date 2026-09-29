@@ -342,3 +342,28 @@ AstraRun v0.6 introduces concrete workstation action execution under strict arch
 
 ### 15.3. Process Safety Invariant
 - System-critical processes (`csrss.exe`, `lsass.exe`, `wininit.exe`, `smss.exe`) are hardcoded in the protection table and cannot be terminated or targeted by automated workflows.
+
+---
+
+## 16. Agent Runtime & Physical Workstation Security Invariants (v0.11)
+
+### 16.1. Zero Shell Generation Invariant
+- The autonomous agent planner (`GoalPlanner`) is strictly prohibited from generating raw shell code, batch files, or PowerShell scripts to `os.system` or `eval`.
+- The planner composes execution graphs exclusively by selecting registered, typed capabilities (`CapabilityRegistry`) with strict parameter schema validation.
+
+### 16.2. Native Wi-Fi Zero Credential Exposure
+- Wi-Fi operations (`wifi_scan`, `wifi_status`, `wifi_connect`, `wifi_disconnect`) interact directly with `wlanapi.dll` (Tier A).
+- Connections utilize pre-existing Windows network profiles. Wi-Fi passwords and credentials are never accepted as arguments, never logged, and never stored in memory.
+
+### 16.3. System Utility Adapter Hardening
+- Administrative tools like `powercfg.exe` run via `SystemUtilityAdapter` (Tier B) with `shell=False`.
+- Arguments are validated against strict whitelists and metacharacter filters (blocking `;`, `&`, `|`, `` ` ``, `$`, `>`, `<`).
+- File output paths are normalized and restricted to safe user directories (e.g. `Downloads/`).
+
+### 16.4. Resource Locking & Race Condition Prevention
+- Shared physical workstation resources (`WINDOW:<hwnd>`, `FILE:<path>`, `NETWORK:WIFI`, `PROCESS:<pid>`) are locked via `ResourceLockManager` during step execution to eliminate concurrency hazards.
+- All acquired locks are guaranteed to be released atomically upon task completion or cancellation.
+
+### 16.5. User Session Data Preservation Guarantee
+- Workstation automation and test suites are strictly prohibited from terminating user `Notepad.exe` instances, clearing tab recovery state, or modifying `%LOCALAPPDATA%\Packages\Microsoft.WindowsNotepad_8wekyb3d8bbwe\LocalState`.
+

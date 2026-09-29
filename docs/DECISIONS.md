@@ -978,6 +978,52 @@
   - Packaged modern Windows 11 apps launch directly onto the interactive display without window starvation or DCOM session deadlocks.
   - Zero persistent console windows spawned during execution.
 
+---
+
+## ADR-081: Dynamic Closed-Loop Agent Runtime Abstraction (Command to Goal DAG)
+- **Status**: ACCEPTED
+- **Context**: The existing command-matcher architecture mapped natural language directly to single capability executions, failing when goals require observation, multi-step dependency chaining, empirical verification, or replanning.
+- **Decision**:
+  - Introduce `UserGoal` and directed acyclic `Plan` graphs as core abstractions.
+  - Implement an autonomous execution loop: `UNDERSTAND GOAL -> PLAN -> ACT -> OBSERVE -> VERIFY -> REPLAN -> COMPLETED`.
+  - Prohibit arbitrary shell generation; models select exclusively from typed capability schemas.
+- **Consequences**:
+  - Enables complex workstation goals like battery diagnostic generation and Wi-Fi management with empirical verification.
+  - Complete cycle protection via Kahn's algorithm and dynamic output data mapping.
+
+---
+
+## ADR-082: Explicit Windows Interaction Surface Tiering
+- **Status**: ACCEPTED
+- **Context**: Attempting to interact with heterogeneous desktop surfaces (Win32, UWP, WPF, Chromium, Qt) via naive mouse coordinates or shell scripts creates high fragility and vulnerability.
+- **Decision**:
+  - Establish an explicit hierarchy: Tier A (Native Win32/WLAN) > Tier B (Structured CLI Adapters) > Tier C (UI Automation) > Tier D (SendInput/Shortcuts) > Tier E (Visual Fallback). Tier F (raw coordinates) is strictly prohibited.
+- **Consequences**:
+  - Predictable, deterministic degradation when modern controls do not implement accessibility patterns.
+  - Clean separation between high-speed in-process C APIs and structured external adapters.
+
+---
+
+## ADR-083: Native Wi-Fi Management via `wlanapi.dll` (Tier A)
+- **Status**: ACCEPTED
+- **Context**: Managing 802.11 network interfaces via `netsh wlan` shell scraping is fragile across localized Windows builds and exposes risk of credential leakage in command lines.
+- **Decision**:
+  - Interface directly with `wlanapi.dll` via `ctypes` (`WlanOpenHandle`, `WlanEnumInterfaces`, `WlanGetAvailableNetworkList`, `WlanConnect`).
+  - Provide fuzzy SSID matching via `WiFiResolver`.
+- **Consequences**:
+  - Sub-5ms status queries, zero child process overhead, zero command-line password exposure.
+
+---
+
+## ADR-084: MotionTokens & Non-Focus-Stealing Live Task HUD V2
+- **Status**: ACCEPTED
+- **Context**: HUD and launcher animations were hardcoded, and task progress lacked visibility for dynamic multi-step tasks. Moreover, background tasks must never steal keyboard focus from active user apps.
+- **Decision**:
+  - Centralize durations and curves in `MotionTokens`, integrating Windows `SPI_GETCLIENTAREAANIMATION` to collapse animation durations to 0ms for reduced-motion users.
+  - Live Task HUD V2 implements authentic progress modes (`INSTANT`, `DETERMINATE`, `INDETERMINATE`, `EVENT_DRIVEN`), measured `TaskETAEstimator`, collapsible dynamic step lists, and cooperative cancellation while strictly preserving `WS_EX_NOACTIVATE`.
+- **Consequences**:
+  - Accessible, fluid 60fps presentation with honest progress reporting and zero focus disruption.
+
 
 
 

@@ -1,39 +1,42 @@
-# AstraRun — Windows Intelligent Command Launcher & Workstation Control Plane (v0.10.3)
+# AstraRun — Windows Intelligent Command Launcher & Workstation Control Plane (v0.11)
 
 AstraRun is a local, lightweight, low-latency Windows command launcher and workstation orchestrator engineered as the foundational command interface for an evolving AI-assisted workstation control ecosystem.
 
 AstraRun replaces fragile string-interpolated shell execution with a strictly typed pipeline:
-`Natural Language -> Neural NLP Sandwich -> StructuredUtterance -> Context Engine -> Entity Resolution -> ActionGate -> Task Runtime -> Capability Registry -> Windows OS`.
+`Natural Language -> GoalPlanner -> DAG Execution Plan -> AgentExecutionEngine -> MachineObserver -> StepVerifier -> Live Task HUD V2 -> Windows OS`.
 
 ---
 
-## Key Capabilities (v0.10.3)
+## Key Capabilities (v0.11)
 
-- **Neural NLP Sandwich Architecture (v0.10.3)**: Embeds a high-precision `spaCy` neural dependency engine between semantic `Laya` (ModernBERT 421M) decision stages.
-  - **Single Shared 421M Instance**: Zero duplicate model weights between Pre-Gate and Verifier stages (+0MB RAM bloat).
-  - **100% Verbatim Literal Preservation**: Text payloads (`type pqr`, `enter text "secret"`) preserve exact character offsets without token truncation or normalization.
-  - **100% Negation Safety**: Strict structural negation gating (`negated: bool`) ensures negative requests (`don't open notepad`) are completely excluded from execution.
-  - **Benchmark Proven**: 98.44% test compound accuracy, 100% negation accuracy, 17.09ms p95 latency (`docs/NEURAL_NLP_BENCHMARK.md`).
-- **True Resident Background Application Mode (v0.10.3)**:
-  - **Zero Persistent Consoles**: Spawns detached via `pythonw.exe` (`0x00000008 | 0x00000200`). Leaves zero background `powershell.exe`, `cmd.exe`, or terminal windows.
-  - **Global Hotkey & Tray**: Resident in system notification area with `Alt+Space` hotkey, "Restart AstraRun", and "Exit AstraRun" lifecycle controls.
-  - **Instant Cross-Process Summon**: Re-invoking the launcher signals the active resident instance via named mutex and trigger file in 928ms with exit code 0.
-- **Native Interactive Desktop Process Launching (v0.10.3)**:
-  - Launches desktop applications directly onto `WinSta0\Default` using native Win32 `CreateProcessW` with `lpDesktop = r"WinSta0\Default"`.
-  - Resolves packaged Windows 11 AppX applications (like modern Notepad) without background suspend deadlocks or DCOM session starvation.
-- **Synchronized Compound Workflow Pipeline (v0.10.2)**: Resolves multi-clause natural-language commands (e.g. `open notepad and type pqr`) into synchronized 4-step execution chains: `open_application` -> `wait_for_window` -> `resolve_editable_element` -> `type_text`.
-- **Compound-Aware Suggestion Suppression (v0.10.2)**: Detects syntactic conjunctions (`and`, `then`, `&`, `;`) and suppresses single-app autocomplete suggestions, guaranteeing that Enter dispatches the complete natural-language instruction without truncation.
-- **WorkflowContext State Propagation (v0.10.2)**: Tracks mutable runtime entities (`last_opened_application`, `last_opened_window` HWND, `last_ui_element`) across sequential steps, enabling downstream operations to automatically bind handles discovered upstream.
-- **Decoupled Floating Task HUD & Non-Focus-Stealing Invariant**: Lightweight, frameless top-right HUD tracking asynchronous task progress (`PASSIVE_PROGRESS`, `SUCCESS`, `ERROR`, `WAITING_CONFIRMATION`). Enforces Win32 `WS_EX_NOACTIVATE (0x08000000)`, `Qt.WindowType.WindowDoesNotAcceptFocus`, and `Qt.WidgetAttribute.WA_ShowWithoutActivating` to ensure background tasks NEVER steal keyboard focus from active target applications (e.g. Notepad, VS Code, Browser).
-- **Semantic UI Automation Subsystem**: 72 typed workstation capabilities across 10 OS categories with direct Microsoft UI Automation (`IUIAutomation`) tree inspection and control manipulation on a dedicated COM MTA worker thread.
-- **Strict Control Mutation Invariant**:
-  $$\text{UIA Semantic Pattern} > \text{Win32 Control Message} > \text{Keyboard Shortcut} > \text{Coordinate Interaction (PERMANENTLY PROHIBITED)}$$
-  Zero blind coordinate clicking (`pyautogui.click(x, y)`). All control manipulations use strongly-typed UIA patterns (`InvokePattern`, `ValuePattern`, `TogglePattern`, `SelectionItemPattern`, `ScrollPattern`).
-- **Benchmark-Proven Performance**:
-  - **Live Workstation Acceptance Suite**: **100.0% Pass Rate** across Background Residency, Single-Instance Summon, Compound Execution, and Lifecycle Controls (`docs/V0.10.3_LIVE_ACCEPTANCE.md`).
-  - **Neural NLP Benchmark (840 cases)**: **99.04% Dev / 98.44% Test Compound Accuracy**, **100.0% Literal Preservation**, **17.09ms p95 latency**.
-  - **Compound Benchmark V1 (50 cases)**: **100.0% Pass Rate** (50 / 50), **100.0% Compound Clause Recall**, **0.00% Fast-Path Truncation Rate**, **0.00% Misroute Rate**.
-- **353 Passing Automated Tests**: 100% test pass rate across 24 test modules in 108s.
+- **Dynamic Workstation Agent Runtime (v0.11)**:
+  - **Closed-Loop Execution**: Executes the autonomous workstation loop:
+    $$\text{UNDERSTAND GOAL} \longrightarrow \text{PLAN} \longrightarrow \text{ACT} \longrightarrow \text{OBSERVE} \longrightarrow \text{VERIFY} \longrightarrow \text{REPLAN} \longrightarrow \text{COMPLETED}$$
+  - **Goal & Plan DAG Abstraction**: Core abstraction centered on high-level `UserGoal` and directed acyclic `Plan` graphs with automated topological readiness and data mapping.
+  - **Zero Raw Shell Invariant**: Models select strictly typed capability schemas with parameter validation; zero arbitrary shell generation.
+- **Machine-Readable Capability Schemas (v0.11)**:
+  - 77 registered workstation capabilities dynamically exporting typed `CapabilitySchema` contracts declaring parameter schemas, side effects, privilege levels, retry policies, and verifier strategies.
+  - **Strict Interaction Tier Hierarchy**: Tier A (Native Win32/WLAN) > Tier B (Structured CLI Adapters) > Tier C (UI Automation) > Tier D (SendInput/Shortcuts) > Tier E (Visual Fallback).
+- **Native Wi-Fi Capabilities (Tier A, v0.11)**:
+  - Direct integration with Windows Native Wi-Fi API (`wlanapi.dll`) via `ctypes` (`WlanOpenHandle`, `WlanEnumInterfaces`, `WlanGetAvailableNetworkList`, `WlanConnect`).
+  - Programmatic Wi-Fi scanning (`wifi_scan`), connection status (`wifi_status`), connection (`wifi_connect`), and disconnection (`wifi_disconnect`).
+  - Fuzzy SSID matching (`WiFiResolver`) handling spoken or mistyped network names. Zero child processes, zero credential exposure.
+- **System Utility Adapters & Battery Report (Tier B, v0.11)**:
+  - Safe `SystemUtilityAdapter` and `PowerCfgAdapter` executing trusted utilities with `shell=False` and metacharacter filtering.
+  - Generates full Windows battery life and health diagnostic reports (`powercfg.exe /batteryreport`) with portable Downloads resolution and empirical `FILE_NON_EMPTY` verification.
+- **Workstation Resource Locking (v0.11)**:
+  - `ResourceLockManager` providing granular mutual exclusion for physical workstation resources (`WINDOW:<hwnd>`, `FILE:<path>`, `NETWORK:WIFI`, `PROCESS:<pid>`).
+- **Centralized Motion System & Live Task HUD V2 (v0.11)**:
+  - `MotionTokens` system defining standardized animation durations and easing curves.
+  - Automatic reduced-motion accessibility support via Win32 `SystemParametersInfoW(SPI_GETCLIENTAREAANIMATION)` collapsing durations to 0ms.
+  - Live Task HUD V2 featuring honest progress modes (`INSTANT`, `DETERMINATE`, `INDETERMINATE`, `EVENT_DRIVEN`).
+  - `TaskETAEstimator` computing remaining duration based on measured step execution times.
+  - Collapsible dynamic step list with status glyphs and cooperative task cancellation.
+  - Non-focus-stealing invariant strictly enforced (`WS_EX_NOACTIVATE`, `WA_ShowWithoutActivating`).
+- **Benchmark-Proven Performance & Safety**:
+  - **Live Workstation Acceptance Suite**: **100.0% Pass Rate** across Autonomous Battery Report Goal, Native Wi-Fi, Resource Locking, and HUD V2 (`docs/V0.11_LIVE_ACCEPTANCE.md`).
+  - **384 Passing Automated Tests**: 100% test pass rate across 28 test modules in 233s.
+  - **100% Data Preservation**: Zero disruption to user Notepad sessions or unsaved tabs.
 
 
 ---

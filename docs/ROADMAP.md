@@ -253,12 +253,24 @@ flowchart LR
 
 ---
 
-### v0.11 — Workstation Daemon / Rich Context
-- Resident system tray daemon with background event monitoring, context synthesis, proactive alerts, and dev port recovery.
+### v0.11 — Dynamic Workstation Agent Runtime (Complete — 2026-09-29)
+- **Closed-Loop Agent Engine (`astrarun.agent`)**: Executes the autonomous loop: `UNDERSTAND GOAL -> PLAN -> ACT -> OBSERVE -> VERIFY -> REPLAN -> COMPLETED`.
+- **Goal & Plan DAG Abstraction**: Core abstraction centered on high-level `UserGoal` and directed acyclic `Plan` graphs with automated topological readiness and data mapping.
+- **Machine-Readable Capability Schemas**: 77 registered workstation capabilities dynamically exporting typed `CapabilitySchema` contracts with strict parameter validation and zero arbitrary shell generation.
+- **Explicit Interaction Surface Tiering**: Tier A (Native Win32/WLAN) > Tier B (Structured CLI Adapters) > Tier C (UI Automation) > Tier D (SendInput/Shortcuts) > Tier E (Visual Fallback). Tier F (raw coordinates) strictly prohibited.
+- **Native Wi-Fi Subsystem (Tier A)**: Direct C-API integration with `wlanapi.dll` (`WlanOpenHandle`, `WlanEnumInterfaces`, `WlanGetAvailableNetworkList`, `WlanConnect`). Fuzzy SSID matching via `WiFiResolver`. Zero child processes, zero credential exposure.
+- **System Utility Adapters (Tier B)**: Safe `PowerCfgAdapter` for Windows battery report generation (`generate_battery_report`) with portable Downloads resolution and empirical `FILE_NON_EMPTY` verification.
+- **Workstation Resource Locking**: `ResourceLockManager` providing granular mutual exclusion for physical workstation resources (`WINDOW:<hwnd>`, `FILE:<path>`, `NETWORK:WIFI`, `PROCESS:<pid>`).
+- **Centralized Motion System & Live Task HUD V2**: `MotionTokens` system defining standardized animation durations and easing curves with automatic Windows reduced-motion zeroing (`SPI_GETCLIENTAREAANIMATION`). Live Task HUD V2 featuring honest progress modes (`INSTANT`, `DETERMINATE`, `INDETERMINATE`, `EVENT_DRIVEN`), `TaskETAEstimator`, dynamic step list, and cooperative cancellation while strictly preserving `WS_EX_NOACTIVATE`.
+- **Live Workstation Acceptance Suite**: 4 / 4 PASSED (100.0%) across Autonomous Battery Report Goal, Native Wi-Fi, Resource Locking, and Motion/HUD V2 (`docs/V0.11_LIVE_ACCEPTANCE.md`).
+- **384 Passing Automated Tests**: 384 / 384 tests passing cleanly in ~233s.
+- **100% User Data Preservation**: Complete protection of user Notepad instances, session files, and unsaved tabs.
 
 ---
 
-### v0.12 — Optional Reasoning Providers
+### v0.12 — Browser Intelligence & Deep Visual Grounding
+- Expand Tier E Visual Computer Use from shadow mode to active interactive visual grounding.
+- Headless / interactive browser automation via Chrome DevTools Protocol (CDP) / Playwright for web workflows.
 - Connect `ReasoningProvider` interface to optional external reasoning gateways (e.g. independent `AI-Bridge` service, local LLM, cloud provider).
 - Consume structured `Observation` envelopes to diagnose crashes and formulate complex multi-step plans.
 - Deep reasoning remains strictly non-authoritative: output re-enters `EntityResolver` -> `ActionGate` -> `CapabilityRegistry`.

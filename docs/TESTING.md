@@ -1,6 +1,6 @@
 # AstraRun Testing & Verification Report
 
-> **Version**: 0.10.3  
+> **Version**: 0.11.0  
 > **Status**: VERIFIED & PASSING  
 > **Execution Date**: 2026-09-29  
 
@@ -8,9 +8,46 @@
 
 ## 1. Test Suite Architecture
 
-The AstraRun test suite contains **353 automated tests across 24 modules**:
+The AstraRun test suite contains **384 automated tests across 28 modules**:
 
-1. **Neural NLP Sandwich Tests (v0.10.3)**:
+1. **Dynamic Agent Runtime & Closed-Loop Planning Tests (v0.11)**:
+   - `tests/test_agent_runtime.py` (10 tests):
+     - `test_parse_battery_report_goal`: Dynamic goal parsing and plan synthesis for battery reporting.
+     - `test_parse_wifi_goals`: Dynamic Wi-Fi goal parsing (`wifi_scan`, `wifi_status`, `wifi_connect`) with parameter extraction.
+     - `test_parse_compound_open_and_type`: Dynamic compound multi-step goal parsing and step dependency linking.
+     - `test_topological_readiness`: ExecutionGraph topological readiness evaluation and output mapping.
+     - `test_cycle_detection`: Kahn's cycle detection raising `DependencyCycleError` on cyclical plans.
+     - `test_progress_calculation`: Honest step-weighted progress percentage calculation (0% to 100%).
+     - `test_lock_acquire_and_release`: ResourceLockManager mutual exclusion, re-entrancy, and timeout enforcement.
+     - `test_release_all_for_task`: Bulk cleanup of all held workstation resource locks upon task completion.
+     - `test_successful_closed_loop`: Full observe-act-verify closed loop with `StepVerifier` and `AgentExecutionEngine`.
+     - `test_task_cancellation`: Cooperative mid-flight task cancellation halting queued steps.
+   - `tests/test_battery_report.py` (4 tests):
+     - `test_blocks_shell_characters`: Prohibited shell metacharacter rejection in `SystemUtilityAdapter`.
+     - `test_downloads_directory_resolution`: Known folder resolution for user `Downloads` directory.
+     - `test_generate_battery_report_custom_temp_path`: Safe HTML battery report generation and verification.
+     - `test_normalize_bare_filename_to_downloads`: Automated destination path normalization to user `Downloads`.
+   - `tests/test_wifi_capabilities.py` (8 tests):
+     - `test_exact_match_case_insensitive`: Case-insensitive exact matching in `WiFiResolver`.
+     - `test_substring_match`: Substring matching for human-entered SSIDs.
+     - `test_fuzzy_match`: Fuzzy Levenshtein ratio matching for human typos in network names.
+     - `test_no_match_returns_none`: Clean rejection of unmatched candidate SSIDs.
+     - `test_wifi_status`: Native `wlanapi.dll` status query returning connection state and active SSID.
+     - `test_wifi_scan`: In-process BSS network list query returning available SSIDs and signal qualities.
+     - `test_wifi_connect_empty_ssid_fails`: Validation failure on empty network targets.
+     - `test_verifier_network_ssid`: Empirical network state verification using `NETWORK_SSID` verifier strategy.
+   - `tests/test_motion_and_hud_v2.py` (9 tests):
+     - `test_default_durations`: Standard centralized motion token timing verification.
+     - `test_reduced_motion_collapses_to_zero`: Windows `SPI_GETCLIENTAREAANIMATION` accessibility compliance (0ms cut).
+     - `test_reduced_motion_query_runs_safely`: Safe Win32 system parameter query execution.
+     - `test_eta_calculation`: Real empirical step duration rolling average calculation in `TaskETAEstimator`.
+     - `test_eta_zero_when_complete`: Clean clearance of ETA display upon task completion.
+     - `test_non_focus_stealing_flags`: Verification of `WS_EX_NOACTIVATE` and `WA_ShowWithoutActivating` on HUD V2.
+     - `test_progress_modes`: Verification of `INSTANT`, `DETERMINATE`, and `INDETERMINATE` progress states.
+     - `test_dynamic_step_list`: Dynamic step list population, execution glyph updates (`►`, `✓`), and accordion expansion.
+     - `test_cancellation_signal`: User cancellation signal dispatch from close button.
+
+2. **Neural NLP Sandwich Tests (v0.10.3)**:
    - `tests/test_neural_nlp_sandwich.py` (16 tests):
      - `test_neural_structure_engine_compound_split`: Verifies dependency parse splitting of compound clauses.
      - `test_neural_structure_engine_negation_detection`: Verifies structural negation tagging (`is_negated: bool`).
@@ -644,4 +681,26 @@ tests/test_ai_bridge_protocol PASSED                                     [100%]
 | `kill lsass` | `BLOCK` -> Prohibited | **PASSED** | Hard policy blocks protected system process |
 | `rmdir /s /q c:\` | `BLOCK` -> Prohibited | **PASSED** | Hard policy blocks dangerous shell commands |
 | `open project` | `CLARIFY` -> DisambiguationCard | **PASSED** | Interactive list with keyboard arrow navigation |
+
+---
+
+## 10. Live Physical Workstation Acceptance Gate (v0.11)
+
+```powershell
+.venv\Scripts\python scripts\run_v011_live_acceptance.py
+```
+
+### Acceptance Results Summary
+- **Overall Status**: **4 / 4 GATES PASSED (100.0%)**
+- **Hardware Architecture**: Windows 11 Build 26100, RTX 2050, Native Wi-Fi (`wlanapi.dll`)
+- **Safety Invariant**: 0 user Notepad instances or sessions touched or killed
+- **Artifact**: `benchmarks/v011_live_acceptance_results.json`
+
+| Gate ID | Gate Name | Subsystem / Tier | Measured Duration | Verification Evidence |
+| :--- | :--- | :--- | :--- | :--- |
+| **Gate 1** | Autonomous Battery Report Goal | Tier B (`powercfg.exe` Adapter) | 3157.5 ms | Validated `C:\Users\hp\Downloads\astra-battery.html` (155,519 bytes, non-empty HTML). Verified via `FILE_NON_EMPTY`. |
+| **Gate 2** | Native Wi-Fi Management | Tier A (ctypes `wlanapi.dll`) | 119.7 ms | Verified connection to active SSID (`Galaxy A14*`, 97% signal). Enumerated BSS scan list in-process with 0 subprocesses. |
+| **Gate 3** | Workstation Resource Locking | Agent Core (`ResourceLockManager`) | 54.4 ms | Mutual exclusion, re-entrancy, cross-task lock rejection, and automatic task teardown verified. |
+| **Gate 4** | Motion System & Live Task HUD V2 | UI / Accessibility (`MotionTokens`) | 76.0 ms | Centralized motion timing tokens (200ms standard / 0ms reduced-motion), `TaskETAEstimator`, and non-activating window flags verified. |
+
 

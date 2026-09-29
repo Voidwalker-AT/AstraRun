@@ -39,6 +39,7 @@ from astrarun.core.models import Decision, RoutingContext
 from astrarun.routing.base import BaseRouter
 from astrarun.search.models import CandidateCategory, SearchResult
 from astrarun.tools.registry import ToolRegistry
+from astrarun.ui.motion import MotionTokens
 from astrarun.ui.positioning import compute_launcher_position
 from astrarun.windows.policy import register_astrarun_hwnd, unregister_astrarun_hwnd
 
@@ -369,13 +370,14 @@ class LauncherWindow(QDialog):
         """Setup slide and native windowOpacity animations without nested QGraphicsEffect."""
         self.setWindowOpacity(1.0)
 
+        dur = MotionTokens.get_enter_duration() if self.animations_enabled else 0
         self.pos_anim = QPropertyAnimation(self, b"pos")
-        self.pos_anim.setDuration(150)
-        self.pos_anim.setEasingCurve(QEasingCurve.Type.OutCubic)
+        self.pos_anim.setDuration(dur)
+        self.pos_anim.setEasingCurve(MotionTokens.EASING_ENTER)
 
         self.opacity_anim = QPropertyAnimation(self, b"windowOpacity")
-        self.opacity_anim.setDuration(150)
-        self.opacity_anim.setEasingCurve(QEasingCurve.Type.OutCubic)
+        self.opacity_anim.setDuration(dur)
+        self.opacity_anim.setEasingCurve(MotionTokens.EASING_ENTER)
 
         self.anim_group = QParallelAnimationGroup(self)
         self.anim_group.addAnimation(self.pos_anim)
@@ -447,13 +449,14 @@ class LauncherWindow(QDialog):
         self.activateWindow()
         self.input_field.setFocus()
 
-        self.pos_anim.setDuration(150)
-        self.pos_anim.setEasingCurve(QEasingCurve.Type.OutCubic)
+        enter_dur = MotionTokens.get_enter_duration() if self.animations_enabled else 0
+        self.pos_anim.setDuration(enter_dur)
+        self.pos_anim.setEasingCurve(MotionTokens.EASING_ENTER)
         self.pos_anim.setStartValue(start_pos)
         self.pos_anim.setEndValue(target_pos)
 
-        self.opacity_anim.setDuration(150)
-        self.opacity_anim.setEasingCurve(QEasingCurve.Type.OutCubic)
+        self.opacity_anim.setDuration(enter_dur)
+        self.opacity_anim.setEasingCurve(MotionTokens.EASING_ENTER)
         self.opacity_anim.setStartValue(0.0)
         self.opacity_anim.setEndValue(1.0)
 
@@ -461,7 +464,7 @@ class LauncherWindow(QDialog):
         self.anim_group.start()
 
     def dismiss_animated(self, reason: str = "unspecified") -> None:
-        """Dismiss command bar smoothly with slide up/fade (110ms, InCubic)."""
+        """Dismiss command bar smoothly with slide up/fade respecting MotionTokens."""
         self._log_lifecycle("DISMISS_REQUESTED", reason=reason)
         if not self.isVisible():
             self._log_lifecycle("DISMISS_BLOCKED", reason="already_hidden")
@@ -480,13 +483,14 @@ class LauncherWindow(QDialog):
         self._activation_timer.stop()
         end_pos = QPoint(self.x(), self.y() - 20)
 
-        self.pos_anim.setDuration(110)
-        self.pos_anim.setEasingCurve(QEasingCurve.Type.InCubic)
+        exit_dur = MotionTokens.get_exit_duration() if self.animations_enabled else 0
+        self.pos_anim.setDuration(exit_dur)
+        self.pos_anim.setEasingCurve(MotionTokens.EASING_EXIT)
         self.pos_anim.setStartValue(self.pos())
         self.pos_anim.setEndValue(end_pos)
 
-        self.opacity_anim.setDuration(110)
-        self.opacity_anim.setEasingCurve(QEasingCurve.Type.InCubic)
+        self.opacity_anim.setDuration(exit_dur)
+        self.opacity_anim.setEasingCurve(MotionTokens.EASING_EXIT)
         self.opacity_anim.setStartValue(self.windowOpacity())
         self.opacity_anim.setEndValue(0.0)
 

@@ -46,6 +46,10 @@ class CapabilityRegistry:
         """Retrieve capability metadata by ID."""
         return self._capabilities.get(capability_id)
 
+    def has_capability(self, capability_id: str) -> bool:
+        """Return True if capability_id is registered."""
+        return capability_id in self._capabilities
+
     def list_capabilities(self, category: Optional[CapabilityCategory] = None) -> list[Capability]:
         """Return registered capabilities, optionally filtered by category."""
         if category is not None:
@@ -179,7 +183,21 @@ class CapabilityRegistry:
             logger.info("Executing capability '%s' with args %s", capability_id, args)
 
         try:
-            raw_res = cap.handler(**args)
+            # Filter arguments to match declared args_schema or callable signature
+            filtered_args = dict(args)
+            if hasattr(cap, "args_schema") and isinstance(cap.args_schema, dict):
+                filtered_args = {k: v for k, v in args.items() if k in cap.args_schema}
+            else:
+                import inspect
+                try:
+                    sig = inspect.signature(cap.handler)
+                    has_varkw = any(p.kind == inspect.Parameter.VAR_KEYWORD for p in sig.parameters.values())
+                    if not has_varkw:
+                        filtered_args = {k: v for k, v in args.items() if k in sig.parameters}
+                except Exception:
+                    pass
+
+            raw_res = cap.handler(**filtered_args)
 
             # Standardize return type to CapabilityResult
             if isinstance(raw_res, CapabilityResult):
@@ -1075,6 +1093,16 @@ class CapabilityRegistry:
             category=CapabilityCategory.INTERACTION,
             description="Type literal text into the active/focused control without shell evaluation",
             args_schema={"text": str, "hwnd": int, "window": str},
+            risk=ToolRisk.LOW,
+            read_only=False,
+            handler=type_literal_text,
+            permission=CapabilityPermission.AUTO,
+        ))
+        self.register(Capability(
+            id="type_into_window",
+            category=CapabilityCategory.INTERACTION,
+            description="Type literal text into the active or specified window control",
+            args_schema={"text": str, "app_name": str, "hwnd": int},
             risk=ToolRisk.LOW,
             read_only=False,
             handler=type_literal_text,

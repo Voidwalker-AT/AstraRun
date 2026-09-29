@@ -1,6 +1,6 @@
 # DAILY_DRIVER_COMMANDS.md — Daily Driver Command Catalog
 
-> **Milestone**: AstraRun v0.11 (Dynamic Workstation Agent Runtime: Closed-Loop Planning & HUD V2)  
+> **Milestone**: AstraRun v0.11.1 (Dynamic Workstation Agent Runtime: Generality & Reality Gate)  
 > **Status**: VERIFIED & BENCHMARKED  
 > **Target Audience**: AstraRun Users, Systems Engineers, and Workstation Operators  
 > **Last Updated**: 2026-09-29  
@@ -135,6 +135,8 @@ Goals execute through structured interaction surfaces (Tier A Native Win32/WLAN 
 | `check wifi status` | `wifi_status` | Tier A (Native Win32) | `RETURN_CODE_ONLY` | Queries native WLAN interface state, active SSID connection, BSS type, and signal quality. |
 | `connect to wifi <ssid>` | `wifi_connect` | Tier A (Native Win32) | `NETWORK_SSID` | Connects to targeted SSID using fuzzy/case-insensitive profile matching (`WiFiResolver`) with empirical network verification. |
 | `disconnect wifi` | `wifi_disconnect` | Tier A (Native Win32) | `RETURN_CODE_ONLY` | Gracefully disconnects WLAN interface via native `WlanDisconnect`. |
+| `reverse <string> and save the result to <path>` | `reverse_text` -> `save_text_file` | Dynamic DAG | `FILE_EXISTS` | Dynamically discovered 2-step pipeline chaining string transformation to disk via `OutputReference`. |
+| `find <pattern> but don't open it` | `find_file` (negated open) | Tier B / C | `FILE_EXISTS` | Negation-aware goal execution safely excluding `open_file` / `open_application`. |
 
 ---
 

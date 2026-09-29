@@ -52,35 +52,106 @@ class ExecutionGraph:
             raise DependencyCycleError("Plan contains cyclic step dependencies.")
 
     def get_ready_steps(self) -> list[PlanStep]:
-        """Return all steps that are currently in PENDING state whose dependencies are satisfied."""
+        """Return all steps that are currently in PENDING or READY state whose dependencies are satisfied."""
         ready: list[PlanStep] = []
         for step in self.plan.steps:
-            if step.state != StepState.PENDING:
+            if step.state not in (StepState.PENDING, StepState.READY):
                 continue
 
             deps_satisfied = True
             for dep in step.dependencies:
                 dep_step = self._step_map.get(dep.step_id)
-                if not dep_step or dep_step.state != dep.required_state:
+                # If dependency was SKIPPED, treat as satisfied if required_state is SKIPPED or COMPLETED
+                if not dep_step:
+                    deps_satisfied = False
+                    break
+                if dep_step.state not in (dep.required_state, StepState.SKIPPED if dep.required_state == StepState.COMPLETED else dep.required_state):
                     deps_satisfied = False
                     break
 
             if deps_satisfied:
-                step.state = StepState.READY
                 self._propagate_data(step)
+
+                # Evaluate conditional guard if present
+                if step.condition:
+                    context = self._build_evaluation_context(step)
+                    if not step.condition.evaluate(context):
+                        step.state = StepState.SKIPPED
+                        continue
+
+                step.state = StepState.READY
                 ready.append(step)
 
         return ready
 
+    def _build_evaluation_context(self, step: PlanStep) -> dict[str, Any]:
+        """Build execution evaluation context for step condition checks."""
+        ctx: dict[str, Any] = {}
+        for s in self.plan.steps:
+            if s.result and s.result.data:
+                ctx[s.step_id] = s.result.data
+        if step.dependencies:
+            last_dep = self._step_map.get(step.dependencies[-1].step_id)
+            if last_dep and last_dep.result and last_dep.result.data:
+                ctx["result"] = last_dep.result.data
+        return ctx
+
     def _propagate_data(self, step: PlanStep) -> None:
-        """Map output data from satisfied dependencies into step arguments."""
+        """Map output data from satisfied dependencies into step arguments (supporting OutputReference and ${step.field})."""
+        import re
+        from astrarun.agent.models import ArgumentBinding, ArgumentSourceType, OutputReference
+
+        # 1. Process explicit data_mapping from dependencies
         for dep in step.dependencies:
             dep_step = self._step_map.get(dep.step_id)
             if not dep_step or not dep_step.result or not dep_step.result.data:
                 continue
             for out_key, in_arg in dep.data_mapping.items():
                 if out_key in dep_step.result.data:
-                    step.arguments[in_arg] = dep_step.result.data[out_key]
+                    val = dep_step.result.data[out_key]
+                    step.arguments[in_arg] = val
+                    step.argument_bindings[in_arg] = ArgumentBinding(
+                        parameter=in_arg,
+                        value=val,
+                        source_type=ArgumentSourceType.PREVIOUS_STEP,
+                        source_reference=f"{dep.step_id}.{out_key}",
+                        confidence=1.0,
+                    )
+
+        # 2. Process OutputReference and ${step_id.field} within step.arguments
+        for arg_name, arg_val in list(step.arguments.items()):
+            if isinstance(arg_val, OutputReference):
+                ref_step = self._step_map.get(arg_val.step_id)
+                if ref_step and ref_step.result and ref_step.result.data and arg_val.field in ref_step.result.data:
+                    resolved_val = ref_step.result.data[arg_val.field]
+                    step.arguments[arg_name] = resolved_val
+                    step.argument_bindings[arg_name] = ArgumentBinding(
+                        parameter=arg_name,
+                        value=resolved_val,
+                        source_type=ArgumentSourceType.PREVIOUS_STEP,
+                        source_reference=f"{arg_val.step_id}.{arg_val.field}",
+                        confidence=1.0,
+                    )
+            elif isinstance(arg_val, str) and "${" in arg_val and "}" in arg_val:
+                # String template substitution
+                def replacer(match):
+                    expr = match.group(1).strip()
+                    if "." in expr:
+                        sid, fld = expr.split(".", 1)
+                        ref_step = self._step_map.get(sid)
+                        if ref_step and ref_step.result and ref_step.result.data and fld in ref_step.result.data:
+                            return str(ref_step.result.data[fld])
+                    return match.group(0)
+
+                resolved_str = re.sub(r"\$\{([^}]+)\}", replacer, arg_val)
+                step.arguments[arg_name] = resolved_str
+                step.argument_bindings[arg_name] = ArgumentBinding(
+                    parameter=arg_name,
+                    value=resolved_str,
+                    source_type=ArgumentSourceType.PREVIOUS_STEP,
+                    source_reference=arg_val,
+                    confidence=1.0,
+                )
 
     def add_step(self, new_step: PlanStep) -> None:
         """Dynamically append a new step to the plan and revalidate."""

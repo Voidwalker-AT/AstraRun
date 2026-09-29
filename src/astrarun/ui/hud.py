@@ -47,24 +47,76 @@ from astrarun.windows.policy import register_astrarun_hwnd, unregister_astrarun_
 logger = get_logger("astrarun.ui.hud")
 
 
+class CapabilityTimingStats:
+    """Historical timing statistics for a capability."""
+    def __init__(self, capability_id: str):
+        self.capability_id = capability_id
+        self.count: int = 0
+        self.ema_duration_s: float = 0.5
+        self.recent_durations: list[float] = []
+
+    def update(self, duration_s: float) -> None:
+        self.count += 1
+        alpha = 0.3
+        self.ema_duration_s = (alpha * duration_s) + ((1.0 - alpha) * self.ema_duration_s)
+        self.recent_durations.append(duration_s)
+        if len(self.recent_durations) > 20:
+            self.recent_durations.pop(0)
+
+    @property
+    def p50(self) -> float:
+        if not self.recent_durations:
+            return self.ema_duration_s
+        s = sorted(self.recent_durations)
+        return s[len(s) // 2]
+
+    @property
+    def p90(self) -> float:
+        if not self.recent_durations:
+            return self.ema_duration_s
+        s = sorted(self.recent_durations)
+        idx = min(int(len(s) * 0.9), len(s) - 1)
+        return s[idx]
+
+
 class TaskETAEstimator:
-    """Estimates remaining duration for multi-step agent tasks based on real measurements."""
+    """Estimates remaining duration for multi-step agent tasks based on real measurements and per-capability stats."""
 
     def __init__(self):
         self.step_start_times: dict[str, float] = {}
         self.completed_durations: list[float] = []
+        self.capability_stats: dict[str, CapabilityTimingStats] = {}
 
     def record_step_start(self, step_id: str) -> None:
         self.step_start_times[step_id] = time.time()
 
-    def record_step_end(self, step_id: str) -> None:
+    def record_step_end(self, step_id: str, capability_id: Optional[str] = None) -> None:
         start = self.step_start_times.get(step_id)
         if start:
-            self.completed_durations.append(time.time() - start)
+            dur = time.time() - start
+            self.completed_durations.append(dur)
+            if capability_id:
+                if capability_id not in self.capability_stats:
+                    self.capability_stats[capability_id] = CapabilityTimingStats(capability_id)
+                self.capability_stats[capability_id].update(dur)
 
-    def estimate_remaining_s(self, completed_steps: int, total_steps: int) -> Optional[float]:
+    def estimate_remaining_s(self, completed_steps: int, total_steps: int, remaining_capabilities: Optional[list[str]] = None) -> Optional[float]:
         if total_steps <= 0 or completed_steps >= total_steps:
             return 0.0
+
+        # If remaining capability IDs are known, sum their expected durations
+        if remaining_capabilities:
+            total_est = 0.0
+            for cap_id in remaining_capabilities:
+                stats = self.capability_stats.get(cap_id)
+                if stats:
+                    total_est += stats.ema_duration_s
+                elif self.completed_durations:
+                    total_est += sum(self.completed_durations) / len(self.completed_durations)
+                else:
+                    total_est += 0.5
+            return round(total_est, 1)
+
         if not self.completed_durations:
             return None
         avg_dur = sum(self.completed_durations) / len(self.completed_durations)
@@ -81,6 +133,7 @@ class TaskETAEstimator:
         mins = int(remaining_s // 60)
         secs = int(remaining_s % 60)
         return f"~{mins}m {secs}s"
+
 
 
 class HUDState(str, Enum):
@@ -837,6 +890,7 @@ class TaskHUDController(QObject):
 class AgentTaskHUDListener:
     """
     Bridges AgentExecutionEngine callbacks to FloatingTaskHUD methods for real-time Live Task HUD V2 display.
+    Domain-agnostic: renders generic Plan, PlanStep, progress, status, and ETA.
     """
 
     def __init__(self, hud: FloatingTaskHUD):
@@ -844,7 +898,11 @@ class AgentTaskHUDListener:
 
     def on_task_started(self, task: Any) -> None:
         steps_data = [
-            {"step_id": s.step_id, "description": s.description, "state": s.state.value}
+            {
+                "step_id": s.step_id,
+                "description": s.human_label or s.description,
+                "state": s.state.value,
+            }
             for s in task.plan.steps
         ]
         self.hud.set_steps(steps_data)
@@ -861,18 +919,35 @@ class AgentTaskHUDListener:
         self.hud.update_progress(task.task_id, message, progress_pct=progress_pct)
 
     def on_step_started(self, task: Any, step: Any) -> None:
-        self.hud.update_step_state(step.step_id, "RUNNING", step.description)
-        self.hud.update_progress(task.task_id, f"Running: {step.description}", task.progress_pct)
+        lbl = step.human_label or step.description
+        if hasattr(self.hud, "eta_estimator") and self.hud.eta_estimator:
+            self.hud.eta_estimator.record_step_start(step.step_id)
+        self.hud.update_step_state(step.step_id, "RUNNING", lbl)
+        self.hud.update_progress(task.task_id, f"Running: {lbl}", task.progress_pct)
 
     def on_step_completed(self, task: Any, step: Any, verification: Any) -> None:
+        lbl = step.human_label or step.description
+        if hasattr(self.hud, "eta_estimator") and self.hud.eta_estimator:
+            self.hud.eta_estimator.record_step_end(step.step_id, getattr(step, "capability_id", None))
         self.hud.update_step_state(step.step_id, "COMPLETED")
-        self.hud.update_progress(task.task_id, f"Verified: {step.description}", task.progress_pct)
+        self.hud.update_progress(task.task_id, f"Verified: {lbl}", task.progress_pct)
 
     def on_step_failed(self, task: Any, step: Any, error: str) -> None:
+        lbl = step.human_label or step.description
         self.hud.update_step_state(step.step_id, "FAILED")
-        self.hud.show_error(task.task_id, f"Failed: {step.description} ({error})")
+        self.hud.show_error(task.task_id, f"Failed: {lbl} ({error})")
 
     def on_replan(self, task: Any, event: Any) -> None:
+        # Dynamically refresh step accordion when a replan adds or alters steps
+        steps_data = [
+            {
+                "step_id": s.step_id,
+                "description": s.human_label or s.description,
+                "state": s.state.value,
+            }
+            for s in task.plan.steps
+        ]
+        self.hud.set_steps(steps_data)
         self.hud.update_progress(task.task_id, f"Replanning: {event.reason}", task.progress_pct)
 
     def on_task_completed(self, task: Any) -> None:
@@ -883,4 +958,5 @@ class AgentTaskHUDListener:
 
     def on_task_cancelled(self, task: Any) -> None:
         self.hud.show_error(task.task_id, "Task was cancelled by user.")
+
 

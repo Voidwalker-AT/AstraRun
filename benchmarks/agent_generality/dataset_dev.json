@@ -1,0 +1,2889 @@
+[
+  {
+    "id": "DEV-APP-001",
+    "prompt": "open application notepad",
+    "category": "application",
+    "expected_capabilities": [
+      "open_application"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-APP-002",
+    "prompt": "is notepad running",
+    "category": "application",
+    "expected_capabilities": [
+      "is_application_running"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-APP-003",
+    "prompt": "focus application notepad",
+    "category": "application",
+    "expected_capabilities": [
+      "focus_application"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-APP-004",
+    "prompt": "find application notepad",
+    "category": "application",
+    "expected_capabilities": [
+      "find_application"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-APP-005",
+    "prompt": "open application calc",
+    "category": "application",
+    "expected_capabilities": [
+      "open_application"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-APP-006",
+    "prompt": "is calc running",
+    "category": "application",
+    "expected_capabilities": [
+      "is_application_running"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-APP-007",
+    "prompt": "focus application calc",
+    "category": "application",
+    "expected_capabilities": [
+      "focus_application"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-APP-008",
+    "prompt": "find application calc",
+    "category": "application",
+    "expected_capabilities": [
+      "find_application"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-APP-009",
+    "prompt": "open application code",
+    "category": "application",
+    "expected_capabilities": [
+      "open_application"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-APP-010",
+    "prompt": "is code running",
+    "category": "application",
+    "expected_capabilities": [
+      "is_application_running"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-APP-011",
+    "prompt": "focus application code",
+    "category": "application",
+    "expected_capabilities": [
+      "focus_application"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-APP-012",
+    "prompt": "find application code",
+    "category": "application",
+    "expected_capabilities": [
+      "find_application"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-APP-013",
+    "prompt": "open application terminal",
+    "category": "application",
+    "expected_capabilities": [
+      "open_application"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-APP-014",
+    "prompt": "is terminal running",
+    "category": "application",
+    "expected_capabilities": [
+      "is_application_running"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-APP-015",
+    "prompt": "focus application terminal",
+    "category": "application",
+    "expected_capabilities": [
+      "focus_application"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-APP-016",
+    "prompt": "find application terminal",
+    "category": "application",
+    "expected_capabilities": [
+      "find_application"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-APP-017",
+    "prompt": "open application vivaldi",
+    "category": "application",
+    "expected_capabilities": [
+      "open_application"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-APP-018",
+    "prompt": "is vivaldi running",
+    "category": "application",
+    "expected_capabilities": [
+      "is_application_running"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-APP-019",
+    "prompt": "focus application vivaldi",
+    "category": "application",
+    "expected_capabilities": [
+      "focus_application"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-APP-020",
+    "prompt": "find application vivaldi",
+    "category": "application",
+    "expected_capabilities": [
+      "find_application"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-APP-021",
+    "prompt": "open application explorer",
+    "category": "application",
+    "expected_capabilities": [
+      "open_application"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-APP-022",
+    "prompt": "is explorer running",
+    "category": "application",
+    "expected_capabilities": [
+      "is_application_running"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-APP-023",
+    "prompt": "focus application explorer",
+    "category": "application",
+    "expected_capabilities": [
+      "focus_application"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-APP-024",
+    "prompt": "find application explorer",
+    "category": "application",
+    "expected_capabilities": [
+      "find_application"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-APP-025",
+    "prompt": "list all running applications",
+    "category": "application",
+    "expected_capabilities": [
+      "list_running_applications"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-WIN-001",
+    "prompt": "list windows",
+    "category": "window",
+    "expected_capabilities": [
+      "list_windows"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-WIN-002",
+    "prompt": "show foreground window",
+    "category": "window",
+    "expected_capabilities": [
+      "foreground_window"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-WIN-003",
+    "prompt": "find window Code",
+    "category": "window",
+    "expected_capabilities": [
+      "find_window"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-WIN-004",
+    "prompt": "minimize window",
+    "category": "window",
+    "expected_capabilities": [
+      "minimize_window"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-WIN-005",
+    "prompt": "maximize window",
+    "category": "window",
+    "expected_capabilities": [
+      "maximize_window"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-WIN-006",
+    "prompt": "restore window",
+    "category": "window",
+    "expected_capabilities": [
+      "restore_window"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-WIN-007",
+    "prompt": "snap window left",
+    "category": "window",
+    "expected_capabilities": [
+      "snap_window_left"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-WIN-008",
+    "prompt": "snap window right",
+    "category": "window",
+    "expected_capabilities": [
+      "snap_window_right"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-WIN-009",
+    "prompt": "undo window layout",
+    "category": "window",
+    "expected_capabilities": [
+      "undo_window_layout"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-WIN-010",
+    "prompt": "arrange desktop",
+    "category": "window",
+    "expected_capabilities": [
+      "arrange_desktop"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-WIN-011",
+    "prompt": "focus window",
+    "category": "window",
+    "expected_capabilities": [
+      "focus_window"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-WIN-012",
+    "prompt": "list windows on desktop",
+    "category": "window",
+    "expected_capabilities": [
+      "list_windows"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-WIN-013",
+    "prompt": "get active window",
+    "category": "window",
+    "expected_capabilities": [
+      "foreground_window"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-WIN-014",
+    "prompt": "minimize active window",
+    "category": "window",
+    "expected_capabilities": [
+      "minimize_window"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-WIN-015",
+    "prompt": "maximize active window",
+    "category": "window",
+    "expected_capabilities": [
+      "maximize_window"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-WIN-016",
+    "prompt": "restore current window",
+    "category": "window",
+    "expected_capabilities": [
+      "restore_window"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-WIN-017",
+    "prompt": "snap current window left",
+    "category": "window",
+    "expected_capabilities": [
+      "snap_window_left"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-WIN-018",
+    "prompt": "snap current window right",
+    "category": "window",
+    "expected_capabilities": [
+      "snap_window_right"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-WIN-019",
+    "prompt": "show open windows",
+    "category": "window",
+    "expected_capabilities": [
+      "list_windows"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-WIN-020",
+    "prompt": "search for window Terminal",
+    "category": "window",
+    "expected_capabilities": [
+      "find_window"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-WIN-021",
+    "prompt": "find window Notepad",
+    "category": "window",
+    "expected_capabilities": [
+      "find_window"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-WIN-022",
+    "prompt": "undo window arrangement",
+    "category": "window",
+    "expected_capabilities": [
+      "undo_window_layout"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-WIN-023",
+    "prompt": "tile desktop windows",
+    "category": "window",
+    "expected_capabilities": [
+      "arrange_desktop"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-WIN-024",
+    "prompt": "focus current window",
+    "category": "window",
+    "expected_capabilities": [
+      "focus_window"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-WIN-025",
+    "prompt": "list all windows",
+    "category": "window",
+    "expected_capabilities": [
+      "list_windows"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-FIL-001",
+    "prompt": "find file readme.md",
+    "category": "file",
+    "expected_capabilities": [
+      "find_file"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-FIL-002",
+    "prompt": "find latest file in Downloads",
+    "category": "file",
+    "expected_capabilities": [
+      "find_latest_file"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-FIL-003",
+    "prompt": "list recent files",
+    "category": "file",
+    "expected_capabilities": [
+      "list_recent_files"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-FIL-004",
+    "prompt": "open file notes.txt",
+    "category": "file",
+    "expected_capabilities": [
+      "open_file"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-FIL-005",
+    "prompt": "reveal file project.json",
+    "category": "file",
+    "expected_capabilities": [
+      "reveal_file"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-FIL-006",
+    "prompt": "get file metadata report.pdf",
+    "category": "file",
+    "expected_capabilities": [
+      "file_metadata"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-FIL-007",
+    "prompt": "search for file budget.xlsx",
+    "category": "file",
+    "expected_capabilities": [
+      "find_file"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-FIL-008",
+    "prompt": "locate latest file in Documents",
+    "category": "file",
+    "expected_capabilities": [
+      "find_latest_file"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-FIL-009",
+    "prompt": "show recent files",
+    "category": "file",
+    "expected_capabilities": [
+      "list_recent_files"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-FIL-010",
+    "prompt": "open file config.toml",
+    "category": "file",
+    "expected_capabilities": [
+      "open_file"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-FIL-011",
+    "prompt": "reveal file data.csv",
+    "category": "file",
+    "expected_capabilities": [
+      "reveal_file"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-FIL-012",
+    "prompt": "check file metadata summary.docx",
+    "category": "file",
+    "expected_capabilities": [
+      "file_metadata"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-FIL-013",
+    "prompt": "find file error.log",
+    "category": "file",
+    "expected_capabilities": [
+      "find_file"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-FIL-014",
+    "prompt": "find latest file in Desktop",
+    "category": "file",
+    "expected_capabilities": [
+      "find_latest_file"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-FIL-015",
+    "prompt": "list recently modified files",
+    "category": "file",
+    "expected_capabilities": [
+      "list_recent_files"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-FIL-016",
+    "prompt": "open file script.py",
+    "category": "file",
+    "expected_capabilities": [
+      "open_file"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-FIL-017",
+    "prompt": "reveal file document.pdf",
+    "category": "file",
+    "expected_capabilities": [
+      "reveal_file"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-FIL-018",
+    "prompt": "inspect file metadata test.py",
+    "category": "file",
+    "expected_capabilities": [
+      "file_metadata"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-FIL-019",
+    "prompt": "find file license.txt",
+    "category": "file",
+    "expected_capabilities": [
+      "find_file"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-FIL-020",
+    "prompt": "find latest file in Temp",
+    "category": "file",
+    "expected_capabilities": [
+      "find_latest_file"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-FIL-021",
+    "prompt": "show recent modified files",
+    "category": "file",
+    "expected_capabilities": [
+      "list_recent_files"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-FIL-022",
+    "prompt": "open file workspace.json",
+    "category": "file",
+    "expected_capabilities": [
+      "open_file"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-FIL-023",
+    "prompt": "reveal file archive.zip",
+    "category": "file",
+    "expected_capabilities": [
+      "reveal_file"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-FIL-024",
+    "prompt": "get file metadata image.png",
+    "category": "file",
+    "expected_capabilities": [
+      "file_metadata"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-FIL-025",
+    "prompt": "search file backlog.md",
+    "category": "file",
+    "expected_capabilities": [
+      "find_file"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-PRC-001",
+    "prompt": "list running processes",
+    "category": "process",
+    "expected_capabilities": [
+      "list_processes"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-PRC-002",
+    "prompt": "find process python",
+    "category": "process",
+    "expected_capabilities": [
+      "find_process"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-PRC-003",
+    "prompt": "inspect process 1024",
+    "category": "process",
+    "expected_capabilities": [
+      "inspect_process"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-PRC-004",
+    "prompt": "check process resource usage 1024",
+    "category": "process",
+    "expected_capabilities": [
+      "process_resource_usage"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-PRC-005",
+    "prompt": "show process ports 1024",
+    "category": "process",
+    "expected_capabilities": [
+      "process_ports"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-PRC-006",
+    "prompt": "show process children 1024",
+    "category": "process",
+    "expected_capabilities": [
+      "process_children"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-PRC-007",
+    "prompt": "show process parent 1024",
+    "category": "process",
+    "expected_capabilities": [
+      "process_parent"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-PRC-008",
+    "prompt": "list listening ports",
+    "category": "process",
+    "expected_capabilities": [
+      "list_listening_ports"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-PRC-009",
+    "prompt": "inspect port 8080",
+    "category": "process",
+    "expected_capabilities": [
+      "inspect_port"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-PRC-010",
+    "prompt": "find process on port 3000",
+    "category": "process",
+    "expected_capabilities": [
+      "find_process_on_port"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-PRC-011",
+    "prompt": "list network connections",
+    "category": "process",
+    "expected_capabilities": [
+      "list_network_connections"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-PRC-012",
+    "prompt": "show active processes",
+    "category": "process",
+    "expected_capabilities": [
+      "list_processes"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-PRC-013",
+    "prompt": "find process node",
+    "category": "process",
+    "expected_capabilities": [
+      "find_process"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-PRC-014",
+    "prompt": "inspect process 2048",
+    "category": "process",
+    "expected_capabilities": [
+      "inspect_process"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-PRC-015",
+    "prompt": "get process resource usage 2048",
+    "category": "process",
+    "expected_capabilities": [
+      "process_resource_usage"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-PRC-016",
+    "prompt": "inspect listening port 5000",
+    "category": "process",
+    "expected_capabilities": [
+      "inspect_port"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-PRC-017",
+    "prompt": "find process using port 8000",
+    "category": "process",
+    "expected_capabilities": [
+      "find_process_on_port"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-PRC-018",
+    "prompt": "list open network connections",
+    "category": "process",
+    "expected_capabilities": [
+      "list_network_connections"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-PRC-019",
+    "prompt": "list all system processes",
+    "category": "process",
+    "expected_capabilities": [
+      "list_processes"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-PRC-020",
+    "prompt": "find process code",
+    "category": "process",
+    "expected_capabilities": [
+      "find_process"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-PRC-021",
+    "prompt": "inspect process 4096",
+    "category": "process",
+    "expected_capabilities": [
+      "inspect_process"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-PRC-022",
+    "prompt": "check process cpu usage 4096",
+    "category": "process",
+    "expected_capabilities": [
+      "process_resource_usage"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-PRC-023",
+    "prompt": "list all listening ports",
+    "category": "process",
+    "expected_capabilities": [
+      "list_listening_ports"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-PRC-024",
+    "prompt": "inspect port 443",
+    "category": "process",
+    "expected_capabilities": [
+      "inspect_port"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-PRC-025",
+    "prompt": "find process on port 80",
+    "category": "process",
+    "expected_capabilities": [
+      "find_process_on_port"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-NET-001",
+    "prompt": "scan wifi networks",
+    "category": "network",
+    "expected_capabilities": [
+      "wifi_scan"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-NET-002",
+    "prompt": "scan available wifi",
+    "category": "network",
+    "expected_capabilities": [
+      "wifi_scan"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-NET-003",
+    "prompt": "check wifi status",
+    "category": "network",
+    "expected_capabilities": [
+      "wifi_status"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-NET-004",
+    "prompt": "show wifi connection status",
+    "category": "network",
+    "expected_capabilities": [
+      "wifi_status"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-NET-005",
+    "prompt": "connect to wifi OfficeNet",
+    "category": "network",
+    "expected_capabilities": [
+      "wifi_connect"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-NET-006",
+    "prompt": "disconnect wifi",
+    "category": "network",
+    "expected_capabilities": [
+      "wifi_disconnect"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-NET-007",
+    "prompt": "disconnect from wifi",
+    "category": "network",
+    "expected_capabilities": [
+      "wifi_disconnect"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-NET-008",
+    "prompt": "scan nearby wifi networks",
+    "category": "network",
+    "expected_capabilities": [
+      "wifi_scan"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-NET-009",
+    "prompt": "show current wifi status",
+    "category": "network",
+    "expected_capabilities": [
+      "wifi_status"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-NET-010",
+    "prompt": "connect to wifi HomeGuest",
+    "category": "network",
+    "expected_capabilities": [
+      "wifi_connect"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-NET-011",
+    "prompt": "disconnect current wifi",
+    "category": "network",
+    "expected_capabilities": [
+      "wifi_disconnect"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-NET-012",
+    "prompt": "list wifi networks",
+    "category": "network",
+    "expected_capabilities": [
+      "wifi_scan"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-NET-013",
+    "prompt": "get wifi status",
+    "category": "network",
+    "expected_capabilities": [
+      "wifi_status"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-NET-014",
+    "prompt": "connect to wifi LabNetwork",
+    "category": "network",
+    "expected_capabilities": [
+      "wifi_connect"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-NET-015",
+    "prompt": "disconnect wireless network",
+    "category": "network",
+    "expected_capabilities": [
+      "wifi_disconnect"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-NET-016",
+    "prompt": "search wifi access points",
+    "category": "network",
+    "expected_capabilities": [
+      "wifi_scan"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-NET-017",
+    "prompt": "view wifi status",
+    "category": "network",
+    "expected_capabilities": [
+      "wifi_status"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-NET-018",
+    "prompt": "connect to wifi AstraSecure",
+    "category": "network",
+    "expected_capabilities": [
+      "wifi_connect"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-NET-019",
+    "prompt": "disconnect from current wireless",
+    "category": "network",
+    "expected_capabilities": [
+      "wifi_disconnect"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-NET-020",
+    "prompt": "scan wireless networks",
+    "category": "network",
+    "expected_capabilities": [
+      "wifi_scan"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-NET-021",
+    "prompt": "display wifi connection info",
+    "category": "network",
+    "expected_capabilities": [
+      "wifi_status"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-NET-022",
+    "prompt": "connect to wifi VisitorNet",
+    "category": "network",
+    "expected_capabilities": [
+      "wifi_connect"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-NET-023",
+    "prompt": "turn off wifi connection",
+    "category": "network",
+    "expected_capabilities": [
+      "wifi_disconnect"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-NET-024",
+    "prompt": "scan for wifi SSIDs",
+    "category": "network",
+    "expected_capabilities": [
+      "wifi_scan"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-NET-025",
+    "prompt": "check wireless connection status",
+    "category": "network",
+    "expected_capabilities": [
+      "wifi_status"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-SYS-001",
+    "prompt": "run a battery report and save it in Downloads as astra-battery.html",
+    "category": "system",
+    "expected_capabilities": [
+      "generate_battery_report"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-SYS-002",
+    "prompt": "generate battery report to Downloads as astra-report.html",
+    "category": "system",
+    "expected_capabilities": [
+      "generate_battery_report"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-SYS-003",
+    "prompt": "show system summary",
+    "category": "system",
+    "expected_capabilities": [
+      "system_summary"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-SYS-004",
+    "prompt": "check cpu status",
+    "category": "system",
+    "expected_capabilities": [
+      "cpu_status"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-SYS-005",
+    "prompt": "check memory status",
+    "category": "system",
+    "expected_capabilities": [
+      "memory_status"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-SYS-006",
+    "prompt": "check disk status",
+    "category": "system",
+    "expected_capabilities": [
+      "disk_status"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-SYS-007",
+    "prompt": "check battery status",
+    "category": "system",
+    "expected_capabilities": [
+      "battery_status"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-SYS-008",
+    "prompt": "check gpu status",
+    "category": "system",
+    "expected_capabilities": [
+      "gpu_status"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-SYS-009",
+    "prompt": "check audio status",
+    "category": "system",
+    "expected_capabilities": [
+      "audio_status"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-SYS-010",
+    "prompt": "lock workstation",
+    "category": "system",
+    "expected_capabilities": [
+      "lock_workstation"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-SYS-011",
+    "prompt": "display system diagnostics summary",
+    "category": "system",
+    "expected_capabilities": [
+      "system_summary"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-SYS-012",
+    "prompt": "show cpu usage status",
+    "category": "system",
+    "expected_capabilities": [
+      "cpu_status"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-SYS-013",
+    "prompt": "show memory usage status",
+    "category": "system",
+    "expected_capabilities": [
+      "memory_status"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-SYS-014",
+    "prompt": "show disk storage status",
+    "category": "system",
+    "expected_capabilities": [
+      "disk_status"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-SYS-015",
+    "prompt": "show battery charge status",
+    "category": "system",
+    "expected_capabilities": [
+      "battery_status"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-SYS-016",
+    "prompt": "show gpu status info",
+    "category": "system",
+    "expected_capabilities": [
+      "gpu_status"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-SYS-017",
+    "prompt": "show audio volume status",
+    "category": "system",
+    "expected_capabilities": [
+      "audio_status"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-SYS-018",
+    "prompt": "lock the screen",
+    "category": "system",
+    "expected_capabilities": [
+      "lock_workstation"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-SYS-019",
+    "prompt": "get workstation system summary",
+    "category": "system",
+    "expected_capabilities": [
+      "system_summary"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-SYS-020",
+    "prompt": "get cpu performance status",
+    "category": "system",
+    "expected_capabilities": [
+      "cpu_status"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-SYS-021",
+    "prompt": "get ram memory status",
+    "category": "system",
+    "expected_capabilities": [
+      "memory_status"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-SYS-022",
+    "prompt": "get drive disk status",
+    "category": "system",
+    "expected_capabilities": [
+      "disk_status"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-SYS-023",
+    "prompt": "get power battery status",
+    "category": "system",
+    "expected_capabilities": [
+      "battery_status"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-SYS-024",
+    "prompt": "get graphics gpu status",
+    "category": "system",
+    "expected_capabilities": [
+      "gpu_status"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-SYS-025",
+    "prompt": "get sound audio status",
+    "category": "system",
+    "expected_capabilities": [
+      "audio_status"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-UI-001",
+    "prompt": "inspect window ui",
+    "category": "ui",
+    "expected_capabilities": [
+      "inspect_window_ui"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-UI-002",
+    "prompt": "get clipboard content",
+    "category": "ui",
+    "expected_capabilities": [
+      "get_clipboard_content"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-UI-003",
+    "prompt": "read clipboard content",
+    "category": "ui",
+    "expected_capabilities": [
+      "get_clipboard_content"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-UI-004",
+    "prompt": "show clipboard content",
+    "category": "ui",
+    "expected_capabilities": [
+      "get_clipboard_content"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-UI-005",
+    "prompt": "inspect ui elements in window",
+    "category": "ui",
+    "expected_capabilities": [
+      "inspect_window_ui"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-UI-006",
+    "prompt": "fetch clipboard text",
+    "category": "ui",
+    "expected_capabilities": [
+      "get_clipboard_content"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-UI-007",
+    "prompt": "inspect window controls",
+    "category": "ui",
+    "expected_capabilities": [
+      "inspect_window_ui"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-UI-008",
+    "prompt": "view clipboard content",
+    "category": "ui",
+    "expected_capabilities": [
+      "get_clipboard_content"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-UI-009",
+    "prompt": "check clipboard content",
+    "category": "ui",
+    "expected_capabilities": [
+      "get_clipboard_content"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-UI-010",
+    "prompt": "analyze window ui controls",
+    "category": "ui",
+    "expected_capabilities": [
+      "inspect_window_ui"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-UI-011",
+    "prompt": "inspect window accessibility elements",
+    "category": "ui",
+    "expected_capabilities": [
+      "inspect_window_ui"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-UI-012",
+    "prompt": "get current clipboard text",
+    "category": "ui",
+    "expected_capabilities": [
+      "get_clipboard_content"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-UI-013",
+    "prompt": "inspect controls in active window",
+    "category": "ui",
+    "expected_capabilities": [
+      "inspect_window_ui"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-UI-014",
+    "prompt": "retrieve clipboard content",
+    "category": "ui",
+    "expected_capabilities": [
+      "get_clipboard_content"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-UI-015",
+    "prompt": "inspect window tree",
+    "category": "ui",
+    "expected_capabilities": [
+      "inspect_window_ui"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-UI-016",
+    "prompt": "read current clipboard",
+    "category": "ui",
+    "expected_capabilities": [
+      "get_clipboard_content"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-UI-017",
+    "prompt": "inspect window widgets",
+    "category": "ui",
+    "expected_capabilities": [
+      "inspect_window_ui"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-UI-018",
+    "prompt": "get text from clipboard",
+    "category": "ui",
+    "expected_capabilities": [
+      "get_clipboard_content"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-UI-019",
+    "prompt": "examine window ui components",
+    "category": "ui",
+    "expected_capabilities": [
+      "inspect_window_ui"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-UI-020",
+    "prompt": "extract clipboard content",
+    "category": "ui",
+    "expected_capabilities": [
+      "get_clipboard_content"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-UI-021",
+    "prompt": "inspect window ui elements and controls",
+    "category": "ui",
+    "expected_capabilities": [
+      "inspect_window_ui"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-UI-022",
+    "prompt": "read text stored in clipboard",
+    "category": "ui",
+    "expected_capabilities": [
+      "get_clipboard_content"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-UI-023",
+    "prompt": "inspect active window structure",
+    "category": "ui",
+    "expected_capabilities": [
+      "inspect_window_ui"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-UI-024",
+    "prompt": "show current text in clipboard",
+    "category": "ui",
+    "expected_capabilities": [
+      "get_clipboard_content"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-UI-025",
+    "prompt": "inspect window interactive elements",
+    "category": "ui",
+    "expected_capabilities": [
+      "inspect_window_ui"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-MLT-001",
+    "prompt": "scan wifi and check wifi status",
+    "category": "multi_step",
+    "expected_capabilities": [
+      "wifi_scan",
+      "wifi_status"
+    ],
+    "expected_plan_length": 2,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-MLT-002",
+    "prompt": "check cpu status and check memory status",
+    "category": "multi_step",
+    "expected_capabilities": [
+      "cpu_status",
+      "memory_status"
+    ],
+    "expected_plan_length": 2,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-MLT-003",
+    "prompt": "check disk status and check battery status",
+    "category": "multi_step",
+    "expected_capabilities": [
+      "disk_status",
+      "battery_status"
+    ],
+    "expected_plan_length": 2,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-MLT-004",
+    "prompt": "show system summary and check gpu status",
+    "category": "multi_step",
+    "expected_capabilities": [
+      "system_summary",
+      "gpu_status"
+    ],
+    "expected_plan_length": 2,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-MLT-005",
+    "prompt": "list windows and show foreground window",
+    "category": "multi_step",
+    "expected_capabilities": [
+      "list_windows",
+      "foreground_window"
+    ],
+    "expected_plan_length": 2,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-MLT-006",
+    "prompt": "list running applications and list running processes",
+    "category": "multi_step",
+    "expected_capabilities": [
+      "list_running_applications",
+      "list_processes"
+    ],
+    "expected_plan_length": 2,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-MLT-007",
+    "prompt": "check memory status and check cpu status",
+    "category": "multi_step",
+    "expected_capabilities": [
+      "memory_status",
+      "cpu_status"
+    ],
+    "expected_plan_length": 2,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-MLT-008",
+    "prompt": "scan available wifi and show wifi status",
+    "category": "multi_step",
+    "expected_capabilities": [
+      "wifi_scan",
+      "wifi_status"
+    ],
+    "expected_plan_length": 2,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-MLT-009",
+    "prompt": "show cpu status and show memory status and check disk status",
+    "category": "multi_step",
+    "expected_capabilities": [
+      "cpu_status",
+      "memory_status",
+      "disk_status"
+    ],
+    "expected_plan_length": 3,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-MLT-010",
+    "prompt": "list listening ports and list network connections",
+    "category": "multi_step",
+    "expected_capabilities": [
+      "list_listening_ports",
+      "list_network_connections"
+    ],
+    "expected_plan_length": 2,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-MLT-011",
+    "prompt": "check battery status and run a battery report and save it in Downloads as astra-battery.html",
+    "category": "multi_step",
+    "expected_capabilities": [
+      "battery_status",
+      "generate_battery_report"
+    ],
+    "expected_plan_length": 2,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-MLT-012",
+    "prompt": "get clipboard content and show system summary",
+    "category": "multi_step",
+    "expected_capabilities": [
+      "get_clipboard_content",
+      "system_summary"
+    ],
+    "expected_plan_length": 2,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-MLT-013",
+    "prompt": "list recent files and find latest file in Downloads",
+    "category": "multi_step",
+    "expected_capabilities": [
+      "list_recent_files",
+      "find_latest_file"
+    ],
+    "expected_plan_length": 2,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-MLT-014",
+    "prompt": "check audio status and check gpu status",
+    "category": "multi_step",
+    "expected_capabilities": [
+      "audio_status",
+      "gpu_status"
+    ],
+    "expected_plan_length": 2,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-MLT-015",
+    "prompt": "list open windows and inspect window ui",
+    "category": "multi_step",
+    "expected_capabilities": [
+      "list_windows",
+      "inspect_window_ui"
+    ],
+    "expected_plan_length": 2,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-MLT-016",
+    "prompt": "check wifi status and list network connections",
+    "category": "multi_step",
+    "expected_capabilities": [
+      "wifi_status",
+      "list_network_connections"
+    ],
+    "expected_plan_length": 2,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-MLT-017",
+    "prompt": "show foreground window and minimize window",
+    "category": "multi_step",
+    "expected_capabilities": [
+      "foreground_window",
+      "minimize_window"
+    ],
+    "expected_plan_length": 2,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-MLT-018",
+    "prompt": "show system summary and list processes",
+    "category": "multi_step",
+    "expected_capabilities": [
+      "system_summary",
+      "list_processes"
+    ],
+    "expected_plan_length": 2,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-MLT-019",
+    "prompt": "check cpu status and check gpu status",
+    "category": "multi_step",
+    "expected_capabilities": [
+      "cpu_status",
+      "gpu_status"
+    ],
+    "expected_plan_length": 2,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-MLT-020",
+    "prompt": "list running applications and show foreground window",
+    "category": "multi_step",
+    "expected_capabilities": [
+      "list_running_applications",
+      "foreground_window"
+    ],
+    "expected_plan_length": 2,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-NEG-001",
+    "prompt": "scan wifi networks but do not connect",
+    "category": "negation",
+    "expected_capabilities": [
+      "wifi_scan"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": true,
+    "negated_capabilities": [
+      "wifi_connect"
+    ],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-NEG-002",
+    "prompt": "check wifi status but don't disconnect",
+    "category": "negation",
+    "expected_capabilities": [
+      "wifi_status"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": true,
+    "negated_capabilities": [
+      "wifi_disconnect"
+    ],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-NEG-003",
+    "prompt": "list processes but do not terminate any process",
+    "category": "negation",
+    "expected_capabilities": [
+      "list_processes"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": true,
+    "negated_capabilities": [
+      "terminate_process"
+    ],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-NEG-004",
+    "prompt": "show foreground window but don't close it",
+    "category": "negation",
+    "expected_capabilities": [
+      "foreground_window"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": true,
+    "negated_capabilities": [
+      "close_window"
+    ],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-NEG-005",
+    "prompt": "show system summary but don't lock workstation",
+    "category": "negation",
+    "expected_capabilities": [
+      "system_summary"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": true,
+    "negated_capabilities": [
+      "lock_workstation"
+    ],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-NEG-006",
+    "prompt": "scan available wifi but never disconnect",
+    "category": "negation",
+    "expected_capabilities": [
+      "wifi_scan"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": true,
+    "negated_capabilities": [
+      "wifi_disconnect"
+    ],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-NEG-007",
+    "prompt": "find file readme.md but do not delete it",
+    "category": "negation",
+    "expected_capabilities": [
+      "find_file"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": true,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-NEG-008",
+    "prompt": "list running applications but don't close application",
+    "category": "negation",
+    "expected_capabilities": [
+      "list_running_applications"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": true,
+    "negated_capabilities": [
+      "close_application"
+    ],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-NEG-009",
+    "prompt": "check cpu status but don't shutdown workstation",
+    "category": "negation",
+    "expected_capabilities": [
+      "cpu_status"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": true,
+    "negated_capabilities": [
+      "shutdown_workstation"
+    ],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-NEG-010",
+    "prompt": "check memory status without restarting workstation",
+    "category": "negation",
+    "expected_capabilities": [
+      "memory_status"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": true,
+    "negated_capabilities": [
+      "restart_workstation"
+    ],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-NEG-011",
+    "prompt": "list windows but don't minimize window",
+    "category": "negation",
+    "expected_capabilities": [
+      "list_windows"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": true,
+    "negated_capabilities": [
+      "minimize_window"
+    ],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-NEG-012",
+    "prompt": "check disk status but don't lock the screen",
+    "category": "negation",
+    "expected_capabilities": [
+      "disk_status"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": true,
+    "negated_capabilities": [
+      "lock_workstation"
+    ],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-NEG-013",
+    "prompt": "inspect process 1024 without terminating it",
+    "category": "negation",
+    "expected_capabilities": [
+      "inspect_process"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": true,
+    "negated_capabilities": [
+      "terminate_process"
+    ],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-NEG-014",
+    "prompt": "get clipboard content but do not clear it",
+    "category": "negation",
+    "expected_capabilities": [
+      "get_clipboard_content"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": true,
+    "negated_capabilities": [],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-NEG-015",
+    "prompt": "scan wifi SSIDs without connecting to any network",
+    "category": "negation",
+    "expected_capabilities": [
+      "wifi_scan"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": true,
+    "negated_capabilities": [
+      "wifi_connect"
+    ],
+    "should_succeed": true
+  },
+  {
+    "id": "DEV-TRP-001",
+    "prompt": "teleport to moon and launch space shuttle",
+    "category": "unsupported",
+    "expected_capabilities": [],
+    "expected_plan_length": 0,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": false
+  },
+  {
+    "id": "DEV-TRP-002",
+    "prompt": "brew a cup of hot espresso coffee",
+    "category": "unsupported",
+    "expected_capabilities": [],
+    "expected_plan_length": 0,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": false
+  },
+  {
+    "id": "DEV-TRP-003",
+    "prompt": "convert lead into gold metal using alchemy",
+    "category": "unsupported",
+    "expected_capabilities": [],
+    "expected_plan_length": 0,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": false
+  },
+  {
+    "id": "DEV-TRP-004",
+    "prompt": "time travel to the year 1999",
+    "category": "unsupported",
+    "expected_capabilities": [],
+    "expected_plan_length": 0,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": false
+  },
+  {
+    "id": "DEV-TRP-005",
+    "prompt": "summon virtual weather cloud indoors",
+    "category": "unsupported",
+    "expected_capabilities": [],
+    "expected_plan_length": 0,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": false
+  },
+  {
+    "id": "DEV-TRP-006",
+    "prompt": "bake a chocolate cake in kitchen",
+    "category": "unsupported",
+    "expected_capabilities": [],
+    "expected_plan_length": 0,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": false
+  },
+  {
+    "id": "DEV-TRP-007",
+    "prompt": "fly airplane across the ocean",
+    "category": "unsupported",
+    "expected_capabilities": [],
+    "expected_plan_length": 0,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": false
+  },
+  {
+    "id": "DEV-TRP-008",
+    "prompt": "perform brain surgery simulation",
+    "category": "unsupported",
+    "expected_capabilities": [],
+    "expected_plan_length": 0,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": false
+  },
+  {
+    "id": "DEV-TRP-009",
+    "prompt": "summon magical dragon on desktop",
+    "category": "unsupported",
+    "expected_capabilities": [],
+    "expected_plan_length": 0,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": false
+  },
+  {
+    "id": "DEV-TRP-010",
+    "prompt": "predict next week lottery numbers",
+    "category": "unsupported",
+    "expected_capabilities": [],
+    "expected_plan_length": 0,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "should_succeed": false
+  }
+]

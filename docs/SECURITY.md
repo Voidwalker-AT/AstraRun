@@ -1,6 +1,6 @@
 # AstraRun Security Specification
 
-> **Version**: 0.10.3  
+> **Version**: 0.11.1 (Generality & Reality Gate)  
 > **Status**: APPROVED  
 
 ---
@@ -13,7 +13,10 @@ AstraRun is designed from the ground up as an AI-ready workstation control inter
 
 In many naive command bar implementations, user input is passed directly to `os.system()`, `subprocess.Popen(cmd, shell=True)`, or PowerShell `Invoke-Expression`. When AI agents or natural language parsers are layered on top of such architectures, prompt injection, hallucinations, and unescaped characters can result in catastrophic system damage (e.g., unintended file deletion, secret exfiltration, or malicious process execution).
 
-AstraRun v0.10.3 enforces zero OS execution authority for neural representations: all intermediate neural outputs must compile through the `WorkflowCompiler` and be authorized by the `ActionGate`.
+AstraRun v0.11.1 enforces:
+1. **Zero OS execution authority for neural representations**: all intermediate neural outputs must compile through the `GoalPlanner` and `PlanQualityValidator` before reaching `AgentExecutionEngine`.
+2. **Strict Plan Quality Gating**: DAG plans undergo pre-execution static audits guaranteeing $0.00\%$ cyclic dependencies, $0.00\%$ dangling output references, and $0.00\%$ unsafe replan modifications.
+3. **Mandatory Developer Data Preservation**: Zero termination or manipulation of user `Notepad.exe` instances, session stores, or unsaved work.
 
 
 ---

@@ -136,12 +136,14 @@ class Capability:
     permission: CapabilityPermission = CapabilityPermission.AUTO
     health: CapabilityHealth = CapabilityHealth.AVAILABLE
     health_reason: str = ""
+    outputs: list[str] = field(default_factory=list)
 
     def to_dict(self) -> dict[str, Any]:
         return {
             "id": self.id,
             "category": self.category.value,
             "description": self.description,
+            "outputs": self.outputs,
             "args_schema": {k: getattr(v, "__name__", str(v)) for k, v in self.args_schema.items()},
             "risk": self.risk.value,
             "read_only": self.read_only,

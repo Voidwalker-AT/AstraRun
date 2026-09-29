@@ -181,6 +181,7 @@ class AstraApplication:
         # 5. Observation Store & Capability Registry
         self.observation_store = ObservationStore()
         self.capability_registry = CapabilityRegistry(observation_store=self.observation_store)
+        self._builtin_capability_ids = {c.id for c in self.capability_registry.list_capabilities()}
         logger.info("[STARTUP_STAGE] CAPABILITY_REGISTRY_INITIALIZED (count=%d)", len(self.capability_registry.list_capabilities()))
 
         # 6. Task Runtime & Event Bus
@@ -424,11 +425,23 @@ class AstraApplication:
             )
 
         # -------------------------------------------------------------
-        # 1.25 AUTONOMOUS WORKSTATION AGENT GOALS (v0.11)
+        # 1.25 AUTONOMOUS WORKSTATION AGENT GOALS (v0.11 / v0.11.1)
         # -------------------------------------------------------------
         from astrarun.agent.models import AgentTaskStatus
         import re
+
+        is_agent_goal = False
         if re.search(r"\bbattery\s+report\b", clean, re.IGNORECASE) or re.search(r"\b(?:scan|check|show|connect|disconnect).*wifi\b|\bwifi\b", clean, re.IGNORECASE):
+            is_agent_goal = True
+        elif has_compound and any(w in lower_q for w in ("save", "report", "reverse", "summary", "find", "metrics")):
+            is_agent_goal = True
+        elif hasattr(self, "agent_engine") and self.agent_engine and hasattr(self, "_builtin_capability_ids"):
+            # Check if indexer has a high-confidence match for dynamic / plug-in capabilities (e.g. reverse_text)
+            top_cand = self.agent_engine.planner.indexer.retrieve(clean, top_k=1, min_score=0.7)
+            if top_cand and top_cand[0].capability_id not in self._builtin_capability_ids:
+                is_agent_goal = True
+
+        if is_agent_goal:
             agent_task = self.agent_engine.execute_goal(clean)
             if agent_task.status == AgentTaskStatus.COMPLETED:
                 last_step = agent_task.plan.steps[-1] if agent_task.plan.steps else None
@@ -441,12 +454,16 @@ class AstraApplication:
                     data=res_data,
                     capability_result=last_step.result if last_step else None,
                 )
+            elif agent_task.status == AgentTaskStatus.FAILED and "Invalid plan" in (agent_task.error or ""):
+                # If plan was invalid or unresolvable by agent runtime, fall through to rich interactive pipeline
+                pass
             else:
                 return ExecutionResult(
                     type="error",
                     success=False,
                     message=agent_task.error or "Agent goal execution failed.",
                 )
+
 
         # -------------------------------------------------------------
         # 1.5 UI INTERACTION & CONTROL GROUNDING (v0.10)

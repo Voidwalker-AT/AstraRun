@@ -1,15 +1,20 @@
-# AstraRun — Windows Intelligent Command Launcher & Workstation Control Plane (v0.11)
+# AstraRun — Windows Intelligent Command Launcher & Workstation Agent Runtime (v0.11.1)
 
-AstraRun is a local, lightweight, low-latency Windows command launcher and workstation orchestrator engineered as the foundational command interface for an evolving AI-assisted workstation control ecosystem.
+AstraRun is a local, lightweight, low-latency Windows command launcher and autonomous workstation agent runtime engineered as the foundational command interface for an evolving AI-assisted workstation control ecosystem.
 
 AstraRun replaces fragile string-interpolated shell execution with a strictly typed pipeline:
 `Natural Language -> GoalPlanner -> DAG Execution Plan -> AgentExecutionEngine -> MachineObserver -> StepVerifier -> Live Task HUD V2 -> Windows OS`.
 
 ---
 
-## Key Capabilities (v0.11)
+## Key Capabilities (v0.11.1 — Generality & Reality Gate)
 
-- **Dynamic Workstation Agent Runtime (v0.11)**:
+- **Empirically Proven Agent Generality (v0.11.1)**:
+  - **Dynamic Capability Discovery**: Discovers, indexes, and invokes arbitrary workstation tools and novel runtime plugins without modifying `planner.py`.
+  - **Dynamic Multi-Branch DAG Planning**: Assembles Directed Acyclic Graphs with topological scheduling, parallel branch execution, and symbolic `OutputReference` dataflow propagation.
+  - **Closed-Loop Dynamic Replanning**: Automatically observes machine state upon unexpected conditions, records structured `PlanRevision` objects, and substitutes safe fallbacks.
+  - **Zero Intent Switch Invariant**: 100% success across 100 novel held-out synthetic capability scenarios with zero hallucination ($0.00\%$) and zero false execution ($0.00\%$).
+- **Dynamic Workstation Agent Runtime (v0.11 / v0.11.1)**:
   - **Closed-Loop Execution**: Executes the autonomous workstation loop:
     $$\text{UNDERSTAND GOAL} \longrightarrow \text{PLAN} \longrightarrow \text{ACT} \longrightarrow \text{OBSERVE} \longrightarrow \text{VERIFY} \longrightarrow \text{REPLAN} \longrightarrow \text{COMPLETED}$$
   - **Goal & Plan DAG Abstraction**: Core abstraction centered on high-level `UserGoal` and directed acyclic `Plan` graphs with automated topological readiness and data mapping.
@@ -34,8 +39,9 @@ AstraRun replaces fragile string-interpolated shell execution with a strictly ty
   - Collapsible dynamic step list with status glyphs and cooperative task cancellation.
   - Non-focus-stealing invariant strictly enforced (`WS_EX_NOACTIVATE`, `WA_ShowWithoutActivating`).
 - **Benchmark-Proven Performance & Safety**:
-  - **Live Workstation Acceptance Suite**: **100.0% Pass Rate** across Autonomous Battery Report Goal, Native Wi-Fi, Resource Locking, and HUD V2 (`docs/V0.11_LIVE_ACCEPTANCE.md`).
-  - **384 Passing Automated Tests**: 100% test pass rate across 28 test modules in 233s.
+  - **320-Scenario Generality Benchmark**: **100% Plan Validity**, **99.03% Recall@5**, **0.00% Hallucination**, **0.00% False Exec**, **100% Held-Out Success** (`docs/AGENT_GENERALITY_BENCHMARK.md`).
+  - **Physical Live Workstation Acceptance**: **100.0% Pass Rate** across Gates A through G (`docs/V0.11.1_LIVE_ACCEPTANCE.md`).
+  - **395 Passing Automated Tests**: 100% test pass rate across 29 test modules.
   - **100% Data Preservation**: Zero disruption to user Notepad sessions or unsaved tabs.
 
 

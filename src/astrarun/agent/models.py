@@ -23,6 +23,111 @@ class AgentTaskStatus(str, Enum):
     CANCELLED = "CANCELLED"
 
 
+class PlanningLevel(int, Enum):
+    """Explicit planning complexity levels (Levels 0 through 5)."""
+    LEVEL_0_DIRECT = 0          # Deterministic direct execution (fast path)
+    LEVEL_1_SINGLE_ACTION = 1   # Single capability invocation
+    LEVEL_2_STATIC_COMPOSE = 2  # Deterministic composition of 2-4 capabilities
+    LEVEL_3_DYNAMIC_DAG = 3     # Dynamically constructed DAG planning with dataflow
+    LEVEL_4_ADAPTIVE_LOOP = 4   # Closed-loop execution with runtime replanning
+    LEVEL_5_EXTERNAL_REASON = 5 # Complex reasoning requiring external reasoning provider
+
+
+class ArgumentSourceType(str, Enum):
+    """Source provenance for capability argument resolution."""
+    USER_TEXT = "USER_TEXT"
+    ENTITY_RESOLVER = "ENTITY_RESOLVER"
+    CONTEXT = "CONTEXT"
+    PREVIOUS_STEP = "PREVIOUS_STEP"
+    OBSERVATION = "OBSERVATION"
+    CLARIFICATION = "CLARIFICATION"
+    DETERMINISTIC_DEFAULT = "DETERMINISTIC_DEFAULT"
+
+
+@dataclass
+class ArgumentBinding:
+    """Provenance tracking for resolved capability arguments."""
+    parameter: str
+    value: Any
+    source_type: ArgumentSourceType = ArgumentSourceType.USER_TEXT
+    source_reference: Optional[str] = None
+    confidence: float = 1.0
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "parameter": self.parameter,
+            "value": str(self.value) if not isinstance(self.value, (int, float, bool, str, list, dict)) else self.value,
+            "source_type": self.source_type.value,
+            "source_reference": self.source_reference,
+            "confidence": self.confidence,
+        }
+
+
+@dataclass
+class OutputReference:
+    """Symbolic reference to an output field of an earlier step in the DAG."""
+    step_id: str
+    field: str
+
+    def to_expression(self) -> str:
+        return f"${{{self.step_id}.{self.field}}}"
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "step_id": self.step_id,
+            "field": self.field,
+            "expression": self.to_expression(),
+        }
+
+
+@dataclass
+class PlanCondition:
+    """Safe, typed predicate condition for plan branching."""
+    left: str            # e.g., "result.count", "result.connected", "step1.output_file"
+    operator: str        # "==", "!=", ">", "<", ">=", "<=", "exists", "non_empty"
+    right: Any = None    # Typed literal: bool, int, float, str
+
+    def evaluate(self, context: dict[str, Any]) -> bool:
+        """Safely evaluate condition against resolved step results/context without eval()."""
+        # Resolve left value
+        left_val = None
+        if "." in self.left:
+            parts = self.left.split(".", 1)
+            root = context.get(parts[0])
+            if isinstance(root, dict):
+                left_val = root.get(parts[1])
+            elif hasattr(root, parts[1]):
+                left_val = getattr(root, parts[1])
+        else:
+            left_val = context.get(self.left)
+
+        op = self.operator.strip().lower()
+        if op in ("==", "eq"):
+            return left_val == self.right
+        elif op in ("!=", "ne"):
+            return left_val != self.right
+        elif op in (">", "gt"):
+            return left_val is not None and self.right is not None and left_val > self.right
+        elif op in ("<", "lt"):
+            return left_val is not None and self.right is not None and left_val < self.right
+        elif op in (">=", "gte"):
+            return left_val is not None and self.right is not None and left_val >= self.right
+        elif op in ("<=", "lte"):
+            return left_val is not None and self.right is not None and left_val <= self.right
+        elif op == "exists":
+            return left_val is not None
+        elif op == "non_empty":
+            return bool(left_val)
+        return False
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "left": self.left,
+            "operator": self.operator,
+            "right": self.right,
+        }
+
+
 class StepState(str, Enum):
     """State machine states for individual plan steps."""
     PENDING = "PENDING"
@@ -103,6 +208,13 @@ class Observation:
     raw_output: Any = None
     extracted_facts: dict[str, Any] = field(default_factory=dict)
     tier: InteractionTier = InteractionTier.TIER_A_NATIVE
+    source: str = "general"
+    confidence: float = 1.0
+    freshness_ttl_s: float = 60.0  # Time-to-live before observation is considered stale
+
+    def is_fresh(self) -> bool:
+        """Evaluate if the observation is within its valid time-to-live window."""
+        return (time.time() - self.timestamp) <= self.freshness_ttl_s
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -113,7 +225,77 @@ class Observation:
             "raw_output": str(self.raw_output) if self.raw_output is not None else None,
             "extracted_facts": self.extracted_facts,
             "tier": self.tier.value,
+            "source": self.source,
+            "confidence": self.confidence,
+            "freshness_ttl_s": self.freshness_ttl_s,
+            "is_fresh": self.is_fresh(),
         }
+
+
+@dataclass
+class ProcessObservation(Observation):
+    """Observation of active process state (PID, name, cpu, memory)."""
+    pid: Optional[int] = None
+    process_name: str = ""
+    is_running: bool = True
+    cpu_percent: float = 0.0
+    source: str = "process"
+    freshness_ttl_s: float = 5.0  # Processes change quickly; 5s TTL
+
+
+@dataclass
+class WindowObservation(Observation):
+    """Observation of desktop window state (HWND, title, visibility, geometry)."""
+    hwnd: int = 0
+    title: str = ""
+    is_visible: bool = True
+    is_foreground: bool = False
+    source: str = "window"
+    freshness_ttl_s: float = 10.0  # Active windows change frequently; 10s TTL
+
+
+@dataclass
+class FileObservation(Observation):
+    """Observation of filesystem state (path, size, exists, modified)."""
+    path: str = ""
+    exists: bool = False
+    size_bytes: int = 0
+    modified_at: float = 0.0
+    source: str = "file"
+    freshness_ttl_s: float = 120.0  # Files remain steady; 2 min TTL
+
+
+@dataclass
+class NetworkObservation(Observation):
+    """Observation of network state (connected, SSID, signal, ports)."""
+    connected: bool = False
+    ssid: str = ""
+    signal_quality: int = 0
+    listening_ports: list[int] = field(default_factory=list)
+    source: str = "network"
+    freshness_ttl_s: float = 15.0  # Wi-Fi / ports; 15s TTL
+
+
+@dataclass
+class UIObservation(Observation):
+    """Observation of UI element hierarchy and patterns."""
+    automation_id: str = ""
+    name: str = ""
+    control_type: str = ""
+    is_enabled: bool = True
+    source: str = "ui"
+    freshness_ttl_s: float = 15.0
+
+
+@dataclass
+class SystemObservation(Observation):
+    """Observation of system health (battery, cpu, memory, disk)."""
+    battery_percent: Optional[int] = None
+    is_charging: Optional[bool] = None
+    cpu_percent: float = 0.0
+    memory_percent: float = 0.0
+    source: str = "system"
+    freshness_ttl_s: float = 30.0
 
 
 @dataclass
@@ -145,9 +327,12 @@ class PlanStep:
     step_id: str
     capability_id: str
     arguments: dict[str, Any] = field(default_factory=dict)
+    argument_bindings: dict[str, ArgumentBinding] = field(default_factory=dict)
     description: str = ""
+    human_label: str = ""
     state: StepState = StepState.PENDING
     dependencies: list[StepDependency] = field(default_factory=list)
+    condition: Optional[PlanCondition] = None
     interaction_tier: InteractionTier = InteractionTier.TIER_A_NATIVE
     verifier_strategy: VerifierStrategy = VerifierStrategy.RETURN_CODE_ONLY
     verifier_params: dict[str, Any] = field(default_factory=dict)
@@ -167,9 +352,12 @@ class PlanStep:
             "step_id": self.step_id,
             "capability_id": self.capability_id,
             "arguments": self.arguments,
+            "argument_bindings": {k: b.to_dict() for k, b in self.argument_bindings.items()},
             "description": self.description,
+            "human_label": self.human_label,
             "state": self.state.value,
             "dependencies": [d.to_dict() for d in self.dependencies],
+            "condition": self.condition.to_dict() if self.condition else None,
             "interaction_tier": self.interaction_tier.value,
             "verifier_strategy": self.verifier_strategy.value,
             "verifier_params": self.verifier_params,
@@ -183,6 +371,35 @@ class PlanStep:
             "duration_ms": self.duration_ms,
             "error": self.error,
             "weight": self.weight,
+        }
+
+
+@dataclass
+class PlanRevision:
+    """Explicit historical record of task graph modification during replanning."""
+    revision_id: str = field(default_factory=lambda: f"rev_{uuid.uuid4().hex[:8]}")
+    task_id: str = ""
+    previous_plan_version: int = 1
+    new_plan_version: int = 2
+    reason: str = ""
+    observation_ids: list[str] = field(default_factory=list)
+    added_steps: list[str] = field(default_factory=list)
+    removed_steps: list[str] = field(default_factory=list)
+    modified_dependencies: dict[str, list[str]] = field(default_factory=dict)
+    timestamp: float = field(default_factory=time.time)
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "revision_id": self.revision_id,
+            "task_id": self.task_id,
+            "previous_plan_version": self.previous_plan_version,
+            "new_plan_version": self.new_plan_version,
+            "reason": self.reason,
+            "observation_ids": self.observation_ids,
+            "added_steps": self.added_steps,
+            "removed_steps": self.removed_steps,
+            "modified_dependencies": self.modified_dependencies,
+            "timestamp": self.timestamp,
         }
 
 
@@ -209,6 +426,56 @@ class ReplanEvent:
         }
 
 
+class PlanValidationStatus(str, Enum):
+    """Validation verdict for a candidate execution plan."""
+    VALID = "VALID"
+    INVALID = "INVALID"
+    CLARIFY = "CLARIFY"
+    REASONING_REQUIRED = "REASONING_REQUIRED"
+
+
+@dataclass
+class PlanValidationResult:
+    """Result of static and policy validation on a proposed plan."""
+    status: PlanValidationStatus
+    is_valid: bool
+    issues: list[str] = field(default_factory=list)
+    clarification_prompt: Optional[str] = None
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "status": self.status.value,
+            "is_valid": self.is_valid,
+            "issues": self.issues,
+            "clarification_prompt": self.clarification_prompt,
+        }
+
+
+class GoalVerificationStatus(str, Enum):
+    """High-level completion status of the overall user goal."""
+    GOAL_COMPLETED = "GOAL_COMPLETED"
+    GOAL_INCOMPLETE = "GOAL_INCOMPLETE"
+
+
+@dataclass
+class GoalVerificationResult:
+    """Result of post-plan empirical goal verification."""
+    status: GoalVerificationStatus
+    completed: bool
+    message: str = ""
+    missing_criteria: list[str] = field(default_factory=list)
+    evidence: dict[str, Any] = field(default_factory=dict)
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "status": self.status.value,
+            "completed": self.completed,
+            "message": self.message,
+            "missing_criteria": self.missing_criteria,
+            "evidence": self.evidence,
+        }
+
+
 @dataclass
 class Plan:
     """Execution plan representing a directed acyclic graph of steps."""
@@ -216,6 +483,8 @@ class Plan:
     goal_id: str = ""
     steps: list[PlanStep] = field(default_factory=list)
     version: int = 1
+    planning_level: PlanningLevel = PlanningLevel.LEVEL_3_DYNAMIC_DAG
+    revisions: list[PlanRevision] = field(default_factory=list)
     created_at: float = field(default_factory=time.time)
     status: PlanStatus = PlanStatus.DRAFT
 
@@ -231,6 +500,8 @@ class Plan:
             "goal_id": self.goal_id,
             "steps": [s.to_dict() for s in self.steps],
             "version": self.version,
+            "planning_level": self.planning_level.value,
+            "revisions": [r.to_dict() for r in self.revisions],
             "created_at": self.created_at,
             "status": self.status.value,
         }
@@ -251,6 +522,8 @@ class AgentTask:
     error: Optional[str] = None
     observations: list[Observation] = field(default_factory=list)
     replans: list[ReplanEvent] = field(default_factory=list)
+    revisions: list[PlanRevision] = field(default_factory=list)
+    goal_verification: Optional[GoalVerificationResult] = None
     progress_mode: ProgressMode = ProgressMode.DETERMINATE
     progress_pct: float = 0.0
     estimated_remaining_ms: float = 0.0
@@ -270,8 +543,11 @@ class AgentTask:
             "error": self.error,
             "observations": [o.to_dict() for o in self.observations],
             "replans": [r.to_dict() for r in self.replans],
+            "revisions": [r.to_dict() for r in self.revisions],
+            "goal_verification": self.goal_verification.to_dict() if self.goal_verification else None,
             "progress_mode": self.progress_mode.value,
             "progress_pct": self.progress_pct,
             "estimated_remaining_ms": self.estimated_remaining_ms,
             "cancellation_requested": self.cancellation_requested,
         }
+

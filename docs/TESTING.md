@@ -1,6 +1,6 @@
 # AstraRun Testing & Verification Report
 
-> **Version**: 0.11.0  
+> **Version**: 0.11.1 (Generality & Reality Gate)  
 > **Status**: VERIFIED & PASSING  
 > **Execution Date**: 2026-09-29  
 
@@ -8,7 +8,21 @@
 
 ## 1. Test Suite Architecture
 
-The AstraRun test suite contains **384 automated tests across 28 modules**:
+The AstraRun test suite contains **395 automated tests across 29 modules**:
+
+0. **Agent Generality & Dynamic Plugin Tests (v0.11.1)**:
+   - `tests/test_generality_and_plugin.py` (11 tests):
+     - `test_single_plugin_discovery_reverse_text`: Dynamic discovery of novel held-out capability (`reverse_text`) without planner.py edits.
+     - `test_novel_composition_reverse_and_save`: Dynamic 2-step DAG composition with `OutputReference` writing reversed text to file.
+     - `test_parallel_branches_cpu_memory_summary`: Parallel branch scheduling and readiness detection in `ExecutionGraph`.
+     - `test_symbolic_output_reference_resolution`: Dynamic runtime resolution of symbolic `OutputReference` tokens.
+     - `test_dynamic_replan_with_fallback_action`: Closed-loop replan substituting fallback action upon unexpected failure and recording `PlanRevision`.
+     - `test_validator_rejects_cycles`: `PlanQualityValidator` static cycle detection and rejection.
+     - `test_validator_rejects_dangling_output_reference`: `PlanQualityValidator` dangling output reference rejection.
+     - `test_negation_excludes_negated_capability`: Negated action extraction and exclusion from executable plan.
+     - `test_typed_plan_condition`: Evaluation of typed comparison and non-empty plan conditions.
+     - `test_alpha_beta_gamma_pipeline`: Dynamic 3-step pipeline (`tool_alpha` -> `tool_beta` -> `tool_gamma`) registered after startup.
+     - `test_observation_ttl_expiry`: Dynamic observation timestamp expiration against `freshness_ttl_s`.
 
 1. **Dynamic Agent Runtime & Closed-Loop Planning Tests (v0.11)**:
    - `tests/test_agent_runtime.py` (10 tests):

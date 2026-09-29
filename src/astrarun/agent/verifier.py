@@ -226,3 +226,69 @@ class StepVerifier:
 
 # Global step verifier
 global_step_verifier = StepVerifier()
+
+
+class GoalVerifier:
+    """Verifies that the overall user goal was satisfied by checking high-level success criteria."""
+
+    def __init__(self, step_verifier: Optional[StepVerifier] = None):
+        self.step_verifier = step_verifier or global_step_verifier
+
+    def verify_goal(
+        self,
+        goal: Any,
+        plan: Any,
+        final_result_data: Optional[dict[str, Any]] = None,
+    ) -> Any:
+        from astrarun.agent.models import GoalVerificationResult, GoalVerificationStatus
+
+        missing: list[str] = []
+        evidence: dict[str, Any] = {}
+
+        # 1. Plan execution health check
+        all_completed = all(s.state.value in ("COMPLETED", "SKIPPED") for s in plan.steps)
+        if not all_completed:
+            missing.append("Not all plan steps reached terminal completion.")
+
+        # 2. Check criteria explicitly declared on goal
+        for criterion in goal.success_criteria:
+            crit_lower = criterion.lower()
+            if "file exists" in crit_lower or "non-empty" in crit_lower:
+                # Find path in goal parameters or final_result_data
+                target_path = (
+                    (final_result_data.get("output_file") if final_result_data else None)
+                    or goal.parameters.get("output_path")
+                    or goal.parameters.get("path")
+                )
+                if target_path:
+                    p = Path(target_path)
+                    if not p.is_absolute() and p.parts and p.parts[0].lower() == "downloads":
+                        p = Path.home() / "Downloads" / Path(*p.parts[1:])
+                    exists = p.exists()
+                    size = p.stat().st_size if exists else 0
+                    evidence["file_path"] = str(p)
+                    evidence["file_exists"] = exists
+                    evidence["file_size_bytes"] = size
+                    if not exists or size == 0:
+                        missing.append(f"Expected non-empty file at '{p}' (exists={exists}, size={size}).")
+            elif "connected to wi-fi" in crit_lower:
+                expected_ssid = goal.parameters.get("ssid", "")
+                active_ssid = final_result_data.get("active_ssid") or final_result_data.get("ssid") if final_result_data else None
+                if expected_ssid and active_ssid and expected_ssid.lower() not in active_ssid.lower():
+                    missing.append(f"Expected connection to SSID '{expected_ssid}', active is '{active_ssid}'.")
+
+        completed = len(missing) == 0
+        status = GoalVerificationStatus.GOAL_COMPLETED if completed else GoalVerificationStatus.GOAL_INCOMPLETE
+        msg = "All goal success criteria empirically verified." if completed else f"Goal criteria incomplete: {'; '.join(missing)}"
+
+        return GoalVerificationResult(
+            status=status,
+            completed=completed,
+            message=msg,
+            missing_criteria=missing,
+            evidence=evidence,
+        )
+
+
+global_goal_verifier = GoalVerifier()
+

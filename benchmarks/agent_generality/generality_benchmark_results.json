@@ -1,0 +1,20 @@
+{
+  "timestamp": "2026-09-29 14:44:25",
+  "total_scenarios": 320,
+  "dev_scenarios": 220,
+  "holdout_scenarios": 100,
+  "elapsed_seconds": 11.782748099998571,
+  "verdict": "PASSED",
+  "metrics": {
+    "goal_interpretation_accuracy": 100.0,
+    "capability_retrieval_recall_at_5": 99.03225806451613,
+    "plan_validity_rate": 100.0,
+    "capability_hallucination_rate": 0.0,
+    "invalid_plan_execution_rate": 0.0,
+    "false_execution_rate": 0.0,
+    "negated_action_leakage": 0.0,
+    "dangling_output_reference_execution": 0.0,
+    "unsafe_replan_execution": 0.0,
+    "held_out_composition_success_rate": 100.0
+  }
+}

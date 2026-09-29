@@ -1,4 +1,4 @@
-"""Autonomous Closed-Loop Agent Execution Runner for AstraRun v0.11."""
+"""Autonomous Closed-Loop Agent Execution Runner for AstraRun agent runtime."""
 
 from __future__ import annotations
 
@@ -10,8 +10,10 @@ from astrarun.agent.locking import ResourceLockManager, global_lock_manager
 from astrarun.agent.models import (
     AgentTask,
     AgentTaskStatus,
+    GoalVerificationStatus,
     Observation,
     Plan,
+    PlanRevision,
     PlanStatus,
     PlanStep,
     ProgressMode,
@@ -21,7 +23,8 @@ from astrarun.agent.models import (
 )
 from astrarun.agent.observer import MachineObserver, global_observer
 from astrarun.agent.planner import GoalPlanner
-from astrarun.agent.verifier import StepVerifier, global_step_verifier
+from astrarun.agent.validator import PlanQualityValidator
+from astrarun.agent.verifier import GoalVerifier, StepVerifier, global_goal_verifier, global_step_verifier
 from astrarun.capabilities.models import CapabilityResult
 from astrarun.capabilities.registry import CapabilityRegistry
 from astrarun.capabilities.schema import InteractionTier, VerifierStrategy
@@ -64,7 +67,7 @@ class AgentExecutionListener:
 class AgentExecutionEngine:
     """
     Executes the autonomous loop:
-      UNDERSTAND GOAL -> PLAN -> ACT -> OBSERVE -> VERIFY -> REPLAN -> DONE
+      UNDERSTAND GOAL -> VALIDATE PLAN -> ACT -> OBSERVE -> VERIFY -> REPLAN -> VERIFY GOAL -> DONE
     """
 
     def __init__(
@@ -72,6 +75,8 @@ class AgentExecutionEngine:
         registry: Optional[CapabilityRegistry] = None,
         observer: Optional[MachineObserver] = None,
         verifier: Optional[StepVerifier] = None,
+        goal_verifier: Optional[GoalVerifier] = None,
+        validator: Optional[PlanQualityValidator] = None,
         lock_manager: Optional[ResourceLockManager] = None,
         listener: Optional[AgentExecutionListener] = None,
     ):
@@ -79,6 +84,8 @@ class AgentExecutionEngine:
         self.registry = registry or CapabilityRegistry()
         self.observer = observer or global_observer
         self.verifier = verifier or global_step_verifier
+        self.goal_verifier = goal_verifier or global_goal_verifier
+        self.validator = validator or PlanQualityValidator(self.registry)
         self.lock_manager = lock_manager or global_lock_manager
         self.planner = GoalPlanner(self.registry)
         self.listener = listener or AgentExecutionListener()
@@ -99,7 +106,7 @@ class AgentExecutionEngine:
         return None
 
     def execute_goal(self, prompt: str) -> AgentTask:
-        """Entrypoint: parse goal from prompt, construct plan, and execute closed loop."""
+        """Entrypoint: parse goal from prompt, construct plan, validate, and execute closed loop."""
         goal = self.planner.parse_goal(prompt)
         plan = self.planner.create_plan(goal)
 
@@ -116,6 +123,15 @@ class AgentExecutionEngine:
         task.status = AgentTaskStatus.RUNNING
         task.started_at = time.time()
         self.listener.on_task_started(task)
+
+        # 1. Validate Plan Quality (Quality Gate)
+        val_result = self.validator.validate_plan(task.plan)
+        if not val_result.is_valid:
+            logger.error("Plan validation failed for task %s: %s", task.task_id, val_result.issues)
+            task.status = AgentTaskStatus.FAILED
+            task.error = f"Invalid plan: {'; '.join(val_result.issues)}"
+            self.listener.on_task_failed(task, task.error)
+            return task
 
         graph = ExecutionGraph(task.plan)
         task.progress_pct = graph.compute_progress_pct()
@@ -147,9 +163,13 @@ class AgentExecutionEngine:
 
                     success = self._execute_step_with_closed_loop(task, step, graph)
                     if not success:
-                        # Attempt runtime replanning or fail
+                        # Attempt runtime replanning
                         replan_ok = self._attempt_replan(task, step, graph)
-                        if not replan_ok:
+                        if replan_ok:
+                            # Re-instantiate execution graph with newly inserted replanned steps
+                            graph = ExecutionGraph(task.plan)
+                            break
+                        else:
                             task.status = AgentTaskStatus.FAILED
                             task.error = f"Step '{step.step_id}' failed: {step.error}"
                             self.listener.on_step_failed(task, step, step.error or "Unknown step failure")
@@ -161,13 +181,24 @@ class AgentExecutionEngine:
                 if task.status == AgentTaskStatus.FAILED:
                     break
 
+            # 2. Final Goal-Level Empirical Verification
             if task.status == AgentTaskStatus.RUNNING:
                 if not graph.has_failures():
-                    task.status = AgentTaskStatus.COMPLETED
-                    task.progress_pct = 100.0
-                    task.completed_at = time.time()
-                    self.listener.on_task_completed(task)
-                    logger.info("Task %s completed successfully in %.2fs", task.task_id, task.completed_at - (task.started_at or task.completed_at))
+                    last_step = task.plan.steps[-1] if task.plan.steps else None
+                    last_data = last_step.result.data if (last_step and last_step.result) else {}
+                    goal_ver = self.goal_verifier.verify_goal(task.goal, task.plan, last_data)
+                    task.goal_verification = goal_ver
+
+                    if goal_ver.completed:
+                        task.status = AgentTaskStatus.COMPLETED
+                        task.progress_pct = 100.0
+                        task.completed_at = time.time()
+                        self.listener.on_task_completed(task)
+                        logger.info("Task %s verified & completed successfully in %.2fs", task.task_id, task.completed_at - (task.started_at or task.completed_at))
+                    else:
+                        task.status = AgentTaskStatus.FAILED
+                        task.error = goal_ver.message
+                        self.listener.on_task_failed(task, task.error)
                 else:
                     task.status = AgentTaskStatus.FAILED
                     self.listener.on_task_failed(task, task.error or "Execution graph encountered errors")
@@ -260,7 +291,7 @@ class AgentExecutionEngine:
         """Attempt dynamic replanning or graceful degradation for a failed step."""
         logger.info("Evaluating dynamic replan options for failed step: %s", failed_step.step_id)
 
-        # Case 1: Tier C UIA typing failed -> Replan by inserting focus step and degrading to Tier D
+        # 1. Fallback tier degradation (e.g. UIA typing -> SendInput typing)
         if failed_step.capability_id == "type_into_window" and failed_step.interaction_tier == InteractionTier.TIER_C_UI_AUTOMATION:
             logger.info("Degrading UI automation text injection to Tier D keyboard focus and input.")
             replan_event = ReplanEvent(
@@ -274,6 +305,27 @@ class AgentExecutionEngine:
             failed_step.retry_count = 0
             task.replans.append(replan_event)
             self.listener.on_replan(task, replan_event)
+            return True
+
+        # 2. Dynamic DAG Replanning via GoalPlanner
+        revision = self.planner.replan(task, failed_step, failed_step.observation)
+        if revision:
+            # Validate updated plan before execution (Safety invariant)
+            val_res = self.validator.validate_plan(task.plan)
+            if not val_res.is_valid:
+                logger.error("Replanned DAG failed quality validation: %s", val_res.issues)
+                return False
+
+            replan_event = ReplanEvent(
+                trigger_step_id=failed_step.step_id,
+                reason=revision.reason,
+                old_plan_version=revision.previous_plan_version,
+                new_plan_version=revision.new_plan_version,
+                modifications={"added_steps": revision.added_steps, "removed_steps": revision.removed_steps},
+            )
+            task.replans.append(replan_event)
+            self.listener.on_replan(task, replan_event)
+            logger.info("Dynamic replan successful. Inserted replacement steps: %s", revision.added_steps)
             return True
 
         return False

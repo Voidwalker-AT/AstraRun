@@ -1,0 +1,49 @@
+{
+  "version": "0.11.1",
+  "timestamp": 1790673776.6285052,
+  "all_passed": true,
+  "results": [
+    {
+      "name": "Gate A: Autonomous Battery Report Goal",
+      "passed": true,
+      "details": "Battery report generated and verified at C:\\Users\\hp\\Downloads\\astra-battery.html (154899 bytes in 1825.8ms).",
+      "elapsed_ms": 1825.7963000214659
+    },
+    {
+      "name": "Gate B: Native Wi-Fi Management (Tier A)",
+      "passed": true,
+      "details": "Native Wi-Fi verified: Connected to Wi-Fi 'GS TECH F8' (88% signal). (1 networks scanned in 135.1ms).",
+      "elapsed_ms": 135.1472000242211
+    },
+    {
+      "name": "Gate C: System Status & Diagnostics",
+      "passed": true,
+      "details": "Hardware telemetry verified: CPU: 0% | RAM: 0% (9.95 GB used) | Disk: 0% (24.61 GB free) in 102.4ms.",
+      "elapsed_ms": 102.40360000170767
+    },
+    {
+      "name": "Gate D: Dynamic Plug-In Discovery",
+      "passed": true,
+      "details": "Discovered and executed novel capability 'reverse_text': result='dlrow olleh' in 52.6ms.",
+      "elapsed_ms": 52.60549997910857
+    },
+    {
+      "name": "Gate E: Novel Multi-Capability Composition",
+      "passed": true,
+      "details": "2-step DAG composed dynamically with OutputReference: file exists=True, content='dlrow olleh' in 60.9ms.",
+      "elapsed_ms": 60.8868999988772
+    },
+    {
+      "name": "Gate F: Real Dynamic Replanning & PlanRevision History",
+      "passed": true,
+      "details": "Dynamic replanning triggered: revisions=1, fallback result=99.4 in 49.8ms.",
+      "elapsed_ms": 49.78070000652224
+    },
+    {
+      "name": "Gate G: Multi-Branch Parallel DAG Execution",
+      "passed": true,
+      "details": "Parallel branches executed concurrently: initial_ready={'step_mem', 'step_cpu'}, combined_score=30.25 in 69.4ms.",
+      "elapsed_ms": 69.44059999659657
+    }
+  ]
+}

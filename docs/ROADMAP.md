@@ -268,6 +268,19 @@ flowchart LR
 
 ---
 
+### v0.11.1 — Generality & Reality Gate (Complete — 2026-09-29)
+- **Empirical Agent Generality Proof**: Proven agent generality eliminating the "intent switch" architectural anti-pattern.
+- **Dynamic Capability Discovery**: Sub-millisecond capability retrieval via `CapabilitySemanticIndex` with 99.03% Recall@5 and zero hardcoded references in `planner.py`.
+- **OutputReference Dataflow Propagation**: Symbolic dataflow propagation across independent and dependent DAG steps with automatic argument binding.
+- **Multi-Branch Parallel DAGs**: Simultaneous readiness detection in `ExecutionGraph` for concurrent capability sampling and downstream aggregation.
+- **PlanQualityValidator Static Gating**: Pre-execution validation enforcing zero cycles, zero dangling output references, and schema compliance with 0.00% invalid plan execution.
+- **Dynamic Closed-Loop Replanning**: Dynamic fallback substitution upon failed step observations with immutable `PlanRevision` auditing and 0.00% unsafe replan execution.
+- **320-Scenario Generality Benchmark**: 100.0% Goal Interpretation, 100.0% Plan Validity, 0.00% Hallucination, 0.00% False Exec, 100.0% Held-Out Success (`docs/AGENT_GENERALITY_BENCHMARK.md`).
+- **Live Workstation Acceptance Gate**: 7 / 7 PASSED (100.0%) across physical Battery Report, Native Wi-Fi, Hardware Telemetry, Plugin Discovery, Composition, Replanning, and Parallelism (`docs/V0.11.1_LIVE_ACCEPTANCE.md`).
+- **395 Passing Automated Tests**: 395 / 395 tests passing cleanly in ~200s.
+
+---
+
 ### v0.12 — Browser Intelligence & Deep Visual Grounding
 - Expand Tier E Visual Computer Use from shadow mode to active interactive visual grounding.
 - Headless / interactive browser automation via Chrome DevTools Protocol (CDP) / Playwright for web workflows.

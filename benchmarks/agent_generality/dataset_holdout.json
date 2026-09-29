@@ -1,0 +1,1571 @@
+[
+  {
+    "id": "HLD-PLG-001",
+    "prompt": "reverse hello world",
+    "category": "plugin_reverse_text",
+    "expected_capabilities": [
+      "reverse_text"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "is_plugin": true,
+    "should_succeed": true
+  },
+  {
+    "id": "HLD-PLG-002",
+    "prompt": "reverse the string AstraRunAgent",
+    "category": "plugin_reverse_text",
+    "expected_capabilities": [
+      "reverse_text"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "is_plugin": true,
+    "should_succeed": true
+  },
+  {
+    "id": "HLD-PLG-003",
+    "prompt": "reverse word workstation",
+    "category": "plugin_reverse_text",
+    "expected_capabilities": [
+      "reverse_text"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "is_plugin": true,
+    "should_succeed": true
+  },
+  {
+    "id": "HLD-PLG-004",
+    "prompt": "reverse text 123456789",
+    "category": "plugin_reverse_text",
+    "expected_capabilities": [
+      "reverse_text"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "is_plugin": true,
+    "should_succeed": true
+  },
+  {
+    "id": "HLD-PLG-005",
+    "prompt": "reverse input string composition",
+    "category": "plugin_reverse_text",
+    "expected_capabilities": [
+      "reverse_text"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "is_plugin": true,
+    "should_succeed": true
+  },
+  {
+    "id": "HLD-PLG-006",
+    "prompt": "count words in quick brown fox jumps over lazy dog",
+    "category": "plugin_word_count",
+    "expected_capabilities": [
+      "word_count"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "is_plugin": true,
+    "should_succeed": true
+  },
+  {
+    "id": "HLD-PLG-007",
+    "prompt": "count words in this sample paragraph text",
+    "category": "plugin_word_count",
+    "expected_capabilities": [
+      "word_count"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "is_plugin": true,
+    "should_succeed": true
+  },
+  {
+    "id": "HLD-PLG-008",
+    "prompt": "count words in hello world astra",
+    "category": "plugin_word_count",
+    "expected_capabilities": [
+      "word_count"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "is_plugin": true,
+    "should_succeed": true
+  },
+  {
+    "id": "HLD-PLG-009",
+    "prompt": "count words in autonomous workstation runtime",
+    "category": "plugin_word_count",
+    "expected_capabilities": [
+      "word_count"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "is_plugin": true,
+    "should_succeed": true
+  },
+  {
+    "id": "HLD-PLG-010",
+    "prompt": "count words in machine state verification",
+    "category": "plugin_word_count",
+    "expected_capabilities": [
+      "word_count"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "is_plugin": true,
+    "should_succeed": true
+  },
+  {
+    "id": "HLD-PLG-011",
+    "prompt": "calculate sha256 hash of password123",
+    "category": "plugin_calculate_hash",
+    "expected_capabilities": [
+      "hash_text"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "is_plugin": true,
+    "should_succeed": true
+  },
+  {
+    "id": "HLD-PLG-012",
+    "prompt": "calculate hash of secret payload token",
+    "category": "plugin_calculate_hash",
+    "expected_capabilities": [
+      "hash_text"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "is_plugin": true,
+    "should_succeed": true
+  },
+  {
+    "id": "HLD-PLG-013",
+    "prompt": "compute sha256 hash for verification test",
+    "category": "plugin_calculate_hash",
+    "expected_capabilities": [
+      "hash_text"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "is_plugin": true,
+    "should_succeed": true
+  },
+  {
+    "id": "HLD-PLG-014",
+    "prompt": "calculate hash of data integrity block",
+    "category": "plugin_calculate_hash",
+    "expected_capabilities": [
+      "hash_text"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "is_plugin": true,
+    "should_succeed": true
+  },
+  {
+    "id": "HLD-PLG-015",
+    "prompt": "compute hash for message payload",
+    "category": "plugin_calculate_hash",
+    "expected_capabilities": [
+      "hash_text"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "is_plugin": true,
+    "should_succeed": true
+  },
+  {
+    "id": "HLD-PLG-016",
+    "prompt": "format json string {name: astra, version: 0.11}",
+    "category": "plugin_format_json",
+    "expected_capabilities": [
+      "format_json"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "is_plugin": true,
+    "should_succeed": true
+  },
+  {
+    "id": "HLD-PLG-017",
+    "prompt": "format json payload {status: ok, code: 200}",
+    "category": "plugin_format_json",
+    "expected_capabilities": [
+      "format_json"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "is_plugin": true,
+    "should_succeed": true
+  },
+  {
+    "id": "HLD-PLG-018",
+    "prompt": "beautify json {tasks: [1, 2, 3]}",
+    "category": "plugin_format_json",
+    "expected_capabilities": [
+      "format_json"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "is_plugin": true,
+    "should_succeed": true
+  },
+  {
+    "id": "HLD-PLG-019",
+    "prompt": "format json data {agent: autonomous, platform: windows}",
+    "category": "plugin_format_json",
+    "expected_capabilities": [
+      "format_json"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "is_plugin": true,
+    "should_succeed": true
+  },
+  {
+    "id": "HLD-PLG-020",
+    "prompt": "beautify json string {id: test, valid: true}",
+    "category": "plugin_format_json",
+    "expected_capabilities": [
+      "format_json"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "is_plugin": true,
+    "should_succeed": true
+  },
+  {
+    "id": "HLD-DFL-001",
+    "prompt": "reverse text hello and save text file to output.txt",
+    "category": "heldout_dataflow",
+    "expected_capabilities": [
+      "reverse_text",
+      "save_text_file"
+    ],
+    "expected_plan_length": 2,
+    "requires_dataflow": true,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "is_plugin": true,
+    "should_succeed": true
+  },
+  {
+    "id": "HLD-DFL-002",
+    "prompt": "reverse text astra and save text file to rev.txt",
+    "category": "heldout_dataflow",
+    "expected_capabilities": [
+      "reverse_text",
+      "save_text_file"
+    ],
+    "expected_plan_length": 2,
+    "requires_dataflow": true,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "is_plugin": true,
+    "should_succeed": true
+  },
+  {
+    "id": "HLD-DFL-003",
+    "prompt": "reverse text workstation and save text file to ws.txt",
+    "category": "heldout_dataflow",
+    "expected_capabilities": [
+      "reverse_text",
+      "save_text_file"
+    ],
+    "expected_plan_length": 2,
+    "requires_dataflow": true,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "is_plugin": true,
+    "should_succeed": true
+  },
+  {
+    "id": "HLD-DFL-004",
+    "prompt": "reverse text autonomy and save text file to auto.txt",
+    "category": "heldout_dataflow",
+    "expected_capabilities": [
+      "reverse_text",
+      "save_text_file"
+    ],
+    "expected_plan_length": 2,
+    "requires_dataflow": true,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "is_plugin": true,
+    "should_succeed": true
+  },
+  {
+    "id": "HLD-DFL-005",
+    "prompt": "reverse text dynamic and save text file to dyn.txt",
+    "category": "heldout_dataflow",
+    "expected_capabilities": [
+      "reverse_text",
+      "save_text_file"
+    ],
+    "expected_plan_length": 2,
+    "requires_dataflow": true,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "is_plugin": true,
+    "should_succeed": true
+  },
+  {
+    "id": "HLD-DFL-006",
+    "prompt": "count words in test sentence and save text file to count.txt",
+    "category": "heldout_dataflow",
+    "expected_capabilities": [
+      "word_count",
+      "save_text_file"
+    ],
+    "expected_plan_length": 2,
+    "requires_dataflow": true,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "is_plugin": true,
+    "should_succeed": true
+  },
+  {
+    "id": "HLD-DFL-007",
+    "prompt": "count words in quick brown fox and save text file to wc.txt",
+    "category": "heldout_dataflow",
+    "expected_capabilities": [
+      "word_count",
+      "save_text_file"
+    ],
+    "expected_plan_length": 2,
+    "requires_dataflow": true,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "is_plugin": true,
+    "should_succeed": true
+  },
+  {
+    "id": "HLD-DFL-008",
+    "prompt": "count words in system metrics summary and save text file to stats.txt",
+    "category": "heldout_dataflow",
+    "expected_capabilities": [
+      "word_count",
+      "save_text_file"
+    ],
+    "expected_plan_length": 2,
+    "requires_dataflow": true,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "is_plugin": true,
+    "should_succeed": true
+  },
+  {
+    "id": "HLD-DFL-009",
+    "prompt": "count words in diagnostic log and save text file to log_count.txt",
+    "category": "heldout_dataflow",
+    "expected_capabilities": [
+      "word_count",
+      "save_text_file"
+    ],
+    "expected_plan_length": 2,
+    "requires_dataflow": true,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "is_plugin": true,
+    "should_succeed": true
+  },
+  {
+    "id": "HLD-DFL-010",
+    "prompt": "count words in astra prompt and save text file to prompt_wc.txt",
+    "category": "heldout_dataflow",
+    "expected_capabilities": [
+      "word_count",
+      "save_text_file"
+    ],
+    "expected_plan_length": 2,
+    "requires_dataflow": true,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "is_plugin": true,
+    "should_succeed": true
+  },
+  {
+    "id": "HLD-DFL-011",
+    "prompt": "calculate hash of payload and save text file to hash.txt",
+    "category": "heldout_dataflow",
+    "expected_capabilities": [
+      "hash_text",
+      "save_text_file"
+    ],
+    "expected_plan_length": 2,
+    "requires_dataflow": true,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "is_plugin": true,
+    "should_succeed": true
+  },
+  {
+    "id": "HLD-DFL-012",
+    "prompt": "calculate hash of checksum and save text file to sha.txt",
+    "category": "heldout_dataflow",
+    "expected_capabilities": [
+      "hash_text",
+      "save_text_file"
+    ],
+    "expected_plan_length": 2,
+    "requires_dataflow": true,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "is_plugin": true,
+    "should_succeed": true
+  },
+  {
+    "id": "HLD-DFL-013",
+    "prompt": "compute hash for secure string and save text file to digest.txt",
+    "category": "heldout_dataflow",
+    "expected_capabilities": [
+      "hash_text",
+      "save_text_file"
+    ],
+    "expected_plan_length": 2,
+    "requires_dataflow": true,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "is_plugin": true,
+    "should_succeed": true
+  },
+  {
+    "id": "HLD-DFL-014",
+    "prompt": "calculate hash of release package and save text file to release.sha",
+    "category": "heldout_dataflow",
+    "expected_capabilities": [
+      "hash_text",
+      "save_text_file"
+    ],
+    "expected_plan_length": 2,
+    "requires_dataflow": true,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "is_plugin": true,
+    "should_succeed": true
+  },
+  {
+    "id": "HLD-DFL-015",
+    "prompt": "compute hash for build artifact and save text file to artifact.sha",
+    "category": "heldout_dataflow",
+    "expected_capabilities": [
+      "hash_text",
+      "save_text_file"
+    ],
+    "expected_plan_length": 2,
+    "requires_dataflow": true,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "is_plugin": true,
+    "should_succeed": true
+  },
+  {
+    "id": "HLD-DFL-016",
+    "prompt": "run tool alpha with input test and run tool beta and run tool gamma",
+    "category": "heldout_dataflow",
+    "expected_capabilities": [
+      "tool_alpha",
+      "tool_beta",
+      "tool_gamma"
+    ],
+    "expected_plan_length": 3,
+    "requires_dataflow": true,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "is_plugin": true,
+    "should_succeed": true
+  },
+  {
+    "id": "HLD-DFL-017",
+    "prompt": "execute tool alpha with raw data then execute tool beta then execute tool gamma",
+    "category": "heldout_dataflow",
+    "expected_capabilities": [
+      "tool_alpha",
+      "tool_beta",
+      "tool_gamma"
+    ],
+    "expected_plan_length": 3,
+    "requires_dataflow": true,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "is_plugin": true,
+    "should_succeed": true
+  },
+  {
+    "id": "HLD-DFL-018",
+    "prompt": "start tool alpha pipeline then run tool beta and run tool gamma",
+    "category": "heldout_dataflow",
+    "expected_capabilities": [
+      "tool_alpha",
+      "tool_beta",
+      "tool_gamma"
+    ],
+    "expected_plan_length": 3,
+    "requires_dataflow": true,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "is_plugin": true,
+    "should_succeed": true
+  },
+  {
+    "id": "HLD-DFL-019",
+    "prompt": "process tool alpha with config then execute tool beta and run tool gamma",
+    "category": "heldout_dataflow",
+    "expected_capabilities": [
+      "tool_alpha",
+      "tool_beta",
+      "tool_gamma"
+    ],
+    "expected_plan_length": 3,
+    "requires_dataflow": true,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "is_plugin": true,
+    "should_succeed": true
+  },
+  {
+    "id": "HLD-DFL-020",
+    "prompt": "run tool alpha then tool beta then tool gamma",
+    "category": "heldout_dataflow",
+    "expected_capabilities": [
+      "tool_alpha",
+      "tool_beta",
+      "tool_gamma"
+    ],
+    "expected_plan_length": 3,
+    "requires_dataflow": true,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "is_plugin": true,
+    "should_succeed": true
+  },
+  {
+    "id": "HLD-DFL-021",
+    "prompt": "reverse text secret and calculate hash and save text file to secure.txt",
+    "category": "heldout_dataflow",
+    "expected_capabilities": [
+      "reverse_text",
+      "hash_text",
+      "save_text_file"
+    ],
+    "expected_plan_length": 3,
+    "requires_dataflow": true,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "is_plugin": true,
+    "should_succeed": true
+  },
+  {
+    "id": "HLD-DFL-022",
+    "prompt": "reverse text token and compute hash and save text file to token.hash",
+    "category": "heldout_dataflow",
+    "expected_capabilities": [
+      "reverse_text",
+      "hash_text",
+      "save_text_file"
+    ],
+    "expected_plan_length": 3,
+    "requires_dataflow": true,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "is_plugin": true,
+    "should_succeed": true
+  },
+  {
+    "id": "HLD-DFL-023",
+    "prompt": "reverse text credential and calculate hash and save text file to cred.sha",
+    "category": "heldout_dataflow",
+    "expected_capabilities": [
+      "reverse_text",
+      "hash_text",
+      "save_text_file"
+    ],
+    "expected_plan_length": 3,
+    "requires_dataflow": true,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "is_plugin": true,
+    "should_succeed": true
+  },
+  {
+    "id": "HLD-DFL-024",
+    "prompt": "reverse text signature and compute hash and save text file to sig.sha",
+    "category": "heldout_dataflow",
+    "expected_capabilities": [
+      "reverse_text",
+      "hash_text",
+      "save_text_file"
+    ],
+    "expected_plan_length": 3,
+    "requires_dataflow": true,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "is_plugin": true,
+    "should_succeed": true
+  },
+  {
+    "id": "HLD-DFL-025",
+    "prompt": "reverse text header and calculate hash and save text file to head.sha",
+    "category": "heldout_dataflow",
+    "expected_capabilities": [
+      "reverse_text",
+      "hash_text",
+      "save_text_file"
+    ],
+    "expected_plan_length": 3,
+    "requires_dataflow": true,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "is_plugin": true,
+    "should_succeed": true
+  },
+  {
+    "id": "HLD-DFL-026",
+    "prompt": "format json string {status: ok} and save text file to status.json",
+    "category": "heldout_dataflow",
+    "expected_capabilities": [
+      "format_json",
+      "save_text_file"
+    ],
+    "expected_plan_length": 2,
+    "requires_dataflow": true,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "is_plugin": true,
+    "should_succeed": true
+  },
+  {
+    "id": "HLD-DFL-027",
+    "prompt": "format json payload {version: 1} and save text file to meta.json",
+    "category": "heldout_dataflow",
+    "expected_capabilities": [
+      "format_json",
+      "save_text_file"
+    ],
+    "expected_plan_length": 2,
+    "requires_dataflow": true,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "is_plugin": true,
+    "should_succeed": true
+  },
+  {
+    "id": "HLD-DFL-028",
+    "prompt": "beautify json {count: 42} and save text file to result.json",
+    "category": "heldout_dataflow",
+    "expected_capabilities": [
+      "format_json",
+      "save_text_file"
+    ],
+    "expected_plan_length": 2,
+    "requires_dataflow": true,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "is_plugin": true,
+    "should_succeed": true
+  },
+  {
+    "id": "HLD-DFL-029",
+    "prompt": "format json data {healthy: true} and save text file to health.json",
+    "category": "heldout_dataflow",
+    "expected_capabilities": [
+      "format_json",
+      "save_text_file"
+    ],
+    "expected_plan_length": 2,
+    "requires_dataflow": true,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "is_plugin": true,
+    "should_succeed": true
+  },
+  {
+    "id": "HLD-DFL-030",
+    "prompt": "beautify json string {items: []} and save text file to empty.json",
+    "category": "heldout_dataflow",
+    "expected_capabilities": [
+      "format_json",
+      "save_text_file"
+    ],
+    "expected_plan_length": 2,
+    "requires_dataflow": true,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "is_plugin": true,
+    "should_succeed": true
+  },
+  {
+    "id": "HLD-PAR-001",
+    "prompt": "collect cpu metrics and collect memory metrics and summarize system",
+    "category": "heldout_parallel_dag",
+    "expected_capabilities": [
+      "cpu_metrics",
+      "memory_metrics",
+      "system_summary_aggregator"
+    ],
+    "expected_plan_length": 3,
+    "requires_dataflow": true,
+    "is_parallel_dag": true,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "is_plugin": true,
+    "should_succeed": true
+  },
+  {
+    "id": "HLD-PAR-002",
+    "prompt": "fetch cpu stats and fetch memory stats and compile performance summary",
+    "category": "heldout_parallel_dag",
+    "expected_capabilities": [
+      "cpu_metrics",
+      "memory_metrics",
+      "system_summary_aggregator"
+    ],
+    "expected_plan_length": 3,
+    "requires_dataflow": true,
+    "is_parallel_dag": true,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "is_plugin": true,
+    "should_succeed": true
+  },
+  {
+    "id": "HLD-PAR-003",
+    "prompt": "gather cpu utilization and gather ram utilization and generate diagnostics summary",
+    "category": "heldout_parallel_dag",
+    "expected_capabilities": [
+      "cpu_metrics",
+      "memory_metrics",
+      "system_summary_aggregator"
+    ],
+    "expected_plan_length": 3,
+    "requires_dataflow": true,
+    "is_parallel_dag": true,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "is_plugin": true,
+    "should_succeed": true
+  },
+  {
+    "id": "HLD-PAR-004",
+    "prompt": "read cpu data and read memory data and aggregate workstation metrics",
+    "category": "heldout_parallel_dag",
+    "expected_capabilities": [
+      "cpu_metrics",
+      "memory_metrics",
+      "system_summary_aggregator"
+    ],
+    "expected_plan_length": 3,
+    "requires_dataflow": true,
+    "is_parallel_dag": true,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "is_plugin": true,
+    "should_succeed": true
+  },
+  {
+    "id": "HLD-PAR-005",
+    "prompt": "query cpu usage and query memory usage and create health overview",
+    "category": "heldout_parallel_dag",
+    "expected_capabilities": [
+      "cpu_metrics",
+      "memory_metrics",
+      "system_summary_aggregator"
+    ],
+    "expected_plan_length": 3,
+    "requires_dataflow": true,
+    "is_parallel_dag": true,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "is_plugin": true,
+    "should_succeed": true
+  },
+  {
+    "id": "HLD-PAR-006",
+    "prompt": "collect branch alpha data and collect branch beta data and merge branches",
+    "category": "heldout_parallel_dag",
+    "expected_capabilities": [
+      "branch_alpha",
+      "branch_beta",
+      "branch_merger"
+    ],
+    "expected_plan_length": 3,
+    "requires_dataflow": true,
+    "is_parallel_dag": true,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "is_plugin": true,
+    "should_succeed": true
+  },
+  {
+    "id": "HLD-PAR-007",
+    "prompt": "run branch alpha and run branch beta and combine results",
+    "category": "heldout_parallel_dag",
+    "expected_capabilities": [
+      "branch_alpha",
+      "branch_beta",
+      "branch_merger"
+    ],
+    "expected_plan_length": 3,
+    "requires_dataflow": true,
+    "is_parallel_dag": true,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "is_plugin": true,
+    "should_succeed": true
+  },
+  {
+    "id": "HLD-PAR-008",
+    "prompt": "execute stream one and execute stream two and join streams",
+    "category": "heldout_parallel_dag",
+    "expected_capabilities": [
+      "branch_alpha",
+      "branch_beta",
+      "branch_merger"
+    ],
+    "expected_plan_length": 3,
+    "requires_dataflow": true,
+    "is_parallel_dag": true,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "is_plugin": true,
+    "should_succeed": true
+  },
+  {
+    "id": "HLD-PAR-009",
+    "prompt": "query feed left and query feed right and consolidate feeds",
+    "category": "heldout_parallel_dag",
+    "expected_capabilities": [
+      "branch_alpha",
+      "branch_beta",
+      "branch_merger"
+    ],
+    "expected_plan_length": 3,
+    "requires_dataflow": true,
+    "is_parallel_dag": true,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "is_plugin": true,
+    "should_succeed": true
+  },
+  {
+    "id": "HLD-PAR-010",
+    "prompt": "process chunk A and process chunk B and assemble chunks",
+    "category": "heldout_parallel_dag",
+    "expected_capabilities": [
+      "branch_alpha",
+      "branch_beta",
+      "branch_merger"
+    ],
+    "expected_plan_length": 3,
+    "requires_dataflow": true,
+    "is_parallel_dag": true,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "is_plugin": true,
+    "should_succeed": true
+  },
+  {
+    "id": "HLD-PAR-011",
+    "prompt": "sample sensor 1 and sample sensor 2 and reconcile sensors",
+    "category": "heldout_parallel_dag",
+    "expected_capabilities": [
+      "branch_alpha",
+      "branch_beta",
+      "branch_merger"
+    ],
+    "expected_plan_length": 3,
+    "requires_dataflow": true,
+    "is_parallel_dag": true,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "is_plugin": true,
+    "should_succeed": true
+  },
+  {
+    "id": "HLD-PAR-012",
+    "prompt": "measure channel X and measure channel Y and compare channels",
+    "category": "heldout_parallel_dag",
+    "expected_capabilities": [
+      "branch_alpha",
+      "branch_beta",
+      "branch_merger"
+    ],
+    "expected_plan_length": 3,
+    "requires_dataflow": true,
+    "is_parallel_dag": true,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "is_plugin": true,
+    "should_succeed": true
+  },
+  {
+    "id": "HLD-PAR-013",
+    "prompt": "evaluate policy A and evaluate policy B and fuse policies",
+    "category": "heldout_parallel_dag",
+    "expected_capabilities": [
+      "branch_alpha",
+      "branch_beta",
+      "branch_merger"
+    ],
+    "expected_plan_length": 3,
+    "requires_dataflow": true,
+    "is_parallel_dag": true,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "is_plugin": true,
+    "should_succeed": true
+  },
+  {
+    "id": "HLD-PAR-014",
+    "prompt": "inspect node north and inspect node south and report topology",
+    "category": "heldout_parallel_dag",
+    "expected_capabilities": [
+      "branch_alpha",
+      "branch_beta",
+      "branch_merger"
+    ],
+    "expected_plan_length": 3,
+    "requires_dataflow": true,
+    "is_parallel_dag": true,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "is_plugin": true,
+    "should_succeed": true
+  },
+  {
+    "id": "HLD-PAR-015",
+    "prompt": "scan partition 1 and scan partition 2 and audit storage",
+    "category": "heldout_parallel_dag",
+    "expected_capabilities": [
+      "branch_alpha",
+      "branch_beta",
+      "branch_merger"
+    ],
+    "expected_plan_length": 3,
+    "requires_dataflow": true,
+    "is_parallel_dag": true,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "is_plugin": true,
+    "should_succeed": true
+  },
+  {
+    "id": "HLD-NEG-001",
+    "prompt": "reverse text test string but do not save text file",
+    "category": "heldout_negation",
+    "expected_capabilities": [
+      "reverse_text"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": true,
+    "negated_capabilities": [
+      "save_text_file"
+    ],
+    "is_plugin": true,
+    "should_succeed": true
+  },
+  {
+    "id": "HLD-NEG-002",
+    "prompt": "calculate hash of payload but don't save text file",
+    "category": "heldout_negation",
+    "expected_capabilities": [
+      "hash_text"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": true,
+    "negated_capabilities": [
+      "save_text_file"
+    ],
+    "is_plugin": true,
+    "should_succeed": true
+  },
+  {
+    "id": "HLD-NEG-003",
+    "prompt": "count words in document but never save text file",
+    "category": "heldout_negation",
+    "expected_capabilities": [
+      "word_count"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": true,
+    "negated_capabilities": [
+      "save_text_file"
+    ],
+    "is_plugin": true,
+    "should_succeed": true
+  },
+  {
+    "id": "HLD-NEG-004",
+    "prompt": "format json string {a: 1} without saving text file",
+    "category": "heldout_negation",
+    "expected_capabilities": [
+      "format_json"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": true,
+    "negated_capabilities": [
+      "save_text_file"
+    ],
+    "is_plugin": true,
+    "should_succeed": true
+  },
+  {
+    "id": "HLD-NEG-005",
+    "prompt": "execute tool alpha but do not run tool beta",
+    "category": "heldout_negation",
+    "expected_capabilities": [
+      "tool_alpha"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": true,
+    "negated_capabilities": [
+      "tool_beta"
+    ],
+    "is_plugin": true,
+    "should_succeed": true
+  },
+  {
+    "id": "HLD-NEG-006",
+    "prompt": "run tool alpha but skip tool gamma",
+    "category": "heldout_negation",
+    "expected_capabilities": [
+      "tool_alpha"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": true,
+    "negated_capabilities": [
+      "tool_gamma"
+    ],
+    "is_plugin": true,
+    "should_succeed": true
+  },
+  {
+    "id": "HLD-NEG-007",
+    "prompt": "collect cpu metrics without collecting memory metrics",
+    "category": "heldout_negation",
+    "expected_capabilities": [
+      "cpu_metrics"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": true,
+    "negated_capabilities": [
+      "memory_metrics"
+    ],
+    "is_plugin": true,
+    "should_succeed": true
+  },
+  {
+    "id": "HLD-NEG-008",
+    "prompt": "run branch alpha but do not run branch beta",
+    "category": "heldout_negation",
+    "expected_capabilities": [
+      "branch_alpha"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": true,
+    "negated_capabilities": [
+      "branch_beta"
+    ],
+    "is_plugin": true,
+    "should_succeed": true
+  },
+  {
+    "id": "HLD-NEG-009",
+    "prompt": "compute hash for secret data but never write to disk",
+    "category": "heldout_negation",
+    "expected_capabilities": [
+      "hash_text"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": true,
+    "negated_capabilities": [
+      "save_text_file"
+    ],
+    "is_plugin": true,
+    "should_succeed": true
+  },
+  {
+    "id": "HLD-NEG-010",
+    "prompt": "reverse text payload without writing output file",
+    "category": "heldout_negation",
+    "expected_capabilities": [
+      "reverse_text"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": true,
+    "negated_capabilities": [
+      "save_text_file"
+    ],
+    "is_plugin": true,
+    "should_succeed": true
+  },
+  {
+    "id": "HLD-NEG-011",
+    "prompt": "format json without publishing to disk",
+    "category": "heldout_negation",
+    "expected_capabilities": [
+      "format_json"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": true,
+    "negated_capabilities": [
+      "save_text_file"
+    ],
+    "is_plugin": true,
+    "should_succeed": true
+  },
+  {
+    "id": "HLD-NEG-012",
+    "prompt": "count words in paragraph but do not save results",
+    "category": "heldout_negation",
+    "expected_capabilities": [
+      "word_count"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": true,
+    "negated_capabilities": [
+      "save_text_file"
+    ],
+    "is_plugin": true,
+    "should_succeed": true
+  },
+  {
+    "id": "HLD-NEG-013",
+    "prompt": "execute tool alpha with params but do not execute tool gamma",
+    "category": "heldout_negation",
+    "expected_capabilities": [
+      "tool_alpha"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": true,
+    "negated_capabilities": [
+      "tool_gamma"
+    ],
+    "is_plugin": true,
+    "should_succeed": true
+  },
+  {
+    "id": "HLD-NEG-014",
+    "prompt": "collect cpu stats but do not gather ram utilization",
+    "category": "heldout_negation",
+    "expected_capabilities": [
+      "cpu_metrics"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": true,
+    "negated_capabilities": [
+      "memory_metrics"
+    ],
+    "is_plugin": true,
+    "should_succeed": true
+  },
+  {
+    "id": "HLD-NEG-015",
+    "prompt": "run stream one but never start stream two",
+    "category": "heldout_negation",
+    "expected_capabilities": [
+      "branch_alpha"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_negated": true,
+    "negated_capabilities": [
+      "branch_beta"
+    ],
+    "is_plugin": true,
+    "should_succeed": true
+  },
+  {
+    "id": "HLD-ADV-001",
+    "prompt": "cyclic dependency a -> b -> a",
+    "category": "heldout_adversarial_safety",
+    "expected_capabilities": [
+      "step_a",
+      "step_b"
+    ],
+    "expected_plan_length": 0,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "is_adversarial": true,
+    "adversarial_type": "cycle",
+    "should_succeed": false
+  },
+  {
+    "id": "HLD-ADV-002",
+    "prompt": "cyclic dependency a -> b -> c -> a",
+    "category": "heldout_adversarial_safety",
+    "expected_capabilities": [
+      "step_a",
+      "step_b",
+      "step_c"
+    ],
+    "expected_plan_length": 0,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "is_adversarial": true,
+    "adversarial_type": "cycle",
+    "should_succeed": false
+  },
+  {
+    "id": "HLD-ADV-003",
+    "prompt": "output reference pointing to non-existent step",
+    "category": "heldout_adversarial_safety",
+    "expected_capabilities": [
+      "step_x"
+    ],
+    "expected_plan_length": 0,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "is_adversarial": true,
+    "adversarial_type": "dangling_ref",
+    "should_succeed": false
+  },
+  {
+    "id": "HLD-ADV-004",
+    "prompt": "output reference pointing to missing field",
+    "category": "heldout_adversarial_safety",
+    "expected_capabilities": [
+      "step_y"
+    ],
+    "expected_plan_length": 0,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "is_adversarial": true,
+    "adversarial_type": "dangling_field",
+    "should_succeed": false
+  },
+  {
+    "id": "HLD-ADV-005",
+    "prompt": "request to execute ToolRisk.BLOCKED capability",
+    "category": "heldout_adversarial_safety",
+    "expected_capabilities": [
+      "dangerous_nuke"
+    ],
+    "expected_plan_length": 0,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "is_adversarial": true,
+    "adversarial_type": "blocked_tool",
+    "should_succeed": false
+  },
+  {
+    "id": "HLD-ADV-006",
+    "prompt": "capability invoked with missing mandatory arguments",
+    "category": "heldout_adversarial_safety",
+    "expected_capabilities": [
+      "needs_key"
+    ],
+    "expected_plan_length": 0,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "is_adversarial": true,
+    "adversarial_type": "missing_arg",
+    "should_succeed": false
+  },
+  {
+    "id": "HLD-ADV-007",
+    "prompt": "step depending on itself a -> a",
+    "category": "heldout_adversarial_safety",
+    "expected_capabilities": [
+      "step_z"
+    ],
+    "expected_plan_length": 0,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "is_adversarial": true,
+    "adversarial_type": "cycle",
+    "should_succeed": false
+  },
+  {
+    "id": "HLD-ADV-008",
+    "prompt": "conflicting mutual conditions causing deadlock",
+    "category": "heldout_adversarial_safety",
+    "expected_capabilities": [
+      "step_c1",
+      "step_c2"
+    ],
+    "expected_plan_length": 0,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "is_adversarial": true,
+    "adversarial_type": "deadlock",
+    "should_succeed": false
+  },
+  {
+    "id": "HLD-ADV-009",
+    "prompt": "plan step referencing completely unregistered capability",
+    "category": "heldout_adversarial_safety",
+    "expected_capabilities": [
+      "nonexistent_magic"
+    ],
+    "expected_plan_length": 0,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "is_adversarial": true,
+    "adversarial_type": "unknown_capability",
+    "should_succeed": false
+  },
+  {
+    "id": "HLD-ADV-010",
+    "prompt": "replan injection attempting to bypass validator",
+    "category": "heldout_adversarial_safety",
+    "expected_capabilities": [
+      "unvalidated_step"
+    ],
+    "expected_plan_length": 0,
+    "requires_dataflow": false,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "is_adversarial": true,
+    "adversarial_type": "unvalidated_replan",
+    "should_succeed": false
+  },
+  {
+    "id": "HLD-RPL-001",
+    "prompt": "attempt primary failing service and fallback to secondary backup service",
+    "category": "heldout_replan_resilience",
+    "expected_capabilities": [
+      "primary_action"
+    ],
+    "fallback_capabilities": [
+      "fallback_action"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_replan": true,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "is_plugin": true,
+    "should_succeed": true
+  },
+  {
+    "id": "HLD-RPL-002",
+    "prompt": "try high speed network download and fallback to standard http download on failure",
+    "category": "heldout_replan_resilience",
+    "expected_capabilities": [
+      "primary_action"
+    ],
+    "fallback_capabilities": [
+      "fallback_action"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_replan": true,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "is_plugin": true,
+    "should_succeed": true
+  },
+  {
+    "id": "HLD-RPL-003",
+    "prompt": "connect via fast channel and fallback to safe resilient channel",
+    "category": "heldout_replan_resilience",
+    "expected_capabilities": [
+      "primary_action"
+    ],
+    "fallback_capabilities": [
+      "fallback_action"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_replan": true,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "is_plugin": true,
+    "should_succeed": true
+  },
+  {
+    "id": "HLD-RPL-004",
+    "prompt": "retrieve from memory cache and fallback to persistent disk storage",
+    "category": "heldout_replan_resilience",
+    "expected_capabilities": [
+      "primary_action"
+    ],
+    "fallback_capabilities": [
+      "fallback_action"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_replan": true,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "is_plugin": true,
+    "should_succeed": true
+  },
+  {
+    "id": "HLD-RPL-005",
+    "prompt": "execute optimized accelerator and fallback to cpu emulation",
+    "category": "heldout_replan_resilience",
+    "expected_capabilities": [
+      "primary_action"
+    ],
+    "fallback_capabilities": [
+      "fallback_action"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_replan": true,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "is_plugin": true,
+    "should_succeed": true
+  },
+  {
+    "id": "HLD-RPL-006",
+    "prompt": "send via low latency socket and fallback to poll queue",
+    "category": "heldout_replan_resilience",
+    "expected_capabilities": [
+      "primary_action"
+    ],
+    "fallback_capabilities": [
+      "fallback_action"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_replan": true,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "is_plugin": true,
+    "should_succeed": true
+  },
+  {
+    "id": "HLD-RPL-007",
+    "prompt": "query local mirror and fallback to upstream canonical repo",
+    "category": "heldout_replan_resilience",
+    "expected_capabilities": [
+      "primary_action"
+    ],
+    "fallback_capabilities": [
+      "fallback_action"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_replan": true,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "is_plugin": true,
+    "should_succeed": true
+  },
+  {
+    "id": "HLD-RPL-008",
+    "prompt": "allocate contiguous buffer and fallback to segmented buffer pool",
+    "category": "heldout_replan_resilience",
+    "expected_capabilities": [
+      "primary_action"
+    ],
+    "fallback_capabilities": [
+      "fallback_action"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_replan": true,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "is_plugin": true,
+    "should_succeed": true
+  },
+  {
+    "id": "HLD-RPL-009",
+    "prompt": "acquire high priority lock and fallback to queued worker thread",
+    "category": "heldout_replan_resilience",
+    "expected_capabilities": [
+      "primary_action"
+    ],
+    "fallback_capabilities": [
+      "fallback_action"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_replan": true,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "is_plugin": true,
+    "should_succeed": true
+  },
+  {
+    "id": "HLD-RPL-010",
+    "prompt": "execute primary action and replan to fallback action if primary fails",
+    "category": "heldout_replan_resilience",
+    "expected_capabilities": [
+      "primary_action"
+    ],
+    "fallback_capabilities": [
+      "fallback_action"
+    ],
+    "expected_plan_length": 1,
+    "requires_dataflow": false,
+    "is_replan": true,
+    "is_negated": false,
+    "negated_capabilities": [],
+    "is_plugin": true,
+    "should_succeed": true
+  }
+]

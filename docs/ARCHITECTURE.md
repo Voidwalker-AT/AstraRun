@@ -1,6 +1,6 @@
 # AstraRun Architecture Specification
 
-> **Version**: 0.7.0  
+> **Version**: 0.11.1 (Generality & Reality Gate)  
 > **Target Platform**: Windows 11 / Windows 10 (64-bit)  
 > **Status**: APPROVED  
 
@@ -8,18 +8,19 @@
 
 ## 1. System Overview
 
-AstraRun is a local Windows intelligent command launcher designed to act as the foundational command interface for an evolving AI-assisted workstation control ecosystem. 
+AstraRun is a local Windows intelligent command launcher and autonomous workstation agent runtime designed to act as the foundational command interface for an evolving AI-assisted workstation control ecosystem. 
 
 Unlike traditional launchers that rely on string-interpolated shell execution or web technologies, AstraRun is built with:
+- **Dynamic Workstation Agent Runtime (v0.11.1)**: Autonomous `UNDERSTAND GOAL -> PLAN -> ACT -> OBSERVE -> VERIFY -> REPLAN -> COMPLETED` execution loop operating over dynamic Directed Acyclic Graphs (DAGs).
+- **Dynamic Plug-In Discovery & Dataflow Composition**: Sub-millisecond capability discovery via `CapabilitySemanticIndex` with zero `planner.py` modifications, symbolic `OutputReference` argument bindings, and parallel branch execution.
+- **Closed-Loop Verification & Replan Engine**: Empirical side-effect verification (`StepVerifier`, `GoalVerifier`) and safe, typed `PlanRevision` substitutions upon unexpected workstation observations.
 - **Zero Raw Shell Ingestion**: Strict security pipeline ensuring user requests are parsed into typed decisions and executed exclusively through registered, validated tools.
 - **Persistent Low-Latency Process**: Resident process with a hidden, pre-warmed Qt UI and a dedicated background Win32 message loop for instantaneous hotkey wake-up.
 - **Deterministic & Fuzzy Multi-Signal Search Engine**: Fast in-memory candidate index with precomputed terms, hierarchical fuzzy scoring (exact, prefix, token, acronym, single-drop typo, subsequence, edit-distance), and bounded usage ranking.
 - **Foreground-Aware Monitor Placement**: Native Win32 display detection anchoring the launcher to the active foreground application's display with mouse cursor and primary monitor fallbacks.
 - **Local-Only Privacy-Preserving Telemetry & Shadow Logging**: Structured routing event collection and dual-track shadow evaluation logging with defensive credential redaction and zero off-machine network egress.
-- **Laya Neural Decision Router in Shadow Mode (v0.3)**: Integrated non-autoregressive decision model (`convaiinnovations/laya`, 421M parameter ModernBERT-large) evaluated strictly in shadow mode with ZERO production execution authority.
-- **Kev Neural Decision Router in Shadow Mode (v0.4)**: Integrated single-pass decision model (`jaredpalmer/kev-0.8b`, PEFT LoRA adapter on `Qwen/Qwen3.5-0.8B-Base` backbone with 256-dim dot-product `PointerHead` and calibrated temperature $T \approx 2.351$) evaluated strictly in shadow mode with ZERO production execution authority.
-- **Fixed Intent Taxonomy**: 10 mutually exclusive semantic categories separating abstract intent prediction from deterministic parameter binding and policy enforcement.
-- **Multi-Model Evolutionary Router Architecture**: Pluggable routing interface transitioning safely from pure deterministic matching (v0.2) to single shadow semantic evaluation (v0.3), dual-model comparative evaluation (v0.4), cascading resolution, and multi-step agent planning (v0.5+).
+- **Native Wi-Fi & System Utility Adapters**: Direct `wlanapi.dll` integration and safe `SystemUtilityAdapter` (PowerCfg) with zero child-process shell interpolation.
+- **Live Task HUD V2 & Motion System**: Accessible, non-focus-stealing progress HUD with real ETA estimation and reduced-motion compliance.
 
 ---
 

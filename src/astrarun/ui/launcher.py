@@ -47,6 +47,14 @@ if TYPE_CHECKING:
 
 logger = get_logger("astrarun.ui.launcher")
 
+if sys.platform == "win32":
+    try:
+        WM_ASTRARUN_SUMMON = ctypes.windll.user32.RegisterWindowMessageW("AstraRun_Summon_Message")
+    except Exception:
+        WM_ASTRARUN_SUMMON = 0
+else:
+    WM_ASTRARUN_SUMMON = 0
+
 
 class LauncherState(str, Enum):
     """Explicit lifecycle state machine for command bar presentation and interaction."""
@@ -951,6 +959,13 @@ class LauncherWindow(QDialog):
                 SC_KEYMENU = 0xF100
                 if msg.message == WM_SYSCOMMAND and (msg.wParam & 0xFFF0) == SC_KEYMENU:
                     self._log_lifecycle("SC_KEYMENU_SWALLOWED", extra="Alt_system_menu_blocked")
+                    return True, 0
+                if WM_ASTRARUN_SUMMON and msg.message == WM_ASTRARUN_SUMMON:
+                    self._log_lifecycle("WM_ASTRARUN_SUMMON_RECEIVED")
+                    if self.app and hasattr(self.app, "presentation_controller") and self.app.presentation_controller:
+                        self.app.presentation_controller.present()
+                    else:
+                        self.present_animated(self.geometry())
                     return True, 0
             except Exception:
                 pass

@@ -1,6 +1,6 @@
 # AstraRun Security Specification
 
-> **Version**: 0.10.2  
+> **Version**: 0.10.3  
 > **Status**: APPROVED  
 
 ---
@@ -12,6 +12,9 @@ AstraRun is designed from the ground up as an AI-ready workstation control inter
 > **Natural-language user input must NEVER be directly evaluated as shell code.**
 
 In many naive command bar implementations, user input is passed directly to `os.system()`, `subprocess.Popen(cmd, shell=True)`, or PowerShell `Invoke-Expression`. When AI agents or natural language parsers are layered on top of such architectures, prompt injection, hallucinations, and unescaped characters can result in catastrophic system damage (e.g., unintended file deletion, secret exfiltration, or malicious process execution).
+
+AstraRun v0.10.3 enforces zero OS execution authority for neural representations: all intermediate neural outputs must compile through the `WorkflowCompiler` and be authorized by the `ActionGate`.
+
 
 ---
 

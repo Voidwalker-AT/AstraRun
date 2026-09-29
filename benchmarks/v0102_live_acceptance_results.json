@@ -1,6 +1,6 @@
 {
   "milestone": "AstraRun v0.10.2",
-  "timestamp": "2026-09-28 20:52:15",
+  "timestamp": "2026-09-28 21:11:32",
   "total_steps": 30,
   "passed_steps": 30,
   "failed_steps": 0,
@@ -22,7 +22,7 @@
       "verification_level": "LIVE_WORKSTATION",
       "passed": true,
       "details": "Suggestions suppressed: True",
-      "latency_ms": 2.49
+      "latency_ms": 1.44
     },
     {
       "step": 3,
@@ -31,7 +31,7 @@
       "verification_level": "LIVE_WORKSTATION",
       "passed": true,
       "details": "Suggestions count for 'note': 5",
-      "latency_ms": 16.02
+      "latency_ms": 7.42
     },
     {
       "step": 4,
@@ -40,7 +40,7 @@
       "verification_level": "LIVE_WORKSTATION",
       "passed": true,
       "details": "Dispatched: 'open notepad and type pqr'",
-      "latency_ms": 0.91
+      "latency_ms": 0.36
     },
     {
       "step": 5,
@@ -49,7 +49,7 @@
       "verification_level": "LIVE_WORKSTATION",
       "passed": true,
       "details": "Cleaned query dispatched: 'open notepad and type   pqr'",
-      "latency_ms": 0.32
+      "latency_ms": 0.15
     },
     {
       "step": 6,
@@ -58,7 +58,7 @@
       "verification_level": "DETERMINISTIC",
       "passed": true,
       "details": "Clauses: ['open_app', 'type_text']",
-      "latency_ms": 7927.61
+      "latency_ms": 4088.35
     },
     {
       "step": 7,
@@ -67,7 +67,7 @@
       "verification_level": "DETERMINISTIC",
       "passed": true,
       "details": "Compiled tools: ['open_application', 'wait_for_window', 'resolve_editable_element', 'type_text']",
-      "latency_ms": 6.2
+      "latency_ms": 1.82
     },
     {
       "step": 8,
@@ -76,7 +76,7 @@
       "verification_level": "DETERMINISTIC",
       "passed": true,
       "details": "Bound step 2 app: 'notepad'",
-      "latency_ms": 0.07
+      "latency_ms": 0.04
     },
     {
       "step": 9,
@@ -85,7 +85,7 @@
       "verification_level": "DETERMINISTIC",
       "passed": true,
       "details": "Step 3 HWND: 2048, Step 4 HWND: 2048",
-      "latency_ms": 0.03
+      "latency_ms": 0.01
     },
     {
       "step": 10,
@@ -94,7 +94,7 @@
       "verification_level": "DETERMINISTIC",
       "passed": true,
       "details": "Compiled tools: ['open_application', 'wait_for_window', 'maximize_window']",
-      "latency_ms": 8.91
+      "latency_ms": 3.33
     },
     {
       "step": 11,
@@ -103,7 +103,7 @@
       "verification_level": "DETERMINISTIC",
       "passed": true,
       "details": "Tools: ['press_keyboard_shortcut', 'press_keyboard_shortcut'], Shortcuts: ['Ctrl+A', 'Delete']",
-      "latency_ms": 7.01
+      "latency_ms": 2.72
     },
     {
       "step": 12,
@@ -112,7 +112,7 @@
       "verification_level": "DETERMINISTIC",
       "passed": true,
       "details": "Router resolved: False, tool: unknown",
-      "latency_ms": 0.02
+      "latency_ms": 0.01
     },
     {
       "step": 13,
@@ -121,7 +121,7 @@
       "verification_level": "LIVE_WORKSTATION",
       "passed": true,
       "details": "Pre-existing Notepad instances terminated",
-      "latency_ms": 534.42
+      "latency_ms": 458.6
     },
     {
       "step": 14,
@@ -130,7 +130,7 @@
       "verification_level": "LIVE_WORKSTATION",
       "passed": true,
       "details": "Launch result: Application 'notepad' launched successfully.",
-      "latency_ms": 426.35
+      "latency_ms": 258.87
     },
     {
       "step": 15,
@@ -138,17 +138,17 @@
       "section": "Real Notepad Gate",
       "verification_level": "LIVE_WORKSTATION",
       "passed": true,
-      "details": "Notepad ready: HWND 19924906, PID 22776",
-      "latency_ms": 355.2
+      "details": "Notepad ready: HWND 62851320, PID 24568",
+      "latency_ms": 305.36
     },
     {
       "step": 16,
       "title": "Notepad Gate: Editable Control Resolution",
       "section": "Real Notepad Gate",
       "verification_level": "LIVE_WORKSTATION",
-      "passed": 1,
-      "details": "Resolved control: name='Document', type='Document', class='RichEditD2DPT'",
-      "latency_ms": 946.47
+      "passed": true,
+      "details": "Resolved control: name='Text editor', type='document', class='RichEditD2DPT'",
+      "latency_ms": 808.2
     },
     {
       "step": 17,
@@ -156,8 +156,8 @@
       "section": "Real Notepad Gate",
       "verification_level": "LIVE_WORKSTATION",
       "passed": 1,
-      "details": "Foreground HWND: 0 (target: 19924906)",
-      "latency_ms": 123.64
+      "details": "Foreground HWND: 0 (target: 62851320)",
+      "latency_ms": 121.94
     },
     {
       "step": 18,
@@ -166,7 +166,7 @@
       "verification_level": "LIVE_WORKSTATION",
       "passed": 1,
       "details": "Typed 3 chars: SendInput unicode typing failed: 0/6 events sent.",
-      "latency_ms": 441.44
+      "latency_ms": 459.69
     },
     {
       "step": 19,
@@ -175,7 +175,7 @@
       "verification_level": "LIVE_WORKSTATION",
       "passed": true,
       "details": "Result type: list_result, message: Workflow executed 4 step(s): Entered 13 characters.",
-      "latency_ms": 3595.19
+      "latency_ms": 3152.22
     },
     {
       "step": 20,
@@ -183,8 +183,8 @@
       "section": "Real Notepad Gate",
       "verification_level": "LIVE_WORKSTATION",
       "passed": true,
-      "details": "Task ID: c0f27eb8-398c-46cc-a8f1-676cbf6630b9, Status: TaskStatus.COMPLETED",
-      "latency_ms": 0.01
+      "details": "Task ID: 0375adf1-85b4-42ae-9c94-cef3f735d2f0, Status: TaskStatus.COMPLETED",
+      "latency_ms": 0.02
     },
     {
       "step": 21,
@@ -193,7 +193,7 @@
       "verification_level": "LIVE_WORKSTATION",
       "passed": true,
       "details": "Close result: Sent graceful close request to 2 window(s) of 'notepad'.",
-      "latency_ms": 1.1
+      "latency_ms": 0.78
     },
     {
       "step": 22,
@@ -202,7 +202,7 @@
       "verification_level": "LIVE_WORKSTATION",
       "passed": true,
       "details": "Lingering Notepad windows: False",
-      "latency_ms": 909.98
+      "latency_ms": 926.66
     },
     {
       "step": 23,
@@ -211,7 +211,7 @@
       "verification_level": "LIVE_WORKSTATION",
       "passed": true,
       "details": "HUD visible: True",
-      "latency_ms": 10.68
+      "latency_ms": 12.03
     },
     {
       "step": 24,
@@ -220,7 +220,7 @@
       "verification_level": "LIVE_WORKSTATION",
       "passed": true,
       "details": "Detail label: 'Step 2/4: Waiting for window synchronization'",
-      "latency_ms": 0.61
+      "latency_ms": 0.79
     },
     {
       "step": 25,
@@ -229,7 +229,7 @@
       "verification_level": "LIVE_WORKSTATION",
       "passed": true,
       "details": "Detail label: 'Step 4/4: Typing literal text 'pqr''",
-      "latency_ms": 0.28
+      "latency_ms": 0.83
     },
     {
       "step": 26,
@@ -238,7 +238,7 @@
       "verification_level": "LIVE_WORKSTATION",
       "passed": true,
       "details": "HUD state: SUCCESS",
-      "latency_ms": 0.72
+      "latency_ms": 1.07
     },
     {
       "step": 27,
@@ -247,7 +247,7 @@
       "verification_level": "LIVE_WORKSTATION",
       "passed": true,
       "details": "HUD dismissed: True",
-      "latency_ms": 217.98
+      "latency_ms": 207.29
     },
     {
       "step": 28,
@@ -256,7 +256,7 @@
       "verification_level": "DETERMINISTIC",
       "passed": true,
       "details": "Blocked result: Action blocked by policy: Attempting to terminate protected system process 'csrss'.",
-      "latency_ms": 99.38
+      "latency_ms": 66.26
     },
     {
       "step": 29,
@@ -264,8 +264,8 @@
       "section": "Performance Invariants",
       "verification_level": "BENCHMARK",
       "passed": true,
-      "details": "Fast-path latency: 14.22ms (success: True)",
-      "latency_ms": 14.22
+      "details": "Fast-path latency: 7.05ms (success: True)",
+      "latency_ms": 7.05
     },
     {
       "step": 30,
@@ -274,7 +274,7 @@
       "verification_level": "DETERMINISTIC",
       "passed": true,
       "details": "Redacted output: 'Authorization: Bearer [REDACTED_TOKEN]'",
-      "latency_ms": 0.08
+      "latency_ms": 0.04
     }
   ]
 }

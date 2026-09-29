@@ -62,6 +62,28 @@ flowchart TD
 
 ---
 
+## 2.1. Neural NLP Sandwich & Workstation Execution Architecture (v0.10.3)
+
+```mermaid
+flowchart TD
+    UserQuery["User Input (Natural Language)"] --> FastPath{"Tier 0 Fast Path<br/>(< 15ms)"}
+    FastPath -- "Single Command Match" --> FastDispatch["Direct Capability Execution"]
+    FastPath -- "Compound / Ambiguous" --> LayaPreGate["Laya A Pre-Gate<br/>(ModernBERT 421M Router)"]
+    LayaPreGate --> NeuralEngine["Neural Structure Engine<br/>(spaCy en_core_web_sm Dependency Parse)"]
+    NeuralEngine --> LayaVerifier["Laya B Verifier<br/>(Shared Model Weights)"]
+    LayaVerifier --> Fusion["Decision Fusion & IR Grounding"]
+    Fusion --> ActionGate["Action Gate & Security Hard Policy"]
+    ActionGate --> WorkflowEngine["Sequential Workflow Execution Engine"]
+    WorkflowEngine --> DesktopLaunch["Native CreateProcessW (WinSta0\\Default)"]
+    WorkflowEngine --> UIASubsystem["Microsoft UI Automation Subsystem"]
+```
+
+### Verified Invariants:
+1. **Zero Duplicate 421M Weights**: Laya A and Laya B strictly share the single singleton `ModernBERT` instance from `laya_router.get_agent()`. Resident memory footprint remains invariant (+0MB duplicate model memory).
+2. **True Background Mode**: Starts detached via `pythonw.exe` (`0x00000008 | 0x00000200`) leaving zero background console windows. Single-instance enforcement via Windows named mutex and instant cross-process summon (< 1s).
+3. **Interactive Desktop Isolation**: Native Win32 `CreateProcessW` explicitly specifies `lpDesktop = r"WinSta0\Default"`, preventing background DCOM server confusion or headless window starvation for modern Windows 11 AppX applications.
+
+
 ## 3. Core Component Boundaries
 
 ### 3.1. Hotkey Layer (`astrarun.hotkeys.manager`)

@@ -31,6 +31,10 @@ def _ensure_desktop_attached() -> None:
         return
     try:
         user32 = ctypes.windll.user32
+        user32.OpenInputDesktop.restype = ctypes.c_void_p
+        user32.OpenDesktopW.restype = ctypes.c_void_p
+        user32.SetThreadDesktop.argtypes = [ctypes.c_void_p]
+        user32.SetThreadDesktop.restype = ctypes.wintypes.BOOL
         DESKTOP_ALL = 0x01FF
         hdesk = user32.OpenInputDesktop(0, False, DESKTOP_ALL)
         if not hdesk:
@@ -39,6 +43,7 @@ def _ensure_desktop_attached() -> None:
             user32.SetThreadDesktop(hdesk)
     except Exception:
         pass
+
 
 
 def list_windows(limit: int = 30) -> CapabilityResult:
@@ -247,7 +252,7 @@ def windows_for_application(app: str) -> CapabilityResult:
 
 def wait_for_window(
     app: str = "",
-    timeout: float = 5.0,
+    timeout: float = 10.0,
     hwnd: Optional[int] = None,
 ) -> CapabilityResult:
     """

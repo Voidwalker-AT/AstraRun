@@ -35,11 +35,18 @@ from astrarun.learning.memory import MemoryStore
 from astrarun.learning.persistence import LearningPersistence
 from astrarun.learning.skills import SkillManager
 from astrarun.nlp.engine import NLPEngine
+import threading
+
+from astrarun.nlp.ir import ParsedClause, ParsedRequest
+from astrarun.nlp.structure_engine import NeuralStructureEngine
 from astrarun.nlp.models import NLPEntityType, StructuredUtterance, UserRequest
 from astrarun.policy.action_gate import ActionGate
 from astrarun.projects.registry import ProjectRegistry
+from astrarun.routing.decision_fusion import DecisionFusionEngine, FusedExecutionPlan
 from astrarun.routing.deterministic import DeterministicRouter
 from astrarun.routing.entity_resolver import EntityResolutionEngine, ProposedAction
+from astrarun.routing.laya import LayaRouter
+from astrarun.routing.laya_sandwich import LayaSandwichRouter
 from astrarun.search.index import SearchIndex
 from astrarun.search.models import SearchResult
 from astrarun.tasks.events import TaskEventBus
@@ -229,6 +236,12 @@ class AstraApplication:
             usage_store=self.usage_store,
         )
 
+        # 10. Neural NLP Sandwich & Decision Fusion (v0.10.3)
+        self.laya_router = LayaRouter(config=self.settings.get("laya", {}))
+        self.laya_sandwich = LayaSandwichRouter(laya_router=self.laya_router)
+        self.neural_structure_engine = NeuralStructureEngine()
+        self.decision_fusion = DecisionFusionEngine()
+
         # Single instance lock
         self.single_instance = SingleInstanceLock()
 
@@ -236,6 +249,18 @@ class AstraApplication:
         self.origin_window: Optional[WindowEntity] = None
 
         logger.info("AstraApplication composition root ready. Registered capabilities: %d", len(self.capability_registry.list_capabilities()))
+
+    def _prewarm_neural_models_async(self) -> None:
+        """Asynchronously pre-warm the spaCy linguistic engine in a background daemon thread."""
+        if "pytest" in sys.modules:
+            return
+        def _prewarm():
+            try:
+                self.neural_structure_engine.get_nlp()
+            except Exception as err:
+                logger.debug("Asynchronous neural pre-warm completed with status: %s", err)
+        t = threading.Thread(target=_prewarm, name="NeuralPrewarmWorker", daemon=True)
+        t.start()
 
     def capture_origin_window(self) -> Optional[WindowEntity]:
         """
@@ -607,18 +632,61 @@ class AstraApplication:
                     )
 
         # -------------------------------------------------------------
-        # 3. RICH PATH: Task Creation, Hybrid NLP, Entity Resolution, Safety Gating
+        # 3. RICH PATH: Neural NLP Sandwich, Task Creation, Safety Gating
         # -------------------------------------------------------------
         task = self.task_manager.create_task(request_text=clean, source="user_launcher")
         self.task_manager.transition_status(task.id, TaskStatus.PARSING)
 
         try:
-            # Parse query into StructuredUtterance IR
-            snapshot = self.context_engine.get_snapshot()
-            utterance: StructuredUtterance = self.nlp_engine.parse(
-                request=UserRequest(text=clean),
-                context=snapshot,
+            # Stage 1: Laya A Semantic Pre-Gate
+            pre_gate = self.laya_sandwich.evaluate_pre_gate(clean)
+
+            # Stage 2: Neural NLP Structure Engine (spaCy + byte-exact spans)
+            parsed_req = self.neural_structure_engine.parse(clean)
+
+            # Stage 3: Laya B Semantic Verifier
+            verifier = self.laya_sandwich.evaluate_verifier(clean, parsed_req)
+
+            # Stage 4: Decision Fusion
+            fused_plan = self.decision_fusion.fuse(
+                query=clean,
+                fast_path_decision=None,
+                pre_gate=pre_gate,
+                parsed_request=parsed_req,
+                verifier=verifier,
             )
+
+            # Handle verifier rejection
+            if fused_plan.action_type == "rejected":
+                reason = fused_plan.rejection_reason or "Plan failed semantic safety verification."
+                self.task_manager.block_task(task.id, reason=reason)
+                return ExecutionResult(
+                    type="blocked",
+                    success=False,
+                    message=f"Action rejected by verifier: {reason}",
+                    task=task,
+                )
+
+            # Handle clarification prompt
+            if fused_plan.action_type == "clarify":
+                self.task_manager.transition_status(task.id, TaskStatus.WAITING_CLARIFICATION)
+                return ExecutionResult(
+                    type="clarify",
+                    success=False,
+                    message=fused_plan.clarification_prompt or "Clarification required.",
+                    task=task,
+                    prompt=fused_plan.clarification_prompt or "Which action did you mean?",
+                )
+
+            # Parse query into StructuredUtterance IR (from Neural NLP or NLPEngine fallback)
+            snapshot = self.context_engine.get_snapshot()
+            if parsed_req.clauses and not parsed_req.has_negation:
+                utterance: StructuredUtterance = parsed_req.to_structured_utterance()
+            else:
+                utterance = self.nlp_engine.parse(
+                    request=UserRequest(text=clean),
+                    context=snapshot,
+                )
 
             # Check for AI Bridge Reasoning escalation
             escalation = self.nlp_engine.check_reasoning_escalation(utterance)

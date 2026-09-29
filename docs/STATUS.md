@@ -1,15 +1,31 @@
-# AstraRun v0.10.2 Status Report
+# AstraRun v0.10.3 Status Report
 
-> **Date**: 2026-09-28  
+> **Date**: 2026-09-29  
 > **Status**: STABLE / VERIFIED / MILESTONE COMPLETE  
-> **Milestone**: v0.10.2 Complete (Capability Integration & Real Natural-Language Execution)  
-> **Prior Milestone**: v0.10.1 Complete  
+> **Milestone**: v0.10.3 Complete (Neural NLP Sandwich + True Background Application Mode)  
+> **Prior Milestone**: v0.10.2 Complete  
 
 ---
 
 ## 1. What Works Completely
 
-1. **Synchronized Compound Workflow Pipeline (`astrarun.workflows`, `astrarun.nlp`)**:
+1. **Neural NLP Sandwich Architecture (`astrarun.nlp.structure_engine`, `astrarun.routing.laya_sandwich`, `astrarun.routing.decision_fusion`)**:
+   - Multi-tier natural language processing pipeline: `Tier 0 Fast Path` -> `Laya A Pre-Gate` -> `spaCy Neural Structure Engine` -> `Laya B Verifier` -> `Decision Fusion` -> `WorkflowCompiler`.
+   - Single shared ModernBERT 421M instance (0 duplicate weights).
+   - Verbatim literal text preservation (100.0% accuracy across 840 benchmark items).
+   - Structural negation gating (`is_negated: bool`) preventing negated commands from reaching execution.
+
+2. **True Background Application Mode (`start-astrarun.ps1`, `src/astrarun/main.py`)**:
+   - Starts detached via `pythonw.exe` leaving **zero persistent console windows** (`powershell.exe`, `cmd.exe`, `conhost.exe`, `WindowsTerminal.exe`).
+   - Resident system notification tray icon with "Restart AstraRun" and "Exit AstraRun" lifecycle controls.
+   - Global `Alt+Space` hotkey registration via native Win32 `RegisterHotKey`.
+   - Cross-process single-instance summon: secondary launches signal the active instance via named mutex and trigger file in 928ms and exit code 0.
+
+3. **Native Interactive Desktop Process Launching (`astrarun.tools.apps`, `astrarun.discovery.apps`)**:
+   - Launches executables directly onto `WinSta0\Default` via native `CreateProcessW` with `lpDesktop = r"WinSta0\Default"`.
+   - Eliminates background AppX session deadlocks and DCOM starvation for Windows 11 packaged applications (e.g. modern Notepad).
+
+4. **Synchronized Compound Workflow Pipeline (`astrarun.workflows`, `astrarun.nlp`)**:
    - Decomposes multi-clause compound sentences into synchronized multi-step execution plans.
    - For application + typing commands (`open notepad and type pqr`), compiles a 4-step sequence:
      1. `open_application` (launches process via AppX alias or binary path)
@@ -18,46 +34,47 @@
      4. `type_text` (6-point focus validation and Unicode keystroke delivery)
    - Zero race conditions, zero keystroke drops.
 
-2. **Compound-Aware Suggestion Suppression (`astrarun.ui.launcher`, `astrarun.routing`)**:
+5. **Compound-Aware Suggestion Suppression (`astrarun.ui.launcher`, `astrarun.routing`)**:
    - `has_compound_indicators()` detects conjunctions (`and`, `then`, `&`, `;`) and multi-clause verbs.
    - Automatically suppresses autocomplete suggestions on compound queries, preventing fast-path app preselection from truncating user intent when Enter is pressed.
    - Enter dispatches the literal full sentence directly into the workflow engine.
 
-3. **WorkflowContext State Propagation (`astrarun.workflows.context`)**:
+6. **WorkflowContext State Propagation (`astrarun.workflows.context`)**:
    - Tracks runtime entity state (`last_opened_application`, `last_opened_window` HWND, `last_ui_element`).
    - Automatically binds upstream outputs to downstream inputs across execution steps.
 
-4. **Win32 Interactive Desktop Attachment & Focus Invariants (`astrarun.windows`, `astrarun.ui.presentation`)**:
+7. **Win32 Interactive Desktop Attachment & Focus Invariants (`astrarun.windows`, `astrarun.ui.presentation`)**:
    - `_ensure_desktop_attached()` attaches the executing thread to `user32.OpenInputDesktop(0, False, 0x01FF)`, resolving background runner desktop isolation.
    - `force_foreground_activation` uses `AttachThreadInput` across caller, foreground, and target threads, `AllowSetForegroundWindow(-1)`, and `VK_MENU` (Alt) key pulse to release foreground lock timeout restrictions on Windows 11.
 
-5. **Real Alt+Space Hotkey & Win32 Presentation Pipeline (`astrarun.ui.presentation`, `astrarun.hotkeys`)**:
+8. **Real Alt+Space Hotkey & Win32 Presentation Pipeline (`astrarun.ui.presentation`, `astrarun.hotkeys`)**:
    - Summoned reliably with `Alt+Space` in ~4.5ms from a pre-warmed resident background process.
    - Synchronous origin window HWND pre-capture on hotkey listener thread before UI spawn.
    - Fluid 150ms entrance drop-in (`OutCubic`) and 110ms exit slide-up (`InCubic`) animations.
 
-6. **Decoupled Floating Task HUD (`astrarun.ui.hud`)**:
+9. **Decoupled Floating Task HUD (`astrarun.ui.hud`)**:
    - Non-focus-stealing invariant enforced via Win32 extended style `WS_EX_NOACTIVATE (0x08000000)`, `Qt.WindowType.WindowDoesNotAcceptFocus`, and `Qt.WidgetAttribute.WA_ShowWithoutActivating`.
    - Real-time step progress (`Step 1/4`, `Step 2/4`, `Step 3/4`, `Step 4/4`) with smooth auto-dismissal.
 
-7. **Semantic UI Automation Subsystem (`astrarun.interaction`)**:
-   - 72 typed workstation capabilities across 10 categories.
-   - Microsoft UI Automation (`IUIAutomation`) tree inspection isolated on dedicated COM MTA worker thread.
-   - Strict control mutation invariant: UIA Patterns > Win32 Messages > Keyboard Shortcuts > Coordinate Clicks (PROHIBITED).
+10. **Semantic UI Automation Subsystem (`astrarun.interaction`)**:
+    - 72 typed workstation capabilities across 10 categories.
+    - Microsoft UI Automation (`IUIAutomation`) tree inspection isolated on dedicated COM MTA worker thread.
+    - Strict control mutation invariant: UIA Patterns > Win32 Messages > Keyboard Shortcuts > Coordinate Clicks (PROHIBITED).
 
-8. **Safety, Privacy & Password Invariants**:
-   - Password fields masked at discovery and logging layers.
-   - Destructive keywords gated behind `ActionGate` confirmation.
-   - Text keystroke injection treated strictly as literal data, never evaluated as shell commands.
+11. **Safety, Privacy & Password Invariants**:
+    - Password fields masked at discovery and logging layers.
+    - Destructive keywords gated behind `ActionGate` confirmation.
+    - Text keystroke injection treated strictly as literal data, never evaluated as shell commands.
 
 ---
 
 ## 2. Verification & Benchmark Results
 
 ### 2.1 Automated Unit & Integration Tests
-- **Status**: **337 / 337 PASSED** in **45.76s**
+- **Status**: **353 / 353 PASSED** in **108.12s**
 - **Regressions**: **0**
-- 10 dedicated compound pipeline tests in `tests/test_v0102_compound_pipeline.py`.
+- 16 dedicated neural NLP sandwich tests in `tests/test_neural_nlp_sandwich.py`.
+
 - 14 launcher and HUD tests in `tests/test_v0101_launcher_hud.py`.
 - 12 hotfix dwell tests in `tests/test_v0101_hotfix_dwell.py`.
 - 8 resident lifecycle tests in `tests/test_v0101_resident_lifecycle.py`.

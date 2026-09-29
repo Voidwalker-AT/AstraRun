@@ -1,0 +1,27 @@
+{
+  "version": "0.10.3",
+  "timestamp": 1790656181.95055,
+  "all_passed": true,
+  "results": [
+    {
+      "name": "Background Residency & Console Policy",
+      "passed": true,
+      "details": "AstraRun resident background service active (PID=24312, Hotkey=Alt+Space)."
+    },
+    {
+      "name": "Cross-Process Single-Instance Summon",
+      "passed": true,
+      "details": "Cross-process summon succeeded in 1432.3ms with exit code 0."
+    },
+    {
+      "name": "Compound Natural Language Execution",
+      "passed": true,
+      "details": "Compound execution 'open notepad and type pqr' succeeded in 34115.5ms."
+    },
+    {
+      "name": "Tray & Lifecycle Controls",
+      "passed": true,
+      "details": "Lifecycle inspection and clean shutdown verified successfully."
+    }
+  ]
+}

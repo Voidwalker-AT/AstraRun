@@ -32,6 +32,10 @@ def _ensure_desktop_attached() -> None:
         return
     try:
         user32 = ctypes.windll.user32
+        user32.OpenInputDesktop.restype = ctypes.c_void_p
+        user32.OpenDesktopW.restype = ctypes.c_void_p
+        user32.SetThreadDesktop.argtypes = [ctypes.c_void_p]
+        user32.SetThreadDesktop.restype = ctypes.wintypes.BOOL
         DESKTOP_ALL = 0x01FF
         hdesk = user32.OpenInputDesktop(0, False, DESKTOP_ALL)
         if not hdesk:
@@ -40,6 +44,7 @@ def _ensure_desktop_attached() -> None:
             user32.SetThreadDesktop(hdesk)
     except Exception:
         pass
+
 
 
 def _get_top_level_windows() -> list[WindowEntity]:

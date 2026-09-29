@@ -1,24 +1,26 @@
 # DAILY_DRIVER_COMMANDS.md — Daily Driver Command Catalog
 
-> **Milestone**: AstraRun v0.10.2 (Capability Integration & Compound Natural Language Execution)  
+> **Milestone**: AstraRun v0.10.3 (Neural NLP Sandwich & True Background Application Mode)  
 > **Status**: VERIFIED & BENCHMARKED  
 > **Target Audience**: AstraRun Users, Systems Engineers, and Workstation Operators  
-> **Last Updated**: 2026-09-28  
+> **Last Updated**: 2026-09-29  
 
 ---
 
 ## 1. Overview & Invocation Model
 
-AstraRun v0.10.2 functions as an ambient, resident workstation assistant. It is invoked via:
+AstraRun v0.10.3 functions as an ambient, resident workstation assistant. It is invoked via:
 1. **Global Hotkey**: `Alt+Space` (captures foreground origin window and toggles launcher overlay).
-2. **System Tray Icon**: Context menu or double-click.
+2. **System Tray Icon**: Context menu (Restart AstraRun, Exit AstraRun) or click.
 3. **Headless / CLI Mode**: `python src/astrarun/main.py --run-command "<utterance>"`
-4. **PowerShell Service Wrapper**: `.\start-astrarun.ps1 -Restart` / `.\start-astrarun.ps1 -Status`
+4. **PowerShell Service Wrapper**: `.\start-astrarun.ps1 -Restart` / `.\start-astrarun.ps1 -Status` / `.\start-astrarun.ps1 -Stop`
+5. **Cross-Process Summon**: Executing `python src/astrarun/main.py` summons the active resident instance instantly in <1s and exits 0.
 
 All commands are processed through the canonical `AstraApplication.handle_request()` pipeline:
 - **Fast-Path Launcher**: Sub-15ms pure deterministic routing for direct application launching, folder navigation, and system status queries.
 - **Direct Navigation Commands**: Sub-millisecond instant switching to dedicated workstation views (History, Memory, Skills, Settings, Diagnostics).
-- **Synchronized Compound Workflow Pipeline**: Multi-clause NLP parsing, automatic 4-step execution expansion, `WorkflowContext` implicit state propagation, and non-focus-stealing `FloatingTaskHUD` progress tracking.
+- **Neural NLP Sandwich Pipeline**: Multi-clause NLP parsing via spaCy dependency engine embedded between semantic Laya stages with 0 duplicate model weights, 100% literal preservation, and automatic 4-step execution expansion.
+
 
 ---
 

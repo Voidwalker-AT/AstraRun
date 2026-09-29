@@ -327,7 +327,7 @@ class WorkflowCompiler:
                             step_id=f"step_{step_counter}",
                             name=f"Wait for {app_name} window",
                             tool="wait_for_window",
-                            arguments={"app": app_name},
+                            arguments={"app": app_name, "timeout": 10.0},
                             critical=True,
                             source_clause_idx=clause.idx,
                         ))
@@ -727,7 +727,7 @@ class WorkflowCompiler:
                     preview_lines.append(f"{step_counter}. Type '{val}'")
                 step_counter += 1
 
-            elif clause.action == "press_keyboard_shortcut":
+            elif clause.action in ("press_keyboard_shortcut", "press_key"):
                 raw_sc = clause.text.strip().lower()
                 if "copy" in raw_sc:
                     sc_val = "Ctrl+C"
@@ -751,8 +751,8 @@ class WorkflowCompiler:
                 preview_lines.append(f"{step_counter}. Press shortcut {sc_val}")
                 step_counter += 1
 
-            elif clause.action == "click_ui_element":
-                target_btn = re.sub(r'^(?:click)\s+', '', clause.text, flags=re.I).strip()
+            elif clause.action in ("click_ui_element", "ui_click"):
+                target_btn = re.sub(r'^(?:click|press)\s+', '', clause.text, flags=re.I).strip()
                 steps.append(WorkflowStep(
                     step_id=f"step_{step_counter}",
                     name=f"Click '{target_btn}'",

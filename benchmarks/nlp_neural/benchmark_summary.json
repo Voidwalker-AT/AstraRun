@@ -1,0 +1,36 @@
+{
+  "dev_metrics": {
+    "split_name": "dev_v1",
+    "total_samples": 520,
+    "compound_accuracy": 99.04,
+    "negation_accuracy": 100.0,
+    "intent_accuracy": 98.35,
+    "literal_preservation_rate": 100.0,
+    "span_exactness_rate": 100.0,
+    "latency_mean_ms": 10.37,
+    "latency_p50_ms": 9.76,
+    "latency_p90_ms": 14.64,
+    "latency_p95_ms": 17.09,
+    "latency_max_ms": 35.59,
+    "targets_met": true
+  },
+  "test_metrics": {
+    "split_name": "test_v1",
+    "total_samples": 320,
+    "compound_accuracy": 98.44,
+    "negation_accuracy": 100.0,
+    "intent_accuracy": 97.51,
+    "literal_preservation_rate": 100.0,
+    "span_exactness_rate": 100.0,
+    "latency_mean_ms": 12.62,
+    "latency_p50_ms": 11.04,
+    "latency_p90_ms": 20.99,
+    "latency_p95_ms": 23.58,
+    "latency_max_ms": 30.74,
+    "targets_met": true
+  },
+  "dev_failures_count": 18,
+  "test_failures_count": 17,
+  "passed": true,
+  "timestamp": 1790655730.8979814
+}

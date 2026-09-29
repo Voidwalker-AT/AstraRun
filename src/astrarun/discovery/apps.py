@@ -50,14 +50,29 @@ class AppDiscoveryCache:
 
         # 1. Discover via Windows App Paths Registry
         app_paths = self._scan_app_paths_registry()
+        system_root = os.environ.get("SystemRoot", r"C:\Windows")
         for key, path in app_paths.items():
             if Path(path).exists():
+                clean_path = path
+                # If path is an internal raw WindowsApps binary, prefer standard system launcher
+                if "windowsapps" in path.lower():
+                    alias = f"{key}.exe" if not key.endswith(".exe") else key
+                    candidates = [
+                        Path(system_root) / alias,
+                        Path(system_root) / "System32" / alias,
+                        Path(os.environ.get("LOCALAPPDATA", "")) / "Microsoft" / "WindowsApps" / alias,
+                    ]
+                    for cand in candidates:
+                        if cand.exists():
+                            clean_path = str(cand)
+                            break
                 discovered[key] = AppInfo(
                     key=key,
-                    name=Path(path).stem.title(),
-                    path=path,
-                    description=f"Discovered via App Paths: {Path(path).name}"
+                    name=Path(clean_path).stem.title(),
+                    path=clean_path,
+                    description=f"Discovered via App Paths: {Path(clean_path).name}"
                 )
+
 
         # 2. Discover via PATH
         for key, display_name, exe_name in STANDARD_APPS:

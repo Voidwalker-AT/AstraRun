@@ -43,7 +43,7 @@ if (-not (Test-Path $VenvPython)) {
 }
 
 # Resolve canonical version from src/astrarun/__init__.py
-$version = "0.10.1-hotfix"
+$version = "0.10.3"
 if (Test-Path $InitPy) {
     $verMatch = Select-String -Path $InitPy -Pattern '__version__\s*=\s*["'']([^"'']+)["'']'
     if ($verMatch) {
@@ -147,6 +147,9 @@ if ($Status) {
 $running = Get-AstraRunProcesses
 if ($running) {
     Write-Host "[AstraRun] An instance is already running (PID: $($running -join ', '))." -ForegroundColor Yellow
+    Write-Host "[AstraRun] Summoning existing launcher window..." -ForegroundColor Cyan
+    $startExe = if (Test-Path $VenvPythonW) { $VenvPythonW } else { $VenvPython }
+    & $startExe $MainScript | Out-Null
     Write-Host "Press Alt+Space to summon the launcher, or run .\start-astrarun.ps1 -Restart to restart it." -ForegroundColor Cyan
     exit 0
 }

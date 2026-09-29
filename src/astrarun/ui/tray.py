@@ -41,6 +41,7 @@ class AstraTrayIcon(QSystemTrayIcon):
     """Resident system tray controller for AstraRun."""
 
     toggle_launcher_requested = Signal()
+    restart_requested = Signal()
     open_history_requested = Signal()
     open_memory_requested = Signal()
     open_skills_requested = Signal()
@@ -118,7 +119,11 @@ class AstraTrayIcon(QSystemTrayIcon):
 
         menu.addSeparator()
 
-        # Exit
+        # Restart & Exit
+        restart_action = QAction("Restart AstraRun", self)
+        restart_action.triggered.connect(self.restart_requested.emit)
+        menu.addAction(restart_action)
+
         exit_action = QAction("Exit AstraRun", self)
         exit_action.triggered.connect(self.exit_requested.emit)
         menu.addAction(exit_action)

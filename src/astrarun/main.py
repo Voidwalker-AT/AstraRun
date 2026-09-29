@@ -3,7 +3,9 @@
 from __future__ import annotations
 
 import argparse
+import ctypes
 import json
+import logging
 import os
 import signal
 import sys
@@ -16,7 +18,7 @@ SRC_DIR = Path(__file__).resolve().parent.parent
 if str(SRC_DIR) not in sys.path:
     sys.path.insert(0, str(SRC_DIR))
 
-from PySide6.QtCore import QTimer
+from PySide6.QtCore import QFileSystemWatcher, QTimer
 from PySide6.QtWidgets import QApplication
 
 from astrarun import __version__
@@ -52,6 +54,34 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
+def summon_existing_instance() -> bool:
+    """If another AstraRun instance is already active, signal its launcher window to summon."""
+    # 1. Primary trigger file mechanism (works across all session & UIPI boundaries)
+    try:
+        os.makedirs("data", exist_ok=True)
+        trigger_path = Path("data/astrarun_summon.trigger")
+        trigger_path.write_text(f"{time.time()}", encoding="utf-8")
+    except Exception as err:
+        logging.getLogger("astrarun.main").debug("Could not write summon trigger: %s", err)
+
+    # 2. Win32 window message & foreground activation
+    if sys.platform == "win32":
+        state_path = Path("data/astrarun_state.json")
+        if state_path.exists():
+            try:
+                with open(state_path, "r", encoding="utf-8") as f:
+                    data = json.load(f)
+                launcher_hwnd = data.get("launcher_hwnd")
+                if launcher_hwnd and ctypes.windll.user32.IsWindow(launcher_hwnd):
+                    WM_ASTRARUN_SUMMON = ctypes.windll.user32.RegisterWindowMessageW("AstraRun_Summon_Message")
+                    ctypes.windll.user32.PostMessageW(launcher_hwnd, WM_ASTRARUN_SUMMON, 0, 0)
+                    from astrarun.ui.presentation import force_foreground_activation
+                    force_foreground_activation(launcher_hwnd)
+            except Exception as err:
+                logging.getLogger("astrarun.main").debug("Could not signal window message: %s", err)
+    return True
+
+
 def write_state_file(
     status: str,
     ready: bool,
@@ -60,6 +90,7 @@ def write_state_file(
     key: str = "Space",
     exit_code: int | None = None,
     started_at: str | None = None,
+    launcher_hwnd: int | None = None,
 ) -> None:
     """Write machine-readable runtime state file for wrapper process verification."""
     try:
@@ -75,6 +106,7 @@ def write_state_file(
             "started_at": started_at or datetime.now().isoformat(),
             "hotkey": hk_str,
             "tray": True,
+            "launcher_hwnd": launcher_hwnd,
             "stage": stage,
             "exit_code": exit_code,
         }
@@ -126,8 +158,9 @@ def main() -> int:
 
     # 3. Single-Instance Enforcement
     if not astra_app.single_instance.acquire():
-        logger.warning("[STARTUP_STAGE] SINGLE_INSTANCE_FAILED. Another instance is active. Exiting cleanly.")
-        print("[ASTRARUN] Another instance of AstraRun is already running. Exiting.")
+        logger.warning("[STARTUP_STAGE] SINGLE_INSTANCE_FAILED. Another instance is active. Summoning existing launcher...")
+        summon_existing_instance()
+        print("[ASTRARUN] Another instance of AstraRun is already running. Summoned existing launcher.")
         return 0
     logger.info("[STARTUP_STAGE] SINGLE_INSTANCE_ACQUIRED (mutex=%s)", astra_app.single_instance.mutex_name)
 
@@ -178,6 +211,26 @@ def main() -> int:
     tray_icon.open_settings_requested.connect(launcher.open_settings)
     tray_icon.open_diagnostics_requested.connect(launcher.open_diagnostics)
     tray_icon.exit_requested.connect(qapp.quit)
+
+    def handle_restart():
+        logger.info("[LIFECYCLE] Restart requested via tray menu. Spawning fresh resident process...")
+        try:
+            import subprocess
+            venv_pythonw = sys.executable
+            main_script = str(Path(__file__).resolve())
+            DETACHED_PROCESS = 0x00000008
+            CREATE_NO_WINDOW = 0x00000200
+            subprocess.Popen(
+                [venv_pythonw, main_script],
+                cwd=str(Path(__file__).resolve().parent.parent.parent),
+                creationflags=DETACHED_PROCESS | CREATE_NO_WINDOW,
+                close_fds=True,
+            )
+        except Exception as err:
+            logger.error("Failed to spawn restart process: %s", err)
+        qapp.quit()
+
+    tray_icon.restart_requested.connect(handle_restart)
     tray_icon.show()
     astra_app.tray_icon = tray_icon  # type: ignore
     logger.info("[STARTUP_STAGE] TRAY_CREATED (tooltip='%s')", tray_icon.toolTip())
@@ -231,6 +284,23 @@ def main() -> int:
     heartbeat.start(500)
     astra_app.heartbeat = heartbeat  # type: ignore
 
+    # Setup cross-process summon trigger watcher
+    os.makedirs("data", exist_ok=True)
+    trigger_path = Path("data/astrarun_summon.trigger")
+    if not trigger_path.exists():
+        trigger_path.touch()
+
+    summon_watcher = QFileSystemWatcher([str(trigger_path.resolve())])
+
+    def on_trigger_summon(path: str):
+        logger.info("[SUMMON] Summon trigger received from external process: %s", path)
+        presentation_controller.present()
+        if str(trigger_path.resolve()) not in summon_watcher.files():
+            summon_watcher.addPath(str(trigger_path.resolve()))
+
+    summon_watcher.fileChanged.connect(on_trigger_summon)
+    astra_app.summon_watcher = summon_watcher  # type: ignore
+
     if args.show_now:
         presentation_controller.present()
 
@@ -243,6 +313,7 @@ def main() -> int:
         modifiers=modifiers,
         key=key,
         started_at=start_iso,
+        launcher_hwnd=int(launcher.winId()) if sys.platform == "win32" else None,
     )
 
     logger.info(

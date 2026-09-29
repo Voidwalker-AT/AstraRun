@@ -239,6 +239,20 @@ flowchart LR
 
 ---
 
+### v0.10.3 — Neural NLP Sandwich & True Background Application Mode (Complete — 2026-09-29)
+- **Neural NLP Sandwich Architecture**: Multi-tier pipeline (`Tier 0 Fast Path` -> `Laya A Pre-Gate` -> `spaCy Neural Structure Engine` -> `Laya B Verifier` -> `Decision Fusion` -> `WorkflowCompiler`).
+- **Zero Duplicate 421M Weights**: Laya A and Laya B strictly share the single singleton `ModernBERT` instance from `laya_router.get_agent()`.
+- **100% Verbatim Literal Preservation**: Text payloads (`type pqr`, `enter text "secret"`) preserve exact character offsets without token truncation or normalization.
+- **100% Negation Safety**: Structural negation gating (`is_negated: bool`) preventing negated commands from reaching execution.
+- **True Resident Background Mode**: Spawns detached via `pythonw.exe` (`0x00000008 | 0x00000200`) leaving zero background console windows. Resident tray icon with "Restart AstraRun" and "Exit AstraRun" lifecycle controls.
+- **Cross-Process Single-Instance Summon**: Secondary launches signal the resident process in 928ms with exit code 0 via named mutex and trigger file.
+- **Native WinSta0\Default Process Launching**: Direct `CreateProcessW` onto interactive desktop eliminating packaged AppX suspend deadlocks.
+- **Neural NLP Benchmark (840 cases)**: 99.04% Dev / 98.44% Test Compound Accuracy, 100.0% Literal Preservation, 17.09ms p95 latency (`docs/NEURAL_NLP_BENCHMARK.md`).
+- **Live Workstation Acceptance Suite**: 4 / 4 PASSED (100.0%) across background residency, summon, compound execution, and lifecycle controls (`docs/V0.10.3_LIVE_ACCEPTANCE.md`).
+- **353 Passing Automated Tests**: 353 / 353 tests passing cleanly in ~108s.
+
+---
+
 ### v0.11 — Workstation Daemon / Rich Context
 - Resident system tray daemon with background event monitoring, context synthesis, proactive alerts, and dev port recovery.
 

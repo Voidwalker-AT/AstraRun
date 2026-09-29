@@ -1,16 +1,27 @@
 # AstraRun Testing & Verification Report
 
-> **Version**: 0.10.2  
+> **Version**: 0.10.3  
 > **Status**: VERIFIED & PASSING  
-> **Execution Date**: 2026-09-28  
+> **Execution Date**: 2026-09-29  
 
 ---
 
 ## 1. Test Suite Architecture
 
-The AstraRun test suite contains **337 automated tests across 23 modules**:
+The AstraRun test suite contains **353 automated tests across 24 modules**:
 
-1. **Compound Pipeline & Reachability Tests (v0.10.2)**:
+1. **Neural NLP Sandwich Tests (v0.10.3)**:
+   - `tests/test_neural_nlp_sandwich.py` (16 tests):
+     - `test_neural_structure_engine_compound_split`: Verifies dependency parse splitting of compound clauses.
+     - `test_neural_structure_engine_negation_detection`: Verifies structural negation tagging (`is_negated: bool`).
+     - `test_neural_structure_engine_literal_preservation`: Verifies verbatim character preservation of text payloads.
+     - `test_laya_sandwich_shared_agent`: Proves Laya A and B share single singleton `ModernBERT 421M` instance.
+     - `test_decision_fusion_fast_path_bypass`: Verifies Tier 0 fast path bypasses neural parsing for single commands.
+     - `test_decision_fusion_compound_approval`: Verifies multi-clause approval with sequential clause grounding.
+     - `test_decision_fusion_negation_gating`: Verifies complete exclusion of negated actions from executable steps.
+     - `test_e2e_open_notepad_and_type`: Validates end-to-end simulated compound compilation and execution.
+
+2. **Compound Pipeline & Reachability Tests (v0.10.2)**:
    - `tests/test_v0102_compound_pipeline.py` (10 tests):
      - `test_has_compound_indicators`: Detection of conjunctions (`and`, `then`, `&`, `;`) and multi-clause verbs.
      - `test_has_compound_indicators_false_for_simple`: Validates simple queries do not trigger compound indicators.
@@ -22,6 +33,7 @@ The AstraRun test suite contains **337 automated tests across 23 modules**:
      - `test_workflow_compiler_shortcut_chaining`: Resolution of sequential keyboard shortcut chords.
      - `test_launcher_suppresses_suggestions_on_compound_query`: Validates suggestion list is cleared and hidden on compound input.
      - `test_end_to_end_compound_handle_request`: End-to-end execution of compound commands in simulated environment.
+
 
 1. **Application Interaction & Control Grounding Tests (v0.10)**:
    - `tests/test_v010_interaction.py` (41 tests):

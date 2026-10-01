@@ -1,0 +1,140 @@
+{
+  "total_cases": 13,
+  "raw_entity_preservation_pct": 38.5,
+  "normalized_entity_preservation_pct": 100.0,
+  "entity_preservation_delta_pct": 61.5,
+  "raw_technical_token_accuracy_pct": 53.8,
+  "normalized_technical_token_accuracy_pct": 100.0,
+  "records": [
+    {
+      "id": "C01",
+      "canonical": "open Vivaldi",
+      "raw_asr": "open vivaldi",
+      "normalized": "open Vivaldi",
+      "raw_ep": 100.0,
+      "norm_ep": 100.0,
+      "raw_tta": 100.0,
+      "norm_tta": 100.0
+    },
+    {
+      "id": "C02",
+      "canonical": "open my deep learning project",
+      "raw_asr": "open my deep learning project",
+      "normalized": "open my deep learning project",
+      "raw_ep": 100.0,
+      "norm_ep": 100.0,
+      "raw_tta": 100.0,
+      "norm_tta": 100.0
+    },
+    {
+      "id": "C03",
+      "canonical": "run pytest",
+      "raw_asr": "run pie test",
+      "normalized": "run pytest",
+      "raw_ep": 0.0,
+      "norm_ep": 100.0,
+      "raw_tta": 0.0,
+      "norm_tta": 100.0
+    },
+    {
+      "id": "C04",
+      "canonical": "kill whatever is using port 3000",
+      "raw_asr": "kill whatever is using port three thousand",
+      "normalized": "kill process on port 3000",
+      "raw_ep": 0.0,
+      "norm_ep": 100.0,
+      "raw_tta": 50.0,
+      "norm_tta": 100.0
+    },
+    {
+      "id": "C05",
+      "canonical": "connect to Campus Guest",
+      "raw_asr": "connect to campus guest",
+      "normalized": "connect to Campus Guest",
+      "raw_ep": 100.0,
+      "norm_ep": 100.0,
+      "raw_tta": 100.0,
+      "norm_tta": 100.0
+    },
+    {
+      "id": "C06",
+      "canonical": "open E:\\Workspace\\Active\\AstraRun",
+      "raw_asr": "open e colon workspace active astrarun",
+      "normalized": "open e:\\Workspace\\Active\\AstraRun",
+      "raw_ep": 0.0,
+      "norm_ep": 100.0,
+      "raw_tta": 100.0,
+      "norm_tta": 100.0
+    },
+    {
+      "id": "C07",
+      "canonical": "run the CUDA benchmark",
+      "raw_asr": "run the cuda benchmark",
+      "normalized": "run the CUDA benchmark",
+      "raw_ep": 100.0,
+      "norm_ep": 100.0,
+      "raw_tta": 100.0,
+      "norm_tta": 100.0
+    },
+    {
+      "id": "C08",
+      "canonical": "use Qwen for this",
+      "raw_asr": "use cue when for this",
+      "normalized": "use Qwen for this",
+      "raw_ep": 0.0,
+      "norm_ep": 100.0,
+      "raw_tta": 0.0,
+      "norm_tta": 100.0
+    },
+    {
+      "id": "C09",
+      "canonical": "ask Spark to inspect it",
+      "raw_asr": "ask spark to inspect it",
+      "normalized": "ask Spark to inspect it",
+      "raw_ep": 100.0,
+      "norm_ep": 100.0,
+      "raw_tta": 100.0,
+      "norm_tta": 100.0
+    },
+    {
+      "id": "C10",
+      "canonical": "Q4_K_M",
+      "raw_asr": "q four k m",
+      "normalized": "Q4_K_M",
+      "raw_ep": 0.0,
+      "norm_ep": 100.0,
+      "raw_tta": 0.0,
+      "norm_tta": 100.0
+    },
+    {
+      "id": "C11",
+      "canonical": "git status",
+      "raw_asr": "get status",
+      "normalized": "git status",
+      "raw_ep": 0.0,
+      "norm_ep": 100.0,
+      "raw_tta": 50.0,
+      "norm_tta": 100.0
+    },
+    {
+      "id": "C12",
+      "canonical": "open VS Code",
+      "raw_asr": "open v s code",
+      "normalized": "open VS Code",
+      "raw_ep": 0.0,
+      "norm_ep": 100.0,
+      "raw_tta": 0.0,
+      "norm_tta": 100.0
+    },
+    {
+      "id": "C13",
+      "canonical": "run nvidia-smi",
+      "raw_asr": "run nvidia s m i",
+      "normalized": "run nvidia-smi",
+      "raw_ep": 0.0,
+      "norm_ep": 100.0,
+      "raw_tta": 0.0,
+      "norm_tta": 100.0
+    }
+  ]
+}

@@ -1,0 +1,59 @@
+{
+  "lab": "LAB_E_WINRT_OCR",
+  "timestamp_utc": "2026-09-30T15:18:11Z",
+  "tests": [
+    {
+      "test_id": "E-1",
+      "name": "python_winsdk_import",
+      "status": "FAIL",
+      "elapsed_ms": 0.72,
+      "module_found": false,
+      "error": "No module named 'winsdk'",
+      "finding": "winsdk is not installed in project venv; cannot import directly without external pip wheel."
+    },
+    {
+      "test_id": "E-2",
+      "name": "python_winrt_import",
+      "status": "FAIL",
+      "elapsed_ms": 0.69,
+      "module_found": false,
+      "error": "No module named 'winrt'",
+      "finding": "winrt is not installed in project venv."
+    },
+    {
+      "test_id": "E-3",
+      "name": "os_winrt_ocr_dll_presence",
+      "status": "PASS",
+      "dll_path": "C:\\Windows\\System32\\Windows.Media.Ocr.dll",
+      "exists": true,
+      "size_bytes": 876544,
+      "finding": "OS-level C++ binary exists in System32."
+    },
+    {
+      "test_id": "E-4",
+      "name": "powershell_winrt_projection",
+      "status": "FAIL",
+      "elapsed_ms": 569.48,
+      "returncode": 0,
+      "stdout_snippet": "{\n    \"line_count\":  0,\n    \"full_text\":  null,\n    \"language\":  \"en-US\",\n    \"inference_time_ms\":  23.04,\n    \"total_time_ms\":  232.93,\n    \"lines\":  [\n\n              ]\n}",
+      "stderr_snippet": "You cannot call a method on a null-valued expression.\nAt E:\\Workspace\\Active\\AstraRun\\tests\\benchmarks\\phase17\\run_ocr_winrt.ps1:31 char:1\n+ $streamOp = $file.OpenAsync([Windows.Storage.FileAccessMode]::Read)\n+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n    + CategoryInfo",
+      "finding": "PowerShell 5.1 cannot invoke WinRT IAsyncOperation::GetResults directly on COM objects without compiling custom C# interop assemblies referencing Windows.winmd."
+    },
+    {
+      "test_id": "E-5",
+      "name": "combase_winrt_exports",
+      "status": "PASS",
+      "has_RoInitialize": true,
+      "has_RoGetActivationFactory": true,
+      "has_WindowsCreateStringReference": true,
+      "finding": "Native WinRT C-API exports are present in combase.dll, but calling them from Python requires full C++ COM interface vtable bindings."
+    }
+  ],
+  "summary": {
+    "total": 5,
+    "pass": 2,
+    "fail": 3,
+    "blocked": 0,
+    "inconclusive": 0
+  }
+}

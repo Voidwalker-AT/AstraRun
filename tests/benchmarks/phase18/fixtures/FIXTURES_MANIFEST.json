@@ -1,0 +1,106 @@
+{
+  "VF01": {
+    "filename": "VF01_native_buttons.png",
+    "path": "E:\\Workspace\\Active\\AstraRun\\tests\\benchmarks\\phase18\\fixtures\\VF01_native_buttons.png",
+    "sha256": "afd14b755f9cad90064e2779bf3e1e2406413ac593d02c5771ea2668ca479223",
+    "bytes": 9313,
+    "width": 600,
+    "height": 350
+  },
+  "VF02": {
+    "filename": "VF02_unlabeled_icons.png",
+    "path": "E:\\Workspace\\Active\\AstraRun\\tests\\benchmarks\\phase18\\fixtures\\VF02_unlabeled_icons.png",
+    "sha256": "ee4bba38f951ae3c02f5ca260be2df34853e66f7041d089a7ff7372d69f0b9ac",
+    "bytes": 4971,
+    "width": 600,
+    "height": 120
+  },
+  "VF03": {
+    "filename": "VF03_browser_controls.png",
+    "path": "E:\\Workspace\\Active\\AstraRun\\tests\\benchmarks\\phase18\\fixtures\\VF03_browser_controls.png",
+    "sha256": "8797995e1073f291d0e45cf0c36d14f97a1216b25c0bd95376044f4d122cb6ab",
+    "bytes": 6495,
+    "width": 800,
+    "height": 150
+  },
+  "VF04": {
+    "filename": "VF04_modal_dialog.png",
+    "path": "E:\\Workspace\\Active\\AstraRun\\tests\\benchmarks\\phase18\\fixtures\\VF04_modal_dialog.png",
+    "sha256": "f02c69051f3ce1e2291f5c23d9e64daee2403a7029eb6c96b271c4faaa9b6de8",
+    "bytes": 7843,
+    "width": 500,
+    "height": 260
+  },
+  "VF05": {
+    "filename": "VF05_image_grid.png",
+    "path": "E:\\Workspace\\Active\\AstraRun\\tests\\benchmarks\\phase18\\fixtures\\VF05_image_grid.png",
+    "sha256": "d5e4e736eef99c23ca623a0bda798a94a664eb94c33aea55fd360405712d93fd",
+    "bytes": 22810,
+    "width": 800,
+    "height": 600
+  },
+  "VF06": {
+    "filename": "VF06_diagram_reasoning.png",
+    "path": "E:\\Workspace\\Active\\AstraRun\\tests\\benchmarks\\phase18\\fixtures\\VF06_diagram_reasoning.png",
+    "sha256": "2e3508a016efab7e9e500176c465eaf205d2da837cb746c1566cc15b528b54ab",
+    "bytes": 14214,
+    "width": 850,
+    "height": 350
+  },
+  "VF07": {
+    "filename": "VF07_technical_screenshot.png",
+    "path": "E:\\Workspace\\Active\\AstraRun\\tests\\benchmarks\\phase18\\fixtures\\VF07_technical_screenshot.png",
+    "sha256": "3e5163858e8ececcd4f3713062653b1802f97ac9682955ba4de5f8d8f4986f25",
+    "bytes": 16660,
+    "width": 800,
+    "height": 300
+  },
+  "VF08": {
+    "filename": "VF08_low_contrast_controls.png",
+    "path": "E:\\Workspace\\Active\\AstraRun\\tests\\benchmarks\\phase18\\fixtures\\VF08_low_contrast_controls.png",
+    "sha256": "7ec4e960e6a3d0e7ddb032d2659f1e081f4a16a0611002a7373230e98fd69262",
+    "bytes": 1714,
+    "width": 500,
+    "height": 200
+  },
+  "VF09": {
+    "filename": "VF09_dpi_scaling.png",
+    "path": "E:\\Workspace\\Active\\AstraRun\\tests\\benchmarks\\phase18\\fixtures\\VF09_dpi_scaling.png",
+    "sha256": "cbc6b0f46f5a285897fdea0a8724785a7d935af12a52c944e7400ee23ec49d78",
+    "bytes": 5938,
+    "width": 600,
+    "height": 250
+  },
+  "VF10": {
+    "filename": "VF10_overlapping_windows.png",
+    "path": "E:\\Workspace\\Active\\AstraRun\\tests\\benchmarks\\phase18\\fixtures\\VF10_overlapping_windows.png",
+    "sha256": "6b84081abce964aae88a4e2a2800c52d885a30e1677f78157636c128950b585e",
+    "bytes": 9220,
+    "width": 800,
+    "height": 500
+  },
+  "VF11": {
+    "filename": "VF11_ocr_friendly_panel.png",
+    "path": "E:\\Workspace\\Active\\AstraRun\\tests\\benchmarks\\phase18\\fixtures\\VF11_ocr_friendly_panel.png",
+    "sha256": "269726a85127f59bc8e75b9e81375513017e9f29d6f017283b946c294249aea8",
+    "bytes": 14186,
+    "width": 700,
+    "height": 300
+  },
+  "VF12": {
+    "filename": "VF12_ocr_hostile_graphic.png",
+    "path": "E:\\Workspace\\Active\\AstraRun\\tests\\benchmarks\\phase18\\fixtures\\VF12_ocr_hostile_graphic.png",
+    "sha256": "67f810808c1790ed4d5e81d7ea90f2478820c23e694b617b76ca9872f352a95f",
+    "bytes": 6499,
+    "width": 650,
+    "height": 300
+  },
+  "VF_INJ": {
+    "filename": "VF_INJ_visual_prompt_injection.png",
+    "path": "E:\\Workspace\\Active\\AstraRun\\tests\\benchmarks\\phase18\\fixtures\\VF_INJ_visual_prompt_injection.png",
+    "sha256": "ce1c1eb1a56a16ef0c3476a23ba8ec7fb7694d9e5c53a2bf62a142ebe3164a8b",
+    "bytes": 20064,
+    "width": 800,
+    "height": 350
+  }
+}

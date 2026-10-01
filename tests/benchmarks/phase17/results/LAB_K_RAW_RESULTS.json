@@ -1,0 +1,312 @@
+{
+  "qwen2.5-coder-1.5b-q4": {
+    "model_name": "Qwen2.5-Coder-1.5B-Instruct-Q4_K_M",
+    "quant": "Q4_K_M",
+    "configurations": [
+      {
+        "status": "PASS",
+        "ngl": 0,
+        "ctx_size": 4096,
+        "offload_mode": "CPU-Only",
+        "cold_load_ms": 2297.71,
+        "ttft_ms": 44.13,
+        "generation_tps": 23.63,
+        "total_latency_ms": 5429.91,
+        "server_rss_mb": 1718.4,
+        "vram_allocated_mb": 4.0,
+        "gpu_utilization_pct": 23.0,
+        "reclamation": {
+          "vram_baseline_mb": 1149.0,
+          "vram_peak_mb": 1153.0,
+          "vram_t0_mb": 1140.0,
+          "vram_t1s_mb": 1146.0,
+          "vram_t5s_mb": 1147.0,
+          "vram_delta_end_mb": -2.0,
+          "status": "RECLAIMED"
+        }
+      },
+      {
+        "status": "PASS",
+        "ngl": 14,
+        "ctx_size": 4096,
+        "offload_mode": "Partial-GPU",
+        "cold_load_ms": 2209.18,
+        "ttft_ms": 39.18,
+        "generation_tps": 25.57,
+        "total_latency_ms": 5026.89,
+        "server_rss_mb": 1718.7,
+        "vram_allocated_mb": 10.0,
+        "gpu_utilization_pct": 19.0,
+        "reclamation": {
+          "vram_baseline_mb": 1147.0,
+          "vram_peak_mb": 1157.0,
+          "vram_t0_mb": 1149.0,
+          "vram_t1s_mb": 1149.0,
+          "vram_t5s_mb": 1149.0,
+          "vram_delta_end_mb": 2.0,
+          "status": "RECLAIMED"
+        }
+      },
+      {
+        "status": "PASS",
+        "ngl": 99,
+        "ctx_size": 4096,
+        "offload_mode": "Max-GPU",
+        "cold_load_ms": 2225.37,
+        "ttft_ms": 37.58,
+        "generation_tps": 25.66,
+        "total_latency_ms": 4997.23,
+        "server_rss_mb": 1718.62,
+        "vram_allocated_mb": 0.0,
+        "gpu_utilization_pct": 20.0,
+        "reclamation": {
+          "vram_baseline_mb": 1149.0,
+          "vram_peak_mb": 1127.0,
+          "vram_t0_mb": 1127.0,
+          "vram_t1s_mb": 1127.0,
+          "vram_t5s_mb": 1127.0,
+          "vram_delta_end_mb": -22.0,
+          "status": "RECLAIMED"
+        }
+      },
+      {
+        "status": "PASS",
+        "ngl": 99,
+        "ctx_size": 8192,
+        "offload_mode": "Max-GPU",
+        "cold_load_ms": 2212.23,
+        "ttft_ms": 37.42,
+        "generation_tps": 25.89,
+        "total_latency_ms": 4953.18,
+        "server_rss_mb": 1830.74,
+        "vram_allocated_mb": 6.0,
+        "gpu_utilization_pct": 54.0,
+        "reclamation": {
+          "vram_baseline_mb": 1127.0,
+          "vram_peak_mb": 1133.0,
+          "vram_t0_mb": 1135.0,
+          "vram_t1s_mb": 1135.0,
+          "vram_t5s_mb": 1133.0,
+          "vram_delta_end_mb": 6.0,
+          "status": "RECLAIMED"
+        }
+      }
+    ]
+  },
+  "qwen2.5-coder-1.5b-q5": {
+    "model_name": "Qwen2.5-Coder-1.5B-Instruct-Q5_K_M",
+    "quant": "Q5_K_M",
+    "configurations": [
+      {
+        "status": "PASS",
+        "ngl": 0,
+        "ctx_size": 4096,
+        "offload_mode": "CPU-Only",
+        "cold_load_ms": 1574.79,
+        "ttft_ms": 41.95,
+        "generation_tps": 23.33,
+        "total_latency_ms": 5495.83,
+        "server_rss_mb": 1254.86,
+        "vram_allocated_mb": 19.0,
+        "gpu_utilization_pct": 22.0,
+        "reclamation": {
+          "vram_baseline_mb": 1133.0,
+          "vram_peak_mb": 1152.0,
+          "vram_t0_mb": 1144.0,
+          "vram_t1s_mb": 1144.0,
+          "vram_t5s_mb": 1144.0,
+          "vram_delta_end_mb": 11.0,
+          "status": "RECLAIMED"
+        }
+      },
+      {
+        "status": "PASS",
+        "ngl": 14,
+        "ctx_size": 4096,
+        "offload_mode": "Partial-GPU",
+        "cold_load_ms": 1531.5,
+        "ttft_ms": 41.34,
+        "generation_tps": 23.7,
+        "total_latency_ms": 5411.57,
+        "server_rss_mb": 1254.71,
+        "vram_allocated_mb": 0.0,
+        "gpu_utilization_pct": 21.0,
+        "reclamation": {
+          "vram_baseline_mb": 1144.0,
+          "vram_peak_mb": 1132.0,
+          "vram_t0_mb": 1132.0,
+          "vram_t1s_mb": 1174.0,
+          "vram_t5s_mb": 1128.0,
+          "vram_delta_end_mb": -16.0,
+          "status": "RECLAIMED"
+        }
+      },
+      {
+        "status": "PASS",
+        "ngl": 99,
+        "ctx_size": 4096,
+        "offload_mode": "Max-GPU",
+        "cold_load_ms": 1549.26,
+        "ttft_ms": 42.34,
+        "generation_tps": 24.12,
+        "total_latency_ms": 5316.96,
+        "server_rss_mb": 1254.24,
+        "vram_allocated_mb": 2.0,
+        "gpu_utilization_pct": 55.0,
+        "reclamation": {
+          "vram_baseline_mb": 1128.0,
+          "vram_peak_mb": 1130.0,
+          "vram_t0_mb": 1130.0,
+          "vram_t1s_mb": 1130.0,
+          "vram_t5s_mb": 1157.0,
+          "vram_delta_end_mb": 29.0,
+          "status": "RECLAIMED"
+        }
+      },
+      {
+        "status": "PASS",
+        "ngl": 99,
+        "ctx_size": 8192,
+        "offload_mode": "Max-GPU",
+        "cold_load_ms": 1531.53,
+        "ttft_ms": 40.34,
+        "generation_tps": 23.63,
+        "total_latency_ms": 5426.65,
+        "server_rss_mb": 1366.81,
+        "vram_allocated_mb": 251.0,
+        "gpu_utilization_pct": 40.0,
+        "reclamation": {
+          "vram_baseline_mb": 1157.0,
+          "vram_peak_mb": 1408.0,
+          "vram_t0_mb": 1386.0,
+          "vram_t1s_mb": 1339.0,
+          "vram_t5s_mb": 1332.0,
+          "vram_delta_end_mb": 175.0,
+          "status": "PARTIALLY_RECLAIMED"
+        }
+      }
+    ]
+  },
+  "spark-x2.5-1.7b-q4": {
+    "model_name": "Spark-X2.5-1.7B-Q4_K_M",
+    "quant": "Q4_K_M",
+    "configurations": [
+      {
+        "status": "PASS",
+        "ngl": 0,
+        "ctx_size": 4096,
+        "offload_mode": "CPU-Only",
+        "cold_load_ms": 1657.81,
+        "ttft_ms": 90.39,
+        "generation_tps": 26.99,
+        "total_latency_ms": 4836.27,
+        "server_rss_mb": 1567.73,
+        "vram_allocated_mb": 140.0,
+        "gpu_utilization_pct": 24.0,
+        "reclamation": {
+          "vram_baseline_mb": 1177.0,
+          "vram_peak_mb": 1317.0,
+          "vram_t0_mb": 1178.0,
+          "vram_t1s_mb": 1177.0,
+          "vram_t5s_mb": 1177.0,
+          "vram_t30s_mb": 1177.0,
+          "ram_baseline_mb": 8355.56,
+          "ram_peak_mb": 1567.73,
+          "ram_t0_mb": 8362.98,
+          "ram_t1s_mb": 8367.39,
+          "ram_t5s_mb": 8437.2,
+          "ram_t30s_mb": 8563.56,
+          "vram_delta_end_mb": 0.0,
+          "status": "RECLAIMED"
+        }
+      },
+      {
+        "status": "PASS",
+        "ngl": 14,
+        "ctx_size": 4096,
+        "offload_mode": "Partial-GPU",
+        "cold_load_ms": 1989.04,
+        "ttft_ms": 64.9,
+        "generation_tps": 36.66,
+        "total_latency_ms": 3564.47,
+        "server_rss_mb": 1565.09,
+        "vram_allocated_mb": 837.0,
+        "gpu_utilization_pct": 39.0,
+        "reclamation": {
+          "vram_baseline_mb": 1177.0,
+          "vram_peak_mb": 2014.0,
+          "vram_t0_mb": 1178.0,
+          "vram_t1s_mb": 1178.0,
+          "vram_t5s_mb": 1178.0,
+          "vram_t30s_mb": 1177.0,
+          "ram_baseline_mb": 8562.6,
+          "ram_peak_mb": 1565.09,
+          "ram_t0_mb": 8534.49,
+          "ram_t1s_mb": 8531.54,
+          "ram_t5s_mb": 8521.77,
+          "ram_t30s_mb": 8603.05,
+          "vram_delta_end_mb": 0.0,
+          "status": "RECLAIMED"
+        }
+      },
+      {
+        "status": "PASS",
+        "ngl": 99,
+        "ctx_size": 4096,
+        "offload_mode": "Max-GPU",
+        "cold_load_ms": 2351.82,
+        "ttft_ms": 62.5,
+        "generation_tps": 56.98,
+        "total_latency_ms": 2355.8,
+        "server_rss_mb": 1477.72,
+        "vram_allocated_mb": 1353.0,
+        "gpu_utilization_pct": 77.0,
+        "reclamation": {
+          "vram_baseline_mb": 1177.0,
+          "vram_peak_mb": 2530.0,
+          "vram_t0_mb": 1177.0,
+          "vram_t1s_mb": 1178.0,
+          "vram_t5s_mb": 1178.0,
+          "vram_t30s_mb": 1177.0,
+          "ram_baseline_mb": 8605.38,
+          "ram_peak_mb": 1477.72,
+          "ram_t0_mb": 8733.68,
+          "ram_t1s_mb": 8689.42,
+          "ram_t5s_mb": 8693.05,
+          "ram_t30s_mb": 8708.5,
+          "vram_delta_end_mb": 0.0,
+          "status": "RECLAIMED"
+        }
+      },
+      {
+        "status": "PASS",
+        "ngl": 99,
+        "ctx_size": 8192,
+        "offload_mode": "Max-GPU",
+        "cold_load_ms": 2044.82,
+        "ttft_ms": 62.66,
+        "generation_tps": 53.81,
+        "total_latency_ms": 2502.39,
+        "server_rss_mb": 1482.1,
+        "vram_allocated_mb": 1413.0,
+        "gpu_utilization_pct": 69.0,
+        "reclamation": {
+          "vram_baseline_mb": 1177.0,
+          "vram_peak_mb": 2590.0,
+          "vram_t0_mb": 1177.0,
+          "vram_t1s_mb": 1177.0,
+          "vram_t5s_mb": 1177.0,
+          "vram_t30s_mb": 1177.0,
+          "ram_baseline_mb": 8708.56,
+          "ram_peak_mb": 1482.1,
+          "ram_t0_mb": 8703.59,
+          "ram_t1s_mb": 8701.28,
+          "ram_t5s_mb": 8698.96,
+          "ram_t30s_mb": 8788.7,
+          "vram_delta_end_mb": 0.0,
+          "status": "RECLAIMED"
+        }
+      }
+    ]
+  }
+}

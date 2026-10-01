@@ -1,0 +1,30 @@
+{
+  "qwen2.5-coder-1.5b-q4": {
+    "A_ZERO_SHOT": {
+      "passed": true,
+      "output": "To emit a JSON action to click the button with the ID `@e14`, you can use the following JSON structure:\n\n```json\n{\n  \"action\": \"click\",\n  \"target\": \"@e14\"\n}\n```\n\nThis JSON object specifies that the action is to click the button with the ID `@e14`. The `target` field is set to the ID of the button, which is `@e14` in this case."
+    },
+    "B_SYSTEM_INSTRUCTION": {
+      "passed": true,
+      "output": "```json\n{\n  \"action\": \"click\",\n  \"target\": \"@e14\"\n}\n```"
+    },
+    "C_FEW_SHOT": {
+      "passed": true,
+      "output": "{\"action\": \"click\", \"target\": \"@e14\"}"
+    }
+  },
+  "spark-x2.5-1.7b-q4": {
+    "A_ZERO_SHOT": {
+      "passed": true,
+      "output": "{\"action\": \"click\", \"target\": \"@e14\"}"
+    },
+    "B_SYSTEM_INSTRUCTION": {
+      "passed": true,
+      "output": "{\"action\": \"click\", \"target\": \"@e14\"}"
+    },
+    "C_FEW_SHOT": {
+      "passed": false,
+      "output": "{\"action\": \"click\", \"target\": \"@e{14}\"}"
+    }
+  }
+}

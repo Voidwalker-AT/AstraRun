@@ -1,0 +1,148 @@
+{
+  "lab": "LAB_J_PROCEDURAL_SKILLS",
+  "timestamp_utc": "2026-09-30T17:07:03Z",
+  "tests": [
+    {
+      "test_id": "J-1",
+      "name": "trajectory_ingestion",
+      "status": "PASS",
+      "evidence_type": "MEASURED_LOCAL",
+      "steps_ingested": 6,
+      "trajectory_id": "traj-wifi-recon-20260930-001",
+      "goal": "Scan network adapters, check wifi signal, and reconnect to campus-guest",
+      "parse_latency_ms": 4.245
+    },
+    {
+      "test_id": "J-2",
+      "name": "generalization_and_distillation",
+      "status": "PASS",
+      "evidence_type": "SIMULATED_STUB (LLM) + MEASURED_LOCAL (File/Schema)",
+      "skill_md_path": "E:\\Workspace\\Active\\AstraRun\\tests\\benchmarks\\phase17\\fixtures\\skills_lab\\candidate\\wifi_reconnect\\SKILL.md",
+      "run_py_path": "E:\\Workspace\\Active\\AstraRun\\tests\\benchmarks\\phase17\\fixtures\\skills_lab\\candidate\\wifi_reconnect\\scripts\\run.py",
+      "skill_md_size_bytes": 1100,
+      "run_py_size_bytes": 2003
+    },
+    {
+      "test_id": "J-3",
+      "name": "ast_linting_and_security_scan",
+      "status": "PASS",
+      "evidence_type": "MEASURED_LOCAL",
+      "clean_candidate_findings": 0,
+      "adversarial_tests": {
+        "clean_script_allowed": true,
+        "subprocess_import_rejected": true,
+        "socket_import_rejected": true,
+        "ctypes_import_rejected": true,
+        "os_system_call_rejected": true,
+        "eval_call_rejected": true,
+        "frontmatter_valid": true
+      },
+      "rejection_rate_adversarial": "100.0%"
+    },
+    {
+      "test_id": "J-4",
+      "name": "sandbox_dry_run",
+      "status": "PASS",
+      "evidence_type": "MEASURED_LOCAL",
+      "exit_code": 0,
+      "timed_out": false,
+      "elapsed_ms": 146.39,
+      "memory_limit_mb": 128,
+      "dry_run_output": {
+        "status": "DRY_RUN_SUCCESS",
+        "skill": "wifi_reconnect",
+        "validated_parameters": {
+          "ssid": "campus-guest",
+          "target_host": "8.8.8.8",
+          "timeout_seconds": 15
+        }
+      }
+    },
+    {
+      "test_id": "J-5",
+      "name": "registration_and_indexing",
+      "status": "PASS",
+      "evidence_type": "MEASURED_LOCAL",
+      "catalog_size": 5,
+      "indexed_skills": [
+        "battery_health_report",
+        "browser_download_organizer",
+        "clean_temp_files",
+        "system_audio_mute",
+        "wifi_reconnect"
+      ],
+      "catalog_path": "E:\\Workspace\\Active\\AstraRun\\tests\\benchmarks\\phase17\\fixtures\\skills_lab\\library\\skill_catalog.json"
+    },
+    {
+      "test_id": "J-6",
+      "name": "progressive_retrieval",
+      "status": "PASS",
+      "evidence_type": "MEASURED_LOCAL",
+      "user_query": "My laptop dropped offline from campus-guest wifi, can you reconnect and verify internet?",
+      "matched_skill": "wifi_reconnect",
+      "retrieval_latency_ms": 0.188,
+      "token_metrics": {
+        "header_index_tokens": 126,
+        "disclosed_single_skill_tokens": 306,
+        "progressive_total_tokens": 432,
+        "monolithic_all_skills_tokens": 2263,
+        "token_reduction_percent": 80.91
+      }
+    },
+    {
+      "test_id": "J-7",
+      "name": "parameter_binding_and_execution",
+      "status": "PASS",
+      "evidence_type": "MEASURED_LOCAL (Execution) + SIMULATED_STUB (Parameter Binding)",
+      "bound_parameters": {
+        "ssid": "campus-guest",
+        "timeout_seconds": 10,
+        "target_host": "8.8.8.8"
+      },
+      "exit_code": 0,
+      "timed_out": false,
+      "elapsed_ms": 211.43,
+      "execution_result": {
+        "status": "SUCCESS",
+        "skill": "wifi_reconnect",
+        "connected_ssid": "campus-guest",
+        "assigned_ip": "10.12.4.88",
+        "ping_host": "8.8.8.8",
+        "ping_latency_ms": 14.2,
+        "packet_loss_percent": 0.0
+      }
+    },
+    {
+      "test_id": "J-8",
+      "name": "failure_injection_and_recovery",
+      "status": "PASS",
+      "evidence_type": "MEASURED_LOCAL (Execution & Dispatch) + SIMULATED_STUB (Replan Synthesis)",
+      "injected_fault": "ADAPTER_DISABLED",
+      "exit_code": 2,
+      "structured_diagnostic": {
+        "status": "ERROR",
+        "code": "ADAPTER_DISABLED",
+        "message": "Wi-Fi interface 'Wi-Fi' is disabled in system control",
+        "recommended_action": "enable_adapter",
+        "interface": "Wi-Fi"
+      },
+      "recovery_dispatched": true,
+      "replan_branch": {
+        "step_index": "1b",
+        "action": "system_enable_network_adapter",
+        "parameters": {
+          "adapter_name": "Wi-Fi"
+        },
+        "subsequent_action": "wifi_reconnect"
+      },
+      "infinite_loop_prevented": true
+    }
+  ],
+  "summary": {
+    "total": 8,
+    "pass": 8,
+    "fail": 0,
+    "blocked": 0,
+    "inconclusive": 0
+  }
+}

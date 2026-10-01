@@ -1,0 +1,77 @@
+[
+  {
+    "name": "battery_health_report",
+    "description": "Generate comprehensive battery degradation and cycle report via powercfg.",
+    "tags": [
+      "hardware",
+      "battery",
+      "power",
+      "report"
+    ],
+    "inputs": [
+      "output_format",
+      "target_dir",
+      "include_history"
+    ]
+  },
+  {
+    "name": "browser_download_organizer",
+    "description": "Sort recent browser downloads into categorized project subfolders.",
+    "tags": [
+      "files",
+      "downloads",
+      "organization",
+      "browser"
+    ],
+    "inputs": [
+      "destination_path",
+      "file_types",
+      "dry_run"
+    ]
+  },
+  {
+    "name": "clean_temp_files",
+    "description": "Safely prune user temporary caches, crash dumps, and obsolete temp directories.",
+    "tags": [
+      "maintenance",
+      "disk",
+      "storage",
+      "cleanup"
+    ],
+    "inputs": [
+      "max_age_days",
+      "dry_run",
+      "target_scopes"
+    ]
+  },
+  {
+    "name": "system_audio_mute",
+    "description": "Toggle or set master audio output volume and mute state via CoreAudio.",
+    "tags": [
+      "audio",
+      "volume",
+      "sound",
+      "media"
+    ],
+    "inputs": [
+      "action",
+      "volume_level",
+      "device_endpoint"
+    ]
+  },
+  {
+    "name": "wifi_reconnect",
+    "description": "Scan, connect to a specified Wi-Fi SSID, and verify internet connectivity.",
+    "tags": [
+      "network",
+      "wifi",
+      "connectivity",
+      "diagnostics"
+    ],
+    "inputs": [
+      "ssid",
+      "target_host",
+      "timeout_seconds"
+    ]
+  }
+]

@@ -1,0 +1,98 @@
+{
+  "CONF_1_SPARK_ONLY": {
+    "name": "Spark Only (Fast Path)",
+    "models": [
+      "spark_x25_q4"
+    ],
+    "allocated_vram_mb": 1350,
+    "total_with_os_mb": 2400,
+    "free_usable_headroom_mb": 1696,
+    "status": "COEXIST_SAFE",
+    "action": "None (Coexists in GPU)"
+  },
+  "CONF_2_SPARK_QWEN_DUAL": {
+    "name": "Spark + Qwen (Dual Residency)",
+    "models": [
+      "spark_x25_q4",
+      "qwen25_coder_q4"
+    ],
+    "allocated_vram_mb": 2550,
+    "total_with_os_mb": 3600,
+    "free_usable_headroom_mb": 496,
+    "status": "COEXIST_SAFE",
+    "action": "None (Coexists in GPU)"
+  },
+  "CONF_3_SPARK_GROUNDER": {
+    "name": "Spark + Visual Grounder",
+    "models": [
+      "spark_x25_q4",
+      "florence2_base_int8"
+    ],
+    "allocated_vram_mb": 1600,
+    "total_with_os_mb": 2650,
+    "free_usable_headroom_mb": 1446,
+    "status": "COEXIST_SAFE",
+    "action": "None (Coexists in GPU)"
+  },
+  "CONF_4_SPARK_QWEN_GROUNDER": {
+    "name": "Spark + Qwen + Visual Grounder",
+    "models": [
+      "spark_x25_q4",
+      "qwen25_coder_q4",
+      "florence2_base_int8"
+    ],
+    "allocated_vram_mb": 2800,
+    "total_with_os_mb": 3850,
+    "free_usable_headroom_mb": 246,
+    "status": "COEXIST_SAFE",
+    "action": "None (Coexists in GPU)"
+  },
+  "CONF_5_SPARK_VLM_ONDEMAND": {
+    "name": "Spark + SmolVLM-500M (On-Demand VLM)",
+    "models": [
+      "spark_x25_q4",
+      "smolvlm_500m"
+    ],
+    "allocated_vram_mb": 1350,
+    "total_with_os_mb": 2400,
+    "free_usable_headroom_mb": 1696,
+    "status": "COEXIST_SAFE",
+    "action": "None (Coexists in GPU)"
+  },
+  "CONF_6_QWEN_VLM_ONDEMAND": {
+    "name": "Qwen + SmolVLM-500M",
+    "models": [
+      "qwen25_coder_q4",
+      "smolvlm_500m"
+    ],
+    "allocated_vram_mb": 1200,
+    "total_with_os_mb": 2250,
+    "free_usable_headroom_mb": 1846,
+    "status": "COEXIST_SAFE",
+    "action": "None (Coexists in GPU)"
+  },
+  "CONF_7_TRIPLE_SPARK_QWEN_VLM": {
+    "name": "Spark + Qwen + SmolVLM-500M (Illegal Triple)",
+    "models": [
+      "spark_x25_q4",
+      "qwen25_coder_q4",
+      "smolvlm_500m"
+    ],
+    "allocated_vram_mb": 2550,
+    "total_with_os_mb": 3600,
+    "free_usable_headroom_mb": 496,
+    "status": "COEXIST_SAFE",
+    "action": "None (Coexists in GPU)"
+  },
+  "CONF_8_VLM_ONLY_3B": {
+    "name": "Qwen2.5-VL-3B Solo",
+    "models": [
+      "qwen25_vl_3b_q4"
+    ],
+    "allocated_vram_mb": 2600,
+    "total_with_os_mb": 3650,
+    "free_usable_headroom_mb": 446,
+    "status": "COEXIST_SAFE",
+    "action": "None (Coexists in GPU)"
+  }
+}

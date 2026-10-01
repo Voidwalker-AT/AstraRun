@@ -1,0 +1,191 @@
+{
+  "model": "microsoft/OmniParser-v2.0/icon_detect",
+  "model_size_mb": 38.74,
+  "overall_accuracy_pct": 11.1,
+  "average_latency_ms": 1707.9,
+  "vram_mb": 0.0,
+  "fixtures": {
+    "VF02": {
+      "fixture_id": "VF02",
+      "latency_ms": 3628.61,
+      "ram_delta_mb": 270.59,
+      "vram_mb": 0.0,
+      "total_targets": 5,
+      "detected_targets": 1,
+      "accuracy_pct": 20.0,
+      "avg_iou": 0.209,
+      "target_matches": [
+        {
+          "target_name": "Mic",
+          "target_bbox": [
+            40,
+            35,
+            100,
+            95
+          ],
+          "best_iou": 0.363,
+          "hit": true,
+          "matched_box": [
+            56.6,
+            43.0,
+            93.4,
+            78.5
+          ]
+        },
+        {
+          "target_name": "Camera",
+          "target_bbox": [
+            150,
+            35,
+            210,
+            95
+          ],
+          "best_iou": 0.155,
+          "hit": false,
+          "matched_box": [
+            181.5,
+            44.9,
+            198.4,
+            78.0
+          ]
+        },
+        {
+          "target_name": "ScreenShare",
+          "target_bbox": [
+            250,
+            35,
+            310,
+            95
+          ],
+          "best_iou": 0.239,
+          "hit": false,
+          "matched_box": [
+            256.8,
+            46.4,
+            287.0,
+            74.9
+          ]
+        },
+        {
+          "target_name": "Hand",
+          "target_bbox": [
+            340,
+            35,
+            400,
+            95
+          ],
+          "best_iou": 0.279,
+          "hit": false,
+          "matched_box": [
+            355.6,
+            45.8,
+            390.3,
+            74.7
+          ]
+        },
+        {
+          "target_name": "EndCall",
+          "target_bbox": [
+            450,
+            35,
+            520,
+            95
+          ],
+          "best_iou": 0.01,
+          "hit": false,
+          "matched_box": [
+            15.6,
+            19.5,
+            457.4,
+            108.1
+          ]
+        }
+      ],
+      "raw_detected_count": 5
+    },
+    "VF08": {
+      "fixture_id": "VF08",
+      "latency_ms": 724.39,
+      "ram_delta_mb": 20.7,
+      "vram_mb": 0.0,
+      "total_targets": 3,
+      "detected_targets": 0,
+      "accuracy_pct": 0.0,
+      "avg_iou": 0.048,
+      "target_matches": [
+        {
+          "target_name": "DeployButton",
+          "target_bbox": [
+            40,
+            110,
+            170,
+            160
+          ],
+          "best_iou": 0.0,
+          "hit": false,
+          "matched_box": null
+        },
+        {
+          "target_name": "StagingButton",
+          "target_bbox": [
+            190,
+            110,
+            320,
+            160
+          ],
+          "best_iou": 0.143,
+          "hit": false,
+          "matched_box": [
+            178.1,
+            79.5,
+            323.2,
+            122.2
+          ]
+        },
+        {
+          "target_name": "AbortButton",
+          "target_bbox": [
+            340,
+            110,
+            460,
+            160
+          ],
+          "best_iou": 0.0,
+          "hit": false,
+          "matched_box": null
+        }
+      ],
+      "raw_detected_count": 1
+    },
+    "VF12": {
+      "fixture_id": "VF12",
+      "latency_ms": 770.67,
+      "ram_delta_mb": 10.72,
+      "vram_mb": 0.0,
+      "total_targets": 1,
+      "detected_targets": 0,
+      "accuracy_pct": 0.0,
+      "avg_iou": 0.188,
+      "target_matches": [
+        {
+          "target_name": "HyperdriveButton",
+          "target_bbox": [
+            100,
+            120,
+            550,
+            240
+          ],
+          "best_iou": 0.188,
+          "hit": false,
+          "matched_box": [
+            196.5,
+            98.6,
+            453.0,
+            163.6
+          ]
+        }
+      ],
+      "raw_detected_count": 2
+    }
+  }
+}

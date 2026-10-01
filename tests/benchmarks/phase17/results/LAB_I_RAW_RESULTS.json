@@ -1,0 +1,218 @@
+{
+  "metadata": {
+    "timestamp": "2026-09-30T21:21:11+0530",
+    "os": "Windows 11 (AMD64)",
+    "tokenizer": "Qwen/Laya BPE (Vocab: 50368)",
+    "comtypes_version": "1.4.17"
+  },
+  "traversal_benchmarks": [
+    {
+      "target": "File Explorer",
+      "hwnd": 9112550,
+      "title": "This PC - File Explorer",
+      "class_name": "CabinetWClass",
+      "method_a_uncached": {
+        "total_descendants": 7,
+        "elements_read": 7,
+        "duration_ms": 19.57,
+        "ms_per_element": 2.796
+      },
+      "method_b_ufo_buildcache": {
+        "total_descendants": 7,
+        "elements_read": 7,
+        "duration_ms": 20.39,
+        "ms_per_element": 2.913
+      },
+      "method_c_filtered_buildcache": {
+        "total_descendants": 7,
+        "elements_read": 7,
+        "duration_ms": 29.8,
+        "ms_per_element": 4.257
+      }
+    },
+    {
+      "target": "Chromium/Vivaldi Window",
+      "hwnd": 132842,
+      "title": "Research Jev And Laya Repos - Vivaldi",
+      "class_name": "Chrome_WidgetWin_1",
+      "method_a_uncached": {
+        "total_descendants": 3263,
+        "elements_read": 150,
+        "duration_ms": 930.35,
+        "ms_per_element": 6.202
+      },
+      "method_b_ufo_buildcache": {
+        "total_descendants": 3263,
+        "elements_read": 150,
+        "duration_ms": 5217.73,
+        "ms_per_element": 34.785
+      },
+      "method_c_filtered_buildcache": {
+        "total_descendants": 1408,
+        "elements_read": 150,
+        "duration_ms": 2341.5,
+        "ms_per_element": 15.61
+      }
+    }
+  ],
+  "serialization_benchmarks": [
+    {
+      "target": "File Explorer",
+      "node_count": 5,
+      "ufo_json": {
+        "characters": 777,
+        "tokens": 328
+      },
+      "browser_use_tag": {
+        "characters": 144,
+        "tokens": 54,
+        "reduction_pct_vs_ufo": 83.5
+      },
+      "astrarun_compact": {
+        "characters": 214,
+        "tokens": 100,
+        "reduction_pct_vs_ufo": 69.5
+      },
+      "astrarun_minimal": {
+        "characters": 104,
+        "tokens": 45,
+        "reduction_pct_vs_ufo": 86.3
+      }
+    },
+    {
+      "target": "Chromium/Vivaldi Window",
+      "node_count": 5,
+      "ufo_json": {
+        "characters": 750,
+        "tokens": 312
+      },
+      "browser_use_tag": {
+        "characters": 198,
+        "tokens": 73,
+        "reduction_pct_vs_ufo": 76.6
+      },
+      "astrarun_compact": {
+        "characters": 226,
+        "tokens": 111,
+        "reduction_pct_vs_ufo": 64.4
+      },
+      "astrarun_minimal": {
+        "characters": 158,
+        "tokens": 64,
+        "reduction_pct_vs_ufo": 79.5
+      }
+    },
+    {
+      "target": "Chromium/Vivaldi Window",
+      "node_count": 10,
+      "ufo_json": {
+        "characters": 1487,
+        "tokens": 609
+      },
+      "browser_use_tag": {
+        "characters": 382,
+        "tokens": 140,
+        "reduction_pct_vs_ufo": 77.0
+      },
+      "astrarun_compact": {
+        "characters": 443,
+        "tokens": 213,
+        "reduction_pct_vs_ufo": 65.0
+      },
+      "astrarun_minimal": {
+        "characters": 302,
+        "tokens": 121,
+        "reduction_pct_vs_ufo": 80.1
+      }
+    },
+    {
+      "target": "Chromium/Vivaldi Window",
+      "node_count": 25,
+      "ufo_json": {
+        "characters": 3687,
+        "tokens": 1491
+      },
+      "browser_use_tag": {
+        "characters": 907,
+        "tokens": 324,
+        "reduction_pct_vs_ufo": 78.3
+      },
+      "astrarun_compact": {
+        "characters": 1068,
+        "tokens": 505,
+        "reduction_pct_vs_ufo": 66.1
+      },
+      "astrarun_minimal": {
+        "characters": 707,
+        "tokens": 272,
+        "reduction_pct_vs_ufo": 81.8
+      }
+    },
+    {
+      "target": "Chromium/Vivaldi Window",
+      "node_count": 50,
+      "ufo_json": {
+        "characters": 7388,
+        "tokens": 2971
+      },
+      "browser_use_tag": {
+        "characters": 1770,
+        "tokens": 629,
+        "reduction_pct_vs_ufo": 78.8
+      },
+      "astrarun_compact": {
+        "characters": 2126,
+        "tokens": 998,
+        "reduction_pct_vs_ufo": 66.4
+      },
+      "astrarun_minimal": {
+        "characters": 1370,
+        "tokens": 525,
+        "reduction_pct_vs_ufo": 82.3
+      }
+    },
+    {
+      "target": "Chromium/Vivaldi Window",
+      "node_count": 78,
+      "ufo_json": {
+        "characters": 11602,
+        "tokens": 4633
+      },
+      "browser_use_tag": {
+        "characters": 2821,
+        "tokens": 988,
+        "reduction_pct_vs_ufo": 78.7
+      },
+      "astrarun_compact": {
+        "characters": 3379,
+        "tokens": 1550,
+        "reduction_pct_vs_ufo": 66.5
+      },
+      "astrarun_minimal": {
+        "characters": 2197,
+        "tokens": 824,
+        "reduction_pct_vs_ufo": 82.2
+      }
+    }
+  ],
+  "safety_audit": {
+    "mouse_cursor_moved": false,
+    "initial_cursor": {
+      "x": 0,
+      "y": 0
+    },
+    "final_cursor": {
+      "x": 0,
+      "y": 0
+    },
+    "focus_window_changed": false,
+    "initial_foreground_hwnd": 0,
+    "final_foreground_hwnd": 0,
+    "ufo_comparison": {
+      "ufo_mouse_behavior": "pywinauto.click_input() and pyautogui.click() physically displace OS cursor and click",
+      "ufo_failsafe": "Explicitly disabled: pyautogui.FAILSAFE = False (controller.py:42)",
+      "ufo_focus_behavior": "Steals foreground window focus via SetForegroundWindow",
+      "astrarun_behavior": "Zero mouse movement, zero focus stealing via programmatic UIA / CDP invocation"
+    }
+  }
+}

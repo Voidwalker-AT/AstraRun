@@ -1,0 +1,230 @@
+{
+  "Microsoft Ravi": {
+    "phrases": {
+      "P01": {
+        "status": "PASS",
+        "voice": "Microsoft Ravi",
+        "ttfa_ms": 1035,
+        "synthesis_latency_ms": 1088,
+        "audio_duration_s": 1.989,
+        "real_time_factor": 0.547,
+        "wall_clock_ms": 1850.8
+      },
+      "P02": {
+        "status": "PASS",
+        "voice": "Microsoft Ravi",
+        "ttfa_ms": 352,
+        "synthesis_latency_ms": 379,
+        "audio_duration_s": 2.144,
+        "real_time_factor": 0.1768,
+        "wall_clock_ms": 751.33
+      },
+      "P03": {
+        "status": "PASS",
+        "voice": "Microsoft Ravi",
+        "ttfa_ms": 288,
+        "synthesis_latency_ms": 334,
+        "audio_duration_s": 4.559,
+        "real_time_factor": 0.0733,
+        "wall_clock_ms": 633.97
+      },
+      "P04": {
+        "status": "PASS",
+        "voice": "Microsoft Ravi",
+        "ttfa_ms": 268,
+        "synthesis_latency_ms": 303,
+        "audio_duration_s": 4.579,
+        "real_time_factor": 0.0662,
+        "wall_clock_ms": 651.11
+      },
+      "P05": {
+        "status": "PASS",
+        "voice": "Microsoft Ravi",
+        "ttfa_ms": 305,
+        "synthesis_latency_ms": 335,
+        "audio_duration_s": 2.859,
+        "real_time_factor": 0.1172,
+        "wall_clock_ms": 666.29
+      },
+      "P06": {
+        "status": "PASS",
+        "voice": "Microsoft Ravi",
+        "ttfa_ms": 325,
+        "synthesis_latency_ms": 347,
+        "audio_duration_s": 1.899,
+        "real_time_factor": 0.1827,
+        "wall_clock_ms": 733.94
+      },
+      "P07": {
+        "status": "PASS",
+        "voice": "Microsoft Ravi",
+        "ttfa_ms": 315,
+        "synthesis_latency_ms": 338,
+        "audio_duration_s": 3.039,
+        "real_time_factor": 0.1112,
+        "wall_clock_ms": 751.29
+      }
+    },
+    "cancellation": {
+      "status": "PASS",
+      "cancel_latency_ms": 389
+    },
+    "aggregate": {
+      "avg_latency_ms": 446.29,
+      "avg_rtf": 0.1821,
+      "samples_passed": "7/7"
+    }
+  },
+  "Microsoft Heera": {
+    "phrases": {
+      "P01": {
+        "status": "PASS",
+        "voice": "Microsoft Heera",
+        "ttfa_ms": 349,
+        "synthesis_latency_ms": 368,
+        "audio_duration_s": 1.989,
+        "real_time_factor": 0.185,
+        "wall_clock_ms": 760.75
+      },
+      "P02": {
+        "status": "PASS",
+        "voice": "Microsoft Heera",
+        "ttfa_ms": 317,
+        "synthesis_latency_ms": 347,
+        "audio_duration_s": 2.144,
+        "real_time_factor": 0.1618,
+        "wall_clock_ms": 753.91
+      },
+      "P03": {
+        "status": "PASS",
+        "voice": "Microsoft Heera",
+        "ttfa_ms": 347,
+        "synthesis_latency_ms": 385,
+        "audio_duration_s": 4.559,
+        "real_time_factor": 0.0844,
+        "wall_clock_ms": 790.27
+      },
+      "P04": {
+        "status": "PASS",
+        "voice": "Microsoft Heera",
+        "ttfa_ms": 273,
+        "synthesis_latency_ms": 307,
+        "audio_duration_s": 4.579,
+        "real_time_factor": 0.067,
+        "wall_clock_ms": 732.11
+      },
+      "P05": {
+        "status": "PASS",
+        "voice": "Microsoft Heera",
+        "ttfa_ms": 405,
+        "synthesis_latency_ms": 435,
+        "audio_duration_s": 2.859,
+        "real_time_factor": 0.1522,
+        "wall_clock_ms": 868.64
+      },
+      "P06": {
+        "status": "PASS",
+        "voice": "Microsoft Heera",
+        "ttfa_ms": 303,
+        "synthesis_latency_ms": 332,
+        "audio_duration_s": 1.899,
+        "real_time_factor": 0.1748,
+        "wall_clock_ms": 708.57
+      },
+      "P07": {
+        "status": "PASS",
+        "voice": "Microsoft Heera",
+        "ttfa_ms": 272,
+        "synthesis_latency_ms": 294,
+        "audio_duration_s": 3.039,
+        "real_time_factor": 0.0967,
+        "wall_clock_ms": 678.23
+      }
+    },
+    "cancellation": {
+      "status": "PASS",
+      "cancel_latency_ms": 769
+    },
+    "aggregate": {
+      "avg_latency_ms": 352.57,
+      "avg_rtf": 0.1317,
+      "samples_passed": "7/7"
+    }
+  },
+  "Microsoft David": {
+    "phrases": {
+      "P01": {
+        "status": "PASS",
+        "voice": "Microsoft David",
+        "ttfa_ms": 285,
+        "synthesis_latency_ms": 306,
+        "audio_duration_s": 1.989,
+        "real_time_factor": 0.1538,
+        "wall_clock_ms": 667.16
+      },
+      "P02": {
+        "status": "PASS",
+        "voice": "Microsoft David",
+        "ttfa_ms": 331,
+        "synthesis_latency_ms": 349,
+        "audio_duration_s": 2.144,
+        "real_time_factor": 0.1628,
+        "wall_clock_ms": 716.12
+      },
+      "P03": {
+        "status": "PASS",
+        "voice": "Microsoft David",
+        "ttfa_ms": 345,
+        "synthesis_latency_ms": 381,
+        "audio_duration_s": 4.559,
+        "real_time_factor": 0.0836,
+        "wall_clock_ms": 761.86
+      },
+      "P04": {
+        "status": "PASS",
+        "voice": "Microsoft David",
+        "ttfa_ms": 326,
+        "synthesis_latency_ms": 361,
+        "audio_duration_s": 4.579,
+        "real_time_factor": 0.0788,
+        "wall_clock_ms": 726.49
+      },
+      "P05": {
+        "status": "PASS",
+        "voice": "Microsoft David",
+        "ttfa_ms": 364,
+        "synthesis_latency_ms": 396,
+        "audio_duration_s": 2.859,
+        "real_time_factor": 0.1385,
+        "wall_clock_ms": 840.81
+      },
+      "P06": {
+        "status": "PASS",
+        "voice": "Microsoft David",
+        "ttfa_ms": 418,
+        "synthesis_latency_ms": 445,
+        "audio_duration_s": 1.899,
+        "real_time_factor": 0.2343,
+        "wall_clock_ms": 916.87
+      },
+      "P07": {
+        "status": "PASS",
+        "voice": "Microsoft David",
+        "ttfa_ms": 386,
+        "synthesis_latency_ms": 424,
+        "audio_duration_s": 3.039,
+        "real_time_factor": 0.1395,
+        "wall_clock_ms": 817.82
+      }
+    },
+    "cancellation": {
+      "status": "PASS",
+      "cancel_latency_ms": 371
+    },
+    "aggregate": {
+      "avg_latency_ms": 380.29,
+      "avg_rtf": 0.1416,
+      "samples_passed": "7/7"
+    }
+  }
+}

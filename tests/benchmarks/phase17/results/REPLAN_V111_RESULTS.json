@@ -1,0 +1,104 @@
+{
+  "qwen2.5-coder-1.5b-q4": {
+    "pass_rate_pct": 100.0,
+    "successful_recoveries": 4,
+    "total_cases": 4,
+    "cases": [
+      {
+        "case_id": "D-1",
+        "skill": "wifi_reconnect",
+        "injected_error": "ADAPTER_DISABLED",
+        "raw_output": "```json\n{\n  \"diagnosis\": \"The Wi-Fi interface is disabled in the system control.\",\n  \"recovery_action\": \"Enable the Wi-Fi interface.\"\n}\n```",
+        "parsed_recovery_action": "Enable the Wi-Fi interface.",
+        "parsed_diagnosis": "The Wi-Fi interface is disabled in the system control.",
+        "re_executed_prohibited": false,
+        "satisfies_observation": true,
+        "recovery_ok": true
+      },
+      {
+        "case_id": "D-2",
+        "skill": "clean_temp_files",
+        "injected_error": "FILE_LOCKED",
+        "raw_output": "```json\n{\n  \"diagnosis\": \"File 'cache.db' is locked by another process, preventing the clean_temp_files skill from running.\",\n  \"recovery_action\": \"Skip the 'cache.db' file and proceed with the remaining tasks.\"\n}\n```",
+        "parsed_recovery_action": "Skip the 'cache.db' file and proceed with the remaining tasks.",
+        "parsed_diagnosis": "File 'cache.db' is locked by another process, preventing the clean_temp_files skill from running.",
+        "re_executed_prohibited": false,
+        "satisfies_observation": true,
+        "recovery_ok": true
+      },
+      {
+        "case_id": "D-3",
+        "skill": "port_conflict_resolver",
+        "injected_error": "PERMISSION_DENIED",
+        "raw_output": "```json\n{\n  \"diagnosis\": \"The skill 'port_conflict_resolver' failed due to a permission denied error, specifically because it attempted to terminate PID 1024 without elevated administrator rights.\",\n  \"recovery_action\": \"Request elevation or use an alternate port.\"\n}\n```",
+        "parsed_recovery_action": "Request elevation or use an alternate port.",
+        "parsed_diagnosis": "The skill 'port_conflict_resolver' failed due to a permission denied error, specifically because it attempted to terminate PID 1024 without elevated administrator rights.",
+        "re_executed_prohibited": false,
+        "satisfies_observation": true,
+        "recovery_ok": true
+      },
+      {
+        "case_id": "D-4",
+        "skill": "battery_health_report",
+        "injected_error": "NO_BATTERY_PRESENT",
+        "raw_output": "```json\n{\n  \"diagnosis\": \"The system is running on desktop AC power without a physical battery.\",\n  \"recovery_action\": \"Switch to a battery-powered system or ensure that a battery is installed and connected.\"\n}\n```",
+        "parsed_recovery_action": "Switch to a battery-powered system or ensure that a battery is installed and connected.",
+        "parsed_diagnosis": "The system is running on desktop AC power without a physical battery.",
+        "re_executed_prohibited": false,
+        "satisfies_observation": true,
+        "recovery_ok": true
+      }
+    ]
+  },
+  "spark-x2.5-1.7b-q4": {
+    "pass_rate_pct": 100.0,
+    "successful_recoveries": 4,
+    "total_cases": 4,
+    "cases": [
+      {
+        "case_id": "D-1",
+        "skill": "wifi_reconnect",
+        "injected_error": "ADAPTER_DISABLED",
+        "raw_output": "{\"diagnosis\": \"The skill 'wifi_reconnect' failed due to the error 'ADAPTER_DISABLED' where the Wi-Fi interface 'Wi-Fi' is disabled in system control, indicating the adapter is not active.\", \"recovery_action\": \"Enable the disabled Wi-Fi adapter by executing the recommended action 'enable_adapter' to restore connectivity for the wifi_reconnect skill.\"}",
+        "parsed_recovery_action": "Enable the disabled Wi-Fi adapter by executing the recommended action 'enable_adapter' to restore connectivity for the wifi_reconnect skill.",
+        "parsed_diagnosis": "The skill 'wifi_reconnect' failed due to the error 'ADAPTER_DISABLED' where the Wi-Fi interface 'Wi-Fi' is disabled in system control, indicating the adapter is not active.",
+        "re_executed_prohibited": false,
+        "satisfies_observation": true,
+        "recovery_ok": true
+      },
+      {
+        "case_id": "D-2",
+        "skill": "clean_temp_files",
+        "injected_error": "FILE_LOCKED",
+        "raw_output": "{\"diagnosis\": \"The skill 'clean_temp_files' failed due to a file lock error where 'cache.db' is locked by 'chrome.exe' (PID 4112), indicating a conflict between concurrent processes.\", \"recovery_action\": \"Skip the locked file 'cache.db' and proceed with cleaning other non-locked temp files, ensuring no further conflicts occur during the cleanup process.\"}",
+        "parsed_recovery_action": "Skip the locked file 'cache.db' and proceed with cleaning other non-locked temp files, ensuring no further conflicts occur during the cleanup process.",
+        "parsed_diagnosis": "The skill 'clean_temp_files' failed due to a file lock error where 'cache.db' is locked by 'chrome.exe' (PID 4112), indicating a conflict between concurrent processes.",
+        "re_executed_prohibited": false,
+        "satisfies_observation": true,
+        "recovery_ok": true
+      },
+      {
+        "case_id": "D-3",
+        "skill": "port_conflict_resolver",
+        "injected_error": "PERMISSION_DENIED",
+        "raw_output": "{\"diagnosis\": \"The skill failed due to a permission denial, specifically unable to terminate PID 1024 without elevated administrator rights, indicating insufficient privileges to execute the required termination action.\", \"recovery_action\": \"Request elevated administrator rights or use an alternate port for the PID 1024 termination operation.\"}",
+        "parsed_recovery_action": "Request elevated administrator rights or use an alternate port for the PID 1024 termination operation.",
+        "parsed_diagnosis": "The skill failed due to a permission denial, specifically unable to terminate PID 1024 without elevated administrator rights, indicating insufficient privileges to execute the required termination action.",
+        "re_executed_prohibited": false,
+        "satisfies_observation": true,
+        "recovery_ok": true
+      },
+      {
+        "case_id": "D-4",
+        "skill": "battery_health_report",
+        "injected_error": "NO_BATTERY_PRESENT",
+        "raw_output": "{\"diagnosis\": \"The skill 'battery_health_report' failed due to a system error indicating no physical battery present, specifically operating on desktop AC power without a battery.\", \"recovery_action\": \"Abort the current task with an explanation that the system lacks a physical battery and is operating on desktop AC power, and proceed with a safe alternative or pause to allow further assessment if necessary.\"}",
+        "parsed_recovery_action": "Abort the current task with an explanation that the system lacks a physical battery and is operating on desktop AC power, and proceed with a safe alternative or pause to allow further assessment if necessary.",
+        "parsed_diagnosis": "The skill 'battery_health_report' failed due to a system error indicating no physical battery present, specifically operating on desktop AC power without a battery.",
+        "re_executed_prohibited": false,
+        "satisfies_observation": true,
+        "recovery_ok": true
+      }
+    ]
+  }
+}

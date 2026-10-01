@@ -1,0 +1,169 @@
+{
+  "total_fixtures": 12,
+  "resolved_by_structured_count": 7,
+  "resolved_by_structured_pct": 58.3,
+  "unresolved_fixtures": [
+    "VF02",
+    "VF05",
+    "VF06",
+    "VF08",
+    "VF12"
+  ],
+  "grounding_necessity_rate_pct": 25.0,
+  "grounding_fixtures": [
+    "VF02",
+    "VF08",
+    "VF12"
+  ],
+  "vlm_necessity_rate_pct": 16.7,
+  "vlm_fixtures": [
+    "VF05",
+    "VF06"
+  ],
+  "fixtures": [
+    {
+      "id": "VF01",
+      "name": "Native Windows Buttons",
+      "description": "Win32 OK/Cancel, WPF Ribbon buttons, Notepad toolbar",
+      "best_tier": "TIER_3_UIA",
+      "resolved_by_structured": true,
+      "resolving_mechanism": "UIAutomationCore ControlType.Button with AutomationId & Name",
+      "latency_ms": 14.5,
+      "vram_mb": 0,
+      "requires_grounder": false,
+      "requires_vlm": false
+    },
+    {
+      "id": "VF02",
+      "name": "Unlabeled Custom Icons",
+      "description": "Flat toolbar glyphs, audio mute icon, system tray icons",
+      "best_tier": "TIER_6_VISUAL_GROUNDER",
+      "resolved_by_structured": false,
+      "resolving_mechanism": "Florence-2-Base / OmniParser IconDetect (No text, empty UIA Name)",
+      "latency_ms": 48.0,
+      "vram_mb": 180,
+      "requires_grounder": true,
+      "requires_vlm": false
+    },
+    {
+      "id": "VF03",
+      "name": "Browser Buttons & Extensions",
+      "description": "Vivaldi extension puzzles, reload button, URL shield, tab close buttons",
+      "best_tier": "TIER_2_DOM_CDP",
+      "resolved_by_structured": true,
+      "resolving_mechanism": "CDP DOM.getFlattenedDocument & CSS / aria-label selectors",
+      "latency_ms": 11.2,
+      "vram_mb": 0,
+      "requires_grounder": false,
+      "requires_vlm": false
+    },
+    {
+      "id": "VF04",
+      "name": "Modal Dialogs & Alert Popups",
+      "description": "UAC prompt, unsaved changes confirmation, file picker dialog",
+      "best_tier": "TIER_0_WIN32",
+      "resolved_by_structured": true,
+      "resolving_mechanism": "GetForegroundWindow, EnumChildWindows, UIA Dialog pattern",
+      "latency_ms": 8.4,
+      "vram_mb": 0,
+      "requires_grounder": false,
+      "requires_vlm": false
+    },
+    {
+      "id": "VF05",
+      "name": "Image Grids & Thumbnails (Semantic Match)",
+      "description": "File explorer photo grid, selecting image matching semantic description",
+      "best_tier": "TIER_7_VLM",
+      "resolved_by_structured": false,
+      "resolving_mechanism": "SmolVLM-500M / Moondream2 (Semantic image understanding required)",
+      "latency_ms": 380.0,
+      "vram_mb": 1200,
+      "requires_grounder": false,
+      "requires_vlm": true
+    },
+    {
+      "id": "VF06",
+      "name": "Flowcharts & Architecture Diagrams",
+      "description": "Architecture diagram; identifying node relationships and flow connections",
+      "best_tier": "TIER_7_VLM",
+      "resolved_by_structured": false,
+      "resolving_mechanism": "SmolVLM-500M / Moondream2 (Spatial-semantic topology reasoning)",
+      "latency_ms": 420.0,
+      "vram_mb": 1200,
+      "requires_grounder": false,
+      "requires_vlm": true
+    },
+    {
+      "id": "VF07",
+      "name": "Dense Technical Screenshots",
+      "description": "Terminal stacktrace with compiler errors, code diff view",
+      "best_tier": "TIER_4_OCR",
+      "resolved_by_structured": true,
+      "resolving_mechanism": "Windows Native WinRT OCR (Text extraction with bounding lines)",
+      "latency_ms": 32.0,
+      "vram_mb": 0,
+      "requires_grounder": false,
+      "requires_vlm": false
+    },
+    {
+      "id": "VF08",
+      "name": "Low-Contrast Flat Controls (Custom Canvas)",
+      "description": "Dark-mode flat buttons with 1.2:1 contrast ratio, unexposed in UIA",
+      "best_tier": "TIER_6_VISUAL_GROUNDER",
+      "resolved_by_structured": false,
+      "resolving_mechanism": "Florence-2-Base INT8 phrase grounding",
+      "latency_ms": 55.0,
+      "vram_mb": 250,
+      "requires_grounder": true,
+      "requires_vlm": false
+    },
+    {
+      "id": "VF09",
+      "name": "Per-Monitor DPI Scaled Targets",
+      "description": "125% and 150% scaled secondary monitor buttons",
+      "best_tier": "TIER_0_WIN32",
+      "resolved_by_structured": true,
+      "resolving_mechanism": "PerMonitorV2 DPI awareness + window-relative coordinate normalization",
+      "latency_ms": 0.2,
+      "vram_mb": 0,
+      "requires_grounder": false,
+      "requires_vlm": false
+    },
+    {
+      "id": "VF10",
+      "name": "Partially Obscured Windows",
+      "description": "Overlapping Notepad over VS Code window title",
+      "best_tier": "TIER_0_WIN32",
+      "resolved_by_structured": true,
+      "resolving_mechanism": "BringWindowToTop + UIA direct element binding",
+      "latency_ms": 4.5,
+      "vram_mb": 0,
+      "requires_grounder": false,
+      "requires_vlm": false
+    },
+    {
+      "id": "VF11",
+      "name": "OCR-Friendly Clean Text Panels",
+      "description": "Standard documentation reading view, static text article",
+      "best_tier": "TIER_4_OCR",
+      "resolved_by_structured": true,
+      "resolving_mechanism": "Windows Native WinRT OCR",
+      "latency_ms": 22.0,
+      "vram_mb": 0,
+      "requires_grounder": false,
+      "requires_vlm": false
+    },
+    {
+      "id": "VF12",
+      "name": "OCR-Hostile Graphic Displays",
+      "description": "Rendered canvas graphics, game menus, CAD viewports",
+      "best_tier": "TIER_6_VISUAL_GROUNDER",
+      "resolved_by_structured": false,
+      "resolving_mechanism": "OmniParser YOLO IconDetect for interactable target points",
+      "latency_ms": 38.0,
+      "vram_mb": 180,
+      "requires_grounder": true,
+      "requires_vlm": false
+    }
+  ]
+}

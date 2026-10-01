@@ -1,0 +1,64 @@
+{
+  "lab": "LAB_G_DYNAMIC_RUNTIME",
+  "timestamp_utc": "2026-09-30T15:14:51Z",
+  "tests": [
+    {
+      "test_id": "G-1",
+      "name": "process_tree_kill",
+      "status": "PASS",
+      "parent_pid": 25584,
+      "grandchild_pid": 26812,
+      "parent_alive_before": true,
+      "grandchild_alive_before": true,
+      "parent_alive_after": false,
+      "grandchild_alive_after": false,
+      "reclamation_time_ms": 500.77
+    },
+    {
+      "test_id": "G-2",
+      "name": "memory_quota_enforcement",
+      "status": "PASS",
+      "configured_quota_mb": 128,
+      "attempted_allocation_mb": 512,
+      "exit_code": 0,
+      "stdout": "PYTHON_MEMORY_ERROR",
+      "elapsed_ms": 145.6,
+      "os_terminated_properly": true
+    },
+    {
+      "test_id": "G-3",
+      "name": "timeout_watchdog",
+      "status": "PASS",
+      "timeout_target_sec": 2.5,
+      "actual_elapsed_sec": 2.537,
+      "delta_ms": 37.31,
+      "process_terminated": true
+    },
+    {
+      "test_id": "G-4",
+      "name": "secret_stream_scrubber",
+      "status": "PASS",
+      "secrets_registered_count": 3,
+      "redactions_applied": 3,
+      "plaintext_leaks_remaining": [],
+      "scrub_latency_ms": 0.0131,
+      "sample_scrubbed_line": "Using HuggingFace: ***REDACTED*** in header."
+    },
+    {
+      "test_id": "G-5",
+      "name": "conpty_native_availability",
+      "status": "PASS",
+      "has_CreatePseudoConsole": true,
+      "has_ClosePseudoConsole": true,
+      "has_ResizePseudoConsole": true,
+      "windows_build": "10.0.26200"
+    }
+  ],
+  "summary": {
+    "total": 5,
+    "pass": 5,
+    "fail": 0,
+    "blocked": 0,
+    "inconclusive": 0
+  }
+}

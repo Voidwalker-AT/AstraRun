@@ -1,0 +1,98 @@
+{
+  "download_audit_timestamp": "2026-10-01T15:15:00+05:30",
+  "canonical_storage_root": "E:\\AI_Models",
+  "authorized_portfolio": [
+    "microsoft/OmniParser-v2.0 (icon_detect)",
+    "HuggingFaceTB/SmolVLM-500M-Instruct"
+  ],
+  "artifacts": {
+    "omni_parser_icon_detect": {
+      "repo_id": "microsoft/OmniParser-v2.0",
+      "repo_url": "https://huggingface.co/microsoft/OmniParser-v2.0",
+      "commit_sha": "f55d0750e5b94db2125ef0b45b0fa4a85ddc59b4",
+      "filename": "icon_detect/model.pt",
+      "local_path": "E:\\AI_Models\\Vision\\OmniParser\\icon_detect\\model.pt",
+      "reported_size_bytes": 40623819,
+      "actual_size_bytes": 40623819,
+      "upstream_sha256": "dab3d4351ad00b035db829909a4db98354d5a90f6990e4ac00222a9a95d4bf57",
+      "local_sha256": "dab3d4351ad00b035db829909a4db98354d5a90f6990e4ac00222a9a95d4bf57",
+      "hash_verified": true,
+      "license": "MIT"
+    },
+    "smolvlm_500m_instruct": {
+      "repo_id": "HuggingFaceTB/SmolVLM-500M-Instruct",
+      "repo_url": "https://huggingface.co/HuggingFaceTB/SmolVLM-500M-Instruct",
+      "commit_sha": "a7da5b986cb59b408707209984f360a5f4ad7e47",
+      "local_directory": "E:\\AI_Models\\Vision\\SmolVLM-500M",
+      "total_size_bytes": 1019410960,
+      "total_size_mb": 972.19,
+      "license": "Apache-2.0",
+      "files": [
+        {
+          "filename": "config.json",
+          "local_path": "E:\\AI_Models\\Vision\\SmolVLM-500M\\config.json",
+          "reported_size_bytes": 7339,
+          "actual_size_bytes": 7339,
+          "upstream_sha256": null,
+          "local_sha256": "daacbbca6af3c34e50466c72aed2df4553a08084f6a0551d4ae420a241cb66c6",
+          "hash_verified": true
+        },
+        {
+          "filename": "generation_config.json",
+          "local_path": "E:\\AI_Models\\Vision\\SmolVLM-500M\\generation_config.json",
+          "reported_size_bytes": 136,
+          "actual_size_bytes": 136,
+          "upstream_sha256": null,
+          "local_sha256": "067a2a54e5f87162ecac6e0e911cc4665fc8f7f3324794ecbac0f76badb56636",
+          "hash_verified": true
+        },
+        {
+          "filename": "preprocessor_config.json",
+          "local_path": "E:\\AI_Models\\Vision\\SmolVLM-500M\\preprocessor_config.json",
+          "reported_size_bytes": 486,
+          "actual_size_bytes": 486,
+          "upstream_sha256": null,
+          "local_sha256": "6cb6e36d6fcb88ca1502c4a26750715dc3e7dedddc9a8f17b27d8d167d1457e7",
+          "hash_verified": true
+        },
+        {
+          "filename": "tokenizer.json",
+          "local_path": "E:\\AI_Models\\Vision\\SmolVLM-500M\\tokenizer.json",
+          "reported_size_bytes": 3548256,
+          "actual_size_bytes": 3548256,
+          "upstream_sha256": null,
+          "local_sha256": "5ece781dc8d2b2f3e2f289ca0ae50b17cfc27dd27bfe7971bb8241e0b964331a",
+          "hash_verified": true
+        },
+        {
+          "filename": "tokenizer_config.json",
+          "local_path": "E:\\AI_Models\\Vision\\SmolVLM-500M\\tokenizer_config.json",
+          "reported_size_bytes": 28249,
+          "actual_size_bytes": 28249,
+          "upstream_sha256": null,
+          "local_sha256": "36c6fd44d07d10fd8180ee6b46dcccf69fb7c06753968ff0d7e17b8bfe17b777",
+          "hash_verified": true
+        },
+        {
+          "filename": "vocab.json",
+          "local_path": "E:\\AI_Models\\Vision\\SmolVLM-500M\\vocab.json",
+          "reported_size_bytes": 800662,
+          "actual_size_bytes": 800662,
+          "upstream_sha256": null,
+          "local_sha256": "82b84012e3add4d01d12ba14442026e49b8cbbaead1f79ecf3d919784f82dc79",
+          "hash_verified": true
+        },
+        {
+          "filename": "model.safetensors",
+          "local_path": "E:\\AI_Models\\Vision\\SmolVLM-500M\\model.safetensors",
+          "reported_size_bytes": 1015025832,
+          "actual_size_bytes": 1015025832,
+          "upstream_sha256": "d05b567eeaf534e83d375551f068ed57b5f52d37c657197f644af5ef9db091a2",
+          "local_sha256": "d05b567eeaf534e83d375551f068ed57b5f52d37c657197f644af5ef9db091a2",
+          "hash_verified": true
+        }
+      ]
+    }
+  },
+  "total_download_volume_mb": 1010.93
+}

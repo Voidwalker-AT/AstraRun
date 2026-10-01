@@ -1,0 +1,5 @@
+{
+  "ssid": "campus-guest",
+  "timeout_seconds": 10,
+  "target_host": "8.8.8.8"
+}

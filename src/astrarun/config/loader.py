@@ -75,6 +75,29 @@ DEFAULT_SETTINGS: dict[str, Any] = {
         "min_support_count": 3,
         "allow_training_dataset_export": False,
         "auto_propose_skills": True
+    },
+    "models": {
+        "server_binary": r"E:\AI_Runtimes\llama.cpp-spark\llama-server.exe",
+        "spark": {
+            "model_id": "spark",
+            "role": "FAST",
+            "endpoint": "http://127.0.0.1:8090",
+            "port": 8090,
+            "model_path": r"E:\AI_Models\GGUF\Spark-X2.5-1.7B-Q4_K_M.gguf",
+            "residency": "PINNED",
+            "ngl": 99,
+            "ctx_size": 4096,
+        },
+        "qwen": {
+            "model_id": "qwen",
+            "role": "DEEP",
+            "endpoint": "http://127.0.0.1:8089",
+            "port": 8089,
+            "model_path": r"E:\AI_Models\GGUF\qwen2.5-coder-1.5b-instruct-q4_k_m.gguf",
+            "residency": "WARM",
+            "ngl": 99,
+            "ctx_size": 4096,
+        },
     }
 }
 
@@ -112,6 +135,11 @@ class AppConfig:
     configured_apps: dict[str, AppInfo] = field(default_factory=dict)
     aliases: dict[str, str] = field(default_factory=lambda: dict(DEFAULT_ALIASES))
     urls: dict[str, str] = field(default_factory=lambda: dict(DEFAULT_URLS))
+
+    def get_model_config(self, model_name: str) -> dict[str, Any]:
+        """Retrieve model configuration dictionary by name ('spark', 'qwen')."""
+        models_cfg = self.settings.get("models", DEFAULT_SETTINGS.get("models", {}))
+        return dict(models_cfg.get(model_name.lower(), {}))
 
 
 def _read_json_file(file_path: Path, fallback: Any) -> Any:

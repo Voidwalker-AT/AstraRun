@@ -98,6 +98,16 @@ DEFAULT_SETTINGS: dict[str, Any] = {
             "ngl": 99,
             "ctx_size": 4096,
         },
+    },
+    "rag": {
+        "enabled": True,
+        "db_path": "data/astra_memory.db",
+        "embedding_model_dir": r"E:\AI_Models\ONNX\bge-small-en-v1.5",
+        "dimension": 384,
+        "rrf_k": 60,
+        "max_retrieved_tokens": 1500,
+        "auto_index_workspace": True,
+        "batch_size": 16,
     }
 }
 
@@ -140,6 +150,11 @@ class AppConfig:
         """Retrieve model configuration dictionary by name ('spark', 'qwen')."""
         models_cfg = self.settings.get("models", DEFAULT_SETTINGS.get("models", {}))
         return dict(models_cfg.get(model_name.lower(), {}))
+
+    def get_rag_config(self) -> dict[str, Any]:
+        """Retrieve RAG and memory subsystem configuration."""
+        return dict(self.settings.get("rag", DEFAULT_SETTINGS.get("rag", {})))
+
 
 
 def _read_json_file(file_path: Path, fallback: Any) -> Any:

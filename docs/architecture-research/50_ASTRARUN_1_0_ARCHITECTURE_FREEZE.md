@@ -513,12 +513,31 @@ Implementation progresses through 5 sequential, verifiable milestones. Each mile
 - **Windows Control Surfaces**: Win32 `SendInput` keyboard/mouse injection with PerMonitorV2 DPI normalization; COM Automation (Excel/Office).
 - **Verification Gate**: 13 canonical desktop fixtures evaluated; sub-10px click accuracy; 0 MB GPU VRAM utilized by visual tiers.
 
-### Milestone 5: PySide6 Floating HUD, End-to-End Orchestration & 1.0 Release
+### Milestone 5: Production TaskRuntime, Floating HUD & Tray Resident Daemon
 - **PySide6 Desktop UX**: Centered `Alt+Space` command launcher, semi-transparent acrylic floating status overlay (bottom-right).
+- **Single-Instance Protection**: Named Win32 Mutex and IPC signaling (`SHOW_MAIN_UI` / `SHOW_TASK_CENTER`) preventing duplicate resident processes.
+- **System Tray Management**: Exactly ONE notification-area icon reflecting dynamic platform states (`READY`, `WORKING`, `PAUSED`, `ATTENTION_REQUIRED`, `ERROR`) with right-click context menu.
 - **Interactive ActionGate Cards**: Modal approval cards for destructive operations (`DELETE`, `PRIVILEGED_MODIFY`) and ambiguous parameters.
-- **Zero-Terminal Stealth**: Daemon execution via `pythonw.exe` with zero visible console windows.
+- **Zero-Terminal Stealth**: Daemon execution with `CREATE_NO_WINDOW = 0x08000000` (zero visible console windows).
+- **Persistent Residency**: Dismissing HUD returns AstraRun to background residency without process teardown.
+
+### Milestone 6: Packaging, Installer, Startup & First-Run Experience
+- **Distribution Packaging**: Inno Setup / WiX script generating `AstraRun-Setup-<version>.exe`.
+- **Start with Windows**: Per-user `HKCU\...\Run` autostart toggle requiring zero administrator rights.
+- **Filesystem Governance**: Clean separation of immutable binaries (`%LOCALAPPDATA%\Programs\AstraRun`) from writable user data (`%APPDATA%`, `%LOCALAPPDATA%`). Removal of development drive (`E:`) assumptions.
+- **First-Run Hardware Onboarding**: Detection wizard for CPU, RAM, GPU, VRAM and verified model download manager (SHA-256 validation, atomic rename).
+
+### Milestone 7: 25 North-Star E2E Hardening & Release Candidate
 - **End-to-End North-Star Verification**: Full execution of all 25 North-Star Benchmark tasks.
-- **Release Verification**: All 8 North-Star Acceptance Gates satisfied.
+- **Chaos Resilience Testing**: Crash injection across worker processes and dynamic recovery within restart ceilings.
+- **Release Candidate Validation**: All 8 North-Star Acceptance Gates satisfied; tag `v1.0.0-rc1`.
+
+### Milestone 8: AstraRun 1.0.0 Production Release
+- **Release Pipeline**: GitHub Releases automation for setup executable, portable bundle, and checksums.
+- **Authenticode Signing**: Code-signing pipeline readiness for Windows SmartScreen compatibility.
+- **Public Documentation**: Canonical README, LICENSE, THIRD_PARTY_NOTICES, and user guides.
+
+*(For detailed productization and distribution invariants, see [52_DISTRIBUTION_AND_RESIDENT_APPLICATION_SPEC.md](file:///E:/Workspace/Active/AstraRun/docs/architecture-research/52_DISTRIBUTION_AND_RESIDENT_APPLICATION_SPEC.md))*
 
 ---
 

@@ -11,18 +11,21 @@
 Development strictly follows sequential, verifiable milestones. Each milestone delivers an isolated, verified subsystem validated against automated test suites and workstation constraints before advancing to the next.
 
 ```mermaid
-flowchart LR
-    M1["Milestone 1:\nCore Foundation,\nJob Objects & ActionGate"] --> M2["Milestone 2:\nDual Cognition &\nResidency Governance"]
-    M2 --> M3["Milestone 3:\nProgressive Skills,\nMemory & Hybrid RAG"]
-    M3 --> M4["Milestone 4:\nPerception Hierarchy &\nWindows Control"]
-    M4 --> M5["Milestone 5:\nPySide6 Floating HUD &\nEnd-to-End Release"]
+flowchart TD
+    M1["Milestone 1 (DONE):\nCore Foundation, Job Objects & ActionGate"] --> M2["Milestone 2 (DONE):\nDual Cognition & Residency Governance"]
+    M2 --> M3["Milestone 3 (CURRENT):\nProgressive Skills, Memory & Hybrid RAG"]
+    M3 --> M4["Milestone 4:\nPerception Hierarchy & Windows Control"]
+    M4 --> M5["Milestone 5:\nTaskRuntime, Floating HUD & Tray Resident Daemon"]
+    M5 --> M6["Milestone 6:\nPackaging, Installer, Startup & First-Run Wizard"]
+    M6 --> M7["Milestone 7:\n25 North-Star E2E Hardening & Release Candidate"]
+    M7 --> M8["Milestone 8:\nAstraRun 1.0.0 Production Release"]
 ```
 
 ---
 
 ## 2. Milestone Detailed Breakdown
 
-### Milestone 1 — Core Foundation & Sandboxed Execution Runtime
+### Milestone 1 — Core Foundation & Sandboxed Execution Runtime [COMPLETED & TAGGED: `post-milestone-1`]
 - **Objective**: Establish the hardened, zero-window Win32 Job Object runtime and operation-aware security kernel.
 - **Deliverables**:
   1. `DynamicExecutionRuntime` implementing Windows Job Objects (`JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE`, memory limits).
@@ -37,19 +40,20 @@ flowchart LR
 
 ---
 
-### Milestone 2 — Dual Cognitive Engine & Model Residency Governance
+### Milestone 2 — Dual Cognitive Engine & Model Residency Governance [COMPLETED & TAGGED: `post-milestone-2`]
 - **Objective**: Deploy the dual-engine cognition subsystem (Spark-X2.5-1.7B + Qwen2.5-Coder-1.5B) under permanent dual-residency on the RTX 2050.
 - **Deliverables**:
-  1. Out-of-process `llama-server.exe` supervision for Spark (Port 8090, 1350 MB) and Qwen (Port 8089, 1200 MB).
-  2. `ModelResidencyManager`: Zero-eviction dual residency (2550 MB total VRAM, +496 MB headroom), telemetry probe, and emergency fallback eviction.
-  3. `CognitiveRouter`: Fast Path (<1.2s to Spark) vs Deep Path (to Qwen) with Mode-D adaptive replan error recovery.
+  1. Out-of-process `llama-server.exe` supervision for Spark (Port 8090, 1320 MB) and Qwen (Port 8089, 1180 MB).
+  2. `ModelResidencyManager`: Zero-eviction dual residency (2500 MB total VRAM, +1596 MB headroom), telemetry probe, and emergency fallback eviction.
+  3. `CognitiveRouter`: Fast Path (<1.1s to Spark) vs Deep Path (to Qwen) with Mode-D adaptive replan error recovery and anti-ping-pong guards.
 - **Verification Gate**:
   - 0.0 ms model switch latency between Spark and Qwen.
   - 100% Mode-D replan recovery on simulated tool failures.
+  - 455 passing tests across entire platform regression suite.
 
 ---
 
-### Milestone 3 — Progressive Skills, Memory & Hybrid Retrieval (RAG) Subsystem
+### Milestone 3 — Progressive Skills, Memory & Hybrid Retrieval (RAG) Subsystem [NEXT TARGET]
 - **Objective**: Implement the unified local memory and hybrid retrieval architecture across lexical, dense semantic, episodic, and procedural domains.
 - **Deliverables**:
   1. `MemoryStore`: Unified embedded SQLite engine housing relational state, FTS5 lexical index, compact `VectorIndex`, and provenance/trust records.
@@ -87,20 +91,64 @@ flowchart LR
 
 ---
 
-### Milestone 5 — PySide6 Floating HUD, End-to-End Orchestration & 1.0 Release
-- **Objective**: Deliver the unified, polished desktop user experience with zero visible console windows.
+### Milestone 5 — Production TaskRuntime, Floating HUD & Tray Resident App
+- **Objective**: Deliver the unified, polished desktop user experience with a single-instance resident application and zero visible console windows.
 - **Deliverables**:
-  1. PySide6 floating task HUD with live progress, pause/cancel controls, and centered `Alt+Space` command launcher.
-  2. Interactive ActionGate approval cards and clarification modals.
-  3. Zero-console stealth daemon execution via `pythonw.exe`.
-  4. End-to-end task execution and validation across all 25 North-Star Benchmark tasks.
+  1. Per-User Interactive Daemon with Single-Instance protection (named mutex + IPC activation).
+  2. Exactly ONE System Tray icon with dynamic status (`READY`, `WORKING`, `PAUSED`, `ATTENTION_REQUIRED`, `ERROR`) and right-click menu.
+  3. Global Hotkey (`Alt+Space`) summon mechanism with foreground focus management.
+  4. PySide6 frameless acrylic command surface and floating progress HUD.
+  5. Interactive ActionGate modal approval cards.
+- **Verification Gate**:
+  - Cold start < 2.5s with zero visible console windows.
+  - Launching `AstraRun.exe` repeatedly activates existing resident surface without duplicate processes.
+  - Dismissing HUD keeps AstraRun and models alive in background tray.
+
+---
+
+### Milestone 6 — Packaging, Installer, Startup & First-Run Experience
+- **Objective**: Produce production-grade Windows installer and first-run hardware onboarding.
+- **Deliverables**:
+  1. Inno Setup / WiX packaging script outputting `AstraRun-Setup-<version>.exe`.
+  2. Per-user auto-start registration (`HKCU\Software\Microsoft\Windows\CurrentVersion\Run`).
+  3. Separation of read-only application binaries from `%APPDATA%` and `%LOCALAPPDATA%`.
+  4. First-run hardware detection wizard (CPU, RAM, GPU, VRAM) and storage setup.
+  5. Model acquisition with SHA-256 stream integrity validation and atomic rename.
+- **Verification Gate**:
+  - Clean install, upgrade, and uninstall without leftover running processes.
+  - Verified toggle for Start with Windows.
+  - Tested download resumption and corrupt-file rejection.
+
+---
+
+### Milestone 7 — 25 North-Star E2E Hardening & Release Candidate
+- **Objective**: Subject full integrated system to end-to-end task execution, stress, and recovery batteries.
+- **Deliverables**:
+  1. Complete pass across all 25 North-Star Benchmark tasks.
+  2. Chaos recovery testing (unexpected worker kill, model crash, network drop).
+  3. Memory and VRAM leak audits over 24-hour simulated residency.
+  4. Release Candidate (`v1.0.0-rc1`) freeze.
 - **Verification Gate**:
   - All 8 North-Star Acceptance Gates satisfied.
-  - Zero flashing console windows during complex workflows.
+  - Zero unhandled exceptions or orphan processes during 25-task run.
+
+---
+
+### Milestone 8 — AstraRun 1.0.0 Production Release
+- **Objective**: Final release automation, documentation, and public distribution.
+- **Deliverables**:
+  1. Authoritative `__version__ = "1.0.0"`.
+  2. GitHub Releases workflow publishing setup binary, checksums, and release notes.
+  3. Authenticode code-signing configuration.
+  4. End-user documentation and README installation guide.
+- **Verification Gate**:
+  - Reproducible clean build from repository.
+  - Validated SHA-256 signatures and install verification on clean Windows 11 test machine.
 
 ---
 
 ## 3. Immediate Next Action
 
-All pre-implementation research is concluded and frozen.  
-Proceed directly to **Milestone 1 Implementation**.
+Milestones 1 and 2 are completed and tagged.  
+Proceed directly to **Milestone 3 Implementation: Progressive Skills + Memory + Hybrid RAG**.
+

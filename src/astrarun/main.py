@@ -22,13 +22,14 @@ from PySide6.QtCore import QFileSystemWatcher, QTimer
 from PySide6.QtWidgets import QApplication
 
 from astrarun import __version__
-from astrarun.app import AstraApplication, SingleInstanceLock
+from astrarun.app import AstraApplication
 from astrarun.core.logging import get_logger, setup_logging
 from astrarun.hotkeys.manager import HotkeyManager
+from astrarun.tasks.models import TaskEventType, TaskStatus
 from astrarun.ui.hud import FloatingTaskHUD, TaskHUDController
 from astrarun.ui.launcher import LauncherWindow
 from astrarun.ui.presentation import LauncherPresentationController
-from astrarun.ui.tray import AstraTrayIcon
+from astrarun.ui.tray import AstraTrayIcon, TrayState
 
 
 def parse_args() -> argparse.Namespace:
@@ -174,7 +175,12 @@ def main() -> int:
 
     # 5. Instantiate Floating Task HUD & HUD Controller
     hud = FloatingTaskHUD()
-    hud_controller = TaskHUDController(hud=hud, event_bus=astra_app.task_event_bus, app=astra_app)
+    hud_controller = TaskHUDController(
+        hud=hud,
+        event_bus=astra_app.task_event_bus,
+        app=astra_app,
+        task_runtime=getattr(astra_app, "task_runtime", None),
+    )
     logger.info("[STARTUP_STAGE] HUD_CREATED")
 
     # 6. Instantiate Launcher Window (Top-Center Floating Command Bar)
@@ -204,13 +210,44 @@ def main() -> int:
 
     # 8. Instantiate System Tray Icon
     tray_icon = AstraTrayIcon(parent=launcher)
-    tray_icon.toggle_launcher_requested.connect(presentation_controller.toggle_presentation)
+    tray_icon.open_astra_requested.connect(presentation_controller.toggle_presentation)
+    tray_icon.open_task_center_requested.connect(launcher.open_task_center)
     tray_icon.open_history_requested.connect(launcher.open_history)
     tray_icon.open_memory_requested.connect(launcher.open_memory)
     tray_icon.open_skills_requested.connect(launcher.open_skills)
     tray_icon.open_settings_requested.connect(launcher.open_settings)
     tray_icon.open_diagnostics_requested.connect(launcher.open_diagnostics)
     tray_icon.exit_requested.connect(qapp.quit)
+
+    def on_tray_pause():
+        if hasattr(astra_app, "task_runtime"):
+            for t in astra_app.task_runtime.get_recent_tasks(limit=10):
+                if not t.status.is_terminal and t.status.is_active:
+                    astra_app.task_runtime.pause_task(t.id)
+
+    def on_tray_resume():
+        if hasattr(astra_app, "task_runtime"):
+            for t in astra_app.task_runtime.get_recent_tasks(limit=10):
+                if t.status in (TaskStatus.PAUSED, TaskStatus.PAUSED_USER_ACTIVE):
+                    astra_app.task_runtime.resume_task(t.id)
+
+    tray_icon.pause_astra_requested.connect(on_tray_pause)
+    tray_icon.resume_astra_requested.connect(on_tray_resume)
+
+    def on_tray_task_event(event: Any):
+        ev_type = getattr(event, "type", None) or getattr(event, "event_type", None)
+        if ev_type in (TaskEventType.TASK_CREATED, TaskEventType.CAPABILITY_STARTED):
+            tray_icon.set_state(TrayState.WORKING)
+        elif ev_type in (TaskEventType.CONFIRMATION_REQUESTED, TaskEventType.ACTION_GATE_CONFIRM, TaskEventType.CLARIFICATION_REQUESTED):
+            tray_icon.set_state(TrayState.ATTENTION_REQUIRED)
+        elif ev_type in (TaskEventType.TASK_INTERRUPTED, getattr(TaskEventType, "TASK_PAUSED", "TASK_PAUSED")):
+            tray_icon.set_state(TrayState.PAUSED)
+        elif ev_type in (TaskEventType.TASK_COMPLETED, TaskEventType.WORKFLOW_COMPLETED):
+            tray_icon.set_state(TrayState.READY)
+        elif ev_type in (TaskEventType.TASK_FAILED, TaskEventType.TASK_BLOCKED):
+            tray_icon.set_state(TrayState.ERROR)
+
+    astra_app.task_event_bus.subscribe(lambda ev: QTimer.singleShot(0, lambda: on_tray_task_event(ev)))
 
     def handle_restart():
         logger.info("[LIFECYCLE] Restart requested via tray menu. Spawning fresh resident process...")
@@ -234,6 +271,32 @@ def main() -> int:
     tray_icon.show()
     astra_app.tray_icon = tray_icon  # type: ignore
     logger.info("[STARTUP_STAGE] TRAY_CREATED (tooltip='%s')", tray_icon.toolTip())
+
+    # Start local IPC server on primary instance
+    def handle_ipc_command(command: str, args: dict) -> dict:
+        logger.info("[IPC] Received local command: %s", command)
+        cmd_upper = command.upper()
+        if cmd_upper in ("SHOW_MAIN_UI", "ACTIVATE", "SUMMON"):
+            QTimer.singleShot(0, presentation_controller.present)
+            return {"action": "SHOW_MAIN_UI_TRIGGERED"}
+        elif cmd_upper in ("SHOW_TASK_CENTER", "TASK_CENTER"):
+            QTimer.singleShot(0, launcher.open_task_center)
+            return {"action": "SHOW_TASK_CENTER_TRIGGERED"}
+        elif cmd_upper == "PAUSE":
+            QTimer.singleShot(0, on_tray_pause)
+            return {"action": "PAUSE_TRIGGERED"}
+        elif cmd_upper == "RESUME":
+            QTimer.singleShot(0, on_tray_resume)
+            return {"action": "RESUME_TRIGGERED"}
+        elif cmd_upper == "RESTART":
+            QTimer.singleShot(0, handle_restart)
+            return {"action": "RESTART_TRIGGERED"}
+        elif cmd_upper in ("QUIT", "EXIT"):
+            QTimer.singleShot(0, qapp.quit)
+            return {"action": "QUIT_TRIGGERED"}
+        return {"status": "UNKNOWN_COMMAND", "command": command}
+
+    astra_app.single_instance.start_ipc_server(handle_ipc_command)
 
     # 9. Wire up Hotkey Manager to Presentation Controller
     hotkey_manager.hotkey_activated.connect(presentation_controller.toggle_presentation)

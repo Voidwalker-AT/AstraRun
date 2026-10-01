@@ -192,6 +192,12 @@ class AstraApplication:
             ledger=self.task_ledger,
             event_bus=self.task_event_bus,
         )
+        from astrarun.tasks.runtime import TaskRuntime
+        self.task_runtime = TaskRuntime(
+            app=self,
+            event_bus=self.task_event_bus,
+            ledger=self.task_ledger,
+        )
         logger.info("[STARTUP_STAGE] TASK_LEDGER_INITIALIZED")
 
         # 7. Semantic Memory & Learning Subsystem
@@ -247,8 +253,9 @@ class AstraApplication:
         from astrarun.agent.loop import AgentExecutionEngine
         self.agent_engine = AgentExecutionEngine(registry=self.capability_registry)
 
-        # Single instance lock
-        self.single_instance = SingleInstanceLock()
+        # Single instance lock & local Named Pipe IPC
+        from astrarun.core.single_instance import AstraSingleInstance
+        self.single_instance = AstraSingleInstance()
 
         # Track active origin window captured prior to launcher summon
         self.origin_window: Optional[WindowEntity] = None
@@ -310,6 +317,11 @@ class AstraApplication:
         )
         self.routing_context.apps = self.app_cache.apps
         self.routing_context.folders = self.folder_resolver.folders
+
+    def show_task_center(self) -> None:
+        """Summon TaskCenterWindow from any component."""
+        if hasattr(self, "launcher") and self.launcher:
+            self.launcher.open_task_center()
 
     def _complete_task(self, task: Task, cap_res: CapabilityResult) -> None:
         """Helper to build TaskResult and invoke task_manager.complete_task."""

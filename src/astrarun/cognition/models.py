@@ -139,7 +139,7 @@ class PlanDAG(BaseModel):
     plan_id: str = Field(default_factory=lambda: f"plan_{uuid.uuid4().hex[:8]}")
     goal: str
     steps: List[PlanStep]
-    dataflow: Dict[str, str] = Field(default_factory=dict)
+    dataflow: Dict[str, Any] = Field(default_factory=dict)
     estimated_risk: str = "LOW"
 
     def validate_graph(self) -> None:

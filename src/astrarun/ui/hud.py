@@ -146,6 +146,8 @@ class HUDState(str, Enum):
     LIST_RESULT = "LIST_RESULT"
     WAITING_CONFIRMATION = "WAITING_CONFIRMATION"
     WAITING_CLARIFICATION = "WAITING_CLARIFICATION"
+    INTERACTIVE = "INTERACTIVE"
+    PAUSED = "PAUSED"
 
 
 class FloatingTaskHUD(QWidget):
@@ -162,6 +164,10 @@ class FloatingTaskHUD(QWidget):
     cancelled = Signal()
     candidate_selected = Signal(dict)
     dismissed = Signal()
+    pause_requested = Signal(str)
+    resume_requested = Signal(str)
+    cancel_requested = Signal(str)
+    details_requested = Signal(str)
 
     def __init__(self, parent: QWidget | None = None, animations_enabled: bool = True):
         super().__init__(parent)
@@ -457,8 +463,16 @@ class FloatingTaskHUD(QWidget):
 
     def _on_close_clicked(self) -> None:
         """Handle user clicking close / cancel button on HUD."""
-        if self.current_state in (HUDState.PASSIVE_PROGRESS, HUDState.WAITING_CONFIRMATION, HUDState.WAITING_CLARIFICATION):
+        if self.current_state in (
+            HUDState.PASSIVE_PROGRESS,
+            HUDState.WAITING_CONFIRMATION,
+            HUDState.WAITING_CLARIFICATION,
+            HUDState.INTERACTIVE,
+            HUDState.PAUSED,
+        ):
             logger.info("HUD cancel button clicked for task %s", self.current_task_id)
+            if self.current_task_id:
+                self.cancel_requested.emit(self.current_task_id)
             self.cancelled.emit()
             self.detail_label.setText("Cancelling task...")
             self.status_icon.setText("○")
@@ -751,6 +765,59 @@ class FloatingTaskHUD(QWidget):
         if not self.isVisible():
             self.present_animated()
 
+    def show_user_takeover(self, task_id: str, message: str = "✦ Paused — you're using the computer") -> None:
+        """Transition to PAUSED_USER_ACTIVE interactive state on user takeover."""
+        self.dismiss_timer.stop()
+        self._clear_actions()
+        self.current_state = HUDState.INTERACTIVE
+        self.current_task_id = task_id
+
+        self.status_icon.setText("❚❚")
+        self.status_icon.setStyleSheet("color: #fab387; font-size: 15px; font-weight: bold;")
+        self.title_label.setText("Astra — Paused")
+        self.detail_label.setText(message)
+
+        # Resume Button
+        btn_resume = QPushButton("Resume", self.action_container)
+        btn_resume.setStyleSheet("""
+            QPushButton {
+                background-color: #a6e3a1;
+                color: #11111b;
+                border: none;
+                border-radius: 4px;
+                padding: 4px 12px;
+                font-size: 12px;
+                font-weight: bold;
+            }
+            QPushButton:hover {
+                background-color: #94e2d5;
+            }
+        """)
+        btn_resume.clicked.connect(lambda: self.resume_requested.emit(task_id))
+        self.action_layout.addWidget(btn_resume)
+
+        # Cancel Button
+        btn_cancel = QPushButton("Cancel", self.action_container)
+        btn_cancel.setStyleSheet("""
+            QPushButton {
+                background-color: #313244;
+                color: #f38ba8;
+                border: 1px solid #45475a;
+                border-radius: 4px;
+                padding: 4px 12px;
+                font-size: 12px;
+            }
+            QPushButton:hover {
+                background-color: #45475a;
+            }
+        """)
+        btn_cancel.clicked.connect(lambda: self.cancel_requested.emit(task_id))
+        self.action_layout.addWidget(btn_cancel)
+        self.action_container.show()
+
+        if not self.isVisible():
+            self.present_animated()
+
     def _clear_actions(self) -> None:
         """Clear dynamic interactive buttons."""
         while self.action_layout.count():
@@ -797,11 +864,13 @@ class TaskHUDController(QObject):
         hud: FloatingTaskHUD,
         event_bus: TaskEventBus | None = None,
         app: Any = None,
+        task_runtime: Any = None,
     ):
         super().__init__()
         self.hud = hud
         self.event_bus = event_bus
         self.app = app
+        self.task_runtime = task_runtime or getattr(app, "task_runtime", None)
         self._sub_id: Optional[int] = None
 
         # Cross-thread Qt signal connection
@@ -810,6 +879,10 @@ class TaskHUDController(QObject):
         # Wire up HUD interactive signals
         self.hud.confirmed.connect(self._on_hud_confirmed)
         self.hud.candidate_selected.connect(self._on_hud_candidate_selected)
+        self.hud.pause_requested.connect(self._on_hud_pause)
+        self.hud.resume_requested.connect(self._on_hud_resume)
+        self.hud.cancel_requested.connect(self._on_hud_cancel)
+        self.hud.details_requested.connect(self._on_hud_details)
 
         if self.event_bus is not None:
             self._sub_id = self.event_bus.subscribe(self._on_bus_event)
@@ -858,6 +931,11 @@ class TaskHUDController(QObject):
         elif ev_type == TaskEventType.TASK_CANCELLED:
             self.hud.show_error(event.task_id, "Task cancelled.")
 
+        elif ev_type == TaskEventType.TASK_INTERRUPTED:
+            is_takeover = ev_data.get("is_user_takeover", False)
+            msg = ev_msg or ("✦ Paused — you're using the computer" if is_takeover else "✦ Task paused")
+            self.hud.show_user_takeover(event.task_id, msg)
+
     def _on_hud_confirmed(self, token: str, tool: str, arguments: dict) -> None:
         """Dispatch confirmed capability execution through composition root."""
         if not self.app:
@@ -879,6 +957,31 @@ class TaskHUDController(QObject):
         target = candidate.get("title") or candidate.get("name") or str(candidate)
         self.hud.show_progress(self.hud.current_task_id or "", f"Selected: {target}", "Executing...")
         self.app.handle_request(target)
+
+    def _on_hud_pause(self, task_id: str) -> None:
+        """Pause running task via TaskRuntime."""
+        runtime = self.task_runtime or getattr(self.app, "task_runtime", None)
+        if runtime and task_id:
+            runtime.pause_task(task_id)
+
+    def _on_hud_resume(self, task_id: str) -> None:
+        """Resume paused task via TaskRuntime."""
+        runtime = self.task_runtime or getattr(self.app, "task_runtime", None)
+        if runtime and task_id:
+            runtime.resume_task(task_id)
+
+    def _on_hud_cancel(self, task_id: str) -> None:
+        """Cancel task via TaskRuntime."""
+        runtime = self.task_runtime or getattr(self.app, "task_runtime", None)
+        if runtime and task_id:
+            runtime.cancel_task(task_id)
+        else:
+            self.hud.dismiss()
+
+    def _on_hud_details(self, task_id: str) -> None:
+        """Open Task Center window for detailed task inspection."""
+        if hasattr(self.app, "show_task_center"):
+            self.app.show_task_center()
 
     def stop(self) -> None:
         """Unsubscribe from event bus."""

@@ -248,11 +248,11 @@ class LauncherWindow(QDialog):
         bar_layout.setContentsMargins(0, 0, 0, 0)
         bar_layout.setSpacing(12)
 
-        # Prompt Glyph (">")
-        self.prompt_label = QLabel(">", self.bar_row)
+        # Prompt Glyph ("✦")
+        self.prompt_label = QLabel("✦", self.bar_row)
         self.prompt_label.setStyleSheet("""
             color: #89b4fa;
-            font-size: 20px;
+            font-size: 18px;
             font-weight: bold;
             padding-bottom: 2px;
         """)
@@ -882,6 +882,13 @@ class LauncherWindow(QDialog):
         view = HistoryView(ledger=self.app.task_ledger, parent=dlg)
         view.dismissed.connect(dlg.accept)
         layout.addWidget(view)
+        dlg.exec()
+ 
+    def open_task_center(self) -> None:
+        """Open TaskCenterWindow modal dialog."""
+        from astrarun.ui.task_center import TaskCenterWindow
+        runtime = getattr(self.app, "task_runtime", None)
+        dlg = TaskCenterWindow(task_runtime=runtime, app=self.app, parent=self)
         dlg.exec()
 
     def open_memory(self) -> None:

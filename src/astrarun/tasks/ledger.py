@@ -652,6 +652,9 @@ class TaskLedger:
                 logger.error("Failed to get recent tasks: %s", err)
                 return []
 
+    # Alias for API compatibility
+    list_tasks = get_recent_tasks
+
     def get_tasks_by_conversation(self, conversation_id: str) -> list[Task]:
         """Fetch all tasks belonging to a specific conversation thread."""
         with self._lock:

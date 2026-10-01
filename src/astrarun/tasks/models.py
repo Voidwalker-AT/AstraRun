@@ -22,13 +22,18 @@ class TaskCancelledError(Exception):
 class TaskStatus(str, Enum):
     """Finite states of a Task lifecycle."""
     CREATED = "CREATED"
+    QUEUED = "QUEUED"
     PARSING = "PARSING"
+    PLANNING = "PLANNING"
     RESOLVING = "RESOLVING"
     READY = "READY"
     RUNNING = "RUNNING"
     WAITING_CONFIRMATION = "WAITING_CONFIRMATION"
     WAITING_CLARIFICATION = "WAITING_CLARIFICATION"
     WAITING_USER = "WAITING_USER"
+    PAUSED = "PAUSED"
+    PAUSED_USER_ACTIVE = "PAUSED_USER_ACTIVE"
+    RECOVERING = "RECOVERING"
     COMPLETED = "COMPLETED"
     FAILED = "FAILED"
     CANCELLED = "CANCELLED"
@@ -50,11 +55,13 @@ class TaskStatus(str, Enum):
 
     @property
     def is_waiting(self) -> bool:
-        """Return True if the task is suspended waiting for external user input."""
+        """Return True if the task is suspended waiting for external user input or paused."""
         return self in {
             TaskStatus.WAITING_CONFIRMATION,
             TaskStatus.WAITING_CLARIFICATION,
             TaskStatus.WAITING_USER,
+            TaskStatus.PAUSED,
+            TaskStatus.PAUSED_USER_ACTIVE,
         }
 
     @property
@@ -66,7 +73,9 @@ class TaskStatus(str, Enum):
 # Strict State Transition Validation Table
 VALID_TRANSITIONS: dict[TaskStatus, set[TaskStatus]] = {
     TaskStatus.CREATED: {
+        TaskStatus.QUEUED,
         TaskStatus.PARSING,
+        TaskStatus.PLANNING,
         TaskStatus.RESOLVING,
         TaskStatus.READY,
         TaskStatus.RUNNING,
@@ -75,10 +84,30 @@ VALID_TRANSITIONS: dict[TaskStatus, set[TaskStatus]] = {
         TaskStatus.FAILED,
         TaskStatus.INTERRUPTED,
     },
+    TaskStatus.QUEUED: {
+        TaskStatus.PLANNING,
+        TaskStatus.PARSING,
+        TaskStatus.READY,
+        TaskStatus.RUNNING,
+        TaskStatus.BLOCKED,
+        TaskStatus.CANCELLED,
+        TaskStatus.FAILED,
+    },
     TaskStatus.PARSING: {
+        TaskStatus.PLANNING,
         TaskStatus.RESOLVING,
         TaskStatus.READY,
         TaskStatus.RUNNING,
+        TaskStatus.WAITING_CLARIFICATION,
+        TaskStatus.BLOCKED,
+        TaskStatus.FAILED,
+        TaskStatus.CANCELLED,
+        TaskStatus.INTERRUPTED,
+    },
+    TaskStatus.PLANNING: {
+        TaskStatus.READY,
+        TaskStatus.RUNNING,
+        TaskStatus.WAITING_CONFIRMATION,
         TaskStatus.WAITING_CLARIFICATION,
         TaskStatus.BLOCKED,
         TaskStatus.FAILED,
@@ -112,7 +141,25 @@ VALID_TRANSITIONS: dict[TaskStatus, set[TaskStatus]] = {
         TaskStatus.WAITING_CONFIRMATION,
         TaskStatus.WAITING_CLARIFICATION,
         TaskStatus.WAITING_USER,
+        TaskStatus.PAUSED,
+        TaskStatus.PAUSED_USER_ACTIVE,
+        TaskStatus.RECOVERING,
         TaskStatus.INTERRUPTED,
+    },
+    TaskStatus.PAUSED: {
+        TaskStatus.RUNNING,
+        TaskStatus.CANCELLED,
+        TaskStatus.FAILED,
+    },
+    TaskStatus.PAUSED_USER_ACTIVE: {
+        TaskStatus.RUNNING,
+        TaskStatus.CANCELLED,
+        TaskStatus.FAILED,
+    },
+    TaskStatus.RECOVERING: {
+        TaskStatus.RUNNING,
+        TaskStatus.FAILED,
+        TaskStatus.CANCELLED,
     },
     TaskStatus.WAITING_CONFIRMATION: {
         TaskStatus.RUNNING,
@@ -122,6 +169,7 @@ VALID_TRANSITIONS: dict[TaskStatus, set[TaskStatus]] = {
         TaskStatus.INTERRUPTED,
     },
     TaskStatus.WAITING_CLARIFICATION: {
+        TaskStatus.PLANNING,
         TaskStatus.RESOLVING,
         TaskStatus.READY,
         TaskStatus.RUNNING,

@@ -89,7 +89,13 @@ class DiagnosticsDialog(QDialog):
         git_commit = "5a2b139"
         try:
             import subprocess
-            proc = subprocess.run(["git", "rev-parse", "--short", "HEAD"], capture_output=True, text=True, timeout=1)
+            proc = subprocess.run(
+                ["git", "rev-parse", "--short", "HEAD"],
+                capture_output=True,
+                text=True,
+                timeout=1,
+                creationflags=0x08000000 if os.name == "nt" else 0,
+            )
             if proc.returncode == 0:
                 git_commit = proc.stdout.strip()
         except Exception:

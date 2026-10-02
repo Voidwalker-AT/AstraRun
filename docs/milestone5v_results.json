@@ -1,0 +1,204 @@
+{
+  "item_1_flags": {
+    "CREATE_NO_WINDOW": true,
+    "DETACHED_PROCESS": true,
+    "CREATE_NEW_PROCESS_GROUP": true,
+    "CREATE_NEW_CONSOLE": true,
+    "zero_improper_constants": true,
+    "improper_sites": []
+  },
+  "item_2_startup": {
+    "success": true,
+    "pid": 11856,
+    "startup_seconds": 3.0425760746002197,
+    "state": {
+      "pid": 11856,
+      "version": "0.10.3",
+      "status": "READY",
+      "ready": true,
+      "timestamp": 1790960239.777015,
+      "started_at": "2026-10-02T22:27:18.389438",
+      "hotkey": "Alt+Space",
+      "tray": true,
+      "launcher_hwnd": 3473958,
+      "stage": "EVENT_LOOP_ENTERING",
+      "exit_code": null
+    },
+    "new_console_windows": [],
+    "zero_console_pass": true
+  },
+  "item_3_single_instance": {
+    "success": true,
+    "primary_pid": 11856,
+    "current_pid": 11856,
+    "exit_codes": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "avg_latency_ms": 989.0884099979303
+  },
+  "item_4_alt_space": {
+    "success": true,
+    "count": 20,
+    "p50_ms": 2.066499990178272,
+    "p95_ms": 3.951999999117106,
+    "worst_ms": 3.951999999117106
+  },
+  "item_5_screenshots": {
+    "success": true,
+    "screenshots": {
+      "A": {
+        "filename": "screenshot_A_command_surface_empty.png",
+        "exists": true,
+        "size_bytes": 7904,
+        "valid": true
+      },
+      "B": {
+        "filename": "screenshot_B_command_surface_query.png",
+        "exists": true,
+        "size_bytes": 8995,
+        "valid": true
+      },
+      "C": {
+        "filename": "screenshot_C_active_task_hud.png",
+        "exists": true,
+        "size_bytes": 6879,
+        "valid": true
+      },
+      "D": {
+        "filename": "screenshot_D_expanded_task_hud.png",
+        "exists": true,
+        "size_bytes": 17985,
+        "valid": true
+      },
+      "E": {
+        "filename": "screenshot_E_task_center.png",
+        "exists": true,
+        "size_bytes": 11599,
+        "valid": true
+      },
+      "F": {
+        "filename": "screenshot_F_actiongate_confirm.png",
+        "exists": true,
+        "size_bytes": 21240,
+        "valid": true
+      },
+      "G": {
+        "filename": "screenshot_G_clarification_card.png",
+        "exists": true,
+        "size_bytes": 25201,
+        "valid": true
+      },
+      "H": {
+        "filename": "screenshot_H_user_takeover.png",
+        "exists": true,
+        "size_bytes": 18710,
+        "valid": true
+      },
+      "I": {
+        "filename": "screenshot_I_completed_result.png",
+        "exists": true,
+        "size_bytes": 18791,
+        "valid": true
+      },
+      "J": {
+        "filename": "screenshot_J_tray_menu.png",
+        "exists": true,
+        "size_bytes": 6620,
+        "valid": true
+      }
+    }
+  },
+  "item_7_calculator": {
+    "success": true,
+    "message": "Application 'calc' launched successfully.",
+    "elapsed_sec": 0.04136810000636615,
+    "calc_running": true
+  },
+  "item_8_battery": {
+    "success": true,
+    "message": "Battery report generated successfully at E:\\Workspace\\Active\\AstraRun\\data\\test_milestone5v_battery.html",
+    "file_exists": true,
+    "file_size": 134204,
+    "elapsed_sec": 1.2471060999960173
+  },
+  "item_9_project": {
+    "success": true,
+    "message": "Workflow executed 2 step(s): Safe test command executed for 'AstraRun': ============================= test session starts =============================",
+    "elapsed_sec": 30.084217399999034
+  },
+  "item_10_browser": {
+    "success": true,
+    "element_count": 1,
+    "message": "CLICKED_CDP: Element @e1 clicked via CDP Runtime.evaluate"
+  },
+  "item_11_visual": {
+    "success": true,
+    "confidence": 0.85,
+    "message": "CLICKED_SIMULATED"
+  },
+  "item_12_clarification": {
+    "success": true,
+    "before": "WAITING_CLARIFICATION",
+    "after": "COMPLETED"
+  },
+  "item_13_actiongate": {
+    "success": true,
+    "cancel_ok": true,
+    "allow_ok": true
+  },
+  "item_14_cancel": {
+    "success": true,
+    "final_status": "CANCELLED"
+  },
+  "item_15_takeover": {
+    "success": true,
+    "paused_status": "PAUSED_USER_ACTIVE",
+    "lock_released": true,
+    "resumed_status": "RUNNING"
+  },
+  "item_16_task_center": {
+    "success": true,
+    "count": 2
+  },
+  "item_17_tray": {
+    "success": true,
+    "states_verified": true,
+    "pause_ok": true,
+    "resume_ok": true
+  },
+  "item_18_restart": {
+    "success": true,
+    "old_pid": 11856,
+    "new_pid": 16960,
+    "restart_seconds": 2.0080556869506836
+  },
+  "item_19_crash_containment": {
+    "success": true,
+    "worker_pid": 9652,
+    "resident_healthy": true
+  },
+  "item_20_zero_console": {
+    "success": true,
+    "visible_console_count": 0,
+    "consoles": []
+  },
+  "item_21_high_dpi": {
+    "success": true,
+    "dpi_scale": 1.25,
+    "percentage": "125%"
+  },
+  "item_22_resources": {
+    "success": true,
+    "ram_mb": 128.34765625,
+    "vram_mb": 0.0
+  }
+}

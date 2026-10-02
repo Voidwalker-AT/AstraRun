@@ -260,6 +260,9 @@ def infer_action_and_intent(
     if re.search(r'\b(?:start\s+(?:the\s+)?server|start\s+anything|run\s+anything|startup)\b', text_clean, re.I):
         return ("startup_actions", "startup_action", 0.95)
 
+    if re.search(r'\b(?:run\s+(?:the\s+)?(?:(?:approved|safe)\s+)*test(?:\s+command)?|run\s+tests?|run\s+test\s+command)\b', text_clean, re.I):
+        return ("run_project_command", "project_action", 0.95)
+
     # 13. Project open / launcher
     if has_proj:
         return ("open_project", "project_action", 0.98)

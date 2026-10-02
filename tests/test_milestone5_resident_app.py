@@ -405,12 +405,23 @@ def test_task_center_window(qapp):
 # =========================================================================
 
 def test_zero_terminal_windows_flag_verification():
-    """Verify subprocess creation flags include CREATE_NO_WINDOW and DETACHED_PROCESS."""
-    CREATE_NO_WINDOW = 0x00000200
-    DETACHED_PROCESS = 0x00000008
+    """Verify canonical Microsoft Win32 process flags for stealth background execution."""
+    import subprocess
+    assert getattr(subprocess, "CREATE_NO_WINDOW", 0x08000000) == 0x08000000
+    assert getattr(subprocess, "DETACHED_PROCESS", 0x00000008) == 0x00000008
+    assert getattr(subprocess, "CREATE_NEW_PROCESS_GROUP", 0x00000200) == 0x00000200
+    assert getattr(subprocess, "CREATE_NEW_CONSOLE", 0x00000010) == 0x00000010
 
-    # Verify our codebase uses CREATE_NO_WINDOW for background launches
+    # Verify our codebase uses 0x08000000 / CREATE_NO_WINDOW for background launches
     from astrarun import main as main_mod
-    src = open(main_mod.__file__, "r", encoding="utf-8").read()
-    assert "CREATE_NO_WINDOW" in src
-    assert "0x00000200" in src
+    from astrarun.cognition import supervisor as sup_mod
+    from astrarun.execution import runtime as rt_mod
+
+    main_src = open(main_mod.__file__, "r", encoding="utf-8").read()
+    sup_src = open(sup_mod.__file__, "r", encoding="utf-8").read()
+    rt_src = open(rt_mod.__file__, "r", encoding="utf-8").read()
+
+    assert "CREATE_NO_WINDOW" in main_src
+    assert "0x08000000" in main_src
+    assert "0x08000000" in sup_src
+    assert "0x08000000" in rt_src

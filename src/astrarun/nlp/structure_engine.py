@@ -392,18 +392,24 @@ class NeuralStructureEngine:
             elif re.search(r'\b(?:click|tap)\b', clause_lower):
                 intent = "ui_click"
                 action_verb = "click"
+            elif re.search(r'\b(?:open|launch|start|bring\s+up|fire\s+up)\b', clause_lower) and re.search(r'\b(?:project|repo|workspace)\b', clause_lower):
+                intent = "open_project"
+                action_verb = "open"
+            elif re.search(r'\b(?:run\s+(?:the\s+)?(?:(?:approved|safe)\s+)*test(?:\s+command)?|run\s+tests?|run\s+test\s+command)\b', clause_lower):
+                intent = "run_project_command"
+                action_verb = "run"
             elif re.search(r'\b(?:open|launch|start|run|bring\s+up|fire\s+up)\b', clause_lower) or re.search(r'\bget\s+([a-zA-Z0-9_\-]+)\s+running\b', clause_lower) or "i need to write some notes in" in clause_lower:
                 if not re.search(r'\b(?:project|repo|workspace)\b', clause_lower):
                     if not any(k in clause_lower for k in ("folder", "downloads", "documents", "http", ".com", "system", "status")):
                         intent = "open_app"
                         action_verb = "open"
 
-            # App / target entity extraction
-            if intent in ("open_app", "close_application", "close_window", "focus_window") and not any(e.entity_type == "snap_position" for e in entities):
+            # App / project / target entity extraction
+            if intent in ("open_app", "open_project", "close_application", "close_window", "focus_window") and not any(e.entity_type == "snap_position" for e in entities):
                 # Identify object noun / argument
                 target_str = ""
                 for tok in clause_doc:
-                    if tok.text.lower() in VERB_INTENT_MAP or tok.text.lower() in ("the", "a", "an", "window", "app"):
+                    if tok.text.lower() in VERB_INTENT_MAP or tok.text.lower() in ("the", "a", "an", "window", "app", "project", "repo", "workspace"):
                         continue
                     if tok.dep_ in ("dobj", "pobj", "compound", "nmod") or tok.pos_ in ("PROPN", "NOUN", "X"):
                         target_str += (" " if target_str else "") + tok.text
@@ -413,8 +419,9 @@ class NeuralStructureEngine:
                     if t_idx != -1:
                         s = clause_start + t_idx
                         e = s + len(target_str)
+                        e_type = "project" if intent == "open_project" else "app_name"
                         entities.append(ParsedEntity(
-                            entity_type="app_name",
+                            entity_type=e_type,
                             value=target_str,
                             source_span=TextSpan(start=s, end=e, raw=raw_query[s:e]),
                             confidence=0.95

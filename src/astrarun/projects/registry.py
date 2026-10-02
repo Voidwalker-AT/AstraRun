@@ -62,8 +62,14 @@ class ProjectRegistry:
         workspace_root: Path | str = r"E:\Workspace",
         workspace_json_path: Path | str = r"E:\Workspace\workspace.json",
     ) -> None:
-        self.workspace_root = Path(workspace_root).resolve()
-        self.workspace_json_path = Path(workspace_json_path).resolve()
+        p_root = Path(workspace_root)
+        if p_root.name.endswith(".json") or p_root.suffix == ".json":
+            self.workspace_json_path = p_root.resolve()
+            parent = p_root.resolve().parent
+            self.workspace_root = parent if (parent / "Active").exists() or parent.name == "Workspace" else Path(r"E:\Workspace")
+        else:
+            self.workspace_root = Path(workspace_root).resolve()
+            self.workspace_json_path = Path(workspace_json_path).resolve()
         self._projects: dict[str, ProjectMetadata] = {}
         self._alias_map: dict[str, str] = {}
         self._load()

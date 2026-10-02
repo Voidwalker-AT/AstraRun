@@ -167,6 +167,35 @@ class WorkflowCompiler:
                     if not has_ambiguity:
                         unsupported_clauses.append(clause.text)
 
+            elif clause.action in ("run_project_command", "run_project_test"):
+                proj_ent = next((e for e in clause.entities if e.type == NLPEntityType.PROJECT), None)
+                if not proj_ent and clause.contextual_references:
+                    ref = clause.contextual_references[0]
+                    proj_id = ref.resolved_id
+                else:
+                    proj_id = proj_ent.normalized if proj_ent else None
+
+                # Inherit from preceding steps if not explicitly in clause
+                if not proj_id:
+                    for prev_s in reversed(steps):
+                        if "project_id" in prev_s.arguments:
+                            proj_id = prev_s.arguments["project_id"]
+                            break
+
+                if not proj_id:
+                    proj_id = "astrarun"
+
+                steps.append(WorkflowStep(
+                    step_id=f"step_{step_counter}",
+                    name=f"Run safe test command for {proj_id}",
+                    tool="run_project_command",
+                    arguments={"project_id": proj_id, "command_name": "test"},
+                    critical=True,
+                    source_clause_idx=clause.idx,
+                ))
+                preview_lines.append(f"{step_counter}. Run safe test command for {proj_id}")
+                step_counter += 1
+
             # B. Inspect Port
             elif clause.action == "inspect_port":
                 port_ent = next((e for e in clause.entities if e.type == NLPEntityType.PORT), None)

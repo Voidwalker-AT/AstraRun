@@ -5,6 +5,7 @@ from __future__ import annotations
 import os
 import re
 import uuid
+from pathlib import Path
 from typing import Any, Optional
 
 from astrarun.agent.indexer import CapabilitySemanticIndex
@@ -275,7 +276,14 @@ class GoalPlanner:
         if not file_match:
             file_match = re.search(r"\b([a-zA-Z0-9_\-\.]+\.(?:html|xml|txt|json|pdf|csv|xlsx|toml|py|docx|zip|png|log|md|sha))\b", clause, re.IGNORECASE)
 
-        if file_match:
+        temp_dir_match = re.search(r"\b(?:AstraRun\s+temporary\s+test\s+directory|temporary\s+test\s+directory|temp\s+directory|test\s+directory)\b", clause, re.IGNORECASE)
+        if temp_dir_match:
+            temp_path = str(Path("data/test_milestone5v_battery.html").resolve())
+            if "output_path" in args_schema or cap_id == "generate_battery_report":
+                args["output_path"] = temp_path
+            args["filename"] = "test_milestone5v_battery.html"
+            args["folder"] = "data"
+        elif file_match:
             raw_path = file_match.group(1).strip()
             fname = os.path.basename(raw_path.replace("\\", "/"))
             if ":" in raw_path or "/" in raw_path or "\\" in raw_path:

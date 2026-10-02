@@ -133,7 +133,7 @@ def open_app(app: str, path: str | None = None, target: str | None = None) -> bo
                 pass
 
             # Final detached Popen fallback
-            creationflags = 0x00000008 | 0x00000200
+            creationflags = 0x00000008 | 0x08000000  # DETACHED_PROCESS | CREATE_NO_WINDOW
             subprocess.Popen(
                 args,
                 shell=False,

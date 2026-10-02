@@ -291,7 +291,7 @@ class CapabilityRegistry:
             system_summary,
         )
         from astrarun.tools.folders import open_folder
-        from astrarun.tools.projects import open_project_folder, open_project_in_vscode
+        from astrarun.tools.projects import open_project_folder, open_project_in_vscode, run_project_command
         from astrarun.tools.web import open_url
         from astrarun.windows import (
             arrange_desktop,
@@ -740,6 +740,17 @@ class CapabilityRegistry:
             handler=open_project_in_vscode,
             permission=CapabilityPermission.AUTO,
             context_effects=["project_opened"],
+        ))
+        self.register(Capability(
+            id="run_project_command",
+            category=CapabilityCategory.PROJECT,
+            description="Run an approved safe command in a verified project workspace",
+            args_schema={"project_id": str, "command_name": str},
+            risk=ToolRisk.MEDIUM,
+            read_only=False,
+            handler=run_project_command,
+            permission=CapabilityPermission.AUTO,
+            context_effects=["project_command_executed"],
         ))
 
         # ---------------------------------------------------------

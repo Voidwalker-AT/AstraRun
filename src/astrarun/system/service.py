@@ -151,7 +151,13 @@ def gpu_status() -> CapabilityResult:
             "--query-gpu=name,utilization.gpu,memory.used,memory.total,temperature.gpu",
             "--format=csv,noheader,nounits",
         ]
-        res = subprocess.run(cmd, capture_output=True, text=True, timeout=2.0)
+        res = subprocess.run(
+            cmd,
+            capture_output=True,
+            text=True,
+            timeout=2.0,
+            creationflags=0x08000000 if os.name == "nt" else 0,
+        )
         if res.returncode != 0:
             return CapabilityResult.fail(
                 capability="gpu_status",

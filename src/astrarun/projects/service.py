@@ -68,12 +68,14 @@ def project_git_status(project_id: str) -> CapabilityResult:
         )
 
     try:
+        flags = 0x08000000 if os.name == "nt" else 0
         branch_res = subprocess.run(
             ["git", "branch", "--show-current"],
             cwd=str(proj_dir),
             capture_output=True,
             text=True,
             timeout=2.0,
+            creationflags=flags,
         )
         branch = branch_res.stdout.strip() or "HEAD"
 
@@ -83,6 +85,7 @@ def project_git_status(project_id: str) -> CapabilityResult:
             capture_output=True,
             text=True,
             timeout=2.0,
+            creationflags=flags,
         )
         lines = status_res.stdout.splitlines()
         modified = []

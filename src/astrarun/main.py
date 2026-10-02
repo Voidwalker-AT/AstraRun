@@ -18,7 +18,7 @@ SRC_DIR = Path(__file__).resolve().parent.parent
 if str(SRC_DIR) not in sys.path:
     sys.path.insert(0, str(SRC_DIR))
 
-from PySide6.QtCore import QFileSystemWatcher, QTimer
+from PySide6.QtCore import QFileSystemWatcher, QObject, QTimer, Signal
 from PySide6.QtWidgets import QApplication
 
 from astrarun import __version__
@@ -250,13 +250,15 @@ def main() -> int:
     astra_app.task_event_bus.subscribe(lambda ev: QTimer.singleShot(0, lambda: on_tray_task_event(ev)))
 
     def handle_restart():
-        logger.info("[LIFECYCLE] Restart requested via tray menu. Spawning fresh resident process...")
+        logger.info("[LIFECYCLE] Restart requested via tray menu / IPC. Releasing mutex and spawning fresh resident process...")
         try:
+            if hasattr(astra_app, "single_instance") and astra_app.single_instance:
+                astra_app.single_instance.release()
             import subprocess
             venv_pythonw = sys.executable
             main_script = str(Path(__file__).resolve())
-            DETACHED_PROCESS = 0x00000008
-            CREATE_NO_WINDOW = 0x00000200
+            DETACHED_PROCESS = getattr(subprocess, "DETACHED_PROCESS", 0x00000008)
+            CREATE_NO_WINDOW = getattr(subprocess, "CREATE_NO_WINDOW", 0x08000000)
             subprocess.Popen(
                 [venv_pythonw, main_script],
                 cwd=str(Path(__file__).resolve().parent.parent.parent),
@@ -272,27 +274,54 @@ def main() -> int:
     astra_app.tray_icon = tray_icon  # type: ignore
     logger.info("[STARTUP_STAGE] TRAY_CREATED (tooltip='%s')", tray_icon.toolTip())
 
+    # 8b. Dedicated thread-safe IPC Signal Bridge
+    class IPCSignalBridge(QObject):
+        show_ui_requested = Signal()
+        task_center_requested = Signal()
+        pause_requested = Signal()
+        resume_requested = Signal()
+        restart_requested = Signal()
+        submit_query_requested = Signal(str)
+        quit_requested = Signal()
+
+    ipc_bridge = IPCSignalBridge(parent=launcher)
+    ipc_bridge.show_ui_requested.connect(presentation_controller.present)
+    ipc_bridge.task_center_requested.connect(launcher.open_task_center)
+    ipc_bridge.pause_requested.connect(on_tray_pause)
+    ipc_bridge.resume_requested.connect(on_tray_resume)
+    ipc_bridge.restart_requested.connect(handle_restart)
+    def on_ipc_query(query: str):
+        launcher.input_field.setText(query)
+        launcher.execute_command()
+    ipc_bridge.submit_query_requested.connect(on_ipc_query)
+    ipc_bridge.quit_requested.connect(qapp.quit)
+    astra_app.ipc_bridge = ipc_bridge  # type: ignore
+
     # Start local IPC server on primary instance
     def handle_ipc_command(command: str, args: dict) -> dict:
         logger.info("[IPC] Received local command: %s", command)
         cmd_upper = command.upper()
         if cmd_upper in ("SHOW_MAIN_UI", "ACTIVATE", "SUMMON"):
-            QTimer.singleShot(0, presentation_controller.present)
+            ipc_bridge.show_ui_requested.emit()
             return {"action": "SHOW_MAIN_UI_TRIGGERED"}
         elif cmd_upper in ("SHOW_TASK_CENTER", "TASK_CENTER"):
-            QTimer.singleShot(0, launcher.open_task_center)
+            ipc_bridge.task_center_requested.emit()
             return {"action": "SHOW_TASK_CENTER_TRIGGERED"}
         elif cmd_upper == "PAUSE":
-            QTimer.singleShot(0, on_tray_pause)
+            ipc_bridge.pause_requested.emit()
             return {"action": "PAUSE_TRIGGERED"}
         elif cmd_upper == "RESUME":
-            QTimer.singleShot(0, on_tray_resume)
+            ipc_bridge.resume_requested.emit()
             return {"action": "RESUME_TRIGGERED"}
         elif cmd_upper == "RESTART":
-            QTimer.singleShot(0, handle_restart)
+            ipc_bridge.restart_requested.emit()
             return {"action": "RESTART_TRIGGERED"}
+        elif cmd_upper in ("SUBMIT_QUERY", "EXECUTE_COMMAND", "EXECUTE"):
+            query = args.get("query", "")
+            ipc_bridge.submit_query_requested.emit(query)
+            return {"action": "QUERY_SUBMITTED", "query": query}
         elif cmd_upper in ("QUIT", "EXIT"):
-            QTimer.singleShot(0, qapp.quit)
+            ipc_bridge.quit_requested.emit()
             return {"action": "QUIT_TRIGGERED"}
         return {"status": "UNKNOWN_COMMAND", "command": command}
 
@@ -328,10 +357,16 @@ def main() -> int:
             hud.hide()
             tray_icon.hide()
             astra_app.shutdown()
-            # Clean up state file on normal exit
+            # Clean up state file on normal exit ONLY if it belongs to current process
             state_path = Path("data/astrarun_state.json")
             if state_path.exists():
-                state_path.unlink(missing_ok=True)
+                try:
+                    with open(state_path, "r", encoding="utf-8") as f:
+                        cur_data = json.load(f)
+                    if cur_data.get("pid") == os.getpid():
+                        state_path.unlink(missing_ok=True)
+                except Exception:
+                    pass
         except Exception as e:
             logger.error("Error during cleanup: %s", e)
 

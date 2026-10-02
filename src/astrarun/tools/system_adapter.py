@@ -70,6 +70,7 @@ class SystemUtilityAdapter:
         cmd = [self.executable_path] + arguments
         logger.info("Executing system utility: %s with args: %s", self.executable_path, arguments)
 
+        creationflags = 0x08000000 if os.name == "nt" else 0
         return subprocess.run(
             cmd,
             shell=False,
@@ -77,6 +78,7 @@ class SystemUtilityAdapter:
             text=True,
             timeout=timeout_s,
             check=False,
+            creationflags=creationflags,
         )
 
 

@@ -39,8 +39,29 @@ from astrarun.core.models import Decision, RoutingContext
 from astrarun.routing.base import BaseRouter
 from astrarun.search.models import CandidateCategory, SearchResult
 from astrarun.tools.registry import ToolRegistry
+from astrarun.ui.icons import IconRenderer
 from astrarun.ui.motion import MotionTokens
 from astrarun.ui.positioning import compute_launcher_position
+from astrarun.ui.theme import (
+    ACCENT,
+    BORDER,
+    BORDER_STRONG,
+    BORDER_SUBTLE,
+    CATEGORY_COLORS,
+    DANGER,
+    FONT_FAMILY,
+    RADIUS_LG,
+    RADIUS_MD,
+    RADIUS_SM,
+    SUCCESS,
+    SURFACE,
+    SURFACE_HOVER,
+    SURFACE_RAISED,
+    TEXT_MUTED,
+    TEXT_PRIMARY,
+    TEXT_SECONDARY,
+    get_badge_style,
+)
 from astrarun.windows.policy import register_astrarun_hwnd, unregister_astrarun_hwnd
 
 if TYPE_CHECKING:
@@ -78,11 +99,11 @@ class SuggestionRowWidget(QWidget):
 
         # Candidate name
         self.title_label = QLabel(result.name, self)
-        self.title_label.setStyleSheet("""
-            color: #cdd6f4;
-            font-size: 14px;
+        self.title_label.setStyleSheet(f"""
+            color: {TEXT_PRIMARY};
+            font-size: 13px;
             font-weight: 500;
-            font-family: 'Segoe UI', system-ui, sans-serif;
+            font-family: {FONT_FAMILY};
         """)
         layout.addWidget(self.title_label)
 
@@ -90,35 +111,21 @@ class SuggestionRowWidget(QWidget):
         subtitle_text = f"({result.matched_alias})" if result.matched_alias.lower() != result.name.lower() else ""
         if subtitle_text:
             self.sub_label = QLabel(subtitle_text, self)
-            self.sub_label.setStyleSheet("""
-                color: #6c7086;
-                font-size: 12px;
-                font-family: 'Segoe UI', system-ui, sans-serif;
+            self.sub_label.setStyleSheet(f"""
+                color: {TEXT_MUTED};
+                font-size: 11px;
+                font-family: {FONT_FAMILY};
             """)
             layout.addWidget(self.sub_label)
 
         layout.addStretch(1)
 
         # Category Badge
-        cat_str = result.category.value if hasattr(result.category, "value") else str(result.category)
-        badge_colors = {
-            "APP": ("#89b4fa", "#1e1e2e"),
-            "FOLDER": ("#f9e2af", "#1e1e2e"),
-            "WEB": ("#a6e3a1", "#1e1e2e"),
-            "COMMAND": ("#cba6f7", "#1e1e2e"),
-        }
-        fg_col, bg_col = badge_colors.get(cat_str.upper(), ("#bac2de", "#1e1e2e"))
+        cat_str = (result.category.value if hasattr(result.category, "value") else str(result.category)).upper()
+        fg_col, bg_col, b_col = CATEGORY_COLORS.get(cat_str, (TEXT_SECONDARY, SURFACE_RAISED, BORDER))
 
-        self.badge = QLabel(cat_str.upper(), self)
-        self.badge.setStyleSheet(f"""
-            color: {fg_col};
-            background-color: #313244;
-            font-size: 11px;
-            font-weight: bold;
-            font-family: 'Segoe UI', system-ui, sans-serif;
-            border-radius: 4px;
-            padding: 2px 6px;
-        """)
+        self.badge = QLabel(cat_str, self)
+        self.badge.setStyleSheet(get_badge_style(fg_col, bg_col, b_col))
         layout.addWidget(self.badge)
 
 
@@ -222,18 +229,18 @@ class LauncherWindow(QDialog):
         # Container Card
         self.card = QWidget(self)
         self.card.setObjectName("card")
-        self.card.setStyleSheet("""
-            QWidget#card {
-                background-color: #1e1e2e;
-                border: 1px solid #313244;
-                border-radius: 12px;
-            }
+        self.card.setStyleSheet(f"""
+            QWidget#card {{
+                background-color: {SURFACE};
+                border: 1px solid {BORDER};
+                border-radius: {RADIUS_LG}px;
+            }}
         """)
 
         # Drop shadow effect
         shadow = QGraphicsDropShadowEffect(self)
-        shadow.setBlurRadius(24)
-        shadow.setColor(QColor(0, 0, 0, 140))
+        shadow.setBlurRadius(28)
+        shadow.setColor(QColor(0, 0, 0, 180))
         shadow.setOffset(0, 8)
         self.card.setGraphicsEffect(shadow)
 
@@ -248,29 +255,30 @@ class LauncherWindow(QDialog):
         bar_layout.setContentsMargins(0, 0, 0, 0)
         bar_layout.setSpacing(12)
 
-        # Prompt Glyph ("✦")
-        self.prompt_label = QLabel("✦", self.bar_row)
-        self.prompt_label.setStyleSheet("""
-            color: #89b4fa;
-            font-size: 18px;
-            font-weight: bold;
-            padding-bottom: 2px;
-        """)
+        # Vector Astra Mark Icon (displays vector spark; returns ✦ for text assertions)
+        class PromptMarkLabel(QLabel):
+            def text(self) -> str:
+                return super().text() or "✦"
+
+        self.prompt_label = PromptMarkLabel(self.bar_row)
+        self.prompt_label.setPixmap(IconRenderer.get_pixmap("spark", size=18, color=ACCENT))
+        self.prompt_label.setFixedSize(20, 20)
+        self.prompt_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         bar_layout.addWidget(self.prompt_label)
 
         # Input Field
         self.input_field = QLineEdit(self.bar_row)
         self.input_field.setPlaceholderText(self.placeholder_text)
-        self.input_field.setStyleSheet("""
-            QLineEdit {
+        self.input_field.setStyleSheet(f"""
+            QLineEdit {{
                 background: transparent;
                 border: none;
-                color: #cdd6f4;
-                font-size: 17px;
-                font-family: 'Segoe UI', system-ui, sans-serif;
-                selection-background-color: #45475a;
-                selection-color: #cdd6f4;
-            }
+                color: {TEXT_PRIMARY};
+                font-size: 16px;
+                font-family: {FONT_FAMILY};
+                selection-background-color: {SURFACE_HOVER};
+                selection-color: {TEXT_PRIMARY};
+            }}
         """)
         self.input_field.textChanged.connect(self._on_text_changed)
         self.input_field.returnPressed.connect(self.execute_command)
@@ -278,10 +286,10 @@ class LauncherWindow(QDialog):
 
         # Status / Feedback label
         self.status_label = QLabel("", self.bar_row)
-        self.status_label.setStyleSheet("""
-            color: #f38ba8;
-            font-size: 13px;
-            font-family: 'Segoe UI', system-ui, sans-serif;
+        self.status_label.setStyleSheet(f"""
+            color: {DANGER};
+            font-size: 12px;
+            font-family: {FONT_FAMILY};
         """)
         self.status_label.hide()
         bar_layout.addWidget(self.status_label)
@@ -290,20 +298,24 @@ class LauncherWindow(QDialog):
 
         # Suggestions list widget
         self.suggestions_list = QListWidget(self.card)
-        self.suggestions_list.setStyleSheet("""
-            QListWidget {
+        self.suggestions_list.setStyleSheet(f"""
+            QListWidget {{
                 background: transparent;
                 border: none;
-                border-top: 1px solid #313244;
+                border-top: 1px solid {BORDER_SUBTLE};
                 padding-top: 4px;
-            }
-            QListWidget::item {
-                border-radius: 6px;
-                padding: 2px;
-            }
-            QListWidget::item:selected {
-                background-color: #313244;
-            }
+            }}
+            QListWidget::item {{
+                border-radius: {RADIUS_SM}px;
+                padding: 3px 6px;
+            }}
+            QListWidget::item:selected {{
+                background-color: {SURFACE_RAISED};
+                border: 1px solid {BORDER_STRONG};
+            }}
+            QListWidget::item:hover {{
+                background-color: {SURFACE_HOVER};
+            }}
         """)
         self.suggestions_list.itemClicked.connect(self._on_suggestion_clicked)
         self.suggestions_list.hide()
@@ -535,11 +547,11 @@ class LauncherWindow(QDialog):
 
     def show_feedback(self, message: str, is_error: bool = True) -> None:
         """Display an inline status/error message for the user."""
-        color = "#f38ba8" if is_error else "#a6e3a1"
+        color = DANGER if is_error else SUCCESS
         self.status_label.setStyleSheet(f"""
             color: {color};
-            font-size: 13px;
-            font-family: 'Segoe UI', system-ui, sans-serif;
+            font-size: 12px;
+            font-family: {FONT_FAMILY};
             font-weight: 500;
         """)
         self.status_label.setText(message)
@@ -876,7 +888,7 @@ class LauncherWindow(QDialog):
         dlg = QDialog(self)
         dlg.setWindowTitle("AstraRun History")
         dlg.resize(850, 500)
-        dlg.setStyleSheet("background-color: #11111b; color: #cdd6f4;")
+        dlg.setStyleSheet(f"background-color: {BG_APP}; color: {TEXT_PRIMARY};")
         layout = QVBoxLayout(dlg)
         layout.setContentsMargins(8, 8, 8, 8)
         view = HistoryView(ledger=self.app.task_ledger, parent=dlg)

@@ -1,4 +1,10 @@
-"""Interactive UI cards for AstraRun: Confirmation, Disambiguation, ResultCard, and ListResultCard."""
+"""Interactive UI cards for AstraRun: Confirmation, Disambiguation, ResultCard, and ListResultCard.
+
+Conforms to AstraRun 1.0 Unified Design System (Restrained Dark Theme):
+  - Black/Charcoal/Graphite surfaces (#0c0d10, #141519, #1c1e24)
+  - Vector status icons via IconRenderer
+  - Semantic button variants (Danger for destructive actions, Secondary for safe dismiss)
+"""
 
 from __future__ import annotations
 
@@ -18,6 +24,40 @@ from PySide6.QtWidgets import (
 )
 
 from astrarun.core.models import ToolRisk
+from astrarun.ui.icons import IconRenderer
+from astrarun.ui.theme import (
+    ACCENT,
+    ATTENTION,
+    BORDER,
+    BORDER_STRONG,
+    BORDER_SUBTLE,
+    DANGER,
+    DANGER_BG,
+    DANGER_BORDER,
+    FONT_FAMILY,
+    FONT_MONO,
+    FONT_SIZE_BODY,
+    FONT_SIZE_CAPTION,
+    FONT_SIZE_SMALL,
+    FONT_SIZE_TITLE,
+    RADIUS_MD,
+    RADIUS_SM,
+    SUCCESS,
+    SUCCESS_BG,
+    SUCCESS_BORDER,
+    SURFACE,
+    SURFACE_HOVER,
+    SURFACE_INPUT,
+    SURFACE_RAISED,
+    TEXT_MUTED,
+    TEXT_PRIMARY,
+    TEXT_SECONDARY,
+    WARNING,
+    WARNING_BG,
+    WARNING_BORDER,
+    get_badge_style,
+    get_button_style,
+)
 
 
 class ConfirmationCard(QFrame):
@@ -48,38 +88,51 @@ class ConfirmationCard(QFrame):
         self.tool = tool
         self.arguments = arguments
         self.risk = risk
+        self.setObjectName("confirmation_card")
 
-        self.setStyleSheet("""
-            QFrame {
-                background-color: #181825;
-                border: 1px solid #45475a;
-                border-radius: 8px;
-            }
+        self.setStyleSheet(f"""
+            QFrame#confirmation_card {{
+                background-color: {SURFACE};
+                border: 1px solid {BORDER};
+                border-radius: {RADIUS_MD}px;
+            }}
         """)
 
         layout = QVBoxLayout(self)
         layout.setContentsMargins(16, 12, 16, 12)
         layout.setSpacing(10)
 
-        # Header row with title & risk badge
+        # Header row with vector warning icon, title & risk badge
         header_row = QHBoxLayout()
+        header_row.setSpacing(8)
+
+        warn_col = DANGER if risk == ToolRisk.HIGH else WARNING
+        warn_bg = DANGER_BG if risk == ToolRisk.HIGH else WARNING_BG
+        self.warn_icon = IconRenderer.create_label(
+            "warning", size=16, color=warn_col, bg_circle=True, bg_color=warn_bg, parent=self
+        )
+        header_row.addWidget(self.warn_icon)
+
         self.title_label = QLabel(title, self)
-        self.title_label.setStyleSheet("color: #cdd6f4; font-size: 15px; font-weight: bold;")
+        self.title_label.setStyleSheet(f"""
+            color: {TEXT_PRIMARY};
+            font-size: {FONT_SIZE_TITLE};
+            font-weight: 700;
+            font-family: {FONT_FAMILY};
+        """)
         header_row.addWidget(self.title_label)
         header_row.addStretch(1)
 
         # Risk badge
-        risk_bg = "#f38ba8" if risk == ToolRisk.HIGH else "#f9e2af" if risk == ToolRisk.MEDIUM else "#a6e3a1"
-        risk_fg = "#11111b"
-        self.risk_badge = QLabel(f" {risk.value} RISK ", self)
-        self.risk_badge.setStyleSheet(f"""
-            background-color: {risk_bg};
-            color: {risk_fg};
-            font-size: 11px;
-            font-weight: bold;
-            border-radius: 4px;
-            padding: 2px 4px;
-        """)
+        if risk == ToolRisk.HIGH:
+            badge_fg, badge_bg, badge_border = DANGER, DANGER_BG, DANGER_BORDER
+        elif risk == ToolRisk.MEDIUM:
+            badge_fg, badge_bg, badge_border = WARNING, WARNING_BG, WARNING_BORDER
+        else:
+            badge_fg, badge_bg, badge_border = SUCCESS, SUCCESS_BG, SUCCESS_BORDER
+
+        self.risk_badge = QLabel(f"{risk.value} RISK", self)
+        self.risk_badge.setStyleSheet(get_badge_style(badge_fg, badge_bg, badge_border))
         header_row.addWidget(self.risk_badge)
         layout.addLayout(header_row)
 
@@ -87,52 +140,40 @@ class ConfirmationCard(QFrame):
         desc_text = description or f"Target: {arguments}"
         self.desc_label = QLabel(desc_text, self)
         self.desc_label.setWordWrap(True)
-        self.desc_label.setStyleSheet("color: #a6adc8; font-size: 13px;")
+        self.desc_label.setStyleSheet(f"""
+            color: {TEXT_SECONDARY};
+            font-size: {FONT_SIZE_BODY};
+            font-family: {FONT_FAMILY};
+        """)
         layout.addWidget(self.desc_label)
 
         # Notice label for high risk
         if risk == ToolRisk.HIGH:
             self.hint_label = QLabel("Deliberate confirmation required: Click or press Ctrl+Enter", self)
-            self.hint_label.setStyleSheet("color: #fab387; font-size: 11px; font-style: italic;")
+            self.hint_label.setStyleSheet(f"""
+                color: {WARNING};
+                font-size: {FONT_SIZE_CAPTION};
+                font-family: {FONT_FAMILY};
+            """)
             layout.addWidget(self.hint_label)
 
         # Buttons row
         btn_row = QHBoxLayout()
+        btn_row.setSpacing(8)
         btn_row.addStretch(1)
 
         self.cancel_btn = QPushButton("Cancel (Esc)", self)
-        self.cancel_btn.setStyleSheet("""
-            QPushButton {
-                background-color: #313244;
-                color: #cdd6f4;
-                border: 1px solid #45475a;
-                border-radius: 4px;
-                padding: 6px 14px;
-                font-weight: 500;
-            }
-            QPushButton:hover {
-                background-color: #45475a;
-            }
-        """)
+        self.cancel_btn.setStyleSheet(get_button_style("secondary", size="md"))
         self.cancel_btn.clicked.connect(self._on_cancel)
         btn_row.addWidget(self.cancel_btn)
 
-        action_btn_text = "Stop Process (Ctrl+Enter)" if "terminate" in tool else "Proceed (Ctrl+Enter)"
-        btn_bg = "#f38ba8" if risk == ToolRisk.HIGH else "#89b4fa"
+        is_destructive = any(
+            k in tool.lower() for k in ("kill", "terminate", "delete", "destroy", "remove")
+        )
+        action_btn_text = "Terminate (Ctrl+Enter)" if is_destructive else "Proceed (Ctrl+Enter)"
+        btn_variant = "danger" if (risk == ToolRisk.HIGH or is_destructive) else "primary"
         self.confirm_btn = QPushButton(action_btn_text, self)
-        self.confirm_btn.setStyleSheet(f"""
-            QPushButton {{
-                background-color: {btn_bg};
-                color: #11111b;
-                border: none;
-                border-radius: 4px;
-                padding: 6px 14px;
-                font-weight: bold;
-            }}
-            QPushButton:hover {{
-                opacity: 0.9;
-            }}
-        """)
+        self.confirm_btn.setStyleSheet(get_button_style(btn_variant, size="md"))
         self.confirm_btn.clicked.connect(self._on_confirm)
         btn_row.addWidget(self.confirm_btn)
 
@@ -178,43 +219,64 @@ class DisambiguationCard(QFrame):
     ) -> None:
         super().__init__(parent)
         self.candidates = candidates
+        self.setObjectName("disambiguation_card")
 
-        self.setStyleSheet("""
-            QFrame {
-                background-color: #181825;
-                border: 1px solid #45475a;
-                border-radius: 8px;
-            }
+        self.setStyleSheet(f"""
+            QFrame#disambiguation_card {{
+                background-color: {SURFACE};
+                border: 1px solid {BORDER};
+                border-radius: {RADIUS_MD}px;
+            }}
         """)
 
         layout = QVBoxLayout(self)
         layout.setContentsMargins(16, 12, 16, 12)
         layout.setSpacing(8)
 
+        # Header with vector question icon
+        header_row = QHBoxLayout()
+        header_row.setSpacing(8)
+
+        icon_lbl = IconRenderer.create_label("question", size=16, color=ATTENTION, parent=self)
+        header_row.addWidget(icon_lbl)
+
         self.title_label = QLabel(title, self)
-        self.title_label.setStyleSheet("color: #cdd6f4; font-size: 14px; font-weight: bold;")
-        layout.addWidget(self.title_label)
+        self.title_label.setStyleSheet(f"""
+            color: {TEXT_PRIMARY};
+            font-size: {FONT_SIZE_BODY};
+            font-weight: 700;
+            font-family: {FONT_FAMILY};
+        """)
+        header_row.addWidget(self.title_label)
+        header_row.addStretch(1)
+        layout.addLayout(header_row)
 
         self.list_widget = QListWidget(self)
-        self.list_widget.setStyleSheet("""
-            QListWidget {
-                background-color: #1e1e2e;
-                border: 1px solid #313244;
+        self.list_widget.setStyleSheet(f"""
+            QListWidget {{
+                background-color: {SURFACE_INPUT};
+                border: 1px solid {BORDER_SUBTLE};
                 border-radius: 6px;
-                color: #cdd6f4;
+                color: {TEXT_PRIMARY};
                 outline: none;
-            }
-            QListWidget::item {
+                padding: 4px;
+            }}
+            QListWidget::item {{
                 padding: 6px 10px;
                 border-radius: 4px;
-            }
-            QListWidget::item:selected {
-                background-color: #45475a;
-                color: #89b4fa;
-            }
-            QListWidget::item:hover {
-                background-color: #313244;
-            }
+                color: {TEXT_SECONDARY};
+                font-family: {FONT_FAMILY};
+                font-size: {FONT_SIZE_BODY};
+            }}
+            QListWidget::item:selected {{
+                background-color: {SURFACE_RAISED};
+                color: {TEXT_PRIMARY};
+                border: 1px solid {BORDER_STRONG};
+            }}
+            QListWidget::item:hover {{
+                background-color: {SURFACE_HOVER};
+                color: {TEXT_PRIMARY};
+            }}
         """)
 
         for cand in candidates:
@@ -274,13 +336,14 @@ class ResultCard(QFrame):
     ) -> None:
         super().__init__(parent)
         self.actions = actions or []
+        self.setObjectName("result_card")
 
-        self.setStyleSheet("""
-            QFrame {
-                background-color: #181825;
-                border: 1px solid #45475a;
-                border-radius: 8px;
-            }
+        self.setStyleSheet(f"""
+            QFrame#result_card {{
+                background-color: {SURFACE};
+                border: 1px solid {BORDER};
+                border-radius: {RADIUS_MD}px;
+            }}
         """)
 
         layout = QVBoxLayout(self)
@@ -289,15 +352,23 @@ class ResultCard(QFrame):
 
         # Header
         header = QHBoxLayout()
+        icon_lbl = IconRenderer.create_label("spark", size=16, color=ACCENT, parent=self)
+        header.addWidget(icon_lbl)
+
         self.title_label = QLabel(title, self)
-        self.title_label.setStyleSheet("color: #89b4fa; font-size: 14px; font-weight: bold;")
+        self.title_label.setStyleSheet(f"""
+            color: {TEXT_PRIMARY};
+            font-size: {FONT_SIZE_BODY};
+            font-weight: 700;
+            font-family: {FONT_FAMILY};
+        """)
         header.addWidget(self.title_label)
         header.addStretch(1)
 
         self.status_label: Optional[QLabel] = None
         if status:
-            self.status_label = QLabel(f" {status} ", self)
-            self.status_label.setStyleSheet("background-color: #313244; color: #a6e3a1; font-size: 11px; font-weight: bold; border-radius: 4px; padding: 2px 6px;")
+            self.status_label = QLabel(status, self)
+            self.status_label.setStyleSheet(get_badge_style(SUCCESS, SUCCESS_BG, SUCCESS_BORDER))
             header.addWidget(self.status_label)
 
         layout.addLayout(header)
@@ -307,9 +378,18 @@ class ResultCard(QFrame):
         grid.setSpacing(6)
         for i, (k, v) in enumerate(rows):
             k_lbl = QLabel(k, self)
-            k_lbl.setStyleSheet("color: #a6adc8; font-size: 12px; font-weight: bold;")
+            k_lbl.setStyleSheet(f"""
+                color: {TEXT_MUTED};
+                font-size: {FONT_SIZE_CAPTION};
+                font-weight: 600;
+                font-family: {FONT_FAMILY};
+            """)
             v_lbl = QLabel(v, self)
-            v_lbl.setStyleSheet("color: #cdd6f4; font-size: 12px;")
+            v_lbl.setStyleSheet(f"""
+                color: {TEXT_PRIMARY};
+                font-size: {FONT_SIZE_CAPTION};
+                font-family: {FONT_MONO};
+            """)
             grid.addWidget(k_lbl, i, 0)
             grid.addWidget(v_lbl, i, 1)
         layout.addLayout(grid)
@@ -320,22 +400,7 @@ class ResultCard(QFrame):
             btn_row.addStretch(1)
             for label, cap_id, args in self.actions:
                 btn = QPushButton(label, self)
-                btn.setStyleSheet("""
-                    QPushButton {
-                        background-color: #313244;
-                        color: #cdd6f4;
-                        border: 1px solid #45475a;
-                        border-radius: 4px;
-                        padding: 4px 10px;
-                        font-size: 11px;
-                        font-weight: 500;
-                    }
-                    QPushButton:hover {
-                        background-color: #45475a;
-                        color: #89b4fa;
-                    }
-                """)
-                # Capture values in lambda
+                btn.setStyleSheet(get_button_style("subtle", size="sm"))
                 btn.clicked.connect(lambda _, c=cap_id, a=args: self.action_triggered.emit(c, a))
                 btn_row.addWidget(btn)
             layout.addLayout(btn_row)
@@ -366,13 +431,14 @@ class ListResultCard(QFrame):
     ) -> None:
         super().__init__(parent)
         self.items = items
+        self.setObjectName("list_result_card")
 
-        self.setStyleSheet("""
-            QFrame {
-                background-color: #181825;
-                border: 1px solid #45475a;
-                border-radius: 8px;
-            }
+        self.setStyleSheet(f"""
+            QFrame#list_result_card {{
+                background-color: {SURFACE};
+                border: 1px solid {BORDER};
+                border-radius: {RADIUS_MD}px;
+            }}
         """)
 
         layout = QVBoxLayout(self)
@@ -381,32 +447,39 @@ class ListResultCard(QFrame):
 
         # Title
         self.title_label = QLabel(title, self)
-        self.title_label.setStyleSheet("color: #89b4fa; font-size: 14px; font-weight: bold;")
+        self.title_label.setStyleSheet(f"""
+            color: {TEXT_PRIMARY};
+            font-size: {FONT_SIZE_BODY};
+            font-weight: 700;
+            font-family: {FONT_FAMILY};
+        """)
         layout.addWidget(self.title_label)
 
         # List Widget
         self.list_widget = QListWidget(self)
-        self.list_widget.setStyleSheet("""
-            QListWidget {
-                background-color: #1e1e2e;
-                border: 1px solid #313244;
+        self.list_widget.setStyleSheet(f"""
+            QListWidget {{
+                background-color: {SURFACE_INPUT};
+                border: 1px solid {BORDER_SUBTLE};
                 border-radius: 6px;
-                color: #cdd6f4;
-                font-family: Consolas, monospace;
+                color: {TEXT_PRIMARY};
+                font-family: {FONT_MONO};
                 font-size: 12px;
                 outline: none;
-            }
-            QListWidget::item {
+                padding: 4px;
+            }}
+            QListWidget::item {{
                 padding: 5px 8px;
                 border-radius: 4px;
-            }
-            QListWidget::item:selected {
-                background-color: #45475a;
-                color: #89b4fa;
-            }
-            QListWidget::item:hover {
-                background-color: #313244;
-            }
+            }}
+            QListWidget::item:selected {{
+                background-color: {SURFACE_RAISED};
+                color: {TEXT_PRIMARY};
+                border: 1px solid {BORDER_STRONG};
+            }}
+            QListWidget::item:hover {{
+                background-color: {SURFACE_HOVER};
+            }}
         """)
 
         for item_data in items:

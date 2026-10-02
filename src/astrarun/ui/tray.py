@@ -4,6 +4,7 @@ Implements:
   - Exactly ONE notification area icon with the Astra star/spark visual identity
   - Discrete states: READY, WORKING, PAUSED, ATTENTION_REQUIRED, ERROR
   - Exact menu: Open Astra, Task Center, Pause/Resume, Settings, Restart, Quit
+  - Conforms to AstraRun 1.0 Unified Design System (Restrained Dark Theme)
 """
 
 from __future__ import annotations
@@ -16,6 +17,26 @@ from PySide6.QtGui import QAction, QColor, QFont, QIcon, QPainter, QPainterPath,
 from PySide6.QtWidgets import QMenu, QSystemTrayIcon, QWidget
 
 from astrarun.core.logging import get_logger
+from astrarun.ui.icons import IconRenderer
+from astrarun.ui.theme import (
+    ACCENT,
+    ATTENTION,
+    BG_APP,
+    BORDER,
+    BORDER_STRONG,
+    BORDER_SUBTLE,
+    DANGER,
+    FONT_FAMILY,
+    FONT_SIZE_BODY,
+    SUCCESS,
+    SURFACE,
+    SURFACE_HOVER,
+    SURFACE_RAISED,
+    TEXT_MUTED,
+    TEXT_PRIMARY,
+    TEXT_SECONDARY,
+    WARNING,
+)
 
 logger = get_logger("astrarun.ui.tray")
 
@@ -29,11 +50,11 @@ class TrayState(str, Enum):
 
 
 STATE_COLORS = {
-    TrayState.READY: "#89b4fa",             # Blue/Lavender
-    TrayState.WORKING: "#f9e2af",           # Amber/Gold
-    TrayState.PAUSED: "#fab387",            # Peach/Orange
-    TrayState.ATTENTION_REQUIRED: "#cba6f7",# Mauve/Violet
-    TrayState.ERROR: "#f38ba8",             # Red
+    TrayState.READY: ACCENT,              # #5b8cf7 Cool Astra Blue/Periwinkle
+    TrayState.WORKING: WARNING,           # #d99b38 Muted Amber
+    TrayState.PAUSED: WARNING,            # #d99b38 Muted Amber
+    TrayState.ATTENTION_REQUIRED: ATTENTION, # #8270db Muted Violet
+    TrayState.ERROR: DANGER,              # #d64545 Muted Red
 }
 
 STATE_TOOLTIPS = {
@@ -53,10 +74,11 @@ def create_tray_icon_pixmap(size: int = 32, state: TrayState = TrayState.READY) 
     painter = QPainter(pixmap)
     painter.setRenderHint(QPainter.RenderHint.Antialiasing)
 
-    # 1. Dark circular container (#1e1e2e border)
-    spark_color = QColor(STATE_COLORS.get(state, "#89b4fa"))
-    painter.setBrush(QColor("#181825"))
-    painter.setPen(spark_color)
+    # 1. Dark circular container (near-black with subtle border)
+    spark_color_hex = STATE_COLORS.get(state, ACCENT)
+    spark_color = QColor(spark_color_hex)
+    painter.setBrush(QColor(BG_APP))
+    painter.setPen(QColor(BORDER))
     painter.drawEllipse(2, 2, size - 4, size - 4)
 
     # 2. Draw 4-point Astra Star/Spark in center
@@ -65,7 +87,6 @@ def create_tray_icon_pixmap(size: int = 32, state: TrayState = TrayState.READY) 
     inner_r = size * 0.10
 
     path = QPainterPath()
-    # 4 points at 0, 90, 180, 270 deg with inner pinched vertices at 45, 135, 225, 315 deg
     points = [
         QPointF(cx, cy - outer_r),               # Top
         QPointF(cx + inner_r, cy - inner_r),     # Top-Right
@@ -78,6 +99,7 @@ def create_tray_icon_pixmap(size: int = 32, state: TrayState = TrayState.READY) 
     ]
     poly = QPolygonF(points)
     path.addPolygon(poly)
+    path.closeSubpath()
 
     painter.setBrush(spark_color)
     painter.setPen(Qt.PenStyle.NoPen)
@@ -133,37 +155,44 @@ class AstraTrayIcon(QSystemTrayIcon):
     def _build_menu(self) -> None:
         """Construct the exact canonical tray context menu."""
         menu = QMenu()
-        menu.setStyleSheet("""
-            QMenu {
-                background-color: #1e1e2e;
-                color: #cdd6f4;
-                border: 1px solid #313244;
+        menu.setStyleSheet(f"""
+            QMenu {{
+                background-color: {SURFACE};
+                color: {TEXT_PRIMARY};
+                border: 1px solid {BORDER};
                 border-radius: 8px;
                 padding: 6px;
-                font-family: 'Segoe UI', system-ui, sans-serif;
-            }
-            QMenu::item {
+                font-family: {FONT_FAMILY};
+                font-size: 13px;
+            }}
+            QMenu::item {{
                 padding: 6px 24px 6px 12px;
                 border-radius: 4px;
-            }
-            QMenu::item:selected {
-                background-color: #313244;
-                color: #89b4fa;
-            }
-            QMenu::separator {
+                color: {TEXT_PRIMARY};
+            }}
+            QMenu::item:selected {{
+                background-color: {SURFACE_HOVER};
+                color: #ffffff;
+            }}
+            QMenu::item:disabled {{
+                color: {TEXT_MUTED};
+            }}
+            QMenu::separator {{
                 height: 1px;
-                background-color: #313244;
+                background-color: {BORDER_SUBTLE};
                 margin: 4px 6px;
-            }
+            }}
         """)
 
         # 1. Open Astra
         open_action = QAction("Open Astra  (Alt+Space)", self)
+        open_action.setIcon(IconRenderer.get_icon("spark", size=14, color=ACCENT))
         open_action.triggered.connect(self.open_astra_requested.emit)
         menu.addAction(open_action)
 
         # 2. Task Center
         task_center_action = QAction("Task Center", self)
+        task_center_action.setIcon(IconRenderer.get_icon("history", size=14, color=TEXT_SECONDARY))
         task_center_action.triggered.connect(self.open_task_center_requested.emit)
         menu.addAction(task_center_action)
 
@@ -171,11 +200,13 @@ class AstraTrayIcon(QSystemTrayIcon):
 
         # 3. Pause / Resume Astra
         self.pause_action = QAction("Pause Astra", self)
+        self.pause_action.setIcon(IconRenderer.get_icon("pause", size=14, color=WARNING))
         self.pause_action.triggered.connect(self._toggle_pause)
         menu.addAction(self.pause_action)
 
         # 4. Settings
         settings_action = QAction("Settings", self)
+        settings_action.setIcon(IconRenderer.get_icon("settings", size=14, color=TEXT_SECONDARY))
         settings_action.triggered.connect(self.open_settings_requested.emit)
         menu.addAction(settings_action)
 
@@ -183,11 +214,13 @@ class AstraTrayIcon(QSystemTrayIcon):
 
         # 5. Restart Astra
         restart_action = QAction("Restart Astra", self)
+        restart_action.setIcon(IconRenderer.get_icon("running", size=14, color=TEXT_SECONDARY))
         restart_action.triggered.connect(self.restart_requested.emit)
         menu.addAction(restart_action)
 
         # 6. Quit Astra
         exit_action = QAction("Quit Astra", self)
+        exit_action.setIcon(IconRenderer.get_icon("close", size=14, color=TEXT_MUTED))
         exit_action.triggered.connect(self.exit_requested.emit)
         menu.addAction(exit_action)
 
@@ -198,11 +231,13 @@ class AstraTrayIcon(QSystemTrayIcon):
         if self.is_paused:
             self.is_paused = False
             self.pause_action.setText("Pause Astra")
+            self.pause_action.setIcon(IconRenderer.get_icon("pause", size=14, color=WARNING))
             self.set_state(TrayState.READY)
             self.resume_astra_requested.emit()
         else:
             self.is_paused = True
             self.pause_action.setText("Resume Astra")
+            self.pause_action.setIcon(IconRenderer.get_icon("running", size=14, color=SUCCESS))
             self.set_state(TrayState.PAUSED)
             self.pause_astra_requested.emit()
 

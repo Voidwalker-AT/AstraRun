@@ -40,8 +40,34 @@ from PySide6.QtWidgets import (
 from astrarun.core.logging import get_logger
 from astrarun.tasks.events import TaskEventBus
 from astrarun.tasks.models import TaskEvent, TaskEventType
+from astrarun.ui.icons import IconRenderer
 from astrarun.ui.motion import MotionTokens
 from astrarun.ui.positioning import compute_task_hud_position, get_screen_for_hwnd
+from astrarun.ui.theme import (
+    ACCENT,
+    ATTENTION,
+    BORDER,
+    BORDER_STRONG,
+    BORDER_SUBTLE,
+    DANGER,
+    FONT_FAMILY,
+    FONT_MONO,
+    FONT_SIZE_BODY,
+    FONT_SIZE_CAPTION,
+    FONT_SIZE_SMALL,
+    FONT_SIZE_TITLE,
+    RADIUS_MD,
+    RADIUS_SM,
+    SUCCESS,
+    SURFACE,
+    SURFACE_HOVER,
+    SURFACE_RAISED,
+    TEXT_MUTED,
+    TEXT_PRIMARY,
+    TEXT_SECONDARY,
+    WARNING,
+    get_button_style,
+)
 from astrarun.windows.policy import register_astrarun_hwnd, unregister_astrarun_hwnd
 
 logger = get_logger("astrarun.ui.hud")
@@ -219,7 +245,7 @@ class FloatingTaskHUD(QWidget):
                 logger.debug("Could not set WS_EX_NOACTIVATE on HUD: %s", e)
 
     def _init_ui(self) -> None:
-        """Construct Catppuccin Mocha floating card interface."""
+        """Construct restrained desktop-native floating card interface."""
         self.root_layout = QVBoxLayout(self)
         self.root_layout.setContentsMargins(8, 8, 8, 8)
         self.root_layout.setSpacing(0)
@@ -227,18 +253,18 @@ class FloatingTaskHUD(QWidget):
         # Main Card Frame
         self.card = QFrame(self)
         self.card.setObjectName("hud_card")
-        self.card.setStyleSheet("""
-            QFrame#hud_card {
-                background-color: #181825;
-                border: 1px solid #313244;
+        self.card.setStyleSheet(f"""
+            QFrame#hud_card {{
+                background-color: {SURFACE};
+                border: 1px solid {BORDER};
                 border-radius: 10px;
-            }
+            }}
         """)
 
         # Drop shadow effect
         shadow = QGraphicsDropShadowEffect(self)
-        shadow.setBlurRadius(20)
-        shadow.setColor(QColor(0, 0, 0, 160))
+        shadow.setBlurRadius(24)
+        shadow.setColor(QColor(0, 0, 0, 180))
         shadow.setOffset(0, 6)
         self.card.setGraphicsEffect(shadow)
 
@@ -250,68 +276,47 @@ class FloatingTaskHUD(QWidget):
         header_row = QHBoxLayout()
         header_row.setSpacing(8)
 
-        # Status Indicator Glyph
-        self.status_icon = QLabel("●", self.card)
-        self.status_icon.setStyleSheet("color: #89b4fa; font-size: 14px; font-weight: bold;")
+        # Vector Status Indicator
+        self.status_icon = QLabel(self.card)
+        self.status_icon.setPixmap(IconRenderer.get_pixmap("spark", size=16, color=ACCENT))
+        self.status_icon.setFixedSize(16, 16)
+        self.status_icon.setAlignment(Qt.AlignmentFlag.AlignCenter)
         header_row.addWidget(self.status_icon)
 
         # Task Title Label
         self.title_label = QLabel("Astra Task", self.card)
-        self.title_label.setStyleSheet("""
-            color: #cdd6f4;
-            font-size: 13px;
+        self.title_label.setStyleSheet(f"""
+            color: {TEXT_PRIMARY};
+            font-size: {FONT_SIZE_BODY};
             font-weight: 600;
-            font-family: 'Segoe UI', system-ui, sans-serif;
+            font-family: {FONT_FAMILY};
         """)
         header_row.addWidget(self.title_label, stretch=1)
 
         # ETA Label
         self.eta_label = QLabel("", self.card)
-        self.eta_label.setStyleSheet("""
-            color: #fab387;
-            font-size: 11px;
+        self.eta_label.setStyleSheet(f"""
+            color: {TEXT_MUTED};
+            font-size: {FONT_SIZE_CAPTION};
             font-weight: 500;
-            font-family: 'Segoe UI', system-ui, sans-serif;
+            font-family: {FONT_FAMILY};
         """)
         header_row.addWidget(self.eta_label)
 
         # Expand / Steps toggle
-        self.expand_btn = QPushButton("▾ Steps", self.card)
-        self.expand_btn.setFixedSize(50, 18)
-        self.expand_btn.setStyleSheet("""
-            QPushButton {
-                background: transparent;
-                border: 1px solid #313244;
-                color: #a6adc8;
-                font-size: 10px;
-                border-radius: 4px;
-            }
-            QPushButton:hover {
-                background-color: #313244;
-                color: #cdd6f4;
-            }
-        """)
+        self.expand_btn = QPushButton("Steps", self.card)
+        self.expand_btn.setIcon(IconRenderer.get_icon("chevron_down", size=10, color=TEXT_SECONDARY))
+        self.expand_btn.setFixedHeight(20)
+        self.expand_btn.setStyleSheet(get_button_style("ghost", size="sm"))
         self.expand_btn.clicked.connect(self.toggle_steps_expansion)
         self.expand_btn.hide()
         header_row.addWidget(self.expand_btn)
 
         # Dismiss / Cancel Button
-        self.close_btn = QPushButton("✕", self.card)
-        self.close_btn.setFixedSize(18, 18)
-        self.close_btn.setStyleSheet("""
-            QPushButton {
-                background: transparent;
-                border: none;
-                color: #6c7086;
-                font-size: 11px;
-                font-weight: bold;
-                border-radius: 9px;
-            }
-            QPushButton:hover {
-                background-color: #313244;
-                color: #f38ba8;
-            }
-        """)
+        self.close_btn = QPushButton(self.card)
+        self.close_btn.setIcon(IconRenderer.get_icon("close", size=11, color=TEXT_MUTED))
+        self.close_btn.setFixedSize(20, 20)
+        self.close_btn.setStyleSheet(get_button_style("ghost", size="sm"))
         self.close_btn.clicked.connect(self._on_close_clicked)
         header_row.addWidget(self.close_btn)
 
@@ -320,27 +325,27 @@ class FloatingTaskHUD(QWidget):
         # Subtitle / Step Detail Label
         self.detail_label = QLabel("Processing...", self.card)
         self.detail_label.setWordWrap(True)
-        self.detail_label.setStyleSheet("""
-            color: #a6adc8;
-            font-size: 12px;
-            font-family: 'Segoe UI', system-ui, sans-serif;
+        self.detail_label.setStyleSheet(f"""
+            color: {TEXT_SECONDARY};
+            font-size: {FONT_SIZE_CAPTION};
+            font-family: {FONT_FAMILY};
         """)
         self.card_layout.addWidget(self.detail_label)
 
         # Authentic Progress Bar
         self.progress_bar = QProgressBar(self.card)
-        self.progress_bar.setFixedHeight(4)
+        self.progress_bar.setFixedHeight(3)
         self.progress_bar.setTextVisible(False)
-        self.progress_bar.setStyleSheet("""
-            QProgressBar {
-                background-color: #313244;
+        self.progress_bar.setStyleSheet(f"""
+            QProgressBar {{
+                background-color: #1e2026;
                 border: none;
                 border-radius: 2px;
-            }
-            QProgressBar::chunk {
-                background-color: #89b4fa;
+            }}
+            QProgressBar::chunk {{
+                background-color: {ACCENT};
                 border-radius: 2px;
-            }
+            }}
         """)
         self.card_layout.addWidget(self.progress_bar)
 
@@ -475,8 +480,7 @@ class FloatingTaskHUD(QWidget):
                 self.cancel_requested.emit(self.current_task_id)
             self.cancelled.emit()
             self.detail_label.setText("Cancelling task...")
-            self.status_icon.setText("○")
-            self.status_icon.setStyleSheet("color: #fab387; font-size: 15px; font-weight: bold;")
+            self.status_icon.setPixmap(IconRenderer.get_pixmap("close", size=16, color=WARNING))
         else:
             self.dismiss()
 
@@ -506,6 +510,16 @@ class FloatingTaskHUD(QWidget):
             self.expand_btn.hide()
             return
 
+        class StepGlyphLabel(QLabel):
+            def __init__(self, parent=None):
+                super().__init__(parent)
+                self._fallback_text = "●"
+            def set_glyph(self, pixmap, fallback_text):
+                self._fallback_text = fallback_text
+                self.setPixmap(pixmap)
+            def text(self) -> str:
+                return super().text() or self._fallback_text
+
         for step in steps:
             sid = step.get("step_id", "")
             desc = step.get("description", sid)
@@ -516,12 +530,14 @@ class FloatingTaskHUD(QWidget):
             h_layout.setContentsMargins(2, 1, 2, 1)
             h_layout.setSpacing(6)
 
-            glyph = QLabel("●", row)
-            glyph.setStyleSheet("color: #6c7086; font-size: 10px;")
+            glyph = StepGlyphLabel(row)
+            glyph.set_glyph(IconRenderer.get_pixmap("pending", size=12, color=TEXT_MUTED), "●")
+            glyph.setFixedSize(14, 14)
+            glyph.setAlignment(Qt.AlignmentFlag.AlignCenter)
             h_layout.addWidget(glyph)
 
             lbl = QLabel(desc, row)
-            lbl.setStyleSheet("color: #a6adc8; font-size: 11px;")
+            lbl.setStyleSheet(f"color: {TEXT_SECONDARY}; font-size: 11px; font-family: {FONT_FAMILY};")
             lbl.setWordWrap(True)
             h_layout.addWidget(lbl, stretch=1)
 
@@ -534,7 +550,7 @@ class FloatingTaskHUD(QWidget):
             self.expand_btn.hide()
 
     def update_step_state(self, step_id: str, state: str, description: str = "") -> None:
-        """Update glyph, style, and ETA for a specific plan step."""
+        """Update vector status icon, typography, and ETA for a specific plan step."""
         state_upper = state.upper()
         step_entry = getattr(self, "_step_widgets", {}).get(step_id)
 
@@ -545,23 +561,19 @@ class FloatingTaskHUD(QWidget):
                 lbl.setText(description)
 
             if "RUNNING" in state_upper:
-                glyph.setText("►")
-                glyph.setStyleSheet("color: #89b4fa; font-size: 11px; font-weight: bold;")
-                lbl.setStyleSheet("color: #cdd6f4; font-size: 11px; font-weight: 500;")
+                glyph.set_glyph(IconRenderer.get_pixmap("running", size=12, color=ACCENT), "►")
+                lbl.setStyleSheet(f"color: {TEXT_PRIMARY}; font-size: 11px; font-weight: 500; font-family: {FONT_FAMILY};")
                 self.eta_estimator.record_step_start(step_id)
             elif "COMPLETED" in state_upper:
-                glyph.setText("✓")
-                glyph.setStyleSheet("color: #a6e3a1; font-size: 11px; font-weight: bold;")
-                lbl.setStyleSheet("color: #a6adc8; font-size: 11px;")
+                glyph.set_glyph(IconRenderer.get_pixmap("check", size=12, color=SUCCESS), "✓")
+                lbl.setStyleSheet(f"color: {TEXT_SECONDARY}; font-size: 11px; font-family: {FONT_FAMILY};")
                 self.eta_estimator.record_step_end(step_id)
             elif "FAILED" in state_upper:
-                glyph.setText("✗")
-                glyph.setStyleSheet("color: #f38ba8; font-size: 11px; font-weight: bold;")
-                lbl.setStyleSheet("color: #f38ba8; font-size: 11px;")
+                glyph.set_glyph(IconRenderer.get_pixmap("error", size=12, color=DANGER), "✗")
+                lbl.setStyleSheet(f"color: {DANGER}; font-size: 11px; font-family: {FONT_FAMILY};")
             elif "CANCELLED" in state_upper:
-                glyph.setText("○")
-                glyph.setStyleSheet("color: #fab387; font-size: 11px;")
-                lbl.setStyleSheet("color: #6c7086; font-size: 11px;")
+                glyph.set_glyph(IconRenderer.get_pixmap("close", size=12, color=TEXT_MUTED), "○")
+                lbl.setStyleSheet(f"color: {TEXT_MUTED}; font-size: 11px; font-family: {FONT_FAMILY};")
 
         # Update ETA if we have step widgets
         if hasattr(self, "_step_widgets") and self._step_widgets:
@@ -575,6 +587,7 @@ class FloatingTaskHUD(QWidget):
         is_hidden = self.steps_container.isHidden()
         self.steps_container.setVisible(is_hidden)
         self.expand_btn.setText("▴ Steps" if is_hidden else "▾ Steps")
+        self.expand_btn.setIcon(IconRenderer.get_icon("chevron_up" if is_hidden else "chevron_down", size=10, color=TEXT_SECONDARY))
         self.adjustSize()
 
     def _clear_steps(self) -> None:
@@ -583,10 +596,13 @@ class FloatingTaskHUD(QWidget):
             item = self.steps_layout.takeAt(0)
             widget = item.widget()
             if widget:
+                widget.hide()
+                widget.setParent(None)
                 widget.deleteLater()
         self.steps_container.hide()
         self.expand_btn.hide()
         self.expand_btn.setText("▾ Steps")
+        self.expand_btn.setIcon(IconRenderer.get_icon("chevron_down", size=10, color=TEXT_SECONDARY))
 
     def show_progress(
         self,
@@ -601,13 +617,14 @@ class FloatingTaskHUD(QWidget):
         """Transition to PASSIVE_PROGRESS state (never steals focus)."""
         self.dismiss_timer.stop()
         self._clear_actions()
+        if self.current_task_id != task_id:
+            self._clear_steps()
         self.eta_estimator = TaskETAEstimator()
         self.eta_label.setText("")
         self.current_state = HUDState.PASSIVE_PROGRESS
         self.current_task_id = task_id
 
-        self.status_icon.setText("✦")
-        self.status_icon.setStyleSheet("color: #89b4fa; font-size: 15px; font-weight: bold;")
+        self.status_icon.setPixmap(IconRenderer.get_pixmap("spark", size=16, color=ACCENT))
         self.title_label.setText(title or "Executing Task")
         self.detail_label.setText(message)
 
@@ -625,8 +642,10 @@ class FloatingTaskHUD(QWidget):
                 self.progress_bar.setValue(max(0, min(100, int(progress_pct))))
 
     def show_success(self, task_id: str, message: str = "Task completed successfully.") -> None:
-        """Transition to SUCCESS state with automatic dismissal (2.5s)."""
+        """Transition to SUCCESS state with automatic dismissal."""
         self._clear_actions()
+        if self.current_task_id != task_id:
+            self._clear_steps()
         self.current_state = HUDState.SUCCESS
         self.current_task_id = task_id
         self.eta_label.setText("")
@@ -634,28 +653,42 @@ class FloatingTaskHUD(QWidget):
         self.progress_bar.setRange(0, 100)
         self.progress_bar.setValue(100)
 
-        self.status_icon.setText("✓")
-        self.status_icon.setStyleSheet("color: #a6e3a1; font-size: 15px; font-weight: bold;")
+        self.status_icon.setPixmap(IconRenderer.get_pixmap("check", size=16, color=SUCCESS))
         self.title_label.setText("Completed")
         self.detail_label.setText(message)
+
+        # If result mentions a file/report path, provide Show in Folder & Open actions
+        import re
+        m = re.search(r'([A-Za-z0-9_\\/\-:]+\.[a-zA-Z0-9]+)', message)
+        if m:
+            btn_folder = QPushButton("Show in Folder", self.action_container)
+            btn_folder.setIcon(IconRenderer.get_icon("folder", size=11, color=TEXT_SECONDARY))
+            btn_folder.setStyleSheet(get_button_style("subtle", size="sm"))
+            self.action_layout.addWidget(btn_folder)
+
+            btn_open = QPushButton("Open", self.action_container)
+            btn_open.setIcon(IconRenderer.get_icon("external", size=11, color=TEXT_PRIMARY))
+            btn_open.setStyleSheet(get_button_style("secondary", size="sm"))
+            self.action_layout.addWidget(btn_open)
+            self.action_container.show()
 
         if not self.isVisible():
             self.present_animated()
 
-        # Auto-dismiss after 2.5 seconds
-        self.dismiss_timer.start(2500)
+        self.dismiss_timer.start(3500)
 
     def show_error(self, task_id: str, message: str = "Task failed.") -> None:
         """Transition to ERROR state with 5.0s dismissal."""
         self._clear_actions()
+        if self.current_task_id != task_id:
+            self._clear_steps()
         self.current_state = HUDState.ERROR
         self.current_task_id = task_id
         self.eta_label.setText("")
 
         self.progress_bar.hide()
 
-        self.status_icon.setText("✗")
-        self.status_icon.setStyleSheet("color: #f38ba8; font-size: 15px; font-weight: bold;")
+        self.status_icon.setPixmap(IconRenderer.get_pixmap("error", size=16, color=DANGER))
         self.title_label.setText("Failed")
         self.detail_label.setText(message)
 
@@ -675,48 +708,30 @@ class FloatingTaskHUD(QWidget):
         """Transition to WAITING_CONFIRMATION interactive state."""
         self.dismiss_timer.stop()
         self._clear_actions()
+        if self.current_task_id != task_id:
+            self._clear_steps()
         self.current_state = HUDState.WAITING_CONFIRMATION
         self.current_task_id = task_id
 
-        self.status_icon.setText("!")
-        self.status_icon.setStyleSheet("color: #fab387; font-size: 16px; font-weight: bold;")
+        self.status_icon.setPixmap(IconRenderer.get_pixmap("warning", size=16, color=WARNING))
         self.title_label.setText("Confirmation Required")
         self.detail_label.setText(prompt or "Confirm action to proceed.")
 
-        # Confirm Button
-        btn_confirm = QPushButton("Confirm", self.action_container)
-        btn_confirm.setStyleSheet("""
-            QPushButton {
-                background-color: #a6e3a1;
-                color: #11111b;
-                border: none;
-                border-radius: 4px;
-                padding: 4px 12px;
-                font-size: 12px;
-                font-weight: bold;
-            }
-            QPushButton:hover {
-                background-color: #94e2d5;
-            }
-        """)
+        is_destructive = any(
+            k in tool.lower() or k in (prompt or "").lower()
+            for k in ("kill", "terminate", "delete", "destroy", "remove", "destructive")
+        )
+        action_text = "Terminate" if ("kill" in tool.lower() or "terminate" in tool.lower()) else "Confirm"
+
+        # Action Button (Danger variant for destructive operations)
+        btn_confirm = QPushButton(action_text, self.action_container)
+        btn_confirm.setStyleSheet(get_button_style("danger" if is_destructive else "primary", size="sm"))
         btn_confirm.clicked.connect(lambda: self._on_confirm_clicked(token, tool, arguments))
         self.action_layout.addWidget(btn_confirm)
 
-        # Cancel Button
+        # Cancel Button (Safe default)
         btn_cancel = QPushButton("Cancel", self.action_container)
-        btn_cancel.setStyleSheet("""
-            QPushButton {
-                background-color: #313244;
-                color: #cdd6f4;
-                border: 1px solid #45475a;
-                border-radius: 4px;
-                padding: 4px 12px;
-                font-size: 12px;
-            }
-            QPushButton:hover {
-                background-color: #45475a;
-            }
-        """)
+        btn_cancel.setStyleSheet(get_button_style("secondary", size="sm"))
         btn_cancel.clicked.connect(self._on_cancel_clicked)
         self.action_layout.addWidget(btn_cancel)
         self.action_container.show()
@@ -733,31 +748,19 @@ class FloatingTaskHUD(QWidget):
         """Transition to WAITING_CLARIFICATION interactive state."""
         self.dismiss_timer.stop()
         self._clear_actions()
+        if self.current_task_id != task_id:
+            self._clear_steps()
         self.current_state = HUDState.WAITING_CLARIFICATION
         self.current_task_id = task_id
 
-        self.status_icon.setText("?")
-        self.status_icon.setStyleSheet("color: #cba6f7; font-size: 15px; font-weight: bold;")
+        self.status_icon.setPixmap(IconRenderer.get_pixmap("question", size=16, color=ATTENTION))
         self.title_label.setText("Clarification Needed")
         self.detail_label.setText(prompt or "Please select an option:")
 
         for cand in candidates[:3]:
             name = cand.get("title") or cand.get("name") or str(cand)
             btn = QPushButton(name, self.action_container)
-            btn.setStyleSheet("""
-                QPushButton {
-                    background-color: #313244;
-                    color: #89b4fa;
-                    border: 1px solid #45475a;
-                    border-radius: 4px;
-                    padding: 4px 10px;
-                    font-size: 11px;
-                }
-                QPushButton:hover {
-                    background-color: #45475a;
-                    color: #b4befe;
-                }
-            """)
+            btn.setStyleSheet(get_button_style("secondary", size="sm"))
             btn.clicked.connect(lambda _, c=cand: self.candidate_selected.emit(c))
             self.action_layout.addWidget(btn)
 
@@ -765,52 +768,29 @@ class FloatingTaskHUD(QWidget):
         if not self.isVisible():
             self.present_animated()
 
-    def show_user_takeover(self, task_id: str, message: str = "✦ Paused — you're using the computer") -> None:
+    def show_user_takeover(self, task_id: str, message: str = "Paused — you're using the computer") -> None:
         """Transition to PAUSED_USER_ACTIVE interactive state on user takeover."""
         self.dismiss_timer.stop()
         self._clear_actions()
+        if self.current_task_id != task_id:
+            self._clear_steps()
         self.current_state = HUDState.INTERACTIVE
         self.current_task_id = task_id
 
-        self.status_icon.setText("❚❚")
-        self.status_icon.setStyleSheet("color: #fab387; font-size: 15px; font-weight: bold;")
+        self.status_icon.setPixmap(IconRenderer.get_pixmap("pause", size=16, color=WARNING))
         self.title_label.setText("Astra — Paused")
-        self.detail_label.setText(message)
+        clean_msg = (message or "Paused — you're using the computer").replace("✦", "").strip()
+        self.detail_label.setText(clean_msg)
 
         # Resume Button
         btn_resume = QPushButton("Resume", self.action_container)
-        btn_resume.setStyleSheet("""
-            QPushButton {
-                background-color: #a6e3a1;
-                color: #11111b;
-                border: none;
-                border-radius: 4px;
-                padding: 4px 12px;
-                font-size: 12px;
-                font-weight: bold;
-            }
-            QPushButton:hover {
-                background-color: #94e2d5;
-            }
-        """)
+        btn_resume.setStyleSheet(get_button_style("primary", size="sm"))
         btn_resume.clicked.connect(lambda: self.resume_requested.emit(task_id))
         self.action_layout.addWidget(btn_resume)
 
         # Cancel Button
         btn_cancel = QPushButton("Cancel", self.action_container)
-        btn_cancel.setStyleSheet("""
-            QPushButton {
-                background-color: #313244;
-                color: #f38ba8;
-                border: 1px solid #45475a;
-                border-radius: 4px;
-                padding: 4px 12px;
-                font-size: 12px;
-            }
-            QPushButton:hover {
-                background-color: #45475a;
-            }
-        """)
+        btn_cancel.setStyleSheet(get_button_style("secondary", size="sm"))
         btn_cancel.clicked.connect(lambda: self.cancel_requested.emit(task_id))
         self.action_layout.addWidget(btn_cancel)
         self.action_container.show()
@@ -824,6 +804,8 @@ class FloatingTaskHUD(QWidget):
             item = self.action_layout.takeAt(0)
             widget = item.widget()
             if widget:
+                widget.hide()
+                widget.setParent(None)
                 widget.deleteLater()
         self.action_container.hide()
 
@@ -933,7 +915,7 @@ class TaskHUDController(QObject):
 
         elif ev_type == TaskEventType.TASK_INTERRUPTED:
             is_takeover = ev_data.get("is_user_takeover", False)
-            msg = ev_msg or ("✦ Paused — you're using the computer" if is_takeover else "✦ Task paused")
+            msg = ev_msg or ("Paused — you're using the computer" if is_takeover else "Task paused")
             self.hud.show_user_takeover(event.task_id, msg)
 
     def _on_hud_confirmed(self, token: str, tool: str, arguments: dict) -> None:

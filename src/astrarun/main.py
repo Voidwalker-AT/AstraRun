@@ -43,7 +43,7 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument(
         "--run-command",
-        type=str,
+        nargs="*",
         default=None,
         help="Execute a single command headless and exit (useful for integration testing)",
     )
@@ -52,7 +52,10 @@ def parse_args() -> argparse.Namespace:
         action="store_true",
         help="Immediately show the launcher window upon launch instead of waiting for hotkey",
     )
-    return parser.parse_args()
+    parsed = parser.parse_args()
+    if isinstance(parsed.run_command, list):
+        parsed.run_command = " ".join(parsed.run_command) if parsed.run_command else None
+    return parsed
 
 
 def summon_existing_instance() -> bool:
@@ -125,24 +128,22 @@ def main() -> int:
     args = parse_args()
 
     # 1. Setup logging first to ensure all subsequent stages are captured
-    astra_app = AstraApplication(config_dir=args.config_dir)
-    log_cfg = astra_app.settings.get("logging", {})
+    from astrarun.core.paths import get_logs_dir, is_release_mode
+    effective_log_file = str(get_logs_dir() / "astrarun.log") if is_release_mode() else "logs/astrarun.log"
+
     setup_logging(
-        log_file=log_cfg.get("file", "logs/astrarun.log"),
-        level=log_cfg.get("level", "INFO"),
-        max_bytes=int(log_cfg.get("max_bytes", 10_485_760)),
-        backup_count=int(log_cfg.get("backup_count", 3)),
+        log_file=effective_log_file,
+        level="INFO",
+        max_bytes=10_485_760,
+        backup_count=3,
     )
     logger = get_logger("astrarun.main")
 
-    # Global uncaught exception logger to guard pythonw.exe silent exits
-    def handle_exception(exc_type, exc_value, exc_traceback):
-        if issubclass(exc_type, KeyboardInterrupt):
-            sys.__excepthook__(exc_type, exc_value, exc_traceback)
-            return
-        logger.critical("Uncaught exception in AstraRun main process:", exc_info=(exc_type, exc_value, exc_traceback))
+    astra_app = AstraApplication(config_dir=args.config_dir)
 
-    sys.excepthook = handle_exception
+    # Install sanitized crash diagnostics
+    from astrarun.core.crash import install_crash_handler
+    install_crash_handler()
 
     logger.info("[STARTUP_STAGE] STARTUP_BEGIN (PID=%d, version=%s)", os.getpid(), __version__)
     logger.info("Initializing AstraRun v%s (Real Alt+Space Launcher)... PID=%d", __version__, os.getpid())
@@ -160,6 +161,10 @@ def main() -> int:
     # 3. Single-Instance Enforcement
     if not astra_app.single_instance.acquire():
         logger.warning("[STARTUP_STAGE] SINGLE_INSTANCE_FAILED. Another instance is active. Summoning existing launcher...")
+        try:
+            astra_app.single_instance.send_command("SHOW_MAIN_UI")
+        except Exception as ipc_err:
+            logger.debug("IPC summon failed: %s", ipc_err)
         summon_existing_instance()
         print("[ASTRARUN] Another instance of AstraRun is already running. Summoned existing launcher.")
         return 0
@@ -172,6 +177,13 @@ def main() -> int:
     # AstraRun runs resident in background; do not quit when launcher is hidden
     qapp.setQuitOnLastWindowClosed(False)
     logger.info("[STARTUP_STAGE] QT_APPLICATION_CREATED (quitOnLastWindowClosed=False)")
+
+    # 4b. First-Run Setup Experience
+    from astrarun.ui.first_run import is_first_run_completed, FirstRunWizard
+    if not is_first_run_completed() and not args.run_command:
+        logger.info("[STARTUP_STAGE] FIRST_RUN_WIZARD_SUMMONED")
+        wizard = FirstRunWizard()
+        wizard.exec()
 
     # 5. Instantiate Floating Task HUD & HUD Controller
     hud = FloatingTaskHUD()
@@ -255,13 +267,19 @@ def main() -> int:
             if hasattr(astra_app, "single_instance") and astra_app.single_instance:
                 astra_app.single_instance.release()
             import subprocess
-            venv_pythonw = sys.executable
-            main_script = str(Path(__file__).resolve())
             DETACHED_PROCESS = getattr(subprocess, "DETACHED_PROCESS", 0x00000008)
             CREATE_NO_WINDOW = getattr(subprocess, "CREATE_NO_WINDOW", 0x08000000)
+            if getattr(sys, "frozen", False):
+                cmd = [sys.executable, "--background"]
+                cwd = str(Path(sys.executable).parent)
+            else:
+                venv_pythonw = sys.executable
+                main_script = str(Path(__file__).resolve())
+                cmd = [venv_pythonw, main_script]
+                cwd = str(Path(__file__).resolve().parent.parent.parent)
             subprocess.Popen(
-                [venv_pythonw, main_script],
-                cwd=str(Path(__file__).resolve().parent.parent.parent),
+                cmd,
+                cwd=cwd,
                 creationflags=DETACHED_PROCESS | CREATE_NO_WINDOW,
                 close_fds=True,
             )

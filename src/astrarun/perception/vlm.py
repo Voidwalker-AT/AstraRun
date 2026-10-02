@@ -17,9 +17,11 @@ from PIL import Image
 from astrarun.core.logging import get_logger
 from astrarun.perception.models import BoundingBox, PerceptionTier, VisualSemanticObservation
 
+from astrarun.core.paths import resolve_model_path
+
 logger = get_logger("astrarun.perception.vlm")
 
-DEFAULT_SMOLVLM_DIR = Path(r"E:\AI_Models\Vision\SmolVLM-500M")
+DEFAULT_SMOLVLM_DIR = resolve_model_path("SmolVLM-500M", dev_fallback=r"E:\AI_Models\Vision\SmolVLM-500M")
 
 
 class VisionReasoner:

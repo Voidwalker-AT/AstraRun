@@ -26,10 +26,12 @@ from astrarun.core.logging import get_logger
 from astrarun.execution.job_object import Win32JobObject
 from astrarun.execution.process_tracker import ProcessTracker
 
+from astrarun.core.paths import resolve_runtime_binary
+
 logger = get_logger("astrarun.cognition.supervisor")
 
 CREATE_NO_WINDOW = 0x08000000
-DEFAULT_SERVER_BINARY = r"E:\AI_Runtimes\llama.cpp-spark\llama-server.exe"
+DEFAULT_SERVER_BINARY = str(resolve_runtime_binary("llama-server.exe", dev_fallback=r"E:\AI_Runtimes\llama.cpp-spark\llama-server.exe"))
 
 
 class ModelSupervisor:

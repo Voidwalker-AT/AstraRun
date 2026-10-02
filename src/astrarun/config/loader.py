@@ -9,6 +9,7 @@ from typing import Any
 
 from astrarun.core.logging import get_logger
 from astrarun.core.models import AppInfo
+from astrarun.core.paths import resolve_model_path, resolve_runtime_binary
 
 logger = get_logger("astrarun.config")
 
@@ -77,13 +78,13 @@ DEFAULT_SETTINGS: dict[str, Any] = {
         "auto_propose_skills": True
     },
     "models": {
-        "server_binary": r"E:\AI_Runtimes\llama.cpp-spark\llama-server.exe",
+        "server_binary": str(resolve_runtime_binary("llama-server.exe", dev_fallback=r"E:\AI_Runtimes\llama.cpp-spark\llama-server.exe")),
         "spark": {
             "model_id": "spark",
             "role": "FAST",
             "endpoint": "http://127.0.0.1:8090",
             "port": 8090,
-            "model_path": r"E:\AI_Models\GGUF\Spark-X2.5-1.7B-Q4_K_M.gguf",
+            "model_path": str(resolve_model_path("Spark-X2.5-1.7B-Q4_K_M.gguf", dev_fallback=r"E:\AI_Models\GGUF\Spark-X2.5-1.7B-Q4_K_M.gguf")),
             "residency": "PINNED",
             "ngl": 99,
             "ctx_size": 4096,
@@ -93,7 +94,7 @@ DEFAULT_SETTINGS: dict[str, Any] = {
             "role": "DEEP",
             "endpoint": "http://127.0.0.1:8089",
             "port": 8089,
-            "model_path": r"E:\AI_Models\GGUF\qwen2.5-coder-1.5b-instruct-q4_k_m.gguf",
+            "model_path": str(resolve_model_path("qwen2.5-coder-1.5b-instruct-q4_k_m.gguf", dev_fallback=r"E:\AI_Models\GGUF\qwen2.5-coder-1.5b-instruct-q4_k_m.gguf")),
             "residency": "WARM",
             "ngl": 99,
             "ctx_size": 4096,
@@ -102,7 +103,7 @@ DEFAULT_SETTINGS: dict[str, Any] = {
     "rag": {
         "enabled": True,
         "db_path": "data/astra_memory.db",
-        "embedding_model_dir": r"E:\AI_Models\ONNX\bge-small-en-v1.5",
+        "embedding_model_dir": str(resolve_model_path("bge-small-en-v1.5", dev_fallback=r"E:\AI_Models\ONNX\bge-small-en-v1.5")),
         "dimension": 384,
         "rrf_k": 60,
         "max_retrieved_tokens": 1500,

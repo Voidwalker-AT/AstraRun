@@ -15,9 +15,11 @@ import numpy as np
 
 from astrarun.core.logging import get_logger
 
+from astrarun.core.paths import resolve_model_path
+
 logger = get_logger("astrarun.rag.embeddings")
 
-DEFAULT_MODEL_DIR = Path(r"E:\AI_Models\ONNX\bge-small-en-v1.5")
+DEFAULT_MODEL_DIR = resolve_model_path("bge-small-en-v1.5", dev_fallback=r"E:\AI_Models\ONNX\bge-small-en-v1.5")
 
 
 class EmbeddingProvider:

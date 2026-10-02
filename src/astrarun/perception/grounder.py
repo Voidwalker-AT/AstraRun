@@ -14,9 +14,11 @@ from typing import List, Optional, Tuple
 from astrarun.core.logging import get_logger
 from astrarun.perception.models import BoundingBox, GroundedTargetObservation, PerceptionTier
 
+from astrarun.core.paths import resolve_model_path
+
 logger = get_logger("astrarun.perception.grounder")
 
-DEFAULT_OMNIPARSER_MODEL = Path(r"E:\AI_Models\Vision\OmniParser\icon_detect\model.pt")
+DEFAULT_OMNIPARSER_MODEL = resolve_model_path("OmniParser/icon_detect/model.pt", dev_fallback=r"E:\AI_Models\Vision\OmniParser\icon_detect\model.pt")
 
 
 class VisualGrounder:

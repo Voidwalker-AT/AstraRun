@@ -150,11 +150,15 @@ class AstraApplication:
         self.settings = self.config.settings
         logger.info("[STARTUP_STAGE] CONFIG_LOADED")
 
+        from astrarun.core.paths import get_data_dir, is_release_mode
+        data_dir = get_data_dir() if is_release_mode() else Path("data")
+        data_dir.mkdir(parents=True, exist_ok=True)
+
         # 2. Telemetry & Usage
-        self.usage_store = UsageStore("data/usage.json")
+        self.usage_store = UsageStore(str(data_dir / "usage.json"))
         telem_cfg = self.settings.get("telemetry", {})
         self.telemetry = RoutingEventCollector(
-            event_file=telem_cfg.get("file", "data/routing_events.jsonl"),
+            event_file=telem_cfg.get("file", str(data_dir / "routing_events.jsonl")),
             enabled=bool(telem_cfg.get("enabled", True)),
             store_raw_request=bool(telem_cfg.get("store_raw_request", True)),
         )
@@ -173,7 +177,7 @@ class AstraApplication:
         # 4. Project Registry & Workstation Context
         self.project_registry = ProjectRegistry("workspace.json")
         self.context_engine = WorkstationContextEngine(
-            persistence_file="data/context_state.json",
+            persistence_file=str(data_dir / "context_state.json"),
             project_registry=self.project_registry,
         )
         logger.info("[STARTUP_STAGE] CONTEXT_ENGINE_INITIALIZED")
@@ -185,9 +189,8 @@ class AstraApplication:
         logger.info("[STARTUP_STAGE] CAPABILITY_REGISTRY_INITIALIZED (count=%d)", len(self.capability_registry.list_capabilities()))
 
         # 6. Task Runtime & Event Bus
-        os.makedirs("data", exist_ok=True)
         self.task_event_bus = TaskEventBus()
-        self.task_ledger = TaskLedger("data/astra_history.db")
+        self.task_ledger = TaskLedger(str(data_dir / "astra_history.db"))
         self.task_manager = TaskManager(
             ledger=self.task_ledger,
             event_bus=self.task_event_bus,
@@ -202,7 +205,7 @@ class AstraApplication:
 
         # 7. Semantic Memory & Learning Subsystem
         learning_cfg = self.settings.get("learning", {})
-        self.learning_persistence = LearningPersistence("data/astra_learning.db")
+        self.learning_persistence = LearningPersistence(str(data_dir / "astra_learning.db"))
         self.memory_store = MemoryStore(persistence=self.learning_persistence)
         self.alias_manager = AliasManager(
             memory_store=self.memory_store,

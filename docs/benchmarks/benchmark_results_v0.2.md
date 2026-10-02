@@ -1,6 +1,6 @@
 # AstraRun v0.2 Routing & Search Benchmark Report
 
-> **Execution Date**: 2026-10-02 23:02:51  
+> **Execution Date**: 2026-10-03 01:09:20  
 > **Total Test Queries**: 88  
 > **Evaluation Engine**: `DeterministicRouter` + `SearchIndex` (v0.2)  
 
@@ -24,9 +24,9 @@
 
 | Latency Metric | Measured Time | Target Standard |
 | :--- | :--- | :--- |
-| **Mean Query Latency** | **2643.09 µs** (0.02643 ms) | < 1,000 µs (1 ms) |
-| **Median (p50) Latency** | **26.55 µs** | < 500 µs |
-| **95th Percentile (p95) Latency** | **17245.4 µs** | < 2,000 µs (2 ms) |
+| **Mean Query Latency** | **2724.27 µs** (0.02724 ms) | < 1,000 µs (1 ms) |
+| **Median (p50) Latency** | **24.5 µs** | < 500 µs |
+| **95th Percentile (p95) Latency** | **17069.5 µs** | < 2,000 µs (2 ms) |
 
 ---
 

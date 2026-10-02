@@ -71,8 +71,10 @@ class LayaRouter(BaseRouter):
         self.confidence_threshold = float(self.config.get("confidence_threshold", 0.75))
         self.timeout_ms = float(self.config.get("timeout_ms", 3000.0))
         
-        # Ensure canonical HF cache location per Platform Rule 9
-        os.environ.setdefault("HF_HOME", "E:/AI_Models/HF_CACHE")
+        # Ensure canonical HF cache location (release vs development)
+        from astrarun.core.paths import get_cache_dir, is_release_mode
+        hf_cache_dir = str(get_cache_dir() / "huggingface") if is_release_mode() else "E:/AI_Models/HF_CACHE"
+        os.environ.setdefault("HF_HOME", hf_cache_dir)
         
         self._agent = None
         self._load_lock = threading.Lock()

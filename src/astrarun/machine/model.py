@@ -259,5 +259,10 @@ class MachineModel:
         now = time.time()
         self.set_fact(MachineFact("hardware.gpu.vram_free_gb", snap.free_vram_gb, unit="GB", freshness_class=FreshnessClass.REALTIME, observed_at=now))
 
+    def refresh_dynamic_metrics(self) -> None:
+        """Refresh volatile and realtime dynamic metrics (RAM, disk, power, network, VRAM)."""
+        self.refresh_volatile()
+        self.refresh_realtime()
+
     def get_recent_changes(self) -> List[MachineChangeEvent]:
         return list(self._recent_changes)

@@ -31,7 +31,15 @@ class TaskCheckpoint:
     timestamp: float = field(default_factory=time.time)
     artifacts: List[str] = field(default_factory=list)
     context_variables: Dict[str, Any] = field(default_factory=dict)
+    important_outputs: Dict[str, Any] = field(default_factory=dict)
+    recoverable_handles: Dict[str, Any] = field(default_factory=dict)
     summary: str = ""
+
+    def __post_init__(self) -> None:
+        if self.important_outputs and not self.context_variables:
+            self.context_variables = dict(self.important_outputs)
+        elif self.context_variables and not self.important_outputs:
+            self.important_outputs = dict(self.context_variables)
 
     def to_dict(self) -> Dict[str, Any]:
         return asdict(self)
@@ -61,8 +69,8 @@ class ContinuityEngine:
 
     def save_checkpoint(
         self,
-        task_id: str,
-        goal: str,
+        task_id: Any,
+        goal: str = "",
         status: str = "IN_PROGRESS",
         step_index: int = 0,
         artifacts: Optional[List[str]] = None,
@@ -70,6 +78,30 @@ class ContinuityEngine:
         summary: str = "",
     ) -> TaskCheckpoint:
         """Save task state snapshot to disk."""
+        if hasattr(task_id, "task_id"):
+            cp_obj = task_id
+            t_id = cp_obj.task_id
+            g = getattr(cp_obj, "goal", goal)
+            st = getattr(cp_obj, "status", status)
+            si = getattr(cp_obj, "step_index", step_index)
+            arts = getattr(cp_obj, "artifacts", artifacts or [])
+            cv = getattr(cp_obj, "context_variables", getattr(cp_obj, "important_outputs", context_variables or {}))
+            sm = getattr(cp_obj, "summary", summary)
+            cp = TaskCheckpoint(
+                task_id=t_id,
+                goal=g,
+                status=st,
+                step_index=si,
+                timestamp=getattr(cp_obj, "timestamp", time.time()),
+                artifacts=arts,
+                context_variables=cv,
+                summary=sm,
+            )
+            file_path = self.checkpoints_dir / f"{t_id}.json"
+            file_path.write_text(json.dumps(cp.to_dict(), indent=2), encoding="utf-8")
+            logger.debug("Checkpoint saved: %s (status=%s)", t_id, st)
+            return cp
+
         cp = TaskCheckpoint(
             task_id=task_id,
             goal=goal,
@@ -95,6 +127,9 @@ class ContinuityEngine:
             return TaskCheckpoint.from_dict(data)
         except Exception as e:
             logger.warning("Error reading checkpoint %s: %s", file_path, e)
+            return None
+
+    load_latest_checkpoint = load_checkpoint
     def check_machine_drift(
         self,
         checkpoint: TaskCheckpoint,

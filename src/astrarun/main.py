@@ -185,6 +185,15 @@ def main() -> int:
         wizard = FirstRunWizard()
         wizard.exec()
 
+    # 4c. Initialize Windows Power and Session Lifecycle Subsystem
+    from astrarun.power.listener import QtPowerNativeEventFilter, register_power_notifications
+    from astrarun.power.manager import PowerLifecycleManager
+    power_manager = PowerLifecycleManager.get_instance()
+    if QtPowerNativeEventFilter:
+        power_native_filter = QtPowerNativeEventFilter()
+        qapp.installNativeEventFilter(power_native_filter)
+        logger.info("[STARTUP_STAGE] POWER_EVENT_FILTER_INSTALLED")
+
     # 5. Instantiate Floating Task HUD & HUD Controller
     hud = FloatingTaskHUD()
     hud_controller = TaskHUDController(
@@ -197,6 +206,8 @@ def main() -> int:
 
     # 6. Instantiate Launcher Window (Top-Center Floating Command Bar)
     launcher = LauncherWindow(app=astra_app, hud=hud)
+    if sys.platform == "win32":
+        register_power_notifications(int(launcher.winId()))
     logger.info("[STARTUP_STAGE] LAUNCHER_CREATED")
 
     # 7. Setup Global Hotkey Manager & Presentation Controller
@@ -374,6 +385,7 @@ def main() -> int:
             hud_controller.stop()
             hud.hide()
             tray_icon.hide()
+            power_manager.handle_session_end()
             astra_app.shutdown()
             # Clean up state file on normal exit ONLY if it belongs to current process
             state_path = Path("data/astrarun_state.json")

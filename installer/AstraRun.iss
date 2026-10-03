@@ -1,8 +1,8 @@
-; Inno Setup 6 Script for AstraRun 1.0.0-rc.1
+; Inno Setup 6 Script for AstraRun 1.0.0-rc.2-dogfood
 ; Windows Intelligent Command Launcher & Desktop Agent
 
 #define MyAppName "AstraRun"
-#define MyAppVersion "1.0.0-rc.1"
+#define MyAppVersion "1.0.0-rc.2-dogfood"
 #define MyAppPublisher "Astra Engineering Team"
 #define MyAppURL "https://github.com/astrarun/astrarun"
 #define MyAppExeName "AstraRun.exe"
@@ -19,7 +19,7 @@ DefaultDirName={localappdata}\Programs\{#MyAppName}
 DisableProgramGroupPage=yes
 ; Per-user installation: requires ZERO administrative privileges
 PrivilegesRequired=lowest
-OutputDir=..\dist
+OutputDir=..\dist\installer
 OutputBaseFilename=AstraRun-Setup-{#MyAppVersion}
 SetupIconFile=..\resources\icons\AstraRun.ico
 Compression=lzma2/ultra64

@@ -33,6 +33,7 @@ class TaskStatus(str, Enum):
     WAITING_USER = "WAITING_USER"
     PAUSED = "PAUSED"
     PAUSED_USER_ACTIVE = "PAUSED_USER_ACTIVE"
+    SUSPENDED = "SUSPENDED"
     RECOVERING = "RECOVERING"
     COMPLETED = "COMPLETED"
     FAILED = "FAILED"
@@ -62,6 +63,7 @@ class TaskStatus(str, Enum):
             TaskStatus.WAITING_USER,
             TaskStatus.PAUSED,
             TaskStatus.PAUSED_USER_ACTIVE,
+            TaskStatus.SUSPENDED,
         }
 
     @property
@@ -143,7 +145,16 @@ VALID_TRANSITIONS: dict[TaskStatus, set[TaskStatus]] = {
         TaskStatus.WAITING_USER,
         TaskStatus.PAUSED,
         TaskStatus.PAUSED_USER_ACTIVE,
+        TaskStatus.SUSPENDED,
         TaskStatus.RECOVERING,
+        TaskStatus.INTERRUPTED,
+    },
+    TaskStatus.SUSPENDED: {
+        TaskStatus.RUNNING,
+        TaskStatus.RECOVERING,
+        TaskStatus.CANCELLED,
+        TaskStatus.FAILED,
+        TaskStatus.BLOCKED,
         TaskStatus.INTERRUPTED,
     },
     TaskStatus.PAUSED: {
@@ -162,6 +173,7 @@ VALID_TRANSITIONS: dict[TaskStatus, set[TaskStatus]] = {
     },
     TaskStatus.RECOVERING: {
         TaskStatus.RUNNING,
+        TaskStatus.SUSPENDED,
         TaskStatus.FAILED,
         TaskStatus.CANCELLED,
         TaskStatus.WAITING_CLARIFICATION,
@@ -437,6 +449,13 @@ class Task:
     parent_task_id: Optional[str] = None
     metadata: dict[str, Any] = field(default_factory=dict)
 
+    # Continuous Observable Progress State (RC0 Long Task UX)
+    current_phase: str = "INITIALIZING"
+    last_action: Optional[str] = None
+    active_elapsed_sec: float = 0.0
+    is_determinate: bool = False
+    waiting_state: Optional[str] = None
+
     def __post_init__(self) -> None:
         if not self.request_hash and self.request_text:
             import hashlib
@@ -478,6 +497,11 @@ class Task:
             "final_result": self.final_result.to_dict() if self.final_result else None,
             "parent_task_id": self.parent_task_id,
             "metadata": dict(self.metadata),
+            "current_phase": self.current_phase,
+            "last_action": self.last_action,
+            "active_elapsed_sec": self.active_elapsed_sec,
+            "is_determinate": self.is_determinate,
+            "waiting_state": self.waiting_state,
         }
 
     @classmethod
@@ -499,6 +523,11 @@ class Task:
             final_result=res,
             parent_task_id=d.get("parent_task_id"),
             metadata=d.get("metadata", {}),
+            current_phase=d.get("current_phase", "INITIALIZING"),
+            last_action=d.get("last_action"),
+            active_elapsed_sec=d.get("active_elapsed_sec", 0.0),
+            is_determinate=d.get("is_determinate", False),
+            waiting_state=d.get("waiting_state"),
         )
 
 

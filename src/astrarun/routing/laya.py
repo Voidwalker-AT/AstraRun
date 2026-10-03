@@ -6,13 +6,17 @@ production execution authority.
 
 from __future__ import annotations
 
+import json
 import os
 import re
+import subprocess
+import sys
 import threading
 import time
 from dataclasses import dataclass, field
-from typing import Any
+from typing import Any, Dict, List, Optional
 
+from astrarun.core.crash import record_subsystem_operation
 from astrarun.core.logging import get_logger
 from astrarun.core.models import Decision, RoutingContext
 from astrarun.routing.base import BaseRouter
@@ -55,11 +59,201 @@ class LayaDecision:
         return self.intent != "unknown" and self.error is None
 
 
+class LayaProcessClient:
+    """
+    Supervises an isolated child process running Laya inference.
+    
+    Protects the resident desktop shell (AstraRun.exe) from native PyTorch, CUDA,
+    or tokenizers crash termination. All communication is JSON IPC over stdio pipes.
+    """
+
+    def __init__(
+        self,
+        model_id: str = "convaiinnovations/laya",
+        device: str = "cpu",
+        timeout_ms: float = 3000.0,
+    ) -> None:
+        self.model_id = model_id
+        self.device = device
+        self.timeout_ms = timeout_ms
+        self._proc: Optional[subprocess.Popen] = None
+        self._lock = threading.Lock()
+        self._req_counter = 0
+        self._warmup_started = False
+        self._last_error: Optional[str] = None
+
+    def _ensure_worker_running(self) -> bool:
+        if self._proc is not None and self._proc.poll() is None:
+            return True
+
+        with self._lock:
+            if self._proc is not None and self._proc.poll() is None:
+                return True
+
+            try:
+                from astrarun.core.paths import get_cache_dir, is_release_mode
+                hf_cache_dir = str(get_cache_dir() / "huggingface") if is_release_mode() else "E:/AI_Models/HF_CACHE"
+
+                env = os.environ.copy()
+                env["HF_HOME"] = hf_cache_dir
+                env["PYTHONUNBUFFERED"] = "1"
+
+                # Command selection
+                if getattr(sys, "frozen", False):
+                    cmd = [sys.executable, "--worker-type", "laya"]
+                else:
+                    cmd = [sys.executable, "-m", "astrarun.routing.laya_worker"]
+
+                record_subsystem_operation("LAYA_WORKER_STARTING", {"cmd": cmd})
+                self._proc = subprocess.Popen(
+                    cmd,
+                    stdin=subprocess.PIPE,
+                    stdout=subprocess.PIPE,
+                    stderr=subprocess.PIPE,
+                    text=True,
+                    bufsize=1,
+                    env=env,
+                    creationflags=0x08000000 if sys.platform == "win32" else 0,
+                )
+                logger.info("Spawned isolated LayaWorker PID %d", self._proc.pid)
+                return True
+            except Exception as err:
+                self._last_error = f"Failed to spawn Laya worker: {err}"
+                logger.error(self._last_error)
+                return False
+
+    def predict(self, text: str, criteria: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+        """Send predict request to isolated worker over stdin/stdout."""
+        if not self._ensure_worker_running():
+            return {
+                "intent": "unknown",
+                "confidence": 0.0,
+                "probabilities": {},
+                "latency_ms": 0.0,
+                "error": self._last_error or "Laya worker not running",
+            }
+
+        self._req_counter += 1
+        req_id = f"laya-req-{self._req_counter}"
+        payload = {"id": req_id, "action": "predict", "text": text}
+        if criteria:
+            payload["criteria"] = criteria
+
+        record_subsystem_operation("LAYA_REQUEST_SENT", {"req_id": req_id, "text": text})
+
+        try:
+            assert self._proc is not None and self._proc.stdin is not None and self._proc.stdout is not None
+            self._proc.stdin.write(json.dumps(payload) + "\n")
+            self._proc.stdin.flush()
+
+            line = self._proc.stdout.readline()
+            if not line:
+                # Worker exited or crashed
+                code = self._proc.poll()
+                record_subsystem_operation("WORKER_EXITED", {"exit_code": code, "last_request": text})
+                logger.warning("[CRASH_CONTAINED] LayaWorker exited with code %s during request '%s'", code, text)
+                self._proc = None
+                return {
+                    "intent": "unknown",
+                    "confidence": 0.0,
+                    "probabilities": {},
+                    "latency_ms": 0.0,
+                    "error": f"LayaWorker terminated (code {code})",
+                }
+
+            record_subsystem_operation("IDLE")
+            data = json.loads(line.strip())
+            return data
+        except Exception as err:
+            code = self._proc.poll() if self._proc else None
+            record_subsystem_operation("WORKER_EXITED", {"exit_code": code, "error": str(err), "last_request": text})
+            logger.warning("[CRASH_CONTAINED] Exception communicating with LayaWorker: %s (proc exit_code=%s)", err, code)
+            if self._proc:
+                try:
+                    self._proc.terminate()
+                except Exception:
+                    pass
+                self._proc = None
+            return {
+                "intent": "unknown",
+                "confidence": 0.0,
+                "probabilities": {},
+                "latency_ms": 0.0,
+                "error": str(err),
+            }
+
+    def warmup_async(self) -> None:
+        """Start warmup in background daemon thread without blocking resident UI."""
+        if self._warmup_started:
+            return
+        self._warmup_started = True
+
+        def _do_warmup():
+            if self._ensure_worker_running() and self._proc and self._proc.stdin and self._proc.stdout:
+                try:
+                    self._proc.stdin.write(json.dumps({"id": "warmup-0", "action": "warmup"}) + "\n")
+                    self._proc.stdin.flush()
+                    resp = self._proc.stdout.readline()
+                    logger.debug("LayaWorker warmup response: %s", resp.strip())
+                except Exception as e:
+                    logger.debug("LayaWorker background warmup failed: %s", e)
+
+        t = threading.Thread(target=_do_warmup, daemon=True, name="LayaWorker-Warmup")
+        t.start()
+
+    def crash_for_test(self) -> None:
+        """Explicitly crash the worker to test resident crash containment."""
+        if self._ensure_worker_running() and self._proc and self._proc.stdin:
+            try:
+                self._proc.stdin.write(json.dumps({"action": "crash_for_test"}) + "\n")
+                self._proc.stdin.flush()
+            except Exception:
+                pass
+
+    def shutdown(self) -> None:
+        """Clean shutdown of worker subprocess."""
+        if self._proc and self._proc.poll() is None:
+            try:
+                if self._proc.stdin:
+                    self._proc.stdin.write(json.dumps({"action": "shutdown"}) + "\n")
+                    self._proc.stdin.flush()
+                self._proc.wait(timeout=1.0)
+            except Exception:
+                try:
+                    self._proc.terminate()
+                except Exception:
+                    pass
+            self._proc = None
+
+
+class LayaAgentProxy:
+    """Proxy object implementing the duck-typed interface of laya.Agent for callers."""
+
+    def __init__(self, client: LayaProcessClient) -> None:
+        self._client = client
+
+    def predict(self, text: str, criteria: Optional[Dict[str, Any]] = None) -> Any:
+        res = self._client.predict(text, criteria)
+        if res.get("error"):
+            raise RuntimeError(f"LayaWorker prediction error: {res.get('error')}")
+
+        if criteria and "raw_result" in res:
+            return res["raw_result"]
+
+        # Return a simple mock object with attributes matching LayaAgent
+        class _PredResult:
+            def __init__(self, d: Dict[str, Any]):
+                self.intent = d.get("intent", "unknown")
+                self.confidence = d.get("confidence", 0.0)
+                self.probabilities = d.get("probabilities", {})
+        return _PredResult(res)
+
+
 class LayaRouter(BaseRouter):
     """
     Adapter integrating the Laya decision engine behind AstraRun's BaseRouter interface.
     
-    Operates in shadow mode by default. Never executes tools directly.
+    Operates out-of-process via LayaProcessClient to protect AstraRun.exe from native crashes.
     """
 
     def __init__(self, config: dict[str, Any] | None = None) -> None:
@@ -70,70 +264,29 @@ class LayaRouter(BaseRouter):
         self.device = str(self.config.get("device", "auto")).lower()
         self.confidence_threshold = float(self.config.get("confidence_threshold", 0.75))
         self.timeout_ms = float(self.config.get("timeout_ms", 3000.0))
-        
-        # Ensure canonical HF cache location (release vs development)
-        from astrarun.core.paths import get_cache_dir, is_release_mode
-        hf_cache_dir = str(get_cache_dir() / "huggingface") if is_release_mode() else "E:/AI_Models/HF_CACHE"
-        os.environ.setdefault("HF_HOME", hf_cache_dir)
-        
-        self._agent = None
-        self._load_lock = threading.Lock()
+
+        self._client = LayaProcessClient(
+            model_id=self.model_id,
+            device=self.device,
+            timeout_ms=self.timeout_ms,
+        )
+        self._proxy = LayaAgentProxy(self._client)
         self._load_failed = False
         self._load_error_msg = None
 
-    def _resolve_device(self) -> str:
-        if self.device in ("cpu", "cuda"):
-            return self.device
-        try:
-            import torch
-            return "cuda" if torch.cuda.is_available() else "cpu"
-        except Exception:
-            return "cpu"
+        if self.enabled:
+            # Lazy background warmup — never blocks the UI thread
+            self._client.warmup_async()
 
     def get_agent(self) -> Any:
-        """Thread-safe lazy loader for the underlying Laya agent."""
+        """Return the isolated agent proxy for LayaSandwichRouter or other consumers."""
         if not self.enabled:
             return None
-        if self._load_failed:
-            return None
-        if self._agent is not None:
-            return self._agent
-
-        with self._load_lock:
-            if self._agent is not None:
-                return self._agent
-            if self._load_failed:
-                return None
-
-            try:
-                import laya
-                target_device = self._resolve_device()
-                logger.info(
-                    "Loading Laya model '%s' on device '%s'...",
-                    self.model_id, target_device
-                )
-                t0 = time.perf_counter()
-                self._agent = laya.load(
-                    model_id_or_path=self.model_id,
-                    device=target_device
-                )
-                load_sec = time.perf_counter() - t0
-                logger.info("Laya model successfully loaded in %.2fs", load_sec)
-                return self._agent
-            except ImportError as err:
-                self._load_failed = True
-                self._load_error_msg = f"Laya package not installed: {err}"
-                logger.warning(self._load_error_msg)
-                return None
-            except Exception as err:
-                self._load_failed = True
-                self._load_error_msg = f"Failed to load Laya model: {err}"
-                logger.error(self._load_error_msg, exc_info=True)
-                return None
+        return self._proxy
 
     def predict_intent(self, request: str) -> LayaDecision:
         """
-        Evaluate user request against the 10-class intent taxonomy.
+        Evaluate user request against the 10-class intent taxonomy out-of-process.
         
         Returns structured LayaDecision preserving full calibrated probability distribution.
         """
@@ -148,62 +301,41 @@ class LayaRouter(BaseRouter):
                 error="Empty request"
             )
 
-        agent = self.get_agent()
-        if agent is None:
+        if not self.enabled:
             return LayaDecision(
                 intent="unknown",
                 confidence=0.0,
                 probabilities={},
                 is_executable_now=False,
                 requires_resolution=False,
-                error=self._load_error_msg or "Laya router disabled or unavailable"
+                error="Laya router disabled"
             )
 
-        questions = {
-            "intent": {
-                "type": "choice",
-                "instructions": "Which action does the user intend?",
-                "criteria": INTENT_CRITERIA
-            }
-        }
+        resp = self._client.predict(clean_req)
+        intent = resp.get("intent", "unknown")
+        confidence = float(resp.get("confidence", 0.0))
+        probs = resp.get("probabilities", {})
+        err = resp.get("error")
+        lat = float(resp.get("latency_ms", 0.0))
 
-        t0 = time.perf_counter()
-        try:
-            raw_output = agent.predict(clean_req, questions)
-            latency_ms = (time.perf_counter() - t0) * 1000.0
-            
-            answers = raw_output.get("answers", {})
-            intent_answer = answers.get("intent", {})
-            chosen_intent = intent_answer.get("choice", "unknown")
-            probs = intent_answer.get("probabilities", {})
-            confidence = float(intent_answer.get("confidence", probs.get(chosen_intent, 0.0)))
+        is_exec = intent in EXECUTABLE_INTENTS and confidence >= self.confidence_threshold
+        requires_res = intent in ("open_project", "find_file") or intent in EXECUTABLE_INTENTS
 
-            is_exec = chosen_intent in EXECUTABLE_INTENTS and confidence >= self.confidence_threshold
-            requires_res = chosen_intent in ("open_project", "find_file") or chosen_intent in EXECUTABLE_INTENTS
+        return LayaDecision(
+            intent=intent,
+            confidence=confidence,
+            probabilities={str(k): float(v) for k, v in probs.items()} if isinstance(probs, dict) else {},
+            is_executable_now=is_exec,
+            requires_resolution=requires_res,
+            latency_ms=lat,
+            raw_result=resp,
+            source="laya_isolated_worker",
+            error=err,
+        )
 
-            return LayaDecision(
-                intent=chosen_intent,
-                confidence=confidence,
-                probabilities={str(k): float(v) for k, v in probs.items()},
-                is_executable_now=is_exec,
-                requires_resolution=requires_res,
-                latency_ms=latency_ms,
-                raw_result=raw_output,
-                source="laya"
-            )
-        except Exception as err:
-            latency_ms = (time.perf_counter() - t0) * 1000.0
-            logger.error("Laya inference error on '%s': %s", clean_req, err, exc_info=True)
-            return LayaDecision(
-                intent="unknown",
-                confidence=0.0,
-                probabilities={},
-                is_executable_now=False,
-                requires_resolution=False,
-                latency_ms=latency_ms,
-                error=str(err),
-                source="laya"
-            )
+    def shutdown(self) -> None:
+        """Cleanly terminate the worker process."""
+        self._client.shutdown()
 
     def predict_intent_batch(
         self,
@@ -337,3 +469,8 @@ class LayaRouter(BaseRouter):
                 source="laya",
                 explanation=f"Laya classified intent as future/non-executable '{intent}' (confidence: {laya_dec.confidence:.2f})"
             )
+
+    def shutdown(self) -> None:
+        """Terminate the underlying isolated process client."""
+        if hasattr(self, "_client") and self._client:
+            self._client.shutdown()

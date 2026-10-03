@@ -21,6 +21,7 @@ from PySide6.QtWidgets import (
     QButtonGroup,
     QCheckBox,
     QDialog,
+    QFileDialog,
     QFrame,
     QHBoxLayout,
     QLabel,
@@ -119,10 +120,10 @@ class FirstRunWizard(QDialog):
         title_layout.setSpacing(2)
         title = QLabel(f"{APP_NAME} {VERSION}", self)
         title.setStyleSheet(f"font-size: 15px; font-weight: 600; color: {TEXT_PRIMARY};")
-        subtitle = QLabel("Intelligent Windows Command Launcher & Desktop Agent", self)
-        subtitle.setStyleSheet(f"font-size: 11px; color: {TEXT_MUTED};")
+        self.header_subtitle = QLabel("Local-first adaptive Windows agent", self)
+        self.header_subtitle.setStyleSheet(f"font-size: 11px; color: {TEXT_MUTED};")
         title_layout.addWidget(title)
-        title_layout.addWidget(subtitle)
+        title_layout.addWidget(self.header_subtitle)
         header.addLayout(title_layout, stretch=1)
         layout.addLayout(header)
 
@@ -208,8 +209,8 @@ class FirstRunWizard(QDialog):
     def _create_hardware_page(self) -> QWidget:
         w = QWidget(self)
         v = QVBoxLayout(w)
-        v.setContentsMargins(20, 16, 20, 16)
-        v.setSpacing(12)
+        v.setContentsMargins(20, 14, 20, 14)
+        v.setSpacing(10)
 
         heading = QLabel("System Hardware Audit", w)
         heading.setStyleSheet(f"font-size: 14px; font-weight: 600; color: {TEXT_PRIMARY};")
@@ -225,17 +226,27 @@ class FirstRunWizard(QDialog):
             ("Operating System", f"{self.hardware.os_name} ({self.hardware.os_version})"),
             ("Processor", f"{self.hardware.cpu_name} ({self.hardware.cpu_cores} cores)"),
             ("System Memory", f"{self.hardware.ram_gb:.1f} GB RAM"),
-            ("Graphics Device", f"{self.hardware.gpu_name} ({self.hardware.vram_gb:.1f} GB VRAM)"),
-            ("Available Storage", f"{self.hardware.disk_free_gb:.1f} GB free"),
         ]
+
+        # Multi-GPU Display (discrete compute + integrated display)
+        if getattr(self.hardware, "gpus", None) and len(self.hardware.gpus) > 0:
+            for g in self.hardware.gpus:
+                role = "Graphics (Compute)" if g.is_discrete else "Graphics (Display)"
+                specs.append((role, g.display_label))
+        else:
+            specs.append(("Graphics Device", f"{self.hardware.gpu_name} ({self.hardware.vram_gb:.1f} GB VRAM)"))
+
+        specs.append(("Available Storage", f"{self.hardware.disk_free_gb:.1f} GB free"))
+
         for name, val in specs:
             row = QHBoxLayout()
             lbl_name = QLabel(name, box)
-            lbl_name.setStyleSheet(f"font-size: 11px; color: {TEXT_MUTED}; width: 120px;")
+            lbl_name.setStyleSheet(f"font-size: 11px; color: {TEXT_MUTED}; width: 130px;")
             lbl_val = QLabel(val, box)
             lbl_val.setStyleSheet(f"font-size: 11px; font-weight: 500; color: {TEXT_PRIMARY}; font-family: {FONT_MONO};")
+            lbl_val.setWordWrap(True)
             row.addWidget(lbl_name)
-            row.addSpacing(12)
+            row.addSpacing(8)
             row.addWidget(lbl_val, stretch=1)
             b_layout.addLayout(row)
 
@@ -249,7 +260,7 @@ class FirstRunWizard(QDialog):
 
         if self.hardware.supports_standard_pack:
             status_icon.setPixmap(IconRenderer.get_pixmap("check", size=14, color=SUCCESS))
-            status_text.setText("Hardware verified: Ready for Standard Cognitive Acceleration.")
+            status_text.setText("Hardware verified: Ready for Dedicated Cognitive Acceleration.")
             status_text.setStyleSheet(f"color: {SUCCESS}; font-size: 11px; font-weight: 500;")
         else:
             status_icon.setPixmap(IconRenderer.get_pixmap("warning", size=14, color=WARNING))
@@ -265,18 +276,17 @@ class FirstRunWizard(QDialog):
     def _create_models_page(self) -> QWidget:
         w = QWidget(self)
         v = QVBoxLayout(w)
-        v.setContentsMargins(20, 16, 20, 16)
-        v.setSpacing(10)
+        v.setContentsMargins(20, 14, 20, 14)
+        v.setSpacing(8)
 
         heading = QLabel("Runtime & Model Preparation", w)
         heading.setStyleSheet(f"font-size: 14px; font-weight: 600; color: {TEXT_PRIMARY};")
         v.addWidget(heading)
 
         desc = QLabel(
-            f"Astra operates with dual local cognitive engines for instant offline execution:\n"
-            f"• Spark-X2.5 (1.1 GB) — Fast routing & natural language comprehension\n"
-            f"• Qwen 2.5 Coder (1.0 GB) — Complex decomposition & code generation\n"
-            f"• BGE-small (130 MB) — Hybrid memory & retrieval indexing",
+            "Astra operates with dual local cognitive engines for instant offline execution:\n"
+            "• Spark-X2.5 (1.1 GB) — Fast routing & natural language comprehension\n"
+            "• Qwen 2.5 Coder (1.0 GB) — Complex decomposition & code generation",
             w
         )
         desc.setWordWrap(True)
@@ -292,118 +302,160 @@ class FirstRunWizard(QDialog):
 
         if self.has_existing_models:
             existing_box = QFrame(w)
-            existing_box.setStyleSheet(f"background-color: {SURFACE_RAISED}; border: 1px solid {BORDER}; border-radius: 6px; padding: 8px 10px;")
+            existing_box.setStyleSheet(f"background-color: {SURFACE_RAISED}; border: 1px solid {BORDER}; border-radius: 6px; padding: 10px;")
             eb_layout = QVBoxLayout(existing_box)
-            eb_layout.setSpacing(6)
+            eb_layout.setSpacing(8)
 
             eb_header = QHBoxLayout()
             eb_icon = QLabel(existing_box)
             eb_icon.setPixmap(IconRenderer.get_pixmap("check", size=13, color=SUCCESS))
-            eb_title = QLabel("Existing Compatible Models Discovered", existing_box)
+            eb_title = QLabel("Models detected on workstation", existing_box)
             eb_title.setStyleSheet(f"font-size: 11px; font-weight: 600; color: {SUCCESS};")
             eb_header.addWidget(eb_icon)
             eb_header.addWidget(eb_title, stretch=1)
             eb_layout.addLayout(eb_header)
 
-            details_text = "\n".join(f"• {m.name}: {m.path.name} ({m.size_gb:.2f} GB)" for m in exact_matches if m.path)
-            eb_desc = QLabel(details_text, existing_box)
-            eb_desc.setStyleSheet(f"font-size: 10px; color: {TEXT_SECONDARY}; font-family: {FONT_MONO};")
-            eb_layout.addWidget(eb_desc)
+            # Structured model item cards
+            for m in exact_matches:
+                if not m.path:
+                    continue
+                item_frame = QFrame(existing_box)
+                item_frame.setStyleSheet(f"background-color: {BG_APP}; border: 1px solid {BORDER}; border-radius: 4px; padding: 6px 8px;")
+                if_layout = QVBoxLayout(item_frame)
+                if_layout.setSpacing(2)
 
-            self.radio_use_existing = QRadioButton("Use existing installation (Recommended) — 0 MB download", existing_box)
+                top_row = QHBoxLayout()
+                m_label = QLabel(m.name, item_frame)
+                m_label.setStyleSheet(f"font-size: 11px; font-weight: 600; color: {TEXT_PRIMARY};")
+                m_badge = QLabel("Existing validated model", item_frame)
+                m_badge.setStyleSheet(f"font-size: 9px; color: {SUCCESS}; background-color: rgba(34, 197, 94, 0.12); padding: 1px 4px; border-radius: 3px;")
+                top_row.addWidget(m_label)
+                top_row.addSpacing(6)
+                top_row.addWidget(m_badge)
+                top_row.addStretch(1)
+
+                m_down = QLabel("0 MB download", item_frame)
+                m_down.setStyleSheet(f"font-size: 10px; font-weight: 600; color: {SUCCESS};")
+                top_row.addWidget(m_down)
+                if_layout.addLayout(top_row)
+
+                path_lbl = QLabel(str(m.path), item_frame)
+                path_lbl.setStyleSheet(f"font-size: 9px; color: {TEXT_MUTED}; font-family: {FONT_MONO};")
+                path_lbl.setWordWrap(True)
+                if_layout.addWidget(path_lbl)
+
+                eb_layout.addWidget(item_frame)
+
+            # Radio selections
+            self.radio_use_existing = QRadioButton("Use existing validated models (Recommended) — 0 MB download", existing_box)
             self.radio_use_existing.setChecked(True)
             self.radio_use_existing.setStyleSheet(f"color: {TEXT_PRIMARY}; font-size: 11px; font-weight: 500;")
             eb_layout.addWidget(self.radio_use_existing)
 
-            self.radio_download_fresh = QRadioButton("Download fresh copy to local AstraRun storage", existing_box)
+            self.radio_download_fresh = QRadioButton("Download fresh Astra-managed copies to local storage", existing_box)
             self.radio_download_fresh.setStyleSheet(f"color: {TEXT_MUTED}; font-size: 11px;")
             eb_layout.addWidget(self.radio_download_fresh)
 
             v.addWidget(existing_box)
 
-        # Progress / Status Box
-        self.model_status_box = QFrame(w)
-        self.model_status_box.setStyleSheet(f"background-color: {SURFACE_RAISED}; border: 1px solid {BORDER}; border-radius: 6px; padding: 8px 10px;")
-        ms_layout = QVBoxLayout(self.model_status_box)
-        ms_layout.setSpacing(4)
+        # Status row (clean checkmark, zero clipping progress text)
+        status_box = QFrame(w)
+        status_box.setStyleSheet(f"background-color: {SURFACE_RAISED}; border: 1px solid {BORDER}; border-radius: 6px; padding: 8px 10px;")
+        sb_layout = QHBoxLayout(status_box)
+        sb_layout.setSpacing(8)
 
-        status_init = "Existing models verified and ready for offline use." if self.has_existing_models else "Checking local model cache..."
-        self.lbl_model_status = QLabel(status_init, self.model_status_box)
+        sb_icon = QLabel(status_box)
+        sb_icon.setPixmap(IconRenderer.get_pixmap("check", size=13, color=SUCCESS))
+        status_init = "Existing models verified and ready for instant offline operation." if self.has_existing_models else "Models registered: Ready for offline operation."
+        self.lbl_model_status = QLabel(status_init, status_box)
         self.lbl_model_status.setStyleSheet(f"font-size: 11px; color: {TEXT_PRIMARY};")
-        ms_layout.addWidget(self.lbl_model_status)
+        sb_layout.addWidget(sb_icon)
+        sb_layout.addWidget(self.lbl_model_status, stretch=1)
+        v.addWidget(status_box)
 
-        self.progress_bar = QProgressBar(self.model_status_box)
-        self.progress_bar.setFixedHeight(5)
-        self.progress_bar.setStyleSheet(f"""
-            QProgressBar {{
-                background-color: {BG_APP};
-                border: 1px solid {BORDER};
-                border-radius: 2px;
-                text-align: center;
-            }}
-            QProgressBar::chunk {{
-                background-color: {ACCENT};
-                border-radius: 2px;
-            }}
-        """)
-        self.progress_bar.setValue(100)
-        ms_layout.addWidget(self.progress_bar)
-
-        v.addWidget(self.model_status_box)
         v.addStretch(1)
         return w
 
     def _create_preferences_page(self) -> QWidget:
         w = QWidget(self)
         v = QVBoxLayout(w)
-        v.setContentsMargins(20, 16, 20, 16)
+        v.setContentsMargins(20, 14, 20, 14)
         v.setSpacing(12)
 
         heading = QLabel("Preferences & Autostart", w)
         heading.setStyleSheet(f"font-size: 14px; font-weight: 600; color: {TEXT_PRIMARY};")
         v.addWidget(heading)
 
-        # Autostart checkbox
+        # Autostart checkbox (interactive)
         self.chk_autostart = QCheckBox("Start AstraRun automatically when I sign in to Windows", w)
         self.chk_autostart.setChecked(True)
-        self.chk_autostart.setStyleSheet(f"color: {TEXT_PRIMARY}; font-size: 12px;")
+        self.chk_autostart.setStyleSheet(f"color: {TEXT_PRIMARY}; font-size: 12px; font-weight: 500;")
         v.addWidget(self.chk_autostart)
 
-        # Hotkey notice
+        # Hotkey informational callout (clearly informational, not a dead input)
         box_hk = QFrame(w)
         box_hk.setStyleSheet(f"background-color: {SURFACE_RAISED}; border: 1px solid {BORDER}; border-radius: 6px; padding: 10px;")
-        hk_layout = QHBoxLayout(box_hk)
+        hk_layout = QVBoxLayout(box_hk)
+        hk_layout.setSpacing(4)
+
+        hk_row = QHBoxLayout()
         hk_label = QLabel("Global Summon Hotkey:", box_hk)
         hk_label.setStyleSheet(f"font-size: 11px; color: {TEXT_MUTED};")
-        hk_val = QLabel("Alt + Space", box_hk)
-        hk_val.setStyleSheet(f"font-size: 11px; font-weight: 600; color: {ACCENT}; font-family: {FONT_MONO};")
-        hk_layout.addWidget(hk_label)
-        hk_layout.addWidget(hk_val)
-        hk_layout.addStretch(1)
+        hk_badge = QLabel("Alt + Space", box_hk)
+        hk_badge.setStyleSheet(f"font-size: 11px; font-weight: 600; color: {ACCENT}; background-color: {BG_APP}; border: 1px solid {BORDER_STRONG}; padding: 2px 8px; border-radius: 4px; font-family: {FONT_MONO};")
+        hk_row.addWidget(hk_label)
+        hk_row.addSpacing(8)
+        hk_row.addWidget(hk_badge)
+        hk_row.addStretch(1)
+        hk_layout.addLayout(hk_row)
+
+        hk_sub = QLabel("Configured globally for instant summoning. You can customize this shortcut later in Settings.", box_hk)
+        hk_sub.setStyleSheet(f"font-size: 10px; color: {TEXT_MUTED};")
+        hk_layout.addWidget(hk_sub)
         v.addWidget(box_hk)
 
-        # Model storage location
-        lbl_dir = QLabel("Model Storage Directory:", w)
-        lbl_dir.setStyleSheet(f"font-size: 11px; color: {TEXT_MUTED};")
-        v.addWidget(lbl_dir)
+        # Model storage location (with interactive Browse button)
+        storage_box = QFrame(w)
+        storage_box.setStyleSheet(f"background-color: {SURFACE_RAISED}; border: 1px solid {BORDER}; border-radius: 6px; padding: 10px;")
+        s_layout = QVBoxLayout(storage_box)
+        s_layout.setSpacing(6)
 
-        self.txt_model_dir = QLineEdit(str(get_models_dir()), w)
-        self.txt_model_dir.setReadOnly(True)
+        lbl_dir = QLabel("Model Storage Directory:", storage_box)
+        lbl_dir.setStyleSheet(f"font-size: 11px; font-weight: 500; color: {TEXT_PRIMARY};")
+        s_layout.addWidget(lbl_dir)
+
+        dir_row = QHBoxLayout()
+        dir_row.setSpacing(8)
+        self.txt_model_dir = QLineEdit(str(get_models_dir()), storage_box)
         self.txt_model_dir.setStyleSheet(f"""
             QLineEdit {{
                 background-color: {SURFACE_INPUT};
                 border: 1px solid {BORDER};
                 border-radius: 4px;
-                color: {TEXT_SECONDARY};
+                color: {TEXT_PRIMARY};
                 padding: 6px;
                 font-size: 11px;
                 font-family: {FONT_MONO};
             }}
         """)
-        v.addWidget(self.txt_model_dir)
+        self.btn_browse_dir = QPushButton("Browse...", storage_box)
+        self.btn_browse_dir.setStyleSheet(get_button_style("secondary", size="sm"))
+        self.btn_browse_dir.clicked.connect(self._on_browse_models_dir)
+
+        dir_row.addWidget(self.txt_model_dir, stretch=1)
+        dir_row.addWidget(self.btn_browse_dir)
+        s_layout.addLayout(dir_row)
+        v.addWidget(storage_box)
 
         v.addStretch(1)
         return w
+
+    def _on_browse_models_dir(self) -> None:
+        """Interactive folder chooser for model storage directory."""
+        initial = self.txt_model_dir.text().strip() or str(get_models_dir())
+        chosen = QFileDialog.getExistingDirectory(self, "Select Model Storage Folder", initial)
+        if chosen:
+            self.txt_model_dir.setText(chosen)
 
     def _on_next(self) -> None:
         idx = self.stack.currentIndex()

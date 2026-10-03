@@ -27,6 +27,17 @@ hidden_imports = [
     "winreg",
     "ctypes",
     "ctypes.wintypes",
+    "unittest",
+    "unittest.mock",
+    "multiprocessing",
+    "concurrent.futures",
+    "inspect",
+    "pkgutil",
+    "importlib",
+    "dataclasses",
+    "typing",
+    "json",
+    "logging",
     "astrarun",
     "astrarun.main",
     "astrarun.app",
@@ -87,6 +98,9 @@ hidden_imports = [
     "astrarun.power.manager",
     "astrarun.machine.providers.python_env",
     "astrarun.machine.providers.topology",
+    "astrarun.routing",
+    "astrarun.routing.laya",
+    "astrarun.routing.laya_worker",
 ]
 
 a = Analysis(
@@ -100,7 +114,6 @@ a = Analysis(
     runtime_hooks=[],
     excludes=[
         "tkinter",
-        "unittest",
         "pytest",
         "benchmarks",
         "scipy",

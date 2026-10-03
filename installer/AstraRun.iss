@@ -1,8 +1,8 @@
-; Inno Setup 6 Script for AstraRun 1.0.0-rc.2-dogfood
+; Inno Setup 6 Script for AstraRun 1.0.0-rc.4-dogfood
 ; Windows Intelligent Command Launcher & Desktop Agent
 
 #define MyAppName "AstraRun"
-#define MyAppVersion "1.0.0-rc.3-dogfood"
+#define MyAppVersion "1.0.0-rc.4-dogfood"
 #define MyAppPublisher "Astra Engineering Team"
 #define MyAppURL "https://github.com/astrarun/astrarun"
 #define MyAppExeName "AstraRun.exe"
@@ -38,10 +38,11 @@ Name: "autostart"; Description: "Start AstraRun automatically when signing in to
 
 [Files]
 Source: "..\dist\AstraRun\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "..\resources\icons\AstraRun.ico"; DestDir: "{app}\resources\icons"; Flags: ignoreversion
 
 [Icons]
-Name: "{autoprograms}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; IconFilename: "{app}\resources\icons\AstraRun.ico"
-Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: desktopicon; IconFilename: "{app}\resources\icons\AstraRun.ico"
+Name: "{autoprograms}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; IconFilename: "{app}\{#MyAppExeName}"
+Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: desktopicon; IconFilename: "{app}\{#MyAppExeName}"
 
 [Registry]
 Root: HKCU; Subkey: "Software\Microsoft\Windows\CurrentVersion\Run"; ValueType: string; ValueName: "AstraRun"; ValueData: """{app}\{#MyAppExeName}"" --background"; Tasks: autostart; Flags: uninsdeletevalue

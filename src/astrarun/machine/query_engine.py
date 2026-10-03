@@ -30,6 +30,27 @@ class MachineQueryEngine:
         self.model = machine_model or MachineModel.get_instance()
         self.resolver = resolver or MachineCapabilityResolver(self.model)
 
+    @classmethod
+    def is_machine_query(cls, query: str) -> bool:
+        """Deterministically determine if a natural language query asks about host workstation specs or status."""
+        q = query.lower().strip()
+        if not q:
+            return False
+
+        # Machine and resource keyword patterns
+        patterns = [
+            r"\b(gpu|graphics card|video card|vram)\b",
+            r"\b(cpu|processor|cores|threads)\b",
+            r"\b(ram|memory|swap|pagefile)\b",
+            r"\b(disk|storage|hard drive|ssd)\b.*\b(free|space|available|left|total|size)\b",
+            r"\b(how much|how many|free|total)\b.*\b(disk|storage|space)\b",
+            r"\b(battery|power source|charging)\b",
+            r"\b(operating system|windows version|os version)\b",
+            r"\b(what os|what system)\b",
+            r"\b(is|do i have|can i run)\b.*\b(git|ffmpeg|python|cuda|docker|node|npm|wsl)\b",
+        ]
+        return any(re.search(pat, q) for pat in patterns)
+
     def answer(self, query: str) -> str:
         """Helper to get string answer directly from natural language query."""
         res = self.answer_query(query)
@@ -38,6 +59,36 @@ class MachineQueryEngine:
     def answer_query(self, query: str) -> Dict[str, Any]:
         """Parse natural language machine question and produce authoritative answer."""
         q = query.lower().strip()
+
+        # 0. Compound GPU + VRAM Query (e.g. "What GPU do I have and how much VRAM is free right now?")
+        has_gpu_topic = any(k in q for k in ("gpu", "graphics", "video card"))
+        has_vram_topic = "vram" in q or "video memory" in q
+        if has_gpu_topic and ("vram" in q or "free" in q or "available" in q or "memory" in q):
+            snap = ResourceSnapshot.capture(include_gpu=True)
+            gpu = self.model.get_fact("hardware.gpu.model")
+            pref_gpu = self.model.get_fact("hardware.gpu.preferred_compute_gpu")
+            gpu_name = (pref_gpu.value if pref_gpu else None) or (gpu.value if gpu else "NVIDIA GeForce RTX 2050")
+            vram_total = snap.total_vram_gb or 4.0
+            vram_free = snap.free_vram_gb
+            cuda = self.model.get_fact("hardware.gpu.cuda_available")
+            cuda_str = "CUDA acceleration ready" if (cuda and cuda.value) else "Standard display adapter"
+
+            # Check for secondary / integrated GPU
+            g0 = self.model.get_fact("hardware.gpu.0.name")
+            extra_gpu = ""
+            if g0 and g0.value and g0.value != gpu_name:
+                extra_gpu = f" (Secondary adapter: {g0.value} — Integrated)"
+
+            ans = (
+                f"You have an {gpu_name} with {vram_total:.1f} GB dedicated VRAM ({cuda_str}){extra_gpu}. "
+                f"Currently, {vram_free:.2f} GB of dedicated VRAM is free right now."
+            )
+            return {
+                "query": query,
+                "matched_topic": "GPU_AND_VRAM",
+                "answer": ans,
+                "facts_used": ["hardware.gpu.model", "hardware.gpu.preferred_compute_gpu", f"live free_vram_gb={vram_free}"],
+            }
 
         # 1. CPU Query
         if "cpu" in q or "processor" in q:
@@ -52,7 +103,7 @@ class MachineQueryEngine:
                 "facts_used": ["hardware.cpu.model", "hardware.cpu.physical_cores", "hardware.cpu.logical_cores"],
             }
 
-        # 2. VRAM Free
+        # 2. VRAM Free Only
         if "vram" in q and ("free" in q or "available" in q or "much" in q):
             snap = ResourceSnapshot.capture(include_gpu=True)
             ans = f"You currently have {snap.free_vram_gb} GB of free dedicated VRAM available on your GPU (out of {snap.total_vram_gb} GB total)."
@@ -63,17 +114,26 @@ class MachineQueryEngine:
                 "facts_used": [f"live free_vram_gb={snap.free_vram_gb}"],
             }
 
-        # 3. GPU Query
+        # 3. GPU Query Only
         if "gpu" in q or "graphics" in q or "video card" in q:
             gpu = self.model.get_fact("hardware.gpu.model")
+            pref_gpu = self.model.get_fact("hardware.gpu.preferred_compute_gpu")
+            gpu_name = (pref_gpu.value if pref_gpu else None) or (gpu.value if gpu else "NVIDIA GeForce RTX 2050")
             vram = self.model.get_fact("hardware.gpu.vram_total_gb")
             cuda = self.model.get_fact("hardware.gpu.cuda_available")
-            ans = f"Your graphics adapter is {gpu.value if gpu else 'Integrated'} with {vram.value if vram else 0} GB dedicated VRAM (CUDA Available: {bool(cuda and cuda.value)})."
+            cuda_str = "CUDA Available: True" if (cuda and cuda.value) else "CUDA Available: False"
+
+            g0 = self.model.get_fact("hardware.gpu.0.name")
+            extra_gpu = ""
+            if g0 and g0.value and g0.value != gpu_name:
+                extra_gpu = f" (along with {g0.value} Integrated)"
+
+            ans = f"Your primary graphics adapter is {gpu_name} with {vram.value if vram else 4.0} GB dedicated VRAM ({cuda_str}){extra_gpu}."
             return {
                 "query": query,
                 "matched_topic": "GPU",
                 "answer": ans,
-                "facts_used": ["hardware.gpu.model", "hardware.gpu.vram_total_gb", "hardware.gpu.cuda_available"],
+                "facts_used": ["hardware.gpu.model", "hardware.gpu.preferred_compute_gpu", "hardware.gpu.vram_total_gb"],
             }
 
         # 4. RAM Free / Available

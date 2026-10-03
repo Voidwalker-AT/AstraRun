@@ -124,6 +124,14 @@ def write_state_file(
 
 def main() -> int:
     """Initialize composition root, single-instance enforcement, tray, hotkeys, and Qt event loop."""
+    # 0. Check for isolated child subsystem worker execution mode first (bypasses Qt & mutex)
+    if "--worker-type" in sys.argv:
+        idx = sys.argv.index("--worker-type")
+        worker_type = sys.argv[idx + 1] if idx + 1 < len(sys.argv) else ""
+        if worker_type == "laya":
+            from astrarun.routing.laya_worker import run_worker_loop
+            return run_worker_loop()
+
     start_iso = datetime.now().isoformat()
     args = parse_args()
 
@@ -139,11 +147,15 @@ def main() -> int:
     )
     logger = get_logger("astrarun.main")
 
-    astra_app = AstraApplication(config_dir=args.config_dir)
-
-    # Install sanitized crash diagnostics
-    from astrarun.core.crash import install_crash_handler
+    # Install sanitized crash diagnostics and detect prior abnormal terminations
+    from astrarun.core.crash import detect_previous_abnormal_termination, install_crash_handler
     install_crash_handler()
+    recovery = detect_previous_abnormal_termination()
+    if recovery:
+        logger.info("[STARTUP_STAGE] CRASH_RECOVERY_PROCESSED (prior_pid=%s, last_op=%s)",
+                    recovery.get("prior_pid"), recovery.get("last_operation"))
+
+    astra_app = AstraApplication(config_dir=args.config_dir)
 
     logger.info("[STARTUP_STAGE] STARTUP_BEGIN (PID=%d, version=%s)", os.getpid(), __version__)
     logger.info("Initializing AstraRun v%s (Real Alt+Space Launcher)... PID=%d", __version__, os.getpid())

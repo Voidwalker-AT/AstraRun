@@ -37,6 +37,8 @@ from astrarun.learning.skills import SkillManager
 from astrarun.nlp.engine import NLPEngine
 import threading
 
+from astrarun.machine.model import MachineModel
+from astrarun.machine.query_engine import MachineQueryEngine
 from astrarun.nlp.ir import ParsedClause, ParsedRequest
 from astrarun.nlp.structure_engine import NeuralStructureEngine
 from astrarun.nlp.models import NLPEntityType, StructuredUtterance, UserRequest
@@ -255,6 +257,10 @@ class AstraApplication:
         # 11. Autonomous Agent Execution Engine (v0.11)
         from astrarun.agent.loop import AgentExecutionEngine
         self.agent_engine = AgentExecutionEngine(registry=self.capability_registry)
+
+        # 12. Machine Model & Authoritative Workstation Query Engine (v1.0)
+        self.machine_model = MachineModel.get_instance()
+        self.machine_query_engine = MachineQueryEngine(machine_model=self.machine_model)
 
         # Single instance lock & local Named Pipe IPC
         from astrarun.core.single_instance import AstraSingleInstance
@@ -714,6 +720,29 @@ class AstraApplication:
                     )
 
         # -------------------------------------------------------------
+        # 2.5 MACHINE MODEL FAST PATH: Authoritative Workstation Facts (< 3ms)
+        # -------------------------------------------------------------
+        if self.machine_query_engine.is_machine_query(clean):
+            mq_answer = self.machine_query_engine.answer_query(clean)
+            if mq_answer.get("answer"):
+                logger.info("Machine query path triggered: '%s' -> %s", clean, mq_answer.get("matched_topic"))
+                task = self.task_manager.create_task(request_text=clean, source="user_machine_query")
+                self.task_manager.transition_status(task.id, TaskStatus.RUNNING)
+                cap_res = CapabilityResult.ok(
+                    capability="machine_query",
+                    message=mq_answer["answer"],
+                    data=mq_answer,
+                )
+                self._complete_task(task, cap_res)
+                return ExecutionResult(
+                    type="machine_query",
+                    success=True,
+                    message=mq_answer["answer"],
+                    task=task,
+                    capability_result=cap_res,
+                )
+
+        # -------------------------------------------------------------
         # 3. RICH PATH: Neural NLP Sandwich, Task Creation, Safety Gating
         # -------------------------------------------------------------
         task = self.task_manager.create_task(request_text=clean, source="user_launcher")
@@ -1060,6 +1089,9 @@ class AstraApplication:
         """Gracefully terminate background workers, flush databases, and release locks."""
         logger.info("Initiating graceful shutdown of AstraApplication...")
         try:
+            if hasattr(self, "laya_router") and self.laya_router:
+                if hasattr(self.laya_router, "shutdown"):
+                    self.laya_router.shutdown()
             if hasattr(self, "single_instance") and self.single_instance:
                 self.single_instance.release()
             logger.info("AstraApplication shutdown complete.")

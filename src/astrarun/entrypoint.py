@@ -16,8 +16,19 @@ if sys.platform == "win32":
     try:
         import ctypes
         ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID("AstraEngineering.AstraRun.Desktop.1.0")
+        # If launched from a console with CLI flags, attach to parent console for readable output
+        if any(arg in sys.argv for arg in ("--run-command", "--help", "-h", "--version")):
+            ctypes.windll.kernel32.AttachConsole(-1)
     except Exception:
         pass
+
+# Ensure standard streams exist even in pure windowed GUI mode
+if sys.stdout is None:
+    import io
+    sys.stdout = io.StringIO()
+if sys.stderr is None:
+    import io
+    sys.stderr = io.StringIO()
 
 from astrarun.main import main
 

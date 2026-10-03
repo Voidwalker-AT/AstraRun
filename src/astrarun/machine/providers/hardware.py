@@ -237,6 +237,35 @@ class HardwareProvider(BaseMachineProvider):
                 except Exception as e:
                     logger.debug("nvidia-smi probe failed: %s", e)
 
+        # 3. Discover all display adapters on Windows (e.g. Integrated + Discrete)
+        adapters = []
+        if sys.platform == "win32":
+            try:
+                import subprocess
+                cmd = "Get-CimInstance Win32_VideoController | ForEach-Object { $_.Name }"
+                res = subprocess.run(
+                    ["powershell", "-NoProfile", "-Command", cmd],
+                    capture_output=True, text=True, timeout=3,
+                    creationflags=0x08000000,
+                )
+                if res.returncode == 0:
+                    lines = [l.strip() for l in res.stdout.splitlines() if l.strip()]
+                    for aname in lines:
+                        if not aname:
+                            continue
+                        is_intel = any(k in aname.lower() for k in ("intel", "uhd", "iris"))
+                        is_nv = any(k in aname.lower() for k in ("nvidia", "geforce", "rtx"))
+                        adapters.append({
+                            "name": aname,
+                            "type": "integrated" if is_intel else ("discrete" if is_nv else "unknown"),
+                            "vram_gb": 4.0 if is_nv else 0.0,
+                        })
+            except Exception as e:
+                logger.debug("Win32_VideoController enumeration failed: %s", e)
+
+        if not adapters and has_gpu:
+            adapters.append({"name": gpu_name, "type": "discrete", "vram_gb": vram_total_gb})
+
         facts.append(MachineFact(
             key="hardware.gpu.present",
             value=has_gpu,
@@ -251,6 +280,35 @@ class HardwareProvider(BaseMachineProvider):
             freshness_class=FreshnessClass.STABLE,
             observed_at=now,
         ))
+        facts.append(MachineFact(
+            key="hardware.gpu.preferred_compute_gpu",
+            value=gpu_name if (has_gpu and cuda_avail) else (adapters[0]["name"] if adapters else gpu_name),
+            source=FactAuthority.NVIDIA_NVML if has_gpu else FactAuthority.INFERRED,
+            freshness_class=FreshnessClass.STABLE,
+            observed_at=now,
+        ))
+        facts.append(MachineFact(
+            key="hardware.gpu.count",
+            value=len(adapters) if adapters else (1 if has_gpu else 0),
+            source=FactAuthority.OS_API,
+            freshness_class=FreshnessClass.STABLE,
+            observed_at=now,
+        ))
+        for idx, a in enumerate(adapters):
+            facts.append(MachineFact(
+                key=f"hardware.gpu.{idx}.name",
+                value=a["name"],
+                source=FactAuthority.OS_API,
+                freshness_class=FreshnessClass.STABLE,
+                observed_at=now,
+            ))
+            facts.append(MachineFact(
+                key=f"hardware.gpu.{idx}.type",
+                value=a["type"],
+                source=FactAuthority.OS_API,
+                freshness_class=FreshnessClass.STABLE,
+                observed_at=now,
+            ))
         facts.append(MachineFact(
             key="hardware.gpu.vendor",
             value=vendor,

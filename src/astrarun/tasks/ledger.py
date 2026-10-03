@@ -23,6 +23,7 @@ from astrarun.tasks.models import (
     TaskResult,
     TaskStatus,
 )
+from astrarun.tasks.checkpoints import TaskCheckpoint
 from astrarun.tasks.serialization import (
     hash_request,
     sanitize_capability_payload,
@@ -183,7 +184,6 @@ class TaskLedger:
                 );
             """)
 
-            # Indices for rapid querying and history searching
             cursor.execute("CREATE INDEX IF NOT EXISTS idx_tasks_conv ON tasks(conversation_id);")
             cursor.execute("CREATE INDEX IF NOT EXISTS idx_tasks_created ON tasks(created_at DESC);")
             cursor.execute("CREATE INDEX IF NOT EXISTS idx_tasks_status ON tasks(status);")
@@ -191,12 +191,145 @@ class TaskLedger:
             cursor.execute("CREATE INDEX IF NOT EXISTS idx_messages_conv ON conversation_messages(conversation_id, timestamp ASC);")
 
             cursor.execute(f"PRAGMA user_version = {SCHEMA_VERSION};")
-            conn.commit()
-            logger.info("Task Ledger database initialized to schema version %d.", SCHEMA_VERSION)
+
+        # Ensure task_checkpoints table and index exist on all databases
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS task_checkpoints (
+                id TEXT PRIMARY KEY,
+                task_id TEXT NOT NULL,
+                checkpoint_id TEXT NOT NULL,
+                plan_version INTEGER NOT NULL DEFAULT 1,
+                completed_step_ids TEXT NOT NULL,
+                current_step_id TEXT,
+                important_outputs TEXT,
+                artifact_hashes TEXT,
+                invariant_states TEXT,
+                recoverable_handles TEXT,
+                timestamp REAL NOT NULL,
+                FOREIGN KEY (task_id) REFERENCES tasks(id) ON DELETE CASCADE
+            );
+        """)
+        cursor.execute("CREATE INDEX IF NOT EXISTS idx_checkpoints_task ON task_checkpoints(task_id, timestamp DESC);")
+        conn.commit()
+        logger.info("Task Ledger database initialized to schema version %d.", SCHEMA_VERSION)
 
     # -------------------------------------------------------------------------
-    # Crash Recovery
+    # Crash Recovery & Checkpoint Management
     # -------------------------------------------------------------------------
+
+    def save_checkpoint(self, checkpoint: TaskCheckpoint) -> None:
+        """Persist a durable TaskCheckpoint record into SQLite."""
+        with self._lock:
+            try:
+                conn = self._get_connection()
+                cur = conn.cursor()
+                cur.execute(
+                    """
+                    INSERT INTO task_checkpoints (
+                        id, task_id, checkpoint_id, plan_version, completed_step_ids,
+                        current_step_id, important_outputs, artifact_hashes,
+                        invariant_states, recoverable_handles, timestamp
+                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    ON CONFLICT(id) DO UPDATE SET
+                        completed_step_ids = excluded.completed_step_ids,
+                        current_step_id = excluded.current_step_id,
+                        important_outputs = excluded.important_outputs,
+                        artifact_hashes = excluded.artifact_hashes,
+                        invariant_states = excluded.invariant_states,
+                        recoverable_handles = excluded.recoverable_handles,
+                        timestamp = excluded.timestamp
+                    """,
+                    (
+                        checkpoint.id,
+                        checkpoint.task_id,
+                        checkpoint.checkpoint_id,
+                        checkpoint.plan_version,
+                        json.dumps(checkpoint.completed_step_ids),
+                        checkpoint.current_step_id,
+                        json.dumps(checkpoint.important_outputs),
+                        json.dumps(checkpoint.artifact_hashes),
+                        json.dumps(checkpoint.invariant_states),
+                        json.dumps(checkpoint.recoverable_handles),
+                        checkpoint.timestamp,
+                    ),
+                )
+                conn.commit()
+                logger.debug("Saved TaskCheckpoint %s for task %s", checkpoint.checkpoint_id, checkpoint.task_id)
+            except Exception as err:
+                logger.error("Failed to save checkpoint for task %s: %s", checkpoint.task_id, err)
+
+    def get_latest_checkpoint(self, task_id: str) -> Optional[TaskCheckpoint]:
+        """Retrieve the most recent durable checkpoint for a task."""
+        with self._lock:
+            try:
+                conn = self._get_connection()
+                cur = conn.cursor()
+                cur.execute(
+                    """
+                    SELECT id, task_id, checkpoint_id, plan_version, completed_step_ids,
+                           current_step_id, important_outputs, artifact_hashes,
+                           invariant_states, recoverable_handles, timestamp
+                    FROM task_checkpoints
+                    WHERE task_id = ?
+                    ORDER BY timestamp DESC
+                    LIMIT 1
+                    """,
+                    (task_id,),
+                )
+                row = cur.fetchone()
+                if not row:
+                    return None
+                return TaskCheckpoint(
+                    id=row["id"],
+                    task_id=row["task_id"],
+                    checkpoint_id=row["checkpoint_id"],
+                    plan_version=row["plan_version"],
+                    completed_step_ids=json.loads(row["completed_step_ids"] or "[]"),
+                    current_step_id=row["current_step_id"],
+                    important_outputs=json.loads(row["important_outputs"] or "{}"),
+                    artifact_hashes=json.loads(row["artifact_hashes"] or "{}"),
+                    invariant_states=json.loads(row["invariant_states"] or "{}"),
+                    recoverable_handles=json.loads(row["recoverable_handles"] or "{}"),
+                    timestamp=row["timestamp"],
+                )
+            except Exception as err:
+                logger.error("Failed to fetch latest checkpoint for task %s: %s", task_id, err)
+                return None
+
+    def get_recoverable_interrupted_tasks(self) -> List[Dict[str, Any]]:
+        """Retrieve tasks in INTERRUPTED or recoverable states along with their latest checkpoint info."""
+        with self._lock:
+            try:
+                conn = self._get_connection()
+                cur = conn.cursor()
+                cur.execute(
+                    """
+                    SELECT t.id, t.conversation_id, t.request_text, t.status, t.created_at, t.started_at,
+                           c.checkpoint_id, c.completed_step_ids, c.timestamp as checkpoint_time
+                    FROM tasks t
+                    LEFT JOIN task_checkpoints c ON t.id = c.task_id
+                    WHERE t.status IN ('INTERRUPTED', 'RECOVERING', 'PAUSED_USER_ACTIVE', 'WAITING_CONFIRMATION')
+                    GROUP BY t.id
+                    ORDER BY t.created_at DESC
+                    LIMIT 10
+                    """
+                )
+                results = []
+                for row in cur.fetchall():
+                    results.append({
+                        "task_id": row["id"],
+                        "conversation_id": row["conversation_id"],
+                        "request_text": row["request_text"],
+                        "status": row["status"],
+                        "created_at": row["created_at"],
+                        "has_checkpoint": bool(row["checkpoint_id"]),
+                        "checkpoint_id": row["checkpoint_id"],
+                        "completed_steps": json.loads(row["completed_step_ids"] or "[]"),
+                    })
+                return results
+            except Exception as err:
+                logger.error("Failed to fetch recoverable interrupted tasks: %s", err)
+                return []
 
     def recover_interrupted_tasks(self) -> int:
         """

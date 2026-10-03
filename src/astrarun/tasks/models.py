@@ -150,16 +150,25 @@ VALID_TRANSITIONS: dict[TaskStatus, set[TaskStatus]] = {
         TaskStatus.RUNNING,
         TaskStatus.CANCELLED,
         TaskStatus.FAILED,
+        TaskStatus.RECOVERING,
+        TaskStatus.INTERRUPTED,
     },
     TaskStatus.PAUSED_USER_ACTIVE: {
         TaskStatus.RUNNING,
         TaskStatus.CANCELLED,
         TaskStatus.FAILED,
+        TaskStatus.RECOVERING,
+        TaskStatus.INTERRUPTED,
     },
     TaskStatus.RECOVERING: {
         TaskStatus.RUNNING,
         TaskStatus.FAILED,
         TaskStatus.CANCELLED,
+        TaskStatus.WAITING_CLARIFICATION,
+        TaskStatus.WAITING_USER,
+        TaskStatus.INTERRUPTED,
+        TaskStatus.PAUSED_USER_ACTIVE,
+        TaskStatus.COMPLETED,
     },
     TaskStatus.WAITING_CONFIRMATION: {
         TaskStatus.RUNNING,
@@ -237,8 +246,20 @@ class TaskEventType(str, Enum):
     CAPABILITY_COMPLETED = "CAPABILITY_COMPLETED"
     CAPABILITY_FAILED = "CAPABILITY_FAILED"
 
-    # Fact Observations
+    # Fact Observations & Verification
     OBSERVATION_RECORDED = "OBSERVATION_RECORDED"
+    CHECKPOINT_CREATED = "CHECKPOINT_CREATED"
+    INVARIANT_BROKEN = "INVARIANT_BROKEN"
+    DISTURBANCE_DETECTED = "DISTURBANCE_DETECTED"
+    USER_INTERRUPTION = "USER_INTERRUPTION"
+
+    # Dynamic Recovery & Replanning
+    RECOVERY_STARTED = "RECOVERY_STARTED"
+    RECOVERY_ACTION = "RECOVERY_ACTION"
+    RECOVERY_SUCCEEDED = "RECOVERY_SUCCEEDED"
+    RECOVERY_FAILED = "RECOVERY_FAILED"
+    REPLAN_STARTED = "REPLAN_STARTED"
+    PLAN_REVISED = "PLAN_REVISED"
 
     # User Interactive Gating
     CONFIRMATION_REQUESTED = "CONFIRMATION_REQUESTED"

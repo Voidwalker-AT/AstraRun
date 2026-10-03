@@ -278,6 +278,14 @@ class TaskActivityView(QFrame):
             self.status_badge.setText("ASTRA · Waiting for clarification")
             self.status_badge.setStyleSheet("color: #f9e2af; font-size: 14px; font-weight: bold;")
             self.cancel_button.setVisible(True)
+        elif status == TaskStatus.RECOVERING:
+            self.status_badge.setText("ASTRA · Recovering")
+            self.status_badge.setStyleSheet("color: #fab387; font-size: 14px; font-weight: bold;")
+            self.cancel_button.setVisible(True)
+        elif status in (TaskStatus.INTERRUPTED, TaskStatus.PAUSED_USER_ACTIVE):
+            self.status_badge.setText("ASTRA · Interrupted")
+            self.status_badge.setStyleSheet("color: #fab387; font-size: 14px; font-weight: bold;")
+            self.cancel_button.setVisible(True)
         elif status == TaskStatus.COMPLETED:
             self.status_badge.setText("ASTRA · Complete")
             self.status_badge.setStyleSheet("color: #a6e3a1; font-size: 14px; font-weight: bold;")

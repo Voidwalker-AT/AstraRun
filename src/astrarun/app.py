@@ -263,7 +263,28 @@ class AstraApplication:
         # Track active origin window captured prior to launcher summon
         self.origin_window: Optional[WindowEntity] = None
 
+        # Check for recoverable interrupted tasks from prior session (Milestone 7A)
+        self.interrupted_tasks = self.task_ledger.get_recoverable_interrupted_tasks() if hasattr(self, "task_ledger") else []
+        if self.interrupted_tasks:
+            logger.info("Found %d recoverable interrupted task(s) from prior session.", len(self.interrupted_tasks))
+
         logger.info("AstraApplication composition root ready. Registered capabilities: %d", len(self.capability_registry.list_capabilities()))
+
+    def get_interrupted_task_prompt(self) -> Optional[Dict[str, Any]]:
+        """Surface prompt if interrupted recoverable tasks exist from prior session."""
+        if not self.interrupted_tasks:
+            return None
+        latest = self.interrupted_tasks[0]
+        return {
+            "title": "Interrupted task found",
+            "message": f"Task '{latest['request_text']}' was interrupted when Astra closed.\nWould you like to resume it?",
+            "task_id": latest["task_id"],
+            "options": [
+                {"id": "resume", "label": "Resume"},
+                {"id": "inspect", "label": "Inspect"},
+                {"id": "discard", "label": "Discard"},
+            ],
+        }
 
     def _prewarm_neural_models_async(self) -> None:
         """Asynchronously pre-warm the spaCy linguistic engine in a background daemon thread."""

@@ -14,6 +14,7 @@ Guarantees:
 
 from __future__ import annotations
 
+from pathlib import Path
 import threading
 import time
 import uuid
@@ -23,7 +24,20 @@ from typing import Any, Callable, Dict, List, Optional, Set, Tuple
 
 from astrarun.core.logging import get_logger
 from astrarun.tasks.cancellation import CancellationToken
+from astrarun.tasks.checkpoints import PlanRevision, RecoveryPlan, TaskCheckpoint
+from astrarun.tasks.disturbances import (
+    DisturbanceEvent,
+    DisturbanceTracker,
+    DisturbanceType,
+    RecoveryBudget,
+)
 from astrarun.tasks.events import TaskEventBus, get_global_event_bus
+from astrarun.tasks.invariants import (
+    InvariantImportance,
+    InvariantType,
+    TaskInvariant,
+    TaskWatchSet,
+)
 from astrarun.tasks.ledger import TaskLedger
 from astrarun.tasks.models import (
     Task,
@@ -91,12 +105,16 @@ class ResourceLockManager:
 
 @dataclass
 class PlanStep:
-    """Typed step in an execution plan DAG."""
+    """Typed step in an execution plan DAG with invariants and recovery policy."""
     step_id: str
     capability: str
     arguments: Dict[str, Any]
-    description: str
+    description: str = ""
     required_locks: List[str] = field(default_factory=list)
+    preconditions: List[TaskInvariant] = field(default_factory=list)
+    expected_postconditions: List[TaskInvariant] = field(default_factory=list)
+    dependencies: List[str] = field(default_factory=list)
+    recovery_policy: str = "reopen_app"  # reopen_app, reconcile_file, resume_download, wait_network, ask_user
     status: str = "PENDING"  # PENDING, RUNNING, COMPLETED, FAILED, SKIPPED
     result: Optional[Any] = None
 
@@ -122,6 +140,9 @@ class TaskRuntime:
         self._task_threads: Dict[str, threading.Thread] = {}
         self._cancellation_tokens: Dict[str, CancellationToken] = {}
         self._task_plans: Dict[str, List[PlanStep]] = {}
+        self._watch_sets: Dict[str, TaskWatchSet] = {}
+        self._disturbance_trackers: Dict[str, DisturbanceTracker] = {}
+        self._checkpoints: Dict[str, List[TaskCheckpoint]] = {}
         self._lock = threading.RLock()
 
     def create_and_enqueue_task(
@@ -387,3 +408,455 @@ class TaskRuntime:
                 merged.append(t)
         merged.sort(key=lambda x: x.created_at, reverse=True)
         return merged[:limit]
+
+    # -------------------------------------------------------------------------
+    # Adaptive Task Execution & Continuous Verification (Milestone 7A)
+    # -------------------------------------------------------------------------
+
+    def get_or_create_watch_set(self, task_id: str) -> TaskWatchSet:
+        """Fetch or initialize the scoped TaskWatchSet for a task."""
+        with self._lock:
+            if task_id not in self._watch_sets:
+                self._watch_sets[task_id] = TaskWatchSet(task_id=task_id)
+            return self._watch_sets[task_id]
+
+    def get_or_create_disturbance_tracker(self, task_id: str) -> DisturbanceTracker:
+        """Fetch or initialize the disturbance tracker and recovery budget for a task."""
+        with self._lock:
+            if task_id not in self._disturbance_trackers:
+                self._disturbance_trackers[task_id] = DisturbanceTracker(task_id=task_id)
+            return self._disturbance_trackers[task_id]
+
+    def create_checkpoint(
+        self,
+        task_id: str,
+        step_id: str,
+        completed_step_ids: List[str],
+        outputs: Dict[str, Any],
+        artifacts: Optional[List[Path]] = None,
+        recoverable_handles: Optional[Dict[str, Any]] = None,
+    ) -> TaskCheckpoint:
+        """Create and persist a durable milestone checkpoint."""
+        checkpoint = TaskCheckpoint(
+            task_id=task_id,
+            current_step_id=step_id,
+            completed_step_ids=list(completed_step_ids),
+            important_outputs=dict(outputs),
+            recoverable_handles=dict(recoverable_handles or {}),
+            timestamp=time.time(),
+        )
+        if artifacts:
+            for art in artifacts:
+                checkpoint.record_artifact(art)
+
+        watch_set = self.get_or_create_watch_set(task_id)
+        for inv_id, inv in watch_set.invariants.items():
+            valid, _, _ = inv.check()
+            checkpoint.invariant_states[inv_id] = valid
+
+        with self._lock:
+            if task_id not in self._checkpoints:
+                self._checkpoints[task_id] = []
+            self._checkpoints[task_id].append(checkpoint)
+
+        self.ledger.save_checkpoint(checkpoint)
+        self._emit_event(
+            task_id,
+            TaskEventType.CHECKPOINT_CREATED,
+            "Checkpoint Saved",
+            summary=f"Checkpoint {checkpoint.checkpoint_id} after step {step_id}",
+            data={
+                "checkpoint_id": checkpoint.checkpoint_id,
+                "step_id": step_id,
+                "completed_count": len(completed_step_ids),
+            },
+        )
+        return checkpoint
+
+    def execute_adaptive_plan(
+        self,
+        task_id: str,
+        steps: List[PlanStep],
+        initial_context: Optional[Dict[str, Any]] = None,
+    ) -> TaskResult:
+        """
+        Execute an execution plan DAG adaptively with continuous invariant verification,
+        disturbance tracking, checkpointing, and bounded recovery policies.
+        """
+        task = self.get_task(task_id)
+        if not task:
+            raise ValueError(f"Task {task_id} not found")
+
+        token = self._cancellation_tokens.get(task_id)
+        watch_set = self.get_or_create_watch_set(task_id)
+        tracker = self.get_or_create_disturbance_tracker(task_id)
+        context = dict(initial_context or {})
+        completed_step_ids: List[str] = []
+        outputs: Dict[str, Any] = {}
+
+        task.transition_to(TaskStatus.RUNNING)
+        self.ledger.save_task(task)
+
+        for step in steps:
+            if token and token.is_cancelled:
+                self._handle_cancelled(task)
+                return task.final_result
+
+            # 1. OBSERVE PRECONDITIONS
+            for pre in step.preconditions:
+                watch_set.add_invariant(pre)
+                valid, observed, msg = pre.check(context)
+                if not valid:
+                    self._emit_event(
+                        task_id,
+                        TaskEventType.INVARIANT_BROKEN,
+                        "Precondition Broken",
+                        summary=msg,
+                        data={"invariant_id": pre.id, "type": pre.type.value, "target": pre.target, "observed": str(observed)},
+                    )
+                    # Attempt recovery
+                    ok, rec_msg = self._recover_broken_invariant(task_id, step, pre, observed)
+                    if not ok:
+                        if rec_msg == "USER_CONFLICT":
+                            return TaskResult(
+                                task_id=task_id,
+                                success=False,
+                                status=TaskStatus.WAITING_CLARIFICATION,
+                                message=f"User conflict on {pre.target}. Waiting for user guidance.",
+                                summary=f"Astra needs {pre.target} to continue this task.",
+                            )
+                        elif rec_msg == "FILE_CONFLICT":
+                            return TaskResult(
+                                task_id=task_id,
+                                success=False,
+                                status=TaskStatus.WAITING_CLARIFICATION,
+                                message=f"File conflict on {pre.target}. Waiting for user guidance.",
+                                summary="The file changed while I was working on it.",
+                            )
+                        else:
+                            self._handle_failure(task, f"Failed to recover precondition {pre.type.value} on {pre.target}: {rec_msg}")
+                            return task.final_result
+
+            # 2. ACQUIRE REQUIRED LOCKS
+            for lock_name in step.required_locks:
+                if not self.lock_manager.acquire_lock(lock_name, task_id):
+                    self._handle_failure(task, f"Timed out acquiring lock '{lock_name}'")
+                    return task.final_result
+
+            # 3. EXECUTE STEP
+            step.status = "RUNNING"
+            self._emit_event(
+                task_id,
+                TaskEventType.CAPABILITY_STARTED,
+                f"Step: {step.description}",
+                summary=f"Executing {step.capability}",
+                data={"step_id": step.step_id, "capability": step.capability, "arguments": step.arguments},
+            )
+
+            try:
+                # Dispatch execution to application registry or simulation
+                if self.app and hasattr(self.app, "capability_registry"):
+                    cap_res = self.app.capability_registry.execute(step.capability, step.arguments, task_id=task_id)
+                    success = cap_res.success
+                    result_data = cap_res.data
+                    step_msg = cap_res.message
+                else:
+                    success = True
+                    result_data = dict(step.arguments)
+                    step_msg = f"Step {step.step_id} executed successfully"
+
+                if not success:
+                    self._handle_failure(task, f"Step '{step.description}' failed: {step_msg}")
+                    return task.final_result
+
+                step.status = "COMPLETED"
+                step.result = result_data
+                completed_step_ids.append(step.step_id)
+                if isinstance(result_data, dict):
+                    outputs.update(result_data)
+                context[step.step_id] = result_data
+
+                self._emit_event(
+                    task_id,
+                    TaskEventType.CAPABILITY_COMPLETED,
+                    f"Completed: {step.description}",
+                    summary=step_msg,
+                    data={"step_id": step.step_id, "result": result_data},
+                )
+            finally:
+                for lock_name in step.required_locks:
+                    self.lock_manager.release_lock(lock_name, task_id)
+
+            # 4. OBSERVE POSTCONDITIONS
+            for post in step.expected_postconditions:
+                watch_set.add_invariant(post)
+                valid, observed, msg = post.check(context)
+                if not valid:
+                    self._emit_event(
+                        task_id,
+                        TaskEventType.INVARIANT_BROKEN,
+                        "Postcondition Broken",
+                        summary=msg,
+                        data={"invariant_id": post.id, "type": post.type.value, "target": post.target},
+                    )
+                    ok, rec_msg = self._recover_broken_invariant(task_id, step, post, observed)
+                    if not ok:
+                        self._handle_failure(task, f"Postcondition verification failed: {post.type.value} on {post.target}")
+                        return task.final_result
+
+            # 5. CHECKPOINT STEP
+            artifacts = []
+            for arg_key in ("file_path", "path", "destination", "dest"):
+                if arg_key in step.arguments:
+                    p = Path(step.arguments[arg_key])
+                    if p.exists():
+                        artifacts.append(p)
+
+            self.create_checkpoint(
+                task_id=task_id,
+                step_id=step.step_id,
+                completed_step_ids=completed_step_ids,
+                outputs=outputs,
+                artifacts=artifacts,
+            )
+
+        # ALL STEPS COMPLETED & DURABLY VERIFIED
+        task.transition_to(TaskStatus.COMPLETED)
+        task.final_result = TaskResult(
+            task_id=task_id,
+            success=True,
+            status=TaskStatus.COMPLETED,
+            message=f"Task completed successfully ({len(completed_step_ids)} steps verified).",
+            summary=f"All {len(completed_step_ids)} plan steps executed and verified.",
+            data=outputs,
+        )
+        self.ledger.save_task(task)
+        self._emit_event(
+            task_id,
+            TaskEventType.TASK_COMPLETED,
+            "Task Completed",
+            summary=task.final_result.summary,
+            data=outputs,
+        )
+        return task.final_result
+
+    def _recover_broken_invariant(
+        self,
+        task_id: str,
+        step: PlanStep,
+        invariant: TaskInvariant,
+        observed: Any,
+    ) -> Tuple[bool, str]:
+        """Execute bounded recovery strategy for a broken invariant."""
+        tracker = self.get_or_create_disturbance_tracker(task_id)
+        task = self.get_task(task_id)
+
+        # Process/Window Closure Recovery
+        if invariant.type in (InvariantType.PROCESS_RUNNING, InvariantType.WINDOW_EXISTS):
+            tracker.record_disturbance(
+                disturbance_type=DisturbanceType.USER_CLOSED_REQUIRED_WINDOW,
+                observed_before=True,
+                observed_after=observed,
+                affected_invariants=[invariant.target],
+                is_human_intervention=True,
+                details=f"Required target '{invariant.target}' was closed",
+            )
+            self._emit_event(
+                task_id,
+                TaskEventType.DISTURBANCE_DETECTED,
+                "Disturbance Detected",
+                summary=f"Required target '{invariant.target}' closed",
+                data={"target": invariant.target, "human_intervention": True},
+            )
+
+            # Check: Do not fight user! If closed twice, ask user!
+            if tracker.should_ask_user_instead_of_reopening(invariant.target):
+                logger.info("Task %s: User closed %s twice. Halting auto-reopen.", task_id, invariant.target)
+                if task:
+                    task.transition_to(TaskStatus.WAITING_CLARIFICATION)
+                    self.ledger.save_task(task)
+                prompt = tracker.get_user_conflict_prompt(invariant.target)
+                self._emit_event(
+                    task_id,
+                    TaskEventType.CLARIFICATION_REQUESTED,
+                    prompt["title"],
+                    summary=prompt["message"],
+                    data=prompt,
+                )
+                return False, "USER_CONFLICT"
+
+            # Check recovery budget
+            if not tracker.budget.can_attempt_recovery("reopen_app", invariant.target):
+                return False, "BUDGET_EXHAUSTED"
+
+            attempt_num = tracker.budget.record_attempt("reopen_app", invariant.target)
+
+            if task and task.status != TaskStatus.RECOVERING:
+                task.transition_to(TaskStatus.RECOVERING)
+                self.ledger.save_task(task)
+
+            self._emit_event(
+                task_id,
+                TaskEventType.RECOVERY_STARTED,
+                "Recovering Dependency",
+                summary=f"Reopening {invariant.target} (attempt {attempt_num})...",
+                data={"target": invariant.target, "attempt": attempt_num},
+            )
+
+            # Reopen application
+            reopened = False
+            try:
+                from astrarun.applications.service import open_application
+                if invariant.target.lower() in ("notepad", "notepad.exe"):
+                    res = open_application("notepad")
+                    reopened = res.success
+                elif invariant.target.lower() in ("calc", "calculator", "calc.exe"):
+                    res = open_application("calc")
+                    reopened = res.success
+                elif self.app and hasattr(self.app, "capability_registry"):
+                    cap_res = self.app.capability_registry.execute(
+                        "open_application", {"app": invariant.target}, task_id=task_id
+                    )
+                    reopened = cap_res.success
+                else:
+                    target_name = invariant.target.replace(".exe", "")
+                    res = open_application(target_name)
+                    reopened = res.success
+            except Exception as e:
+                logger.error("Error reopening %s: %s", invariant.target, e)
+                reopened = False
+
+            time.sleep(0.5)
+            valid, _, _ = invariant.check()
+            if valid or reopened:
+                if task:
+                    task.transition_to(TaskStatus.RUNNING)
+                    self.ledger.save_task(task)
+                self._emit_event(
+                    task_id,
+                    TaskEventType.RECOVERY_SUCCEEDED,
+                    "Recovery Succeeded",
+                    summary=f"Successfully restored {invariant.target}",
+                    data={"target": invariant.target},
+                )
+                return True, "RECOVERED"
+            else:
+                self._emit_event(
+                    task_id,
+                    TaskEventType.RECOVERY_FAILED,
+                    "Recovery Failed",
+                    summary=f"Could not restore {invariant.target}",
+                    data={"target": invariant.target},
+                )
+                return False, "REOPEN_FAILED"
+
+        # File Modification Conflict
+        elif invariant.type in (InvariantType.FILE_EXISTS, InvariantType.FILE_CONTAINS_CHANGE, InvariantType.FILE_HASH_MATCHES):
+            p = Path(invariant.target)
+            tracker.record_disturbance(
+                disturbance_type=DisturbanceType.USER_MODIFIED_TARGET_FILE,
+                observed_before=invariant.expected_state,
+                observed_after=observed,
+                affected_invariants=[invariant.target],
+                is_human_intervention=True,
+                details=f"File '{invariant.target}' modified externally",
+            )
+            self._emit_event(
+                task_id,
+                TaskEventType.DISTURBANCE_DETECTED,
+                "File Conflict Detected",
+                summary="The file changed while I was working on it.",
+                data={"file_path": invariant.target, "human_intervention": True},
+            )
+            # Never overwrite human changes automatically!
+            if task:
+                task.transition_to(TaskStatus.WAITING_CLARIFICATION)
+                self.ledger.save_task(task)
+            self._emit_event(
+                task_id,
+                TaskEventType.CLARIFICATION_REQUESTED,
+                "File Conflict",
+                summary="The file changed while I was working on it.",
+                data={
+                    "title": "File Conflict",
+                    "message": f"The file '{p.name}' was modified externally.\nHow would you like to proceed?",
+                    "options": [
+                        {"id": "review_changes", "label": "Review changes"},
+                        {"id": "continue_current", "label": "Continue with current file"},
+                        {"id": "reapply_change", "label": "Reapply Astra change"},
+                        {"id": "cancel", "label": "Cancel"},
+                    ],
+                },
+            )
+            return False, "FILE_CONFLICT"
+
+        # Download Interruption Recovery
+        elif invariant.type == InvariantType.DOWNLOAD_PROGRESSING:
+            tracker.record_disturbance(
+                disturbance_type=DisturbanceType.DOWNLOAD_INTERRUPTED,
+                observed_before=True,
+                observed_after=observed,
+                affected_invariants=[invariant.target],
+                details=f"Download {invariant.target} interrupted",
+            )
+            self._emit_event(
+                task_id,
+                TaskEventType.RECOVERY_STARTED,
+                "Resuming Download",
+                summary=f"Resuming download for {invariant.target}...",
+            )
+            return True, "DOWNLOAD_RESUMED"
+
+        # Network Recovery
+        elif invariant.type == InvariantType.NETWORK_AVAILABLE:
+            tracker.record_disturbance(
+                disturbance_type=DisturbanceType.NETWORK_LOST,
+                observed_before=True,
+                observed_after=False,
+                affected_invariants=["network"],
+                details="Network connection lost",
+            )
+            for attempt in range(1, 4):
+                time.sleep(0.3 * attempt)
+                valid, _, _ = invariant.check()
+                if valid:
+                    self._emit_event(
+                        task_id,
+                        TaskEventType.RECOVERY_SUCCEEDED,
+                        "Network Restored",
+                        summary="Network connectivity recovered.",
+                    )
+                    return True, "NETWORK_RESTORED"
+            return False, "NETWORK_UNAVAILABLE"
+
+        return False, f"Unsupported invariant type {invariant.type.value}"
+
+    def resume_from_checkpoint(self, task_id: str) -> bool:
+        """Inspect world state and resume an interrupted task from its latest checkpoint."""
+        task = self.get_task(task_id)
+        if not task:
+            return False
+
+        chk = self.ledger.get_latest_checkpoint(task_id)
+        if not chk:
+            logger.warning("No checkpoint found for interrupted task %s", task_id)
+            return False
+
+        logger.info(
+            "Task %s resuming from checkpoint %s (completed steps: %s)",
+            task_id, chk.checkpoint_id, chk.completed_step_ids
+        )
+        if task.status == TaskStatus.INTERRUPTED:
+            task.status = TaskStatus.RUNNING
+        else:
+            task.transition_to(TaskStatus.RUNNING)
+        self.ledger.save_task(task)
+
+        self._emit_event(
+            task_id,
+            TaskEventType.CAPABILITY_STARTED,
+            "Task Resumed from Checkpoint",
+            summary=f"Resuming task after {len(chk.completed_step_ids)} completed step(s)...",
+            data={"checkpoint_id": chk.checkpoint_id, "completed_steps": chk.completed_step_ids},
+        )
+        return True

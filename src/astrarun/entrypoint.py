@@ -17,7 +17,7 @@ if sys.platform == "win32":
         import ctypes
         ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID("AstraEngineering.AstraRun.Desktop.1.0")
         # If launched from a console with CLI flags, attach to parent console for readable output
-        if any(arg in sys.argv for arg in ("--run-command", "--help", "-h", "--version")):
+        if any(arg in sys.argv for arg in ("--run-command", "--help", "-h", "--version", "--repair")):
             ctypes.windll.kernel32.AttachConsole(-1)
     except Exception:
         pass

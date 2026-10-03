@@ -132,6 +132,22 @@ def main() -> int:
             from astrarun.routing.laya_worker import run_worker_loop
             return run_worker_loop()
 
+    # Dedicated Uninstaller UI dispatch (invoked by Inno Setup uninstaller)
+    if "--uninstall-ui" in sys.argv:
+        from astrarun.ui.uninstall_wizard import run_uninstall_ui
+        return run_uninstall_ui()
+
+    # Lightweight Repair CLI execution mode
+    if "--repair" in sys.argv:
+        from astrarun.lifecycle.repair import RepairManager
+        mgr = RepairManager()
+        rep = mgr.run_all_repairs()
+        status_tag = "SUCCESS" if rep.success else "WARNING"
+        print(f"[{status_tag}] {rep.summary}")
+        for item in rep.items:
+            print(f"  • {item.name}: [{item.status}] {item.detail}")
+        return 0 if rep.success else 1
+
     start_iso = datetime.now().isoformat()
     args = parse_args()
 

@@ -183,6 +183,30 @@ class FirstRunWizard(QDialog):
         v.addWidget(desc)
         v.addStretch(1)
 
+        # Check for preserved previous configuration
+        from astrarun.core.paths import get_data_dir
+        self.has_preserved_config = (get_config_dir() / "settings.json").exists() or (get_data_dir() / "task_ledger.db").exists()
+        if self.has_preserved_config:
+            restore_box = QFrame(w)
+            restore_box.setStyleSheet(f"background-color: rgba(56, 189, 248, 0.08); border: 1px solid {BORDER_STRONG}; border-radius: 6px; padding: 10px;")
+            rb_layout = QVBoxLayout(restore_box)
+            rb_layout.setSpacing(4)
+
+            rb_top = QHBoxLayout()
+            rb_icon = QLabel(restore_box)
+            rb_icon.setPixmap(IconRenderer.get_pixmap("check", size=13, color=ACCENT))
+            self.chk_restore = QCheckBox("Restore previous Astra configuration and learned memory", restore_box)
+            self.chk_restore.setChecked(True)
+            self.chk_restore.setStyleSheet(f"color: {TEXT_PRIMARY}; font-size: 11px; font-weight: 600;")
+            rb_top.addWidget(rb_icon)
+            rb_top.addWidget(self.chk_restore, stretch=1)
+            rb_layout.addLayout(rb_top)
+
+            rb_sub = QLabel("Preserved user configuration detected from previous installation.", restore_box)
+            rb_sub.setStyleSheet(f"font-size: 10px; color: {TEXT_MUTED};")
+            rb_layout.addWidget(rb_sub)
+            v.addWidget(restore_box)
+
         feature_box = QFrame(w)
         feature_box.setStyleSheet(f"background-color: {SURFACE_RAISED}; border: 1px solid {BORDER}; border-radius: 6px; padding: 8px;")
         fb_layout = QVBoxLayout(feature_box)

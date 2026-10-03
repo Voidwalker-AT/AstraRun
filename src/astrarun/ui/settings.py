@@ -1,4 +1,13 @@
-"""Settings modal dialog for configuring AstraRun workstation behavior."""
+"""Settings and System Configuration Modal Dialog for AstraRun 1.0.
+
+Conforms strictly to the Astra technical near-black visual system:
+1. Autostart & Global Alt+Space Hotkey Configuration
+2. Model Storage Location & Validated Runtime Weights
+3. Workstation Hardware Profile Summary
+4. Diagnostics & Live Log Directory Links
+5. Integrated Lightweight Repair Engine
+6. Authoritative Product Version & Architecture Metadata
+"""
 
 from __future__ import annotations
 
@@ -6,212 +15,470 @@ import os
 import sys
 from pathlib import Path
 from typing import Any, Optional
+
 from PySide6.QtCore import Qt
-from PySide6.QtGui import QFont, QKeyEvent
 from PySide6.QtWidgets import (
     QCheckBox,
     QDialog,
+    QFileDialog,
     QFrame,
     QHBoxLayout,
     QLabel,
+    QLineEdit,
     QMessageBox,
     QPushButton,
+    QScrollArea,
+    QTabWidget,
     QVBoxLayout,
     QWidget,
 )
 
+from astrarun.core.autostart import enable_autostart, is_autostart_enabled
+from astrarun.core.hardware import audit_hardware, HardwareProfile
 from astrarun.core.logging import get_logger
+from astrarun.core.paths import get_logs_dir, get_models_dir
+from astrarun.discovery import CompatibilityStatus, ExistingCapabilityResolver
+from astrarun.lifecycle.repair import RepairManager, RepairReport
+from astrarun.ui.icons import AstraMarkWidget, IconRenderer
+from astrarun.ui.theme import (
+    ACCENT,
+    BG_APP,
+    BORDER,
+    BORDER_STRONG,
+    DANGER,
+    FONT_FAMILY,
+    FONT_MONO,
+    SUCCESS,
+    SURFACE,
+    SURFACE_HOVER,
+    SURFACE_INPUT,
+    SURFACE_RAISED,
+    TEXT_MUTED,
+    TEXT_PRIMARY,
+    TEXT_SECONDARY,
+    WARNING,
+    get_button_style,
+)
+from astrarun.version import APP_NAME, COPYRIGHT, PUBLISHER, VERSION
 
 logger = get_logger("astrarun.ui.settings")
 
 
-def is_windows_startup_enabled() -> bool:
-    """Check if AstraRun is configured to run at Windows login."""
-    if sys.platform != "win32":
-        return False
-    try:
-        import winreg
-        key = winreg.OpenKey(
-            winreg.HKEY_CURRENT_USER,
-            r"Software\Microsoft\Windows\CurrentVersion\Run",
-            0,
-            winreg.KEY_READ,
-        )
-        val, _ = winreg.QueryValueEx(key, "AstraRun")
-        winreg.CloseKey(key)
-        return bool(val)
-    except (FileNotFoundError, OSError):
-        return False
-
-
-def set_windows_startup_enabled(enabled: bool) -> bool:
-    """Enable or disable AstraRun launch at Windows user login."""
-    if sys.platform != "win32":
-        return False
-    try:
-        import winreg
-        key = winreg.OpenKey(
-            winreg.HKEY_CURRENT_USER,
-            r"Software\Microsoft\Windows\CurrentVersion\Run",
-            0,
-            winreg.KEY_SET_VALUE,
-        )
-        if enabled:
-            # Build target command pointing to start-astrarun.ps1 or main.py
-            launch_script = Path(__file__).resolve().parent.parent.parent.parent / "start-astrarun.ps1"
-            cmd_val = f'pwsh.exe -WindowStyle Hidden -ExecutionPolicy Bypass -File "{launch_script}"'
-            winreg.SetValueEx(key, "AstraRun", 0, winreg.REG_SZ, cmd_val)
-            logger.info("Enabled AstraRun Windows startup in HKCU\\...\\Run")
-        else:
-            try:
-                winreg.DeleteValue(key, "AstraRun")
-                logger.info("Disabled AstraRun Windows startup in HKCU\\...\\Run")
-            except FileNotFoundError:
-                pass
-        winreg.CloseKey(key)
-        return True
-    except Exception as err:
-        logger.error("Failed to update Windows startup registry key: %s", err)
-        return False
-
-
 class SettingsDialog(QDialog):
-    """User-facing settings panel for AstraRun preferences."""
+    """User-facing settings & maintenance panel for AstraRun preferences."""
 
-    def __init__(self, app_instance: Any, parent: Optional[QWidget] = None) -> None:
+    def __init__(self, app_instance: Any = None, parent: Optional[QWidget] = None) -> None:
         super().__init__(parent)
         self.app = app_instance
-        self.setWindowTitle("AstraRun Settings")
-        self.setFixedSize(500, 380)
-        self.setStyleSheet("""
-            QDialog {
-                background-color: #1e1e2e;
-                color: #cdd6f4;
-                font-family: 'Segoe UI', system-ui, sans-serif;
-            }
-            QLabel {
-                color: #cdd6f4;
-            }
-            QCheckBox {
-                color: #cdd6f4;
-                font-size: 13px;
+        self.hardware: HardwareProfile = audit_hardware()
+        self.capability_resolver = ExistingCapabilityResolver()
+        self.discovered_models = self.capability_resolver.discover_models()
+
+        self.setWindowTitle(f"{APP_NAME} Settings")
+        self.setFixedSize(580, 560)
+        self.setWindowFlags(
+            Qt.WindowType.Dialog
+            | Qt.WindowType.CustomizeWindowHint
+            | Qt.WindowType.WindowTitleHint
+            | Qt.WindowType.WindowCloseButtonHint
+        )
+        self.setStyleSheet(f"""
+            QDialog {{
+                background-color: {BG_APP};
+                color: {TEXT_PRIMARY};
+                font-family: {FONT_FAMILY};
+            }}
+            QTabWidget::pane {{
+                border: 1px solid {BORDER};
+                border-radius: 6px;
+                background-color: {SURFACE};
+                top: -1px;
+            }}
+            QTabBar::tab {{
+                background-color: {BG_APP};
+                color: {TEXT_MUTED};
+                border: 1px solid {BORDER};
+                border-bottom: none;
+                padding: 6px 14px;
+                font-size: 11px;
+                font-weight: 500;
+                margin-right: 4px;
+                border-top-left-radius: 4px;
+                border-top-right-radius: 4px;
+            }}
+            QTabBar::tab:selected {{
+                background-color: {SURFACE};
+                color: {TEXT_PRIMARY};
+                border-color: {BORDER};
+            }}
+            QTabBar::tab:hover:!selected {{
+                color: {TEXT_SECONDARY};
+                background-color: {SURFACE_HOVER};
+            }}
+            QCheckBox {{
+                color: {TEXT_PRIMARY};
+                font-size: 11px;
                 spacing: 8px;
-            }
-            QCheckBox::indicator {
-                width: 18px;
-                height: 18px;
-                border-radius: 4px;
-                border: 1px solid #45475a;
-                background-color: #181825;
-            }
-            QCheckBox::indicator:checked {
-                background-color: #89b4fa;
-                border: 1px solid #89b4fa;
-            }
+            }}
+            QCheckBox::indicator {{
+                width: 14px;
+                height: 14px;
+                border-radius: 3px;
+                border: 1px solid {BORDER_STRONG};
+                background-color: {SURFACE_INPUT};
+            }}
+            QCheckBox::indicator:checked {{
+                background-color: {ACCENT};
+                border: 1px solid {ACCENT};
+            }}
         """)
 
-        layout = QVBoxLayout(self)
-        layout.setContentsMargins(20, 20, 20, 20)
-        layout.setSpacing(14)
+        self._init_ui()
+
+    def _init_ui(self) -> None:
+        main_layout = QVBoxLayout(self)
+        main_layout.setContentsMargins(24, 20, 24, 20)
+        main_layout.setSpacing(14)
 
         # Header
-        title = QLabel("AstraRun Preferences", self)
-        title.setStyleSheet("font-size: 16px; font-weight: bold; color: #89b4fa;")
-        layout.addWidget(title)
+        header = QHBoxLayout()
+        header.setSpacing(12)
+        mark = AstraMarkWidget(size=26, parent=self)
+        header.addWidget(mark)
 
-        # Options Card
-        card = QFrame(self)
-        card.setStyleSheet("""
-            QFrame {
-                background-color: #181825;
-                border: 1px solid #313244;
-                border-radius: 8px;
-            }
+        title_layout = QVBoxLayout()
+        title_layout.setSpacing(2)
+        title = QLabel(f"{APP_NAME} Settings", self)
+        title.setStyleSheet(f"font-size: 15px; font-weight: 600; color: {TEXT_PRIMARY};")
+        sub = QLabel("Workstation preferences, model paths & system maintenance", self)
+        sub.setStyleSheet(f"font-size: 11px; color: {TEXT_MUTED};")
+        title_layout.addWidget(title)
+        title_layout.addWidget(sub)
+        header.addLayout(title_layout, stretch=1)
+        main_layout.addLayout(header)
+
+        # Tab Widget
+        tabs = QTabWidget(self)
+        tabs.addTab(self._create_general_tab(), "General")
+        tabs.addTab(self._create_models_tab(), "Models & Storage")
+        tabs.addTab(self._create_hardware_tab(), "Machine Profile")
+        tabs.addTab(self._create_maintenance_tab(), "Repair & Logs")
+        tabs.addTab(self._create_about_tab(), "About")
+        main_layout.addWidget(tabs, stretch=1)
+
+        # Footer Actions
+        footer = QHBoxLayout()
+        footer.setSpacing(10)
+
+        self.btn_cancel = QPushButton("Cancel", self)
+        self.btn_cancel.setStyleSheet(get_button_style("secondary", size="md"))
+        self.btn_cancel.clicked.connect(self.reject)
+
+        self.btn_save = QPushButton("Save Preferences", self)
+        self.btn_save.setStyleSheet(get_button_style("primary", size="md"))
+        self.btn_save.clicked.connect(self._on_save)
+
+        footer.addStretch(1)
+        footer.addWidget(self.btn_cancel)
+        footer.addWidget(self.btn_save)
+        main_layout.addLayout(footer)
+
+    def _create_general_tab(self) -> QWidget:
+        w = QWidget(self)
+        v = QVBoxLayout(w)
+        v.setContentsMargins(16, 16, 16, 16)
+        v.setSpacing(14)
+
+        # Autostart
+        self.chk_autostart = QCheckBox("Start AstraRun automatically when I sign in to Windows", w)
+        self.chk_autostart.setChecked(is_autostart_enabled())
+        v.addWidget(self.chk_autostart)
+
+        # Global Hotkey card
+        hk_box = QFrame(w)
+        hk_box.setStyleSheet(f"background-color: {SURFACE_RAISED}; border: 1px solid {BORDER}; border-radius: 6px; padding: 10px;")
+        h_layout = QVBoxLayout(hk_box)
+        h_layout.setSpacing(4)
+
+        h_row = QHBoxLayout()
+        h_lbl = QLabel("Global Summon Hotkey:", hk_box)
+        h_lbl.setStyleSheet(f"font-size: 11px; color: {TEXT_MUTED};")
+        h_badge = QLabel("Alt + Space", hk_box)
+        h_badge.setStyleSheet(f"font-size: 11px; font-weight: 600; color: {ACCENT}; background-color: {BG_APP}; border: 1px solid {BORDER_STRONG}; padding: 2px 8px; border-radius: 4px; font-family: {FONT_MONO};")
+        h_row.addWidget(h_lbl)
+        h_row.addSpacing(8)
+        h_row.addWidget(h_badge)
+        h_row.addStretch(1)
+        h_layout.addLayout(h_row)
+
+        h_sub = QLabel("Summons the resident command launcher instantly from any application.", hk_box)
+        h_sub.setStyleSheet(f"font-size: 10px; color: {TEXT_MUTED};")
+        h_layout.addWidget(h_sub)
+        v.addWidget(hk_box)
+
+        # Learning & context
+        learn_box = QFrame(w)
+        learn_box.setStyleSheet(f"background-color: {SURFACE_RAISED}; border: 1px solid {BORDER}; border-radius: 6px; padding: 10px;")
+        l_layout = QVBoxLayout(learn_box)
+        l_layout.setSpacing(8)
+
+        self.chk_learning = QCheckBox("Enable adaptive semantic memory and task continuity", learn_box)
+        is_learning = True
+        if self.app and hasattr(self.app, "settings"):
+            is_learning = self.app.settings.get("learning", {}).get("enabled", True)
+        self.chk_learning.setChecked(is_learning)
+        l_layout.addWidget(self.chk_learning)
+
+        self.chk_export = QCheckBox("Allow offline sanitized dataset export (gated opt-in)", learn_box)
+        allow_export = False
+        if self.app and hasattr(self.app, "settings"):
+            allow_export = self.app.settings.get("learning", {}).get("allow_training_dataset_export", False)
+        self.chk_export.setChecked(allow_export)
+        l_layout.addWidget(self.chk_export)
+        v.addWidget(learn_box)
+
+        v.addStretch(1)
+        return w
+
+    def _create_models_tab(self) -> QWidget:
+        w = QWidget(self)
+        v = QVBoxLayout(w)
+        v.setContentsMargins(16, 16, 16, 16)
+        v.setSpacing(12)
+
+        # Storage directory
+        s_box = QFrame(w)
+        s_box.setStyleSheet(f"background-color: {SURFACE_RAISED}; border: 1px solid {BORDER}; border-radius: 6px; padding: 10px;")
+        s_layout = QVBoxLayout(s_box)
+        s_layout.setSpacing(6)
+
+        lbl = QLabel("Model Weights Directory:", s_box)
+        lbl.setStyleSheet(f"font-size: 11px; font-weight: 500; color: {TEXT_PRIMARY};")
+        s_layout.addWidget(lbl)
+
+        row = QHBoxLayout()
+        row.setSpacing(8)
+        self.txt_model_dir = QLineEdit(str(get_models_dir()), s_box)
+        self.txt_model_dir.setStyleSheet(f"""
+            QLineEdit {{
+                background-color: {SURFACE_INPUT};
+                border: 1px solid {BORDER};
+                border-radius: 4px;
+                color: {TEXT_PRIMARY};
+                padding: 6px;
+                font-size: 11px;
+                font-family: {FONT_MONO};
+            }}
         """)
-        c_layout = QVBoxLayout(card)
-        c_layout.setContentsMargins(16, 16, 16, 16)
-        c_layout.setSpacing(14)
+        self.btn_browse_models = QPushButton("Browse...", s_box)
+        self.btn_browse_models.setStyleSheet(get_button_style("secondary", size="sm"))
+        self.btn_browse_models.clicked.connect(self._on_browse_models)
 
-        # Startup checkbox
-        self.startup_cb = QCheckBox("Start AstraRun automatically with Windows", card)
-        self.startup_cb.setChecked(is_windows_startup_enabled())
-        c_layout.addWidget(self.startup_cb)
+        row.addWidget(self.txt_model_dir, stretch=1)
+        row.addWidget(self.btn_browse_models)
+        s_layout.addLayout(row)
+        v.addWidget(s_box)
 
-        # Learning toggle
-        self.learning_cb = QCheckBox("Enable semantic memory and alias learning", card)
-        learning_enabled = self.app.settings.get("learning", {}).get("enabled", True)
-        self.learning_cb.setChecked(learning_enabled)
-        c_layout.addWidget(self.learning_cb)
+        # Detected models
+        m_head = QLabel("Cognitive Engines & Runtimes:", w)
+        m_head.setStyleSheet(f"font-size: 11px; font-weight: 600; color: {TEXT_SECONDARY};")
+        v.addWidget(m_head)
 
-        # Training export toggle
-        self.export_cb = QCheckBox("Allow offline sanitized dataset export (gated behind explicit opt-in)", card)
-        export_allowed = self.app.settings.get("learning", {}).get("allow_training_dataset_export", False)
-        self.export_cb.setChecked(export_allowed)
-        c_layout.addWidget(self.export_cb)
+        exact_matches = [
+            m for m in self.discovered_models.values()
+            if m.status in (CompatibilityStatus.EXACT_MATCH, CompatibilityStatus.COMPATIBLE_VERSION) and m.path
+        ]
 
-        # Hotkey notice
-        hotkey_lbl = QLabel("Global Summon Hotkey: Alt+Space", card)
-        hotkey_lbl.setStyleSheet("color: #a6adc8; font-size: 12px; margin-top: 4px;")
-        c_layout.addWidget(hotkey_lbl)
+        for m in exact_matches:
+            c = QFrame(w)
+            c.setStyleSheet(f"background-color: {SURFACE_RAISED}; border: 1px solid {BORDER}; border-radius: 6px; padding: 8px 10px;")
+            cl = QVBoxLayout(c)
+            cl.setSpacing(2)
 
-        layout.addWidget(card)
-        layout.addStretch(1)
+            tr = QHBoxLayout()
+            name_lbl = QLabel(m.name, c)
+            name_lbl.setStyleSheet(f"font-size: 11px; font-weight: 600; color: {TEXT_PRIMARY};")
+            badge = QLabel("Existing validated model", c)
+            badge.setStyleSheet(f"font-size: 9px; color: {SUCCESS}; background-color: rgba(34, 197, 94, 0.12); padding: 1px 4px; border-radius: 3px;")
+            tr.addWidget(name_lbl)
+            tr.addSpacing(6)
+            tr.addWidget(badge)
+            tr.addStretch(1)
+            cl.addLayout(tr)
 
-        # Actions Row
-        btn_box = QHBoxLayout()
-        btn_box.addStretch(1)
+            p_lbl = QLabel(str(m.path), c)
+            p_lbl.setStyleSheet(f"font-size: 9px; color: {TEXT_MUTED}; font-family: {FONT_MONO};")
+            cl.addWidget(p_lbl)
+            v.addWidget(c)
 
-        cancel_btn = QPushButton("Cancel", self)
-        cancel_btn.setStyleSheet("""
-            QPushButton {
-                background-color: #313244;
-                color: #cdd6f4;
-                border: 1px solid #45475a;
-                border-radius: 6px;
-                padding: 6px 14px;
-                font-size: 12px;
-            }
-            QPushButton:hover {
-                background-color: #45475a;
-            }
-        """)
-        cancel_btn.clicked.connect(self.reject)
-        btn_box.addWidget(cancel_btn)
+        v.addStretch(1)
+        return w
 
-        save_btn = QPushButton("Save Settings", self)
-        save_btn.setStyleSheet("""
-            QPushButton {
-                background-color: #89b4fa;
-                color: #11111b;
-                border: none;
-                border-radius: 6px;
-                padding: 6px 16px;
-                font-size: 12px;
-                font-weight: bold;
-            }
-            QPushButton:hover {
-                background-color: #b4befe;
-            }
-        """)
-        save_btn.clicked.connect(self._on_save)
-        btn_box.addWidget(save_btn)
+    def _create_hardware_tab(self) -> QWidget:
+        w = QWidget(self)
+        v = QVBoxLayout(w)
+        v.setContentsMargins(16, 16, 16, 16)
+        v.setSpacing(8)
 
-        layout.addLayout(btn_box)
+        box = QFrame(w)
+        box.setStyleSheet(f"background-color: {SURFACE_RAISED}; border: 1px solid {BORDER}; border-radius: 6px; padding: 10px;")
+        bl = QVBoxLayout(box)
+        bl.setSpacing(6)
+
+        specs = [
+            ("Operating System", f"{self.hardware.os_name} ({self.hardware.os_version})"),
+            ("Processor", f"{self.hardware.cpu_name} ({self.hardware.cpu_cores} cores)"),
+            ("System Memory", f"{self.hardware.ram_gb:.1f} GB RAM"),
+        ]
+
+        if getattr(self.hardware, "gpus", None) and len(self.hardware.gpus) > 0:
+            for g in self.hardware.gpus:
+                role = "Graphics (Compute)" if g.is_discrete else "Graphics (Display)"
+                specs.append((role, g.display_label))
+        else:
+            specs.append(("Graphics Device", f"{self.hardware.gpu_name} ({self.hardware.vram_gb:.1f} GB VRAM)"))
+
+        specs.append(("Storage Available", f"{self.hardware.disk_free_gb:.1f} GB free"))
+
+        for name, val in specs:
+            row = QHBoxLayout()
+            n_lbl = QLabel(name, box)
+            n_lbl.setStyleSheet(f"font-size: 11px; color: {TEXT_MUTED}; width: 130px;")
+            v_lbl = QLabel(val, box)
+            v_lbl.setStyleSheet(f"font-size: 11px; font-weight: 500; color: {TEXT_PRIMARY}; font-family: {FONT_MONO};")
+            row.addWidget(n_lbl)
+            row.addSpacing(8)
+            row.addWidget(v_lbl, stretch=1)
+            bl.addLayout(row)
+
+        v.addWidget(box)
+        v.addStretch(1)
+        return w
+
+    def _create_maintenance_tab(self) -> QWidget:
+        w = QWidget(self)
+        v = QVBoxLayout(w)
+        v.setContentsMargins(16, 16, 16, 16)
+        v.setSpacing(12)
+
+        # Repair Section
+        r_box = QFrame(w)
+        r_box.setStyleSheet(f"background-color: {SURFACE_RAISED}; border: 1px solid {BORDER}; border-radius: 6px; padding: 10px;")
+        rl = QVBoxLayout(r_box)
+        rl.setSpacing(8)
+
+        r_title = QLabel("Self-Healing & System Repair", r_box)
+        r_title.setStyleSheet(f"font-size: 12px; font-weight: 600; color: {TEXT_PRIMARY};")
+        rl.addWidget(r_title)
+
+        r_desc = QLabel("Verifies binary integrity, shortcuts, autostart registry, and refreshes hardware telemetry.", r_box)
+        r_desc.setStyleSheet(f"font-size: 10px; color: {TEXT_MUTED};")
+        rl.addWidget(r_desc)
+
+        self.btn_repair = QPushButton("Run Repair & Verification", r_box)
+        self.btn_repair.setStyleSheet(get_button_style("secondary", size="sm"))
+        self.btn_repair.clicked.connect(self._on_run_repair)
+        rl.addWidget(self.btn_repair)
+
+        self.lbl_repair_status = QLabel("", r_box)
+        self.lbl_repair_status.setStyleSheet(f"font-size: 10px; color: {SUCCESS};")
+        self.lbl_repair_status.hide()
+        rl.addWidget(self.lbl_repair_status)
+
+        v.addWidget(r_box)
+
+        # Logs & Diagnostics Section
+        d_box = QFrame(w)
+        d_box.setStyleSheet(f"background-color: {SURFACE_RAISED}; border: 1px solid {BORDER}; border-radius: 6px; padding: 10px;")
+        dl = QVBoxLayout(d_box)
+        dl.setSpacing(8)
+
+        d_title = QLabel("Diagnostics & Logs", d_box)
+        d_title.setStyleSheet(f"font-size: 12px; font-weight: 600; color: {TEXT_PRIMARY};")
+        dl.addWidget(d_title)
+
+        d_btns = QHBoxLayout()
+        self.btn_open_logs = QPushButton("Open Logs Directory", d_box)
+        self.btn_open_logs.setStyleSheet(get_button_style("secondary", size="sm"))
+        self.btn_open_logs.clicked.connect(self._on_open_logs)
+
+        self.btn_open_diag = QPushButton("Open Diagnostics Tool", d_box)
+        self.btn_open_diag.setStyleSheet(get_button_style("secondary", size="sm"))
+        self.btn_open_diag.clicked.connect(self._on_open_diag)
+
+        d_btns.addWidget(self.btn_open_logs)
+        d_btns.addWidget(self.btn_open_diag)
+        dl.addLayout(d_btns)
+
+        v.addWidget(d_box)
+        v.addStretch(1)
+        return w
+
+    def _create_about_tab(self) -> QWidget:
+        w = QWidget(self)
+        v = QVBoxLayout(w)
+        v.setContentsMargins(16, 16, 16, 16)
+        v.setSpacing(10)
+
+        box = QFrame(w)
+        box.setStyleSheet(f"background-color: {SURFACE_RAISED}; border: 1px solid {BORDER}; border-radius: 6px; padding: 14px;")
+        bl = QVBoxLayout(box)
+        bl.setSpacing(6)
+
+        t = QLabel(f"{APP_NAME}", box)
+        t.setStyleSheet(f"font-size: 15px; font-weight: bold; color: {TEXT_PRIMARY};")
+        bl.addWidget(t)
+
+        ver = QLabel(f"Version: {VERSION}", box)
+        ver.setStyleSheet(f"font-size: 11px; font-family: {FONT_MONO}; color: {ACCENT};")
+        bl.addWidget(ver)
+
+        pub = QLabel(f"Publisher: {PUBLISHER}", box)
+        pub.setStyleSheet(f"font-size: 11px; color: {TEXT_MUTED};")
+        bl.addWidget(pub)
+
+        arch = QLabel("Architecture: Windows Native Desktop Shell (PySide6 / Win32 / CUDA)", box)
+        arch.setStyleSheet(f"font-size: 11px; color: {TEXT_MUTED};")
+        bl.addWidget(arch)
+
+        cpr = QLabel(COPYRIGHT, box)
+        cpr.setStyleSheet(f"font-size: 10px; color: {TEXT_MUTED}; margin-top: 6px;")
+        bl.addWidget(cpr)
+
+        v.addWidget(box)
+        v.addStretch(1)
+        return w
+
+    def _on_browse_models(self) -> None:
+        """Select new model storage directory."""
+        chosen = QFileDialog.getExistingDirectory(self, "Select Model Weights Directory", self.txt_model_dir.text())
+        if chosen:
+            self.txt_model_dir.setText(chosen)
+
+    def _on_run_repair(self) -> None:
+        """Execute RepairManager self-healing procedures."""
+        mgr = RepairManager()
+        report: RepairReport = mgr.run_all_repairs()
+        self.lbl_repair_status.setText(f"Repair Complete: {report.summary}")
+        self.lbl_repair_status.show()
+
+    def _on_open_logs(self) -> None:
+        """Open logs folder in Windows Explorer."""
+        logs_dir = get_logs_dir()
+        logs_dir.mkdir(parents=True, exist_ok=True)
+        if sys.platform == "win32":
+            os.startfile(str(logs_dir))
+
+    def _on_open_diag(self) -> None:
+        """Open live diagnostics window if launcher is available."""
+        if self.app and hasattr(self.app, "launcher"):
+            self.app.launcher.open_diagnostics()
+            self.accept()
 
     def _on_save(self) -> None:
-        """Apply preferences to runtime and Windows registry."""
-        want_startup = self.startup_cb.isChecked()
-        if want_startup != is_windows_startup_enabled():
-            set_windows_startup_enabled(want_startup)
-
-        # Update in-memory settings
-        self.app.settings.setdefault("learning", {})["enabled"] = self.learning_cb.isChecked()
-        self.app.settings["learning"]["allow_training_dataset_export"] = self.export_cb.isChecked()
-
+        """Save settings and apply autostart changes."""
+        enable_autostart(self.chk_autostart.isChecked())
+        if self.app and hasattr(self.app, "settings"):
+            self.app.settings.setdefault("learning", {})["enabled"] = self.chk_learning.isChecked()
+            self.app.settings["learning"]["allow_training_dataset_export"] = self.chk_export.isChecked()
         self.accept()
-
-    def keyPressEvent(self, event: QKeyEvent) -> None:
-        if event.key() == Qt.Key.Key_Escape:
-            self.reject()
-        else:
-            super().keyPressEvent(event)

@@ -2,7 +2,13 @@
 
 from __future__ import annotations
 
-from astrarun.tasks.cancellation import CancellationToken
+from astrarun.tasks.checkpoints import PlanRevision, TaskCheckpoint
+from astrarun.tasks.reconciliation import (
+    HumanChangeClassification,
+    ResumeAssessment,
+    ResumeVerdict,
+    TaskReconciliationEngine,
+)
 from astrarun.tasks.events import TaskEventBus, get_global_event_bus
 from astrarun.tasks.ledger import TaskLedger
 from astrarun.tasks.manager import TaskManager
@@ -31,7 +37,12 @@ __all__ = [
     "CancellationToken",
     "Conversation",
     "ConversationMessage",
-    "InvalidStateTransitionError",
+    "PlanRevision",
+    "TaskCheckpoint",
+    "TaskReconciliationEngine",
+    "ResumeAssessment",
+    "ResumeVerdict",
+    "HumanChangeClassification",
     "Task",
     "TaskCancelledError",
     "TaskError",

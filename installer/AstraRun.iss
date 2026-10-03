@@ -2,7 +2,7 @@
 ; Windows Intelligent Command Launcher & Desktop Agent
 
 #define MyAppName "AstraRun"
-#define MyAppVersion "1.0.0-rc.2-dogfood"
+#define MyAppVersion "1.0.0-rc.3-dogfood"
 #define MyAppPublisher "Astra Engineering Team"
 #define MyAppURL "https://github.com/astrarun/astrarun"
 #define MyAppExeName "AstraRun.exe"

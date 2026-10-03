@@ -28,12 +28,15 @@ class TaskStatus(str, Enum):
     RESOLVING = "RESOLVING"
     READY = "READY"
     RUNNING = "RUNNING"
+    PAUSING = "PAUSING"
+    PAUSED = "PAUSED"
+    PAUSED_USER_REQUEST = "PAUSED_USER_REQUEST"
+    PAUSED_USER_ACTIVE = "PAUSED_USER_ACTIVE"
+    SUSPENDED = "SUSPENDED"
+    SUSPENDED_SYSTEM = "SUSPENDED_SYSTEM"
     WAITING_CONFIRMATION = "WAITING_CONFIRMATION"
     WAITING_CLARIFICATION = "WAITING_CLARIFICATION"
     WAITING_USER = "WAITING_USER"
-    PAUSED = "PAUSED"
-    PAUSED_USER_ACTIVE = "PAUSED_USER_ACTIVE"
-    SUSPENDED = "SUSPENDED"
     RECOVERING = "RECOVERING"
     COMPLETED = "COMPLETED"
     FAILED = "FAILED"
@@ -61,9 +64,12 @@ class TaskStatus(str, Enum):
             TaskStatus.WAITING_CONFIRMATION,
             TaskStatus.WAITING_CLARIFICATION,
             TaskStatus.WAITING_USER,
+            TaskStatus.PAUSING,
             TaskStatus.PAUSED,
+            TaskStatus.PAUSED_USER_REQUEST,
             TaskStatus.PAUSED_USER_ACTIVE,
             TaskStatus.SUSPENDED,
+            TaskStatus.SUSPENDED_SYSTEM,
         }
 
     @property
@@ -143,10 +149,40 @@ VALID_TRANSITIONS: dict[TaskStatus, set[TaskStatus]] = {
         TaskStatus.WAITING_CONFIRMATION,
         TaskStatus.WAITING_CLARIFICATION,
         TaskStatus.WAITING_USER,
+        TaskStatus.PAUSING,
         TaskStatus.PAUSED,
+        TaskStatus.PAUSED_USER_REQUEST,
         TaskStatus.PAUSED_USER_ACTIVE,
         TaskStatus.SUSPENDED,
+        TaskStatus.SUSPENDED_SYSTEM,
         TaskStatus.RECOVERING,
+        TaskStatus.INTERRUPTED,
+    },
+    TaskStatus.PAUSING: {
+        TaskStatus.PAUSED_USER_REQUEST,
+        TaskStatus.PAUSED_USER_ACTIVE,
+        TaskStatus.PAUSED,
+        TaskStatus.CANCELLED,
+        TaskStatus.FAILED,
+        TaskStatus.INTERRUPTED,
+    },
+    TaskStatus.PAUSED_USER_REQUEST: {
+        TaskStatus.RUNNING,
+        TaskStatus.WAITING_CONFIRMATION,
+        TaskStatus.WAITING_CLARIFICATION,
+        TaskStatus.COMPLETED,
+        TaskStatus.BLOCKED,
+        TaskStatus.RECOVERING,
+        TaskStatus.CANCELLED,
+        TaskStatus.FAILED,
+        TaskStatus.INTERRUPTED,
+    },
+    TaskStatus.SUSPENDED_SYSTEM: {
+        TaskStatus.RUNNING,
+        TaskStatus.RECOVERING,
+        TaskStatus.CANCELLED,
+        TaskStatus.FAILED,
+        TaskStatus.BLOCKED,
         TaskStatus.INTERRUPTED,
     },
     TaskStatus.SUSPENDED: {
@@ -159,9 +195,13 @@ VALID_TRANSITIONS: dict[TaskStatus, set[TaskStatus]] = {
     },
     TaskStatus.PAUSED: {
         TaskStatus.RUNNING,
+        TaskStatus.WAITING_CONFIRMATION,
+        TaskStatus.WAITING_CLARIFICATION,
+        TaskStatus.COMPLETED,
         TaskStatus.CANCELLED,
         TaskStatus.FAILED,
         TaskStatus.RECOVERING,
+        TaskStatus.BLOCKED,
         TaskStatus.INTERRUPTED,
     },
     TaskStatus.PAUSED_USER_ACTIVE: {
@@ -174,6 +214,8 @@ VALID_TRANSITIONS: dict[TaskStatus, set[TaskStatus]] = {
     TaskStatus.RECOVERING: {
         TaskStatus.RUNNING,
         TaskStatus.SUSPENDED,
+        TaskStatus.SUSPENDED_SYSTEM,
+        TaskStatus.PAUSED_USER_REQUEST,
         TaskStatus.FAILED,
         TaskStatus.CANCELLED,
         TaskStatus.WAITING_CLARIFICATION,
@@ -288,15 +330,25 @@ class TaskEventType(str, Enum):
     WORKFLOW_STEP_FAILED = "WORKFLOW_STEP_FAILED"
     WORKFLOW_COMPLETED = "WORKFLOW_COMPLETED"
 
-    # Cancellation
-    TASK_CANCEL_REQUESTED = "TASK_CANCEL_REQUESTED"
-    TASK_CANCELLED = "TASK_CANCELLED"
+    # User Pause & Resume Reconciliation (RC0.1)
+    USER_PAUSE_REQUESTED = "USER_PAUSE_REQUESTED"
+    TASK_PAUSING = "TASK_PAUSING"
+    TASK_PAUSED = "TASK_PAUSED"
+    RESUME_REQUESTED = "RESUME_REQUESTED"
+    RESUME_RECONCILIATION_STARTED = "RESUME_RECONCILIATION_STARTED"
+    RESUME_STATE_CHANGED = "RESUME_STATE_CHANGED"
+    RESUME_EXTERNAL_PROGRESS_FOUND = "RESUME_EXTERNAL_PROGRESS_FOUND"
+    RESUME_CONFLICT_FOUND = "RESUME_CONFLICT_FOUND"
+    PLAN_REVISED_AFTER_PAUSE = "PLAN_REVISED_AFTER_PAUSE"
+    TASK_RESUMED = "TASK_RESUMED"
 
     # Terminal Task Events
     TASK_COMPLETED = "TASK_COMPLETED"
     TASK_FAILED = "TASK_FAILED"
-    TASK_BLOCKED = "TASK_BLOCKED"
+    TASK_CANCEL_REQUESTED = "TASK_CANCEL_REQUESTED"
+    TASK_CANCELLED = "TASK_CANCELLED"
     TASK_INTERRUPTED = "TASK_INTERRUPTED"
+    TASK_BLOCKED = "TASK_BLOCKED"
 
     # Forward-looking placeholders (for v0.9+ Window/Computer-Use)
     WINDOW_FOCUSED = "WINDOW_FOCUSED"

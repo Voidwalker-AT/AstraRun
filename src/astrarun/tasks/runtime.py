@@ -25,6 +25,12 @@ from typing import Any, Callable, Dict, List, Optional, Set, Tuple
 from astrarun.core.logging import get_logger
 from astrarun.tasks.cancellation import CancellationToken
 from astrarun.tasks.checkpoints import PlanRevision, RecoveryPlan, TaskCheckpoint
+from astrarun.tasks.reconciliation import (
+    HumanChangeClassification,
+    ResumeAssessment,
+    ResumeVerdict,
+    TaskReconciliationEngine,
+)
 from astrarun.tasks.disturbances import (
     DisturbanceEvent,
     DisturbanceTracker,
@@ -295,33 +301,239 @@ class TaskRuntime:
         finally:
             self.lock_manager.release_all_for_task(task_id)
 
-    def pause_task(self, task_id: str, is_user_takeover: bool = False) -> None:
-        """Pause task execution and release physical input locks."""
+    def pause_task(self, task_id: str, is_user_takeover: bool = False, reason: str = "USER_REQUEST") -> None:
+        """Pause task execution atomically, save durable checkpoint, and release workstation locks."""
         task = self.get_task(task_id)
-        if not task or task.status not in (TaskStatus.RUNNING, TaskStatus.PLANNING):
+        if not task:
+            return
+        if task.status.is_terminal or task.status in (
+            TaskStatus.PAUSED_USER_REQUEST,
+            TaskStatus.PAUSED_USER_ACTIVE,
+            TaskStatus.PAUSED,
+            TaskStatus.PAUSING,
+        ):
             return
 
-        target_status = TaskStatus.PAUSED_USER_ACTIVE if is_user_takeover else TaskStatus.PAUSED
+        # 1. Determine target status and emit pause request event
+        if is_user_takeover:
+            target_status = TaskStatus.PAUSED_USER_ACTIVE
+            msg = "Paused — you're using the computer"
+        else:
+            target_status = TaskStatus.PAUSED_USER_REQUEST
+            msg = "Task paused by user"
+            self._emit_event(
+                task_id,
+                TaskEventType.USER_PAUSE_REQUESTED,
+                "User Pause Requested",
+                summary="User explicitly requested task pause.",
+                data={"reason": reason},
+            )
+
+        # 2. Transition through PAUSING for atomic state isolation
+        if task.status != TaskStatus.PAUSING:
+            try:
+                task.transition_to(TaskStatus.PAUSING)
+            except Exception:
+                task.status = TaskStatus.PAUSING
+            self.ledger.save_task(task)
+            self._emit_event(
+                task_id,
+                TaskEventType.TASK_PAUSING,
+                "Task Pausing",
+                summary="Releasing workstation locks and checkpointing state...",
+            )
+
+        # 3. Release physical input and workstation locks
+        self.lock_manager.release_all_for_task(task_id)
+
+        # 4. Save durable checkpoint
+        latest_chk = self.ledger.get_latest_checkpoint(task_id)
+        if not latest_chk:
+            latest_chk = self.create_checkpoint(
+                task_id=task_id,
+                step_id="step_pause",
+                completed_step_ids=[],
+                outputs={},
+            )
+        latest_chk.goal = task.request_text
+        latest_chk.status = target_status.value
+        latest_chk.pause_timestamp = time.time()
+        latest_chk.pause_reason = "USER_REQUEST" if not is_user_takeover else "USER_ACTIVE"
+        self.ledger.save_checkpoint(latest_chk)
+
+        # 5. Final transition to target paused status
         task.transition_to(target_status)
-        self.lock_manager.release_lock(ResourceLockType.PHYSICAL_INPUT.value, task_id)
         self.ledger.save_task(task)
 
-        msg = "Paused — you're using the computer" if is_user_takeover else "Task paused by user"
-        self._emit_event(task_id, TaskEventType.TASK_INTERRUPTED, "Task Paused", summary=msg, data={"is_user_takeover": is_user_takeover})
+        # 6. Emit TASK_INTERRUPTED if user takeover, else TASK_PAUSED
+        event_type = TaskEventType.TASK_INTERRUPTED if is_user_takeover else TaskEventType.TASK_PAUSED
+        self._emit_event(
+            task_id,
+            event_type,
+            "Task Paused",
+            summary=msg,
+            data={
+                "target_status": target_status.value,
+                "is_user_takeover": is_user_takeover,
+                "checkpoint_id": latest_chk.checkpoint_id,
+                "pause_timestamp": latest_chk.pause_timestamp,
+            },
+        )
         logger.info("Task %s transitioned to %s", task_id, target_status.value)
 
-    def resume_task(self, task_id: str) -> None:
-        """Resume paused task, re-acquiring physical locks and restarting worker."""
+    def resume_task(self, task_id: str, goal_verification_func: Optional[Any] = None) -> ResumeAssessment:
+        """
+        Resume a paused task using pre-resumption state reconciliation.
+        Authoritative invariant: 'RESUME IS RECONCILIATION, NOT UNPAUSE'.
+        """
         task = self.get_task(task_id)
-        if not task or task.status not in (TaskStatus.PAUSED, TaskStatus.PAUSED_USER_ACTIVE):
-            return
+        if not task:
+            raise ValueError(f"Task {task_id} not found")
 
+        if task.status not in (
+            TaskStatus.PAUSED,
+            TaskStatus.PAUSED_USER_REQUEST,
+            TaskStatus.PAUSED_USER_ACTIVE,
+            TaskStatus.SUSPENDED,
+            TaskStatus.SUSPENDED_SYSTEM,
+            TaskStatus.INTERRUPTED,
+        ):
+            logger.warning("Task %s is in state %s; cannot resume", task_id, task.status.value)
+            return ResumeAssessment(
+                task_id=task_id,
+                verdict=ResumeVerdict.UNRECOVERABLE,
+                reason=f"Task is in state {task.status.value}, cannot resume.",
+            )
+
+        # 1. Audit events for resume request and reconciliation start
+        self._emit_event(
+            task_id,
+            TaskEventType.RESUME_REQUESTED,
+            "Resume Requested",
+            summary="User or system requested task resumption.",
+        )
+        self._emit_event(
+            task_id,
+            TaskEventType.RESUME_RECONCILIATION_STARTED,
+            "Reconciliation Started",
+            summary="Validating filesystem, artifacts, and external progress before continuing...",
+        )
+
+        # 2. Get latest checkpoint
+        chk = self.ledger.get_latest_checkpoint(task_id)
+        if not chk:
+            chk = TaskCheckpoint(
+                task_id=task_id,
+                goal=task.request_text,
+                status=task.status.value,
+                timestamp=time.time(),
+            )
+
+        # 3. Run reconciliation engine
+        engine = TaskReconciliationEngine()
+        assessment = engine.reconcile(chk, goal_verification_func=goal_verification_func)
+        logger.info("Reconciliation assessment for %s: %s (reason: %s)", task_id, assessment.verdict.value, assessment.reason)
+
+        # 4. Handle reconciliation verdicts
+        if assessment.verdict == ResumeVerdict.GOAL_ALREADY_COMPLETED:
+            self._emit_event(
+                task_id,
+                TaskEventType.RESUME_EXTERNAL_PROGRESS_FOUND,
+                "Goal Completed Externally",
+                summary=assessment.reason,
+                data={"surviving_artifacts": assessment.surviving_artifacts},
+            )
+            task.transition_to(TaskStatus.COMPLETED)
+            task.final_result = TaskResult(
+                task_id=task_id,
+                success=True,
+                status=TaskStatus.COMPLETED,
+                message=assessment.reason,
+                summary=assessment.reason,
+                data={"artifacts": assessment.surviving_artifacts},
+            )
+            self.ledger.save_task(task)
+            self._emit_event(
+                task_id,
+                TaskEventType.TASK_COMPLETED,
+                "Task Completed",
+                summary=assessment.reason,
+            )
+            return assessment
+
+        if assessment.verdict == ResumeVerdict.REQUIRES_USER:
+            self._emit_event(
+                task_id,
+                TaskEventType.RESUME_CONFLICT_FOUND,
+                "Reconciliation Conflict",
+                summary=assessment.reason,
+                data={"conflicts": assessment.conflicts, "lost_state": assessment.lost_state},
+            )
+            task.transition_to(TaskStatus.WAITING_CLARIFICATION)
+            self.ledger.save_task(task)
+            self._emit_event(
+                task_id,
+                TaskEventType.CLARIFICATION_REQUESTED,
+                "Manual Clarification Needed on Resume",
+                summary=assessment.reason,
+                data={
+                    "title": "Action Needed to Resume",
+                    "message": assessment.reason,
+                    "conflicts": assessment.conflicts,
+                    "recovery": assessment.recommended_recovery,
+                },
+            )
+            return assessment
+
+        if assessment.verdict == ResumeVerdict.PROGRESS_ADVANCED_EXTERNALLY:
+            self._emit_event(
+                task_id,
+                TaskEventType.RESUME_EXTERNAL_PROGRESS_FOUND,
+                "External Progress Discovered",
+                summary=assessment.reason,
+                data={"externally_completed": assessment.externally_completed_work},
+            )
+            if assessment.plan_revision:
+                self._emit_event(
+                    task_id,
+                    TaskEventType.PLAN_REVISED_AFTER_PAUSE,
+                    "Plan Revised After External Progress",
+                    summary=assessment.plan_revision.reason,
+                    data={"revision": assessment.plan_revision.revision},
+                )
+
+        elif assessment.verdict in (ResumeVerdict.REQUIRES_REPLAN, ResumeVerdict.RECOVERABLE_DRIFT, ResumeVerdict.PLAN_PARTIALLY_INVALID):
+            self._emit_event(
+                task_id,
+                TaskEventType.RESUME_STATE_CHANGED,
+                "State Drift Reconciled",
+                summary=assessment.reason,
+                data={"lost_state": assessment.lost_state},
+            )
+            if assessment.plan_revision:
+                self._emit_event(
+                    task_id,
+                    TaskEventType.PLAN_REVISED_AFTER_PAUSE,
+                    "Plan Revised After Environment Drift",
+                    summary=assessment.plan_revision.reason,
+                    data={"revision": assessment.plan_revision.revision},
+                )
+
+        # 5. Transition to RUNNING and restart worker
         task.transition_to(TaskStatus.RUNNING)
         self.ledger.save_task(task)
-        self._emit_event(task_id, TaskEventType.CAPABILITY_STARTED, "Task Resumed", summary="Resuming task execution...")
+        self._emit_event(
+            task_id,
+            TaskEventType.TASK_RESUMED,
+            "Task Resumed",
+            summary=f"Resumed execution ({assessment.verdict.value}).",
+            data={"verdict": assessment.verdict.value, "reason": assessment.reason},
+        )
         logger.info("Task %s resumed to RUNNING", task_id)
+
         # Restart worker thread
         self.start_task_async(task_id)
+        return assessment
 
     def cancel_task(self, task_id: str) -> None:
         """Signal cooperative cancellation, release all locks, and transition to CANCELLED."""
@@ -389,7 +601,12 @@ class TaskRuntime:
 
     def get_task(self, task_id: str) -> Optional[Task]:
         with self._lock:
-            return self._active_tasks.get(task_id) or self.ledger.get_task(task_id)
+            task = self._active_tasks.get(task_id)
+            if not task:
+                task = self.ledger.get_task(task_id)
+                if task:
+                    self._active_tasks[task_id] = task
+            return task
 
     def get_recent_tasks(self, limit: int = 20) -> List[Task]:
         """Fetch recent tasks from active memory and SQLite ledger."""
@@ -501,6 +718,25 @@ class TaskRuntime:
             if token and token.is_cancelled:
                 self._handle_cancelled(task)
                 return task.final_result
+
+            # Check if task was paused by user or system
+            if task.status in (
+                TaskStatus.PAUSING,
+                TaskStatus.PAUSED_USER_REQUEST,
+                TaskStatus.PAUSED_USER_ACTIVE,
+                TaskStatus.PAUSED,
+                TaskStatus.SUSPENDED,
+                TaskStatus.SUSPENDED_SYSTEM,
+            ):
+                logger.info("Adaptive plan execution paused for task %s at step %s", task_id, step.step_id)
+                return TaskResult(
+                    task_id=task_id,
+                    success=True,
+                    status=task.status,
+                    message=f"Execution paused cleanly at step {step.step_id}",
+                    summary=f"Task paused at step {step.step_id}",
+                    data=outputs,
+                )
 
             # 1. OBSERVE PRECONDITIONS
             for pre in step.preconditions:

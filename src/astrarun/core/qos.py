@@ -76,7 +76,7 @@ class ResourceGovernor:
             self._background_paused = True
             concurrency = 1
         elif cpu_press:
-            self._background_paused = True
+            self._background_paused = False
             concurrency = 2
         else:
             self._background_paused = False

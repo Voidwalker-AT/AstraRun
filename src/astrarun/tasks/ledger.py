@@ -206,10 +206,32 @@ class TaskLedger:
                 invariant_states TEXT,
                 recoverable_handles TEXT,
                 timestamp REAL NOT NULL,
+                goal TEXT,
+                status TEXT,
+                pause_reason TEXT,
+                pause_timestamp REAL,
+                artifacts TEXT,
                 FOREIGN KEY (task_id) REFERENCES tasks(id) ON DELETE CASCADE
             );
         """)
         cursor.execute("CREATE INDEX IF NOT EXISTS idx_checkpoints_task ON task_checkpoints(task_id, timestamp DESC);")
+
+        # Dynamic migration for existing databases
+        cursor.execute("PRAGMA table_info(task_checkpoints);")
+        existing_cols = {row[1] for row in cursor.fetchall()}
+        for col_name, col_def in [
+            ("goal", "TEXT"),
+            ("status", "TEXT"),
+            ("pause_reason", "TEXT"),
+            ("pause_timestamp", "REAL"),
+            ("artifacts", "TEXT"),
+        ]:
+            if col_name not in existing_cols:
+                try:
+                    cursor.execute(f"ALTER TABLE task_checkpoints ADD COLUMN {col_name} {col_def};")
+                except Exception:
+                    pass
+
         conn.commit()
         logger.info("Task Ledger database initialized to schema version %d.", SCHEMA_VERSION)
 
@@ -228,8 +250,9 @@ class TaskLedger:
                     INSERT INTO task_checkpoints (
                         id, task_id, checkpoint_id, plan_version, completed_step_ids,
                         current_step_id, important_outputs, artifact_hashes,
-                        invariant_states, recoverable_handles, timestamp
-                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                        invariant_states, recoverable_handles, timestamp,
+                        goal, status, pause_reason, pause_timestamp, artifacts
+                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                     ON CONFLICT(id) DO UPDATE SET
                         completed_step_ids = excluded.completed_step_ids,
                         current_step_id = excluded.current_step_id,
@@ -237,7 +260,12 @@ class TaskLedger:
                         artifact_hashes = excluded.artifact_hashes,
                         invariant_states = excluded.invariant_states,
                         recoverable_handles = excluded.recoverable_handles,
-                        timestamp = excluded.timestamp
+                        timestamp = excluded.timestamp,
+                        goal = excluded.goal,
+                        status = excluded.status,
+                        pause_reason = excluded.pause_reason,
+                        pause_timestamp = excluded.pause_timestamp,
+                        artifacts = excluded.artifacts
                     """,
                     (
                         checkpoint.id,
@@ -251,6 +279,11 @@ class TaskLedger:
                         json.dumps(checkpoint.invariant_states),
                         json.dumps(checkpoint.recoverable_handles),
                         checkpoint.timestamp,
+                        checkpoint.goal,
+                        checkpoint.status,
+                        checkpoint.pause_reason,
+                        checkpoint.pause_timestamp,
+                        json.dumps(checkpoint.artifacts),
                     ),
                 )
                 conn.commit()
@@ -268,7 +301,8 @@ class TaskLedger:
                     """
                     SELECT id, task_id, checkpoint_id, plan_version, completed_step_ids,
                            current_step_id, important_outputs, artifact_hashes,
-                           invariant_states, recoverable_handles, timestamp
+                           invariant_states, recoverable_handles, timestamp,
+                           goal, status, pause_reason, pause_timestamp, artifacts
                     FROM task_checkpoints
                     WHERE task_id = ?
                     ORDER BY timestamp DESC
@@ -279,6 +313,7 @@ class TaskLedger:
                 row = cur.fetchone()
                 if not row:
                     return None
+                row_keys = row.keys() if hasattr(row, "keys") else []
                 return TaskCheckpoint(
                     id=row["id"],
                     task_id=row["task_id"],
@@ -291,6 +326,11 @@ class TaskLedger:
                     invariant_states=json.loads(row["invariant_states"] or "{}"),
                     recoverable_handles=json.loads(row["recoverable_handles"] or "{}"),
                     timestamp=row["timestamp"],
+                    goal=row["goal"] or "" if "goal" in row_keys else "",
+                    status=row["status"] or "IN_PROGRESS" if "status" in row_keys else "IN_PROGRESS",
+                    pause_reason=row["pause_reason"] or "USER_REQUEST" if "pause_reason" in row_keys else "USER_REQUEST",
+                    pause_timestamp=row["pause_timestamp"] if "pause_timestamp" in row_keys else None,
+                    artifacts=json.loads(row["artifacts"] or "[]") if ("artifacts" in row_keys and row["artifacts"]) else [],
                 )
             except Exception as err:
                 logger.error("Failed to fetch latest checkpoint for task %s: %s", task_id, err)

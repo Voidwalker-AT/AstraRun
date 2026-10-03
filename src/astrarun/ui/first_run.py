@@ -18,6 +18,7 @@ from typing import Optional
 from PySide6.QtCore import Qt, Signal
 from PySide6.QtGui import QFont, QIcon
 from PySide6.QtWidgets import (
+    QButtonGroup,
     QCheckBox,
     QDialog,
     QFrame,
@@ -26,6 +27,7 @@ from PySide6.QtWidgets import (
     QLineEdit,
     QProgressBar,
     QPushButton,
+    QRadioButton,
     QStackedWidget,
     QVBoxLayout,
     QWidget,
@@ -35,6 +37,7 @@ from astrarun.core.autostart import enable_autostart, is_autostart_enabled
 from astrarun.core.hardware import HardwareProfile, audit_hardware
 from astrarun.core.logging import get_logger
 from astrarun.core.paths import get_config_dir, get_models_dir
+from astrarun.discovery import CompatibilityStatus, ExistingCapabilityResolver
 from astrarun.models.manifest import STANDARD_COGNITIVE_PACK, ManagedModelPack
 from astrarun.ui.icons import AstraMarkWidget, IconRenderer
 from astrarun.ui.theme import (
@@ -83,6 +86,10 @@ class FirstRunWizard(QDialog):
         super().__init__(parent)
         self.hardware = hardware_profile or audit_hardware()
         self.model_pack: ManagedModelPack = STANDARD_COGNITIVE_PACK
+        self.capability_resolver = ExistingCapabilityResolver()
+        self.discovered_models = self.capability_resolver.discover_models()
+        self.discovered_tools = self.capability_resolver.discover_tools()
+        self.discovered_browsers = self.capability_resolver.discover_browsers()
 
         self.setWindowTitle(f"{APP_NAME} Setup — Welcome")
         self.setFixedSize(540, 420)
@@ -259,41 +266,79 @@ class FirstRunWizard(QDialog):
         w = QWidget(self)
         v = QVBoxLayout(w)
         v.setContentsMargins(20, 16, 20, 16)
-        v.setSpacing(12)
+        v.setSpacing(10)
 
         heading = QLabel("Runtime & Model Preparation", w)
         heading.setStyleSheet(f"font-size: 14px; font-weight: 600; color: {TEXT_PRIMARY};")
         v.addWidget(heading)
 
         desc = QLabel(
-            f"Astra uses managed model packs to keep the installer lightweight. "
-            f"The standard profile requires ~{self.model_pack.total_download_gb:.1f} GB of cognitive models:\n"
+            f"Astra operates with dual local cognitive engines for instant offline execution:\n"
             f"• Spark-X2.5 (1.1 GB) — Fast routing & natural language comprehension\n"
             f"• Qwen 2.5 Coder (1.0 GB) — Complex decomposition & code generation\n"
             f"• BGE-small (130 MB) — Hybrid memory & retrieval indexing",
             w
         )
         desc.setWordWrap(True)
-        desc.setStyleSheet(f"font-size: 11px; color: {TEXT_SECONDARY}; line-height: 1.4;")
+        desc.setStyleSheet(f"font-size: 11px; color: {TEXT_SECONDARY}; line-height: 1.3;")
         v.addWidget(desc)
+
+        # Existing models detection
+        exact_matches = [
+            m for m in self.discovered_models.values()
+            if m.status in (CompatibilityStatus.EXACT_MATCH, CompatibilityStatus.COMPATIBLE_VERSION) and m.path
+        ]
+        self.has_existing_models = len(exact_matches) > 0
+
+        if self.has_existing_models:
+            existing_box = QFrame(w)
+            existing_box.setStyleSheet(f"background-color: {SURFACE_RAISED}; border: 1px solid {BORDER}; border-radius: 6px; padding: 8px 10px;")
+            eb_layout = QVBoxLayout(existing_box)
+            eb_layout.setSpacing(6)
+
+            eb_header = QHBoxLayout()
+            eb_icon = QLabel(existing_box)
+            eb_icon.setPixmap(IconRenderer.get_pixmap("check", size=13, color=SUCCESS))
+            eb_title = QLabel("Existing Compatible Models Discovered", existing_box)
+            eb_title.setStyleSheet(f"font-size: 11px; font-weight: 600; color: {SUCCESS};")
+            eb_header.addWidget(eb_icon)
+            eb_header.addWidget(eb_title, stretch=1)
+            eb_layout.addLayout(eb_header)
+
+            details_text = "\n".join(f"• {m.name}: {m.path.name} ({m.size_gb:.2f} GB)" for m in exact_matches if m.path)
+            eb_desc = QLabel(details_text, existing_box)
+            eb_desc.setStyleSheet(f"font-size: 10px; color: {TEXT_SECONDARY}; font-family: {FONT_MONO};")
+            eb_layout.addWidget(eb_desc)
+
+            self.radio_use_existing = QRadioButton("Use existing installation (Recommended) — 0 MB download", existing_box)
+            self.radio_use_existing.setChecked(True)
+            self.radio_use_existing.setStyleSheet(f"color: {TEXT_PRIMARY}; font-size: 11px; font-weight: 500;")
+            eb_layout.addWidget(self.radio_use_existing)
+
+            self.radio_download_fresh = QRadioButton("Download fresh copy to local AstraRun storage", existing_box)
+            self.radio_download_fresh.setStyleSheet(f"color: {TEXT_MUTED}; font-size: 11px;")
+            eb_layout.addWidget(self.radio_download_fresh)
+
+            v.addWidget(existing_box)
 
         # Progress / Status Box
         self.model_status_box = QFrame(w)
-        self.model_status_box.setStyleSheet(f"background-color: {SURFACE_RAISED}; border: 1px solid {BORDER}; border-radius: 6px; padding: 10px;")
+        self.model_status_box.setStyleSheet(f"background-color: {SURFACE_RAISED}; border: 1px solid {BORDER}; border-radius: 6px; padding: 8px 10px;")
         ms_layout = QVBoxLayout(self.model_status_box)
-        ms_layout.setSpacing(6)
+        ms_layout.setSpacing(4)
 
-        self.lbl_model_status = QLabel("Checking local model cache...", self.model_status_box)
+        status_init = "Existing models verified and ready for offline use." if self.has_existing_models else "Checking local model cache..."
+        self.lbl_model_status = QLabel(status_init, self.model_status_box)
         self.lbl_model_status.setStyleSheet(f"font-size: 11px; color: {TEXT_PRIMARY};")
         ms_layout.addWidget(self.lbl_model_status)
 
         self.progress_bar = QProgressBar(self.model_status_box)
-        self.progress_bar.setFixedHeight(6)
+        self.progress_bar.setFixedHeight(5)
         self.progress_bar.setStyleSheet(f"""
             QProgressBar {{
                 background-color: {BG_APP};
                 border: 1px solid {BORDER};
-                border-radius: 3px;
+                border-radius: 2px;
                 text-align: center;
             }}
             QProgressBar::chunk {{
@@ -371,12 +416,35 @@ class FirstRunWizard(QDialog):
             self.btn_back.show()
             self.btn_next.setText("Next")
             # Update models status
-            self.lbl_model_status.setText("Models registered & verified: Ready for offline operation.")
+            if getattr(self, "has_existing_models", False):
+                self.lbl_model_status.setText("Existing models verified: Ready for offline operation.")
+            else:
+                self.lbl_model_status.setText("Models registered & verified: Ready for offline operation.")
             self.progress_bar.setValue(100)
         elif idx == 2:
             self.stack.setCurrentIndex(3)
             self.btn_back.show()
             self.btn_next.setText("Finish & Launch")
+            # If user opted to use existing models, record mappings in models_config.json
+            if (
+                getattr(self, "has_existing_models", False)
+                and hasattr(self, "radio_use_existing")
+                and self.radio_use_existing.isChecked()
+            ):
+                import json
+                mapping = {}
+                for m in self.discovered_models.values():
+                    if m.is_available and m.path:
+                        mapping[m.path.name] = str(m.path)
+                        if "spark" in m.id:
+                            mapping["Spark-X2.5-1.7B-Q4_K_M.gguf"] = str(m.path)
+                        elif "qwen" in m.id:
+                            mapping["qwen2.5-coder-1.5b-instruct-q4_k_m.gguf"] = str(m.path)
+                            mapping["Qwen2.5-Coder-1.5B-Q4_K_M.gguf"] = str(m.path)
+                cfg_path = get_config_dir() / "models_config.json"
+                cfg_path.parent.mkdir(parents=True, exist_ok=True)
+                cfg_path.write_text(json.dumps(mapping, indent=2), encoding="utf-8")
+                logger.info("Saved existing model mapping to %s: %s", cfg_path, mapping)
         elif idx == 3:
             # Save preferences and complete
             if self.chk_autostart.isChecked():

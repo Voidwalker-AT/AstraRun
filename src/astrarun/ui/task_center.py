@@ -85,8 +85,15 @@ def _get_status_presentation(status: TaskStatus) -> Tuple[str, str, str, str, st
         return ("warning", WARNING, WARNING_BG, WARNING_BORDER, "Needs Review")
     elif status == TaskStatus.WAITING_CLARIFICATION:
         return ("question", ATTENTION, ATTENTION_BG, ATTENTION_BORDER, "Clarifying")
-    elif status in (TaskStatus.PAUSED, TaskStatus.PAUSED_USER_ACTIVE):
+    elif status in (
+        TaskStatus.PAUSED,
+        TaskStatus.PAUSED_USER_REQUEST,
+        TaskStatus.PAUSED_USER_ACTIVE,
+        TaskStatus.PAUSING,
+    ):
         return ("pause", WARNING, WARNING_BG, WARNING_BORDER, "Paused")
+    elif status in (TaskStatus.SUSPENDED, TaskStatus.SUSPENDED_SYSTEM):
+        return ("pause", TEXT_SECONDARY, SURFACE_RAISED, BORDER, "Suspended")
     elif status == TaskStatus.COMPLETED:
         return ("check", SUCCESS, SUCCESS_BG, SUCCESS_BORDER, "Completed")
     elif status == TaskStatus.FAILED:
@@ -102,10 +109,11 @@ def _get_status_presentation(status: TaskStatus) -> Tuple[str, str, str, str, st
 
 
 class TaskCardWidget(QFrame):
-    """Card representing a single active, queued, waiting, or completed task."""
+    """Card representing a single active, paused, queued, waiting, or completed task."""
 
     pause_clicked = Signal(str)
     resume_clicked = Signal(str)
+    details_clicked = Signal(str)
     cancel_clicked = Signal(str)
 
     def __init__(self, task: Task, parent: Optional[QWidget] = None):
@@ -162,19 +170,57 @@ class TaskCardWidget(QFrame):
         layout.addLayout(header)
 
         # Latest Fact / Observation Row
-        latest_event = task.events[-1] if task.events else None
-        if latest_event and (latest_event.summary or latest_event.title):
-            fact_text = latest_event.summary or latest_event.title
-        elif task.status == TaskStatus.COMPLETED:
-            fact_text = "Completed successfully"
-        elif task.status == TaskStatus.RUNNING:
-            fact_text = "Executing plan step..."
-        elif task.status == TaskStatus.QUEUED:
-            fact_text = "Waiting in execution queue"
-        elif task.status in (TaskStatus.PAUSED, TaskStatus.PAUSED_USER_ACTIVE):
-            fact_text = "Paused — computer active"
+        is_paused = task.status in (
+            TaskStatus.PAUSED,
+            TaskStatus.PAUSED_USER_REQUEST,
+            TaskStatus.PAUSED_USER_ACTIVE,
+            TaskStatus.PAUSING,
+            TaskStatus.SUSPENDED,
+            TaskStatus.SUSPENDED_SYSTEM,
+        )
+
+        if is_paused:
+            # Fact line for paused tasks: "Paused X ago • Last completed: ... • Next: ..."
+            pause_time = task.metadata.get("pause_timestamp") if hasattr(task, "metadata") and isinstance(task.metadata, dict) else None
+            if not pause_time and task.events:
+                for ev in reversed(task.events):
+                    if ev.type in (TaskEventType.TASK_PAUSED, TaskEventType.USER_PAUSE_REQUESTED):
+                        pause_time = ev.timestamp
+                        break
+            if not pause_time:
+                pause_time = task.created_at
+
+            elapsed_pause = max(0, time.time() - pause_time)
+            if elapsed_pause < 60:
+                paused_ago = f"{int(elapsed_pause)}s ago"
+            elif elapsed_pause < 3600:
+                paused_ago = f"{int(elapsed_pause // 60)}m ago"
+            else:
+                paused_ago = f"{int(elapsed_pause // 3600)}h {int((elapsed_pause % 3600) // 60)}m ago"
+
+            last_completed = "None"
+            next_step = "Pending plan step"
+            if task.metadata and isinstance(task.metadata, dict) and task.metadata.get("completed_steps"):
+                last_completed = str(task.metadata["completed_steps"][-1])
+            elif task.events:
+                for ev in reversed(task.events):
+                    if ev.type == TaskEventType.CAPABILITY_COMPLETED:
+                        last_completed = ev.title.replace("Completed: ", "")
+                        break
+
+            fact_text = f"Paused {paused_ago} • Last completed: {last_completed} • Next: {next_step}"
         else:
-            fact_text = "Initialized"
+            latest_event = task.events[-1] if task.events else None
+            if latest_event and (latest_event.summary or latest_event.title):
+                fact_text = latest_event.summary or latest_event.title
+            elif task.status == TaskStatus.COMPLETED:
+                fact_text = "Completed successfully"
+            elif task.status == TaskStatus.RUNNING:
+                fact_text = "Executing plan step..."
+            elif task.status == TaskStatus.QUEUED:
+                fact_text = "Waiting in execution queue"
+            else:
+                fact_text = "Initialized"
 
         self.fact_label = QLabel(fact_text, self)
         self.fact_label.setWordWrap(True)
@@ -185,7 +231,7 @@ class TaskCardWidget(QFrame):
         """)
         layout.addWidget(self.fact_label)
 
-        # Actions Row (Duration + Pause / Resume / Cancel)
+        # Actions Row (Duration + Pause / Resume / Details / Cancel)
         actions_row = QHBoxLayout()
         actions_row.setSpacing(6)
 
@@ -202,11 +248,16 @@ class TaskCardWidget(QFrame):
             btn_pause.clicked.connect(lambda: self.pause_clicked.emit(self.task.id))
             actions_row.addWidget(btn_pause)
 
-        elif task.status in (TaskStatus.PAUSED, TaskStatus.PAUSED_USER_ACTIVE):
+        elif is_paused:
             btn_resume = QPushButton("Resume", self)
             btn_resume.setStyleSheet(get_button_style("primary", size="sm"))
             btn_resume.clicked.connect(lambda: self.resume_clicked.emit(self.task.id))
             actions_row.addWidget(btn_resume)
+
+            btn_details = QPushButton("Details", self)
+            btn_details.setStyleSheet(get_button_style("subtle", size="sm"))
+            btn_details.clicked.connect(lambda: self.details_clicked.emit(self.task.id))
+            actions_row.addWidget(btn_details)
 
         if not task.status.is_terminal:
             btn_cancel = QPushButton("Cancel", self)
@@ -395,13 +446,23 @@ class TaskCenterWindow(QDialog):
             self.cards_layout.insertWidget(0, empty_state)
             return
 
-        # Partition into Active, Waiting, and Recent
+        # Partition into Active, Paused, Waiting, and Recent
         active_tasks = [t for t in tasks if t.status in (
-            TaskStatus.RUNNING, TaskStatus.PLANNING, TaskStatus.PAUSED,
-            TaskStatus.PAUSED_USER_ACTIVE, TaskStatus.WAITING_CONFIRMATION, TaskStatus.WAITING_CLARIFICATION
+            TaskStatus.RUNNING, TaskStatus.PLANNING, TaskStatus.RECOVERING
         )]
-        waiting_tasks = [t for t in tasks if t.status in (TaskStatus.QUEUED, TaskStatus.BLOCKED)]
-        recent_tasks = [t for t in tasks if t.status in (TaskStatus.COMPLETED, TaskStatus.FAILED, TaskStatus.CANCELLED)]
+        paused_tasks = [t for t in tasks if t.status in (
+            TaskStatus.PAUSED, TaskStatus.PAUSED_USER_REQUEST,
+            TaskStatus.PAUSED_USER_ACTIVE, TaskStatus.PAUSING,
+            TaskStatus.SUSPENDED, TaskStatus.SUSPENDED_SYSTEM
+        )]
+        waiting_tasks = [t for t in tasks if t.status in (
+            TaskStatus.WAITING_CONFIRMATION, TaskStatus.WAITING_CLARIFICATION,
+            TaskStatus.WAITING_USER, TaskStatus.QUEUED, TaskStatus.BLOCKED
+        )]
+        recent_tasks = [t for t in tasks if t.status in (
+            TaskStatus.COMPLETED, TaskStatus.FAILED, TaskStatus.CANCELLED,
+            TaskStatus.PARTIALLY_COMPLETED, TaskStatus.INTERRUPTED
+        )]
 
         insert_idx = 0
 
@@ -415,7 +476,17 @@ class TaskCenterWindow(QDialog):
                 self.cards_layout.insertWidget(insert_idx, card)
                 insert_idx += 1
 
-        # Section 2: Waiting Tasks
+        # Section 2: Paused Tasks (explicitly placed between Active and Waiting)
+        if paused_tasks:
+            sec_header = SectionHeaderWidget("Paused", len(paused_tasks), self.cards_container)
+            self.cards_layout.insertWidget(insert_idx, sec_header)
+            insert_idx += 1
+            for t in paused_tasks:
+                card = self._create_card(t)
+                self.cards_layout.insertWidget(insert_idx, card)
+                insert_idx += 1
+
+        # Section 3: Waiting Tasks
         if waiting_tasks:
             sec_header = SectionHeaderWidget("Waiting", len(waiting_tasks), self.cards_container)
             self.cards_layout.insertWidget(insert_idx, sec_header)
@@ -425,7 +496,7 @@ class TaskCenterWindow(QDialog):
                 self.cards_layout.insertWidget(insert_idx, card)
                 insert_idx += 1
 
-        # Section 3: Recent Tasks
+        # Section 4: Recent Tasks
         if recent_tasks:
             sec_header = SectionHeaderWidget("Recent", len(recent_tasks), self.cards_container)
             self.cards_layout.insertWidget(insert_idx, sec_header)
@@ -439,8 +510,56 @@ class TaskCenterWindow(QDialog):
         card = TaskCardWidget(task, self.cards_container)
         card.pause_clicked.connect(self._on_pause)
         card.resume_clicked.connect(self._on_resume)
+        card.details_clicked.connect(self._on_details)
         card.cancel_clicked.connect(self._on_cancel)
         return card
+
+    def _on_details(self, task_id: str) -> None:
+        """Display dialog with task details and durable checkpoint info."""
+        task = self.task_runtime.get_task(task_id) if self.task_runtime else None
+        if not task:
+            return
+        dlg = QDialog(self)
+        dlg.setWindowTitle(f"Task Details — {task.id[:8]}")
+        dlg.resize(460, 320)
+        dlg.setStyleSheet(f"background-color: {BG_APP}; color: {TEXT_PRIMARY}; font-family: {FONT_FAMILY};")
+        d_layout = QVBoxLayout(dlg)
+        d_layout.setContentsMargins(16, 16, 16, 16)
+        d_layout.setSpacing(10)
+
+        t_lbl = QLabel(f"Goal: {task.request_text}", dlg)
+        t_lbl.setWordWrap(True)
+        t_lbl.setStyleSheet(f"font-size: {FONT_SIZE_BODY}; font-weight: 600; color: {TEXT_PRIMARY};")
+        d_layout.addWidget(t_lbl)
+
+        s_lbl = QLabel(f"Current Status: {task.status.value}", dlg)
+        s_lbl.setStyleSheet(f"color: {TEXT_SECONDARY}; font-size: {FONT_SIZE_CAPTION};")
+        d_layout.addWidget(s_lbl)
+
+        # Checkpoint info if exists
+        chk_info = "No durable checkpoint saved."
+        if self.task_runtime and hasattr(self.task_runtime, "ledger"):
+            chk = self.task_runtime.ledger.get_latest_checkpoint(task_id)
+            if chk:
+                chk_info = (
+                    f"Checkpoint ID: {chk.checkpoint_id}\n"
+                    f"Completed steps: {len(chk.completed_step_ids)}\n"
+                    f"Artifacts: {len(chk.artifacts)}\n"
+                    f"Pause reason: {chk.pause_reason}"
+                )
+        chk_lbl = QLabel(chk_info, dlg)
+        chk_lbl.setStyleSheet(
+            f"background-color: {SURFACE}; border: 1px solid {BORDER}; border-radius: {RADIUS_SM}px; "
+            f"padding: 10px; color: {TEXT_SECONDARY}; font-family: {FONT_MONO}; font-size: {FONT_SIZE_CAPTION};"
+        )
+        d_layout.addWidget(chk_lbl)
+
+        d_layout.addStretch(1)
+        btn_close = QPushButton("Close", dlg)
+        btn_close.setStyleSheet(get_button_style("subtle", size="sm"))
+        btn_close.clicked.connect(dlg.accept)
+        d_layout.addWidget(btn_close, alignment=Qt.AlignmentFlag.AlignRight)
+        dlg.exec()
 
     def _on_pause(self, task_id: str) -> None:
         if self.task_runtime:

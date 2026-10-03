@@ -1,8 +1,8 @@
 """Authoritative version definition and product metadata for AstraRun."""
 
-__version__ = "1.0.0-rc.1"
+__version__ = "1.0.0-rc.3-dogfood"
 VERSION = __version__
-VERSION_INFO = (1, 0, 0, "rc.1")
+VERSION_INFO = (1, 0, 0, "rc.3-dogfood")
 
 APP_NAME = "AstraRun"
 PUBLISHER = "Astra Engineering Team"

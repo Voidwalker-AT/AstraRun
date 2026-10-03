@@ -19,6 +19,7 @@ from astrarun.power.listener import StandaloneWin32PowerListener, callbacks
 from astrarun.power.recovery import RecoveryAssessment, ResumeRecoveryEngine
 from astrarun.tasks.checkpoints import TaskCheckpoint
 from astrarun.tasks.continuity import ContinuityEngine
+from astrarun.tasks.models import TaskStatus
 
 logger = get_logger("astrarun.power.manager")
 
@@ -67,6 +68,15 @@ class PowerLifecycleManager:
         self._task_timers[task_id] = timer
         return timer
 
+    def register_task(self, task_or_id: Any, task_obj: Any = None, budget_seconds: float = 1200.0) -> ExecutionBudgetTimer:
+        """Convenience alias accepting either (task_id, task_obj) or (task)."""
+        if task_obj is None and hasattr(task_or_id, "id"):
+            task_id = task_or_id.id
+            task_obj = task_or_id
+        else:
+            task_id = str(task_or_id)
+        return self.register_active_task(task_id, task_obj, budget_seconds=budget_seconds)
+
     def unregister_task(self, task_id: str) -> None:
         """Unregister a task upon completion or cancellation."""
         self._active_tasks.pop(task_id, None)
@@ -105,9 +115,16 @@ class PowerLifecycleManager:
             if timer:
                 timer.pause()
 
+            # Preserve explicit user-paused status
+            if getattr(task, "status", None) == TaskStatus.PAUSED_USER_REQUEST:
+                logger.info("Task %s is user-paused; preserving PAUSED_USER_REQUEST across system suspend", task_id)
+                continue
+
             # Create durable checkpoint
             cp = TaskCheckpoint(
                 task_id=task_id,
+                status="SUSPENDED",
+                pause_reason="SYSTEM_SUSPEND",
                 important_outputs={"status": "SUSPENDED", "reason": "SYSTEM_SUSPEND"},
             )
             self.continuity.save_checkpoint(cp)
@@ -165,9 +182,20 @@ class PowerLifecycleManager:
         # 3. Evaluate each task checkpoint
         assessments: List[RecoveryAssessment] = []
         for task_id in list(self._active_tasks.keys()):
+            task_obj = self._active_tasks.get(task_id)
+            cp = self.continuity.load_latest_checkpoint(task_id)
+
+            # Invariant: Power wake does NOT resume user-paused tasks
+            if (
+                (task_obj and getattr(task_obj, "status", None) == TaskStatus.PAUSED_USER_REQUEST)
+                or (cp and getattr(cp, "status", "") == TaskStatus.PAUSED_USER_REQUEST.value)
+                or (cp and getattr(cp, "pause_reason", "") == "USER_REQUEST")
+            ):
+                logger.info("[POWER_LIFECYCLE] Task %s is paused by USER request. Wake does NOT resume it.", task_id)
+                continue
+
             self.ledger.record_event(PowerEventType.TASK_RESUME_STARTED, task_id=task_id)
 
-            cp = self.continuity.load_latest_checkpoint(task_id)
             if not cp:
                 cp = TaskCheckpoint(task_id=task_id)
 

@@ -134,11 +134,26 @@ def ensure_app_dirs() -> None:
 def resolve_model_path(relative_name: str, dev_fallback: Optional[str | Path] = None) -> Path:
     """
     Resolve a model path.
-    1. Checks user models directory (%LOCALAPPDATA%\\AstraRun\\models).
-    2. Checks bundled models directory inside installation root.
-    3. In DEVELOPMENT mode: if neither exists, falls back to dev_fallback (e.g. E:\\AI_Models\\...).
-    4. In RELEASE mode: strictly returns the models directory path.
+    1. Checks models_config.json in config directory (configured existing assets).
+    2. Checks user models directory (%LOCALAPPDATA%\\AstraRun\\models).
+    3. Checks bundled models directory inside installation root.
+    4. Checks canonical machine model directories (E:\\AI_Models\\GGUF).
+    5. In DEVELOPMENT mode: falls back to dev_fallback if found on disk.
+    6. In RELEASE mode: defaults to user models directory path.
     """
+    # 0. Check explicit models_config.json mapping
+    config_map = get_config_dir() / "models_config.json"
+    if config_map.exists():
+        try:
+            import json
+            mapping = json.loads(config_map.read_text(encoding="utf-8"))
+            if relative_name in mapping:
+                p = Path(mapping[relative_name])
+                if p.exists():
+                    return p
+        except Exception:
+            pass
+
     user_model_path = get_models_dir() / relative_name
     if user_model_path.exists():
         return user_model_path
@@ -146,6 +161,11 @@ def resolve_model_path(relative_name: str, dev_fallback: Optional[str | Path] = 
     bundle_model_path = get_install_root() / "models" / relative_name
     if bundle_model_path.exists():
         return bundle_model_path
+
+    # Check canonical workstation AI model repository
+    canonical_gguf = Path(r"E:\AI_Models\GGUF") / relative_name
+    if canonical_gguf.exists():
+        return canonical_gguf
 
     if not is_release_mode() and dev_fallback:
         dev_path = Path(dev_fallback)

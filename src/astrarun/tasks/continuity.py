@@ -21,32 +21,7 @@ from astrarun.core.logging import get_logger
 logger = get_logger("astrarun.tasks.continuity")
 
 
-@dataclass
-class TaskCheckpoint:
-    """Snapshot of a task state for continuity and resumption."""
-    task_id: str
-    goal: str
-    status: str  # IN_PROGRESS, COMPLETED, PAUSED, FAILED
-    step_index: int = 0
-    timestamp: float = field(default_factory=time.time)
-    artifacts: List[str] = field(default_factory=list)
-    context_variables: Dict[str, Any] = field(default_factory=dict)
-    important_outputs: Dict[str, Any] = field(default_factory=dict)
-    recoverable_handles: Dict[str, Any] = field(default_factory=dict)
-    summary: str = ""
-
-    def __post_init__(self) -> None:
-        if self.important_outputs and not self.context_variables:
-            self.context_variables = dict(self.important_outputs)
-        elif self.context_variables and not self.important_outputs:
-            self.important_outputs = dict(self.context_variables)
-
-    def to_dict(self) -> Dict[str, Any]:
-        return asdict(self)
-
-    @classmethod
-    def from_dict(cls, data: Dict[str, Any]) -> TaskCheckpoint:
-        return cls(**data)
+from astrarun.tasks.checkpoints import TaskCheckpoint
 
 
 @dataclass

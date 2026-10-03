@@ -131,6 +131,21 @@ class NetworkBroker:
             logger.warning("NetworkBroker blocked GET: %s (%s)", url, msg)
             return NetworkResponse(status_code=403, data=b"", headers={}, url=url, error=msg)
 
+        # Check machine network connectivity to fail fast on offline state
+        try:
+            from astrarun.machine.model import MachineModel
+            net_fact = MachineModel.get_instance().get_fact("hardware.network.connected")
+            if net_fact and not net_fact.value:
+                return NetworkResponse(
+                    status_code=503,
+                    data=b"",
+                    headers={},
+                    url=url,
+                    error="Host network adapter reports disconnected (offline).",
+                )
+        except Exception:
+            pass
+
         req_headers = {"User-Agent": "AstraRun/1.0 (+https://github.com/astrarun)"}
         if headers:
             req_headers.update(headers)

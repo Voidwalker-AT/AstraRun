@@ -64,6 +64,21 @@ hidden_imports = [
     "astrarun.tools.dynamic_builder",
     "astrarun.tools.lifecycle",
     "astrarun.config.migrations",
+    "astrarun.machine",
+    "astrarun.machine.fact",
+    "astrarun.machine.model",
+    "astrarun.machine.resource_snapshot",
+    "astrarun.machine.capability_resolver",
+    "astrarun.machine.compatibility",
+    "astrarun.machine.diagnostics",
+    "astrarun.machine.query_engine",
+    "astrarun.machine.providers",
+    "astrarun.machine.providers.base",
+    "astrarun.machine.providers.hardware",
+    "astrarun.machine.providers.os_model",
+    "astrarun.machine.providers.software",
+    "astrarun.machine.providers.python_env",
+    "astrarun.machine.providers.topology",
 ]
 
 a = Analysis(

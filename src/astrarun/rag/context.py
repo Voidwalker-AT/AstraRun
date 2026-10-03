@@ -118,3 +118,53 @@ class ContextBuilder:
             "breakdown": breakdown,
             "is_within_budget": breakdown.is_within_budget,
         }
+
+    def build_machine_context(
+        self,
+        task_prompt: str,
+        resolver: Optional[Any] = None,
+    ) -> str:
+        """
+        Produce minimal, task-relevant machine capability context for planning.
+        Invariants:
+        - NEVER injects the entire MachineModel.
+        - NEVER injects personal paths, usernames, or secrets.
+        - Provides only facts and predicates relevant to the specific prompt.
+        """
+        try:
+            from astrarun.machine.capability_resolver import MachineCapabilityResolver
+            res = resolver or MachineCapabilityResolver()
+        except Exception:
+            return ""
+
+        q = task_prompt.lower()
+        items = []
+
+        if any(w in q for w in ["graph", "plot", "visualize", "chart", "figure"]):
+            pred = res.resolve("CAN_RUN_PYTHON_VISUALIZATION")
+            items.append(f"Visualization Capability: {pred.status.value} ({pred.reason})")
+
+        if any(w in q for w in ["cuda", "gpu", "torch", "vram", "vision", "vlm"]):
+            pred_cuda = res.resolve("CAN_USE_CUDA")
+            pred_vlm = res.resolve("CAN_LOAD_LOCAL_VLM_NOW")
+            items.append(f"CUDA: {pred_cuda.status.value} ({pred_cuda.reason})")
+            items.append(f"Vision Model: {pred_vlm.status.value} ({pred_vlm.reason})")
+
+        if any(w in q for w in ["browser", "web", "crawl", "scrape", "search"]):
+            pred_browser = res.resolve("CAN_AUTOMATE_BROWSER")
+            pred_net = res.resolve("CAN_DOWNLOAD")
+            items.append(f"Browser Automation: {pred_browser.status.value}")
+            items.append(f"Network: {pred_net.status.value}")
+
+        if any(w in q for w in ["compile", "build", "c++", "cpp"]):
+            pred = res.resolve("CAN_COMPILE_CPP")
+            items.append(f"C++ Toolchain: {pred.status.value} ({pred.reason})")
+
+        if any(w in q for w in ["git", "clone", "commit", "repo"]):
+            pred = res.resolve("CAN_USE_GIT")
+            items.append(f"Git CLI: {pred.status.value}")
+
+        if not items:
+            return ""
+
+        return "\n[TASK-RELEVANT WORKSTATION REALITY]\n" + "\n".join(f"- {it}" for it in items) + "\n"

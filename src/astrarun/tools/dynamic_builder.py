@@ -123,16 +123,30 @@ if __name__ == '__main__':
 assert os.path.exists('{output_name}'), "Graph artifact was not generated."
 assert os.path.getsize('{output_name}') > 1000, "Graph artifact file is empty."
 '''
+            # Query machine reality before declaring external dependency requirements
+            deps = []
+            try:
+                from astrarun.machine.model import MachineModel
+                model = MachineModel.get_instance()
+                np_fact = model.get_fact("software.python.package.numpy.installed")
+                plt_fact = model.get_fact("software.python.package.matplotlib.installed")
+                if not (np_fact and np_fact.value):
+                    deps.append(DependencyRequest(package="numpy", reason="Array computation for meshgrid"))
+                if not (plt_fact and plt_fact.value):
+                    deps.append(DependencyRequest(package="matplotlib", reason="3D surface visualization"))
+            except Exception:
+                deps = [
+                    DependencyRequest(package="numpy", reason="Array computation for meshgrid"),
+                    DependencyRequest(package="matplotlib", reason="3D surface visualization"),
+                ]
+
             return CandidateTool(
                 goal=goal,
                 executable_code=code,
                 test_verification_block=test_block,
                 inputs={"x_min": x_min, "x_max": x_max, "y_min": y_min, "y_max": y_max, "output_filename": output_name},
                 outputs={"artifact": output_name},
-                external_dependencies=[
-                    DependencyRequest(package="numpy", reason="Array computation for meshgrid"),
-                    DependencyRequest(package="matplotlib", reason="3D surface visualization"),
-                ],
+                external_dependencies=deps,
                 required_permissions=["FILESYSTEM_WRITE_SANDBOX"],
                 expected_side_effects=[f"Creates image artifact '{output_name}' in sandbox."],
                 sandbox_profile="EPHEMERAL_TOOL",

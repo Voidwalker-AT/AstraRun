@@ -95,7 +95,35 @@ class ContinuityEngine:
             return TaskCheckpoint.from_dict(data)
         except Exception as e:
             logger.warning("Error reading checkpoint %s: %s", file_path, e)
-            return None
+    def check_machine_drift(
+        self,
+        checkpoint: TaskCheckpoint,
+        mounted_volumes: Optional[List[str]] = None,
+    ) -> Tuple[bool, List[str]]:
+        """
+        Compare checkpoint machine assumptions with current machine reality.
+        Returns: (has_drift, drift_reasons)
+        """
+        drift_reasons: List[str] = []
+        if mounted_volumes is None:
+            try:
+                from astrarun.machine.model import MachineModel
+                vols_fact = MachineModel.get_instance().get_fact("hardware.storage.volumes")
+                mounted_volumes = vols_fact.value if vols_fact else ["C"]
+            except Exception:
+                mounted_volumes = ["C"]
+
+        mounted_upper = {str(v).upper().replace(":", "").replace("\\", "") for v in mounted_volumes}
+
+        for art in checkpoint.artifacts:
+            if len(art) >= 2 and art[1] == ":":
+                drive = art[0].upper()
+                if drive not in mounted_upper:
+                    drift_reasons.append(
+                        f"Storage volume {drive}:\\ required for artifact '{art}' is currently missing or disconnected."
+                    )
+
+        return len(drift_reasons) > 0, drift_reasons
 
     def list_checkpoints(self, limit: int = 20) -> List[TaskCheckpoint]:
         """List all available checkpoints ordered by recency."""

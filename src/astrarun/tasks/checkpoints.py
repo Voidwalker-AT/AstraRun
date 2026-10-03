@@ -34,9 +34,17 @@ class TaskCheckpoint:
     current_step_id: Optional[str] = None
     important_outputs: Dict[str, Any] = field(default_factory=dict)
     artifact_hashes: Dict[str, str] = field(default_factory=dict)  # filepath -> sha256
+    artifacts: List[str] = field(default_factory=list)
     invariant_states: Dict[str, bool] = field(default_factory=dict)  # invariant_id -> valid
     recoverable_handles: Dict[str, Any] = field(default_factory=dict)  # pids, hwnds, urls, download_ids
     timestamp: float = field(default_factory=time.time)
+
+    def __post_init__(self) -> None:
+        if self.artifacts and not self.artifact_hashes:
+            for a in self.artifacts:
+                self.artifact_hashes[a] = "unhashed"
+        elif self.artifact_hashes and not self.artifacts:
+            self.artifacts = list(self.artifact_hashes.keys())
 
     def record_artifact(self, file_path: Path) -> Optional[str]:
         """Compute and store the SHA-256 hash of a generated or modified file."""

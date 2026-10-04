@@ -39,8 +39,8 @@ def write_crash_report(exc_type: type, exc_value: BaseException, exc_tb: Any) ->
 
     # Sanitize traceback and exception message using SecretBroker
     broker = SecretBroker.get_instance()
-    sanitized_trace = broker.scrub_text(raw_trace)
-    sanitized_msg = broker.scrub_text(str(exc_value))
+    sanitized_trace, _ = broker.scrub_text(raw_trace)
+    sanitized_msg, _ = broker.scrub_text(str(exc_value))
 
     report: Dict[str, Any] = {
         "app_name": APP_NAME,
@@ -75,9 +75,10 @@ def install_crash_handler() -> None:
 
     def _unhandled_exception_handler(exc_type, exc_value, exc_tb):
         try:
+            logger.critical("FATAL UNHANDLED EXCEPTION: %s", exc_value, exc_info=(exc_type, exc_value, exc_tb))
             write_crash_report(exc_type, exc_value, exc_tb)
-        except Exception:
-            pass
+        except Exception as e:
+            logger.error("Failed in crash handler: %s", e)
         # Call original excepthook
         orig_excepthook(exc_type, exc_value, exc_tb)
 

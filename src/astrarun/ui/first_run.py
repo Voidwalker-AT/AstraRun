@@ -284,7 +284,7 @@ class FirstRunWizard(QDialog):
 
         if self.hardware.supports_standard_pack:
             status_icon.setPixmap(IconRenderer.get_pixmap("check", size=14, color=SUCCESS))
-            status_text.setText("Hardware verified: Ready for Dedicated Cognitive Acceleration.")
+            status_text.setText("Hardware verified: Local AI acceleration available.")
             status_text.setStyleSheet(f"color: {SUCCESS}; font-size: 11px; font-weight: 500;")
         else:
             status_icon.setPixmap(IconRenderer.get_pixmap("warning", size=14, color=WARNING))

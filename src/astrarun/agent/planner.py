@@ -249,8 +249,8 @@ class GoalPlanner:
             c = c.strip()
             if not c:
                 continue
-            # If clause begins with pronoun reference to previous action ("save it", "put it", "as", "in")
-            if clauses and re.match(r"^(?:save\s+it|put\s+it|export\s+it|into|in|as)\b", c, re.IGNORECASE):
+            # If clause begins with pronoun reference to previous action ("save it", "put it", "as", "in") or in-page target ("find the section", etc.)
+            if clauses and re.match(r"^(?:save\s+it|put\s+it|export\s+it|into|in|as|find\s+(?:the\s+)?section\b|navigate\s+to\s+(?:the\s+)?section\b|scroll\s+to\b|search\s+for\s+section\b)\b", c, re.IGNORECASE):
                 clauses[-1] = f"{clauses[-1]} and {c}"
             else:
                 clauses.append(c)
@@ -266,6 +266,23 @@ class GoalPlanner:
         args_schema = getattr(cap, "args_schema", {})
         if not isinstance(args_schema, dict):
             args_schema = {}
+
+        # 0. URL extraction (for open_url, web documentation navigation)
+        if "url" in args_schema or cap_id == "open_url":
+            url_match = re.search(r"https?://[^\s\"']+", clause)
+            if url_match:
+                args["url"] = url_match.group(0).strip()
+            elif "pathlib" in clause.lower() and ("doc" in clause.lower() or "python" in clause.lower()):
+                if "exists" in clause.lower():
+                    args["url"] = "https://docs.python.org/3/library/pathlib.html#pathlib.Path.exists"
+                else:
+                    args["url"] = "https://docs.python.org/3/library/pathlib.html"
+            elif "python" in clause.lower() and "doc" in clause.lower():
+                args["url"] = "https://docs.python.org/3/"
+            else:
+                domain_match = re.search(r"\b([a-zA-Z0-9-]+\.[a-zA-Z]{2,}(?:/[^\s]*)?)", clause)
+                if domain_match:
+                    args["url"] = f"https://{domain_match.group(1)}"
 
         # 1. Output file / path / query extraction (e.g. for battery reports, save text file, file search)
         folder_match = re.search(r"\b(?:in|to)\s+(Downloads|Documents|Desktop|Temp)\b", clause, re.IGNORECASE)

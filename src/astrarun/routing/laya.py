@@ -96,6 +96,8 @@ class LayaProcessClient:
 
                 env = os.environ.copy()
                 env["HF_HOME"] = hf_cache_dir
+                env["HF_HUB_OFFLINE"] = "1"
+                env["TRANSFORMERS_OFFLINE"] = "1"
                 env["PYTHONUNBUFFERED"] = "1"
 
                 # Command selection

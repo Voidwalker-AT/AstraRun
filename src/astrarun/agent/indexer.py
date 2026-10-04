@@ -247,6 +247,18 @@ class CapabilitySemanticIndex:
             if "inspect_window_ui" in cap_id and any(w in all_tokens for w in ("controls", "ui", "components", "elements", "widgets")):
                 score += 0.50
                 matched_terms.append("context:inspect_ui")
+            if "explorer" in all_tokens:
+                if cap_id in ("open_folder", "reveal_file"):
+                    score += 0.80
+                    matched_terms.append("context:file_explorer")
+                elif cap_id == "open_file":
+                    score -= 1.20
+            if any(b in all_tokens for b in ("browser", "url", "website", "documentation", "docs", "web")):
+                if cap_id == "open_url":
+                    score += 1.0
+                    matched_terms.append("context:browser_url")
+                elif cap_id == "open_file":
+                    score -= 1.20
 
             # 2. Verb matches (+0.35 specific action, +0.10 generic)
             matched_verbs = entry.verbs.intersection(q_tokens)

@@ -191,11 +191,12 @@ class CapabilityRegistry:
                 import inspect
                 try:
                     sig = inspect.signature(cap.handler)
-                    has_varkw = any(p.kind == inspect.Parameter.VAR_KEYWORD for p in sig.parameters.values())
-                    if not has_varkw:
-                        filtered_args = {k: v for k, v in args.items() if k in sig.parameters}
                 except Exception:
                     pass
+            from astrarun.agent.models import OutputReference
+            for k, v in list(filtered_args.items()):
+                if isinstance(v, OutputReference):
+                    filtered_args[k] = ""
 
             raw_res = cap.handler(**filtered_args)
 

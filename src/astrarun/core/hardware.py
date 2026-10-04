@@ -32,7 +32,7 @@ class GpuDevice:
     def display_label(self) -> str:
         """Formatted label for UI and CLI displays."""
         if self.is_discrete and self.has_cuda:
-            return f"{self.name} - {self.vram_gb:.1f} GB VRAM (Local AI acceleration ready)"
+            return f"{self.name} - {self.vram_gb:.1f} GB VRAM (Local AI acceleration available)"
         if self.is_integrated:
             return f"{self.name} - Integrated"
         return f"{self.name} - {self.vram_gb:.1f} GB VRAM"
@@ -70,6 +70,15 @@ def audit_hardware() -> HardwareProfile:
     os_version = platform.version()
     cpu_cores = os.cpu_count() or 4
     cpu_name = platform.processor() or "x86_64 Processor"
+    if sys.platform == "win32":
+        try:
+            import winreg
+            with winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, r"HARDWARE\DESCRIPTION\System\CentralProcessor\0") as key:
+                reg_name, _ = winreg.QueryValueEx(key, "ProcessorNameString")
+                if reg_name and str(reg_name).strip():
+                    cpu_name = str(reg_name).strip()
+        except Exception as e:
+            logger.debug("Registry CPU query fallback: %s", e)
 
     # 1. Physical RAM
     ram_gb = 16.0

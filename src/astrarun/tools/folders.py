@@ -19,7 +19,20 @@ def open_folder(folder: str) -> bool:
     Args:
         folder: Resolved directory path.
     """
+    clean_folder = (folder or "").strip().lower()
+    if not clean_folder or clean_folder in ("file explorer", "explorer", "this pc", "quick access"):
+        logger.info("Executing open_folder: default File Explorer instance")
+        if sys.platform == "win32":
+            subprocess.Popen(["explorer.exe"], shell=False)
+            return True
+        else:
+            subprocess.Popen(["xdg-open", str(Path.home())], shell=False)
+            return True
+
     folder_path = Path(folder)
+    if folder_path.exists() and folder_path.is_file():
+        folder_path = folder_path.parent
+
     if not folder_path.exists() or not folder_path.is_dir():
         logger.error("Cannot open folder: directory does not exist at %s", folder)
         return False

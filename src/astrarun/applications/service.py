@@ -6,6 +6,7 @@ import ctypes
 import ctypes.wintypes
 import sys
 import time
+from pathlib import Path
 from typing import Any, List, Optional
 
 import psutil
@@ -216,6 +217,13 @@ def open_application(app: str, path: Optional[str] = None) -> CapabilityResult:
     """Launch a verified local application."""
     t0 = time.perf_counter()
     resolved_path = path
+    target = None
+
+    # If provided path is not an existing executable or file, treat it as a target document argument
+    if resolved_path and not Path(resolved_path).exists():
+        target = resolved_path
+        resolved_path = None
+
     if not resolved_path:
         find_res = find_application(app)
         if find_res.success and find_res.data and find_res.data.get("path"):
@@ -226,7 +234,7 @@ def open_application(app: str, path: Optional[str] = None) -> CapabilityResult:
             if which_path:
                 resolved_path = which_path
 
-    success = open_app(app=app, path=resolved_path or "")
+    success = open_app(app=app, path=resolved_path or "", target=target)
     latency = (time.perf_counter() - t0) * 1000
 
     if success:

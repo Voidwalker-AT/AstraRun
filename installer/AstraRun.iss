@@ -1,9 +1,8 @@
-; Inno Setup 6 Script for AstraRun 1.0.0-rc.5-dogfood
+; Inno Setup 6 Script for AstraRun 1.0.0-rc.5a-dogfood
 ; Windows Intelligent Command Launcher & Desktop Agent
 
 #define MyAppName "AstraRun"
-#define MyAppVersion "1.0.0-rc.5-dogfood"
-#define MyAppPublisher "Astra Engineering Team"
+#define MyAppVersion "1.0.0-rc.5a-dogfood"
 #define MyAppURL "https://github.com/astrarun/astrarun"
 #define MyAppExeName "AstraRun.exe"
 
@@ -11,7 +10,6 @@
 AppId={{C24B5D7A-A12E-4F42-87F9-5B264E21D0E4}
 AppName={#MyAppName}
 AppVersion={#MyAppVersion}
-AppPublisher={#MyAppPublisher}
 AppPublisherURL={#MyAppURL}
 AppSupportURL={#MyAppURL}
 AppUpdatesURL={#MyAppURL}
@@ -24,11 +22,10 @@ OutputBaseFilename=AstraRun-Setup-{#MyAppVersion}
 SetupIconFile=..\resources\icons\AstraRun.ico
 UninstallDisplayName={#MyAppName}
 UninstallDisplayIcon={app}\{#MyAppExeName}
-VersionInfoCompany={#MyAppPublisher}
 VersionInfoDescription=AstraRun - Windows Intelligent Command Launcher & Desktop Agent
-VersionInfoVersion=1.0.5.0
+VersionInfoVersion=1.0.5.1
 VersionInfoTextVersion={#MyAppVersion}
-VersionInfoCopyright=Copyright (C) 2026 Astra Engineering Team
+VersionInfoCopyright=Copyright (C) 2026
 Compression=lzma2/ultra64
 SolidCompression=yes
 WizardStyle=modern

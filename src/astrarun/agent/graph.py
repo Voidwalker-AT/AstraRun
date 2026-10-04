@@ -122,16 +122,31 @@ class ExecutionGraph:
         for arg_name, arg_val in list(step.arguments.items()):
             if isinstance(arg_val, OutputReference):
                 ref_step = self._step_map.get(arg_val.step_id)
-                if ref_step and ref_step.result and ref_step.result.data and arg_val.field in ref_step.result.data:
-                    resolved_val = ref_step.result.data[arg_val.field]
-                    step.arguments[arg_name] = resolved_val
+                resolved_val = None
+                if ref_step and ref_step.result and ref_step.result.data:
+                    if arg_val.field in ref_step.result.data:
+                        resolved_val = ref_step.result.data[arg_val.field]
+                    else:
+                        # Fallback to common result fields
+                        for candidate in ("path", "file", "target", "output", "stdout", "app"):
+                            if candidate in ref_step.result.data:
+                                resolved_val = ref_step.result.data[candidate]
+                                break
+                        if resolved_val is None and ref_step.result.data:
+                            resolved_val = next(iter(ref_step.result.data.values()))
+
+                if resolved_val is not None:
+                    step.arguments[arg_name] = str(resolved_val)
                     step.argument_bindings[arg_name] = ArgumentBinding(
                         parameter=arg_name,
-                        value=resolved_val,
+                        value=str(resolved_val),
                         source_type=ArgumentSourceType.PREVIOUS_STEP,
                         source_reference=f"{arg_val.step_id}.{arg_val.field}",
                         confidence=1.0,
                     )
+                else:
+                    # Clean out unresolved reference to prevent type error in downstream handlers
+                    step.arguments[arg_name] = ""
             elif isinstance(arg_val, str) and "${" in arg_val and "}" in arg_val:
                 # String template substitution
                 def replacer(match):

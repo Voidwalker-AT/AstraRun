@@ -433,9 +433,10 @@ class SettingsDialog(QDialog):
         ver.setStyleSheet(f"font-size: 11px; font-family: {FONT_MONO}; color: {ACCENT};")
         bl.addWidget(ver)
 
-        pub = QLabel(f"Publisher: {PUBLISHER}", box)
-        pub.setStyleSheet(f"font-size: 11px; color: {TEXT_MUTED};")
-        bl.addWidget(pub)
+        if PUBLISHER:
+            pub = QLabel(f"Publisher: {PUBLISHER}", box)
+            pub.setStyleSheet(f"font-size: 11px; color: {TEXT_MUTED};")
+            bl.addWidget(pub)
 
         arch = QLabel("Architecture: Windows Native Desktop Shell (PySide6 / Win32 / CUDA)", box)
         arch.setStyleSheet(f"font-size: 11px; color: {TEXT_MUTED};")

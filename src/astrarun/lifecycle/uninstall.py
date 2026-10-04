@@ -148,7 +148,7 @@ def scan_uninstall_inventory(
     items.append(
         ComponentInventoryItem(
             id="config",
-            label="Preferences & Settings",
+            label="Settings",
             category=ComponentOwnership.CONFIGURATION,
             path=cfg_path,
             size_bytes=compute_path_size(cfg_path),
@@ -167,7 +167,7 @@ def scan_uninstall_inventory(
     items.append(
         ComponentInventoryItem(
             id="task_history",
-            label="Task History & Checkpoints",
+            label="Task history",
             category=ComponentOwnership.TASK_HISTORY,
             path=app_data / "data",
             size_bytes=history_size,
@@ -186,7 +186,7 @@ def scan_uninstall_inventory(
     items.append(
         ComponentInventoryItem(
             id="memory",
-            label="Memory & Retrieval Index",
+            label="Memory & search index",
             category=ComponentOwnership.MEMORY_DATABASE,
             path=app_data / "data",
             size_bytes=mem_size,
@@ -202,7 +202,7 @@ def scan_uninstall_inventory(
     items.append(
         ComponentInventoryItem(
             id="skills",
-            label="Learned Skills & Dynamic Tools",
+            label="Learned skills",
             category=ComponentOwnership.SKILLS,
             path=skills_dir,
             size_bytes=compute_path_size(skills_dir),
@@ -218,7 +218,7 @@ def scan_uninstall_inventory(
     items.append(
         ComponentInventoryItem(
             id="logs",
-            label="Logs & Crash Diagnostics",
+            label="Logs & diagnostics",
             category=ComponentOwnership.LOGS,
             path=logs_dir,
             size_bytes=compute_path_size(logs_dir),
@@ -234,7 +234,7 @@ def scan_uninstall_inventory(
     items.append(
         ComponentInventoryItem(
             id="cache",
-            label="Temporary Application Cache",
+            label="Temporary cache",
             category=ComponentOwnership.CACHE,
             path=cache_dir,
             size_bytes=compute_path_size(cache_dir),
@@ -250,7 +250,7 @@ def scan_uninstall_inventory(
     items.append(
         ComponentInventoryItem(
             id="managed_models",
-            label="Astra-Managed Model Weights",
+            label="Astra-managed models",
             category=ComponentOwnership.ASTRA_MANAGED_MODELS,
             path=models_dir,
             size_bytes=compute_path_size(models_dir),
@@ -266,7 +266,7 @@ def scan_uninstall_inventory(
     items.append(
         ComponentInventoryItem(
             id="managed_runtimes",
-            label="Astra-Managed Isolated Runtimes",
+            label="Astra-managed runtimes",
             category=ComponentOwnership.ASTRA_MANAGED_RUNTIMES,
             path=runtimes_dir,
             size_bytes=compute_path_size(runtimes_dir),

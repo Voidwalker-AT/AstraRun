@@ -253,6 +253,16 @@ class CapabilitySemanticIndex:
                     matched_terms.append("context:file_explorer")
                 elif cap_id == "open_file":
                     score -= 1.20
+            if "file" in all_tokens and any(w in all_tokens for w in ("show", "reveal", "highlight")):
+                if cap_id == "reveal_file":
+                    score += 1.50
+                    matched_terms.append("context:reveal_file")
+                elif cap_id == "open_folder":
+                    score -= 0.80
+            if any(w in all_tokens for w in ("save", "write")) and "file" in all_tokens:
+                if cap_id == "save_text_file":
+                    score += 1.80
+                    matched_terms.append("context:save_file")
             if any(b in all_tokens for b in ("browser", "url", "website", "documentation", "docs", "web")):
                 if cap_id == "open_url":
                     score += 1.0

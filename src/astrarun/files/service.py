@@ -294,3 +294,44 @@ def file_metadata(path: str) -> CapabilityResult:
         data=meta,
         latency_ms=latency,
     )
+
+
+def save_text_file(
+    path: str,
+    text: str = "",
+    content: Optional[str] = None,
+    overwrite: bool = True,
+) -> CapabilityResult:
+    """Save or write text content to a destination file on disk."""
+    t0 = time.perf_counter()
+    target_text = text if (text is not None and text != "") else (content or "")
+    try:
+        norm_path = Path(path).expanduser().resolve()
+        norm_path.parent.mkdir(parents=True, exist_ok=True)
+        if not overwrite and norm_path.exists():
+            return CapabilityResult.fail(
+                capability="save_text_file",
+                message=f"File already exists and overwrite is disabled: {norm_path}",
+                error_code=CapabilityErrorCode.CONFLICT,
+            )
+        norm_path.write_text(target_text, encoding="utf-8")
+        latency = (time.perf_counter() - t0) * 1000
+        return CapabilityResult.ok(
+            capability="save_text_file",
+            message=f"Saved text to '{norm_path}'.",
+            data={
+                "path": str(norm_path),
+                "filename": norm_path.name,
+                "output_file": str(norm_path),
+                "bytes_written": len(target_text.encode("utf-8")),
+            },
+            context_updates=[{"type": "file_created", "path": str(norm_path), "filename": norm_path.name}],
+            latency_ms=latency,
+        )
+    except Exception as err:
+        logger.error("Error writing file '%s': %s", path, err)
+        return CapabilityResult.fail(
+            capability="save_text_file",
+            message=f"Failed to write file: {err}",
+            error_code=CapabilityErrorCode.OS_ERROR,
+        )

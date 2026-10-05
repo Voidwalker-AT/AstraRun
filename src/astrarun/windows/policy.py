@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import ctypes
 import ctypes.wintypes
+import os
 import sys
 from typing import Set
 
@@ -52,7 +53,20 @@ def unregister_astrarun_hwnd(hwnd: int) -> None:
 
 def is_astrarun_window(hwnd: int) -> bool:
     """Check if the given HWND belongs to AstraRun's UI."""
-    return hwnd in _ASTRARUN_HWNDS
+    if not hwnd or hwnd <= 0:
+        return False
+    if hwnd in _ASTRARUN_HWNDS:
+        return True
+    if sys.platform == "win32":
+        try:
+            pid = ctypes.wintypes.DWORD()
+            ctypes.windll.user32.GetWindowThreadProcessId(hwnd, ctypes.byref(pid))
+            if pid.value == os.getpid():
+                _ASTRARUN_HWNDS.add(hwnd)
+                return True
+        except Exception:
+            pass
+    return False
 
 
 def validate_window_identity(hwnd: int, expected_pid: int | None = None) -> tuple[bool, str, CapabilityErrorCode | None]:

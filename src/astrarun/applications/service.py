@@ -238,12 +238,28 @@ def open_application(app: str, path: Optional[str] = None) -> CapabilityResult:
     latency = (time.perf_counter() - t0) * 1000
 
     if success:
+        # Wait up to 2.5s for the newly launched process to create a visible window
+        deadline = time.time() + 2.5
+        found_win = None
+        clean_app = app.lower().replace(".exe", "")
+        while time.time() < deadline:
+            time.sleep(0.15)
+            for w in _get_top_level_windows():
+                if clean_app in w.app_id.lower() or clean_app in w.title.lower():
+                    found_win = w
+                    break
+            if found_win:
+                break
+        res_data = {"app": app, "path": resolved_path}
+        if found_win:
+            res_data["hwnd"] = found_win.hwnd
+            res_data["title"] = found_win.title
         return CapabilityResult.ok(
             capability="open_application",
             message=f"Application '{app}' launched successfully.",
-            data={"app": app, "path": resolved_path},
-            context_updates=[{"type": "application_opened", "app": app}],
-            latency_ms=latency,
+            data=res_data,
+            context_updates=[{"type": "application_opened", "app": app, "hwnd": getattr(found_win, "hwnd", 0)}],
+            latency_ms=(time.perf_counter() - t0) * 1000,
         )
     return CapabilityResult.fail(
         capability="open_application",

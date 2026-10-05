@@ -34,30 +34,48 @@ def _resolve_target_hwnd(
     origin_window: Optional[WindowEntity | int] = None,
 ) -> Optional[int]:
     """Resolve the target window HWND from explicit hwnd, window name, or origin/foreground window."""
-    if hwnd and hwnd > 0:
+    from astrarun.windows.policy import is_astrarun_window
+    if hwnd and hwnd > 0 and not is_astrarun_window(hwnd):
         return hwnd
+
+    if sys.platform == "win32":
+        try:
+            from astrarun.windows.discovery import _ensure_desktop_attached
+            _ensure_desktop_attached()
+        except Exception:
+            pass
 
     origin_entity: Optional[WindowEntity] = None
     if isinstance(origin_window, WindowEntity):
         origin_entity = origin_window
 
     if window_query:
-        # Use WindowResolver to resolve window by name
-        res = WindowResolver().resolve(window_query, origin_window=origin_entity)
-        if res.window:
-            return res.window.hwnd
+        # Use WindowResolver to resolve window by name (poll briefly for freshly launched processes)
+        deadline = time.time() + 3.0
+        while time.time() < deadline:
+            res = WindowResolver().resolve(window_query, origin_window=origin_entity)
+            if res.window and not is_astrarun_window(res.window.hwnd):
+                return res.window.hwnd
+            elif res.candidates:
+                # If ambiguous (multiple windows/tabs), select the topmost non-AstraRun window
+                for cand in res.candidates:
+                    if cand.hwnd and not is_astrarun_window(cand.hwnd):
+                        return cand.hwnd
+            time.sleep(0.15)
 
     # Fallback to origin_window if supplied
     if origin_window:
-        if isinstance(origin_window, int) and origin_window > 0:
+        if isinstance(origin_window, int) and origin_window > 0 and not is_astrarun_window(origin_window):
             return origin_window
-        if isinstance(origin_window, WindowEntity) and origin_window.hwnd > 0:
+        if isinstance(origin_window, WindowEntity) and origin_window.hwnd > 0 and not is_astrarun_window(origin_window.hwnd):
             return origin_window.hwnd
 
-    # Fallback to current foreground window
+    # Fallback to current foreground window (excluding AstraRun's own UI)
     fg = foreground_window()
     if fg.success and fg.data.get("hwnd"):
-        return fg.data["hwnd"]
+        fg_hwnd = fg.data["hwnd"]
+        if not is_astrarun_window(fg_hwnd):
+            return fg_hwnd
 
     return None
 
@@ -495,7 +513,10 @@ def resolve_editable_element(
     if not target_hwnd:
         fg_res = foreground_window()
         if fg_res.success and fg_res.data:
-            target_hwnd = fg_res.data.get("hwnd")
+            cand = fg_res.data.get("hwnd")
+            from astrarun.windows.policy import is_astrarun_window
+            if cand and not is_astrarun_window(cand):
+                target_hwnd = cand
 
     if not target_hwnd:
         return CapabilityResult.fail(
@@ -599,12 +620,15 @@ def type_literal_text(
     Enforces the 6-point focus and target verification invariant before injecting keystrokes.
     """
     t0 = time.perf_counter()
-    target_hwnd = _resolve_target_hwnd(hwnd, window, origin_window)
+    target_hwnd = _resolve_target_hwnd(hwnd, window or kwargs.get("app_name") or kwargs.get("app"), origin_window)
 
     if not target_hwnd:
         fg_res = foreground_window()
         if fg_res.success and fg_res.data:
-            target_hwnd = fg_res.data.get("hwnd")
+            cand = fg_res.data.get("hwnd")
+            from astrarun.windows.policy import is_astrarun_window
+            if cand and not is_astrarun_window(cand):
+                target_hwnd = cand
 
     # Fast path for simulated tests
     from astrarun.interaction.policy import is_simulated_interaction_validation

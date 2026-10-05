@@ -258,6 +258,7 @@ class CapabilityRegistry:
             list_recent_files,
             open_file,
             reveal_file,
+            save_text_file,
         )
         from astrarun.network.service import (
             find_process_on_port,
@@ -447,6 +448,17 @@ class CapabilityRegistry:
             read_only=True,
             handler=file_metadata,
             permission=CapabilityPermission.AUTO,
+        ))
+        self.register(Capability(
+            id="save_text_file",
+            category=CapabilityCategory.FILE,
+            description="Save or write text content to a destination file on disk",
+            args_schema={"path": str, "text": str, "content": Optional[str]},
+            risk=ToolRisk.LOW,
+            read_only=False,
+            handler=save_text_file,
+            permission=CapabilityPermission.AUTO,
+            context_effects=["file_created"],
         ))
 
         # ---------------------------------------------------------

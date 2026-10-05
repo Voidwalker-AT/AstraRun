@@ -339,6 +339,7 @@ def main() -> int:
         resume_requested = Signal()
         restart_requested = Signal()
         submit_query_requested = Signal(str)
+        populate_query_requested = Signal(str)
         quit_requested = Signal()
 
     ipc_bridge = IPCSignalBridge(parent=launcher)
@@ -350,7 +351,11 @@ def main() -> int:
     def on_ipc_query(query: str):
         launcher.input_field.setText(query)
         launcher.execute_command()
+    def on_ipc_populate(query: str):
+        launcher.input_field.setText(query)
+        presentation_controller.present()
     ipc_bridge.submit_query_requested.connect(on_ipc_query)
+    ipc_bridge.populate_query_requested.connect(on_ipc_populate)
     ipc_bridge.quit_requested.connect(qapp.quit)
     astra_app.ipc_bridge = ipc_bridge  # type: ignore
 
@@ -373,6 +378,10 @@ def main() -> int:
         elif cmd_upper == "RESTART":
             ipc_bridge.restart_requested.emit()
             return {"action": "RESTART_TRIGGERED"}
+        elif cmd_upper in ("POPULATE_QUERY", "SET_QUERY"):
+            query = args.get("query", "")
+            ipc_bridge.populate_query_requested.emit(query)
+            return {"action": "QUERY_POPULATED", "query": query}
         elif cmd_upper in ("SUBMIT_QUERY", "EXECUTE_COMMAND", "EXECUTE"):
             query = args.get("query", "")
             ipc_bridge.submit_query_requested.emit(query)

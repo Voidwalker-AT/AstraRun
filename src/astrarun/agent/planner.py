@@ -112,6 +112,10 @@ class GoalPlanner:
             goal.parameters.update(valid_sub_goals[0]["arguments"])
         elif len(valid_sub_goals) > 1 and not unresolved_sub_goals:
             goal.intent = "composite_dag_workflow"
+            for sg in valid_sub_goals:
+                for k in ("path", "output_path", "ssid", "query"):
+                    if k in sg.get("arguments", {}) and k not in goal.parameters:
+                        goal.parameters[k] = sg["arguments"][k]
         else:
             goal.intent = "unsupported_or_reasoning_required"
 
@@ -243,15 +247,28 @@ class GoalPlanner:
 
     def _split_clauses(self, text: str) -> list[str]:
         """Split compound multi-step instructions on conjunctions, merging pronoun modifiers."""
-        raw_clauses = re.split(r"\s+(?:and\s+(?:then\s+)?|then\s+|\&\s+|;\s*)", text, flags=re.IGNORECASE)
+        raw_clauses = re.split(
+            r"(?:,\s*(?=(?:type|save|open|show|find|close|reveal|and|then)\b)|\s+(?:and\s+(?:then\s+)?|then\s+|\&\s+|;\s*))",
+            text,
+            flags=re.IGNORECASE,
+        )
         clauses: list[str] = []
         for c in raw_clauses:
             c = c.strip()
             if not c:
                 continue
-            # If clause begins with pronoun reference to previous action ("save it", "put it", "as", "in") or in-page target ("find the section", etc.)
-            if clauses and re.match(r"^(?:save\s+it|put\s+it|export\s+it|into|in|as|find\s+(?:the\s+)?section\b|navigate\s+to\s+(?:the\s+)?section\b|scroll\s+to\b|search\s+for\s+section\b)\b", c, re.IGNORECASE):
+            # If clause begins with in-page target ("find the section", etc.) or relative display target
+            if clauses and re.match(
+                r"^(?:into|in|find\s+(?:the\s+)?section\b|navigate\s+to\s+(?:the\s+)?section\b|scroll\s+to\b|search\s+for\s+section\b)\b",
+                c,
+                re.IGNORECASE,
+            ):
                 clauses[-1] = f"{clauses[-1]} and {c}"
+            elif clauses and re.match(r"^(?:show\s+(?:me\s+)?(?:the\s+)?file|reveal\s+(?:the\s+)?file)\b", c, re.IGNORECASE):
+                if any(w in clauses[-1].lower() for w in ("explorer", "folder", "open")):
+                    clauses[-1] = f"{clauses[-1]} and {c}"
+                else:
+                    clauses.append(c)
             else:
                 clauses.append(c)
         return clauses
@@ -288,10 +305,10 @@ class GoalPlanner:
         folder_match = re.search(r"\b(?:in|to)\s+(Downloads|Documents|Desktop|Temp)\b", clause, re.IGNORECASE)
         folder = folder_match.group(1) if folder_match else "Downloads"
 
-        path_match = re.search(r"(?:to|into|as|in)\s+([a-zA-Z]:[^\s\"']+|[a-zA-Z0-9_\-\\/\.]+\.(?:html|xml|txt|json|pdf|csv|xlsx|toml|py|docx|zip|png|log|md|sha))\b", clause, re.IGNORECASE)
-        file_match = path_match or re.search(r"\bas\s+([a-zA-Z0-9_\-\.]+\.(?:html|xml|txt|json|pdf))\b", clause, re.IGNORECASE)
+        path_match = re.search(r"(?:to|into|as|in)\s+([^\r\n,;\"']+\.(?:html|xml|txt|json|pdf|csv|xlsx|toml|py|docx|zip|png|log|md|sha))\b", clause, re.IGNORECASE)
+        file_match = path_match or re.search(r"\bas\s+([^\r\n,;\"']+\.(?:html|xml|txt|json|pdf))\b", clause, re.IGNORECASE)
         if not file_match:
-            file_match = re.search(r"\b([a-zA-Z0-9_\-\.]+\.(?:html|xml|txt|json|pdf|csv|xlsx|toml|py|docx|zip|png|log|md|sha))\b", clause, re.IGNORECASE)
+            file_match = re.search(r"\b([^\r\n,;\"'\s]+\.(?:html|xml|txt|json|pdf|csv|xlsx|toml|py|docx|zip|png|log|md|sha))\b", clause, re.IGNORECASE)
 
         temp_dir_match = re.search(r"\b(?:AstraRun\s+temporary\s+test\s+directory|temporary\s+test\s+directory|temp\s+directory|test\s+directory)\b", clause, re.IGNORECASE)
         if temp_dir_match:
@@ -303,10 +320,28 @@ class GoalPlanner:
         elif file_match:
             raw_path = file_match.group(1).strip()
             fname = os.path.basename(raw_path.replace("\\", "/"))
-            if ":" in raw_path or "/" in raw_path or "\\" in raw_path:
+            if ":" in raw_path:
+                full_path = raw_path
+            elif re.match(r"^desktop[\\/]", raw_path, re.IGNORECASE):
+                rel_part = re.sub(r"^desktop[\\/]+", "", raw_path, flags=re.IGNORECASE).lstrip("\\/")
+                full_path = str(Path.home() / "Desktop" / rel_part)
+            elif re.match(r"^downloads[\\/]", raw_path, re.IGNORECASE):
+                rel_part = re.sub(r"^downloads[\\/]+", "", raw_path, flags=re.IGNORECASE).lstrip("\\/")
+                full_path = str(Path.home() / "Downloads" / rel_part)
+            elif re.match(r"^documents[\\/]", raw_path, re.IGNORECASE):
+                rel_part = re.sub(r"^documents[\\/]+", "", raw_path, flags=re.IGNORECASE).lstrip("\\/")
+                full_path = str(Path.home() / "Documents" / rel_part)
+            elif "/" in raw_path or "\\" in raw_path:
                 full_path = raw_path
             else:
-                full_path = f"{folder}/{fname}" if folder_match else fname
+                if folder_match and folder.lower() == "desktop":
+                    full_path = str(Path.home() / "Desktop" / fname)
+                elif folder_match and folder.lower() == "downloads":
+                    full_path = str(Path.home() / "Downloads" / fname)
+                elif folder_match and folder.lower() == "documents":
+                    full_path = str(Path.home() / "Documents" / fname)
+                else:
+                    full_path = f"{folder}/{fname}" if folder_match else fname
 
             if "output_path" in args_schema or cap_id == "generate_battery_report":
                 args["output_path"] = full_path
@@ -328,9 +363,13 @@ class GoalPlanner:
                 verb_match = re.search(r"^(?:reverse|type|write|save|count\s+words\s+in|calculate\s+hash\s+of|compute\s+sha256\s+hash\s+for|compute\s+hash\s+for|format\s+json\s+string|format\s+json\s+payload|beautify\s+json|format\s+json\s+data|beautify\s+json\s+string)\s+(.+?)(?:\s+to\s+|\s+in\s+|$)", clause, re.IGNORECASE)
                 val = verb_match.group(1).strip() if verb_match else clause
 
-            for k in ("text", "content", "data", "input", "payload"):
-                if k in args_schema and k not in args:
-                    args[k] = val
+            if val.lower().startswith(("it as", "it to", "it in", "it into")) or val.lower() == "it":
+                val = ""
+
+            if val:
+                for k in ("text", "content", "data", "input", "payload"):
+                    if k in args_schema and k not in args:
+                        args[k] = val
 
         # 3. Numeric PID and Port extraction
         num_match = re.search(r"\b(\d{2,5})\b", clause)
@@ -462,6 +501,20 @@ class GoalPlanner:
                     step.capability_id = "type_into_window"
                     step.arguments["app_name"] = app_name
 
+        # Propagate text payload and saved file path across sequential chain
+        text_payload = None
+        saved_file_path = None
+        for step in steps:
+            if step.capability_id in ("type_text", "type_into_window", "reverse_text"):
+                text_payload = step.arguments.get("text")
+            elif step.capability_id == "save_text_file":
+                if not step.arguments.get("text") and not step.arguments.get("content") and text_payload:
+                    step.arguments["text"] = text_payload
+                saved_file_path = step.arguments.get("path")
+            elif step.capability_id == "reveal_file":
+                if not step.arguments.get("path") and saved_file_path:
+                    step.arguments["path"] = saved_file_path
+
         for i in range(len(steps)):
             step_i = steps[i]
             cap_i = self.registry.get(step_i.capability_id)
@@ -482,8 +535,14 @@ class GoalPlanner:
             for j in range(i + 1, len(steps)):
                 step_j = steps[j]
 
-                # Logical sequencing: open app -> type/click
+                # Logical sequencing
                 if step_i.capability_id in ("open_application", "open_app") and step_j.capability_id in ("type_text", "type_into_window", "click_ui_element"):
+                    if not any(d.step_id == step_i.step_id for d in step_j.dependencies):
+                        step_j.dependencies.append(StepDependency(step_id=step_i.step_id))
+                if step_i.capability_id in ("type_text", "type_into_window", "reverse_text") and step_j.capability_id == "save_text_file":
+                    if not any(d.step_id == step_i.step_id for d in step_j.dependencies):
+                        step_j.dependencies.append(StepDependency(step_id=step_i.step_id))
+                if step_i.capability_id == "save_text_file" and step_j.capability_id == "reveal_file":
                     if not any(d.step_id == step_i.step_id for d in step_j.dependencies):
                         step_j.dependencies.append(StepDependency(step_id=step_i.step_id))
 

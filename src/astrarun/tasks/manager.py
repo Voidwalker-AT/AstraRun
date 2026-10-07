@@ -56,9 +56,11 @@ class TaskManager:
         self,
         ledger: Optional[TaskLedger] = None,
         event_bus: Optional[TaskEventBus] = None,
+        execution_broker: Optional[Any] = None,
     ) -> None:
         self.ledger = ledger or TaskLedger()
         self.event_bus = event_bus or get_global_event_bus()
+        self.execution_broker = execution_broker
 
         self._active_tasks: dict[str, Task] = {}
         self._cancellation_tokens: dict[str, CancellationToken] = {}
@@ -370,6 +372,7 @@ class TaskManager:
         """
         Instrumented capability dispatch within a Task context.
         Verifies cancellation, emits lifecycle events, profiles execution, and records results.
+        Mandatory execution choke-point passes through ExecutionBroker.
         """
         token = self.get_cancellation_token(task_id)
         if token and token.is_cancelled:
@@ -389,14 +392,62 @@ class TaskManager:
             status="RUNNING",
         )
 
+        broker = self.execution_broker
+        if broker is None:
+            from astrarun.security.execution_broker import ExecutionBroker
+            broker = ExecutionBroker(capability_registry=registry)
+            self.execution_broker = broker
+
+        from astrarun.security.execution_broker import ActionCategory, ActionProposal
+        proposal = ActionProposal(
+            category=ActionCategory.ACT,
+            capability_id=capability_id,
+            parameters=arguments,
+            source="task_manager",
+            task_id=task_id,
+        )
+
         t0 = time.perf_counter()
-        result = registry.execute(capability_id, arguments)
+        broker_res = broker.execute(proposal)
         latency = (time.perf_counter() - t0) * 1000.0
 
         # Check for mid-execution cancellation
         if token and token.is_cancelled:
             self.cancel_task(task_id, reason="Task cancelled during capability execution.")
             raise TaskCancelledError(token.reason or "Task cancelled")
+
+        if broker_res.blocked:
+            result = CapabilityResult.fail(
+                capability=capability_id,
+                message=broker_res.message,
+                error_code=CapabilityErrorCode.BLOCKED,
+                latency_ms=latency,
+            )
+        elif broker_res.requires_confirmation:
+            result = CapabilityResult.fail(
+                capability=capability_id,
+                message=broker_res.message,
+                error_code=CapabilityErrorCode.PERMISSION_DENIED,
+                data={"confirmation_token": broker_res.confirmation_token},
+                latency_ms=latency,
+            )
+        elif broker_res.raw_result is not None and isinstance(broker_res.raw_result, CapabilityResult):
+            result = broker_res.raw_result
+        elif not broker_res.success:
+            result = CapabilityResult.fail(
+                capability=capability_id,
+                message=broker_res.message,
+                error_code=CapabilityErrorCode.OS_ERROR,
+                data=broker_res.data,
+                latency_ms=latency,
+            )
+        else:
+            result = CapabilityResult.ok(
+                capability=capability_id,
+                message=broker_res.message,
+                data=broker_res.data,
+                latency_ms=latency,
+            )
 
         if result.success:
             summary = generate_capability_summary(capability_id, result.data, result.message)

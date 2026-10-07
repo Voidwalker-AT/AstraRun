@@ -1,0 +1,161 @@
+{
+  "phase": "C2.2",
+  "audit_timestamp": "2026-10-07T23:25:00+05:30",
+  "mission": "C2.2 Security Closure, Trusted Capability Split & Fresh Adversarial Freeze",
+  "status": "PASS",
+  "readiness_verdict": "READY_FOR_FROZEN_PRODUCT_DOGFOOD",
+  "workstation_baseline": {
+    "os_version": "Windows 11 Build 26200 (AMD64)",
+    "python_runtime": "3.13.0 (64-bit, MSC v.1941)",
+    "active_python": "E:\\Workspace\\Active\\AstraRun\\.venv\\Scripts\\python.exe",
+    "base_python": "C:\\Users\\hp\\AppData\\Local\\Programs\\Python\\Python313\\python.exe",
+    "uac_configuration": {
+      "EnableLUA": 1,
+      "ConsentPromptBehaviorAdmin": 5,
+      "is_admin_token": false,
+      "elevation_bypass": false
+    },
+    "winsta0_baseline": {
+      "mandatory_label": "S:(ML;;NW;;;LW)",
+      "classification": "BASELINE_STALE_REQUIRES_LOGOFF_OR_REBOOT",
+      "notes": "Low integrity label set during C2 experimental audit; workstation requires operator logoff/reboot before native desktop UI automation holdouts."
+    },
+    "hardware": {
+      "cpu": "Intel Core i5-12450H",
+      "ram_gb": 16,
+      "gpu": "NVIDIA GeForce RTX 2050 (4 GB VRAM)"
+    }
+  },
+  "source_freeze": {
+    "manifest_file": "docs/audit/C2_2_FREEZE_MANIFEST.json",
+    "git_head": "f4e5d069ea09a583cbeb61b45757bab31287fe54",
+    "total_production_python_files": 273,
+    "composite_tree_sha256": "4e19fdf2b15e9890e4308c74735c5f08b404a33eb65373bd2eaffc0a6b9adbdf",
+    "external_assets": {
+      "qwen_coder_model": {
+        "path": "E:\\AI_Models\\GGUF\\qwen2.5-coder-1.5b-instruct-q4_k_m.gguf",
+        "sha256": "cc324af070c2ecbfd324a30884d2f951a7ff756aba85cb811a6ec436933bb046",
+        "bytes": 1117320768
+      },
+      "spark_nlp_model": {
+        "path": "E:\\AI_Models\\GGUF\\Spark-X2.5-1.7B-Q4_K_M.gguf",
+        "sha256": "902bde2522394954ac17821b3e5fd0df02defbc6944f122253f2580acf0503f4",
+        "bytes": 1107457856
+      },
+      "llama_server_binary": {
+        "path": "E:\\AI_Runtimes\\llama.cpp-spark\\llama-server.exe",
+        "sha256": "4af4ca1baed1aa6aa4a560c767b5294343b8e83d5738789a591ffa909f32ee8f",
+        "bytes": 9216
+      }
+    }
+  },
+  "security_closure_evaluations": {
+    "launch_time_secret_boundary": {
+      "mechanism": "Explicit positive allowlist environment block via lpEnvironment in CreateProcessW + Python -I isolated mode",
+      "removed_artifacts": ["_ac_bootstrap.py"],
+      "tested": true,
+      "evidence_class": "SOURCE_TREE_EXECUTED",
+      "result": "PASS",
+      "canary_leakage_count": 0,
+      "details": "Zero operator environment variables (OpenAI, AWS, Database tokens) leak into child process."
+    },
+    "kernel_identity_and_token": {
+      "mechanism": "AppContainer token with ephemeral task package SID (S-1-15-2-...) and Low Mandatory Level (S-1-16-4096)",
+      "tested": true,
+      "evidence_class": "SOURCE_TREE_EXECUTED",
+      "result": "PASS",
+      "TokenIsAppContainer": true,
+      "TokenCapabilitiesCount": 0,
+      "TokenIntegrityLevel": "S-1-16-4096",
+      "details": "Verified via live kernel token query from host process on suspended/running child and grandchild process tree."
+    },
+    "network_isolation": {
+      "mechanism": "AppContainer token with 0 network capabilities (no internetClient, no privateNetworkClientServer)",
+      "tested": true,
+      "evidence_class": "SOURCE_TREE_EXECUTED",
+      "result": "PASS",
+      "sacrificial_port_8089": "DENIED (WSAEACCES 10013)",
+      "sacrificial_port_8090": "DENIED (WSAEACCES 10013)",
+      "external_dns_8_8_8_8": "DENIED (WSAEACCES 10013)",
+      "details": "All Winsock socket creation/connect attempts fail closed with WinError 10013."
+    },
+    "filesystem_isolation": {
+      "mechanism": "AppContainer DACL boundary + stripped USERPROFILE environment",
+      "tested": true,
+      "evidence_class": "SOURCE_TREE_EXECUTED",
+      "result": "PASS",
+      "operator_ssh_read": "DENIED (PermissionError / FileNotFoundError)",
+      "operator_aws_read": "DENIED (PermissionError / FileNotFoundError)",
+      "system_hosts_write": "DENIED (PermissionError)",
+      "details": "Worker possesses zero access to operator credential folders or system files."
+    },
+    "sealed_artifact_promotion": {
+      "mechanism": "open_sealed_source_handle: GENERIC_READ, FILE_SHARE_READ, FILE_FLAG_OPEN_REPARSE_POINT + GetFinalPathNameByHandleW + link count == 1 + atomic os.replace",
+      "tested": true,
+      "evidence_class": "SOURCE_TREE_EXECUTED",
+      "result": "PASS",
+      "probes": {
+        "ads_stream_attack": "DENIED (validate_safe_path)",
+        "unc_path_attack": "DENIED (validate_safe_path)",
+        "boundary_escape_attack": "DENIED (escapes authorized sandbox)",
+        "hash_tamper_attack": "DENIED (SHA256 mismatch, staged file unlinked)",
+        "legitimate_promotion": "PASS (atomic replace, SHA256 verified)"
+      }
+    },
+    "trusted_visualization_split": {
+      "mechanism": "Declarative JSON schema (VisualizationSpec) + out-of-process render_worker under Win32JobObject",
+      "tested": true,
+      "evidence_class": "SOURCE_TREE_EXECUTED",
+      "result": "PASS",
+      "probes": {
+        "script_injection_title": "DENIED (Schema ValidationError)",
+        "non_finite_nan_coords": "DENIED (Schema ValidationError)",
+        "oversized_array_bomb": "DENIED (Schema ValidationError > 100k points)",
+        "valid_2d_line_render": "PASS (valid PNG, header verified)",
+        "valid_3d_surface_render": "PASS (valid PNG, header verified)"
+      }
+    },
+    "machine_concurrency_ceiling": {
+      "mechanism": "threading.BoundedSemaphore(1) in SandboxManager + child OMP_NUM_THREADS='2'",
+      "tested": true,
+      "evidence_class": "SOURCE_TREE_EXECUTED",
+      "result": "PASS",
+      "max_concurrent_workers": 1
+    },
+    "positive_unseen_agent_task": {
+      "task_id": "task_c2_2_holdout",
+      "model_role": "DEEP",
+      "model_name": "qwen2.5-coder-1.5b-instruct-q4_k_m.gguf",
+      "model_port": 8089,
+      "tested": true,
+      "evidence_class": "REAL_LOCAL_MODEL_INFERENCE",
+      "result": "PASS",
+      "inference_latency_ms": 3536.8,
+      "unseen_prompt": "Write a pure Python script that calculates the prime factors of 20261008 and writes a JSON file named 'factors.json' inside os.environ['ASTRARUN_OUTPUT_DIR'].",
+      "model_response_chars": 750,
+      "ast_screened": true,
+      "sandbox_profile": "EPHEMERAL_TOOL",
+      "isolation_type": "APPCONTAINER",
+      "artifact_name": "factors.json",
+      "promoted_destination": "prime_factors_result.json",
+      "verified_payload": {
+        "target": 20261008,
+        "factors": [2, 2, 2, 2, 17, 74489],
+        "mathematical_product_verified": 20261008
+      }
+    }
+  },
+  "test_suites": {
+    "unit_regression_suite": {
+      "passed": 34,
+      "failed": 0,
+      "deselected": 30,
+      "duration_sec": 67.01
+    },
+    "post_freeze_adversarial_holdout": {
+      "passed": 6,
+      "failed": 0,
+      "duration_sec": 14.94
+    }
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "task_id": "task_6cfbb3df",
+  "artifact_path": "C:\\Users\\hp\\Desktop\\Astra Delegate Test\\trajectory.png",
+  "file_exists": true,
+  "file_size_bytes": 26982,
+  "image_format": "PNG",
+  "image_dimensions": [
+    640,
+    480
+  ],
+  "pil_verify": "PASSED",
+  "hash_chain_verified": true,
+  "overall_verified": true
+}

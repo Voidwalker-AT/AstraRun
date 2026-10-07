@@ -228,6 +228,75 @@ class StepVerifier:
 global_step_verifier = StepVerifier()
 
 
+class AcceptancePredicate:
+    """Base class for typed acceptance verification predicates."""
+    def evaluate(self, context: dict[str, Any]) -> tuple[bool, str, dict[str, Any]]:
+        raise NotImplementedError
+
+
+class FileExistsPredicate(AcceptancePredicate):
+    def __init__(self, path: str | Path):
+        self.path = Path(path)
+
+    def evaluate(self, context: dict[str, Any]) -> tuple[bool, str, dict[str, Any]]:
+        p = self.path
+        exists = p.exists() and p.is_file()
+        size = p.stat().st_size if exists else 0
+        return exists, f"File {p} exists ({size} bytes)" if exists else f"File {p} does not exist", {"path": str(p), "exists": exists, "size": size}
+
+
+class ImageDecodesPredicate(AcceptancePredicate):
+    def __init__(self, path: str | Path):
+        self.path = Path(path)
+
+    def evaluate(self, context: dict[str, Any]) -> tuple[bool, str, dict[str, Any]]:
+        p = self.path
+        if not p.exists() or not p.is_file():
+            return False, f"Image file {p} does not exist", {"path": str(p), "exists": False}
+        try:
+            data = p.read_bytes()
+            is_png = data.startswith(b"\x89PNG\r\n\x1a\n")
+            is_jpg = data.startswith(b"\xff\xd8\xff")
+            if (is_png or is_jpg) and len(data) > 64:
+                return True, f"Image {p.name} decodes successfully ({len(data)} bytes, format={'PNG' if is_png else 'JPG'})", {"path": str(p), "bytes": len(data), "format": "PNG" if is_png else "JPG"}
+            return False, f"File {p.name} does not match valid image magic bytes", {"path": str(p), "bytes": len(data)}
+        except Exception as e:
+            return False, f"Failed to decode image {p}: {e}", {"error": str(e)}
+
+
+class ProcessRunningPredicate(AcceptancePredicate):
+    def __init__(self, pid: Optional[int] = None, name: Optional[str] = None):
+        self.pid = pid
+        self.name = name
+
+    def evaluate(self, context: dict[str, Any]) -> tuple[bool, str, dict[str, Any]]:
+        import psutil
+        if self.pid:
+            running = psutil.pid_exists(self.pid)
+            return running, f"Process PID {self.pid} is {'running' if running else 'not running'}", {"pid": self.pid, "running": running}
+        if self.name:
+            found = any(p.name().lower() == self.name.lower() for p in psutil.process_iter(['name']))
+            return found, f"Process {self.name} is {'running' if found else 'not running'}", {"name": self.name, "running": found}
+        return False, "No PID or process name specified", {}
+
+
+class PortListeningPredicate(AcceptancePredicate):
+    def __init__(self, port: int, host: str = "127.0.0.1"):
+        self.port = port
+        self.host = host
+
+    def evaluate(self, context: dict[str, Any]) -> tuple[bool, str, dict[str, Any]]:
+        import socket
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        sock.settimeout(0.5)
+        try:
+            res = sock.connect_ex((self.host, self.port))
+            is_open = (res == 0)
+            return is_open, f"Port {self.port} is {'listening' if is_open else 'closed'}", {"port": self.port, "open": is_open}
+        finally:
+            sock.close()
+
+
 class GoalVerifier:
     """Verifies that the overall user goal was satisfied by checking high-level success criteria."""
 
@@ -251,31 +320,75 @@ class GoalVerifier:
             missing.append("Not all plan steps reached terminal completion.")
 
         # 2. Check criteria explicitly declared on goal
-        for criterion in goal.success_criteria:
+        for criterion in getattr(goal, "success_criteria", []):
             crit_lower = criterion.lower()
             if "file exists" in crit_lower or "non-empty" in crit_lower:
-                # Find path in goal parameters or final_result_data
                 target_path = (
                     (final_result_data.get("output_file") if final_result_data else None)
-                    or goal.parameters.get("output_path")
-                    or goal.parameters.get("path")
+                    or (final_result_data.get("artifact") if final_result_data else None)
+                    or (final_result_data.get("path") if final_result_data else None)
+                    or getattr(goal, "parameters", {}).get("output_path")
+                    or getattr(goal, "parameters", {}).get("path")
                 )
                 if target_path:
                     p = Path(target_path)
-                    if not p.is_absolute() and p.parts and p.parts[0].lower() == "downloads":
-                        p = Path.home() / "Downloads" / Path(*p.parts[1:])
-                    exists = p.exists()
-                    size = p.stat().st_size if exists else 0
-                    evidence["file_path"] = str(p)
-                    evidence["file_exists"] = exists
-                    evidence["file_size_bytes"] = size
-                    if not exists or size == 0:
-                        missing.append(f"Expected non-empty file at '{p}' (exists={exists}, size={size}).")
+                    pred = FileExistsPredicate(p)
+                    ok, msg, ev = pred.evaluate(final_result_data or {})
+                    evidence["file_exists"] = ev
+                    if not ok:
+                        missing.append(msg)
+
             elif "connected to wi-fi" in crit_lower:
-                expected_ssid = goal.parameters.get("ssid", "")
+                expected_ssid = getattr(goal, "parameters", {}).get("ssid", "")
                 active_ssid = final_result_data.get("active_ssid") or final_result_data.get("ssid") if final_result_data else None
                 if expected_ssid and active_ssid and expected_ssid.lower() not in active_ssid.lower():
                     missing.append(f"Expected connection to SSID '{expected_ssid}', active is '{active_ssid}'.")
+
+        # 3. Dynamic verification: ImageDecodes if goal specifies verifying image/graph
+        goal_text = getattr(goal, "raw_prompt", "").lower()
+        if any(w in goal_text for w in ("verify the image", "verify image", "verify graph", "plot", "graph")):
+            artifacts = []
+            if final_result_data:
+                if final_result_data.get("artifact"):
+                    artifacts.append(Path(final_result_data["artifact"]))
+                if isinstance(final_result_data.get("artifacts"), list):
+                    for a in final_result_data["artifacts"]:
+                        p = Path(a)
+                        if p not in artifacts:
+                            artifacts.append(p)
+                if final_result_data.get("path"):
+                    artifacts.append(Path(final_result_data["path"]))
+                if final_result_data.get("output_file"):
+                    artifacts.append(Path(final_result_data["output_file"]))
+
+            # Also scan all completed plan steps for artifact paths
+            if hasattr(plan, "steps"):
+                for step in plan.steps:
+                    if getattr(step, "result", None) and getattr(step.result, "data", None):
+                        sd = step.result.data
+                        if sd.get("artifact"):
+                            artifacts.append(Path(sd["artifact"]))
+                        if isinstance(sd.get("artifacts"), list):
+                            for a in sd["artifacts"]:
+                                p = Path(a)
+                                if p not in artifacts:
+                                    artifacts.append(p)
+                        if sd.get("path"):
+                            artifacts.append(Path(sd["path"]))
+                        if sd.get("output_file"):
+                            artifacts.append(Path(sd["output_file"]))
+
+            # Find image artifacts
+            img_artifacts = [p for p in artifacts if p.suffix.lower() in (".png", ".jpg", ".jpeg")]
+            if img_artifacts:
+                for img_p in img_artifacts:
+                    pred = ImageDecodesPredicate(img_p)
+                    ok, msg, ev = pred.evaluate(final_result_data or {})
+                    evidence[f"image_decode_{img_p.name}"] = ev
+                    if not ok:
+                        missing.append(msg)
+            elif "verify the image" in goal_text or "verify image" in goal_text:
+                missing.append("Expected verified image artifact, but no image artifact was detected.")
 
         completed = len(missing) == 0
         status = GoalVerificationStatus.GOAL_COMPLETED if completed else GoalVerificationStatus.GOAL_INCOMPLETE
@@ -291,4 +404,5 @@ class GoalVerifier:
 
 
 global_goal_verifier = GoalVerifier()
+
 

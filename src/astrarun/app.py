@@ -111,7 +111,8 @@ class SingleInstanceLock:
                 self.mutex_handle = None
             existing_pid = None
             try:
-                state_file = Path("data/astrarun_state.json")
+                from astrarun.core.paths import AstraPaths
+                state_file = AstraPaths.state_file_path()
                 if state_file.exists():
                     with open(state_file, "r", encoding="utf-8") as f:
                         data = json.load(f)
@@ -152,8 +153,8 @@ class AstraApplication:
         self.settings = self.config.settings
         logger.info("[STARTUP_STAGE] CONFIG_LOADED")
 
-        from astrarun.core.paths import get_data_dir, is_release_mode
-        data_dir = get_data_dir() if is_release_mode() else Path("data")
+        from astrarun.core.paths import AstraPaths
+        data_dir = AstraPaths.data_dir()
         data_dir.mkdir(parents=True, exist_ok=True)
 
         # 2. Telemetry & Usage
@@ -235,6 +236,12 @@ class AstraApplication:
         self.workflow_compiler = WorkflowCompiler(tool_registry=self.capability_registry)
         self.workflow_engine = WorkflowEngine(context_engine=self.context_engine)
         self.action_gate = ActionGate(capability_registry=self.capability_registry)
+        from astrarun.security.execution_broker import ExecutionBroker
+        self.execution_broker = ExecutionBroker(
+            action_gate=self.action_gate,
+            capability_registry=self.capability_registry,
+        )
+        self.task_manager.execution_broker = self.execution_broker
 
         # 9. Deterministic Router & Routing Context
         self.deterministic_router = DeterministicRouter()
@@ -256,11 +263,25 @@ class AstraApplication:
 
         # 11. Autonomous Agent Execution Engine (v0.11)
         from astrarun.agent.loop import AgentExecutionEngine
-        self.agent_engine = AgentExecutionEngine(registry=self.capability_registry)
+        self.agent_engine = AgentExecutionEngine(
+            registry=self.capability_registry,
+            execution_broker=self.execution_broker,
+        )
 
         # 12. Machine Model & Authoritative Workstation Query Engine (v1.0)
         self.machine_model = MachineModel.get_instance()
         self.machine_query_engine = MachineQueryEngine(machine_model=self.machine_model)
+
+        # 13. Production Cognitive, Memory, Perception & Browser Facades
+        from astrarun.cognition.service import ModelService
+        from astrarun.memory.service import MemoryService
+        from astrarun.perception.service import PerceptionService
+        from astrarun.browser.service import BrowserService
+
+        self.model_service = ModelService.get_instance()
+        self.memory_service = MemoryService.get_instance()
+        self.perception_service = PerceptionService.get_instance()
+        self.browser_service = BrowserService.get_instance()
 
         # Single instance lock & local Named Pipe IPC
         from astrarun.core.single_instance import AstraSingleInstance
@@ -375,6 +396,40 @@ class AstraApplication:
         self.task_manager.fail_task(task.id, err)
         if hasattr(self, "learning_engine") and self.learning_engine:
             self.learning_engine.ingest_task_async(task)
+
+    def _execute_through_broker(
+        self,
+        capability_id: str,
+        parameters: Dict[str, Any],
+        task_id: Optional[str] = None,
+        is_observe: bool = False,
+        source: str = "ui_interaction",
+    ) -> CapabilityResult:
+        """Route capability execution through authoritative ExecutionBroker and ActionGate."""
+        from astrarun.security.execution_broker import ActionCategory, ActionProposal
+        category = ActionCategory.OBSERVE if is_observe else ActionCategory.ACT
+        prop = ActionProposal(
+            category=category,
+            capability_id=capability_id,
+            parameters=parameters,
+            task_id=task_id,
+            source=source,
+        )
+        broker_res = self.execution_broker.execute(prop)
+        err_code = CapabilityErrorCode.NONE
+        if broker_res.requires_confirmation:
+            err_code = CapabilityErrorCode.PERMISSION_DENIED
+        elif broker_res.blocked:
+            err_code = CapabilityErrorCode.PERMISSION_DENIED
+
+        return CapabilityResult(
+            capability=capability_id,
+            success=broker_res.success,
+            message=broker_res.message,
+            data=broker_res.data,
+            error_code=err_code,
+            latency_ms=broker_res.duration_ms,
+        )
 
     def handle_request(
         self,
@@ -520,7 +575,7 @@ class AstraApplication:
             target_hwnd = active_origin.hwnd if active_origin else None
             task = self.task_manager.create_task(request_text=clean, source="user_shortcut")
             self.task_manager.transition_status(task.id, TaskStatus.RUNNING)
-            cap_res = self.capability_registry.execute(
+            cap_res = self._execute_through_broker(
                 "press_keyboard_shortcut",
                 {"shortcut": shortcut_obj.canonical_string, "hwnd": target_hwnd},
                 task_id=task.id,
@@ -534,20 +589,20 @@ class AstraApplication:
 
         if not has_compound and lower_q in ("copy", "copy this", "copy selection"):
             target_hwnd = active_origin.hwnd if active_origin else None
-            cap_res = self.capability_registry.execute("press_keyboard_shortcut", {"shortcut": "Ctrl+C", "hwnd": target_hwnd})
+            cap_res = self._execute_through_broker("press_keyboard_shortcut", {"shortcut": "Ctrl+C", "hwnd": target_hwnd})
             return ExecutionResult(type="capability_result", success=cap_res.success, message=cap_res.message, capability_result=cap_res)
         if not has_compound and lower_q in ("paste", "paste here", "paste text"):
             target_hwnd = active_origin.hwnd if active_origin else None
-            cap_res = self.capability_registry.execute("press_keyboard_shortcut", {"shortcut": "Ctrl+V", "hwnd": target_hwnd})
+            cap_res = self._execute_through_broker("press_keyboard_shortcut", {"shortcut": "Ctrl+V", "hwnd": target_hwnd})
             return ExecutionResult(type="capability_result", success=cap_res.success, message=cap_res.message, capability_result=cap_res)
         if not has_compound and lower_q in ("select all", "select all text"):
             target_hwnd = active_origin.hwnd if active_origin else None
-            cap_res = self.capability_registry.execute("press_keyboard_shortcut", {"shortcut": "Ctrl+A", "hwnd": target_hwnd})
+            cap_res = self._execute_through_broker("press_keyboard_shortcut", {"shortcut": "Ctrl+A", "hwnd": target_hwnd})
             return ExecutionResult(type="capability_result", success=cap_res.success, message=cap_res.message, capability_result=cap_res)
 
         if not has_compound and lower_q in ("inspect ui", "inspect window ui", "what buttons are in this window?", "what controls are in this window?", "show controls", "list buttons"):
             target_hwnd = active_origin.hwnd if active_origin else None
-            cap_res = self.capability_registry.execute("inspect_window_ui", {"hwnd": target_hwnd})
+            cap_res = self._execute_through_broker("inspect_window_ui", {"hwnd": target_hwnd}, is_observe=True)
             return ExecutionResult(type="capability_result", success=cap_res.success, message=cap_res.message, capability_result=cap_res, data=cap_res.data)
 
         if not has_compound and lower_q.startswith("click "):
@@ -556,7 +611,7 @@ class AstraApplication:
             task = self.task_manager.create_task(request_text=clean, source="user_interaction")
             self.task_manager.transition_status(task.id, TaskStatus.RUNNING)
 
-            cap_res = self.capability_registry.execute(
+            cap_res = self._execute_through_broker(
                 "click_ui_element",
                 {"target": target, "hwnd": target_hwnd, "force": False},
                 task_id=task.id,
@@ -596,14 +651,14 @@ class AstraApplication:
             if " into " in type_args:
                 val, target_field = type_args.split(" into ", 1)
                 val = val.strip().strip('"\'')
-                cap_res = self.capability_registry.execute(
+                cap_res = self._execute_through_broker(
                     "set_ui_element_value",
                     {"target": target_field.strip(), "value": val, "hwnd": target_hwnd},
                     task_id=task.id,
                 )
             else:
                 val = type_args.strip().strip('"\'')
-                cap_res = self.capability_registry.execute(
+                cap_res = self._execute_through_broker(
                     "type_text",
                     {"text": val, "hwnd": target_hwnd},
                     task_id=task.id,
@@ -621,7 +676,7 @@ class AstraApplication:
             target_hwnd = active_origin.hwnd if active_origin else None
             task = self.task_manager.create_task(request_text=clean, source="user_interaction")
             self.task_manager.transition_status(task.id, TaskStatus.RUNNING)
-            cap_res = self.capability_registry.execute(
+            cap_res = self._execute_through_broker(
                 "toggle_ui_element",
                 {"target": target, "hwnd": target_hwnd},
                 task_id=task.id,
@@ -638,7 +693,7 @@ class AstraApplication:
             target_hwnd = active_origin.hwnd if active_origin else None
             task = self.task_manager.create_task(request_text=clean, source="user_interaction")
             self.task_manager.transition_status(task.id, TaskStatus.RUNNING)
-            cap_res = self.capability_registry.execute(
+            cap_res = self._execute_through_broker(
                 "focus_ui_element",
                 {"target": target, "hwnd": target_hwnd},
                 task_id=task.id,
@@ -655,7 +710,7 @@ class AstraApplication:
             target_hwnd = active_origin.hwnd if active_origin else None
             task = self.task_manager.create_task(request_text=clean, source="user_interaction")
             self.task_manager.transition_status(task.id, TaskStatus.RUNNING)
-            cap_res = self.capability_registry.execute(
+            cap_res = self._execute_through_broker(
                 "select_ui_element",
                 {"target": target, "hwnd": target_hwnd},
                 task_id=task.id,
@@ -687,14 +742,52 @@ class AstraApplication:
 
                 # Dispatch tool (map 'open_app' to 'open_application')
                 tool_name = "open_application" if decision.tool == "open_app" else decision.tool
-                if dry_run and tool_name == "open_application":
-                    cap_res = CapabilityResult.ok(
-                        capability="open_application",
-                        message=f"Application '{decision.args.get('app', '')}' launched successfully (dry run).",
-                        data=decision.args,
-                    )
+                if dry_run:
+                    if tool_name == "open_application":
+                        cap_res = CapabilityResult.ok(
+                            capability="open_application",
+                            message=f"Application '{decision.args.get('app', '')}' launched successfully (dry run).",
+                            data=decision.args,
+                        )
+                    else:
+                        cap_res = CapabilityResult.ok(
+                            capability=tool_name,
+                            message=f"Simulated execution of '{tool_name}' (dry run).",
+                            data={"dry_run": True, **decision.args},
+                        )
                 else:
-                    cap_res = self.capability_registry.execute(tool_name, decision.args, task_id=task.id)
+                    from astrarun.security.execution_broker import ActionCategory, ActionProposal
+                    proposal = ActionProposal(
+                        category=ActionCategory.ACT,
+                        capability_id=tool_name,
+                        parameters=decision.args,
+                        task_id=task.id,
+                        source="fast_path",
+                    )
+                    broker_res = self.execution_broker.execute(proposal)
+                    if broker_res.requires_confirmation:
+                        self.task_manager.transition_status(task.id, TaskStatus.WAITING_CONFIRMATION)
+                        return ExecutionResult(
+                            type="confirm",
+                            success=False,
+                            message=broker_res.message,
+                            task=task,
+                            prompt=broker_res.message,
+                        )
+                    if broker_res.blocked:
+                        self._fail_task(task, broker_res.message, capability=tool_name)
+                        return ExecutionResult(
+                            type="error",
+                            success=False,
+                            message=broker_res.message,
+                            task=task,
+                        )
+                    cap_res = CapabilityResult(
+                        capability=tool_name,
+                        success=broker_res.success,
+                        message=broker_res.message,
+                        data=broker_res.data,
+                    )
 
                 if cap_res.success:
                     self._complete_task(task, cap_res)
@@ -934,20 +1027,48 @@ class AstraApplication:
             if len(proposal.steps) == 1:
                 step = proposal.steps[0]
                 wf_context.bind_step_arguments(step)
-                if dry_run and step.tool == "open_application":
-                    cap_res = CapabilityResult.ok(
-                        capability="open_application",
-                        message=f"Application '{step.arguments.get('app', '')}' launched successfully (dry run).",
-                        data=step.arguments,
-                    )
-                elif dry_run and step.tool == "focus_application":
-                    app_name = step.arguments.get("app", "app")
-                    cap_res = CapabilityResult.ok(
-                        capability="focus_application",
-                        message=f"Focused application '{app_name}' (dry run).",
-                        data={"hwnd": 1001, "title": f"{app_name.title()} Window", "pid": 1000},
-                        context_updates=[{"type": "application_focused", "app": app_name, "hwnd": 1001}],
-                    )
+                if dry_run:
+                    if step.tool == "open_application":
+                        cap_res = CapabilityResult.ok(
+                            capability="open_application",
+                            message=f"Application '{step.arguments.get('app', '')}' launched successfully (dry run).",
+                            data=step.arguments,
+                        )
+                    elif step.tool == "focus_application":
+                        app_name = step.arguments.get("app", "app")
+                        cap_res = CapabilityResult.ok(
+                            capability="focus_application",
+                            message=f"Focused application '{app_name}' (dry run).",
+                            data={"hwnd": 1001, "title": f"{app_name.title()} Window", "pid": 1000},
+                            context_updates=[{"type": "application_focused", "app": app_name, "hwnd": 1001}],
+                        )
+                    elif step.tool == "wait_for_window":
+                        cap_res = CapabilityResult.ok(
+                            capability="wait_for_window",
+                            message=f"Target window for '{step.arguments.get('app', '')}' is ready (dry run).",
+                            data={"hwnd": 1001, "title": f"{step.arguments.get('app', 'App').title()} Window", "pid": 1000},
+                            context_updates=[{"type": "window_ready", "hwnd": 1001}],
+                        )
+                    elif step.tool == "resolve_editable_element":
+                        cap_res = CapabilityResult.ok(
+                            capability="resolve_editable_element",
+                            message="Resolved editable element in window (dry run).",
+                            data={"element": {"name": "Text Editor", "control_type": "Document", "class_name": "Edit"}, "hwnd": step.arguments.get("hwnd", 1001)},
+                            context_updates=[{"type": "element_resolved", "hwnd": step.arguments.get("hwnd", 1001)}],
+                        )
+                    elif step.tool == "type_text":
+                        t_len = len(step.arguments.get("text", ""))
+                        cap_res = CapabilityResult.ok(
+                            capability="type_text",
+                            message=f"Entered {t_len} characters.",
+                            data={"characters_typed": t_len},
+                        )
+                    else:
+                        cap_res = CapabilityResult.ok(
+                            capability=step.tool,
+                            message=f"Simulated execution of '{step.tool}' (dry run).",
+                            data={"dry_run": True, **step.arguments},
+                        )
                 else:
                     cap_res = self.task_manager.execute_capability(
                         task_id=task.id,
@@ -1003,11 +1124,10 @@ class AstraApplication:
                                 context_updates=[{"type": "application_focused", "app": app_name, "hwnd": 1001}],
                             )
                         else:
-                            s_res = self.task_manager.execute_capability(
-                                task_id=task.id,
-                                capability_id=step.tool,
-                                arguments=step.arguments,
-                                registry=self.capability_registry,
+                            s_res = CapabilityResult.ok(
+                                capability=step.tool,
+                                message=f"Simulated execution of '{step.tool}' (dry run).",
+                                data={"dry_run": True, **step.arguments},
                             )
                     else:
                         s_res = self.task_manager.execute_capability(
@@ -1092,6 +1212,11 @@ class AstraApplication:
             if hasattr(self, "laya_router") and self.laya_router:
                 if hasattr(self.laya_router, "shutdown"):
                     self.laya_router.shutdown()
+            if hasattr(self, "browser_service") and self.browser_service:
+                try:
+                    self.browser_service.close()
+                except Exception:
+                    pass
             if hasattr(self, "single_instance") and self.single_instance:
                 self.single_instance.release()
             logger.info("AstraApplication shutdown complete.")

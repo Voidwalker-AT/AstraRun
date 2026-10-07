@@ -51,26 +51,46 @@ class SearchIndex:
         for alias, target_key in aliases.items():
             alias_map.setdefault(target_key.lower(), []).append(alias.lower())
 
-        # 1. Index Applications
+        # 1. Index Applications with strict identity deduplication
+        seen_targets: dict[str, str] = {}
+        seen_names: dict[str, str] = {}
+
         for app_key, app in apps.items():
-            cand_id = f"app:{app_key}"
             cand_aliases = list(set([app_key] + alias_map.get(app_key, [])))
-            # Add filename stem if different
             stem = app.path.split("\\")[-1].rsplit(".", 1)[0].lower()
             if stem not in cand_aliases:
                 cand_aliases.append(stem)
 
-            self.add(
-                SearchCandidate(
-                    id=cand_id,
-                    name=app.name,
-                    category=CandidateCategory.APP,
-                    target=app.path,
-                    aliases=cand_aliases,
-                    description=app.description or "Application",
-                    metadata={"key": app_key, "path": app.path},
-                )
+            try:
+                from pathlib import Path
+                canonical_target = Path(app.path).resolve().as_posix().lower()
+            except Exception:
+                canonical_target = app.path.strip().lower()
+            import re
+            norm_name = re.sub(r"[^a-zA-Z0-9]+", "", app.name.lower())
+
+            existing_id = seen_targets.get(canonical_target) or seen_names.get(norm_name)
+            if existing_id and existing_id in self._candidates:
+                existing_cand = self._candidates[existing_id]
+                for alias in cand_aliases:
+                    if alias not in existing_cand.aliases:
+                        existing_cand.aliases.append(alias)
+                existing_cand._precompute_terms()
+                continue
+
+            cand_id = f"app:{app_key}"
+            new_cand = SearchCandidate(
+                id=cand_id,
+                name=app.name,
+                category=CandidateCategory.APP,
+                target=app.path,
+                aliases=cand_aliases,
+                description=app.description or "Application",
+                metadata={"key": app_key, "path": app.path},
             )
+            self.add(new_cand)
+            seen_targets[canonical_target] = cand_id
+            seen_names[norm_name] = cand_id
 
         # 2. Index Folders
         for folder_key, folder in folders.items():

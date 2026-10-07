@@ -89,9 +89,15 @@ class FuzzyScorer:
                 coverage = len(q) / len(token)
                 return cls.SCORE_TOKEN_PREFIX + (0.03 * coverage)
 
-        # 4. Substring match
-        if q in t:
-            return cls.SCORE_SUBSTRING
+        # 4. Substring match (Strict: requires len(q) >= 3 and either token boundary or high coverage)
+        if len(q) >= 3 and q in t:
+            is_boundary_match = any(token.startswith(q) for token in term.tokens) or (f" {q}" in t) or (f"-{q}" in t) or (f"_{q}" in t)
+            if is_boundary_match:
+                coverage = len(q) / len(t)
+                return cls.SCORE_SUBSTRING + (0.04 * coverage)
+            coverage = len(q) / len(t)
+            if coverage >= 0.35:
+                return 0.55 + (0.10 * coverage)
 
         # 5. Acronym match (precomputed)
         if len(q) >= 2 and q == term.acronym:

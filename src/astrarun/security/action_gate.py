@@ -48,6 +48,8 @@ class ConfirmationToken:
     expected_create_time: float = 0.0
     created_at: float = field(default_factory=time.time)
     expires_at: float = field(default_factory=lambda: time.time() + 60.0)  # 60s TTL
+    task_id: Optional[str] = None
+    plan_revision: int = 1
 
     @property
     def is_expired(self) -> bool:
@@ -73,6 +75,8 @@ class ActionGateConfig:
         "system_shutdown": "CONFIRM",
         "system_restart": "CONFIRM",
         "system_restart_pc": "BLOCK",
+        "execute_dynamic_tool": "AUTO",
+        "consult_delegate": "AUTO",
     })
 
 
@@ -139,8 +143,8 @@ class ActionGate:
                 latency_ms=lat,
             )
 
-        # 2. Command Policy Evaluation (for EXECUTE operations)
-        if request.operation == Operation.EXECUTE:
+        # 2. Command Policy Evaluation (for shell command EXECUTE operations)
+        if request.operation == Operation.EXECUTE and ("command" in request.parameters or request.capability in ("run_project_command", "shell_exec")):
             cmd_str = request.parameters.get("command") or request.target or ""
             cmd_verdict, cmd_reason, cmd_risk = self.command_policy.evaluate_command_string(cmd_str)
             if cmd_verdict == ActionGateVerdict.DENY:
@@ -268,7 +272,61 @@ class ActionGate:
                 latency_ms=lat,
             )
 
-        # 6. Cleared as ALLOW
+        # 6. Consequential Mutation Policy Check (Requirement 9)
+        if request.operation in (Operation.MODIFY, Operation.CREATE, Operation.DELETE, Operation.EXECUTE, Operation.PRIVILEGED_MODIFY):
+            from astrarun.capabilities.models import CapabilityPermission
+            from astrarun.core.models import ToolRisk
+
+            cap_registered = False
+            is_auto = False
+            if self.capability_registry and self.capability_registry.has_capability(request.capability):
+                cap = self.capability_registry.get(request.capability)
+                cap_registered = True
+                is_auto = (cap.permission == CapabilityPermission.AUTO and cap.risk in (ToolRisk.LOW, ToolRisk.MEDIUM))
+            elif request.capability in self.config.permissions:
+                perm = self.config.permissions.get(request.capability, "BLOCK")
+                cap_registered = True
+                is_auto = (perm == "AUTO")
+
+            if not cap_registered:
+                lat = (time.perf_counter() - t0) * 1000.0
+                reason = f"Unknown consequential operation on capability '{request.capability}' denied by default security policy."
+                audit = self._build_audit_event(request, action_id, ActionGateVerdict.DENY, RiskLevel.HIGH, reason, "DefaultDenyPolicy")
+                return ActionGateEvaluation(
+                    verdict=ActionGateVerdict.DENY,
+                    reason=reason,
+                    risk=RiskLevel.HIGH,
+                    matched_policy="DefaultDenyPolicy",
+                    reversibility=False,
+                    action_summary=f"DENIED unknown mutation {request.operation.value} on {request.target}",
+                    audit_event=audit,
+                    latency_ms=lat,
+                )
+
+            if not is_auto:
+                token_str = secrets.token_hex(16)
+                token_obj = ConfirmationToken(
+                    token=token_str,
+                    tool=request.capability,
+                    arguments=request.parameters,
+                    entity_id=request.target,
+                )
+                self._active_tokens[token_str] = token_obj
+                lat = (time.perf_counter() - t0) * 1000.0
+                audit = self._build_audit_event(request, action_id, ActionGateVerdict.REQUIRE_CONFIRMATION, RiskLevel.MEDIUM, "Consequential mutation requires user confirmation", "MutationConfirmationPolicy")
+                return ActionGateEvaluation(
+                    verdict=ActionGateVerdict.REQUIRE_CONFIRMATION,
+                    reason=f"Consequential action '{request.capability}' requires explicit confirmation.",
+                    risk=RiskLevel.MEDIUM,
+                    matched_policy="MutationConfirmationPolicy",
+                    reversibility=True,
+                    action_summary=f"Require confirmation for {request.operation.value} {request.capability}",
+                    confirmation_token=token_str,
+                    audit_event=audit,
+                    latency_ms=lat,
+                )
+
+        # 7. Cleared as ALLOW (known safe or read-only operations)
         lat = (time.perf_counter() - t0) * 1000.0
         audit = self._build_audit_event(request, action_id, ActionGateVerdict.ALLOW, RiskLevel.LOW, "Cleared by ActionGate policies", "DefaultAllow")
         return ActionGateEvaluation(
@@ -568,6 +626,8 @@ class ActionGate:
         token_str: str | None = None,
         tool_name: str | None = None,
         arguments: dict[str, Any] | None = None,
+        task_id: str | None = None,
+        plan_revision: int | None = None,
         **kwargs: Any,
     ) -> Tuple[bool, str]:
         """
@@ -576,6 +636,8 @@ class ActionGate:
         tok = token_str or kwargs.get("token") or ""
         tl = tool_name or kwargs.get("tool") or ""
         args = arguments if arguments is not None else kwargs.get("arguments", {})
+        tid = task_id if task_id is not None else kwargs.get("task_id")
+        prev = plan_revision if plan_revision is not None else kwargs.get("plan_revision")
 
         token_obj = self._active_tokens.get(tok)
         if not token_obj:
@@ -587,6 +649,12 @@ class ActionGate:
 
         if token_obj.tool != tl:
             return False, f"Confirmation token tool mismatch ('{token_obj.tool}' != '{tl}')"
+
+        if token_obj.task_id and tid and token_obj.task_id != tid:
+            return False, f"Confirmation token task_id mismatch ('{token_obj.task_id}' != '{tid}')"
+
+        if token_obj.plan_revision is not None and prev is not None and token_obj.plan_revision != prev:
+            return False, f"Confirmation token plan_revision mismatch ({token_obj.plan_revision} != {prev})"
 
         if token_obj.arguments:
             for k, expected_v in token_obj.arguments.items():

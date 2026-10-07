@@ -48,7 +48,8 @@ class DownloadQuarantine:
     """Authoritative staging boundary for external downloads."""
 
     def __init__(self, quarantine_dir: Optional[Path] = None) -> None:
-        self.quarantine_dir = Path(quarantine_dir or Path("data/quarantine")).resolve()
+        from astrarun.core.paths import AstraPaths
+        self.quarantine_dir = Path(quarantine_dir or (AstraPaths.data_dir() / "quarantine")).resolve()
         self.quarantine_dir.mkdir(parents=True, exist_ok=True)
 
     def stage_file(

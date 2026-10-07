@@ -137,6 +137,35 @@ class Capability:
     health: CapabilityHealth = CapabilityHealth.AVAILABLE
     health_reason: str = ""
     outputs: list[str] = field(default_factory=list)
+    security_metadata: Optional[Any] = None
+
+    def get_security_metadata(self) -> Any:
+        """Return authoritative CapabilitySecurityMetadata, creating a strict fallback if not set."""
+        if self.security_metadata is not None:
+            return self.security_metadata
+        try:
+            from astrarun.capabilities.manifest import get_authoritative_metadata
+            meta = get_authoritative_metadata(self.id)
+            if meta is not None:
+                return meta
+        except Exception:
+            pass
+        from astrarun.security.models import CapabilityOperationKind, CapabilitySecurityMetadata, RiskLevel
+        risk_map = {
+            ToolRisk.LOW: RiskLevel.LOW,
+            ToolRisk.MEDIUM: RiskLevel.MEDIUM,
+            ToolRisk.HIGH: RiskLevel.HIGH,
+            ToolRisk.BLOCKED: RiskLevel.CRITICAL,
+        }
+        r = risk_map.get(self.risk, RiskLevel.LOW)
+        op_kind = CapabilityOperationKind.OBSERVE_READ_ONLY if self.read_only else CapabilityOperationKind.UNKNOWN_CONSEQUENTIAL
+        return CapabilitySecurityMetadata(
+            operation_kind=op_kind,
+            risk=r,
+            mutates_state=not self.read_only,
+            requires_confirmation=self.requires_confirmation or (self.permission == CapabilityPermission.CONFIRM),
+            resource_scope=self.category.value.lower(),
+        )
 
     def to_dict(self) -> dict[str, Any]:
         return {

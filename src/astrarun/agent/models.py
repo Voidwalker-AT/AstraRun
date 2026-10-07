@@ -487,6 +487,7 @@ class Plan:
     revisions: list[PlanRevision] = field(default_factory=list)
     created_at: float = field(default_factory=time.time)
     status: PlanStatus = PlanStatus.DRAFT
+    context: dict[str, Any] = field(default_factory=dict)
 
     def get_step(self, step_id: str) -> Optional[PlanStep]:
         for step in self.steps:
@@ -504,6 +505,7 @@ class Plan:
             "revisions": [r.to_dict() for r in self.revisions],
             "created_at": self.created_at,
             "status": self.status.value,
+            "context": self.context,
         }
 
 

@@ -1,0 +1,114 @@
+{
+  "astra_paths": {
+    "implemented": true,
+    "wired_production": true,
+    "real_execution_verified": true,
+    "frozen_verified": false,
+    "human_verified": false,
+    "notes": "Centralized in AstraPaths; verified independent of CWD by launching from C:\\Windows\\System32."
+  },
+  "evidence_classes": {
+    "implemented": true,
+    "wired_production": true,
+    "real_execution_verified": true,
+    "frozen_verified": false,
+    "human_verified": false,
+    "notes": "EvidenceClass enum and EvidenceRecord implemented in core/evidence.py; no self-promotion."
+  },
+  "action_gate": {
+    "implemented": true,
+    "wired_production": true,
+    "real_execution_verified": true,
+    "frozen_verified": false,
+    "human_verified": false,
+    "notes": "Consolidated into astrarun.security.action_gate.ActionGate with TOCTOU tokens and risk levels."
+  },
+  "execution_broker": {
+    "implemented": true,
+    "wired_production": true,
+    "real_execution_verified": true,
+    "frozen_verified": false,
+    "human_verified": false,
+    "notes": "ExecutionBroker is the single mandatory gate for all consequential actions (ACT vs OBSERVE)."
+  },
+  "spark_runtime": {
+    "implemented": true,
+    "wired_production": true,
+    "real_execution_verified": true,
+    "frozen_verified": false,
+    "human_verified": false,
+    "notes": "Out-of-process llama-server on port 8090; verified real intent classification (confidence 0.95, latency 4.92s)."
+  },
+  "qwen_runtime": {
+    "implemented": true,
+    "wired_production": true,
+    "real_execution_verified": true,
+    "frozen_verified": false,
+    "human_verified": false,
+    "notes": "Out-of-process llama-server on port 8089; verified real code synthesis (SHA256 a1806a25df..., 1249 bytes, latency 7.67s)."
+  },
+  "dynamic_tool_builder": {
+    "implemented": true,
+    "wired_production": true,
+    "real_execution_verified": true,
+    "frozen_verified": false,
+    "human_verified": false,
+    "notes": "Wired to ModelService.generate_code; canned mathematical/physics templates removed."
+  },
+  "memory_service": {
+    "implemented": true,
+    "wired_production": true,
+    "real_execution_verified": true,
+    "frozen_verified": false,
+    "human_verified": false,
+    "notes": "Unified facade covering working, episodic, semantic, procedural (Hermes skills), and workspace (FTS5)."
+  },
+  "rag_planning": {
+    "implemented": true,
+    "wired_production": true,
+    "real_execution_verified": true,
+    "frozen_verified": false,
+    "human_verified": false,
+    "notes": "Gate E verified: semantic fact injected -> paraphrased query -> retrieved context synthesized in planner."
+  },
+  "perception_service": {
+    "implemented": true,
+    "wired_production": true,
+    "real_execution_verified": true,
+    "frozen_verified": false,
+    "human_verified": false,
+    "notes": "Gate F verified: native COM UIA tree inspection of active Windows Notepad HWND 393322 (48 controls)."
+  },
+  "browser_service": {
+    "implemented": true,
+    "wired_production": true,
+    "real_execution_verified": true,
+    "frozen_verified": false,
+    "human_verified": false,
+    "notes": "Gate G verified: managed Edge browser launched with remote debugging, local fixture opened, DOM parsed, @e1 clicked."
+  },
+  "goal_verifier": {
+    "implemented": true,
+    "wired_production": true,
+    "real_execution_verified": true,
+    "frozen_verified": false,
+    "human_verified": false,
+    "notes": "Added typed acceptance predicates (FileExistsPredicate, ImageDecodesPredicate, ProcessRunningPredicate, PortListeningPredicate)."
+  },
+  "sandbox_process_containment": {
+    "implemented": true,
+    "wired_production": true,
+    "real_execution_verified": true,
+    "frozen_verified": false,
+    "human_verified": false,
+    "notes": "Win32 Job Objects provide PROCESS CONTAINMENT (512MB RAM ceiling, timeout, kill on close), NOT full security isolation."
+  },
+  "chatgpt_web_delegation": {
+    "implemented": false,
+    "wired_production": false,
+    "real_execution_verified": false,
+    "frozen_verified": false,
+    "human_verified": false,
+    "notes": "Explicitly disabled in C1; canned responses removed; reports PROVIDER_UNAVAILABLE until real authenticated browser delegation is built."
+  }
+}

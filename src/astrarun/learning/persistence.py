@@ -129,8 +129,12 @@ class LearningPersistence:
     Thread-safe SQLite storage for learned workstation memory, skills, and audits.
     """
 
-    def __init__(self, db_path: Path | str = "data/astra_learning.db") -> None:
-        self.db_path = Path(db_path)
+    def __init__(self, db_path: Path | str | None = None) -> None:
+        if db_path is None:
+            from astrarun.core.paths import AstraPaths
+            self.db_path = AstraPaths.data_dir() / "astra_learning.db"
+        else:
+            self.db_path = Path(db_path)
         self.db_path.parent.mkdir(parents=True, exist_ok=True)
         self._initialize_database()
 

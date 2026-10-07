@@ -275,26 +275,12 @@ class ASTCodePolicy:
     """
     Syntactic AST inspector analyzing dynamic Python code before execution.
     Acts as a defense-in-depth gate detecting dangerous primitives and unauthorized imports.
+    Delegates to canonical ASTInspector to ensure zero semantic policy divergence.
     """
 
-    BANNED_IMPORTS: Set[str] = {
-        "shutil.rmtree",
-        "ctypes",
-        "winreg",
-    }
-
-    BANNED_MODULES: Set[str] = {
-        "socket",
-        "socketserver",
-        "http.server",
-        "smtplib",
-    }
-
-    SUSPICIOUS_CALLS: Set[str] = {
-        "eval",
-        "exec",
-        "__import__",
-    }
+    def __init__(self, inspector: Optional[Any] = None) -> None:
+        from astrarun.tools.ast_inspector import ASTInspector
+        self.inspector = inspector or ASTInspector()
 
     def evaluate_code(self, code_str: str) -> Tuple[ActionGateVerdict, str, RiskLevel]:
         """
@@ -303,72 +289,25 @@ class ASTCodePolicy:
         if not code_str or not code_str.strip():
             return ActionGateVerdict.ALLOW, "Empty script", RiskLevel.LOW
 
+        res = self.inspector.inspect(code_str)
+        if not res.is_safe:
+            violation_summary = "; ".join(res.violations[:3])
+            return ActionGateVerdict.DENY, f"AST security violation: {violation_summary}", RiskLevel.CRITICAL
+
+        # Additional defense-in-depth: check for obfuscated large base64 payload strings
         try:
             tree = ast.parse(code_str)
-        except SyntaxError as e:
-            return ActionGateVerdict.DENY, f"Python syntax error in synthesized script: {e}", RiskLevel.HIGH
-
-        # Walk AST
-        for node in ast.walk(tree):
-            # Check imports
-            if isinstance(node, ast.Import):
-                for alias in node.names:
-                    if alias.name in self.BANNED_MODULES:
-                        return (
-                            ActionGateVerdict.DENY,
-                            f"Prohibited network/system module imported: {alias.name}",
-                            RiskLevel.CRITICAL,
-                        )
-            elif isinstance(node, ast.ImportFrom):
-                mod = node.module or ""
-                if mod in self.BANNED_MODULES:
-                    return (
-                        ActionGateVerdict.DENY,
-                        f"Prohibited module imported from: {mod}",
-                        RiskLevel.CRITICAL,
-                    )
-                for alias in node.names:
-                    full_name = f"{mod}.{alias.name}" if mod else alias.name
-                    if full_name in self.BANNED_IMPORTS:
-                        return (
-                            ActionGateVerdict.DENY,
-                            f"Prohibited function imported: {full_name}",
-                            RiskLevel.CRITICAL,
-                        )
-
-            # Check calls
-            elif isinstance(node, ast.Call):
-                func = node.func
-                func_name = ""
-                if isinstance(func, ast.Name):
-                    func_name = func.id
-                elif isinstance(func, ast.Attribute):
-                    val_id = getattr(func.value, "id", "")
-                    func_name = f"{val_id}.{func.attr}" if val_id else func.attr
-
-                if func_name in self.SUSPICIOUS_CALLS:
-                    return (
-                        ActionGateVerdict.REQUIRE_CONFIRMATION,
-                        f"Dynamic code evaluation detected ({func_name})",
-                        RiskLevel.HIGH,
-                    )
-                if func_name in self.BANNED_IMPORTS or func_name == "shutil.rmtree":
-                    return (
-                        ActionGateVerdict.DENY,
-                        f"Prohibited destructive filesystem primitive: {func_name}",
-                        RiskLevel.CRITICAL,
-                    )
-
-            # Detect obfuscated base64 payload strings
-            elif isinstance(node, ast.Constant) and isinstance(node.value, str):
-                val = node.value
-                if len(val) > 40 and re.fullmatch(r"[A-Za-z0-9+/=]+", val):
-                    # Potential base64 payload
-                    if any(term in code_str for term in ["b64decode", "decode", "frombase64"]):
-                        return (
-                            ActionGateVerdict.REQUIRE_CONFIRMATION,
-                            "Synthesized script contains large base64-encoded payload",
-                            RiskLevel.HIGH,
-                        )
+            for node in ast.walk(tree):
+                if isinstance(node, ast.Constant) and isinstance(node.value, str):
+                    val = node.value
+                    if len(val) > 40 and re.fullmatch(r"[A-Za-z0-9+/=]+", val):
+                        if any(term in code_str for term in ["b64decode", "decode", "frombase64"]):
+                            return (
+                                ActionGateVerdict.REQUIRE_CONFIRMATION,
+                                "Synthesized script contains large base64-encoded payload",
+                                RiskLevel.HIGH,
+                            )
+        except Exception:
+            pass
 
         return ActionGateVerdict.ALLOW, "AST code safety check passed", RiskLevel.LOW

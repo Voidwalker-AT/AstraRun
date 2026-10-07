@@ -9,7 +9,7 @@ from typing import Any
 
 from astrarun.core.logging import get_logger
 from astrarun.core.models import AppInfo
-from astrarun.core.paths import resolve_model_path, resolve_runtime_binary
+from astrarun.core.paths import AstraPaths, resolve_model_path, resolve_runtime_binary
 
 logger = get_logger("astrarun.config")
 
@@ -30,7 +30,7 @@ DEFAULT_SETTINGS: dict[str, Any] = {
     },
     "telemetry": {
         "enabled": True,
-        "file": "data/routing_events.jsonl",
+        "file": str(AstraPaths.data_dir() / "routing_events.jsonl"),
         "store_raw_request": True
     },
     "shadow_models": {
@@ -43,7 +43,7 @@ DEFAULT_SETTINGS: dict[str, Any] = {
         "model": "convaiinnovations/laya",
         "device": "cpu",
         "confidence_threshold": 0.75,
-        "shadow_file": "data/laya_shadow_events.jsonl"
+        "shadow_file": str(AstraPaths.data_dir() / "laya_shadow_events.jsonl")
     },
     "kev": {
         "enabled": False,
@@ -52,17 +52,17 @@ DEFAULT_SETTINGS: dict[str, Any] = {
         "base_model": "Qwen/Qwen3.5-0.8B-Base",
         "device": "cpu",
         "confidence_threshold": 0.75,
-        "shadow_file": "data/kev_shadow_events.jsonl"
+        "shadow_file": str(AstraPaths.data_dir() / "kev_shadow_events.jsonl")
     },
     "logging": {
         "level": "INFO",
-        "file": "logs/astrarun.log",
+        "file": str(AstraPaths.logs_dir() / "astrarun.log"),
         "max_bytes": 10485760,
         "backup_count": 3
     },
     "history": {
         "enabled": True,
-        "db_path": "data/astra_history.db",
+        "db_path": str(AstraPaths.data_dir() / "astra_history.db"),
         "store_raw_requests": True,
         "retention_days": 30,
         "max_tasks": 5000,
@@ -70,7 +70,7 @@ DEFAULT_SETTINGS: dict[str, Any] = {
     },
     "learning": {
         "enabled": True,
-        "db_path": "data/astra_learning.db",
+        "db_path": str(AstraPaths.data_dir() / "astra_learning.db"),
         "learn_from_history": True,
         "confidence_threshold": 0.85,
         "min_support_count": 3,
@@ -102,7 +102,7 @@ DEFAULT_SETTINGS: dict[str, Any] = {
     },
     "rag": {
         "enabled": True,
-        "db_path": "data/astra_memory.db",
+        "db_path": str(AstraPaths.data_dir() / "astra_memory.db"),
         "embedding_model_dir": str(resolve_model_path("bge-small-en-v1.5", dev_fallback=r"E:\AI_Models\ONNX\bge-small-en-v1.5")),
         "dimension": 384,
         "rrf_k": 60,

@@ -131,6 +131,114 @@ def ensure_app_dirs() -> None:
         d.mkdir(parents=True, exist_ok=True)
 
 
+class AstraPaths:
+    """Authoritative Central Path Service for AstraRun.
+
+    Enforces that NO production subsystem resolves runtime paths relative to CWD.
+    """
+
+    @classmethod
+    def install_dir(cls) -> Path:
+        return get_install_root()
+
+    @classmethod
+    def user_data_dir(cls) -> Path:
+        return get_app_data_dir()
+
+    @classmethod
+    def config_dir(cls) -> Path:
+        return get_config_dir()
+
+    @classmethod
+    def data_dir(cls) -> Path:
+        return get_data_dir()
+
+    @classmethod
+    def logs_dir(cls) -> Path:
+        return get_logs_dir()
+
+    @classmethod
+    def cache_dir(cls) -> Path:
+        return get_cache_dir()
+
+    @classmethod
+    def models_dir(cls) -> Path:
+        return get_models_dir()
+
+    @classmethod
+    def skills_dir(cls) -> Path:
+        return get_skills_dir()
+
+    @classmethod
+    def runtimes_dir(cls) -> Path:
+        return get_runtimes_dir()
+
+    @classmethod
+    def temp_dir(cls) -> Path:
+        custom_temp = os.environ.get("ASTRARUN_TEMP_DIR")
+        if custom_temp:
+            p = Path(custom_temp).resolve()
+        elif sys.platform == "win32":
+            temp_base = os.environ.get("TEMP") or os.environ.get("TMP") or str(Path.home() / "AppData" / "Local" / "Temp")
+            p = Path(temp_base) / "AstraRun"
+        else:
+            p = Path("/tmp/astrarun")
+        p.mkdir(parents=True, exist_ok=True)
+        return p
+
+    @classmethod
+    def sandbox_dir(cls) -> Path:
+        if sys.platform == "win32":
+            p = Path.home() / "AppData" / "LocalLow" / "AstraRun" / "sandbox"
+        else:
+            p = cls.data_dir() / "sandbox"
+        p.mkdir(parents=True, exist_ok=True)
+        return p
+
+    @classmethod
+    def machine_db_path(cls) -> Path:
+        p = cls.data_dir() / "machine" / "machine_facts.db"
+        p.parent.mkdir(parents=True, exist_ok=True)
+        return p
+
+    @classmethod
+    def state_file_path(cls) -> Path:
+        return cls.data_dir() / "astrarun_state.json"
+
+    @classmethod
+    def summon_trigger_path(cls) -> Path:
+        return cls.data_dir() / "astrarun_summon.trigger"
+
+    @classmethod
+    def program_dir(cls) -> Path:
+        """Return the installation root for program binaries (%LOCALAPPDATA%\\Programs\\AstraRun or get_install_root())."""
+        if getattr(sys, "frozen", False):
+            return get_install_root()
+        local_app = os.environ.get("LOCALAPPDATA")
+        if local_app:
+            candidate = Path(local_app) / "Programs" / "AstraRun"
+            if candidate.exists():
+                return candidate
+        return get_install_root()
+
+    @classmethod
+    def resolve_model(cls, relative_name: str, dev_fallback: Optional[str | Path] = None) -> Path:
+        """Resolve model without ever moving or deleting external user assets."""
+        return resolve_model_path(relative_name, dev_fallback)
+
+    @classmethod
+    def resolve_runtime(cls, binary_name: str, dev_fallback: Optional[str | Path] = None) -> Path:
+        return resolve_runtime_binary(binary_name, dev_fallback)
+
+    @classmethod
+    def ensure_all_dirs(cls) -> None:
+        ensure_app_dirs()
+        cls.temp_dir()
+        cls.sandbox_dir()
+        cls.machine_db_path().parent.mkdir(parents=True, exist_ok=True)
+
+
+
 def resolve_model_path(relative_name: str, dev_fallback: Optional[str | Path] = None) -> Path:
     """
     Resolve a model path.
@@ -162,15 +270,19 @@ def resolve_model_path(relative_name: str, dev_fallback: Optional[str | Path] = 
     if bundle_model_path.exists():
         return bundle_model_path
 
-    # Check canonical workstation AI model repository
-    canonical_gguf = Path(r"E:\AI_Models\GGUF") / relative_name
-    if canonical_gguf.exists():
-        return canonical_gguf
+    # 4. In DEVELOPMENT mode: check explicit workstation repo or dev fallback
+    if not is_release_mode():
+        # Check explicit development fallback
+        if dev_fallback:
+            dev_path = Path(dev_fallback)
+            if dev_path.exists():
+                return dev_path
 
-    if not is_release_mode() and dev_fallback:
-        dev_path = Path(dev_fallback)
-        if dev_path.exists():
-            return dev_path
+        # Workstation development fallback only when running in development environment
+        if os.environ.get("ASTRARUN_ENV") == "development" or os.environ.get("ASTRA_DEV") == "1":
+            dev_repo = Path(r"E:\AI_Models\GGUF") / relative_name
+            if dev_repo.exists():
+                return dev_repo
 
     return user_model_path
 

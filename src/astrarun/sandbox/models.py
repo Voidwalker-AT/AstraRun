@@ -31,6 +31,8 @@ class SandboxConfig:
     preserve_on_exit: bool = False
     extra_env: Dict[str, str] = field(default_factory=dict)
     run_id: str = field(default_factory=lambda: f"sb_{uuid.uuid4().hex[:8]}")
+    output_dir: Optional[Path] = None
+    launcher_preference: str = "APPCONTAINER"
 
 
 @dataclass
@@ -45,10 +47,21 @@ class SandboxResult:
     duration_ms: float
     peak_memory_mb: float = 0.0
     working_dir: Optional[Path] = None
+    output_dir: Optional[Path] = None
     created_artifacts: List[Path] = field(default_factory=list)
     redacted: bool = False
     violations: List[str] = field(default_factory=list)
+    isolation_type: str = "APPCONTAINER"
+    token_diagnostics: Dict[str, Any] = field(default_factory=dict)
 
     @property
     def is_success(self) -> bool:
         return self.status == "SUCCESS" and self.exit_code == 0
+
+    @property
+    def is_timeout(self) -> bool:
+        return self.status == "TIMEOUT"
+
+    @property
+    def artifacts(self) -> List[Path]:
+        return self.created_artifacts

@@ -1,0 +1,226 @@
+{
+  "audit_phase": "C2.2A",
+  "timestamp": "2026-10-07T23:38:00+05:30",
+  "python_version": "3.13.0 (tags/v3.13.0:60403a5, Oct  7 2024, 09:38:07) [MSC v.1941 64 bit (AMD64)]",
+  "total_deselected_tests_audited": 30,
+  "category_counts": {
+    "CURRENT_AND_APPLICABLE": 11,
+    "SUPERSEDED_BY_C2_2": 6,
+    "LEGACY_C2_BASELINE": 12,
+    "INCOMPATIBLE_WITH_NEW_ARCHITECTURE": 1,
+    "BROKEN_TEST": 0,
+    "OTHER": 0
+  },
+  "tests": [
+    {
+      "test_id": "C2-01",
+      "test_name": "test_c2_01_normal_arithmetic_script",
+      "category": "LEGACY_C2_BASELINE",
+      "rationale": "Evaluates basic arithmetic execution specifically targeting the Phase C2 Restricted Token launcher baseline via configure_c2_launcher monkeypatch. In C2.2, AppContainer execution is covered by post-freeze holdouts.",
+      "execution_result": "PASSED"
+    },
+    {
+      "test_id": "C2-02",
+      "test_name": "test_c2_02_json_output",
+      "category": "LEGACY_C2_BASELINE",
+      "rationale": "Evaluates JSON artifact output generation under the Phase C2 Restricted Token launcher baseline.",
+      "execution_result": "PASSED"
+    },
+    {
+      "test_id": "C2-03",
+      "test_name": "test_c2_03_csv_transform",
+      "category": "LEGACY_C2_BASELINE",
+      "rationale": "Evaluates CSV tabular transformation under the Phase C2 Restricted Token launcher baseline.",
+      "execution_result": "PASSED"
+    },
+    {
+      "test_id": "C2-04",
+      "test_name": "test_c2_04_numpy_computation",
+      "category": "LEGACY_C2_BASELINE",
+      "rationale": "Evaluates numerical linear algebra computation under the Phase C2 Restricted Token launcher baseline.",
+      "execution_result": "PASSED"
+    },
+    {
+      "test_id": "C2-05",
+      "test_name": "test_c2_05_matplotlib_png",
+      "category": "INCOMPATIBLE_WITH_NEW_ARCHITECTURE",
+      "rationale": "Directly executes matplotlib inside the untrusted worker. Under C2.2 architecture, untrusted AppContainer workers lack desktop/GDI access; visualization is strictly performed via the trusted declarative capability in astrarun.visualization.",
+      "execution_result": "PASSED_UNDER_LEGACY_ONLY"
+    },
+    {
+      "test_id": "C2-06",
+      "test_name": "test_c2_06_attempt_write_desktop",
+      "category": "LEGACY_C2_BASELINE",
+      "rationale": "Probes Desktop directory write denial under the Phase C2 Restricted Token baseline.",
+      "execution_result": "PASSED"
+    },
+    {
+      "test_id": "C2-07",
+      "test_name": "test_c2_07_attempt_write_documents",
+      "category": "LEGACY_C2_BASELINE",
+      "rationale": "Probes Documents directory write denial under the Phase C2 Restricted Token baseline.",
+      "execution_result": "PASSED"
+    },
+    {
+      "test_id": "C2-08",
+      "test_name": "test_c2_08_attempt_write_astra_config",
+      "category": "LEGACY_C2_BASELINE",
+      "rationale": "Probes Astra configuration directory write denial under the Phase C2 Restricted Token baseline.",
+      "execution_result": "PASSED"
+    },
+    {
+      "test_id": "C2-09",
+      "test_name": "test_c2_09_attempt_write_install_directory",
+      "category": "LEGACY_C2_BASELINE",
+      "rationale": "Probes installation directory write denial under the Phase C2 Restricted Token baseline.",
+      "execution_result": "PASSED"
+    },
+    {
+      "test_id": "C2-10",
+      "test_name": "test_c2_10_attempt_write_windows_directory",
+      "category": "LEGACY_C2_BASELINE",
+      "rationale": "Probes Windows system directory write denial under the Phase C2 Restricted Token baseline.",
+      "execution_result": "PASSED"
+    },
+    {
+      "test_id": "C2-11",
+      "test_name": "test_c2_11_attempt_read_synthetic_documents_secret",
+      "category": "SUPERSEDED_BY_C2_2",
+      "rationale": "In Phase C2 Restricted Token, read-up from Medium integrity files was permitted and accepted by the test harness. In C2.2 AppContainer, all read access to Documents is structurally blocked.",
+      "execution_result": "PASSED"
+    },
+    {
+      "test_id": "C2-12",
+      "test_name": "test_c2_12_attempt_read_synthetic_astra_secret",
+      "category": "SUPERSEDED_BY_C2_2",
+      "rationale": "In Phase C2 Restricted Token, read-up of Astra data dir was tolerated. In C2.2 AppContainer, all read access to AppData is blocked.",
+      "execution_result": "PASSED"
+    },
+    {
+      "test_id": "C2-13",
+      "test_name": "test_c2_13_attempt_read_synthetic_ssh_canary",
+      "category": "SUPERSEDED_BY_C2_2",
+      "rationale": "In Phase C2 Restricted Token, read-up of ~/.ssh was tolerated. In C2.2 AppContainer, all read access to ~/.ssh is blocked.",
+      "execution_result": "PASSED"
+    },
+    {
+      "test_id": "C2-14",
+      "test_name": "test_c2_14_raw_socket_public",
+      "category": "SUPERSEDED_BY_C2_2",
+      "rationale": "In Phase C2 Restricted Token, network sockets were not restricted by the token. In C2.2 AppContainer, network capabilities are zeroed out (0 capabilities granted).",
+      "execution_result": "PASSED"
+    },
+    {
+      "test_id": "C2-15",
+      "test_name": "test_c2_15_localhost_model_server",
+      "category": "SUPERSEDED_BY_C2_2",
+      "rationale": "In Phase C2 Restricted Token, loopback sockets were permitted. In C2.2 AppContainer, loopback isolation blocks unauthorized local server access.",
+      "execution_result": "PASSED"
+    },
+    {
+      "test_id": "C2-16",
+      "test_name": "test_c2_16_private_lan_target",
+      "category": "SUPERSEDED_BY_C2_2",
+      "rationale": "In Phase C2 Restricted Token, private LAN was reachable. In C2.2 AppContainer, private LAN access is blocked.",
+      "execution_result": "PASSED"
+    },
+    {
+      "test_id": "C2-17",
+      "test_name": "test_c2_17_terminate_unrelated_helper",
+      "category": "LEGACY_C2_BASELINE",
+      "rationale": "Probes OpenProcess PROCESS_TERMINATE under the Phase C2 Restricted Token baseline.",
+      "execution_result": "PASSED"
+    },
+    {
+      "test_id": "C2-18",
+      "test_name": "test_c2_18_terminate_astra_host",
+      "category": "LEGACY_C2_BASELINE",
+      "rationale": "Probes OpenProcess parent process handle acquisition under the Phase C2 Restricted Token baseline.",
+      "execution_result": "PASSED"
+    },
+    {
+      "test_id": "C2-19",
+      "test_name": "test_c2_19_spawn_child_and_survive_parent",
+      "category": "CURRENT_AND_APPLICABLE",
+      "rationale": "Verifies that processes spawned by workers are contained in the Win32 Job Object and terminated when the parent job closes (JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE). Applies to all execution tiers.",
+      "execution_result": "PASSED"
+    },
+    {
+      "test_id": "C2-20",
+      "test_name": "test_c2_20_memory_exhaustion",
+      "category": "CURRENT_AND_APPLICABLE",
+      "rationale": "Verifies that memory-hungry worker processes are bounded and terminated cleanly by the Job Object memory limit.",
+      "execution_result": "PASSED"
+    },
+    {
+      "test_id": "C2-21",
+      "test_name": "test_c2_21_timeout_infinite_loop",
+      "category": "CURRENT_AND_APPLICABLE",
+      "rationale": "Verifies that CPU-bound infinite loops are forcibly terminated by the sandbox timeout governor.",
+      "execution_result": "PASSED"
+    },
+    {
+      "test_id": "C2-22",
+      "test_name": "test_c2_22_registry_synthetic_mutation",
+      "category": "LEGACY_C2_BASELINE",
+      "rationale": "Probes HKCU mutation under the Phase C2 Restricted Token baseline.",
+      "execution_result": "PASSED"
+    },
+    {
+      "test_id": "C2-23",
+      "test_name": "test_c2_23_startup_registry_mutation",
+      "category": "LEGACY_C2_BASELINE",
+      "rationale": "Probes HKCU Run startup registry mutation under the Phase C2 Restricted Token baseline.",
+      "execution_result": "PASSED"
+    },
+    {
+      "test_id": "C2-24",
+      "test_name": "test_c2_24_fake_host_api_key_environment_read",
+      "category": "CURRENT_AND_APPLICABLE",
+      "rationale": "Verifies environment secret scrubbing so host secrets (ASTRA_CANARY_API_KEY) do not leak into child worker processes.",
+      "execution_result": "PASSED"
+    },
+    {
+      "test_id": "C2-25",
+      "test_name": "test_c2_25_fake_authorization_token_read",
+      "category": "CURRENT_AND_APPLICABLE",
+      "rationale": "Verifies environment token scrubbing so host authorization tokens (ASTRA_AUTH_TOKEN) do not leak into child worker processes.",
+      "execution_result": "PASSED"
+    },
+    {
+      "test_id": "C2-26",
+      "test_name": "test_c2_26_ast_bypass_corpus",
+      "category": "CURRENT_AND_APPLICABLE",
+      "rationale": "Validates ASTInspector defensive screening against hostile dynamic evaluation (__import__ os system).",
+      "execution_result": "PASSED"
+    },
+    {
+      "test_id": "C2-27",
+      "test_name": "test_c2_27_malformed_source",
+      "category": "CURRENT_AND_APPLICABLE",
+      "rationale": "Validates ASTInspector detection and rejection of syntactically malformed source code.",
+      "execution_result": "PASSED"
+    },
+    {
+      "test_id": "C2-28",
+      "test_name": "test_c2_28_artifact_traversal_attempt",
+      "category": "CURRENT_AND_APPLICABLE",
+      "rationale": "Verifies that deliver_artifact denies files originating outside authorized sandbox boundaries. Assertion string reconciled in C2.2A.",
+      "execution_result": "PASSED"
+    },
+    {
+      "test_id": "C2-29",
+      "test_name": "test_c2_29_symlink_reparse_point_escape_attempt",
+      "category": "CURRENT_AND_APPLICABLE",
+      "rationale": "Verifies that deliver_artifact rejects symlinks and reparse points attempting boundary escape.",
+      "execution_result": "PASSED"
+    },
+    {
+      "test_id": "C2-30",
+      "test_name": "test_c2_30_race_toctou_artifact_replacement_attempt",
+      "category": "CURRENT_AND_APPLICABLE",
+      "rationale": "Verifies that deliver_artifact detects and rejects TOCTOU content tampering via pre-delivery SHA-256 validation.",
+      "execution_result": "PASSED"
+    }
+  ]
+}

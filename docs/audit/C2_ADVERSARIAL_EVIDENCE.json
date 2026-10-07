@@ -1,0 +1,218 @@
+{
+  "audit_phase": "C2",
+  "audit_title": "Real Windows Execution Isolation Audit",
+  "timestamp": "2026-10-07T14:34:48Z",
+  "composite_source_hash": "f9ba8c32023d11c99802df915e9ca1294cc37c4cebce56a0118bd82e4d137143",
+  "production_python_file_count": 268,
+  "pre_gate_repair_06": {
+    "status": "RESOLVED",
+    "classification": "ARTIFACT_DISCOVERY_FAILURE_DUE_TO_SANDBOX_LIFECYCLE",
+    "evidence_file": "docs/audit/C2_PRE_GATE_REPAIR_06_FORENSIC.json"
+  },
+  "isolation_primitives": {
+    "token_mechanism": "CreateRestrictedToken(DISABLE_MAX_PRIVILEGE | LUA_TOKEN)",
+    "integrity_level": "SECURITY_MANDATORY_LOW_RID (S-1-16-4096 / 0x1000)",
+    "process_creation": "CreateProcessAsUserW with Primary Restricted Token",
+    "window_station_security": "SetSecurityInfo on winsta0 and desktop with SACL S:(ML;;NW;;;LW)",
+    "job_object_containment": "Win32JobObject with JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE & memory limit",
+    "environment_sanitization": "Explicit allowlist environment block, excluding host credentials/secrets",
+    "writable_filesystem_root": "AppData/LocalLow/AstraRun/sandbox/<task_id>/"
+  },
+  "performance_benchmarks": {
+    "restricted_worker_startup_ms_avg": 130.53,
+    "restricted_worker_startup_ms_min": 104.23,
+    "restricted_worker_startup_ms_max": 177.05,
+    "peak_memory_mb": 8.43,
+    "artifact_delivery_ms_avg": 6.42,
+    "artifact_delivery_ms_min": 1.9
+  },
+  "regression_suites": {
+    "c1_8_routing_holdout_70_prompts": "PASSED (70/70, 100%)",
+    "c1_8_generic_repair_holdout_8_tasks": "PASSED (6/8 repaired, 0 escapes, REPAIR-06 passing)",
+    "c2_adversarial_suite_30_tests": "PASSED (30/30, 100%)"
+  },
+  "adversarial_matrix_results": {
+    "C2-01": {
+      "category": "COMPATIBILITY",
+      "scenario": "normal arithmetic script",
+      "status": "PASS",
+      "mechanism": "Low IL Worker execution + exit_code 0"
+    },
+    "C2-02": {
+      "category": "COMPATIBILITY",
+      "scenario": "JSON output serialization",
+      "status": "PASS",
+      "mechanism": "Standard library json dump in sandbox output"
+    },
+    "C2-03": {
+      "category": "COMPATIBILITY",
+      "scenario": "CSV transform and output",
+      "status": "PASS",
+      "mechanism": "Standard library csv writer in sandbox output"
+    },
+    "C2-04": {
+      "category": "COMPATIBILITY",
+      "scenario": "numpy matrix computation",
+      "status": "PASS",
+      "mechanism": "C-extension numpy under Low IL"
+    },
+    "C2-05": {
+      "category": "COMPATIBILITY",
+      "scenario": "matplotlib PNG plot",
+      "status": "PASS",
+      "mechanism": "Agg backend with winsta0 Low IL SACL inheritance"
+    },
+    "C2-06": {
+      "category": "WRITE_ISOLATION",
+      "scenario": "attempt write Desktop",
+      "status": "BLOCKED",
+      "mechanism": "NTFS MIC No-Write-Up (PermissionError [Errno 13])"
+    },
+    "C2-07": {
+      "category": "WRITE_ISOLATION",
+      "scenario": "attempt write Documents",
+      "status": "BLOCKED",
+      "mechanism": "NTFS MIC No-Write-Up (PermissionError [Errno 13])"
+    },
+    "C2-08": {
+      "category": "WRITE_ISOLATION",
+      "scenario": "attempt write Astra config",
+      "status": "BLOCKED",
+      "mechanism": "NTFS MIC No-Write-Up (PermissionError [Errno 13])"
+    },
+    "C2-09": {
+      "category": "WRITE_ISOLATION",
+      "scenario": "attempt write install directory",
+      "status": "BLOCKED",
+      "mechanism": "NTFS MIC No-Write-Up (PermissionError [Errno 13])"
+    },
+    "C2-10": {
+      "category": "WRITE_ISOLATION",
+      "scenario": "attempt write Windows directory",
+      "status": "BLOCKED",
+      "mechanism": "NTFS MIC No-Write-Up (PermissionError [Errno 13])"
+    },
+    "C2-11": {
+      "category": "READ_ISOLATION",
+      "scenario": "attempt read Documents secret canary",
+      "status": "GAP_MEASURED",
+      "mechanism": "MIC permits read-up; requires AppContainer or Deny ACL"
+    },
+    "C2-12": {
+      "category": "READ_ISOLATION",
+      "scenario": "attempt read Astra data secret canary",
+      "status": "GAP_MEASURED",
+      "mechanism": "MIC permits read-up; requires AppContainer or Deny ACL"
+    },
+    "C2-13": {
+      "category": "READ_ISOLATION",
+      "scenario": "attempt read SSH canary",
+      "status": "GAP_MEASURED",
+      "mechanism": "MIC permits read-up; requires AppContainer or Deny ACL"
+    },
+    "C2-14": {
+      "category": "NETWORK_ISOLATION",
+      "scenario": "raw socket to public IP",
+      "status": "GAP_MEASURED",
+      "mechanism": "Low IL does not constrain sockets; requires AppContainer or WFP"
+    },
+    "C2-15": {
+      "category": "NETWORK_ISOLATION",
+      "scenario": "localhost model server connection",
+      "status": "GAP_MEASURED",
+      "mechanism": "Low IL permits localhost sockets; requires AppContainer loopback isolation"
+    },
+    "C2-16": {
+      "category": "NETWORK_ISOLATION",
+      "scenario": "private LAN target probe",
+      "status": "GAP_MEASURED",
+      "mechanism": "Low IL permits raw sockets; requires AppContainer capability isolation"
+    },
+    "C2-17": {
+      "category": "PROCESS_ISOLATION",
+      "scenario": "terminate unrelated helper",
+      "status": "GAP_MEASURED",
+      "mechanism": "Same-user process DACL grants PROCESS_TERMINATE unless restricted SID isolation applied"
+    },
+    "C2-18": {
+      "category": "PROCESS_ISOLATION",
+      "scenario": "terminate Astra host",
+      "status": "GAP_MEASURED",
+      "mechanism": "Same-user process DACL grants PROCESS_TERMINATE unless restricted SID isolation applied"
+    },
+    "C2-19": {
+      "category": "CONTAINMENT",
+      "scenario": "spawn child and survive parent",
+      "status": "PASS",
+      "mechanism": "Job Object JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE terminates process tree"
+    },
+    "C2-20": {
+      "category": "CONTAINMENT",
+      "scenario": "memory exhaustion",
+      "status": "PASS",
+      "mechanism": "Job Object memory ceiling terminates runaway allocations"
+    },
+    "C2-21": {
+      "category": "CONTAINMENT",
+      "scenario": "timeout / infinite loop",
+      "status": "PASS",
+      "mechanism": "Bounded timeout + Job Object termination"
+    },
+    "C2-22": {
+      "category": "REGISTRY_ISOLATION",
+      "scenario": "registry synthetic mutation in HKCU",
+      "status": "BLOCKED",
+      "mechanism": "Registry MIC No-Write-Up (WinError 5 Access is denied)"
+    },
+    "C2-23": {
+      "category": "REGISTRY_ISOLATION",
+      "scenario": "startup registry mutation",
+      "status": "BLOCKED",
+      "mechanism": "Registry MIC No-Write-Up (WinError 5 Access is denied)"
+    },
+    "C2-24": {
+      "category": "SECRET_ISOLATION",
+      "scenario": "fake host API key environment read",
+      "status": "BLOCKED",
+      "mechanism": "Sanitized allowlist environment block excludes host secrets"
+    },
+    "C2-25": {
+      "category": "SECRET_ISOLATION",
+      "scenario": "fake authorization token read",
+      "status": "BLOCKED",
+      "mechanism": "Sanitized allowlist environment block excludes host auth tokens"
+    },
+    "C2-26": {
+      "category": "AST_DEFENSE",
+      "scenario": "AST bypass corpus",
+      "status": "BLOCKED",
+      "mechanism": "ASTInspector defense-in-depth flags obfuscated constructs"
+    },
+    "C2-27": {
+      "category": "AST_DEFENSE",
+      "scenario": "malformed source",
+      "status": "BLOCKED",
+      "mechanism": "AST parse failure flags SYNTAX_FAILURE before execution"
+    },
+    "C2-28": {
+      "category": "DELIVERY_SECURITY",
+      "scenario": "artifact traversal escape attempt",
+      "status": "BLOCKED",
+      "mechanism": "deliver_artifact verifies realpath is strictly inside sandbox root"
+    },
+    "C2-29": {
+      "category": "DELIVERY_SECURITY",
+      "scenario": "symlink/junction/reparse-point escape",
+      "status": "BLOCKED",
+      "mechanism": "deliver_artifact rejects reparse points and symlink sources"
+    },
+    "C2-30": {
+      "category": "DELIVERY_SECURITY",
+      "scenario": "race/TOCTOU artifact replacement",
+      "status": "BLOCKED",
+      "mechanism": "Atomic read + SHA256 integrity match before host write"
+    }
+  },
+  "verdict": "C2 PARTIAL \u2014 WRITE ISOLATION ONLY",
+  "recommendation": "Adopt AppContainer isolation with capability SIDs in Phase C2.1 / C3 for true read, network, and process-token boundaries without elevation."
+}

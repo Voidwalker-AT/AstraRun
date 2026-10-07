@@ -56,7 +56,8 @@ class MachineModel:
         db_path: Optional[Path] = None,
         providers: Optional[List[BaseMachineProvider]] = None,
     ) -> None:
-        self.db_path = Path(db_path or Path("data/machine/machine_facts.db")).resolve()
+        from astrarun.core.paths import AstraPaths
+        self.db_path = Path(db_path or AstraPaths.machine_db_path()).resolve()
         self.db_path.parent.mkdir(parents=True, exist_ok=True)
 
         self.providers: Dict[str, BaseMachineProvider] = {}

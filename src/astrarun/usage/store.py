@@ -15,8 +15,12 @@ logger = get_logger("astrarun.usage")
 class UsageStore:
     """Persists local candidate usage statistics to slightly weight ranking."""
 
-    def __init__(self, data_file: Path | str = "data/usage.json"):
-        self.data_file = Path(data_file)
+    def __init__(self, data_file: Path | str | None = None):
+        if data_file is None:
+            from astrarun.core.paths import AstraPaths
+            self.data_file = AstraPaths.data_dir() / "usage.json"
+        else:
+            self.data_file = Path(data_file)
         self._data: dict[str, dict[str, Any]] = {}
         self.load()
 

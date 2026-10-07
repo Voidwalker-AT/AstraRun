@@ -1,0 +1,1 @@
+Open ChatGPT and ask it to design a small Python program that simulates projectile motion and plots the trajectory. Implement what it gives you, run it, send the real execution/test result back to the same ChatGPT conversation, ask it to review the result, make any changes it requests, and finish only when the program works locally and ChatGPT approves it.

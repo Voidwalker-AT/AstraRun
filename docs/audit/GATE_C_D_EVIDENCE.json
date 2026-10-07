@@ -1,0 +1,18 @@
+{
+  "spark": {
+    "verified": true,
+    "port": 8090,
+    "pid": 20672,
+    "intent": "monitor",
+    "confidence": 0.95,
+    "latency_s": 4.922757625579834
+  },
+  "qwen": {
+    "verified": true,
+    "port": 8089,
+    "pid": 6684,
+    "source_hash": "a1806a25df6d10e956ea1e7f740dbe5c123da997ac61fabd0ed4a6f89a8a917b",
+    "code_bytes": 1249,
+    "latency_s": 7.67024302482605
+  }
+}

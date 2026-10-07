@@ -74,3 +74,36 @@ class ActionGateEvaluation:
     @property
     def requires_confirmation(self) -> bool:
         return self.verdict == ActionGateVerdict.REQUIRE_CONFIRMATION
+
+
+class CapabilityOperationKind(str, Enum):
+    """Authoritative semantic operation classifications."""
+    OBSERVE_READ_ONLY = "OBSERVE_READ_ONLY"
+    SYSTEM_DIAGNOSTIC = "SYSTEM_DIAGNOSTIC"
+    APPLICATION_LAUNCH = "APPLICATION_LAUNCH"
+    APPLICATION_CLOSE = "APPLICATION_CLOSE"
+    PROCESS_KILL = "PROCESS_KILL"
+    FILE_READ = "FILE_READ"
+    FILE_CREATE = "FILE_CREATE"
+    FILE_MODIFY = "FILE_MODIFY"
+    FILE_DELETE = "FILE_DELETE"
+    DYNAMIC_CODE_EXEC = "DYNAMIC_CODE_EXEC"
+    SHELL_EXEC = "SHELL_EXEC"
+    UI_INTERACTION = "UI_INTERACTION"
+    NETWORK_INSPECT = "NETWORK_INSPECT"
+    NETWORK_MUTATE = "NETWORK_MUTATE"
+    BROWSER_NAVIGATE = "BROWSER_NAVIGATE"
+    BROWSER_INTERACT = "BROWSER_INTERACT"
+    BROWSER_EXTRACT = "BROWSER_EXTRACT"
+    PRIVILEGED_SYSTEM = "PRIVILEGED_SYSTEM"
+    UNKNOWN_CONSEQUENTIAL = "UNKNOWN_CONSEQUENTIAL"
+
+
+@dataclass(frozen=True)
+class CapabilitySecurityMetadata:
+    """Authoritative capability security specification defining immutable gating properties."""
+    operation_kind: CapabilityOperationKind
+    risk: RiskLevel = RiskLevel.LOW
+    mutates_state: bool = False
+    requires_confirmation: bool = False
+    resource_scope: str = "local"

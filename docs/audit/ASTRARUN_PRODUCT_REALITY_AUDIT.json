@@ -1,0 +1,260 @@
+{
+  "audit_version": "1.0.0",
+  "audit_date": "2026-10-06",
+  "auditor": "Independent Architecture & Codebase Reality Audit",
+  "repository": "E:\\Workspace\\Active\\AstraRun",
+  "base_commit": "f4e5d06",
+  "summary": {
+    "verdict": "ARCHITECTURALLY FRAGMENTED WITH CRITICAL EVIDENCE AND PATH DEFECTS",
+    "core_insight": "AstraRun is currently a deterministic hybrid Windows resident command bar (v0.10 UIA + regex + hardcoded fallback templates). The advertised multi-model cognitive spine (Spark, Qwen, Laya, RAG, OmniParser) exists primarily in isolated test harnesses, while the production resident executable runs with these subsystems completely unwired or simulated.",
+    "p0_findings_count": 2,
+    "p1_findings_count": 7,
+    "p2_findings_count": 4,
+    "p3_findings_count": 2,
+    "total_modules_src": 257,
+    "reachable_production_modules": 192,
+    "unreachable_production_modules": 65
+  },
+  "findings": [
+    {
+      "id": "AUDIT-P0-001",
+      "severity": "P0",
+      "category": "FILESYSTEM_PATH_ARCHITECTURE",
+      "title": "CWD-dependent runtime storage causes frozen application startup crash",
+      "status": "ROOT_CAUSED_AND_REMEDIATED_IN_SOURCE",
+      "description": "Production code resolved SQLite databases, log directories, and config paths relative to process CWD. When launched from C:\\Windows\\System32 or arbitrary non-writable directories, MachineModel threw WinError 5 Access is denied: 'C:\\Windows\\System32\\data'. In total, 44 relative path constructions existed across 20 production files.",
+      "affected_files": [
+        "src/astrarun/machine/model.py",
+        "src/astrarun/app.py",
+        "src/astrarun/main.py",
+        "src/astrarun/core/single_instance.py",
+        "src/astrarun/config/loader.py",
+        "src/astrarun/sandbox/manager.py",
+        "src/astrarun/tasks/continuity.py",
+        "src/astrarun/network/quarantine.py",
+        "src/astrarun/power/ledger.py",
+        "src/astrarun/tools/lifecycle.py",
+        "src/astrarun/ui/diagnostics.py",
+        "src/astrarun/ui/launcher.py",
+        "src/astrarun/ui/settings.py",
+        "src/astrarun/core/logging.py",
+        "src/astrarun/usage/store.py",
+        "src/astrarun/learning/persistence.py",
+        "src/astrarun/tasks/ledger.py",
+        "src/astrarun/telemetry/collector.py",
+        "src/astrarun/telemetry/shadow_collector.py",
+        "src/astrarun/learning/engine.py"
+      ],
+      "remediation": "Implemented centralized AstraPaths in src/astrarun/core/paths.py resolving strictly against %LOCALAPPDATA%\\AstraRun and %TEMP%\\AstraRun. Verified across 6 distinct CWDs."
+    },
+    {
+      "id": "AUDIT-P0-002",
+      "severity": "P0",
+      "category": "EVIDENCE_INTEGRITY",
+      "title": "Simulated ChatGPT Web delegation fabricated and mislabeled as REAL_INSTALLED_PRODUCT_EXECUTION",
+      "status": "CONFIRMED_DEFECT",
+      "description": "ChatGPTWebDelegate in src/astrarun/delegation/chatgpt_web.py only checked psutil for chrome/msedge/brave process existence. Its _dispatch_browser_interaction() method returned a 100% hardcoded Python script for projectile motion and hardcoded review approval strings. It never launched a browser, never navigated to chatgpt.com, never used an authenticated session, and never communicated with OpenAI. Yet test_dogfood_chatgpt_workflow.py and evidence generation emitted evidence_class REAL_INSTALLED_PRODUCT_EXECUTION.",
+      "affected_files": [
+        "src/astrarun/delegation/chatgpt_web.py",
+        "src/astrarun/delegation/loop.py",
+        "tests/delegation/test_dogfood_chatgpt_workflow.py"
+      ],
+      "remediation": "Relabel evidence class to SIMULATED_PROVIDER. Remove prompt-specific hardcoded trajectory/math mocks from production delegation loops."
+    },
+    {
+      "id": "AUDIT-P1-001",
+      "severity": "P1",
+      "category": "ARCHITECTURE_DISCONNECTION",
+      "title": "Entire RAG subsystem is unwired and dead in production composition root",
+      "status": "CONFIRMED_DEFECT",
+      "description": "All 10 modules in astrarun.rag (context, embeddings, indexer, models, router, skills, store, vector, worker) are unimported by AstraApplication, main, or entrypoint. The subsystem is only exercised by test_milestone3_rag_subsystem.py.",
+      "affected_files": [
+        "src/astrarun/rag/context.py",
+        "src/astrarun/rag/embeddings.py",
+        "src/astrarun/rag/indexer.py",
+        "src/astrarun/rag/models.py",
+        "src/astrarun/rag/router.py",
+        "src/astrarun/rag/skills.py",
+        "src/astrarun/rag/store.py",
+        "src/astrarun/rag/vector.py",
+        "src/astrarun/rag/worker.py"
+      ]
+    },
+    {
+      "id": "AUDIT-P1-002",
+      "severity": "P1",
+      "category": "ARCHITECTURE_DISCONNECTION",
+      "title": "Entire Perception and OmniParser subsystem is unwired and dead in production",
+      "status": "CONFIRMED_DEFECT",
+      "description": "All 11 modules in astrarun.perception (capture, cdp, com, cv, grounder, input, models, ocr, router, vlm) are unimported by the production application. Production desktop automation uses astrarun.interaction.service (pywinauto/UIA) directly. OmniParser and Florence-2 visual grounding are isolated in test suites.",
+      "affected_files": [
+        "src/astrarun/perception/capture.py",
+        "src/astrarun/perception/cdp.py",
+        "src/astrarun/perception/com.py",
+        "src/astrarun/perception/cv.py",
+        "src/astrarun/perception/grounder.py",
+        "src/astrarun/perception/input.py",
+        "src/astrarun/perception/models.py",
+        "src/astrarun/perception/ocr.py",
+        "src/astrarun/perception/router.py",
+        "src/astrarun/perception/vlm.py"
+      ]
+    },
+    {
+      "id": "AUDIT-P1-003",
+      "severity": "P1",
+      "category": "COGNITIVE_ARCHITECTURE",
+      "title": "ModelService, Qwen, and Spark are disconnected from resident product execution",
+      "status": "CONFIRMED_DEFECT",
+      "description": "AstraApplication never starts or contacts ModelService, Spark (:8090), or Qwen (:8089). GoalPlanner uses CapabilitySemanticIndex (in-memory BM25/keyword index) and regex rules. DynamicToolBuilder attempts an HTTP call to Qwen if online, but defaults to hardcoded fallback script generation when offline.",
+      "affected_files": [
+        "src/astrarun/cognition/service.py",
+        "src/astrarun/cognition/supervisor.py",
+        "src/astrarun/agent/planner.py",
+        "src/astrarun/agent/dynamic_tool_builder.py",
+        "src/astrarun/app.py"
+      ]
+    },
+    {
+      "id": "AUDIT-P1-004",
+      "severity": "P1",
+      "category": "SECURITY_ARCHITECTURE",
+      "title": "ActionGate security policy is bypassed by built-in commands and dynamic tooling",
+      "status": "CONFIRMED_DEFECT",
+      "description": "In AstraApplication.handle_request(), built-in actions (open_application, open_url, system_info) dispatch directly to capability_registry.execute() without passing through ActionGate.evaluate(). Furthermore, DynamicToolBuilder executes generated scripts in SandboxManager relying solely on AST regex/inspection without ActionGate risk scoring.",
+      "affected_files": [
+        "src/astrarun/app.py",
+        "src/astrarun/agent/dynamic_tool_builder.py",
+        "src/astrarun/security/action_gate.py"
+      ]
+    },
+    {
+      "id": "AUDIT-P1-005",
+      "severity": "P1",
+      "category": "SANDBOX_SECURITY",
+      "title": "SandboxManager provides process containment, NOT security virtualization",
+      "status": "CONFIRMED_DEFECT",
+      "description": "SandboxManager uses Win32 Job Objects to enforce memory limits (512MB) and kill-on-close. It does NOT use Windows AppContainer, restricted tokens, or file system filter virtualization. Generated Python scripts execute with the full security context of the logged-in user, capable of accessing user profile files, reading secrets, or opening network sockets.",
+      "affected_files": [
+        "src/astrarun/sandbox/manager.py",
+        "src/astrarun/sandbox/job_object.py"
+      ]
+    },
+    {
+      "id": "AUDIT-P1-006",
+      "severity": "P1",
+      "category": "MODEL_LIFECYCLE",
+      "title": "Laya worker relies on torchvision masking monkey-patch and unbundled HF weights",
+      "status": "CONFIRMED_DEFECT",
+      "description": "laya_worker.py masks torchvision via sys.modules['torchvision'] = None to prevent DLL import crashes. The frozen PyInstaller executable bundles torch (365MB) but bundles no weights. Laya with TRANSFORMERS_OFFLINE=1 crashes at startup unless weights exist in %LOCALAPPDATA%\\AstraRun\\cache\\huggingface.",
+      "affected_files": [
+        "src/astrarun/cognition/laya_worker.py",
+        "src/astrarun/cognition/laya_client.py"
+      ]
+    },
+    {
+      "id": "AUDIT-P1-007",
+      "severity": "P1",
+      "category": "CODE_INTEGRITY",
+      "title": "Hardcoded acceptance criteria and prompt special cases in agent loop",
+      "status": "CONFIRMED_DEFECT",
+      "description": "Production code contains special cases tailored specifically to dogfood and acceptance test queries. For example, delegation loop specifically looks for 'projectile_sim.py', 'projectile_motion.py', and 'Astra Delegate Test'; dynamic tool builder falls back to a canned matplotlib 3D math script.",
+      "affected_files": [
+        "src/astrarun/delegation/loop.py",
+        "src/astrarun/agent/dynamic_tool_builder.py",
+        "src/astrarun/agent/planner.py"
+      ]
+    },
+    {
+      "id": "AUDIT-P2-001",
+      "severity": "P2",
+      "category": "ARCHITECTURAL_DUPLICATION",
+      "title": "Duplicate subsystems: dual memory, dual skills, dual action gates",
+      "status": "CONFIRMED_DEFECT",
+      "description": "Parallel implementations exist across milestone boundaries: astrarun.rag.store vs astrarun.learning.memory (MemoryStore); astrarun.rag.skills vs astrarun.learning.skills (SkillRegistry); astrarun.security.action_gate vs astrarun.policy.action_gate.",
+      "affected_files": [
+        "src/astrarun/rag/store.py",
+        "src/astrarun/learning/memory.py",
+        "src/astrarun/rag/skills.py",
+        "src/astrarun/learning/skills.py",
+        "src/astrarun/security/action_gate.py",
+        "src/astrarun/policy/action_gate.py"
+      ]
+    },
+    {
+      "id": "AUDIT-P2-002",
+      "severity": "P2",
+      "category": "PACKAGING",
+      "title": "Frozen binary distribution bloat: 1.1GB containing unused runtimes",
+      "status": "CONFIRMED_DEFECT",
+      "description": "PyInstaller dist includes _polars_runtime_32.pyd (167MB), PyTorch (365MB), and OpenCV (112MB). Polars is completely unimported in production. OpenCV is used only by unwired perception modules. PyTorch is bundled without weights.",
+      "affected_files": [
+        "packaging/installer.spec",
+        "dist/AstraRun"
+      ]
+    },
+    {
+      "id": "AUDIT-P2-003",
+      "severity": "P2",
+      "category": "TEST_HYGIENE",
+      "title": "1,984 vendored upstream repository files pollute the test tree",
+      "status": "CONFIRMED_DEFECT",
+      "description": "tests/benchmarks contains full vendored copies of open_interpreter and other external repositories, skewing code metrics, test discovery, and linters.",
+      "affected_files": [
+        "tests/benchmarks/"
+      ]
+    },
+    {
+      "id": "AUDIT-P2-004",
+      "severity": "P2",
+      "category": "DELEGATION_AND_BROWSER",
+      "title": "Browser automation lacks CDP session bridge to user's authenticated profiles",
+      "status": "CONFIRMED_DEFECT",
+      "description": "astrarun.browser does not attach to active user browser profiles with debugging ports. It cannot authenticate or interact with live user sessions on chatgpt.com or Claude web.",
+      "affected_files": [
+        "src/astrarun/browser/manager.py",
+        "src/astrarun/browser/controller.py"
+      ]
+    },
+    {
+      "id": "AUDIT-P3-001",
+      "severity": "P3",
+      "category": "TELEMETRY",
+      "title": "Dual telemetry collector and shadow collector create unnecessary disk I/O",
+      "status": "OBSERVED",
+      "description": "TelemetryCollector and ShadowCollector run concurrently writing parallel JSONL streams for every interaction turn.",
+      "affected_files": [
+        "src/astrarun/telemetry/collector.py",
+        "src/astrarun/telemetry/shadow_collector.py"
+      ]
+    },
+    {
+      "id": "AUDIT-P3-002",
+      "severity": "P3",
+      "category": "CONFIGURATION",
+      "title": "Silent default fallbacks in config loader mask missing configuration files",
+      "status": "OBSERVED",
+      "description": "Config loader catches all IOErrors and silently returns hardcoded defaults, masking configuration syntax errors and missing production config files.",
+      "affected_files": [
+        "src/astrarun/config/loader.py"
+      ]
+    }
+  ],
+  "special_findings": {
+    "A_System32_Crash": "Caused by MachineModel.get_instance() resolving data/machine/machine_facts.db relative to CWD. When launched with CWD C:\\Windows\\System32, mkdir threw WinError 5 Access is denied: 'C:\\Windows\\System32\\data'. Resolved by anchoring to AstraPaths.user_data_dir.",
+    "B_Relative_Paths_Audit": "Found 44 relative path constructions in production code across 20 files. All 44 now anchored to AstraPaths (%LOCALAPPDATA%\\AstraRun and %TEMP%\\AstraRun). Tested across 6 CWDs: C:\\, C:\\Windows, C:\\Windows\\System32, Desktop, Downloads, Temp.",
+    "C_ChatGPT_Dogfood_Truth": "SIMULATED_PROVIDER. ChatGPTWebDelegate only verified browser process existence via psutil, and its _dispatch_browser_interaction() returned a hardcoded Python projectile motion script. It never launched a browser, navigated to chatgpt.com, or reached OpenAI.",
+    "D_Dogfood_Evidence_Classification": "Evidence generated by test_dogfood_chatgpt_workflow.py was marked REAL_INSTALLED_PRODUCT_EXECUTION but should strictly be classified as SIMULATED_PROVIDER or MOCK. No real physical user, browser automation, or external model participated.",
+    "E_Simulated_vs_Real_Tests": "Current test suite runs in source-tree pytest against Python classes. Acceptance tests for 3D visualization and delegation pass because DynamicToolBuilder falls back to canned matplotlib templates and ChatGPTWebDelegate returns canned scripts.",
+    "F_Qwen_Participation": "Qwen NEVER runs in resident product execution. ModelService is uncalled by AstraApplication. DynamicToolBuilder uses regex/canned templates when Qwen (:8089) is unreachable.",
+    "G_Spark_Participation": "Spark NEVER runs in resident product execution. ModelService is uncalled. GoalPlanner uses BM25 keyword matching via CapabilitySemanticIndex rather than Spark cognitive planning.",
+    "H_Laya_Frozen_Viability": "Laya worker uses torchvision monkey-patching (sys.modules['torchvision'] = None) to bypass DLL crashes. In frozen builds, PyTorch is packaged without weights; offline mode fails unless weights are manually placed in %LOCALAPPDATA%\\AstraRun\\cache\\huggingface.",
+    "I_OmniParser_Semantics": "OmniParser (astrarun.perception.grounder) is totally unimported and disconnected from production. Desktop automation strictly uses pywinauto/UIA in astrarun.interaction.service.",
+    "J_ChatGPT_Web_Control_Feasibility": "Cannot control authenticated ChatGPT web today. No CDP remote-debugging attachment to running user browser sessions exists. Only a mock string generator exists.",
+    "K_ActionGate_Bypasses": "Built-in commands (open_application, open_url, system_info) bypass ActionGate.evaluate() entirely. DynamicToolBuilder executes generated scripts in sandbox without ActionGate risk scoring.",
+    "L_SandboxManager_Reality": "SandboxManager is PROCESS CONTAINMENT (Win32 Job Object memory limits + kill-on-close), NOT a security sandbox. Scripts execute with full host user privileges.",
+    "M_Dead_Subsystems": "astrarun.rag (10 modules), astrarun.perception (11 modules), astrarun.ai_bridge (2 modules). Completely unwired from resident application.",
+    "N_Duplicated_Subsystems": "Dual MemoryStore (rag.store vs learning.memory), Dual SkillRegistry (rag.skills vs learning.skills), Dual ActionGate (security.action_gate vs policy.action_gate).",
+    "O_Single_Weakest_Link": "The disconnect between the advertised multi-model cognitive architecture and the actual running codebase: Astra is documented as an autonomous LLM/VLM agent, but runs as a deterministic command bar with models sitting isolated in separate test harnesses."
+  }
+}

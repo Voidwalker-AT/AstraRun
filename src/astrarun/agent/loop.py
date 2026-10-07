@@ -79,15 +79,33 @@ class AgentExecutionEngine:
         validator: Optional[PlanQualityValidator] = None,
         lock_manager: Optional[ResourceLockManager] = None,
         listener: Optional[AgentExecutionListener] = None,
+        execution_broker: Optional[Any] = None,
+        model_service: Optional[Any] = None,
     ):
         from astrarun.capabilities.registry import CapabilityRegistry
         self.registry = registry or CapabilityRegistry()
+        if execution_broker is None:
+            try:
+                from astrarun.security.execution_broker import ExecutionBroker
+                self.execution_broker = ExecutionBroker(capability_registry=self.registry)
+            except Exception as err:
+                raise RuntimeError(f"SECURITY_VIOLATION: AgentExecutionEngine requires an active ExecutionBroker: {err}")
+        else:
+            self.execution_broker = execution_broker
+        if model_service is None:
+            try:
+                from astrarun.cognition.service import ModelService
+                self.model_service = ModelService.get_instance()
+            except Exception:
+                self.model_service = None
+        else:
+            self.model_service = model_service
         self.observer = observer or global_observer
         self.verifier = verifier or global_step_verifier
         self.goal_verifier = goal_verifier or global_goal_verifier
         self.validator = validator or PlanQualityValidator(self.registry)
         self.lock_manager = lock_manager or global_lock_manager
-        self.planner = GoalPlanner(self.registry)
+        self.planner = GoalPlanner(self.registry, model_service=model_service)
         self.listener = listener or AgentExecutionListener()
 
     def determine_resource_lock(self, step: PlanStep) -> Optional[str]:
@@ -220,6 +238,7 @@ class AgentExecutionEngine:
         step.state = StepState.RUNNING
         step.started_at = time.time()
         self.listener.on_step_started(task, step)
+        graph.resolve_step_arguments(step, getattr(task, "context", {}))
 
         lock_key = self.determine_resource_lock(step)
         if lock_key:
@@ -231,13 +250,37 @@ class AgentExecutionEngine:
 
         try:
             while step.retry_count <= step.max_retries:
-                # 1. ACT
+                # 1. ACT (mandatorily governed via ExecutionBroker)
                 t_act_start = time.perf_counter()
-                result = self.registry.execute(
+                if not self.execution_broker:
+                    raise RuntimeError("SECURITY_VIOLATION: ExecutionBroker is absent; execution prohibited.")
+
+                from astrarun.security.execution_broker import ActionCategory, ActionProposal
+                from astrarun.capabilities.models import CapabilityResult
+                prop = ActionProposal(
+                    category=ActionCategory.ACT,
                     capability_id=step.capability_id,
-                    arguments=step.arguments,
+                    parameters=step.arguments,
                     task_id=task.task_id,
+                    source="agent_planner",
                 )
+                broker_res = self.execution_broker.execute(prop)
+                if broker_res.blocked:
+                    result = CapabilityResult(
+                        capability=step.capability_id,
+                        success=False,
+                        message=f"ActionGate BLOCKED step '{step.capability_id}': {broker_res.message}",
+                        data={"blocked": True, "verdict": "BLOCK"},
+                        latency_ms=broker_res.duration_ms,
+                    )
+                else:
+                    result = CapabilityResult(
+                        capability=step.capability_id,
+                        success=broker_res.success,
+                        message=broker_res.message,
+                        data=broker_res.data,
+                        latency_ms=broker_res.duration_ms,
+                    )
                 step.result = result
 
                 # 2. OBSERVE

@@ -96,6 +96,10 @@ class ExecutionGraph:
                 ctx["result"] = last_dep.result.data
         return ctx
 
+    def resolve_step_arguments(self, step: PlanStep, context: Optional[dict[str, Any]] = None) -> None:
+        """Resolve step arguments from previous step outputs."""
+        self._propagate_data(step)
+
     def _propagate_data(self, step: PlanStep) -> None:
         """Map output data from satisfied dependencies into step arguments (supporting OutputReference and ${step.field})."""
         import re

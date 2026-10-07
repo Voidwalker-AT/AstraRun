@@ -50,7 +50,7 @@ class SoftwareProvider(BaseMachineProvider):
         "vivaldi": [
             Path(os.environ.get("LOCALAPPDATA", "")) / "Vivaldi" / "Application" / "vivaldi.exe",
             Path(os.environ.get("PROGRAMFILES", "")) / "Vivaldi" / "Application" / "vivaldi.exe",
-            Path(r"C:\Users\hp\scoop\shims\vivaldi.exe"),
+            Path.home() / "scoop" / "shims" / "vivaldi.exe",
         ],
         "chrome": [
             Path(os.environ.get("PROGRAMFILES", "")) / "Google" / "Chrome" / "Application" / "chrome.exe",
@@ -72,7 +72,7 @@ class SoftwareProvider(BaseMachineProvider):
         "vscode": [
             Path(os.environ.get("LOCALAPPDATA", "")) / "Programs" / "Microsoft VS Code" / "bin" / "code.cmd",
             Path(os.environ.get("PROGRAMFILES", "")) / "Microsoft VS Code" / "bin" / "code.cmd",
-            Path(r"C:\Users\hp\scoop\shims\code.cmd"),
+            Path.home() / "scoop" / "shims" / "code.cmd",
         ],
         "cursor": [
             Path(os.environ.get("LOCALAPPDATA", "")) / "Programs" / "cursor" / "Cursor.exe",

@@ -39,7 +39,8 @@ class ContinuityEngine:
     """Authoritative continuity manager for Astra tasks and sessions."""
 
     def __init__(self, checkpoints_dir: Optional[Path] = None) -> None:
-        self.checkpoints_dir = Path(checkpoints_dir or Path("data/checkpoints")).resolve()
+        from astrarun.core.paths import AstraPaths
+        self.checkpoints_dir = Path(checkpoints_dir or (AstraPaths.data_dir() / "checkpoints")).resolve()
         self.checkpoints_dir.mkdir(parents=True, exist_ok=True)
 
     def save_checkpoint(

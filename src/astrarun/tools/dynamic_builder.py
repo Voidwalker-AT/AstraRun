@@ -1,25 +1,107 @@
 """Governed DynamicToolBuilder for AstraRun 1.0.
 
 Provides model-independent dynamic tool generation, AST safety screening,
-sandbox verification, and bounded self-repair (max 2 attempts).
+sandbox verification, governed artifact delivery via ExecutionBroker,
+and bounded self-repair (max 2 attempts).
 """
 
 from __future__ import annotations
 
+import hashlib
+import os
 import re
 import time
 from dataclasses import dataclass, field
+from enum import Enum
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
 from astrarun.core.logging import get_logger
+from astrarun.machine.resource_governor import GovernorDecision, ResourceGovernor
 from astrarun.sandbox.manager import SandboxManager
 from astrarun.sandbox.models import SandboxConfig, SandboxProfile, SandboxResult
+from astrarun.security.execution_broker import ActionCategory, ActionProposal, ExecutionBroker
 from astrarun.tools.ast_inspector import ASTInspectionResult, ASTInspector
-from astrarun.tools.candidate import CandidateTool, DependencyRequest
+from astrarun.tools.candidate import CandidateTool, CodeProvenance, DependencyRequest, RevisionRecord
 from astrarun.tools.registry import ToolRegistry
 
 logger = get_logger("astrarun.tools.dynamic_builder")
+
+
+class RepairFailureType(str, Enum):
+    """Categorized root causes for candidate tool execution failures."""
+    SYNTAX_FAILURE = "SYNTAX_FAILURE"
+    AST_POLICY_FAILURE = "AST_POLICY_FAILURE"
+    IMPORT_FAILURE = "IMPORT_FAILURE"
+    RUNTIME_EXCEPTION = "RUNTIME_EXCEPTION"
+    ARTIFACT_MISSING = "ARTIFACT_MISSING"
+    SEMANTIC_VERIFICATION_FAILURE = "SEMANTIC_VERIFICATION_FAILURE"
+    TIMEOUT = "TIMEOUT"
+    RESOURCE_LIMIT = "RESOURCE_LIMIT"
+    SECURITY_DENIAL = "SECURITY_DENIAL"
+
+
+@dataclass
+class StructuredRepairPacket:
+    """Structured diagnostic packet passed to model repair engine."""
+    failure_type: RepairFailureType
+    original_goal: str
+    current_revision: int
+    current_source: str
+    entrypoint: str
+    exit_code: Optional[int]
+    stderr: str
+    stdout_tail: str
+    exception_type: Optional[str] = None
+    exception_message: Optional[str] = None
+    failing_file: Optional[str] = None
+    failing_line: Optional[int] = None
+    ast_violations: List[str] = field(default_factory=list)
+    missing_artifacts: List[str] = field(default_factory=list)
+    verification_error: str = ""
+    output_dir: str = ""
+    analysis: str = ""
+
+
+@dataclass
+class DeliverArtifactProposal:
+    """Typed proposal to deliver a verified sandbox artifact to the host."""
+    source: Path
+    destination: Path
+    source_sha256: str
+    task_id: str
+    user_intent_reason: str = "User requested deliverable placement"
+
+
+def extract_exception_details(stderr: str) -> Dict[str, Any]:
+    """
+    Extract structured exception details from Python traceback without bug-specific logic.
+    Identifies exception type, message, file, and line number generically.
+    """
+    exc_type = None
+    exc_msg = None
+    failing_file = None
+    failing_line = None
+
+    file_matches = re.findall(r'File\s+"([^"]+)",\s+line\s+(\d+)', stderr)
+    if file_matches:
+        failing_file, failing_line_str = file_matches[-1]
+        try:
+            failing_line = int(failing_line_str)
+        except ValueError:
+            pass
+
+    exc_match = re.search(r'([A-Za-z_][A-Za-z0-9_]*Error|[A-Za-z_][A-Za-z0-9_]*Exception):\s*(.*)', stderr)
+    if exc_match:
+        exc_type = exc_match.group(1)
+        exc_msg = exc_match.group(2).strip()
+
+    return {
+        "exception_type": exc_type,
+        "exception_message": exc_msg,
+        "failing_file": failing_file,
+        "failing_line": failing_line,
+    }
 
 
 class RepairExhaustedError(RuntimeError):
@@ -36,6 +118,7 @@ class DynamicToolExecutionReport:
     repair_attempts: int
     is_success: bool
     artifacts: List[Path] = field(default_factory=list)
+    delivered_artifacts: List[Path] = field(default_factory=list)
     error_message: Optional[str] = None
 
 
@@ -49,22 +132,39 @@ class DynamicToolBuilder:
         sandbox_manager: Optional[SandboxManager] = None,
         tool_registry: Optional[ToolRegistry] = None,
         ast_inspector: Optional[ASTInspector] = None,
+        model_service: Optional[Any] = None,
+        execution_broker: Optional[ExecutionBroker] = None,
         max_repair_attempts: int = 2,
     ) -> None:
         self.sandbox = sandbox_manager or SandboxManager()
         self.registry = tool_registry or ToolRegistry()
         self.inspector = ast_inspector or ASTInspector()
+        if model_service is None:
+            try:
+                from astrarun.cognition.service import ModelService
+                self.model_service = ModelService.get_instance()
+            except Exception:
+                self.model_service = None
+        else:
+            self.model_service = model_service
+
+        if execution_broker is None:
+            try:
+                self.execution_broker = ExecutionBroker()
+            except Exception:
+                self.execution_broker = None
+        else:
+            self.execution_broker = execution_broker
+
         self.max_repair_attempts = max_repair_attempts
 
     def search_existing_capabilities(self, goal: str) -> Optional[str]:
         """Check if goal can be resolved by an existing permanent tool."""
         g = goal.lower().strip()
-        # Direct keyword match against tool descriptions and names
         for tool in self.registry.list_tools():
             name = tool.name.lower()
             if name in g:
                 return tool.name
-            # Check keywords
             if "port" in g and "inspect_port" in name:
                 return tool.name
             if "process" in g and "inspect_process" in name:
@@ -76,150 +176,69 @@ class DynamicToolBuilder:
     def synthesize_tool_for_goal(self, goal: str, inputs: Optional[Dict[str, Any]] = None) -> CandidateTool:
         """
         Synthesize CandidateTool for a recognized user goal.
-        Uses deterministic templates or model-assisted generation.
+        Requires active Qwen2.5-Coder via ModelService; fails closed with MODEL_UNAVAILABLE if offline.
         """
-        g_lower = goal.lower()
-        inputs = inputs or {}
-
-        # 1. 3D Graph / Plotting Goal
-        if ("3d" in g_lower and "graph" in g_lower) or ("plot" in g_lower and ("sin" in g_lower or "cos" in g_lower)):
-            output_name = inputs.get("output_filename", "dynamic_3d_graph.png")
-            x_min = inputs.get("x_min", -10)
-            x_max = inputs.get("x_max", 10)
-            y_min = inputs.get("y_min", -10)
-            y_max = inputs.get("y_max", 10)
-
-            code = f'''import matplotlib
-matplotlib.use('Agg')
-import matplotlib.pyplot as plt
-import numpy as np
-from mpl_toolkits.mplot3d import Axes3D
-
-def generate_graph(output_path='{output_name}'):
-    x = np.linspace({x_min}, {x_max}, 100)
-    y = np.linspace({y_min}, {y_max}, 100)
-    X, Y = np.meshgrid(x, y)
-    R = np.sqrt(X**2 + Y**2)
-    # Avoid zero-division warning if R==0
-    Z = np.sin(R)
-
-    fig = plt.figure(figsize=(10, 8), dpi=150)
-    ax = fig.add_subplot(111, projection='3d')
-    surf = ax.plot_surface(X, Y, Z, cmap='viridis', edgecolor='none', alpha=0.9)
-    ax.set_title('3D Surface: z = sin(sqrt(x^2 + y^2))', fontsize=14, pad=12)
-    ax.set_xlabel('X axis')
-    ax.set_ylabel('Y axis')
-    ax.set_zlabel('Z axis')
-    fig.colorbar(surf, shrink=0.5, aspect=10)
-    plt.tight_layout()
-    plt.savefig(output_path, dpi=150)
-    plt.close(fig)
-    print(f"Artifact created: {{output_path}}")
-
-if __name__ == '__main__':
-    generate_graph()
-'''
-            test_block = f'''import os
-assert os.path.exists('{output_name}'), "Graph artifact was not generated."
-assert os.path.getsize('{output_name}') > 1000, "Graph artifact file is empty."
-'''
-            # Query machine reality before declaring external dependency requirements
-            deps = []
+        if self.model_service:
             try:
-                from astrarun.machine.model import MachineModel
-                model = MachineModel.get_instance()
-                np_fact = model.get_fact("software.python.package.numpy.installed")
-                plt_fact = model.get_fact("software.python.package.matplotlib.installed")
-                if not (np_fact and np_fact.value):
-                    deps.append(DependencyRequest(package="numpy", reason="Array computation for meshgrid"))
-                if not (plt_fact and plt_fact.value):
-                    deps.append(DependencyRequest(package="matplotlib", reason="3D surface visualization"))
-            except Exception:
-                deps = [
-                    DependencyRequest(package="numpy", reason="Array computation for meshgrid"),
-                    DependencyRequest(package="matplotlib", reason="3D surface visualization"),
-                ]
+                candidate = self.model_service.generate_code(goal=goal, context=inputs)
+                if candidate and candidate.source_files:
+                    return candidate
+            except Exception as e:
+                logger.error("ModelService code generation failed: %s", e)
+                raise RuntimeError(f"MODEL_UNAVAILABLE: Code generation failed via ModelService: {e}")
 
-            return CandidateTool(
-                goal=goal,
-                executable_code=code,
-                test_verification_block=test_block,
-                inputs={"x_min": x_min, "x_max": x_max, "y_min": y_min, "y_max": y_max, "output_filename": output_name},
-                outputs={"artifact": output_name},
-                external_dependencies=deps,
-                required_permissions=["FILESYSTEM_WRITE_SANDBOX"],
-                expected_side_effects=[f"Creates image artifact '{output_name}' in sandbox."],
-                sandbox_profile="EPHEMERAL_TOOL",
-            )
-
-        # 2. Mathematical computation / Data summary
-        if "compute" in g_lower or "calculate" in g_lower or "math" in g_lower:
-            code = '''import math
-
-def compute():
-    results = {}
-    results["pi"] = math.pi
-    results["e"] = math.e
-    print(f"Computed mathematical constants: {results}")
-
-if __name__ == '__main__':
-    compute()
-'''
-            test_block = 'print("Verification successful.")'
-            return CandidateTool(
-                goal=goal,
-                executable_code=code,
-                test_verification_block=test_block,
-                sandbox_profile="EPHEMERAL_TOOL",
-            )
-
-        # Fallback generic candidate tool
-        code = f'''# Dynamic script for goal: {goal}
-def run():
-    print("Executing dynamic task: {goal}")
-
-if __name__ == '__main__':
-    run()
-'''
-        return CandidateTool(
-            goal=goal,
-            executable_code=code,
-            test_verification_block='print("Dry run OK")',
-            sandbox_profile="EPHEMERAL_TOOL",
+        raise RuntimeError(
+            "MODEL_UNAVAILABLE: Real code synthesis requires an active Qwen coder model via ModelService. "
+            "Canned or simulated code generation is prohibited in production."
         )
 
-    def repair_code(self, candidate: CandidateTool, error_text: str, attempt: int) -> str:
+    def repair_code(self, candidate: CandidateTool, repair_context: Any, attempt: int) -> CandidateTool:
         """
         Formulate and apply a structured repair to candidate tool code.
-        Bounded to strictly fix common runtime issues (missing imports, typos, zero-division, shape mismatch).
+        Leverages Qwen2.5-Coder via ModelService with structured diagnostic context.
         """
-        logger.info("Attempting bounded repair #%d for tool %s", attempt, candidate.tool_id)
-        code = candidate.executable_code
+        logger.info("Attempting bounded structured repair #%d for tool %s", attempt, candidate.tool_id)
+        if self.model_service:
+            try:
+                repaired = self.model_service.repair_code(candidate, repair_context, attempt)
+                if isinstance(repaired, str):
+                    repaired = candidate.derive_repaired(repaired, f"Structured repair attempt {attempt}")
+                if repaired and repaired.compute_source_hash() != candidate.compute_source_hash():
+                    return repaired
+            except Exception as e:
+                logger.warning("ModelService structured code repair failed: %s", e)
 
-        # Common Repair 1: Missing Agg backend for headless matplotlib
-        if "tkinter" in error_text.lower() or "tcl" in error_text.lower() or "gui" in error_text.lower():
-            if "matplotlib" in code and "matplotlib.use('Agg')" not in code:
-                code = "import matplotlib\nmatplotlib.use('Agg')\n" + code
+        return candidate
 
-        # Common Repair 2: Missing numpy/math import
-        if "NameError: name 'np' is not defined" in error_text:
-            code = "import numpy as np\n" + code
-        elif "NameError: name 'math' is not defined" in error_text:
-            code = "import math\n" + code
+    def deliver_artifact_via_broker(self, proposal: DeliverArtifactProposal) -> bool:
+        """
+        Deliver a verified sandbox artifact to the host via ExecutionBroker + ActionGate.
+        Guarantees host filesystem mutations pass the authoritative security boundary.
+        """
+        if not self.execution_broker:
+            logger.warning("No ExecutionBroker configured; cannot deliver artifact to host.")
+            return False
 
-        # Common Repair 3: ZeroDivisionError
-        if "ZeroDivisionError" in error_text:
-            code = code.replace("np.sin(R) / R", "np.where(R == 0, 1.0, np.sin(R) / np.maximum(R, 1e-9))")
-            code = code.replace("/ R", "/ np.maximum(R, 1e-9)")
-
-        # Common Repair 4: Syntax error line fixes
-        if "SyntaxError" in error_text:
-            # Strip trailing bad characters or syntax glitches
-            lines = code.splitlines()
-            cleaned = [l for l in lines if not l.strip().startswith(">>>")]
-            code = "\n".join(cleaned)
-
-        return code
+        act_prop = ActionProposal(
+            category=ActionCategory.ACT,
+            capability_id="deliver_artifact",
+            parameters={
+                "source": str(proposal.source),
+                "destination": str(proposal.destination),
+                "source_sha256": proposal.source_sha256,
+                "task_id": proposal.task_id,
+            },
+            source="dynamic_tool",
+            task_id=proposal.task_id,
+            reason=proposal.user_intent_reason,
+        )
+        res = self.execution_broker.execute(act_prop)
+        if res.success:
+            logger.info("Artifact delivered via ExecutionBroker: %s -> %s", proposal.source, proposal.destination)
+            return True
+        else:
+            logger.warning("Artifact delivery blocked by ExecutionBroker: %s (%s)", res.message, res.verdict)
+            return False
 
     def build_and_execute(
         self,
@@ -228,21 +247,61 @@ if __name__ == '__main__':
     ) -> DynamicToolExecutionReport:
         """
         Execute candidate tool through full governed pipeline with AST checks,
-        sandbox dry run, and bounded repair loop.
+        sandbox dry run, machine pressure awareness, and bounded structured repair.
         """
+        # Assess machine resource pressure via ResourceGovernor
+        try:
+            gov = ResourceGovernor.get_instance()
+            decision, reason = gov.assess_state(target_workload="sandbox_execution")
+            if decision == GovernorDecision.LOW_MEMORY_EXECUTION_PROFILE:
+                logger.warning("ResourceGovernor enforced LOW_MEMORY_EXECUTION_PROFILE: %s", reason)
+                timeout_sec = min(timeout_sec, 20.0)
+            elif decision == GovernorDecision.SERIALIZE_HEAVY_WORK:
+                logger.info("ResourceGovernor enforced SERIALIZE_HEAVY_WORK: %s", reason)
+        except Exception:
+            pass
+
         current_tool = candidate
         repair_attempts = 0
         last_ast: Optional[ASTInspectionResult] = None
         last_sb_result: Optional[SandboxResult] = None
 
+        if not current_tool.provenance:
+            current_tool.provenance = CodeProvenance(
+                task_id=current_tool.task_id,
+                model=current_tool.generator_model,
+                prompt_hash=hashlib.sha256(current_tool.goal.encode("utf-8")).hexdigest(),
+                source_hash=current_tool.compute_source_hash(),
+                entrypoint_hash=current_tool.compute_entrypoint_hash(),
+                tree_hash=current_tool.compute_tree_hash(),
+            )
+
         while repair_attempts <= self.max_repair_attempts:
             # 1. AST Inspection
-            full_code = current_tool.full_script(include_test=True)
-            ast_res = self.inspector.inspect(full_code)
+            ast_res = self.inspector.inspect_candidate(current_tool)
             last_ast = ast_res
 
             if not ast_res.is_safe:
                 logger.warning("AST safety violation in tool %s: %s", current_tool.tool_id, ast_res.violations)
+                # If malicious/security violation, fail closed immediately without repair
+                if any("Trust Kernel" in v or "Forbidden module" in v or "Prohibited OS" in v for v in ast_res.violations):
+                    return DynamicToolExecutionReport(
+                        candidate_tool=current_tool,
+                        sandbox_result=SandboxResult(
+                            run_id="denied",
+                            profile=SandboxProfile.EPHEMERAL_TOOL,
+                            status="DENIED",
+                            exit_code=-1,
+                            stdout="",
+                            stderr=f"AST Inspection failed with security violations: {ast_res.violations}",
+                            duration_ms=0.0,
+                        ),
+                        ast_result=ast_res,
+                        repair_attempts=repair_attempts,
+                        is_success=False,
+                        error_message="AST Inspection failed with security violations.",
+                    )
+
                 if repair_attempts >= self.max_repair_attempts:
                     return DynamicToolExecutionReport(
                         candidate_tool=current_tool,
@@ -258,45 +317,169 @@ if __name__ == '__main__':
                         ast_result=ast_res,
                         repair_attempts=repair_attempts,
                         is_success=False,
-                        error_message="AST Inspection failed with security violations.",
+                        error_message="AST Inspection failed with syntax/structure errors.",
                     )
-                # Attempt repair
+
+                # Formulate structured AST repair packet
                 repair_attempts += 1
-                repaired_code = self.repair_code(current_tool, "\n".join(ast_res.violations), repair_attempts)
-                current_tool.executable_code = repaired_code
+                packet = StructuredRepairPacket(
+                    failure_type=RepairFailureType.SYNTAX_FAILURE if ast_res.syntax_error else RepairFailureType.AST_POLICY_FAILURE,
+                    original_goal=current_tool.goal,
+                    current_revision=repair_attempts,
+                    current_source=current_tool.source_files.get(current_tool.entrypoint, current_tool.executable_code),
+                    entrypoint=current_tool.entrypoint,
+                    exit_code=-1,
+                    stderr="\n".join(ast_res.violations),
+                    stdout_tail="",
+                    ast_violations=ast_res.violations,
+                    analysis="Syntax or AST validation error detected. Return valid self-contained Python.",
+                )
+                repaired = self.repair_code(current_tool, packet, repair_attempts)
+                if repaired.compute_source_hash() == current_tool.compute_source_hash():
+                    break
+                current_tool = repaired
                 continue
 
             # 2. Contained Sandbox Execution
             cfg = SandboxConfig(
+                run_id=current_tool.task_id or current_tool.tool_id,
                 profile=SandboxProfile.EPHEMERAL_TOOL,
                 timeout_sec=timeout_sec,
-                preserve_on_exit=True,  # Preserve to inspect artifacts
+                preserve_on_exit=True,
             )
-            sb_res = self.sandbox.execute_script(full_code, config=cfg)
+            sb_res = self.sandbox.execute_candidate(current_tool, config=cfg)
             last_sb_result = sb_res
+
+            # Audit Provenance for this execution revision
+            src_h = current_tool.compute_source_hash()
+            ep_h = current_tool.compute_entrypoint_hash()
+            tr_h = current_tool.compute_tree_hash()
+            staged_h = getattr(sb_res, "staged_source_hash", None) or ep_h
+            exec_h = getattr(sb_res, "executed_source_hash", None) or ep_h
+            gen_req_id = current_tool.task_id or f"req_{int(time.time()*1000)}"
+
+            rev_rec = RevisionRecord(
+                revision_number=repair_attempts + 1,
+                generation_request_id=gen_req_id,
+                sandbox_execution_id=sb_res.run_id,
+                request_id=gen_req_id,
+                prompt_hash=hashlib.sha256(current_tool.goal.encode("utf-8")).hexdigest(),
+                response_hash=hashlib.sha256(current_tool.full_script().encode("utf-8")).hexdigest(),
+                source_hash=src_h,
+                entrypoint_hash=ep_h,
+                tree_hash=tr_h,
+                ast_safe=ast_res.is_safe,
+                ast_violations=ast_res.violations,
+                staged_hash=staged_h,
+                executed_hash=exec_h,
+                exit_code=sb_res.exit_code,
+                stdout_summary=sb_res.stdout[:500],
+                stderr_summary=sb_res.stderr[:500],
+                artifacts_created=[str(p) for p in sb_res.created_artifacts],
+                verification_status="PASSED" if sb_res.is_success else "FAILED",
+                parent_revision=repair_attempts if repair_attempts > 0 else None,
+                repair_reason="repair_cycle" if repair_attempts > 0 else "initial_synthesis",
+            )
+            current_tool.provenance.record_revision(rev_rec)
 
             if sb_res.is_success:
                 logger.info("Dynamic tool %s executed successfully in %sms", current_tool.tool_id, sb_res.duration_ms)
+                all_artifacts = list(sb_res.created_artifacts)
+                delivered_artifacts: List[Path] = []
+
+                # Parse stdout for explicit printed artifact paths
+                for line in sb_res.stdout.splitlines():
+                    match = re.search(r"([A-Za-z]:\\[^\r\n,;\"']+\.(?:png|jpg|jpeg|py|txt|csv|json|html|log|dat))", line)
+                    if match:
+                        found_p = Path(match.group(1).strip())
+                        if found_p.exists() and found_p not in all_artifacts:
+                            all_artifacts.append(found_p)
+
+                # Authoritative Artifact Delivery via ExecutionBroker
+                # Dynamic code writes ONLY into governed output scope.
+                # If the goal explicitly requested a host destination, propose delivery via ExecutionBroker.
+                goal_lower = current_tool.goal.lower()
+                negated_delivery = any(w in goal_lower for w in ("don't copy", "do not copy", "leave it in", "leave in workspace", "don't save to", "do not move"))
+
+                target_dest_dir = None
+                if not negated_delivery:
+                    if "desktop" in goal_lower:
+                        target_dest_dir = Path.home() / "Desktop"
+                    elif "documents" in goal_lower:
+                        target_dest_dir = Path.home() / "Documents"
+                    elif "downloads" in goal_lower:
+                        target_dest_dir = Path.home() / "Downloads"
+
+                if target_dest_dir and target_dest_dir.exists():
+                    for art in all_artifacts:
+                        if art.parent != target_dest_dir and art.is_file():
+                            art_hash = hashlib.sha256(art.read_bytes()).hexdigest()
+                            prop = DeliverArtifactProposal(
+                                source=art,
+                                destination=target_dest_dir / art.name,
+                                source_sha256=art_hash,
+                                task_id=current_tool.task_id,
+                                user_intent_reason=f"User requested artifact placement in {target_dest_dir.name}",
+                            )
+                            if self.deliver_artifact_via_broker(prop):
+                                delivered_path = target_dest_dir / art.name
+                                delivered_artifacts.append(delivered_path)
+
                 return DynamicToolExecutionReport(
                     candidate_tool=current_tool,
                     sandbox_result=sb_res,
                     ast_result=ast_res,
                     repair_attempts=repair_attempts,
                     is_success=True,
-                    artifacts=sb_res.created_artifacts,
+                    artifacts=all_artifacts,
+                    delivered_artifacts=delivered_artifacts,
                 )
 
-            # Failure during sandbox execution -> Bounded repair
+            # Failure during sandbox execution -> Bounded structured repair
             logger.warning("Sandbox execution failed (exit_code=%s): %s", sb_res.exit_code, sb_res.stderr)
             if repair_attempts >= self.max_repair_attempts:
                 break
 
             repair_attempts += 1
-            repaired_code = self.repair_code(current_tool, sb_res.stderr, repair_attempts)
-            if repaired_code == current_tool.executable_code:
-                # No repair could be formulated
+            err_text = (sb_res.stderr or "").strip() or (sb_res.stdout or "").strip()
+            exc_details = extract_exception_details(err_text)
+
+            if "ImportError" in err_text or "ModuleNotFoundError" in err_text:
+                ftype = RepairFailureType.IMPORT_FAILURE
+                diag = f"Import error: {exc_details.get('exception_message') or 'Module not found'}."
+            elif "SyntaxError" in err_text:
+                ftype = RepairFailureType.SYNTAX_FAILURE
+                diag = f"Python syntax error at line {exc_details.get('failing_line') or 'unknown'}."
+            elif "Timeout" in err_text or sb_res.status == "TIMEOUT":
+                ftype = RepairFailureType.TIMEOUT
+                diag = "Process execution timed out."
+            else:
+                ftype = RepairFailureType.RUNTIME_EXCEPTION
+                diag = f"Runtime exception: {exc_details.get('exception_type') or 'Exception'}."
+
+            packet = StructuredRepairPacket(
+                failure_type=ftype,
+                original_goal=current_tool.goal,
+                current_revision=repair_attempts,
+                current_source=current_tool.source_files.get(current_tool.entrypoint, current_tool.executable_code),
+                entrypoint=current_tool.entrypoint,
+                exit_code=sb_res.exit_code,
+                stderr=sb_res.stderr,
+                stdout_tail=sb_res.stdout[-500:],
+                exception_type=exc_details.get("exception_type"),
+                exception_message=exc_details.get("exception_message"),
+                failing_file=exc_details.get("failing_file"),
+                failing_line=exc_details.get("failing_line"),
+                output_dir=str(sb_res.output_dir or sb_res.working_dir or ""),
+                analysis=diag,
+            )
+
+            repaired_tool = self.repair_code(current_tool, packet, repair_attempts)
+            if isinstance(repaired_tool, str):
+                repaired_tool = current_tool.derive_repaired(repaired_tool, f"Structured repair attempt {repair_attempts}")
+            if repaired_tool.compute_source_hash() == current_tool.compute_source_hash():
                 break
-            current_tool.executable_code = repaired_code
+            current_tool = repaired_tool
 
         # If loop exits without success
         return DynamicToolExecutionReport(

@@ -9,6 +9,7 @@ from __future__ import annotations
 import os
 import shutil
 import sys
+import threading
 import time
 from pathlib import Path
 from typing import Dict, List, Optional, Set
@@ -43,6 +44,9 @@ SAFE_ENV_ALLOWLIST: Set[str] = {
     "PYTHONHOME",
     "PYTHONUNBUFFERED",
     "PYTHONIOENCODING",
+    "ASTRARUN_OUTPUT_DIR",
+    "ASTRARUN_WORKSPACE_DIR",
+    "OUTPUT_DIR",
 }
 
 # Substrings identifying sensitive variables to strictly redact from child environments
@@ -68,12 +72,16 @@ SENSITIVE_KEY_SUBSTRINGS: Set[str] = {
 class SandboxManager:
     """Manages isolated sandbox environments and contained execution."""
 
+    # Section 8: Concurrency ceiling: permit strictly ONE dynamic compute worker concurrently
+    _concurrency_lock = threading.BoundedSemaphore(value=1)
+
     def __init__(
         self,
         base_dir: Optional[Path] = None,
         secret_broker: Optional[SecretBroker] = None,
     ) -> None:
-        self.base_dir = Path(base_dir or Path("data/sandbox")).resolve()
+        from astrarun.core.paths import AstraPaths
+        self.base_dir = Path(base_dir or AstraPaths.sandbox_dir()).resolve()
         self.base_dir.mkdir(parents=True, exist_ok=True)
         self.secret_broker = secret_broker or SecretBroker.get_instance()
 
@@ -151,20 +159,15 @@ class SandboxManager:
         run_dir.mkdir(parents=True, exist_ok=True)
 
         script_file = run_dir / "candidate_script.py"
-        script_file.write_text(script_code, encoding="utf-8")
+        script_file.write_bytes(script_code.encode("utf-8"))
 
         exe = python_executable or sys.executable
         clean_env = self.sanitize_environment(cfg.extra_env)
 
         # Record pre-existing files in working_dir to detect created artifacts
         pre_files = set(run_dir.glob("**/*"))
+        pre_sizes = {f: f.stat().st_size for f in pre_files if f.is_file()}
 
-        job = Win32JobObject(
-            name=f"sb_job_{cfg.run_id}",
-            memory_limit_bytes=cfg.memory_limit_bytes if cfg.memory_limit_bytes > 0 else None,
-        )
-
-        import subprocess
         start_time = time.time()
         status = "SUCCESS"
         exit_code: Optional[int] = None
@@ -172,62 +175,148 @@ class SandboxManager:
         stderr_text = ""
         peak_mb = 0.0
 
-        try:
-            proc = subprocess.Popen(
-                [exe, str(script_file)],
-                cwd=str(run_dir),
-                env=clean_env,
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
-                creationflags=CREATE_NO_WINDOW,
+        isolation_type = "UNKNOWN"
+        acquired = self._concurrency_lock.acquire(timeout=cfg.timeout_sec + 5.0)
+        if not acquired:
+            return SandboxResult(
+                run_id=cfg.run_id,
+                profile=cfg.profile,
+                status="BUSY",
+                exit_code=-1,
+                stdout="",
+                stderr="System compute concurrency ceiling reached (strictly 1 worker active).",
+                duration_ms=0.0,
             )
 
-            # Assign to Win32 Job Object
-            if os.name == "nt" and hasattr(proc, "_handle"):
-                job.assign_process(int(proc._handle))
+        try:
+            if os.name == "nt":
+                if getattr(cfg, "launcher_preference", "APPCONTAINER") == "RESTRICTED_TOKEN":
+                    from astrarun.sandbox.restricted_launcher import RestrictedWorkerLauncher
+                    try:
+                        worker_res = RestrictedWorkerLauncher.launch(
+                            entrypoint_file=script_file,
+                            workspace=run_dir,
+                            run_id=cfg.run_id,
+                            timeout_sec=cfg.timeout_sec,
+                            memory_limit_bytes=cfg.memory_limit_bytes,
+                            extra_env=cfg.extra_env,
+                            python_executable=exe,
+                        )
+                        status = worker_res.status
+                        exit_code = worker_res.exit_code
+                        stdout_text = worker_res.stdout
+                        stderr_text = worker_res.stderr
+                        peak_mb = worker_res.peak_memory_mb
+                        isolation_type = "RESTRICTED_TOKEN"
+                        token_diag = {
+                            "is_restricted_token": True,
+                            "integrity_level": "LOW",
+                        }
+                    except Exception as e:
+                        status = "ERROR"
+                        stderr_text = f"RestrictedWorkerLauncher execution exception: {e}"
+                        logger.exception("RestrictedWorkerLauncher execution failed")
+                        isolation_type = "RESTRICTED_TOKEN_FAILED"
+                        token_diag = {"error": str(e), "fail_closed": True}
+                else:
+                    from astrarun.sandbox.appcontainer_launcher import AppContainerLauncher
+                    try:
+                        worker_res = AppContainerLauncher.launch(
+                            entrypoint_file=script_file,
+                            workspace=run_dir,
+                            run_id=cfg.run_id,
+                            timeout_sec=cfg.timeout_sec,
+                            memory_limit_bytes=cfg.memory_limit_bytes,
+                            extra_env=cfg.extra_env,
+                            python_executable=exe,
+                        )
+                        status = worker_res.status
+                        exit_code = worker_res.exit_code
+                        stdout_text = worker_res.stdout
+                        stderr_text = worker_res.stderr
+                        peak_mb = worker_res.peak_memory_mb
+                        isolation_type = worker_res.isolation_type
+                        token_diag = {
+                            "is_appcontainer": worker_res.is_appcontainer,
+                            "package_sid": worker_res.package_sid,
+                            "capabilities_granted": worker_res.capabilities_granted,
+                        }
+                    except Exception as e:
+                        status = "ERROR"
+                        stderr_text = f"AppContainer execution exception: {e}"
+                        logger.exception("AppContainerLauncher execution failed")
+                        isolation_type = "APPCONTAINER_FAILED"
+                        token_diag = {"error": str(e), "fail_closed": True}
+            else:
+                job = Win32JobObject(
+                    name=f"sb_job_{cfg.run_id}",
+                    memory_limit_bytes=cfg.memory_limit_bytes if cfg.memory_limit_bytes > 0 else None,
+                )
+                import subprocess
+                try:
+                    proc = subprocess.Popen(
+                        [exe, str(script_file)],
+                        cwd=str(run_dir),
+                        env=clean_env,
+                        stdout=subprocess.PIPE,
+                        stderr=subprocess.PIPE,
+                        creationflags=CREATE_NO_WINDOW,
+                    )
+                    if os.name == "nt" and hasattr(proc, "_handle"):
+                        job.assign_process(int(proc._handle))
 
-            # Wait with bounded timeout
-            try:
-                stdout_bytes, stderr_bytes = proc.communicate(timeout=cfg.timeout_sec)
-                exit_code = proc.returncode
-                if exit_code != 0:
-                    status = "FAILED"
-            except subprocess.TimeoutExpired:
-                status = "TIMEOUT"
-                proc.kill()
-                job.terminate(exit_code=1)
-                stdout_bytes, stderr_bytes = proc.communicate()
-                stderr_text += f"\nExecution exceeded timeout limit ({cfg.timeout_sec}s)."
+                    # Wait with bounded timeout
+                    try:
+                        stdout_bytes, stderr_bytes = proc.communicate(timeout=cfg.timeout_sec)
+                        exit_code = proc.returncode
+                        if exit_code != 0:
+                            status = "FAILED"
+                    except subprocess.TimeoutExpired:
+                        status = "TIMEOUT"
+                        proc.kill()
+                        job.terminate(exit_code=1)
+                        stdout_bytes, stderr_bytes = proc.communicate()
+                        stderr_text += f"\nExecution exceeded timeout limit ({cfg.timeout_sec}s)."
 
-            # Truncate output to size caps
-            max_bytes = cfg.stdout_max_bytes
-            if len(stdout_bytes) > max_bytes:
-                stdout_bytes = stdout_bytes[:max_bytes] + b"\n[TRUNCATED: Output exceeded cap]"
-            if len(stderr_bytes) > max_bytes:
-                stderr_bytes = stderr_bytes[:max_bytes] + b"\n[TRUNCATED: Output exceeded cap]"
+                    # Truncate output to size caps
+                    max_bytes = cfg.stdout_max_bytes
+                    if len(stdout_bytes) > max_bytes:
+                        stdout_bytes = stdout_bytes[:max_bytes] + b"\n[TRUNCATED: Output exceeded cap]"
+                    if len(stderr_bytes) > max_bytes:
+                        stderr_bytes = stderr_bytes[:max_bytes] + b"\n[TRUNCATED: Output exceeded cap]"
 
-            stdout_text = stdout_bytes.decode("utf-8", errors="replace")
-            stderr_text = stderr_bytes.decode("utf-8", errors="replace")
+                    stdout_text = stdout_bytes.decode("utf-8", errors="replace")
+                    stderr_text = stderr_bytes.decode("utf-8", errors="replace")
 
-        except Exception as e:
-            status = "ERROR"
-            stderr_text = f"Execution exception: {e}"
-            logger.exception("Sandbox execution failed")
+                except Exception as e:
+                    status = "ERROR"
+                    stderr_text = f"Execution exception: {e}"
+                    logger.exception("Sandbox execution failed")
+                finally:
+                    # Query job telemetry
+                    try:
+                        peak_bytes = job.query_peak_memory()
+                        peak_mb = round(peak_bytes / (1024 * 1024), 2)
+                    except Exception:
+                        peak_mb = 0.0
+
+                    job.close()
         finally:
-            # Query job telemetry
-            try:
-                peak_bytes = job.query_peak_memory()
-                peak_mb = round(peak_bytes / (1024 * 1024), 2)
-            except Exception:
-                peak_mb = 0.0
-
-            job.close()
+            self._concurrency_lock.release()
 
         duration_ms = round((time.time() - start_time) * 1000.0, 2)
 
-        # Detect newly created artifact files
+        # Detect newly created or populated artifact files
         post_files = set(run_dir.glob("**/*"))
-        new_files = [f for f in post_files - pre_files if f.is_file() and f != script_file]
+        new_files = [
+            f for f in post_files - {script_file}
+            if f.is_file()
+            and (
+                f not in pre_files
+                or (pre_sizes.get(f, 0) == 0 and f.stat().st_size > 0)
+                or (f.stat().st_mtime >= start_time and f.stat().st_size != pre_sizes.get(f, 0))
+            )
+        ]
 
         # Output scrubbing via SecretBroker
         scrubbed_stdout, was_redacted_out = self.secret_broker.scrub_text(stdout_text)
@@ -245,6 +334,8 @@ class SandboxManager:
             working_dir=run_dir,
             created_artifacts=new_files,
             redacted=was_redacted_out or was_redacted_err,
+            isolation_type=isolation_type,
+            token_diagnostics=token_diag,
         )
 
         # Cleanup if ephemeral and not preserved
@@ -255,3 +346,270 @@ class SandboxManager:
                 logger.warning("Error cleaning sandbox dir %s: %s", run_dir, e)
 
         return result
+
+    def execute_candidate(
+        self,
+        candidate: Any,
+        config: Optional[SandboxConfig] = None,
+        python_executable: Optional[str] = None,
+    ) -> SandboxResult:
+        """
+        Execute a CandidateTool (single or multi-file) in an isolated sandbox workspace.
+        Enforces strict path containment, Win32 Job Object limits, and secret scrubbing.
+        """
+        cfg = config or SandboxConfig(
+            run_id=getattr(candidate, "tool_id", "dyn_run"),
+            timeout_sec=getattr(candidate, "timeout", 30.0),
+            memory_limit_bytes=int(getattr(candidate, "memory_limit_mb", 512.0) * 1024 * 1024),
+        )
+
+        run_dir = cfg.working_dir or (self.base_dir / getattr(candidate, "task_id", cfg.run_id))
+        run_dir.mkdir(parents=True, exist_ok=True)
+
+        # Governed Task Workspace contract: TASK_WORKSPACE/ (source, output, temp, evidence)
+        source_dir = run_dir / "source"
+        output_dir = cfg.output_dir or (run_dir / "output")
+        temp_dir = run_dir / "temp"
+        evidence_dir = run_dir / "evidence"
+
+        source_dir.mkdir(parents=True, exist_ok=True)
+        output_dir.mkdir(parents=True, exist_ok=True)
+        temp_dir.mkdir(parents=True, exist_ok=True)
+        evidence_dir.mkdir(parents=True, exist_ok=True)
+
+        # Stage all files
+        sources = getattr(candidate, "source_files", {})
+        if not sources and hasattr(candidate, "executable_code"):
+            entry = getattr(candidate, "entrypoint", "main.py")
+            sources = {entry: candidate.full_script(include_test=True)}
+
+        written_files: List[Path] = []
+        for rel_path, content in sources.items():
+            # Strict path containment check
+            norm = Path(rel_path)
+            if norm.is_absolute() or ".." in norm.parts:
+                return SandboxResult(
+                    run_id=cfg.run_id,
+                    profile=cfg.profile,
+                    status="DENIED",
+                    exit_code=-1,
+                    stdout="",
+                    stderr=f"Path traversal detected in candidate source file: {rel_path}",
+                    duration_ms=0.0,
+                    violations=[f"Illegal file path: {rel_path}"],
+                )
+            target_f = (run_dir / norm).resolve()
+            # Ensure it resolves within run_dir
+            if not str(target_f).startswith(str(run_dir.resolve())):
+                return SandboxResult(
+                    run_id=cfg.run_id,
+                    profile=cfg.profile,
+                    status="DENIED",
+                    exit_code=-1,
+                    stdout="",
+                    stderr=f"Target file path escapes sandbox: {rel_path}",
+                    duration_ms=0.0,
+                    violations=[f"Path escape: {rel_path}"],
+                )
+            target_f.parent.mkdir(parents=True, exist_ok=True)
+            target_f.write_bytes(content.encode("utf-8"))
+            written_files.append(target_f)
+
+            # Mirror to source_dir for archive
+            (source_dir / norm).parent.mkdir(parents=True, exist_ok=True)
+            (source_dir / norm).write_bytes(content.encode("utf-8"))
+
+        entry_file = run_dir / getattr(candidate, "entrypoint", "main.py")
+        if not entry_file.exists():
+            return SandboxResult(
+                run_id=cfg.run_id,
+                profile=cfg.profile,
+                status="FAILED",
+                exit_code=-1,
+                stdout="",
+                stderr=f"Entrypoint '{candidate.entrypoint}' not found in candidate source files.",
+                duration_ms=0.0,
+            )
+
+        exe = python_executable or sys.executable
+        extra = dict(cfg.extra_env or {})
+        extra["ASTRARUN_OUTPUT_DIR"] = str(output_dir)
+        extra["ASTRARUN_WORKSPACE_DIR"] = str(run_dir)
+        extra["OUTPUT_DIR"] = str(output_dir)
+        extra["TEMP"] = str(temp_dir)
+        extra["TMP"] = str(temp_dir)
+        clean_env = self.sanitize_environment(extra)
+
+        # Record pre-existing files and sizes to detect newly produced or populated artifacts
+        pre_files = set(run_dir.glob("**/*"))
+        pre_sizes = {f: f.stat().st_size for f in pre_files if f.is_file()}
+
+        start_time = time.time()
+        status = "SUCCESS"
+        exit_code: Optional[int] = None
+        stdout_text = ""
+        stderr_text = ""
+        peak_mb = 0.0
+
+        isolation_type = "UNKNOWN"
+        token_diag: Dict[str, Any] = {}
+
+        acquired = self._concurrency_lock.acquire(timeout=cfg.timeout_sec + 5.0)
+        if not acquired:
+            return SandboxResult(
+                run_id=cfg.run_id,
+                profile=cfg.profile,
+                status="BUSY",
+                exit_code=-1,
+                stdout="",
+                stderr="System compute concurrency ceiling reached (strictly 1 worker active).",
+                duration_ms=0.0,
+            )
+
+        try:
+            if os.name == "nt":
+                if getattr(cfg, "launcher_preference", "APPCONTAINER") == "RESTRICTED_TOKEN":
+                    from astrarun.sandbox.restricted_launcher import RestrictedWorkerLauncher
+                    try:
+                        worker_res = RestrictedWorkerLauncher.launch(
+                            entrypoint_file=entry_file,
+                            workspace=run_dir,
+                            run_id=cfg.run_id,
+                            timeout_sec=cfg.timeout_sec,
+                            memory_limit_bytes=cfg.memory_limit_bytes,
+                            extra_env=cfg.extra_env,
+                            python_executable=exe,
+                        )
+                        status = worker_res.status
+                        exit_code = worker_res.exit_code
+                        stdout_text = worker_res.stdout
+                        stderr_text = worker_res.stderr
+                        peak_mb = worker_res.peak_memory_mb
+                        isolation_type = "RESTRICTED_TOKEN"
+                        token_diag = {
+                            "is_restricted_token": True,
+                            "integrity_level": "LOW",
+                        }
+                    except Exception as e:
+                        status = "ERROR"
+                        stderr_text = f"RestrictedWorkerLauncher execution exception: {e}"
+                        logger.exception("RestrictedWorkerLauncher execution failed")
+                        isolation_type = "RESTRICTED_TOKEN_FAILED"
+                        token_diag = {"error": str(e), "fail_closed": True}
+                else:
+                    from astrarun.sandbox.appcontainer_launcher import AppContainerLauncher
+                    try:
+                        worker_res = AppContainerLauncher.launch(
+                            entrypoint_file=entry_file,
+                            workspace=run_dir,
+                            run_id=cfg.run_id,
+                            timeout_sec=cfg.timeout_sec,
+                            memory_limit_bytes=cfg.memory_limit_bytes,
+                            extra_env=cfg.extra_env,
+                            python_executable=exe,
+                        )
+                        status = worker_res.status
+                        exit_code = worker_res.exit_code
+                        stdout_text = worker_res.stdout
+                        stderr_text = worker_res.stderr
+                        peak_mb = worker_res.peak_memory_mb
+                        isolation_type = worker_res.isolation_type
+                        token_diag = {
+                            "is_appcontainer": worker_res.is_appcontainer,
+                            "package_sid": worker_res.package_sid,
+                            "capabilities_granted": worker_res.capabilities_granted,
+                        }
+                    except Exception as e:
+                        status = "ERROR"
+                        stderr_text = f"AppContainer execution exception: {e}"
+                        logger.exception("AppContainerLauncher execution failed")
+                        isolation_type = "APPCONTAINER_FAILED"
+                        token_diag = {"error": str(e), "fail_closed": True}
+            else:
+                job = Win32JobObject(
+                    name=f"sb_job_{cfg.run_id}",
+                    memory_limit_bytes=cfg.memory_limit_bytes if cfg.memory_limit_bytes > 0 else None,
+                )
+                import subprocess
+                try:
+                    proc = subprocess.Popen(
+                        [exe, str(entry_file)],
+                        cwd=str(run_dir),
+                        env=clean_env,
+                        stdout=subprocess.PIPE,
+                        stderr=subprocess.PIPE,
+                        creationflags=CREATE_NO_WINDOW,
+                    )
+                    if os.name == "nt" and hasattr(proc, "_handle"):
+                        job.assign_process(int(proc._handle))
+
+                    try:
+                        stdout_bytes, stderr_bytes = proc.communicate(timeout=cfg.timeout_sec)
+                        exit_code = proc.returncode
+                        if exit_code != 0:
+                            status = "FAILED"
+                    except subprocess.TimeoutExpired:
+                        status = "TIMEOUT"
+                        proc.kill()
+                        job.terminate(exit_code=1)
+                        stdout_bytes, stderr_bytes = proc.communicate()
+                        stderr_text += f"\nExecution exceeded timeout limit ({cfg.timeout_sec}s)."
+
+                    max_bytes = cfg.stdout_max_bytes
+                    if len(stdout_bytes) > max_bytes:
+                        stdout_bytes = stdout_bytes[:max_bytes] + b"\n[TRUNCATED: Output exceeded cap]"
+                    if len(stderr_bytes) > max_bytes:
+                        stderr_bytes = stderr_bytes[:max_bytes] + b"\n[TRUNCATED: Output exceeded cap]"
+
+                    stdout_text = stdout_bytes.decode("utf-8", errors="replace")
+                    stderr_text = stderr_bytes.decode("utf-8", errors="replace")
+                except Exception as e:
+                    status = "ERROR"
+                    stderr_text = f"Execution exception: {e}"
+                    logger.exception("Sandbox candidate execution failed")
+                finally:
+                    try:
+                        peak_bytes = job.query_peak_memory()
+                        peak_mb = round(peak_bytes / (1024 * 1024), 2)
+                    except Exception:
+                        peak_mb = 0.0
+                    job.close()
+        finally:
+            self._concurrency_lock.release()
+
+        duration_ms = round((time.time() - start_time) * 1000.0, 2)
+
+        # Detect newly created or populated artifact files (excluding staged source files and temp dirs)
+        post_files = set(run_dir.glob("**/*"))
+        staged_set = set(written_files)
+        excluded_dirs = {source_dir, temp_dir}
+        new_files = [
+            f for f in post_files - staged_set
+            if f.is_file() and not any(p in excluded_dirs for p in f.parents)
+            and (
+                f not in pre_files
+                or (pre_sizes.get(f, 0) == 0 and f.stat().st_size > 0)
+                or (f.stat().st_mtime >= start_time and f.stat().st_size != pre_sizes.get(f, 0))
+            )
+        ]
+
+        scrubbed_stdout, was_redacted_out = self.secret_broker.scrub_text(stdout_text)
+        scrubbed_stderr, was_redacted_err = self.secret_broker.scrub_text(stderr_text)
+
+        return SandboxResult(
+            run_id=cfg.run_id,
+            profile=cfg.profile,
+            status=status,
+            exit_code=exit_code,
+            stdout=scrubbed_stdout,
+            stderr=scrubbed_stderr,
+            duration_ms=duration_ms,
+            peak_memory_mb=peak_mb,
+            working_dir=run_dir,
+            output_dir=output_dir,
+            created_artifacts=new_files,
+            redacted=was_redacted_out or was_redacted_err,
+            isolation_type=isolation_type,
+            token_diagnostics=token_diag,
+        )
+

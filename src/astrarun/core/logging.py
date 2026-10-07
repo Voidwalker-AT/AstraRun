@@ -45,13 +45,10 @@ def setup_logging(
     if _LOGGING_INITIALIZED:
         return logger
 
-    from astrarun.core.paths import get_logs_dir, is_release_mode
+    from astrarun.core.paths import AstraPaths, is_release_mode
 
     if log_file is None:
-        if is_release_mode():
-            log_path = get_logs_dir() / "astrarun.log"
-        else:
-            log_path = Path("logs/astrarun.log")
+        log_path = AstraPaths.logs_dir() / "astrarun.log"
     else:
         log_path = Path(log_file)
 

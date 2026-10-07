@@ -264,7 +264,7 @@ class ExistingCapabilityResolver:
         candidates = [
             Path(os.environ.get("ProgramFiles", r"C:\Program Files")),
             Path(os.environ.get("ProgramFiles(x86)", r"C:\Program Files (x86)")),
-            Path(os.environ.get("LOCALAPPDATA", r"C:\Users\hp\AppData\Local")),
+            Path(os.environ.get("LOCALAPPDATA", str(Path.home() / "AppData" / "Local"))),
             Path.home() / "scoop" / "shims",
         ]
         for base in candidates:

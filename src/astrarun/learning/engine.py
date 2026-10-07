@@ -51,7 +51,8 @@ class LearningEngine:
         self.learn_from_history = self.config.get("learn_from_history", True)
         self.auto_propose_skills = self.config.get("auto_propose_skills", True)
 
-        db_path = self.config.get("db_path", "data/astra_learning.db")
+        from astrarun.core.paths import AstraPaths
+        db_path = self.config.get("db_path") or str(AstraPaths.data_dir() / "astra_learning.db")
         self.persistence = persistence or LearningPersistence(db_path=db_path)
 
         conf_threshold = float(self.config.get("confidence_threshold", 0.85))

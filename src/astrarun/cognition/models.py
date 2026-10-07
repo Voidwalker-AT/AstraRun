@@ -106,6 +106,27 @@ class IntentDecision(BaseModel):
     requires_deep_planning: bool = False
 
 
+class IntentClass(str, Enum):
+    """Authoritative intent classifications for Tier 2 Local Intent Reasoner."""
+    KNOWN_CAPABILITY = "KNOWN_CAPABILITY"
+    COMPOSITE_WORKFLOW = "COMPOSITE_WORKFLOW"
+    DYNAMIC_COMPUTATION = "DYNAMIC_COMPUTATION"
+    DELEGATE_EXTERNAL_AI = "DELEGATE_EXTERNAL_AI"
+    CONVERSATIONAL = "CONVERSATIONAL"
+    CLARIFICATION_REQUIRED = "CLARIFICATION_REQUIRED"
+
+
+class IntentReasonerResult(BaseModel):
+    """Structured classification output required for Tier 2 Local Intent Reasoner."""
+    model_config = ConfigDict(extra="ignore")
+
+    intent_class: IntentClass
+    candidate_capabilities: List[str] = Field(default_factory=list)
+    confidence: float = Field(ge=0.0, le=1.0)
+    reason: str = ""
+    requires_code: bool = False
+
+
 class SkillSelection(BaseModel):
     """Selection of a known, verified skill for rapid execution."""
     model_config = ConfigDict(extra="forbid")
@@ -236,3 +257,14 @@ class ClarificationRequest(BaseModel):
     missing_parameter: str
     prompt_question: str
     candidate_options: List[str] = Field(default_factory=list)
+
+
+class VerificationDecision(BaseModel):
+    """Structured evaluation of whether executed actions satisfied the user's objective."""
+    model_config = ConfigDict(extra="ignore")
+
+    is_success: bool = True
+    confidence: float = 1.0
+    reasoning: str = ""
+    missing_elements: List[str] = Field(default_factory=list)
+

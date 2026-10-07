@@ -1,0 +1,199 @@
+{
+  "phase": "C2.1",
+  "audit_date": "2026-10-07",
+  "mission": "Capability-isolated generated workers with fail-closed broker mediation and sealed artifact promotion",
+  "status": "PASS_WITH_EMPIRICAL_ESCAPE_HATCH_CLASSIFICATION",
+  "workstation_baseline": {
+    "os_version": "Windows 11 Build 26200 (AMD64)",
+    "python_runtime": "3.13.0 (64-bit)",
+    "active_python": "E:\\Workspace\\Active\\AstraRun\\.venv\\Scripts\\python.exe",
+    "base_python": "C:\\Users\\hp\\AppData\\Local\\Programs\\Python\\Python313\\python.exe",
+    "uac_configuration": {
+      "EnableLUA": 1,
+      "ConsentPromptBehaviorAdmin": 5,
+      "is_admin_token": false,
+      "elevation_bypass": false
+    },
+    "hardware": {
+      "cpu": "Intel Core i5-12450H",
+      "ram_gb": 16,
+      "gpu": "NVIDIA GeForce RTX 2050 (4 GB VRAM)"
+    }
+  },
+  "source_integrity": {
+    "composite_sha256": "60e818e7c4c80a2a37a47769879b160a391573e045223e70ec20a17b0ad805b2",
+    "production_python_files": 269
+  },
+  "empirical_isolation_matrix": [
+    {
+      "dimension": "Confidentiality (Documents Read)",
+      "probe": "Read synthetic canary in C:\\Users\\hp\\Documents",
+      "c2_restricted_token": {
+        "verdict": "ALLOWED",
+        "detail": "CONFIRMED GAP: Low Integrity read-up allowed under ambient user SID"
+      },
+      "c2_1_appcontainer": {
+        "verdict": "BLOCKED",
+        "detail": "ENFORCED: PermissionError: [Errno 13] Permission denied; AppContainer token lacks user profile DACL"
+      }
+    },
+    {
+      "dimension": "Integrity (Desktop Write)",
+      "probe": "Write canary file in C:\\Users\\hp\\Desktop",
+      "c2_restricted_token": {
+        "verdict": "BLOCKED",
+        "detail": "ENFORCED: PermissionError: [Errno 13] Permission denied via NTFS MIC No-Write-Up"
+      },
+      "c2_1_appcontainer": {
+        "verdict": "BLOCKED",
+        "detail": "ENFORCED: PermissionError: [Errno 13] Permission denied via AppContainer boundary"
+      }
+    },
+    {
+      "dimension": "Network Exfiltration (TCP Socket)",
+      "probe": "Raw socket connect to external target 1.1.1.1:53",
+      "c2_restricted_token": {
+        "verdict": "ALLOWED",
+        "detail": "CONFIRMED GAP: Winsock unconstrained at Low Integrity"
+      },
+      "c2_1_appcontainer": {
+        "verdict": "BLOCKED",
+        "detail": "ENFORCED: PermissionError: [WinError 10013] WSAEACCES; offline by default with zero capability SIDs"
+      }
+    },
+    {
+      "dimension": "Process Control (Process Terminate)",
+      "probe": "OpenProcess(PROCESS_TERMINATE) and TerminateProcess on same-user process",
+      "c2_restricted_token": {
+        "verdict": "ALLOWED",
+        "detail": "CONFIRMED GAP: User SID matches host process; termination succeeds"
+      },
+      "c2_1_appcontainer": {
+        "verdict": "BLOCKED",
+        "detail": "ENFORCED: OpenProcess returns WinError 5 Access Denied; package SID cannot open host process tokens"
+      }
+    },
+    {
+      "dimension": "Process Containment (Grandchild Kill)",
+      "probe": "Spawn decoupled grandchild background process and close parent worker",
+      "c2_restricted_token": {
+        "verdict": "ENFORCED",
+        "detail": "Win32 Job Object JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE terminates grandchildren"
+      },
+      "c2_1_appcontainer": {
+        "verdict": "ENFORCED",
+        "detail": "Win32 Job Object assigned while process is suspended before thread resume"
+      }
+    },
+    {
+      "dimension": "Governed Output (Task Workspace Write)",
+      "probe": "Write task deliverables into scoped task workspace directory",
+      "c2_restricted_token": {
+        "verdict": "ALLOWED",
+        "detail": "Scoped writes permitted in AppData/LocalLow directory"
+      },
+      "c2_1_appcontainer": {
+        "verdict": "ALLOWED",
+        "detail": "Scoped writes permitted in task workspace via ephemeral package SID ACL"
+      }
+    },
+    {
+      "dimension": "Workload: Pure Python / JSON / CSV",
+      "probe": "Execute arithmetic, file parsing, formatting, and JSON serialization",
+      "c2_restricted_token": {
+        "verdict": "ALLOWED",
+        "detail": "Clean execution"
+      },
+      "c2_1_appcontainer": {
+        "verdict": "ALLOWED",
+        "detail": "Clean execution (Exit Code 0)"
+      }
+    },
+    {
+      "dimension": "Workload: NumPy Computation",
+      "probe": "Array creation, matrix operations, determinant computation",
+      "c2_restricted_token": {
+        "verdict": "ALLOWED",
+        "detail": "Clean execution"
+      },
+      "c2_1_appcontainer": {
+        "verdict": "ALLOWED",
+        "detail": "Clean execution (Exit Code 0, sum=10)"
+      }
+    },
+    {
+      "dimension": "Workload: Matplotlib / Win32k GDI",
+      "probe": "Render PNG plot via headless Agg backend",
+      "c2_restricted_token": {
+        "verdict": "ALLOWED",
+        "detail": "Clean execution under Low IL"
+      },
+      "c2_1_appcontainer": {
+        "verdict": "BLOCKED",
+        "detail": "ImportError: DLL load failed while importing _c_internal_utils: An internal error occurred (Win32k/GDI system call filtering)"
+      }
+    }
+  ],
+  "authoritative_broker_mediation": {
+    "enforced_call_sites": [
+      "TaskManager.execute_capability -> ExecutionBroker.execute(ActionProposal)",
+      "AgentExecutionEngine.execute_step -> ExecutionBroker.execute(ActionProposal)",
+      "DynamicToolBuilder.deliver_artifact_via_broker -> ExecutionBroker.execute(ActionProposal)"
+    ],
+    "dry_run_purity": {
+      "verified": true,
+      "guarantee": "Zero side-effects; fast_path, single-step, and multi-step bypasses eliminated when dry_run=True"
+    }
+  },
+  "sealed_artifact_promotion": {
+    "hard_link_rejection": "get_file_link_count(path) > 1 rejected via Win32 GetFileInformationByHandle",
+    "path_traversal_rejection": "Device paths, alternate data streams (:), UNC paths, and reserved DOS names rejected",
+    "toctou_prevention": "Streaming SHA-256 chunk verification, staged write in destination parent directory, atomic commit via os.replace"
+  },
+  "test_suite_verification": {
+    "test_milestone7b_dynamic_tooling": {
+      "total": 9,
+      "passed": 9,
+      "status": "PASS"
+    },
+    "test_post_freeze_routing_holdout": {
+      "total": 70,
+      "passed": 70,
+      "status": "PASS"
+    },
+    "test_generic_repair_holdout": {
+      "total": 8,
+      "passed": 8,
+      "status": "PASS"
+    },
+    "test_c2_adversarial_suite": {
+      "total": 30,
+      "passed": 30,
+      "status": "PASS"
+    },
+    "test_cognitive_spine_self_repair": {
+      "total": 2,
+      "passed": 2,
+      "status": "PASS"
+    }
+  },
+  "architecture_escape_hatch": {
+    "compatibility_verdict": {
+      "pure_python_algorithms": "NATIVE_COMPATIBLE",
+      "numpy_numerical_compute": "NARROW_RUNTIME_LAYOUT_REQUIRED",
+      "matplotlib_gui_extensions": "MATERIAL_SECURITY_GRANT_REQUIRED_OR_FUNDAMENTALLY_INCOMPATIBLE"
+    },
+    "recommended_stronger_primitives": [
+      {
+        "primitive": "Dedicated Restricted Worker Account (e.g. AstraWorker)",
+        "isolation_profile": "Distinct local Windows user SID with isolated C:\\Users\\AstraWorker profile; zero read/write access to primary user documents or credentials; full Win32k/GDI support for headless rendering",
+        "overhead": "Low process startup latency; requires one-time local account setup"
+      },
+      {
+        "primitive": "Windows Sandbox / Lightweight Hyper-V Container",
+        "isolation_profile": "Hardware-enforced hypervisor boundary; complete filesystem, registry, and kernel memory isolation; headless GPU acceleration supported",
+        "overhead": "Higher initialization time and memory footprint"
+      }
+    ]
+  }
+}

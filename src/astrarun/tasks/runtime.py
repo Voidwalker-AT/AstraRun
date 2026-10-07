@@ -790,16 +790,21 @@ class TaskRuntime:
             )
 
             try:
-                # Dispatch execution to application registry or simulation
-                if self.app and hasattr(self.app, "capability_registry"):
-                    cap_res = self.app.capability_registry.execute(step.capability, step.arguments, task_id=task_id)
-                    success = cap_res.success
-                    result_data = cap_res.data
-                    step_msg = cap_res.message
+                # Dispatch execution strictly governed by ExecutionBroker
+                if self.app and hasattr(self.app, "execution_broker") and self.app.execution_broker:
+                    from astrarun.security.execution_broker import ActionProposal
+                    prop = ActionProposal(
+                        capability_id=step.capability,
+                        parameters=step.arguments,
+                        task_id=task_id,
+                        source="task_runtime",
+                    )
+                    broker_res = self.app.execution_broker.execute(prop)
+                    success = broker_res.success
+                    result_data = broker_res.data
+                    step_msg = broker_res.message
                 else:
-                    success = True
-                    result_data = dict(step.arguments)
-                    step_msg = f"Step {step.step_id} executed successfully"
+                    raise RuntimeError("SECURITY_VIOLATION: TaskRuntime requires an active ExecutionBroker.")
 
                 if not success:
                     self._handle_failure(task, f"Step '{step.description}' failed: {step_msg}")
@@ -949,15 +954,18 @@ class TaskRuntime:
                 elif invariant.target.lower() in ("calc", "calculator", "calc.exe"):
                     res = open_application("calc")
                     reopened = res.success
-                elif self.app and hasattr(self.app, "capability_registry"):
-                    cap_res = self.app.capability_registry.execute(
-                        "open_application", {"app": invariant.target}, task_id=task_id
+                elif self.app and hasattr(self.app, "execution_broker") and self.app.execution_broker:
+                    from astrarun.security.execution_broker import ActionProposal
+                    prop = ActionProposal(
+                        capability_id="open_application",
+                        parameters={"app": invariant.target},
+                        task_id=task_id,
+                        source="task_runtime_recovery",
                     )
-                    reopened = cap_res.success
+                    broker_res = self.app.execution_broker.execute(prop)
+                    reopened = broker_res.success
                 else:
-                    target_name = invariant.target.replace(".exe", "")
-                    res = open_application(target_name)
-                    reopened = res.success
+                    reopened = False
             except Exception as e:
                 logger.error("Error reopening %s: %s", invariant.target, e)
                 reopened = False

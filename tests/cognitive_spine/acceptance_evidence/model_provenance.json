@@ -1,0 +1,14 @@
+{
+  "task_id": "task_6cfbb3df",
+  "model": "qwen2.5-coder",
+  "model_version": "1.5b-instruct-q4_k_m",
+  "model_path": "E:\\AI_Models\\GGUF\\qwen2.5-coder-1.5b-instruct-q4_k_m.gguf",
+  "temperature": 0.2,
+  "prompt_hash": "48f41ed14e04265be0cfb2c78953fa1f9d336a13c07536e532e3a3deda5e15e1",
+  "source_file": "generated_source/main.py",
+  "source_sha256": "f9dabc3d3c7c28615462448358caf8ecfb659f89c288210e86bcf3bbf25756c8",
+  "revision": 1,
+  "authoring_agent": "Qwen2.5-Coder-1.5B (Autonomous Neural Authoring)",
+  "human_or_harness_intervention": false,
+  "df016_integrity_status": "VERIFIED_IDENTICAL_TO_SANDBOX"
+}

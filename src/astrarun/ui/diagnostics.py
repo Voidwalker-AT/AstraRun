@@ -110,10 +110,11 @@ class DiagnosticsDialog(QDialog):
             hotkey_str = f"Alt+Space ({'Active' if is_reg else 'Failed'}, {trig_cnt} triggers)"
 
         # Database checks
-        hist_db = "data/astra_history.db"
+        from astrarun.core.paths import AstraPaths
+        hist_db = str(AstraPaths.data_dir() / "astra_history.db")
         hist_status = "Connected (WAL)" if os.path.exists(hist_db) else "Ready"
 
-        learn_db = "data/astra_learning.db"
+        learn_db = str(AstraPaths.data_dir() / "astra_learning.db")
         learn_status = "Connected (WAL)" if os.path.exists(learn_db) else "Ready"
 
         # Monitor discovery

@@ -10,6 +10,12 @@ from astrarun.security.models import (
     Operation,
     RiskLevel,
 )
+from astrarun.security.execution_broker import (
+    ActionCategory,
+    ActionProposal,
+    ExecutionBroker,
+    ExecutionBrokerResult,
+)
 from astrarun.security.policies import ASTCodePolicy, CommandPolicy, PathPolicy
 from astrarun.security.secret_broker import RedactionReport, SecretBroker
 
@@ -27,4 +33,8 @@ __all__ = [
     "ASTCodePolicy",
     "SecretBroker",
     "RedactionReport",
+    "ExecutionBroker",
+    "ActionProposal",
+    "ActionCategory",
+    "ExecutionBrokerResult",
 ]

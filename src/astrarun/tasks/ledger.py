@@ -54,9 +54,8 @@ class TaskLedger:
         store_result_payloads: bool = False,
     ) -> None:
         if db_path is None:
-            # Default to data/astra_history.db relative to workspace root
-            root = Path(__file__).resolve().parent.parent.parent.parent
-            self.db_path = root / "data" / "astra_history.db"
+            from astrarun.core.paths import AstraPaths
+            self.db_path = AstraPaths.data_dir() / "astra_history.db"
         else:
             self.db_path = Path(db_path)
 

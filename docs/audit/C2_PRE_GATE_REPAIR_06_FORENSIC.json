@@ -1,0 +1,13 @@
+{
+  "investigation": "C2_PRE_GATE_REPAIR_06",
+  "task_id": "repair_holdout_repair_06_1791310156434",
+  "root_cause_classification": "ARTIFACT_DISCOVERY_FAILURE",
+  "contributing_cause": "SANDBOX_LIFECYCLE_FAILURE",
+  "physical_file_found": true,
+  "physical_path": "C:\\Users\\hp\\AppData\\Local\\AstraRun\\data\\sandbox\\repair_holdout_repair_06_1791310156434\\signature.bin",
+  "file_size_bytes": 8,
+  "file_sha256": "4c4b6a3be1314ab86138bef4314dde022e600960d8689a2c8f8631802d20dab6",
+  "repaired_code_valid": true,
+  "exit_code": 0,
+  "diagnosis": "Attempt 0 failed after creating 0-byte file. Attempt 1 executed in same directory. Pre-execution snapshot captured the 0-byte file, causing differential file detection (post_files - pre_files) to filter out the newly populated 8-byte artifact."
+}

@@ -197,3 +197,37 @@ class ASTInspector:
                 violations=[f"Error reading file {file_path}: {e}"],
             )
         return self.inspect(code)
+
+    def inspect_candidate(self, candidate: Any) -> ASTInspectionResult:
+        """Inspect all source files and verification block in a CandidateTool."""
+        all_violations: List[str] = []
+        all_modules: Set[str] = set()
+        all_calls: Set[str] = set()
+
+        sources = getattr(candidate, "source_files", {})
+        if not sources and hasattr(candidate, "executable_code"):
+            sources = {getattr(candidate, "entrypoint", "main.py"): candidate.executable_code}
+
+        for fname, code in sources.items():
+            res = self.inspect(code)
+            if not res.is_safe:
+                all_violations.extend([f"[{fname}] {v}" for v in res.violations])
+            all_modules.update(res.imported_modules)
+            all_calls.update(res.calls_detected)
+
+        vblock = getattr(candidate, "test_verification_block", "")
+        if vblock and vblock.strip():
+            vres = self.inspect(vblock)
+            if not vres.is_safe:
+                all_violations.extend([f"[verification] {v}" for v in vres.violations])
+            all_modules.update(vres.imported_modules)
+            all_calls.update(vres.calls_detected)
+
+        return ASTInspectionResult(
+            is_safe=len(all_violations) == 0,
+            violations=all_violations,
+            imported_modules=sorted(list(all_modules)),
+            calls_detected=sorted(list(all_calls)),
+            syntax_error=any("SyntaxError" in v for v in all_violations),
+        )
+

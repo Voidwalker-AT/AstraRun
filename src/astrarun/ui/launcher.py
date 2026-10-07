@@ -182,7 +182,7 @@ class LauncherWindow(QDialog):
         self.placeholder_text = str(ui_cfg.get("placeholder", "What do you want to do?"))
         # Section 4: remove "focus loss = immediate dismiss" as architectural invariant
         self.hide_on_focus_loss = bool(ui_cfg.get("hide_on_focus_loss", False))
-        self.launcher_debug = bool(ui_cfg.get("launcher_debug", True))
+        self.launcher_debug = bool(ui_cfg.get("launcher_debug", False))
         self.max_suggestions = int(ui_cfg.get("max_suggestions", 5))
 
         # Explicit State Machine and Telemetry
@@ -615,6 +615,16 @@ class LauncherWindow(QDialog):
             self._adjust_height(expanded=False)
             return
 
+        # 1. Deterministic Input Router Classification
+        from astrarun.routing.input_router import classify_launcher_input, InputIntent
+        intent = classify_launcher_input(clean)
+
+        # Natural language, Questions, and Goals must NEVER show application search suggestions
+        if intent in (InputIntent.NATURAL_LANGUAGE, InputIntent.QUESTION, InputIntent.GOAL):
+            self.suggestions_list.hide()
+            self._adjust_height(expanded=False)
+            return
+
         # Strip action verb prefix for search
         from astrarun.routing.deterministic import normalize_request
         _, target = normalize_request(clean)
@@ -625,7 +635,10 @@ class LauncherWindow(QDialog):
             self._adjust_height(expanded=False)
             return
 
-        results = self.context.search_index.search(search_query, limit=self.max_suggestions)
+        raw_results = self.context.search_index.search(search_query, limit=self.max_suggestions)
+        # Strict confidence filter: only show candidates with score >= 0.60
+        results = [r for r in raw_results if r.score >= 0.60]
+
         if results:
             self.suggestions_list.clear()
             for res in results:
@@ -694,8 +707,25 @@ class LauncherWindow(QDialog):
         if not query:
             return
 
-        # 1. If query is compound or NLP command, bypass suggestions list completely
-        if self._is_compound_or_nlp_query(query):
+        from astrarun.routing.input_router import (
+            classify_launcher_input,
+            get_conversational_response,
+            InputIntent,
+        )
+        intent = classify_launcher_input(query)
+
+        # 1. Natural Language / Conversational input: Immediate friendly response without closing
+        if intent == InputIntent.NATURAL_LANGUAGE:
+            self.suggestions_list.hide()
+            self._adjust_height(expanded=False)
+            resp = get_conversational_response(query)
+            logger.info("Conversational prompt response: '%s' -> '%s'", query, resp)
+            self.show_feedback(resp, is_error=False)
+            self.input_field.selectAll()
+            return
+
+        # 2. If query is compound or NLP command / question / goal, bypass suggestions list completely
+        if self._is_compound_or_nlp_query(query) or intent in (InputIntent.QUESTION, InputIntent.GOAL):
             self.suggestions_list.hide()
             self._adjust_height(expanded=False)
             if self.app is not None:
@@ -703,22 +733,28 @@ class LauncherWindow(QDialog):
                 self._handle_execution_result(exec_res, query)
                 return
 
-        # 2. If suggestions list is visible and user navigated to an item, or input closely matches
+        # 3. If suggestions list is visible and user navigated to an item, or input closely matches
         current_row = self.suggestions_list.currentRow()
         if self.suggestions_list.isVisible() and current_row >= 0:
             item = self.suggestions_list.item(current_row)
             if item:
                 res = item.data(Qt.ItemDataRole.UserRole)
                 if res and isinstance(res, SearchResult):
-                    # Execute suggestion if user explicitly used arrow keys or query matches/prefixes suggestion
                     q_lower = query.lower()
                     name_lower = res.name.lower()
                     alias_lower = (res.matched_alias or "").lower()
-                    if getattr(self, "_user_navigated_suggestions", False) or q_lower in name_lower or q_lower in alias_lower or name_lower.startswith(q_lower):
+                    user_nav = getattr(self, "_user_navigated_suggestions", False)
+                    # Strict matching: requires explicit navigation OR prefix / token startswith match
+                    prefix_match = (
+                        name_lower.startswith(q_lower)
+                        or alias_lower.startswith(q_lower)
+                        or any(tok.startswith(q_lower) for tok in name_lower.split())
+                    )
+                    if user_nav or prefix_match:
                         self._execute_result(res)
                         return
 
-        # 3. Otherwise route raw typed command
+        # 4. Otherwise route raw typed command
         logger.info("Processing command: '%s'", query)
 
         # Canonical execution through AstraApplication composition root
@@ -862,15 +898,21 @@ class LauncherWindow(QDialog):
         self.clear_card()
         if not self.app:
             return
-        valid, msg = self.app.action_gate.validate_token(token, tool, arguments)
-        if not valid:
-            self.show_feedback(f"Confirmation failed: {msg}", is_error=True)
+        if hasattr(self.app, "execution_broker") and self.app.execution_broker:
+            from astrarun.security.execution_broker import ActionProposal
+            prop = ActionProposal(
+                capability_id=tool,
+                parameters=arguments,
+                source="launcher_confirmation",
+            )
+            broker_res = self.app.execution_broker.execute(prop, confirmation_token=token)
+            if broker_res.success:
+                self.show_feedback(f"Executed: {broker_res.message}", is_error=False)
+            else:
+                self.show_feedback(f"Failed: {broker_res.message}", is_error=True)
             return
-        cap_res = self.app.capability_registry.execute(tool, arguments)
-        if cap_res.success:
-            self.show_feedback(f"Executed: {cap_res.message}", is_error=False)
-        else:
-            self.show_feedback(f"Failed: {cap_res.message}", is_error=True)
+
+        self.show_feedback("SECURITY_VIOLATION: ExecutionBroker is required for confirmed execution", is_error=True)
 
     def _on_candidate_chosen(self, candidate_data: dict) -> None:
         """Handle user disambiguation candidate selection."""
@@ -929,8 +971,9 @@ class LauncherWindow(QDialog):
 
     def open_settings(self) -> None:
         """Open SettingsDialog."""
+        from astrarun.core.paths import AstraPaths
         from astrarun.ui.settings import SettingsDialog
-        dlg = SettingsDialog(settings_path="config/settings.json", parent=self)
+        dlg = SettingsDialog(settings_path=str(AstraPaths.config_dir() / "settings.json"), parent=self)
         dlg.exec()
 
     def open_diagnostics(self) -> None:

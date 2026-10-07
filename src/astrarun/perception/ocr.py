@@ -10,6 +10,7 @@ from __future__ import annotations
 import json
 import subprocess
 import time
+import os
 from pathlib import Path
 from typing import List, Optional
 
@@ -18,9 +19,8 @@ from astrarun.perception.models import BoundingBox, PerceptionTier, TextRegionOb
 
 logger = get_logger("astrarun.perception.ocr")
 
-DEFAULT_WINRT_OCR_EXE = Path(
-    r"C:\Users\hp\.gemini\antigravity\brain\23cb9148-e84c-4e70-9e8c-2413e3b2f9d6\scratch\WinRtOcr\bin\Release\net8.0-windows10.0.19041.0\WinRtOcr.exe"
-)
+_env_ocr = os.environ.get("ASTRARUN_WINRT_OCR_EXE")
+DEFAULT_WINRT_OCR_EXE = Path(_env_ocr) if _env_ocr else Path(__file__).resolve().parent.parent / "bin" / "WinRtOcr.exe"
 
 
 class OCRProvider:

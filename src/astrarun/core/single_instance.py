@@ -245,8 +245,9 @@ class AstraSingleInstance:
 
         # Fallback to trigger file mechanism if pipe call failed (e.g. startup race)
         try:
-            os.makedirs("data", exist_ok=True)
-            trigger_path = Path("data/astrarun_summon.trigger")
+            from astrarun.core.paths import AstraPaths
+            trigger_path = AstraPaths.summon_trigger_path()
+            trigger_path.parent.mkdir(parents=True, exist_ok=True)
             trigger_path.write_text(f"{time.time()}:{command}", encoding="utf-8")
         except Exception:
             pass

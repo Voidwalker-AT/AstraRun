@@ -50,9 +50,10 @@ class ToolLifecycleManager:
         skills_dir: Optional[Path] = None,
         promotion_threshold: int = 2,
     ) -> None:
-        self.storage_path = Path(storage_path or Path("data/tool_trajectories.json")).resolve()
+        from astrarun.core.paths import AstraPaths
+        self.storage_path = Path(storage_path or (AstraPaths.data_dir() / "tool_trajectories.json")).resolve()
         self.storage_path.parent.mkdir(parents=True, exist_ok=True)
-        self.skills_dir = Path(skills_dir or Path("skills")).resolve()
+        self.skills_dir = Path(skills_dir or AstraPaths.skills_dir()).resolve()
         self.skills_dir.mkdir(parents=True, exist_ok=True)
         self.promotion_threshold = promotion_threshold
         self._records: Dict[str, ToolTrajectoryRecord] = {}

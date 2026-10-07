@@ -1,0 +1,1 @@
+Create a Python program that generates a 3D visualization of a function you choose, save the source and output to a new Desktop folder, run it, fix any errors yourself, and show me the finished visualization.

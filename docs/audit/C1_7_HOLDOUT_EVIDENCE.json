@@ -1,0 +1,156 @@
+{
+  "timestamp": 1791307339.4737303,
+  "source_tree_hash_before": "1e05ccfa6ac0d9f22032e11af9eae092bf1cb93e7c4bd3a35a39bbed376318bc",
+  "source_tree_hash_after": "1e05ccfa6ac0d9f22032e11af9eae092bf1cb93e7c4bd3a35a39bbed376318bc",
+  "audit_phase": "C1.7_GENUINE_HOLDOUT_EXECUTION",
+  "selected_tasks": [
+    "HOLD2-03-STRUCTURED-DATA",
+    "HOLD2-01-ALGORITHMIC",
+    "HOLD2-08-SIMULATION",
+    "HOLD2-10-COMPOSITE-WORKFLOW"
+  ],
+  "task_results": {
+    "HOLD2-03-STRUCTURED-DATA": {
+      "task_id": "HOLD2-03-STRUCTURED-DATA",
+      "category": "Structured Data Processing",
+      "prompt": "Create a Python program that generates an inventory dataset of 15 electronic items with name, price, stock, calculates total valuation, and exports to inventory_report.json.",
+      "status": "COMPLETED",
+      "duration_s": 32.10473155975342,
+      "error": null,
+      "artifacts": [
+        "C:\\Users\\hp\\AppData\\Local\\AstraRun\\data\\sandbox\\task_5322bfea\\output\\inventory_report.json"
+      ],
+      "semantic_verified": true,
+      "semantic_verification_message": "Valid inventory report JSON",
+      "hash_chain_intact": true,
+      "verdict": "PASS",
+      "model_provenance": {
+        "model_role": "DEEP",
+        "model_name": "qwen2.5-coder",
+        "model_path": "E:\\AI_Models\\GGUF\\qwen2.5-coder-1.5b-instruct-q4_k_m.gguf",
+        "model_sha256": "cc324af070c2ecbfd324a30884d2f951a7ff756aba85cb811a6ec436933bb046",
+        "llama_server_pid": 12116,
+        "llama_server_port": 8089,
+        "request_id": "task_5322bfea",
+        "prompt_hash": "48ce0235f02fba2f757e6cb6bbfba2df9973a0b3a9c09fa34ad260183b9c9482",
+        "source_hash": "705b779db848d4bb6e9b985801298bf933497c4f5ed620ded90a9572baa1fadd",
+        "revision": 1,
+        "revisions_count": 1,
+        "evidence_class": "REAL_LOCAL_MODEL_INFERENCE"
+      },
+      "source_hash_chain": {
+        "generated_source_sha256": "705b779db848d4bb6e9b985801298bf933497c4f5ed620ded90a9572baa1fadd",
+        "candidatetool_source_sha256": "705b779db848d4bb6e9b985801298bf933497c4f5ed620ded90a9572baa1fadd",
+        "staged_source_sha256": "705b779db848d4bb6e9b985801298bf933497c4f5ed620ded90a9572baa1fadd",
+        "executed_source_sha256": "705b779db848d4bb6e9b985801298bf933497c4f5ed620ded90a9572baa1fadd",
+        "matches": true
+      },
+      "sandbox_execution": {
+        "exit_code": 0,
+        "working_dir": "C:\\Users\\hp\\AppData\\Local\\AstraRun\\data\\sandbox\\task_5322bfea",
+        "stdout_snippet": "Inventory report generated and saved to C:\\Users\\hp\\AppData\\Local\\AstraRun\\data\\sandbox\\task_5322bfea\\output\\inventory_report.json\r\n"
+      }
+    },
+    "HOLD2-01-ALGORITHMIC": {
+      "task_id": "HOLD2-01-ALGORITHMIC",
+      "category": "Algorithmic Computation",
+      "prompt": "Create a Python program that calculates the greatest common divisor and least common multiple for pairs of integers from 10 to 50, writing the results table to math_results.csv.",
+      "status": "COMPLETED",
+      "duration_s": 6.065140247344971,
+      "error": null,
+      "artifacts": [
+        "C:\\Users\\hp\\AppData\\Local\\AstraRun\\data\\sandbox\\task_c9e19425\\output\\math_results.csv"
+      ],
+      "semantic_verified": true,
+      "semantic_verification_message": "Verified math_results.csv with 821 rows",
+      "hash_chain_intact": true,
+      "verdict": "PASS",
+      "model_provenance": {
+        "model_role": "DEEP",
+        "model_name": "qwen2.5-coder",
+        "model_path": "E:\\AI_Models\\GGUF\\qwen2.5-coder-1.5b-instruct-q4_k_m.gguf",
+        "model_sha256": "cc324af070c2ecbfd324a30884d2f951a7ff756aba85cb811a6ec436933bb046",
+        "llama_server_pid": 12116,
+        "llama_server_port": 8089,
+        "request_id": "task_c9e19425",
+        "prompt_hash": "f5d84572bd9bdafd65f24187bf55ba514b3b8b72c483707e1cb96091a50e6d19",
+        "source_hash": "08f5d44d82f9ba661a4a56e0dbe3b267789bf641bb5724d73382c9f26253c0b8",
+        "revision": 1,
+        "revisions_count": 1,
+        "evidence_class": "REAL_LOCAL_MODEL_INFERENCE"
+      },
+      "source_hash_chain": {
+        "generated_source_sha256": "08f5d44d82f9ba661a4a56e0dbe3b267789bf641bb5724d73382c9f26253c0b8",
+        "candidatetool_source_sha256": "08f5d44d82f9ba661a4a56e0dbe3b267789bf641bb5724d73382c9f26253c0b8",
+        "staged_source_sha256": "08f5d44d82f9ba661a4a56e0dbe3b267789bf641bb5724d73382c9f26253c0b8",
+        "executed_source_sha256": "08f5d44d82f9ba661a4a56e0dbe3b267789bf641bb5724d73382c9f26253c0b8",
+        "matches": true
+      },
+      "sandbox_execution": {
+        "exit_code": 0,
+        "working_dir": "C:\\Users\\hp\\AppData\\Local\\AstraRun\\data\\sandbox\\task_c9e19425",
+        "stdout_snippet": "Results written to math_results.csv\r\n"
+      }
+    },
+    "HOLD2-08-SIMULATION": {
+      "task_id": "HOLD2-08-SIMULATION",
+      "category": "Lightweight Simulation",
+      "prompt": "Create a Python program that simulates a Monte Carlo coin flip experiment with 5000 trials, computes empirical heads/tails probability, and saves results to monte_carlo.json.",
+      "status": "COMPLETED",
+      "duration_s": 6.9744954109191895,
+      "error": null,
+      "artifacts": [
+        "C:\\Users\\hp\\AppData\\Local\\AstraRun\\data\\sandbox\\task_b8671235\\output\\monte_carlo_plot.png",
+        "C:\\Users\\hp\\AppData\\Local\\AstraRun\\data\\sandbox\\task_b8671235\\output\\monte_carlo.json"
+      ],
+      "semantic_verified": true,
+      "semantic_verification_message": "Valid Monte Carlo simulation JSON",
+      "hash_chain_intact": true,
+      "verdict": "PASS",
+      "model_provenance": {
+        "model_role": "DEEP",
+        "model_name": "qwen2.5-coder",
+        "model_path": "E:\\AI_Models\\GGUF\\qwen2.5-coder-1.5b-instruct-q4_k_m.gguf",
+        "model_sha256": "cc324af070c2ecbfd324a30884d2f951a7ff756aba85cb811a6ec436933bb046",
+        "llama_server_pid": 12116,
+        "llama_server_port": 8089,
+        "request_id": "task_b8671235",
+        "prompt_hash": "7e92072cba0ded41056a6d3f3dbecde76a01f240c09dac9017a04eaaa45ce3f7",
+        "source_hash": "503a8c10f361b48a2b58120e303bf5fd2f079060ee230fde7a69e8ef8afc077d",
+        "revision": 1,
+        "revisions_count": 1,
+        "evidence_class": "REAL_LOCAL_MODEL_INFERENCE"
+      },
+      "source_hash_chain": {
+        "generated_source_sha256": "503a8c10f361b48a2b58120e303bf5fd2f079060ee230fde7a69e8ef8afc077d",
+        "candidatetool_source_sha256": "503a8c10f361b48a2b58120e303bf5fd2f079060ee230fde7a69e8ef8afc077d",
+        "staged_source_sha256": "503a8c10f361b48a2b58120e303bf5fd2f079060ee230fde7a69e8ef8afc077d",
+        "executed_source_sha256": "503a8c10f361b48a2b58120e303bf5fd2f079060ee230fde7a69e8ef8afc077d",
+        "matches": true
+      },
+      "sandbox_execution": {
+        "exit_code": 0,
+        "working_dir": "C:\\Users\\hp\\AppData\\Local\\AstraRun\\data\\sandbox\\task_b8671235",
+        "stdout_snippet": ""
+      }
+    },
+    "HOLD2-10-COMPOSITE-WORKFLOW": {
+      "task_id": "HOLD2-10-COMPOSITE-WORKFLOW",
+      "category": "Composed Capability Workflow",
+      "prompt": "check cpu status and inspect disk status",
+      "status": "COMPLETED",
+      "duration_s": 0.0017709732055664062,
+      "error": null,
+      "artifacts": [],
+      "semantic_verified": true,
+      "semantic_verification_message": "Correctly classified into composite_dag_workflow",
+      "hash_chain_intact": true,
+      "verdict": "PASS",
+      "model_provenance": {
+        "model_role": "FAST_OR_DETERMINISTIC",
+        "model_name": "local_router",
+        "evidence_class": "SOURCE_TREE_INTEGRATION"
+      }
+    }
+  }
+}

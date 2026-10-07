@@ -1,0 +1,132 @@
+{
+  "timestamp": 1791305759.146189,
+  "source_tree_hash_before": "534b0b06d9b97864d8d9046e2fd409d980acd8a72978c5ce6e3e16f10214b275",
+  "source_tree_hash_after": "534b0b06d9b97864d8d9046e2fd409d980acd8a72978c5ce6e3e16f10214b275",
+  "audit_phase": "C1.6_GENUINE_HOLDOUT_EXECUTION",
+  "selected_tasks": [
+    "HOLD-09-TELEMETRY-REPORT",
+    "HOLD-08-WORKSPACE-SORTER",
+    "HOLD-01-CSV-ANALYSIS"
+  ],
+  "task_results": {
+    "HOLD-09-TELEMETRY-REPORT": {
+      "task_id": "HOLD-09-TELEMETRY-REPORT",
+      "category": "System Telemetry Reporting",
+      "prompt": "Create a Python program that queries platform OS details, CPU core count, and memory metrics, formatting them into an aligned text summary table saved to sys_telemetry.txt.",
+      "status": "COMPLETED",
+      "duration_s": 18.740611791610718,
+      "error": null,
+      "artifacts": [
+        "C:\\Users\\hp\\Desktop\\sys_telemetry.txt"
+      ],
+      "semantic_verified": true,
+      "semantic_verification_message": "Valid system telemetry report",
+      "hash_chain_intact": false,
+      "verdict": "FAIL",
+      "model_provenance": {
+        "model_role": "DEEP",
+        "model_name": "qwen2.5-coder",
+        "model_path": "E:\\AI_Models\\GGUF\\qwen2.5-coder-1.5b-instruct-q4_k_m.gguf",
+        "model_sha256": "cc324af070c2ecbfd324a30884d2f951a7ff756aba85cb811a6ec436933bb046",
+        "llama_server_pid": 5188,
+        "llama_server_port": 8089,
+        "request_id": "task_24d9bb45",
+        "prompt_hash": "9f4bfa34e898c6291158cc1134ce4642d5c7570f961f75e2780804017cc95cbb",
+        "source_hash": "f7f21e88fff11fd434093af6ec92a91fb574b2ae2ca475076c3ce867c7ad80d3",
+        "revision": 2,
+        "reason_for_revision": "Repaired error: Traceback (most recent call last):\r\n  File \"C:\\Users\\hp\\AppData\\Local\\AstraRun\\data\\sandbox\\task_24d9bb45\\main.py\", line 63, in <module>\r\n    main()\r\n",
+        "evidence_class": "REAL_LOCAL_MODEL_INFERENCE"
+      },
+      "source_hash_chain": {
+        "generated_source_sha256": "a420789a10e99e5d4c45c32b8b8ae524cf85c5439084fd5ee7fe84e3f966aa35",
+        "candidatetool_source_sha256": "f7f21e88fff11fd434093af6ec92a91fb574b2ae2ca475076c3ce867c7ad80d3",
+        "staged_source_sha256": "a420789a10e99e5d4c45c32b8b8ae524cf85c5439084fd5ee7fe84e3f966aa35",
+        "executed_source_sha256": "a420789a10e99e5d4c45c32b8b8ae524cf85c5439084fd5ee7fe84e3f966aa35",
+        "matches": false
+      },
+      "sandbox_execution": {
+        "exit_code": 0,
+        "working_dir": "C:\\Users\\hp\\AppData\\Local\\AstraRun\\data\\sandbox\\task_24d9bb45",
+        "stdout_snippet": "Summary table saved to C:\\Users\\hp\\Desktop\\sys_telemetry.txt\r\n"
+      }
+    },
+    "HOLD-08-WORKSPACE-SORTER": {
+      "task_id": "HOLD-08-WORKSPACE-SORTER",
+      "category": "Filesystem Organization",
+      "prompt": "Create a Python program that creates a sandbox directory with 10 test files of mixed extensions (.txt, .log, .dat), organizes them into subfolders by extension, and writes manifest.json.",
+      "status": "FAILED",
+      "duration_s": 23.90097999572754,
+      "error": "Step 'step_1' failed: Capability execution failed: Dynamic tool execution failed: Tool execution failed and bounded repair attempts were exhausted.",
+      "artifacts": [],
+      "semantic_verified": false,
+      "semantic_verification_message": "No artifact found",
+      "hash_chain_intact": false,
+      "verdict": "FAIL",
+      "model_provenance": {
+        "model_role": "DEEP",
+        "model_name": "qwen2.5-coder",
+        "model_path": "E:\\AI_Models\\GGUF\\qwen2.5-coder-1.5b-instruct-q4_k_m.gguf",
+        "model_sha256": "cc324af070c2ecbfd324a30884d2f951a7ff756aba85cb811a6ec436933bb046",
+        "llama_server_pid": 5188,
+        "llama_server_port": 8089,
+        "request_id": null,
+        "prompt_hash": null,
+        "source_hash": null,
+        "revision": 1,
+        "reason_for_revision": "initial_synthesis",
+        "evidence_class": "MODEL_RESIDENT"
+      },
+      "source_hash_chain": {
+        "generated_source_sha256": null,
+        "candidatetool_source_sha256": null,
+        "staged_source_sha256": null,
+        "executed_source_sha256": null,
+        "matches": false
+      },
+      "sandbox_execution": {
+        "exit_code": 1,
+        "working_dir": "",
+        "stdout_snippet": ""
+      }
+    },
+    "HOLD-01-CSV-ANALYSIS": {
+      "task_id": "HOLD-01-CSV-ANALYSIS",
+      "category": "CSV Analysis & Statistics",
+      "prompt": "Create a Python program that generates a sample sales CSV with columns product, price, quantity, computes total revenue and top-selling product, saves summary report to sales_summary.txt, and displays summary.",
+      "status": "FAILED",
+      "duration_s": 27.541858196258545,
+      "error": "Step 'step_1' failed: Capability execution failed: Dynamic tool execution failed: Tool execution failed and bounded repair attempts were exhausted.",
+      "artifacts": [],
+      "semantic_verified": false,
+      "semantic_verification_message": "No artifact found",
+      "hash_chain_intact": false,
+      "verdict": "FAIL",
+      "model_provenance": {
+        "model_role": "DEEP",
+        "model_name": "qwen2.5-coder",
+        "model_path": "E:\\AI_Models\\GGUF\\qwen2.5-coder-1.5b-instruct-q4_k_m.gguf",
+        "model_sha256": "cc324af070c2ecbfd324a30884d2f951a7ff756aba85cb811a6ec436933bb046",
+        "llama_server_pid": 5188,
+        "llama_server_port": 8089,
+        "request_id": null,
+        "prompt_hash": null,
+        "source_hash": null,
+        "revision": 1,
+        "reason_for_revision": "initial_synthesis",
+        "evidence_class": "MODEL_RESIDENT"
+      },
+      "source_hash_chain": {
+        "generated_source_sha256": null,
+        "candidatetool_source_sha256": null,
+        "staged_source_sha256": null,
+        "executed_source_sha256": null,
+        "matches": false
+      },
+      "sandbox_execution": {
+        "exit_code": 1,
+        "working_dir": "",
+        "stdout_snippet": ""
+      }
+    }
+  }
+}

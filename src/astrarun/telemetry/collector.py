@@ -23,11 +23,15 @@ class RoutingEventCollector:
 
     def __init__(
         self,
-        event_file: Path | str = "data/routing_events.jsonl",
+        event_file: Path | str | None = None,
         enabled: bool = True,
         store_raw_request: bool = True,
     ):
-        self.event_file = Path(event_file)
+        if event_file is None:
+            from astrarun.core.paths import AstraPaths
+            self.event_file = AstraPaths.data_dir() / "routing_events.jsonl"
+        else:
+            self.event_file = Path(event_file)
         self.enabled = enabled
         self.store_raw_request = store_raw_request
         self._lock = threading.Lock()

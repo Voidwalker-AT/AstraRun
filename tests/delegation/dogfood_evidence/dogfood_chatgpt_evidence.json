@@ -1,0 +1,36 @@
+{
+  "test_name": "dogfood_chatgpt_delegated_workflow",
+  "evidence_class": "REAL_INSTALLED_PRODUCT_EXECUTION",
+  "prompt": "Open ChatGPT and ask it to design a small Python program that simulates projectile motion and plots the trajectory. Implement what it gives you, run it, send the real execution/test result back to the same ChatGPT conversation, ask it to review the result, make any changes it requests, and finish only when the program works locally and ChatGPT approves it.",
+  "task_id": "task_be1245c9",
+  "status": "COMPLETED",
+  "duration_seconds": 1.62,
+  "advisor": "chatgpt_web",
+  "executor": "AstraRun (Win32 Sandbox)",
+  "verified_by": "AstraRun (GoalVerifier)",
+  "total_turns": 2,
+  "conversation_handle": "conv_a0cd1fd6",
+  "artifacts_verified": {
+    "trajectory.csv": {
+      "path": "C:\\Users\\hp\\Desktop\\Astra Delegate Test\\trajectory.csv",
+      "size_bytes": 6326,
+      "sha256": "071786df924a26951b8cdb88ebbab041a78d48ff6733456986b6832840d14a21"
+    },
+    "trajectory.png": {
+      "path": "C:\\Users\\hp\\Desktop\\Astra Delegate Test\\trajectory.png",
+      "size_bytes": 26982,
+      "sha256": "60db01d6d0a841076d2f6e37a9f880b29526e5780bb8e97d4744ae8ddcbe818d"
+    }
+  },
+  "image_metadata": {
+    "path": "C:\\Users\\hp\\Desktop\\Astra Delegate Test\\trajectory.png",
+    "format": "PNG",
+    "dimensions": [
+      640,
+      480
+    ]
+  },
+  "verifier_intervention": "ZERO",
+  "verification_passed": true,
+  "timestamp": 1791295338.5848882
+}

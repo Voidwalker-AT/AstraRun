@@ -1,0 +1,66 @@
+{
+  "audit_phase": "C2.1_STAGE_0",
+  "audit_title": "Baseline Reconstruction and Physical Workstation Ledger",
+  "timestamp": "2026-10-07T20:34:00Z",
+  "base_commit_head": "f4e5d06",
+  "composite_source_sha256": "f9ba8c32023d11c99802df915e9ca1294cc37c4cebce56a0118bd82e4d137143",
+  "production_python_file_count": 268,
+  "workstation_environment": {
+    "os_platform": "Windows-11-10.0.26200-SP0",
+    "python_version": "3.13.0 (tags/v3.13.0:60403a5, Oct 7 2024, 09:38:07) [MSC v.1941 64 bit (AMD64)]",
+    "python_executable": "E:\\Workspace\\Active\\AstraRun\\.venv\\Scripts\\python.exe",
+    "base_python_executable": "C:\\Users\\hp\\AppData\\Local\\Programs\\Python\\Python313\\python.exe",
+    "uac_enable_lua": 1,
+    "uac_consent_behavior": 5,
+    "caller_is_admin": false,
+    "hardware": {
+      "ram_gb": 16,
+      "cpu": "Intel Core i5-12450H",
+      "gpu": "NVIDIA GeForce RTX 2050 (4 GB VRAM)"
+    }
+  },
+  "winsta0_desktop_relabeling": {
+    "winsta0_label_sddl": "S:(ML;;NW;;;LW)",
+    "desktop_label_sddl": "None (implicit Medium)",
+    "relabeling_source": "C2 ensure_window_station_low_integrity",
+    "c2_1_remediation": "Removed all interactive station relabeling; worker executes strictly headless without shared relabeling; session reset on reboot"
+  },
+  "process_control_reproduction": {
+    "sacrificial_target_pid": 15436,
+    "target_integrity": "Medium (0x2000)",
+    "child_integrity": "Low (0x1000)",
+    "rights_tested": {
+      "PROCESS_TERMINATE": {
+        "handle_acquired": true,
+        "win_error": 0,
+        "classification": "CONFIRMED_SECURITY_GAP_UNDER_C2"
+      },
+      "PROCESS_VM_READ": {
+        "handle_acquired": false,
+        "win_error": 5,
+        "classification": "BLOCKED_BY_MIC"
+      },
+      "PROCESS_QUERY_INFORMATION": {
+        "handle_acquired": false,
+        "win_error": 5,
+        "classification": "BLOCKED_BY_MIC"
+      },
+      "PROCESS_QUERY_LIMITED_INFORMATION": {
+        "handle_acquired": true,
+        "win_error": 0,
+        "classification": "ALLOWED_BY_MIC"
+      }
+    }
+  },
+  "c2_claim_reconciliation": {
+    "write_isolation": "RAW_MEASURED_ENFORCED",
+    "read_isolation": "RAW_MEASURED_GAP",
+    "network_isolation": "RAW_MEASURED_GAP",
+    "process_control": "RAW_MEASURED_GAP",
+    "job_containment": "RAW_MEASURED_ENFORCED",
+    "registry_isolation": "RAW_MEASURED_ENFORCED",
+    "secret_isolation": "RAW_MEASURED_ENFORCED",
+    "artifact_delivery": "RAW_MEASURED_ENFORCED",
+    "workload_compatibility": "RAW_MEASURED_ENFORCED"
+  }
+}

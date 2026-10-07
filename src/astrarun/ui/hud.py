@@ -922,15 +922,21 @@ class TaskHUDController(QObject):
         """Dispatch confirmed capability execution through composition root."""
         if not self.app:
             return
-        valid, msg = self.app.action_gate.validate_token(token, tool, arguments)
-        if not valid:
-            self.hud.show_error(self.hud.current_task_id or "", f"Confirmation rejected: {msg}")
+        if hasattr(self.app, "execution_broker") and self.app.execution_broker:
+            from astrarun.security.execution_broker import ActionProposal
+            prop = ActionProposal(
+                capability_id=tool,
+                parameters=arguments,
+                source="hud_confirmation",
+            )
+            broker_res = self.app.execution_broker.execute(prop, confirmation_token=token)
+            if broker_res.success:
+                self.hud.show_success(self.hud.current_task_id or "", broker_res.message)
+            else:
+                self.hud.show_error(self.hud.current_task_id or "", broker_res.message)
             return
-        cap_res = self.app.capability_registry.execute(tool, arguments)
-        if cap_res.success:
-            self.hud.show_success(self.hud.current_task_id or "", cap_res.message)
-        else:
-            self.hud.show_error(self.hud.current_task_id or "", cap_res.message)
+
+        self.hud.show_error(self.hud.current_task_id or "", "SECURITY_VIOLATION: ExecutionBroker is required for confirmed execution")
 
     def _on_hud_candidate_selected(self, candidate: dict) -> None:
         """Reroute candidate through application request pipeline."""

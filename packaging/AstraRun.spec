@@ -104,9 +104,13 @@ hidden_imports = [
     "astrarun.machine.providers.python_env",
     "astrarun.machine.providers.topology",
     "astrarun.routing",
+    "astrarun.routing.input_router",
     "astrarun.routing.laya",
     "astrarun.routing.laya_worker",
-]
+    "astrarun.hotkeys",
+    "astrarun.hotkeys.manager",
+    "astrarun.ui.hotkey_conflict",
+] + collect_submodules("astrarun")
 
 a = Analysis(
     [str(src_dir / "astrarun" / "entrypoint.py")],
@@ -122,6 +126,7 @@ a = Analysis(
         "pytest",
         "benchmarks",
         "scipy",
+        "torchvision",
     ],
     win_no_prefer_redirects=False,
     win_private_assemblies=False,

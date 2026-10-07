@@ -14,7 +14,12 @@ import json
 import os
 import sys
 import time
+from pathlib import Path
 from typing import Any, Dict, Optional
+
+# Strict Invariant: Laya is pure NLP; neutralize torchvision C++ operator loading
+sys.modules["torchvision"] = None
+sys.modules["torchvision.ops"] = None
 
 
 DEFAULT_QUESTIONS = {
@@ -56,9 +61,12 @@ class LayaWorker:
         try:
             import laya
             t0 = time.perf_counter()
-            self._agent = laya.load(model_id_or_path=self.model_id, device=self.device)
+            # Prioritize complete local snapshot path if available
+            local_snap = Path("E:/AI_Models/HF_CACHE/hub/models--convaiinnovations--laya/snapshots/55cf4c4ebb4ebe31b2550e8bdf3bd21b99753851")
+            target_path = str(local_snap) if local_snap.exists() else self.model_id
+            self._agent = laya.load(model_id_or_path=target_path, device=self.device)
             load_ms = (time.perf_counter() - t0) * 1000
-            sys.stderr.write(f"[LayaWorker] Model '{self.model_id}' loaded on {self.device} in {load_ms:.1f}ms\n")
+            sys.stderr.write(f"[LayaWorker] Model '{target_path}' loaded on {self.device} in {load_ms:.1f}ms\n")
             sys.stderr.flush()
             return True
         except ImportError as err:

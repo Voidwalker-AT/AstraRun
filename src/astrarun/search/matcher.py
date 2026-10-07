@@ -91,7 +91,24 @@ class FuzzyMatcher:
 
         # Sort by score descending, then alphabetically by name
         results.sort(key=lambda r: (-r.score, r.name.lower()))
-        return results[:limit]
+
+        # Strict deduplication: collapse candidates sharing display name or target
+        deduped: list[SearchResult] = []
+        seen_names: set[str] = set()
+        seen_targets: set[str] = set()
+
+        for r in results:
+            n_clean = r.name.strip().lower()
+            t_clean = r.target.strip().lower()
+            if n_clean in seen_names or t_clean in seen_targets:
+                continue
+            seen_names.add(n_clean)
+            seen_targets.add(t_clean)
+            deduped.append(r)
+            if len(deduped) >= limit:
+                break
+
+        return deduped
 
     def _build_canonical_command(self, candidate: SearchCandidate) -> str:
         """Derive the canonical command string to execute this candidate."""

@@ -33,7 +33,7 @@ from astrarun.ui.tray import AstraTrayIcon, TrayState
 
 
 def parse_args() -> argparse.Namespace:
-    """Parse command line arguments."""
+    """Parse command line arguments with resilient fallback for background/autostart."""
     parser = argparse.ArgumentParser(description="AstraRun - Windows Intelligent Command Launcher")
     parser.add_argument(
         "--config-dir",
@@ -52,7 +52,17 @@ def parse_args() -> argparse.Namespace:
         action="store_true",
         help="Immediately show the launcher window upon launch instead of waiting for hotkey",
     )
-    parsed = parser.parse_args()
+    parser.add_argument(
+        "--background",
+        action="store_true",
+        help="Run resident in system tray waiting for global summon hotkey",
+    )
+    parser.add_argument(
+        "--first-run",
+        action="store_true",
+        help="Launch the first-run configuration wizard",
+    )
+    parsed, _ = parser.parse_known_args()
     if isinstance(parsed.run_command, list):
         parsed.run_command = " ".join(parsed.run_command) if parsed.run_command else None
     return parsed
@@ -60,17 +70,18 @@ def parse_args() -> argparse.Namespace:
 
 def summon_existing_instance() -> bool:
     """If another AstraRun instance is already active, signal its launcher window to summon."""
+    from astrarun.core.paths import AstraPaths
     # 1. Primary trigger file mechanism (works across all session & UIPI boundaries)
     try:
-        os.makedirs("data", exist_ok=True)
-        trigger_path = Path("data/astrarun_summon.trigger")
+        trigger_path = AstraPaths.summon_trigger_path()
+        trigger_path.parent.mkdir(parents=True, exist_ok=True)
         trigger_path.write_text(f"{time.time()}", encoding="utf-8")
     except Exception as err:
         logging.getLogger("astrarun.main").debug("Could not write summon trigger: %s", err)
 
     # 2. Win32 window message & foreground activation
     if sys.platform == "win32":
-        state_path = Path("data/astrarun_state.json")
+        state_path = AstraPaths.state_file_path()
         if state_path.exists():
             try:
                 with open(state_path, "r", encoding="utf-8") as f:
@@ -97,9 +108,10 @@ def write_state_file(
     launcher_hwnd: int | None = None,
 ) -> None:
     """Write machine-readable runtime state file for wrapper process verification."""
+    from astrarun.core.paths import AstraPaths
     try:
-        os.makedirs("data", exist_ok=True)
-        state_path = Path("data/astrarun_state.json")
+        state_path = AstraPaths.state_file_path()
+        state_path.parent.mkdir(parents=True, exist_ok=True)
         hk_str = f"{'+'.join(modifiers)}+{key}" if modifiers else "Alt+Space"
         state_data = {
             "pid": os.getpid(),
@@ -114,7 +126,7 @@ def write_state_file(
             "stage": stage,
             "exit_code": exit_code,
         }
-        tmp_path = Path(f"data/astrarun_state_{os.getpid()}.tmp")
+        tmp_path = AstraPaths.data_dir() / f"astrarun_state_{os.getpid()}.tmp"
         with open(tmp_path, "w", encoding="utf-8") as f:
             json.dump(state_data, f, indent=2)
         tmp_path.replace(state_path)
@@ -152,8 +164,8 @@ def main() -> int:
     args = parse_args()
 
     # 1. Setup logging first to ensure all subsequent stages are captured
-    from astrarun.core.paths import get_logs_dir, is_release_mode
-    effective_log_file = str(get_logs_dir() / "astrarun.log") if is_release_mode() else "logs/astrarun.log"
+    from astrarun.core.paths import AstraPaths
+    effective_log_file = str(AstraPaths.logs_dir() / "astrarun.log")
 
     setup_logging(
         log_file=effective_log_file,
@@ -396,14 +408,43 @@ def main() -> int:
     # 9. Wire up Hotkey Manager to Presentation Controller
     hotkey_manager.hotkey_activated.connect(presentation_controller.toggle_presentation)
 
-    def on_hotkey_error(err_msg: str):
-        logger.warning("Hotkey registration issue: %s", err_msg)
-        presentation_controller.present()
-        launcher.show_feedback("Hotkey conflict: check logs/astrarun.log", is_error=True)
+    def on_hotkey_registered(shortcut: str):
+        tray_icon.setToolTip(f"AstraRun — Ready ({shortcut})")
+        logger.info("[STARTUP_STAGE] HOTKEY_REGISTERED (%s)", shortcut)
 
-    hotkey_manager.error_occurred.connect(on_hotkey_error)
-    hotkey_manager.start()
-    logger.info("[STARTUP_STAGE] HOTKEY_REGISTERED (%s+%s)", "+".join(modifiers), key)
+    hotkey_manager.hotkey_registered.connect(on_hotkey_registered)
+
+    conflict_dialog_holder = [None]
+
+    def on_hotkey_conflict(shortcut: str, code: int, desc: str):
+        logger.warning("[HOTKEY_CONFLICT_TRIGGERED] %s (code=%d, %s)", shortcut, code, desc)
+        tray_icon.setToolTip(f"AstraRun — Shortcut Conflict ({shortcut})")
+        from astrarun.ui.hotkey_conflict import HotkeyConflictDialog
+        if conflict_dialog_holder[0] is None or not conflict_dialog_holder[0].isVisible():
+            dlg = HotkeyConflictDialog(
+                hotkey_manager=hotkey_manager,
+                failed_shortcut=shortcut,
+                parent=None,
+                on_settings_callback=launcher.open_settings,
+            )
+            def on_rebound(mods, k):
+                astra_app.settings.setdefault("hotkey", {})["modifiers"] = mods
+                astra_app.settings["hotkey"]["key"] = k
+                tray_icon.setToolTip(f"AstraRun — Ready ({hotkey_manager.shortcut_name})")
+            dlg.rebound_applied.connect(on_rebound)
+            conflict_dialog_holder[0] = dlg
+            dlg.show()
+            dlg.raise_()
+            dlg.activateWindow()
+
+    hotkey_manager.hotkey_conflict.connect(on_hotkey_conflict)
+
+    reg_ok = hotkey_manager.start()
+    if not reg_ok:
+        logger.warning(
+            "[STARTUP_STAGE] HOTKEY_REGISTRATION_FAILED (%s, code=%d)",
+            hotkey_manager.shortcut_name, hotkey_manager.last_error_code
+        )
 
     # 10. Clean shutdown hook
     def cleanup():
@@ -425,7 +466,7 @@ def main() -> int:
             power_manager.handle_session_end()
             astra_app.shutdown()
             # Clean up state file on normal exit ONLY if it belongs to current process
-            state_path = Path("data/astrarun_state.json")
+            state_path = AstraPaths.state_file_path()
             if state_path.exists():
                 try:
                     with open(state_path, "r", encoding="utf-8") as f:
@@ -450,8 +491,8 @@ def main() -> int:
     astra_app.heartbeat = heartbeat  # type: ignore
 
     # Setup cross-process summon trigger watcher
-    os.makedirs("data", exist_ok=True)
-    trigger_path = Path("data/astrarun_summon.trigger")
+    trigger_path = AstraPaths.summon_trigger_path()
+    trigger_path.parent.mkdir(parents=True, exist_ok=True)
     if not trigger_path.exists():
         trigger_path.touch()
 

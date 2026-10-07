@@ -22,7 +22,8 @@ class PowerEventLedger:
     """Persistent audit ledger for system power and task recovery events."""
 
     def __init__(self, db_path: Optional[Path] = None) -> None:
-        self.db_path = db_path or (Path("data/power/power_events.db"))
+        from astrarun.core.paths import AstraPaths
+        self.db_path = db_path or (AstraPaths.data_dir() / "power" / "power_events.db")
         self.db_path.parent.mkdir(parents=True, exist_ok=True)
         self._init_db()
 

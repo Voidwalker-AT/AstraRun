@@ -1,0 +1,99 @@
+{
+  "timestamp": 1791307500.0,
+  "audit_phase": "C1.7_FAILURE_FORENSICS",
+  "base_evidence_preserved": "docs/audit/C1_6_HOLDOUT_EVIDENCE.json",
+  "model_infrastructure": {
+    "model_name": "qwen2.5-coder",
+    "model_path": "E:\\AI_Models\\GGUF\\qwen2.5-coder-1.5b-instruct-q4_k_m.gguf",
+    "model_sha256": "cc324af070c2ecbfd324a30884d2f951a7ff756aba85cb811a6ec436933bb046",
+    "llama_server_pid": 5188,
+    "llama_server_port": 8089
+  },
+  "forensic_tasks": {
+    "HOLD-09-TELEMETRY-REPORT": {
+      "task_id": "HOLD-09-TELEMETRY-REPORT",
+      "category": "System Telemetry Reporting",
+      "prompt": "Create a Python program that queries platform OS details, CPU core count, and memory metrics, formatting them into an aligned text summary table saved to sys_telemetry.txt.",
+      "outcome": "COMPLETED",
+      "exit_code": 0,
+      "revisions": [
+        {
+          "revision": 1,
+          "trigger": "initial_synthesis",
+          "raw_source_sha256": "8d876bc256191a81d451cfb5fa3bc11e6d0aa9a5b118b62baeb3cf20b8f41315",
+          "ast_safe": true,
+          "ast_violations": [],
+          "exit_code": 1,
+          "stderr": "Traceback (most recent call last):\r\n  File \"C:\\Users\\hp\\AppData\\Local\\AstraRun\\data\\sandbox\\task_24d9bb45\\main.py\", line 63, in <module>\r\n    main()\r\n",
+          "artifacts": []
+        },
+        {
+          "revision": 2,
+          "trigger": "repaired_error",
+          "raw_source_sha256": "a420789a10e99e5d4c45c32b8b8ae524cf85c5439084fd5ee7fe84e3f966aa35",
+          "candidate_tool_tree_sha256": "f7f21e88fff11fd434093af6ec92a91fb574b2ae2ca475076c3ce867c7ad80d3",
+          "staged_source_sha256": "a420789a10e99e5d4c45c32b8b8ae524cf85c5439084fd5ee7fe84e3f966aa35",
+          "executed_source_sha256": "a420789a10e99e5d4c45c32b8b8ae524cf85c5439084fd5ee7fe84e3f966aa35",
+          "ast_safe": true,
+          "ast_violations": [],
+          "exit_code": 0,
+          "stderr": "",
+          "stdout": "Summary table saved to C:\\Users\\hp\\Desktop\\sys_telemetry.txt\r\n",
+          "artifacts": ["C:\\Users\\hp\\Desktop\\sys_telemetry.txt"],
+          "semantic_verification": {
+            "verified": true,
+            "message": "Valid system telemetry report"
+          }
+        }
+      ],
+      "hash_discrepancy_explanation": {
+        "issue": "In C1.6 holdout report, candidate tool source hash was reported as f7f21e88... while staged and executed source hash was a420789a..., causing hash_chain_intact=false.",
+        "root_cause": "Representational mismatch. CandidateTool.compute_source_hash() computes SHA-256 over (relpath || content) for multi-file trees, yielding SHA-256('main.py' + content) = f7f21e88... The holdout test harness computed raw single-file content hash SHA-256(content) = a420789a... On disk, main.py contains exactly the Revision 2 source with content hash a420789a... Candidate source, staged source, and executed source are 100% byte-identical."
+      }
+    },
+    "HOLD-08-WORKSPACE-SORTER": {
+      "task_id": "HOLD-08-WORKSPACE-SORTER",
+      "category": "Filesystem Organization",
+      "prompt": "Create a Python program that creates a sandbox directory with 10 test files of mixed extensions (.txt, .log, .dat), organizes them into subfolders by extension, and writes manifest.json.",
+      "outcome": "FAILED",
+      "questions": {
+        "A_qwen_inference_occurred": true,
+        "B_non_occurrence_reason": null,
+        "C_exact_code_produced": "Revision 1 (task_d9bb63f5/main.py): Imported 'from matplotlib.backends.backend_agg import Agg' and called 'json.dump()' without 'import json'. Revision 2 (task_2d0da726/main.py): Used 'with open(...) as manifest_file: manifest_file.write(...)' which closed the file handle after line 22, then called manifest_file.write() on line 40 outside the with block. Also used broken f-string syntax f'file_{i+1}.{' + np.random.choice(extensions) + '}'.",
+        "D_ast_rejected": false,
+        "E_action_gate_rejected": false,
+        "F_staging_failed": false,
+        "G_python_failed_to_start": false,
+        "H_script_raised": true,
+        "I_dependency_missing": false,
+        "J_output_written_elsewhere": false,
+        "K_semantic_verification_rejected": false,
+        "L_repair_context_given": "Raw stderr string: 'ImportError: cannot import name 'Agg' from 'matplotlib.backends.backend_agg''",
+        "M_repaired_code_returned": "Revision 2 in task_2d0da726/main.py",
+        "N_repair_failure_reason": "Revision 1 failed due to prompt-induced hallucination of 'from matplotlib.backends.backend_agg import Agg' (the system prompt instructed Agg backend globally even for non-visual tasks). Revision 2 removed matplotlib but introduced a Python file-handle scoping bug (closing manifest_file prematurely before writing entries) and invalid f-string syntax. Bounded repair attempts (2) were exhausted."
+      }
+    },
+    "HOLD-01-CSV-ANALYSIS": {
+      "task_id": "HOLD-01-CSV-ANALYSIS",
+      "category": "CSV Analysis & Statistics",
+      "prompt": "Create a Python program that generates a sample sales CSV with columns product, price, quantity, computes total revenue and top-selling product, saves summary report to sales_summary.txt, and displays summary.",
+      "outcome": "FAILED",
+      "questions": {
+        "A_qwen_inference_occurred": true,
+        "B_non_occurrence_reason": null,
+        "C_exact_code_produced": "Revision 1 (task_505744fb/main.py): Used np.column_stack((products, prices, quantities)) which created a 3-column array, then np.vstack((['Product', 'Price', 'Quantity', 'Total Revenue'], sales_data)) which attempted to concatenate a 4-column header row to a 3-column data array. Revision 2 (task_2afbaea4/main.py): Re-synthesized code with identical np.vstack bug on line 24, only modifying price range and adding os.makedirs.",
+        "D_ast_rejected": false,
+        "E_action_gate_rejected": false,
+        "F_staging_failed": false,
+        "G_python_failed_to_start": false,
+        "H_script_raised": true,
+        "I_dependency_missing": false,
+        "J_output_written_elsewhere": false,
+        "K_semantic_verification_rejected": false,
+        "L_repair_context_given": "Raw stderr: 'ValueError: all the input array dimensions except for the concatenation axis must match exactly, but along dimension 1, the array at index 0 has size 4 and the array at index 1 has size 3'",
+        "M_repaired_code_returned": "Revision 2 in task_2afbaea4/main.py",
+        "N_repair_failure_reason": "Revision 1 had a dimension mismatch between 4 header columns and 3 data columns. The unstructured repair prompt provided only raw stderr without indicating the exact line or explaining the array shape mismatch. Qwen misdiagnosed the failure as a directory creation issue and added os.makedirs, leaving line 24 untouched. Bounded repair attempts (2) were exhausted."
+      }
+    }
+  }
+}

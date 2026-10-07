@@ -1,0 +1,75 @@
+{
+  "test_name": "architectural_acceptance_3d_visualization",
+  "evidence_class": "REAL_INSTALLED_PRODUCT_EXECUTION",
+  "prompt": "Create a Python program that generates a 3D visualization of a function you choose, save the source and output to a new Desktop folder, run it, fix any errors yourself, and show me the finished visualization.",
+  "task_id": "task_6cfbb3df",
+  "status": "COMPLETED",
+  "duration_seconds": 9.11,
+  "model_path": "E:\\AI_Models\\GGUF\\qwen2.5-coder-1.5b-instruct-q4_k_m.gguf",
+  "model_role": "DEEP (Qwen2.5-Coder-1.5B)",
+  "plan": [
+    {
+      "step_id": "step_1",
+      "capability": "execute_dynamic_tool",
+      "state": "COMPLETED",
+      "duration_ms": 8616.86
+    },
+    {
+      "step_id": "step_2",
+      "capability": "reveal_file",
+      "state": "COMPLETED",
+      "duration_ms": 490.95
+    }
+  ],
+  "target_location": "C:\\Users\\hp\\Desktop\\Astra Delegate Test",
+  "source_hash_chain": {
+    "candidate_memory_sha256": "f9dabc3d3c7c28615462448358caf8ecfb659f89c288210e86bcf3bbf25756c8",
+    "sandbox_staged_sha256": "f9dabc3d3c7c28615462448358caf8ecfb659f89c288210e86bcf3bbf25756c8",
+    "evidence_copied_sha256": "f9dabc3d3c7c28615462448358caf8ecfb659f89c288210e86bcf3bbf25756c8",
+    "all_match": true
+  },
+  "artifacts_verified": {
+    "main.py": {
+      "path": "tests\\cognitive_spine\\acceptance_evidence\\generated_source\\main.py",
+      "size_bytes": 1354,
+      "sha256": "f9dabc3d3c7c28615462448358caf8ecfb659f89c288210e86bcf3bbf25756c8",
+      "provenance_chain_verified": true
+    },
+    "trajectory.csv": {
+      "path": "C:\\Users\\hp\\Desktop\\Astra Delegate Test\\trajectory.csv",
+      "size_bytes": 6326,
+      "sha256": "071786df924a26951b8cdb88ebbab041a78d48ff6733456986b6832840d14a21"
+    },
+    "trajectory.png": {
+      "path": "C:\\Users\\hp\\Desktop\\Astra Delegate Test\\trajectory.png",
+      "size_bytes": 26982,
+      "sha256": "60db01d6d0a841076d2f6e37a9f880b29526e5780bb8e97d4744ae8ddcbe818d"
+    },
+    "3D_Visualization.png": {
+      "path": "C:\\Users\\hp\\Desktop\\3D Visualization\\3D_Visualization.png",
+      "size_bytes": 95592,
+      "sha256": "dda87569f7949e136317bc944edac2a496e9694e4c3961763fc3ff124f95e5ee"
+    },
+    "3d_plot.png": {
+      "path": "C:\\Users\\hp\\Desktop\\3d_plot\\3d_plot.png",
+      "size_bytes": 95592,
+      "sha256": "dda87569f7949e136317bc944edac2a496e9694e4c3961763fc3ff124f95e5ee"
+    },
+    "my_function_plot.png": {
+      "path": "C:\\Users\\hp\\Desktop\\MyFunctionVisualization\\my_function_plot.png",
+      "size_bytes": 95592,
+      "sha256": "dda87569f7949e136317bc944edac2a496e9694e4c3961763fc3ff124f95e5ee"
+    }
+  },
+  "image_metadata": {
+    "path": "C:\\Users\\hp\\Desktop\\Astra Delegate Test\\trajectory.png",
+    "format": "PNG",
+    "dimensions": [
+      640,
+      480
+    ]
+  },
+  "verifier_intervention": "ZERO",
+  "verification_passed": true,
+  "timestamp": 1791295362.9046128
+}

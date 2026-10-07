@@ -40,9 +40,84 @@ class GoalPlanner:
         self,
         registry: Optional[CapabilityRegistry] = None,
         indexer: Optional[CapabilitySemanticIndex] = None,
+        model_service: Optional[Any] = None,
+        memory_service: Optional[Any] = None,
+        context_builder: Optional[Any] = None,
     ):
         self.registry = registry or CapabilityRegistry()
         self.indexer = indexer or CapabilitySemanticIndex(self.registry)
+        if model_service is not None:
+            self.model_service = model_service
+        else:
+            try:
+                from astrarun.cognition.service import ModelService
+                self.model_service = ModelService.get_instance()
+            except Exception:
+                self.model_service = None
+        if memory_service is not None:
+            self.memory_service = memory_service
+        else:
+            try:
+                from astrarun.memory.service import MemoryService
+                self.memory_service = MemoryService.get_instance()
+            except Exception:
+                self.memory_service = None
+
+        if context_builder is not None:
+            self.context_builder = context_builder
+        else:
+            try:
+                from astrarun.rag.context import ContextBuilder
+                self.context_builder = ContextBuilder()
+            except Exception:
+                self.context_builder = None
+
+    def retrieve_relevant_context(self, prompt: str) -> dict[str, Any]:
+        """Retrieve relevant context across semantic, workspace, and working memory."""
+        retrieved_facts = []
+        retrieved_docs = []
+        retrieved_skills = []
+        working_mem = {}
+
+        if self.memory_service:
+            try:
+                working_mem = self.memory_service.working.snapshot()
+            except Exception:
+                pass
+
+            # 1. Semantic facts
+            try:
+                all_facts = self.memory_service.semantic.get_facts()
+                prompt_tokens = set(re.findall(r"\w+", prompt.lower()))
+                for f in all_facts:
+                    k = f.get("key", "").lower()
+                    v = str(f.get("value", "")).lower()
+                    f_tokens = set(re.findall(r"\w+", f"{k} {v}"))
+                    if (prompt_tokens & f_tokens) or (k in prompt.lower()) or any(t in k for t in prompt_tokens if len(t) > 3):
+                        retrieved_facts.append(f)
+            except Exception as err:
+                logger.debug("Error retrieving semantic facts: %s", err)
+
+            # 2. Workspace documents
+            try:
+                docs = self.memory_service.workspace.search_workspace(prompt, top_k=3)
+                retrieved_docs.extend(docs)
+            except Exception as err:
+                logger.debug("Error searching workspace: %s", err)
+
+            # 3. Procedural skills
+            try:
+                skills = self.memory_service.procedural.find_skills_for_prompt(prompt, top_k=2)
+                retrieved_skills.extend(skills)
+            except Exception as err:
+                logger.debug("Error finding skills: %s", err)
+
+        return {
+            "facts": retrieved_facts,
+            "docs": retrieved_docs,
+            "skills": retrieved_skills,
+            "working_memory": working_mem,
+        }
 
     def parse_goal(self, raw_prompt: str) -> Goal:
         """Parse raw user utterance into a normalized Goal representation using semantic retrieval."""
@@ -83,6 +158,10 @@ class GoalPlanner:
 
             if candidates:
                 best = candidates[0]
+                for cand in candidates[1:3]:
+                    if cand.score >= best.score - 0.05 and any(len(tok) > 3 and tok in cand.capability_id.lower() for tok in clause_clean.lower().split()):
+                        best = cand
+                        break
                 extracted_args = self._extract_arguments_for_capability(clause_clean, best.capability_id)
                 sub_goals.append({
                     "clause": clause_clean,
@@ -101,25 +180,202 @@ class GoalPlanner:
 
         goal.parameters["sub_goals"] = sub_goals
 
-        # Determine primary intent
+        # =====================================================================
+        # AUTHORITATIVE 5-TIER INTELLIGENCE ROUTING HIERARCHY
+        # =====================================================================
+        clean_lower = clean.lower()
+
+        # 0. Security Policy Gate (Authoritative Fail-Closed Rejection)
+        # Destructive or malicious system requests rejected immediately by policy
+        destructive_patterns = (
+            "format c:", "format drive", "delete system32", "rm -rf /",
+            "drop database", "download malware", "wipe disk", "wipe drive",
+            "shred disk", "destroy system", "delete c:\\windows", "erase hard drive"
+        )
+        if any(w in clean_lower for w in destructive_patterns):
+            goal.intent = "security_denial"
+            goal.parameters["routing_tier"] = "SECURITY_REJECTION"
+            goal.parameters["routing_source"] = "SECURITY_POLICY"
+            goal.parameters["rejection_reason"] = "Destructive system operation rejected by policy."
+            self._infer_success_criteria(goal)
+            return goal
+
+        # Tier 0: Deterministic Exact Known Capability Match
+        exact_cap = self.registry.get(clean.replace(" ", "_").lower()) or self.registry.get(clean.lower())
+        if exact_cap:
+            goal.intent = exact_cap.id
+            goal.parameters["routing_tier"] = "DETERMINISTIC"
+            goal.parameters["routing_source"] = "DETERMINISTIC"
+            self._infer_success_criteria(goal)
+            return goal
+
+        # Tier 4: Clarification when intent is short and underspecified
+        if len(clean.split()) <= 2 and clean_lower in ("hello", "hi", "help", "what", "test", "do something", "who are you", "run", "inspect", "start", "check"):
+            goal.intent = "needs_clarification"
+            goal.parameters["routing_tier"] = "CLARIFICATION"
+            goal.parameters["routing_source"] = "CLARIFICATION"
+            self._infer_success_criteria(goal)
+            return goal
+
+        # Delegation Check: External AI Advisor Routing
+        is_delegated_task = (
+            any(w in clean_lower for w in ("chatgpt", "claude", "gemini", "external ai", "delegate", "consult delegate", "advisor"))
+            or ("ask" in clean_lower and any(w in clean_lower for w in ("chatgpt", "ai", "advisor", "external")))
+        )
+        if is_delegated_task:
+            goal.intent = "consult_delegate"
+            goal.parameters["goal"] = clean
+            goal.parameters["routing_tier"] = "LOCAL_MODEL"
+            goal.parameters["routing_source"] = "LOCAL_MODEL"
+            if "chatgpt" in clean_lower:
+                goal.parameters["provider_name"] = "chatgpt_web"
+            elif "mock" in clean_lower:
+                goal.parameters["provider_name"] = "mock"
+            goal.parameters["require_approval"] = any(w in clean_lower for w in ("approve", "approval", "review"))
+            goal.parameters["reveal_result"] = any(w in clean_lower for w in ("show", "reveal", "open", "display"))
+            goal.parameters["reveal_type"] = "reveal_file" if any(w in clean_lower for w in ("reveal", "explorer", "folder")) else "open_file"
+            self._infer_success_criteria(goal)
+            return goal
+
+        # Tier 1: Semantic capability retrieval for existing discrete capabilities
         valid_sub_goals = [sg for sg in sub_goals if sg.get("capability_id")]
         unresolved_sub_goals = [sg for sg in sub_goals if not sg.get("capability_id")]
 
-        if unresolved_sub_goals and not valid_sub_goals:
-            goal.intent = "unsupported_or_reasoning_required"
-        elif len(valid_sub_goals) == 1 and not unresolved_sub_goals:
-            goal.intent = valid_sub_goals[0]["capability_id"]
-            goal.parameters.update(valid_sub_goals[0]["arguments"])
-        elif len(valid_sub_goals) > 1 and not unresolved_sub_goals:
+        explicit_code_words = (
+            "script", "python", "code", "csv", "json", "plot", "graph",
+            "histogram", "calculate", "simulation", "monte carlo", "visualiz",
+            "table", "dataset", "organize", "turn this", "convert this", "chart",
+            "bar", "parse", "log", "heatmap"
+        )
+        is_explicit_code = any(w in clean_lower for w in explicit_code_words)
+
+        inquiry_starters = (
+            "why ", "what is ", "what does ", "what was ", "can you explain",
+            "could you explain", "how does ", "how do i ", "help me decide",
+            "tell me about "
+        )
+        is_inquiry = clean_lower.startswith(inquiry_starters) or clean_lower.endswith("?") or any(w in clean_lower for w in ("acting weird", "went wrong", "which project to work on", "what we were doing yesterday", "difference between"))
+
+        if not is_inquiry and not is_explicit_code and len(valid_sub_goals) == 1 and not unresolved_sub_goals:
+            top_score = valid_sub_goals[0].get("score", 0.0)
+            if top_score >= 0.50:
+                goal.intent = valid_sub_goals[0]["capability_id"]
+                goal.parameters.update(valid_sub_goals[0]["arguments"])
+                goal.parameters["routing_tier"] = "SEMANTIC_RETRIEVAL"
+                goal.parameters["routing_source"] = "SEMANTIC"
+                self._infer_success_criteria(goal)
+                return goal
+
+        # Composite multi-step workflow via existing discrete capabilities
+        if not is_inquiry and not is_explicit_code and len(valid_sub_goals) > 1 and not unresolved_sub_goals:
             goal.intent = "composite_dag_workflow"
+            goal.parameters["routing_tier"] = "SEMANTIC_RETRIEVAL"
+            goal.parameters["routing_source"] = "SEMANTIC"
             for sg in valid_sub_goals:
                 for k in ("path", "output_path", "ssid", "query"):
                     if k in sg.get("arguments", {}) and k not in goal.parameters:
                         goal.parameters[k] = sg["arguments"][k]
-        else:
-            goal.intent = "unsupported_or_reasoning_required"
+            self._infer_success_criteria(goal)
+            return goal
 
-        # Success criteria inference
+        # Tier 2: LOCAL INTENT REASONER
+        # Ask resident model for structured classification:
+        # {intent_class, candidate_capabilities, confidence, reason, requires_code}
+        available_cap_ids = [c.id for c in self.registry.list_capabilities()]
+        reasoner_result = None
+        if self.model_service:
+            try:
+                reasoner_result = self.model_service.classify_intent_reasoner(
+                    clean, available_capabilities=available_cap_ids, context=goal.parameters
+                )
+            except Exception as e:
+                logger.warning("Local intent reasoner call failed: %s", e)
+
+        if not reasoner_result:
+            from astrarun.cognition.service import ModelService
+            reasoner_result = ModelService.get_instance()._fallback_intent_reasoner(
+                clean, available_capabilities=available_cap_ids
+            )
+
+        from astrarun.cognition.models import IntentClass
+        intent_class = reasoner_result.intent_class
+        confidence = reasoner_result.confidence
+        requires_code = reasoner_result.requires_code
+
+        # Low confidence or explicit clarification required -> Tier 4 Clarification
+        if intent_class == IntentClass.CLARIFICATION_REQUIRED or confidence < 0.40:
+            goal.intent = "needs_clarification"
+            goal.parameters["routing_tier"] = "CLARIFICATION"
+            goal.parameters["clarification_reason"] = reasoner_result.reason
+            self._infer_success_criteria(goal)
+            return goal
+
+        # External AI delegation
+        if intent_class == IntentClass.DELEGATE_EXTERNAL_AI:
+            goal.intent = "consult_delegate"
+            goal.parameters["goal"] = clean
+            goal.parameters["routing_tier"] = "LOCAL_MODEL"
+            if "chatgpt" in clean_lower:
+                goal.parameters["provider_name"] = "chatgpt_web"
+            elif "mock" in clean_lower:
+                goal.parameters["provider_name"] = "mock"
+            goal.parameters["require_approval"] = any(w in clean_lower for w in ("approve", "approval", "review"))
+            goal.parameters["reveal_result"] = any(w in clean_lower for w in ("show", "reveal", "open", "display"))
+            goal.parameters["reveal_type"] = "reveal_file" if any(w in clean_lower for w in ("reveal", "explorer", "folder")) else "open_file"
+            self._infer_success_criteria(goal)
+            return goal
+
+        # Conversational dialogue or troubleshooting discussion -> DO NOT RUN PYTHON!
+        if intent_class == IntentClass.CONVERSATIONAL:
+            goal.intent = "conversational_dialogue"
+            goal.parameters["goal"] = clean
+            goal.parameters["routing_tier"] = "LOCAL_MODEL"
+            goal.parameters["requires_code"] = False
+            self._infer_success_criteria(goal)
+            return goal
+
+        # Known capability match resolved by reasoner
+        if intent_class == IntentClass.KNOWN_CAPABILITY and reasoner_result.candidate_capabilities:
+            cand = reasoner_result.candidate_capabilities[0]
+            if self.registry.has_capability(cand):
+                goal.intent = cand
+                goal.parameters["routing_tier"] = "LOCAL_MODEL"
+                self._infer_success_criteria(goal)
+                return goal
+
+        # Composite workflow resolved by reasoner
+        if intent_class == IntentClass.COMPOSITE_WORKFLOW:
+            valid_candidates = [
+                c for c in reasoner_result.candidate_capabilities
+                if self.registry.has_capability(c) and (
+                    c.replace("_", " ") in clean_lower or any(tok in clean_lower for tok in c.split("_") if len(tok) > 3)
+                )
+            ]
+            high_conf_sub_goals = [sg for sg in valid_sub_goals if sg.get("score", 0.0) >= 0.50]
+            if not requires_code and (len(valid_candidates) >= 2 or len(high_conf_sub_goals) >= 2):
+                goal.intent = "composite_dag_workflow"
+                goal.parameters["routing_tier"] = "LOCAL_MODEL"
+                self._infer_success_criteria(goal)
+                return goal
+            else:
+                intent_class = IntentClass.DYNAMIC_COMPUTATION
+                requires_code = True
+
+        # Tier 3: Dynamic Tool Synthesis
+        # Enter ONLY when reasoner concludes DYNAMIC_COMPUTATION and requires_code == True!
+        if intent_class == IntentClass.DYNAMIC_COMPUTATION and requires_code:
+            goal.intent = "execute_dynamic_tool"
+            goal.parameters["goal"] = clean
+            goal.parameters["routing_tier"] = "LOCAL_MODEL"
+            goal.parameters["reveal_result"] = any(w in clean_lower for w in ("show", "reveal", "open", "display"))
+            goal.parameters["reveal_type"] = "reveal_file" if any(w in clean_lower for w in ("reveal", "explorer", "folder")) else "open_file"
+            self._infer_success_criteria(goal)
+            return goal
+
+        # Unknown / Unclassified fallback -> Tier 4 Clarification (NEVER execute_dynamic_tool!)
+        goal.intent = "needs_clarification"
+        goal.parameters["routing_tier"] = "CLARIFICATION"
+        goal.parameters["clarification_reason"] = "Could not map goal to a safe capability or structured intent."
         self._infer_success_criteria(goal)
         return goal
 
@@ -131,6 +387,108 @@ class GoalPlanner:
             status=PlanStatus.DRAFT,
             planning_level=PlanningLevel.LEVEL_3_DYNAMIC_DAG,
         )
+
+        # RAG Context Retrieval & Prompt Synthesis
+        if self.context_builder:
+            try:
+                ctx_data = self.retrieve_relevant_context(goal.raw_prompt)
+                from astrarun.rag.models import RetrievedDocument, DocType, TrustLevel
+                doc_objs = []
+                for d in ctx_data.get("docs", []):
+                    doc_objs.append(RetrievedDocument(
+                        chunk_id=d.get("chunk_id", ""),
+                        source=d.get("source", ""),
+                        content=d.get("content", ""),
+                        doc_type=DocType.CODE,
+                        trust_level=TrustLevel.TRUSTED_LOCAL,
+                        score=float(d.get("score", 0.0)),
+                    ))
+                for idx, f in enumerate(ctx_data.get("facts", [])):
+                    doc_objs.append(RetrievedDocument(
+                        chunk_id=f"fact_{idx}",
+                        source=f"semantic_memory:{f.get('key')}",
+                        content=f"{f.get('key')}: {f.get('value')}",
+                        doc_type=DocType.TEXT,
+                        trust_level=TrustLevel.TRUSTED_LOCAL,
+                        score=1.0,
+                    ))
+
+                turn_ctx = self.context_builder.build_turn_context(
+                    system_instruction="AstraRun Autonomous Agent Planner",
+                    task_prompt=goal.raw_prompt,
+                    history_turns=[],
+                    retrieved_docs=doc_objs,
+                    retrieved_skills=ctx_data.get("skills", []),
+                    working_memory=ctx_data.get("working_memory", {}),
+                )
+                plan.context = turn_ctx
+                goal.parameters["retrieved_context"] = turn_ctx.get("task_prompt", "")
+            except Exception as err:
+                logger.debug("RAG context synthesis in planner error: %s", err)
+
+        if goal.intent == "consult_delegate":
+            step_1 = PlanStep(
+                step_id="step_1",
+                capability_id="consult_delegate",
+                arguments={
+                    "goal": goal.parameters.get("goal", goal.raw_prompt),
+                    "provider_name": goal.parameters.get("provider_name"),
+                    "require_approval": goal.parameters.get("require_approval", True),
+                },
+                description="Consult external AI advisor in an authoritative closed-loop orchestration cycle",
+                human_label="Orchestrate delegated AI session and empirical verification",
+                interaction_tier=InteractionTier.TIER_B_STRUCTURED_CLI,
+                verifier_strategy=VerifierStrategy.RETURN_CODE_ONLY,
+            )
+            plan.steps.append(step_1)
+
+            if goal.parameters.get("reveal_result"):
+                reveal_cap = goal.parameters.get("reveal_type", "open_file")
+                step_2 = PlanStep(
+                    step_id="step_2",
+                    capability_id=reveal_cap,
+                    arguments={"path": OutputReference(step_id="step_1", field="artifact")},
+                    dependencies=[StepDependency(step_id="step_1")],
+                    description=f"{reveal_cap.replace('_', ' ').title()} output artifact",
+                    human_label="Show finished artifact",
+                    interaction_tier=InteractionTier.TIER_A_NATIVE,
+                    verifier_strategy=VerifierStrategy.RETURN_CODE_ONLY,
+                )
+                plan.steps.append(step_2)
+
+            plan.status = PlanStatus.ACTIVE
+            plan.planning_level = PlanningLevel.LEVEL_3_DYNAMIC_DAG if len(plan.steps) > 1 else PlanningLevel.LEVEL_1_SINGLE_ACTION
+            return plan
+
+        if goal.intent == "execute_dynamic_tool":
+            step_1 = PlanStep(
+                step_id="step_1",
+                capability_id="execute_dynamic_tool",
+                arguments={"goal": goal.parameters.get("goal", goal.raw_prompt)},
+                description="Synthesize, inspect, execute, and self-repair dynamic Python program in contained execution workspace",
+                human_label="Synthesize and run dynamic Python program",
+                interaction_tier=InteractionTier.TIER_B_STRUCTURED_CLI,
+                verifier_strategy=VerifierStrategy.RETURN_CODE_ONLY,
+            )
+            plan.steps.append(step_1)
+
+            if goal.parameters.get("reveal_result"):
+                reveal_cap = goal.parameters.get("reveal_type", "open_file")
+                step_2 = PlanStep(
+                    step_id="step_2",
+                    capability_id=reveal_cap,
+                    arguments={"path": OutputReference(step_id="step_1", field="artifact")},
+                    dependencies=[StepDependency(step_id="step_1")],
+                    description=f"{reveal_cap.replace('_', ' ').title()} output artifact",
+                    human_label="Show finished visualization artifact",
+                    interaction_tier=InteractionTier.TIER_A_NATIVE,
+                    verifier_strategy=VerifierStrategy.RETURN_CODE_ONLY,
+                )
+                plan.steps.append(step_2)
+
+            plan.status = PlanStatus.ACTIVE
+            plan.planning_level = PlanningLevel.LEVEL_3_DYNAMIC_DAG if len(plan.steps) > 1 else PlanningLevel.LEVEL_1_SINGLE_ACTION
+            return plan
 
         sub_goals = goal.parameters.get("sub_goals", [])
         negated = goal.parameters.get("negated_actions", [])

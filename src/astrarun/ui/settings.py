@@ -19,6 +19,7 @@ from typing import Any, Optional
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import (
     QCheckBox,
+    QComboBox,
     QDialog,
     QFileDialog,
     QFrame,
@@ -36,7 +37,7 @@ from PySide6.QtWidgets import (
 from astrarun.core.autostart import enable_autostart, is_autostart_enabled
 from astrarun.core.hardware import audit_hardware, HardwareProfile
 from astrarun.core.logging import get_logger
-from astrarun.core.paths import get_logs_dir, get_models_dir
+from astrarun.core.paths import get_config_dir, get_logs_dir, get_models_dir
 from astrarun.discovery import CompatibilityStatus, ExistingCapabilityResolver
 from astrarun.lifecycle.repair import RepairManager, RepairReport
 from astrarun.ui.icons import AstraMarkWidget, IconRenderer
@@ -196,24 +197,128 @@ class SettingsDialog(QDialog):
 
         # Global Hotkey card
         hk_box = QFrame(w)
-        hk_box.setStyleSheet(f"background-color: {SURFACE_RAISED}; border: 1px solid {BORDER}; border-radius: 6px; padding: 10px;")
+        hk_box.setStyleSheet(f"background-color: {SURFACE_RAISED}; border: 1px solid {BORDER}; border-radius: 6px; padding: 12px;")
         h_layout = QVBoxLayout(hk_box)
-        h_layout.setSpacing(4)
+        h_layout.setSpacing(8)
 
-        h_row = QHBoxLayout()
-        h_lbl = QLabel("Global Summon Hotkey:", hk_box)
-        h_lbl.setStyleSheet(f"font-size: 11px; color: {TEXT_MUTED};")
-        h_badge = QLabel("Alt + Space", hk_box)
-        h_badge.setStyleSheet(f"font-size: 11px; font-weight: 600; color: {ACCENT}; background-color: {BG_APP}; border: 1px solid {BORDER_STRONG}; padding: 2px 8px; border-radius: 4px; font-family: {FONT_MONO};")
-        h_row.addWidget(h_lbl)
-        h_row.addSpacing(8)
-        h_row.addWidget(h_badge)
-        h_row.addStretch(1)
-        h_layout.addLayout(h_row)
+        h_title = QLabel("Global Summon Shortcut", hk_box)
+        h_title.setStyleSheet(f"font-size: 12px; font-weight: 600; color: {TEXT_PRIMARY};")
+        h_layout.addWidget(h_title)
 
         h_sub = QLabel("Summons the resident command launcher instantly from any application.", hk_box)
         h_sub.setStyleSheet(f"font-size: 10px; color: {TEXT_MUTED};")
         h_layout.addWidget(h_sub)
+
+        # Preset selection row
+        preset_row = QHBoxLayout()
+        preset_lbl = QLabel("Shortcut:", hk_box)
+        preset_lbl.setStyleSheet(f"font-size: 11px; color: {TEXT_SECONDARY};")
+        preset_row.addWidget(preset_lbl)
+
+        self.cbo_hotkey = QComboBox(hk_box)
+        self.cbo_hotkey.setStyleSheet(f"""
+            QComboBox {{
+                background-color: {SURFACE_INPUT};
+                border: 1px solid {BORDER_STRONG};
+                border-radius: 4px;
+                color: {TEXT_PRIMARY};
+                padding: 4px 8px;
+                font-size: 11px;
+                min-width: 220px;
+            }}
+            QComboBox::drop-down {{
+                border: none;
+            }}
+            QComboBox QAbstractItemView {{
+                background-color: {SURFACE};
+                color: {TEXT_PRIMARY};
+                selection-background-color: {SURFACE_HOVER};
+                selection-color: {TEXT_PRIMARY};
+                border: 1px solid {BORDER};
+            }}
+        """)
+        self.cbo_hotkey.addItem("Alt + Space (Default)", ["Alt", "Space"])
+        self.cbo_hotkey.addItem("Ctrl + Space (Recommended alternative)", ["Ctrl", "Space"])
+        self.cbo_hotkey.addItem("Alt + F12", ["Alt", "F12"])
+        self.cbo_hotkey.addItem("Alt + \\", ["Alt", "\\"])
+        self.cbo_hotkey.addItem("Custom Shortcut...", "custom")
+        preset_row.addWidget(self.cbo_hotkey)
+        preset_row.addSpacing(8)
+
+        self.btn_test_hotkey = QPushButton("Test Availability", hk_box)
+        self.btn_test_hotkey.setStyleSheet(get_button_style("secondary", size="sm"))
+        self.btn_test_hotkey.clicked.connect(self._on_test_hotkey)
+        preset_row.addWidget(self.btn_test_hotkey)
+        preset_row.addStretch(1)
+        h_layout.addLayout(preset_row)
+
+        # Custom controls container (hidden by default)
+        self.custom_hk_container = QWidget(hk_box)
+        custom_layout = QHBoxLayout(self.custom_hk_container)
+        custom_layout.setContentsMargins(0, 4, 0, 4)
+        custom_layout.setSpacing(10)
+
+        self.chk_mod_alt = QCheckBox("Alt", self.custom_hk_container)
+        self.chk_mod_ctrl = QCheckBox("Ctrl", self.custom_hk_container)
+        self.chk_mod_shift = QCheckBox("Shift", self.custom_hk_container)
+        self.chk_mod_win = QCheckBox("Win", self.custom_hk_container)
+
+        self.txt_custom_key = QLineEdit(self.custom_hk_container)
+        self.txt_custom_key.setPlaceholderText("Key (e.g. Space, F12, \\)")
+        self.txt_custom_key.setMaxLength(10)
+        self.txt_custom_key.setFixedWidth(140)
+        self.txt_custom_key.setStyleSheet(f"""
+            QLineEdit {{
+                background-color: {SURFACE_INPUT};
+                border: 1px solid {BORDER_STRONG};
+                border-radius: 4px;
+                color: {TEXT_PRIMARY};
+                padding: 4px 8px;
+                font-size: 11px;
+                font-family: {FONT_MONO};
+            }}
+        """)
+
+        custom_layout.addWidget(self.chk_mod_alt)
+        custom_layout.addWidget(self.chk_mod_ctrl)
+        custom_layout.addWidget(self.chk_mod_shift)
+        custom_layout.addWidget(self.chk_mod_win)
+        custom_layout.addWidget(self.txt_custom_key)
+        custom_layout.addStretch(1)
+        h_layout.addWidget(self.custom_hk_container)
+        self.custom_hk_container.hide()
+
+        # Feedback / status label
+        self.lbl_hotkey_status = QLabel("", hk_box)
+        self.lbl_hotkey_status.setStyleSheet(f"font-size: 11px; font-family: {FONT_FAMILY};")
+        self.lbl_hotkey_status.hide()
+        h_layout.addWidget(self.lbl_hotkey_status)
+
+        # Initialize current hotkey selection
+        cur_hk = {}
+        if self.app and hasattr(self.app, "settings"):
+            cur_hk = self.app.settings.get("hotkey", {})
+        cur_mods = cur_hk.get("modifiers", ["Alt"])
+        cur_key = cur_hk.get("key", "Space")
+
+        matched_idx = -1
+        for i in range(self.cbo_hotkey.count() - 1):
+            item_data = self.cbo_hotkey.itemData(i)
+            if isinstance(item_data, list) and item_data == [cur_mods[0], cur_key]:
+                matched_idx = i
+                break
+        if matched_idx >= 0:
+            self.cbo_hotkey.setCurrentIndex(matched_idx)
+        else:
+            self.cbo_hotkey.setCurrentIndex(self.cbo_hotkey.count() - 1)
+            self.custom_hk_container.show()
+            self.chk_mod_alt.setChecked("Alt" in cur_mods)
+            self.chk_mod_ctrl.setChecked("Ctrl" in cur_mods)
+            self.chk_mod_shift.setChecked("Shift" in cur_mods)
+            self.chk_mod_win.setChecked("Win" in cur_mods)
+            self.txt_custom_key.setText(cur_key)
+
+        self.cbo_hotkey.currentIndexChanged.connect(self._on_hotkey_preset_changed)
         v.addWidget(hk_box)
 
         # Learning & context
@@ -476,10 +581,90 @@ class SettingsDialog(QDialog):
             self.app.launcher.open_diagnostics()
             self.accept()
 
+    def _on_hotkey_preset_changed(self, idx: int) -> None:
+        """Handle preset selection or show custom controls."""
+        is_custom = self.cbo_hotkey.itemData(idx) == "custom"
+        self.custom_hk_container.setVisible(is_custom)
+        self.lbl_hotkey_status.hide()
+
+    def _get_selected_hotkey(self) -> tuple[list[str], str]:
+        """Derive currently chosen modifier list and key name."""
+        idx = self.cbo_hotkey.currentIndex()
+        data = self.cbo_hotkey.itemData(idx)
+        if data != "custom" and isinstance(data, list):
+            mods = [data[0]]
+            key = data[1]
+            return mods, key
+
+        mods = []
+        if self.chk_mod_alt.isChecked():
+            mods.append("Alt")
+        if self.chk_mod_ctrl.isChecked():
+            mods.append("Ctrl")
+        if self.chk_mod_shift.isChecked():
+            mods.append("Shift")
+        if self.chk_mod_win.isChecked():
+            mods.append("Win")
+        if not mods:
+            mods = ["Alt"]
+
+        key = self.txt_custom_key.text().strip() or "Space"
+        return mods, key
+
+    def _on_test_hotkey(self) -> None:
+        """Test whether selected shortcut can be registered on this system."""
+        mods, key = self._get_selected_hotkey()
+        from astrarun.hotkeys.manager import HotkeyManager, format_shortcut_name
+        mgr = getattr(self.app, "hotkey_manager", None)
+        if mgr is None:
+            mgr = HotkeyManager()
+
+        avail, code, desc = mgr.test_registration(mods, key)
+        shortcut_str = format_shortcut_name(mods, key)
+        if avail:
+            self.lbl_hotkey_status.setText(f"✓ {shortcut_str} is available on this system.")
+            self.lbl_hotkey_status.setStyleSheet(f"color: {SUCCESS}; font-size: 11px;")
+        else:
+            self.lbl_hotkey_status.setText(f"✗ {shortcut_str} is unavailable ({desc}).")
+            self.lbl_hotkey_status.setStyleSheet(f"color: {DANGER}; font-size: 11px;")
+        self.lbl_hotkey_status.show()
+
+    def _persist_settings(self) -> None:
+        """Atomically persist settings dictionary to local user and config files."""
+        if not self.app or not hasattr(self.app, "settings"):
+            return
+        from astrarun.core.paths import AstraPaths
+        targets = [
+            AstraPaths.config_dir() / "settings.json",
+        ]
+        for p in targets:
+            try:
+                p.parent.mkdir(parents=True, exist_ok=True)
+                with open(p, "w", encoding="utf-8") as f:
+                    json.dump(self.app.settings, f, indent=2)
+                logger.info("Settings persisted to %s", p)
+            except Exception as e:
+                logger.debug("Could not write settings to %s: %s", p, e)
+
     def _on_save(self) -> None:
-        """Save settings and apply autostart changes."""
+        """Save settings, apply hotkey rebind live, and persist changes."""
         enable_autostart(self.chk_autostart.isChecked())
         if self.app and hasattr(self.app, "settings"):
             self.app.settings.setdefault("learning", {})["enabled"] = self.chk_learning.isChecked()
             self.app.settings["learning"]["allow_training_dataset_export"] = self.chk_export.isChecked()
+
+            # Hotkey update and live rebind
+            mods, key = self._get_selected_hotkey()
+            self.app.settings["hotkey"] = {"modifiers": mods, "key": key}
+            mgr = getattr(self.app, "hotkey_manager", None)
+            if mgr:
+                success, code, err = mgr.rebind(mods, key)
+                if not success:
+                    QMessageBox.warning(
+                        self,
+                        "Shortcut Conflict",
+                        f"Could not bind {mgr.shortcut_name}: {err}\nPrevious shortcut was retained."
+                    )
+            self._persist_settings()
+
         self.accept()

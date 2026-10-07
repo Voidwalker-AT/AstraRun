@@ -33,6 +33,10 @@ class CapabilityRegistry:
 
     def register(self, capability: Capability) -> None:
         """Register a new workstation capability."""
+        if capability.security_metadata is None:
+            from astrarun.capabilities.manifest import get_authoritative_metadata
+            capability.security_metadata = get_authoritative_metadata(capability.id)
+
         self._capabilities[capability.id] = capability
         logger.debug(
             "Capability registered: %s [category=%s, risk=%s, permission=%s]",
@@ -41,6 +45,25 @@ class CapabilityRegistry:
             capability.risk.value,
             capability.permission.value,
         )
+
+    def export_security_manifest(self) -> list[dict[str, Any]]:
+        """Export a machine-readable security manifest for all registered capabilities."""
+        manifest = []
+        for cap in sorted(self._capabilities.values(), key=lambda c: c.id):
+            sec = cap.get_security_metadata()
+            manifest.append({
+                "id": cap.id,
+                "category": cap.category.value,
+                "operation_kind": sec.operation_kind.value,
+                "risk": sec.risk.value,
+                "mutates_state": sec.mutates_state,
+                "requires_confirmation": sec.requires_confirmation,
+                "resource_scope": sec.resource_scope,
+                "permission": cap.permission.value,
+                "read_only": cap.read_only,
+                "classification_source": "explicit_manifest",
+            })
+        return manifest
 
     def get(self, capability_id: str) -> Optional[Capability]:
         """Retrieve capability metadata by ID."""
@@ -259,7 +282,9 @@ class CapabilityRegistry:
             open_file,
             reveal_file,
             save_text_file,
+            deliver_artifact,
         )
+        from astrarun.visualization.renderer import render_visualization
         from astrarun.network.service import (
             find_process_on_port,
             inspect_port,
@@ -459,6 +484,37 @@ class CapabilityRegistry:
             handler=save_text_file,
             permission=CapabilityPermission.AUTO,
             context_effects=["file_created"],
+        ))
+        self.register(Capability(
+            id="deliver_artifact",
+            category=CapabilityCategory.FILE,
+            description="Deliver a verified sandbox artifact to a host destination under strict policy",
+            args_schema={
+                "source": str,
+                "destination": str,
+                "source_sha256": Optional[str],
+                "task_id": Optional[str],
+                "overwrite": Optional[bool],
+                "plan_revision": Optional[int],
+                "artifact_identity": Optional[str],
+                "expected_artifact_type": Optional[str],
+            },
+            risk=ToolRisk.LOW,
+            read_only=False,
+            handler=deliver_artifact,
+            permission=CapabilityPermission.AUTO,
+            context_effects=["artifact_delivered"],
+        ))
+        self.register(Capability(
+            id="render_visualization",
+            category=CapabilityCategory.FILE,
+            description="Render a validated declarative visualization specification out-of-process into PNG/SVG",
+            args_schema={"spec": Union[dict, str], "output_path": Optional[str], "format": Optional[str]},
+            risk=ToolRisk.LOW,
+            read_only=False,
+            handler=render_visualization,
+            permission=CapabilityPermission.AUTO,
+            context_effects=["visualization_rendered"],
         ))
 
         # ---------------------------------------------------------
@@ -1213,3 +1269,143 @@ class CapabilityRegistry:
             permission=CapabilityPermission.AUTO,
             context_effects=["wifi_disconnected"],
         ))
+
+        # ---------------------------------------------------------
+        # COGNITIVE / DYNAMIC EXECUTION CAPABILITIES
+        # ---------------------------------------------------------
+        from astrarun.tools.dynamic_builder import DynamicToolBuilder
+        dynamic_builder = DynamicToolBuilder()
+
+        def _execute_dynamic_tool(goal: str = "", candidate: Any = None, **kwargs: Any) -> CapabilityResult:
+            target_cand = candidate
+            if target_cand is None:
+                target_cand = dynamic_builder.synthesize_tool_for_goal(goal, inputs=kwargs)
+            report = dynamic_builder.build_and_execute(target_cand, timeout_sec=60.0)
+            if report.is_success:
+                art_strs = [str(a) for a in report.artifacts]
+                primary_art = art_strs[0] if art_strs else ""
+                for a in art_strs:
+                    if any(a.lower().endswith(ext) for ext in (".png", ".jpg", ".jpeg", ".svg")):
+                        primary_art = a
+                        break
+                return CapabilityResult.ok(
+                    "execute_dynamic_tool",
+                    f"Dynamic execution succeeded with {len(report.artifacts)} artifact(s) created.",
+                    data={
+                        "artifacts": art_strs,
+                        "artifact": primary_art,
+                        "path": primary_art,
+                        "output_file": primary_art,
+                        "stdout": report.sandbox_result.stdout,
+                        "exit_code": report.sandbox_result.exit_code,
+                        "tool_id": report.candidate_tool.tool_id,
+                        "repair_attempts": report.repair_attempts,
+                        "sandbox_working_dir": str(report.sandbox_result.working_dir),
+                        "source_files": report.candidate_tool.source_files,
+                        "entrypoint": report.candidate_tool.entrypoint,
+                        "source_hash": report.candidate_tool.compute_source_hash(),
+                        "provenance": report.candidate_tool.provenance.to_dict() if report.candidate_tool.provenance else {},
+                    },
+                    context_updates=[{"type": "dynamic_tool_artifacts", "artifacts": art_strs, "primary_artifact": primary_art}],
+                )
+            return CapabilityResult.fail(
+                "execute_dynamic_tool",
+                f"Dynamic tool execution failed: {report.error_message or report.sandbox_result.stderr}",
+                data={
+                    "stderr": report.sandbox_result.stderr,
+                    "exit_code": report.sandbox_result.exit_code,
+                    "repair_attempts": report.repair_attempts,
+                },
+            )
+
+        from astrarun.security.models import CapabilityOperationKind, CapabilitySecurityMetadata, RiskLevel
+        self.register(Capability(
+            id="execute_dynamic_tool",
+            category=CapabilityCategory.WORKFLOW,
+            description="Synthesize, inspect, execute, and self-repair a dynamic Python script or computational tool in a contained execution workspace",
+            args_schema={"goal": str},
+            outputs=["artifact", "artifacts", "path", "output_file"],
+            risk=ToolRisk.MEDIUM,
+            read_only=False,
+            handler=_execute_dynamic_tool,
+            permission=CapabilityPermission.AUTO,
+            context_effects=["dynamic_tool_artifacts"],
+            security_metadata=CapabilitySecurityMetadata(
+                operation_kind=CapabilityOperationKind.DYNAMIC_CODE_EXEC,
+                risk=RiskLevel.MEDIUM,
+                mutates_state=True,
+                requires_confirmation=False,
+                resource_scope="contained_workspace",
+            ),
+        ))
+
+        # ---------------------------------------------------------
+        # DELEGATED AGENT ORCHESTRATION CAPABILITIES
+        # ---------------------------------------------------------
+        from astrarun.delegation.loop import DelegatedOrchestrationLoop
+        from astrarun.delegation.provider import DelegateRegistry
+        from astrarun.delegation.mock import MockDelegateProvider
+        from astrarun.delegation.chatgpt_web import ChatGPTWebDelegate
+
+        del_reg = DelegateRegistry.get_instance()
+        if not del_reg.list_providers():
+            del_reg.register(MockDelegateProvider(name="mock"), set_default=True)
+            del_reg.register(ChatGPTWebDelegate())
+
+        delegation_loop = DelegatedOrchestrationLoop(registry=del_reg)
+
+        def _execute_delegated_agent(
+            goal: str = "",
+            provider_name: Optional[str] = None,
+            require_approval: bool = True,
+            **kwargs: Any,
+        ) -> CapabilityResult:
+            res = delegation_loop.execute_goal(
+                goal=goal,
+                provider_name=provider_name,
+                require_delegate_approval=require_approval,
+            )
+            art_strs = [a["path"] for a in res.artifacts]
+            primary_art = art_strs[0] if art_strs else ""
+            if res.status == "COMPLETED":
+                return CapabilityResult.ok(
+                    "consult_delegate",
+                    f"Delegated orchestration succeeded via {res.provider} in {res.turns_completed} turn(s).",
+                    data={
+                        "artifacts": art_strs,
+                        "artifact": primary_art,
+                        "path": primary_art,
+                        "output_file": primary_art,
+                        "turns": res.turns_completed,
+                        "provider": res.provider,
+                        "provenance": res.provenance,
+                    },
+                    context_updates=[{"type": "delegated_artifacts", "artifacts": art_strs, "primary_artifact": primary_art}],
+                )
+            return CapabilityResult.fail(
+                "consult_delegate",
+                f"Delegated orchestration {res.status}: {res.final_stderr or 'Review/acceptance incomplete'}",
+                data=res.to_dict(),
+            )
+
+        self.register(Capability(
+            id="consult_delegate",
+            category=CapabilityCategory.WORKFLOW,
+            description="Consult external AI advisor (e.g. ChatGPT, external models, or test mocks) in an authoritative closed-loop orchestration cycle with sandbox execution and empirical verification",
+            args_schema={"goal": str, "provider_name": str, "require_approval": bool},
+            outputs=["artifact", "artifacts", "path", "output_file"],
+            risk=ToolRisk.MEDIUM,
+            read_only=False,
+            handler=_execute_delegated_agent,
+            permission=CapabilityPermission.AUTO,
+            context_effects=["delegated_artifacts"],
+            security_metadata=CapabilitySecurityMetadata(
+                operation_kind=CapabilityOperationKind.DYNAMIC_CODE_EXEC,
+                risk=RiskLevel.MEDIUM,
+                mutates_state=True,
+                requires_confirmation=False,
+                resource_scope="delegation",
+            ),
+        ))
+
+

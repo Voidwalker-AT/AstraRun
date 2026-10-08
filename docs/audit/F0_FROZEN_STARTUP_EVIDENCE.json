@@ -1,0 +1,131 @@
+{
+  "milestone": "PHASE_F0_FROZEN_STARTUP_FORENSICS_AND_PRODUCT_BOOT_INTEGRITY_GATE",
+  "status": "PASS",
+  "timestamp": "2026-10-08T11:22:00+05:30",
+  "verdict": "F0_PASS_READY_FOR_INDEPENDENT_ACCEPTANCE",
+  "environment": {
+    "os": "Windows 11 Build 26200 AMD64",
+    "kernel": "Windows NT 10.0.26200",
+    "hardware": "HP Victus AMD Ryzen / NVIDIA RTX 2050 (Driver 596.49)",
+    "python_version": "3.13.0 (64-bit AMD64)",
+    "pyinstaller_version": "6.22.3"
+  },
+  "source_tree": {
+    "git_commit": "ab7f4a9b60b730fdfefbc46f53caef201d78fc96",
+    "composite_sha256": "a96c29fae780d28f7e47fec6d01a7f4e9b617de7b524985ea72d45952f197c9a",
+    "production_files_count": 273,
+    "manifest_file": "docs/audit/F0_FREEZE_MANIFEST.json"
+  },
+  "historical_frozen_baseline": {
+    "executable_path": "C:\\Users\\hp\\AppData\\Local\\Programs\\AstraRun\\AstraRun.exe",
+    "file_size": 78256882,
+    "last_write_time": "2026-10-05T20:31:40",
+    "reboot_time": "2026-10-08T01:03:40",
+    "incident_timestamp": "2026-10-08T09:02:39",
+    "observed_failures": {
+      "F0_1": "PermissionError: [WinError 5] Access is denied: 'C:\\Windows\\System32\\data'",
+      "F0_2": "False crash recovery report generated after normal graceful shutdown",
+      "F0_3": "Stale operation journal 'LAYA_WORKER_STARTING' from 36 hours prior attributed across reboot to new PID 1952",
+      "F0_4": "RuntimeError: operator torchvision::nms does not exist + OSError: [Errno 22] Invalid argument on stderr flush"
+    }
+  },
+  "newly_frozen_executable": {
+    "executable_path": "E:\\Workspace\\Active\\AstraRun\\dist\\AstraRun\\AstraRun.exe",
+    "file_size": 77287461,
+    "last_write_time": "2026-10-08T11:10:01",
+    "sha256": "E680188DE109D00E10ADF6D3485A7288CEFFB9EB8CAC3FE84A4C26AF69430EE7",
+    "torchvision_in_internal": false
+  },
+  "frozen_execution_test_matrix": {
+    "test_1_launch_from_temp": {
+      "cwd": "C:\\Users\\hp\\AppData\\Local\\Temp",
+      "pid": 16720,
+      "exit_code": 1,
+      "shutdown_clean": true,
+      "files_created_in_temp": [],
+      "result": "PASS"
+    },
+    "test_2_launch_from_c_drive_root": {
+      "cwd": "C:\\",
+      "pid": 18676,
+      "exit_code": 1,
+      "shutdown_clean": true,
+      "files_created_in_c_root": [],
+      "machine_dir_in_c_data": false,
+      "machine_dir_in_c_root": false,
+      "result": "PASS"
+    },
+    "test_3_launch_from_system32": {
+      "cwd": "C:\\Windows\\System32",
+      "pid": 15564,
+      "exit_code": 1,
+      "shutdown_clean": true,
+      "data_dir_in_system32": false,
+      "machine_dir_in_system32": false,
+      "permission_denied_observed": false,
+      "result": "PASS"
+    },
+    "test_4_launch_with_clean_previous_state": {
+      "recovery_detected": false,
+      "recovery_info": null,
+      "result": "PASS"
+    },
+    "test_5_laya_worker_startup_and_warmup": {
+      "spawned_worker_pids": [8292, 7620, 15784, 9528, 21932],
+      "torchvision_nms_error_observed": false,
+      "stderr_oserror_errno22_observed": false,
+      "warmup_successful": true,
+      "status": "LAYA_AVAILABLE",
+      "result": "PASS"
+    },
+    "test_6_tray_and_hotkey_readiness_latency": {
+      "resident_pid": 3592,
+      "started_at": "2026-10-08T11:17:55.657889",
+      "ready_at": "2026-10-08T11:17:57.338936",
+      "latency_seconds": 1.681,
+      "latency_ceiling_seconds": 2.0,
+      "hotkey_registered": "Alt+Space",
+      "tray_state": "READY",
+      "result": "PASS"
+    },
+    "test_7_laya_worker_kill_containment": {
+      "resident_pid": 3592,
+      "killed_laya_pid": 21932,
+      "main_resident_survived": true,
+      "crash_contained": true,
+      "result": "PASS"
+    },
+    "test_8_graceful_shutdown": {
+      "resident_pid": 3592,
+      "ipc_command_sent": "QUIT",
+      "ipc_response": {
+        "status": "OK",
+        "command": "QUIT",
+        "action": "QUIT_TRIGGERED"
+      },
+      "exit_code": 0,
+      "final_state_status": "CLEAN_EXIT",
+      "final_state_stage": "SHUTDOWN_COMPLETED",
+      "result": "PASS"
+    },
+    "test_9_immediate_relaunch_recovery_check": {
+      "recovery_detected": false,
+      "recovery_info": null,
+      "false_crash_report_generated": false,
+      "result": "PASS"
+    }
+  },
+  "unit_test_regression": {
+    "total_tests": 80,
+    "passed": 80,
+    "failed": 0,
+    "duration_seconds": 147.90,
+    "result": "PASS"
+  },
+  "packaging_artifact_policy": {
+    "installer_generated": false,
+    "inno_setup_executed": false,
+    "installed_rc6_overwritten": false,
+    "compliance": "STRICT_PASS"
+  }
+}

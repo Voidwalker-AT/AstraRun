@@ -1,0 +1,76 @@
+{
+  "milestone": "F0-15",
+  "description": "Astra-Owned Application / Window Lifecycle Cleanup Physical Verification",
+  "timestamp": 1791471324.2175486,
+  "timestamp_iso": "2026-10-08 20:25:24",
+  "host": {
+    "platform": "Windows-11-10.0.26200-SP0",
+    "machine": "AMD64",
+    "python": "3.13.0",
+    "os_build": "10.0.26200"
+  },
+  "verdict": "PASS",
+  "invariants_verified": [
+    "TASK_SCOPED_RESOURCE_OWNERSHIP",
+    "CRITICAL_OWNERSHIP_RULE_NEVER_CLOSE_NON_ASTRA_RESOURCES",
+    "SAVE_BEFORE_CLOSE_ARTIFACT_VERIFICATION",
+    "USER_TAKEOVER_DETACHMENT_DO_NOT_FIGHT_THE_USER",
+    "PID_REUSE_HAZARD_GUARD",
+    "CRASH_RESTART_ORPHAN_RECOVERY",
+    "ZERO_DESKTOP_DEBRIS"
+  ],
+  "test_results": [
+    {
+      "test": "calculator_lifecycle",
+      "status": "PASS",
+      "task_id": "test_f0_15_calc_1791471300",
+      "pid": 18500,
+      "hwnd": 1641278,
+      "calculation": "58+42=",
+      "verified_display": "Display is 100",
+      "closure_verified": true,
+      "latency_sec": 4.178
+    },
+    {
+      "test": "notepad_lifecycle_save_before_close",
+      "status": "PASS",
+      "task_id": "test_f0_15_notepad_1791471304",
+      "pid": 2800,
+      "hwnd": 1772228,
+      "artifact_path": "C:\\Users\\hp\\AppData\\Local\\Temp\\astra_f0_15_artifact_1791471304.txt",
+      "sha256": "130af861f0dd07660bf565f51142b60956a5a41f6c01f7369545c8277f850f32",
+      "closure_verified": true,
+      "artifact_intact": true,
+      "latency_sec": 4.54
+    },
+    {
+      "test": "mixed_ownership_user_protection",
+      "status": "PASS",
+      "user_hwnd": 1772350,
+      "user_pid": 1952,
+      "astra_hwnd": 461636,
+      "astra_pid": 17916,
+      "user_window_preserved": true,
+      "user_content_untouched": true,
+      "astra_window_closed": true,
+      "latency_sec": 12.437
+    },
+    {
+      "test": "user_takeover_detachment",
+      "status": "PASS",
+      "task_id": "test_f0_15_takeover_1791471321",
+      "hwnd": 1968908,
+      "pid": 2500,
+      "preserved_on_takeover": true,
+      "latency_sec": 2.646
+    },
+    {
+      "test": "orphan_recovery_and_pid_reuse",
+      "status": "PASS",
+      "pid_reuse_aborted": true,
+      "stale_reused_marked": true,
+      "orphan_recovery_verified": true,
+      "latency_sec": 0.004
+    }
+  ]
+}

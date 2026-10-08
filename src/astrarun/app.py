@@ -292,10 +292,15 @@ class AstraApplication:
         # Track active origin window captured prior to launcher summon
         self.origin_window: Optional[WindowEntity] = None
 
-        # Check for recoverable interrupted tasks from prior session (Milestone 7A)
-        self.interrupted_tasks = self.task_ledger.get_recoverable_interrupted_tasks() if hasattr(self, "task_ledger") else []
-        if self.interrupted_tasks:
-            logger.info("Found %d recoverable interrupted task(s) from prior session.", len(self.interrupted_tasks))
+        # Orphan resource recovery from prior crashed sessions (Milestone F0-15)
+        try:
+            from astrarun.tasks.resource_ledger import AstraResourceLedger
+            self.resource_ledger = AstraResourceLedger.get_instance(self.task_ledger.db_path if hasattr(self, "task_ledger") else None)
+            recovered = self.resource_ledger.recover_orphaned_resources()
+            if recovered:
+                logger.info("Recovered %d orphaned resource(s) from prior session.", len(recovered))
+        except Exception as e:
+            logger.warning("Could not execute orphan resource recovery: %s", e)
 
         logger.info("AstraApplication composition root ready. Registered capabilities: %d", len(self.capability_registry.list_capabilities()))
 

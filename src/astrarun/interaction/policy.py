@@ -108,6 +108,29 @@ def redact_sensitive_content(text: str, is_password: bool = False) -> str:
     return redacted
 
 
+def _ensure_desktop_attached() -> None:
+    """Ensure current thread is attached to the interactive input desktop."""
+    import sys
+    if sys.platform != "win32":
+        return
+    try:
+        import ctypes
+        from ctypes import wintypes
+        user32 = ctypes.windll.user32
+        user32.OpenInputDesktop.restype = ctypes.c_void_p
+        user32.OpenDesktopW.restype = ctypes.c_void_p
+        user32.SetThreadDesktop.argtypes = [ctypes.c_void_p]
+        user32.SetThreadDesktop.restype = wintypes.BOOL
+        DESKTOP_ALL = 0x01FF
+        hdesk = user32.OpenInputDesktop(0, False, DESKTOP_ALL)
+        if not hdesk:
+            hdesk = user32.OpenDesktopW("Default", 0, False, DESKTOP_ALL)
+        if hdesk:
+            user32.SetThreadDesktop(hdesk)
+    except Exception:
+        pass
+
+
 def validate_interaction_target(hwnd: int, pid: Optional[int] = None) -> Tuple[bool, str, Optional[CapabilityErrorCode]]:
     """
     Validate that a target window handle is alive, interactive, and safe to manipulate.
@@ -120,6 +143,8 @@ def validate_interaction_target(hwnd: int, pid: Optional[int] = None) -> Tuple[b
 
     if is_astrarun_window(hwnd):
         return False, "Target HWND belongs to AstraRun itself (self-manipulation blocked).", CapabilityErrorCode.BLOCKED
+
+    _ensure_desktop_attached()
 
     import ctypes
     user32 = ctypes.windll.user32

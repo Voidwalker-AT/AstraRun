@@ -286,7 +286,7 @@ def inspect_window_ui(
 
     valid, err_msg, _ = validate_interaction_target(hwnd)
     if not valid:
-        logger.warning("Target window HWND %d failed validation: %s", hwnd, err_msg)
+        logger.warning("Target window HWND %s failed validation: %s", hwnd, err_msg)
         return []
 
     _ensure_desktop_attached()

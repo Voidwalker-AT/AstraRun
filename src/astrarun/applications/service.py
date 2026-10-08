@@ -19,6 +19,12 @@ from astrarun.capabilities.models import (
 )
 from astrarun.core.logging import get_logger
 from astrarun.discovery.apps import discover_all_apps
+from astrarun.tasks.resource_ledger import (
+    AstraResourceLedger,
+    CleanupPolicy,
+    ContentClassification,
+    ResourceType,
+)
 from astrarun.tools.apps import open_app
 
 logger = get_logger("astrarun.applications.service")
@@ -45,7 +51,6 @@ def _ensure_desktop_attached() -> None:
             user32.SetThreadDesktop(hdesk)
     except Exception:
         pass
-
 
 
 def _get_top_level_windows() -> list[WindowEntity]:
@@ -213,16 +218,26 @@ def find_application(name: str) -> CapabilityResult:
     )
 
 
-def open_application(app: str, path: Optional[str] = None) -> CapabilityResult:
-    """Launch a verified local application."""
+def open_application(
+    app: str,
+    path: Optional[str] = None,
+    target: Optional[str] = None,
+    task_id: Optional[str] = None,
+    cleanup_policy: Optional[CleanupPolicy | str] = None,
+    content_classification: Optional[ContentClassification | str] = None,
+) -> CapabilityResult:
+    """Launch a verified local application with task-scoped resource ownership."""
     t0 = time.perf_counter()
     resolved_path = path
-    target = None
+    resolved_target = target
 
-    # If provided path is not an existing executable or file, treat it as a target document argument
-    if resolved_path and not Path(resolved_path).exists():
-        target = resolved_path
-        resolved_path = None
+    # If path is provided but represents a document rather than an executable, use it as target
+    if resolved_path:
+        p = Path(resolved_path)
+        if not p.exists() or p.suffix.lower() not in (".exe", ".lnk", ".bat", ".cmd"):
+            if not resolved_target:
+                resolved_target = resolved_path
+            resolved_path = None
 
     if not resolved_path:
         find_res = find_application(app)
@@ -234,31 +249,65 @@ def open_application(app: str, path: Optional[str] = None) -> CapabilityResult:
             if which_path:
                 resolved_path = which_path
 
-    success = open_app(app=app, path=resolved_path or "", target=target)
+    # Pre-launch resource snapshotting for unambiguous ownership
+    ledger = AstraResourceLedger.get_instance()
+    pre_snap = ledger.capture_pre_launch_snapshot()
+
+    success = open_app(app=app, path=resolved_path or "", target=resolved_target)
     latency = (time.perf_counter() - t0) * 1000
 
     if success:
-        # Wait up to 2.5s for the newly launched process to create a visible window
-        deadline = time.time() + 2.5
-        found_win = None
-        clean_app = app.lower().replace(".exe", "")
-        while time.time() < deadline:
-            time.sleep(0.15)
-            for w in _get_top_level_windows():
-                if clean_app in w.app_id.lower() or clean_app in w.title.lower():
-                    found_win = w
+        # Determine policies
+        pol = CleanupPolicy(cleanup_policy) if cleanup_policy else CleanupPolicy.AUTO_CLOSE_ON_COMPLETION
+        clsf = ContentClassification(content_classification) if content_classification else ContentClassification.NONE
+
+        owned_res = ledger.identify_and_register_launched_resource(
+            task_id=task_id or "default_task",
+            capability="open_application",
+            pre_snapshot=pre_snap,
+            expected_name_or_class=app,
+            cleanup_policy=pol,
+            content_classification=clsf,
+            document_path=resolved_target or resolved_path,
+            resource_type=ResourceType.APPLICATION,
+        )
+
+        # Tabbed application fallback (Windows 11 Notepad / Terminal):
+        # If pre-existing instances absorbed the launch into a tab, spawn a distinct window for task isolation
+        if not owned_res.hwnd and app.lower().replace(".exe", "") == "notepad":
+            for h, (w_pid, w_title, _) in pre_snap.hwnds.items():
+                if "notepad" in w_title.lower():
+                    logger.info("[TABBED_APP_SEPARATION] Pre-existing Notepad detected; spawning isolated task window via Ctrl+Shift+N.")
+                    from astrarun.interaction.keyboard import dispatch_shortcut, parse_shortcut
+                    sc = parse_shortcut("ctrl+shift+n")
+                    dispatch_shortcut(sc, target_hwnd=h)
+                    time.sleep(0.8)
+                    owned_res = ledger.identify_and_register_launched_resource(
+                        task_id=task_id or "default_task",
+                        capability="open_application",
+                        pre_snapshot=pre_snap,
+                        expected_name_or_class=app,
+                        cleanup_policy=pol,
+                        content_classification=clsf,
+                        document_path=resolved_target or resolved_path,
+                        resource_type=ResourceType.APPLICATION,
+                    )
                     break
-            if found_win:
-                break
-        res_data = {"app": app, "path": resolved_path}
-        if found_win:
-            res_data["hwnd"] = found_win.hwnd
-            res_data["title"] = found_win.title
+
+        res_data = {
+            "app": app,
+            "path": resolved_path,
+            "resource_id": owned_res.resource_id,
+            "pid": owned_res.pid,
+            "hwnd": owned_res.hwnd,
+            "astra_created": owned_res.astra_created,
+            "process_creation_time": owned_res.process_creation_time,
+        }
         return CapabilityResult.ok(
             capability="open_application",
-            message=f"Application '{app}' launched successfully.",
+            message=f"Application '{app}' launched successfully (PID={owned_res.pid}, HWND={owned_res.hwnd}).",
             data=res_data,
-            context_updates=[{"type": "application_opened", "app": app, "hwnd": getattr(found_win, "hwnd", 0)}],
+            context_updates=[{"type": "application_opened", "app": app, "hwnd": owned_res.hwnd or 0, "pid": owned_res.pid or 0}],
             latency_ms=(time.perf_counter() - t0) * 1000,
         )
     return CapabilityResult.fail(
@@ -325,10 +374,14 @@ def focus_application(app: str) -> CapabilityResult:
     )
 
 
-def close_application(app: str) -> CapabilityResult:
+def close_application(
+    app: str,
+    task_id: Optional[str] = None,
+    resource_id: Optional[str] = None,
+) -> CapabilityResult:
     """
-    Gracefully request normal window closure for an application using WM_CLOSE.
-    Does NOT force kill the process; respects application unsaved changes dialogs.
+    Gracefully close ONLY Astra-owned application windows and processes.
+    Strict Invariant: NEVER terminates pre-existing user windows.
     """
     t0 = time.perf_counter()
     if sys.platform != "win32":
@@ -339,32 +392,55 @@ def close_application(app: str) -> CapabilityResult:
         )
 
     clean_app = app.strip().lower().replace(".exe", "")
-    windows = _get_top_level_windows()
+    ledger = AstraResourceLedger.get_instance()
 
-    matches = [
-        w for w in windows
-        if clean_app in w.app_id or clean_app in w.title.lower()
-    ]
+    target_resources = []
+    if resource_id:
+        res = ledger.get_resource(resource_id)
+        if res:
+            target_resources.append(res)
+    elif task_id:
+        for res in ledger.list_resources_for_task(task_id):
+            if clean_app in res.launching_capability.lower() or (res.document_path and clean_app in res.document_path.lower()) or clean_app in str(res.metadata).lower():
+                target_resources.append(res)
+            elif res.pid:
+                try:
+                    pname = psutil.Process(res.pid).name().lower()
+                    if clean_app in pname:
+                        target_resources.append(res)
+                except Exception:
+                    pass
+    else:
+        # Match active Astra-owned resources
+        for res in ledger.list_active_astra_resources():
+            if res.pid:
+                try:
+                    pname = psutil.Process(res.pid).name().lower()
+                    if clean_app in pname:
+                        target_resources.append(res)
+                        continue
+                except Exception:
+                    pass
+            if res.document_path and clean_app in res.document_path.lower():
+                target_resources.append(res)
 
     latency = (time.perf_counter() - t0) * 1000
-    if not matches:
+    if not target_resources:
         return CapabilityResult.fail(
             capability="close_application",
-            message=f"No running application found for '{app}'.",
+            message=f"No Astra-owned running instance found for '{app}'. Pre-existing user windows were safely preserved.",
             error_code=CapabilityErrorCode.NOT_FOUND,
             latency_ms=latency,
         )
 
-    user32 = ctypes.windll.user32
     closed_count = 0
-    for w in matches:
-        # PostMessageW WM_CLOSE
-        user32.PostMessageW(w.hwnd, WM_CLOSE, 0, 0)
-        closed_count += 1
+    for res in target_resources:
+        if ledger.close_owned_resource(res):
+            closed_count += 1
 
     return CapabilityResult.ok(
         capability="close_application",
-        message=f"Sent graceful close request to {closed_count} window(s) of '{app}'.",
+        message=f"Closed {closed_count} Astra-owned instance(s) of '{app}'.",
         data={"app": clean_app, "windows_closed": closed_count},
         context_updates=[{"type": "application_closed", "app": clean_app, "windows_count": closed_count}],
         latency_ms=latency,

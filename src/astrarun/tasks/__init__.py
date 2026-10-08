@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from astrarun.tasks.cancellation import CancellationToken
 from astrarun.tasks.checkpoints import PlanRevision, TaskCheckpoint
 from astrarun.tasks.reconciliation import (
     HumanChangeClassification,
@@ -25,6 +26,15 @@ from astrarun.tasks.models import (
     TaskStatus,
     validate_transition,
 )
+from astrarun.tasks.resource_ledger import (
+    AstraResourceLedger,
+    CleanupPolicy,
+    ContentClassification,
+    OwnedResource,
+    PreLaunchSnapshot,
+    ResourceLifecycleState,
+    ResourceType,
+)
 from astrarun.tasks.serialization import (
     generate_capability_summary,
     generate_task_title,
@@ -34,23 +44,31 @@ from astrarun.tasks.serialization import (
 )
 
 __all__ = [
+    "AstraResourceLedger",
     "CancellationToken",
+    "CleanupPolicy",
+    "ContentClassification",
     "Conversation",
     "ConversationMessage",
+    "HumanChangeClassification",
+    "InvalidStateTransitionError",
+    "OwnedResource",
     "PlanRevision",
-    "TaskCheckpoint",
-    "TaskReconciliationEngine",
+    "PreLaunchSnapshot",
+    "ResourceLifecycleState",
+    "ResourceType",
     "ResumeAssessment",
     "ResumeVerdict",
-    "HumanChangeClassification",
     "Task",
     "TaskCancelledError",
+    "TaskCheckpoint",
     "TaskError",
     "TaskEvent",
     "TaskEventBus",
     "TaskEventType",
     "TaskLedger",
     "TaskManager",
+    "TaskReconciliationEngine",
     "TaskResult",
     "TaskStatus",
     "generate_capability_summary",

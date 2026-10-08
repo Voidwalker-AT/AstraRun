@@ -140,6 +140,8 @@ class TaskRuntime:
         self.app = app
         self.event_bus = event_bus or get_global_event_bus()
         self.ledger = ledger or TaskLedger()
+        from astrarun.tasks.resource_ledger import AstraResourceLedger
+        self.resource_ledger = AstraResourceLedger.get_instance(self.ledger.db_path)
         self.lock_manager = ResourceLockManager()
 
         self._active_tasks: Dict[str, Task] = {}
@@ -300,6 +302,8 @@ class TaskRuntime:
             self._handle_failure(task, str(e))
         finally:
             self.lock_manager.release_all_for_task(task_id)
+            if task:
+                self.resource_ledger.cleanup_task_resources(task_id, task.status)
 
     def pause_task(self, task_id: str, is_user_takeover: bool = False, reason: str = "USER_REQUEST") -> None:
         """Pause task execution atomically, save durable checkpoint, and release workstation locks."""
@@ -318,6 +322,7 @@ class TaskRuntime:
         if is_user_takeover:
             target_status = TaskStatus.PAUSED_USER_ACTIVE
             msg = "Paused — you're using the computer"
+            self.resource_ledger.mark_user_takeover_for_task(task_id)
         else:
             target_status = TaskStatus.PAUSED_USER_REQUEST
             msg = "Task paused by user"
@@ -553,6 +558,7 @@ class TaskRuntime:
             task.status = TaskStatus.CANCELLED
 
         self.lock_manager.release_all_for_task(task.id)
+        self.resource_ledger.cleanup_task_resources(task.id, TaskStatus.CANCELLED)
         self.ledger.save_task(task)
         self._emit_event(task.id, TaskEventType.TASK_CANCELLED, "Task Cancelled", summary="Cancelled by user request")
         logger.info("Task %s cancelled", task.id)
@@ -573,6 +579,7 @@ class TaskRuntime:
             error=TaskError(code="EXECUTION_ERROR", message=error_msg),
         )
         self.lock_manager.release_all_for_task(task.id)
+        self.resource_ledger.cleanup_task_resources(task.id, TaskStatus.FAILED)
         self.ledger.save_task(task)
         self._emit_event(task.id, TaskEventType.TASK_FAILED, "Task Failed", summary=error_msg)
         logger.warning("Task %s failed: %s", task.id, error_msg)

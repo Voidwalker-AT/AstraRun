@@ -385,6 +385,25 @@ def close_window(hwnd: int, pid: int | None = None) -> CapabilityResult:
             latency_ms=1.0,
         )
 
+    try:
+        from astrarun.tasks.resource_ledger import AstraResourceLedger
+        ledger = AstraResourceLedger.get_instance()
+        active_res = [r for r in ledger.list_active_astra_resources() if r.hwnd == hwnd]
+        if active_res:
+            res = active_res[0]
+            ok = ledger.close_owned_resource(res)
+            latency = (time.perf_counter() - t0) * 1000
+            if ok:
+                return CapabilityResult.ok(
+                    capability="close_window",
+                    message=f"Closed Astra-owned window '{snap.title}' (HWND {hwnd}).",
+                    data={"hwnd": hwnd, "title": snap.title, "action": "close", "resource_id": res.resource_id},
+                    context_updates=[{"type": "window_closed", "hwnd": hwnd, "title": snap.title}],
+                    latency_ms=latency,
+                )
+    except Exception as err:
+        logger.debug("Resource ledger check in close_window: %s", err)
+
     user32 = ctypes.windll.user32
     user32.PostMessageW(hwnd, WM_CLOSE, 0, 0)
     latency = (time.perf_counter() - t0) * 1000

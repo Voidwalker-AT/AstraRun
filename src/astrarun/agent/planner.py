@@ -670,11 +670,12 @@ class GoalPlanner:
 
         temp_dir_match = re.search(r"\b(?:AstraRun\s+temporary\s+test\s+directory|temporary\s+test\s+directory|temp\s+directory|test\s+directory)\b", clause, re.IGNORECASE)
         if temp_dir_match:
-            temp_path = str(Path("data/test_milestone5v_battery.html").resolve())
+            from astrarun.core.paths import AstraPaths
+            temp_path = str(AstraPaths.temp_dir() / "test_milestone5v_battery.html")
             if "output_path" in args_schema or cap_id == "generate_battery_report":
                 args["output_path"] = temp_path
             args["filename"] = "test_milestone5v_battery.html"
-            args["folder"] = "data"
+            args["folder"] = "temp"
         elif file_match:
             raw_path = file_match.group(1).strip()
             fname = os.path.basename(raw_path.replace("\\", "/"))

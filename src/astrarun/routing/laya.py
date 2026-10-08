@@ -59,6 +59,15 @@ class LayaDecision:
         return self.intent != "unknown" and self.error is None
 
 
+import collections
+from enum import Enum
+
+class LayaStatus(str, Enum):
+    AVAILABLE = "LAYA_AVAILABLE"
+    DEGRADED = "LAYA_DEGRADED"
+    UNAVAILABLE = "LAYA_UNAVAILABLE"
+
+
 class LayaProcessClient:
     """
     Supervises an isolated child process running Laya inference.
@@ -81,6 +90,23 @@ class LayaProcessClient:
         self._req_counter = 0
         self._warmup_started = False
         self._last_error: Optional[str] = None
+        self._stderr_lines = collections.deque(maxlen=100)
+        self._stderr_thread: Optional[threading.Thread] = None
+        self._diagnostics: Dict[str, Any] = {
+            "worker_type": "laya",
+            "status": LayaStatus.UNAVAILABLE.value,
+            "pid": None,
+            "startup_timestamp": None,
+            "exit_code": None,
+            "failure_classification": None,
+            "stderr_tail": [],
+        }
+
+    def get_diagnostics(self) -> Dict[str, Any]:
+        """Return captured worker diagnostics, stderr tail, and health status."""
+        d = dict(self._diagnostics)
+        d["stderr_tail"] = list(self._stderr_lines)[-20:]
+        return d
 
     def _ensure_worker_running(self) -> bool:
         if self._proc is not None and self._proc.poll() is None:
@@ -118,10 +144,40 @@ class LayaProcessClient:
                     creationflags=0x08000000 if sys.platform == "win32" else 0,
                 )
                 logger.info("Spawned isolated LayaWorker PID %d", self._proc.pid)
+                self._diagnostics["pid"] = self._proc.pid
+                self._diagnostics["startup_timestamp"] = time.time()
+                self._diagnostics["status"] = LayaStatus.AVAILABLE.value
+                record_subsystem_operation("IDLE")
+
+                # Drain stderr in background to avoid blocking pipe buffer
+                def _drain_stderr(pipe, buffer):
+                    try:
+                        for line in iter(pipe.readline, ''):
+                            if not line:
+                                break
+                            buffer.append(line.rstrip())
+                    except Exception:
+                        pass
+                    finally:
+                        try:
+                            pipe.close()
+                        except Exception:
+                            pass
+
+                self._stderr_thread = threading.Thread(
+                    target=_drain_stderr,
+                    args=(self._proc.stderr, self._stderr_lines),
+                    daemon=True,
+                    name="LayaWorker-StderrDrain",
+                )
+                self._stderr_thread.start()
                 return True
             except Exception as err:
                 self._last_error = f"Failed to spawn Laya worker: {err}"
+                self._diagnostics["status"] = LayaStatus.UNAVAILABLE.value
+                self._diagnostics["failure_classification"] = "SPAWN_FAILED"
                 logger.error(self._last_error)
+                record_subsystem_operation("IDLE")
                 return False
 
     def predict(self, text: str, criteria: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
@@ -152,8 +208,20 @@ class LayaProcessClient:
             if not line:
                 # Worker exited or crashed
                 code = self._proc.poll()
-                record_subsystem_operation("WORKER_EXITED", {"exit_code": code, "last_request": text})
-                logger.warning("[CRASH_CONTAINED] LayaWorker exited with code %s during request '%s'", code, text)
+                stderr_tail = list(self._stderr_lines)[-20:]
+                self._diagnostics["exit_code"] = code
+                self._diagnostics["status"] = LayaStatus.DEGRADED.value
+                self._diagnostics["failure_classification"] = "WORKER_EXITED"
+                self._diagnostics["stderr_tail"] = stderr_tail
+                record_subsystem_operation("IDLE")
+
+                from astrarun.security.secret_broker import SecretBroker
+                broker = SecretBroker.get_instance()
+                scrubbed_stderr = [broker.scrub_text(l)[0] for l in stderr_tail]
+                logger.warning(
+                    "[CRASH_CONTAINED] LayaWorker exited (code=%s) during request '%s'. Worker stderr tail:\n%s",
+                    code, text, "\n".join(scrubbed_stderr) if scrubbed_stderr else "(empty stderr)"
+                )
                 self._proc = None
                 return {
                     "intent": "unknown",
@@ -168,8 +236,20 @@ class LayaProcessClient:
             return data
         except Exception as err:
             code = self._proc.poll() if self._proc else None
-            record_subsystem_operation("WORKER_EXITED", {"exit_code": code, "error": str(err), "last_request": text})
-            logger.warning("[CRASH_CONTAINED] Exception communicating with LayaWorker: %s (proc exit_code=%s)", err, code)
+            stderr_tail = list(self._stderr_lines)[-20:]
+            self._diagnostics["exit_code"] = code
+            self._diagnostics["status"] = LayaStatus.DEGRADED.value
+            self._diagnostics["failure_classification"] = "COMMUNICATION_ERROR"
+            self._diagnostics["stderr_tail"] = stderr_tail
+            record_subsystem_operation("IDLE")
+
+            from astrarun.security.secret_broker import SecretBroker
+            broker = SecretBroker.get_instance()
+            scrubbed_stderr = [broker.scrub_text(l)[0] for l in stderr_tail]
+            logger.warning(
+                "[CRASH_CONTAINED] Exception communicating with LayaWorker: %s (proc exit_code=%s). Worker stderr tail:\n%s",
+                err, code, "\n".join(scrubbed_stderr) if scrubbed_stderr else "(empty stderr)"
+            )
             if self._proc:
                 try:
                     self._proc.terminate()
@@ -196,9 +276,23 @@ class LayaProcessClient:
                     self._proc.stdin.write(json.dumps({"id": "warmup-0", "action": "warmup"}) + "\n")
                     self._proc.stdin.flush()
                     resp = self._proc.stdout.readline()
-                    logger.debug("LayaWorker warmup response: %s", resp.strip())
+                    if resp and resp.strip():
+                        data = json.loads(resp.strip())
+                        if data.get("status") == "ready":
+                            self._diagnostics["status"] = LayaStatus.AVAILABLE.value
+                            logger.info("LayaWorker warmup successful (model loaded).")
+                        else:
+                            self._diagnostics["status"] = LayaStatus.DEGRADED.value
+                            self._diagnostics["failure_classification"] = "WARMUP_FAILED"
+                            stderr_tail = list(self._stderr_lines)[-20:]
+                            self._diagnostics["stderr_tail"] = stderr_tail
+                            logger.warning("LayaWorker warmup degraded: %s", data.get("error"))
+                    record_subsystem_operation("IDLE")
                 except Exception as e:
+                    self._diagnostics["status"] = LayaStatus.DEGRADED.value
+                    self._diagnostics["failure_classification"] = "WARMUP_EXCEPTION"
                     logger.debug("LayaWorker background warmup failed: %s", e)
+                    record_subsystem_operation("IDLE")
 
         t = threading.Thread(target=_do_warmup, daemon=True, name="LayaWorker-Warmup")
         t.start()
@@ -476,3 +570,18 @@ class LayaRouter(BaseRouter):
         """Terminate the underlying isolated process client."""
         if hasattr(self, "_client") and self._client:
             self._client.shutdown()
+
+    @property
+    def status(self) -> LayaStatus:
+        """Return the current runtime health status of Laya worker."""
+        if not self.enabled:
+            return LayaStatus.UNAVAILABLE
+        if hasattr(self, "_client") and self._client:
+            return LayaStatus(self._client._diagnostics.get("status", LayaStatus.UNAVAILABLE.value))
+        return LayaStatus.UNAVAILABLE
+
+    def get_diagnostics(self) -> dict[str, Any]:
+        """Return captured worker diagnostics, stderr tail, and process metadata."""
+        if hasattr(self, "_client") and self._client:
+            return self._client.get_diagnostics()
+        return {"worker_type": "laya", "status": LayaStatus.UNAVAILABLE.value}

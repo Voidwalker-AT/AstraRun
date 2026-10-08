@@ -22,6 +22,12 @@ if sys.platform == "win32":
     except Exception:
         pass
 
+# Neutralize torchvision C++ operator loading in frozen/desktop runtime
+for _mod in ("torchvision", "torchvision.ops", "torchvision.io", "torchvision.transforms", "torchvision._meta_registrations"):
+    sys.modules[_mod] = None
+os.environ["TORCHVISION_WARN_WHEN_EXTENSION_LOADING_FAILS"] = "0"
+os.environ["TRANSFORMERS_NO_TORCHVISION"] = "1"
+
 # Ensure standard streams exist even in pure windowed GUI mode
 if sys.stdout is None:
     import io

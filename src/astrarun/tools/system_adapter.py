@@ -119,7 +119,7 @@ class PowerCfgAdapter(SystemUtilityAdapter):
                     # Bare filename like 'astra-battery.html' -> save to Downloads
                     dest_file = self.get_downloads_directory() / parts[0]
                 else:
-                    dest_file = (Path.cwd() / path_obj).resolve()
+                    dest_file = (self.get_downloads_directory() / path_obj).resolve()
             else:
                 dest_file = path_obj.resolve()
 

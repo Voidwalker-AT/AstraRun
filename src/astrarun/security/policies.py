@@ -64,9 +64,11 @@ class PathPolicy:
         allowed_workspace_roots: Optional[List[str]] = None,
         disallowed_system_roots: Optional[List[str]] = None,
     ) -> None:
+        from astrarun.core.paths import AstraPaths
         raw_workspaces = allowed_workspace_roots or [
             r"E:\Workspace",
-            os.getcwd(),
+            str(AstraPaths.data_dir()),
+            str(AstraPaths.sandbox_dir()),
         ]
         self.allowed_workspaces = [self.normalize_path(p) for p in raw_workspaces]
         

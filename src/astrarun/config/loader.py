@@ -175,9 +175,9 @@ def _read_json_file(file_path: Path, fallback: Any) -> Any:
         return fallback
 
 
-def load_config(config_dir: str | Path = "config") -> AppConfig:
-    """Load all configuration files from the specified configuration directory."""
-    dir_path = Path(config_dir)
+def load_config(config_dir: str | Path | None = None) -> AppConfig:
+    """Load all configuration files from the specified configuration directory (default: %LOCALAPPDATA%\\AstraRun\\config)."""
+    dir_path = Path(config_dir) if config_dir is not None else AstraPaths.config_dir()
 
     # 1. Load settings
     settings_file = dir_path / "settings.json"

@@ -18,8 +18,21 @@ from pathlib import Path
 from typing import Any, Dict, Optional
 
 # Strict Invariant: Laya is pure NLP; neutralize torchvision C++ operator loading
-sys.modules["torchvision"] = None
-sys.modules["torchvision.ops"] = None
+for _mod in ("torchvision", "torchvision.ops", "torchvision.io", "torchvision.transforms", "torchvision._meta_registrations"):
+    sys.modules[_mod] = None
+os.environ["TORCHVISION_WARN_WHEN_EXTENSION_LOADING_FAILS"] = "0"
+os.environ["TRANSFORMERS_NO_TORCHVISION"] = "1"
+
+
+def _safe_stderr_write(msg: str) -> None:
+    """Safely write to stderr without crashing on invalid handles or closed pipes (e.g. WinError 22)."""
+    try:
+        if sys.stderr is not None and hasattr(sys.stderr, "write"):
+            sys.stderr.write(msg)
+            if hasattr(sys.stderr, "flush"):
+                sys.stderr.flush()
+    except Exception:
+        pass
 
 
 DEFAULT_QUESTIONS = {
@@ -66,18 +79,17 @@ class LayaWorker:
             target_path = str(local_snap) if local_snap.exists() else self.model_id
             self._agent = laya.load(model_id_or_path=target_path, device=self.device)
             load_ms = (time.perf_counter() - t0) * 1000
-            sys.stderr.write(f"[LayaWorker] Model '{target_path}' loaded on {self.device} in {load_ms:.1f}ms\n")
-            sys.stderr.flush()
+            _safe_stderr_write(f"[LayaWorker] Model '{target_path}' loaded on {self.device} in {load_ms:.1f}ms\n")
             return True
         except ImportError as err:
             self._load_error = f"Laya package not installed in worker: {err}"
-            sys.stderr.write(f"[LayaWorker] Warning: {self._load_error}\n")
-            sys.stderr.flush()
+            _safe_stderr_write(f"[LayaWorker] Warning: {self._load_error}\n")
             return False
         except Exception as err:
-            self._load_error = f"Failed to load Laya model in worker: {err}"
-            sys.stderr.write(f"[LayaWorker] Error: {self._load_error}\n")
-            sys.stderr.flush()
+            import traceback
+            tb_str = traceback.format_exc()
+            self._load_error = f"Failed to load Laya model in worker: {err}\n{tb_str}"
+            _safe_stderr_write(f"[LayaWorker] Error: {self._load_error}\n")
             return False
 
     def handle_request(self, req: Dict[str, Any]) -> Dict[str, Any]:
@@ -100,8 +112,7 @@ class LayaWorker:
             }
 
         if action == "crash_for_test":
-            sys.stderr.write("[LayaWorker] Simulating intentional worker crash for containment test\n")
-            sys.stderr.flush()
+            _safe_stderr_write("[LayaWorker] Simulating intentional worker crash for containment test\n")
             os._exit(99)
 
         if action == "predict":

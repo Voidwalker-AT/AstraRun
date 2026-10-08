@@ -63,7 +63,15 @@ class ProjectRegistry:
         workspace_json_path: Path | str = r"E:\Workspace\workspace.json",
     ) -> None:
         p_root = Path(workspace_root)
-        if p_root.name.endswith(".json") or p_root.suffix == ".json":
+        if not p_root.is_absolute() and (p_root.name.endswith(".json") or p_root.suffix == ".json"):
+            canonical_json = Path(r"E:\Workspace\workspace.json")
+            if canonical_json.exists():
+                self.workspace_json_path = canonical_json
+                self.workspace_root = Path(r"E:\Workspace")
+            else:
+                self.workspace_json_path = p_root.resolve()
+                self.workspace_root = self.workspace_json_path.parent
+        elif p_root.name.endswith(".json") or p_root.suffix == ".json":
             self.workspace_json_path = p_root.resolve()
             parent = p_root.resolve().parent
             self.workspace_root = parent if (parent / "Active").exists() or parent.name == "Workspace" else Path(r"E:\Workspace")

@@ -1,0 +1,60 @@
+{
+  "timestamp": 1791436031.4961932,
+  "python_version": "3.13.0 (tags/v3.13.0:60403a5, Oct  7 2024, 09:38:07) [MSC v.1941 64 bit (AMD64)]",
+  "phase": "F0_BEFORE_FIX_EVALUATION",
+  "cwd_tests": {
+    "repo_root": {
+      "exit_code": 0,
+      "status": "PASS",
+      "details": {
+        "status": "OK",
+        "created_in_cwd": [],
+        "machine_db": "C:\\Users\\hp\\AppData\\Local\\AstraRun\\data\\machine\\machine_facts.db",
+        "ledger_db": "C:\\Users\\hp\\AppData\\Local\\AstraRun\\data\\astra_history.db"
+      }
+    },
+    "temp_dir": {
+      "exit_code": 0,
+      "status": "PASS",
+      "details": {
+        "status": "OK",
+        "created_in_cwd": [],
+        "machine_db": "C:\\Users\\hp\\AppData\\Local\\AstraRun\\data\\machine\\machine_facts.db",
+        "ledger_db": "C:\\Users\\hp\\AppData\\Local\\AstraRun\\data\\astra_history.db"
+      }
+    },
+    "c_drive_root": {
+      "exit_code": 1,
+      "status": "FAIL",
+      "stderr": "File \"<string>\", line 6\n    os.chdir(r\"C:\\\")\n             ^\nSyntaxError: unterminated string literal (detected at line 6); perhaps you escaped the end quote?"
+    },
+    "system32": {
+      "exit_code": 0,
+      "status": "PASS",
+      "details": {
+        "status": "OK",
+        "created_in_cwd": [],
+        "machine_db": "C:\\Users\\hp\\AppData\\Local\\AstraRun\\data\\machine\\machine_facts.db",
+        "ledger_db": "C:\\Users\\hp\\AppData\\Local\\AstraRun\\data\\astra_history.db"
+      }
+    },
+    "full_app_system32": {
+      "exit_code": 0,
+      "stdout": "{\"status\": \"OK\", \"registered_capabilities\": 84}",
+      "stderr": ""
+    }
+  },
+  "laya_tests": {
+    "dev_worker_load": {
+      "exit_code": 0,
+      "stdout": "{\"loaded\": true, \"load_error\": null, \"duration_s\": 7.426055431365967}",
+      "stderr": "E:\\Workspace\\Active\\AstraRun\\.venv\\Lib\\site-packages\\laya\\agent.py:928: RuntimeWarning: laya: this checkpoint ships invalid temperatures or values outside [0.5, 5]; using choice:11+=0.10058280825614929 -> 0.5. Treat confidence from the affected entries as uncalibrated.\n  return Agent(model_id_or_path, device=device, token=token, subfolder=subfolder, fast=fast,\n[LayaWorker] Model 'E:\\AI_Models\\HF_CACHE\\hub\\models--convaiinnovations--laya\\snapshots\\55cf4c4ebb4ebe31b2550e8bdf3bd21b99753851' loaded "
+    }
+  },
+  "crash_recovery_tests": {
+    "after_clean_shutdown": {
+      "output": "{\"recovery_detected\": true, \"recovery_info\": {\"prior_pid\": 6776, \"detected_at\": 1791436058.663668, \"last_operation\": \"LAYA_WORKER_STARTING\", \"last_operation_time\": \"2026-10-08 10:37:36\", \"last_details\": {\"cmd\": [\"E:\\\\Workspace\\\\Active\\\\AstraRun\\\\.venv\\\\Scripts\\\\python.exe\", \"-m\", \"astrarun.routing.laya_worker\"]}, \"prior_state\": {}, \"windows_event\": \"Message : Faulting application name: AstraRun.exe, version: 1.0.0.0, time stamp: 0x6ac0ee21\\n          Faulting module name: AstraRun.exe, version: 1.0.0.0, time stamp: 0x6ac0ee21\\n          Exception code: 0xc0000409\\n          Fault offset: 0x00000000000221d5\\n          Faulting process id: 0x561C\\n          Faulting application start time: 0x1DD533227BDABC5\\n          Faulting application path: E:\\\\AstraRun\\\\AstraRun.exe\\n          Faulting module path: E:\\\\AstraRun\\\\AstraRun.exe\\n          Report Id: d109e03d-cdd1-4bf2-b2e9-b40a1c6cede1\\n          Faulting package full name: \\n          Faulting package-relative application ID:\"}}"
+    }
+  },
+  "journal_tests": {}
+}

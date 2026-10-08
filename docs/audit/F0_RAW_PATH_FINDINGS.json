@@ -1,0 +1,962 @@
+[
+  {
+    "file": "src/astrarun/agent/planner.py",
+    "line": 673,
+    "patterns": [
+      "relative_path_data"
+    ],
+    "code": "temp_path = str(Path(\"data/test_milestone5v_battery.html\").resolve())"
+  },
+  {
+    "file": "src/astrarun/app.py",
+    "line": 158,
+    "patterns": [
+      "mkdir"
+    ],
+    "code": "data_dir.mkdir(parents=True, exist_ok=True)"
+  },
+  {
+    "file": "src/astrarun/browser/service.py",
+    "line": 98,
+    "patterns": [
+      "mkdir"
+    ],
+    "code": "profile_dir.mkdir(parents=True, exist_ok=True)"
+  },
+  {
+    "file": "src/astrarun/config/migrations.py",
+    "line": 90,
+    "patterns": [
+      "write_text_or_bytes"
+    ],
+    "code": "p.write_text(json.dumps(migrated, indent=2), encoding=\"utf-8\")"
+  },
+  {
+    "file": "src/astrarun/config/migrations.py",
+    "line": 101,
+    "patterns": [
+      "mkdir"
+    ],
+    "code": "p.parent.mkdir(parents=True, exist_ok=True)"
+  },
+  {
+    "file": "src/astrarun/config/migrations.py",
+    "line": 112,
+    "patterns": [
+      "sqlite_connect"
+    ],
+    "code": "conn = sqlite3.connect(str(p))"
+  },
+  {
+    "file": "src/astrarun/context/persistence.py",
+    "line": 33,
+    "patterns": [
+      "mkdir"
+    ],
+    "code": "self.file_path.parent.mkdir(parents=True, exist_ok=True)"
+  },
+  {
+    "file": "src/astrarun/context/persistence.py",
+    "line": 90,
+    "patterns": [
+      "mkdir"
+    ],
+    "code": "dir_path.mkdir(parents=True, exist_ok=True)"
+  },
+  {
+    "file": "src/astrarun/context/persistence.py",
+    "line": 94,
+    "patterns": [
+      "open_write"
+    ],
+    "code": "with os.fdopen(fd, \"w\", encoding=\"utf-8\") as f:"
+  },
+  {
+    "file": "src/astrarun/core/crash.py",
+    "line": 32,
+    "patterns": [
+      "mkdir"
+    ],
+    "code": "logs_dir.mkdir(parents=True, exist_ok=True)"
+  },
+  {
+    "file": "src/astrarun/core/crash.py",
+    "line": 64,
+    "patterns": [
+      "write_text_or_bytes"
+    ],
+    "code": "report_path.write_text(json.dumps(report, indent=2), encoding=\"utf-8\")"
+  },
+  {
+    "file": "src/astrarun/core/crash.py",
+    "line": 100,
+    "patterns": [
+      "mkdir"
+    ],
+    "code": "data_dir.mkdir(parents=True, exist_ok=True)"
+  },
+  {
+    "file": "src/astrarun/core/crash.py",
+    "line": 111,
+    "patterns": [
+      "write_text_or_bytes"
+    ],
+    "code": "tmp_file.write_text(json.dumps(payload, indent=2), encoding=\"utf-8\")"
+  },
+  {
+    "file": "src/astrarun/core/crash.py",
+    "line": 192,
+    "patterns": [
+      "write_text_or_bytes"
+    ],
+    "code": "rep_path.write_text(json.dumps(recovery_info, indent=2), encoding=\"utf-8\")"
+  },
+  {
+    "file": "src/astrarun/core/logging.py",
+    "line": 55,
+    "patterns": [
+      "mkdir"
+    ],
+    "code": "log_path.parent.mkdir(parents=True, exist_ok=True)"
+  },
+  {
+    "file": "src/astrarun/core/paths.py",
+    "line": 131,
+    "patterns": [
+      "mkdir"
+    ],
+    "code": "d.mkdir(parents=True, exist_ok=True)"
+  },
+  {
+    "file": "src/astrarun/core/paths.py",
+    "line": 186,
+    "patterns": [
+      "mkdir"
+    ],
+    "code": "p.mkdir(parents=True, exist_ok=True)"
+  },
+  {
+    "file": "src/astrarun/core/paths.py",
+    "line": 195,
+    "patterns": [
+      "mkdir"
+    ],
+    "code": "p.mkdir(parents=True, exist_ok=True)"
+  },
+  {
+    "file": "src/astrarun/core/paths.py",
+    "line": 201,
+    "patterns": [
+      "mkdir"
+    ],
+    "code": "p.parent.mkdir(parents=True, exist_ok=True)"
+  },
+  {
+    "file": "src/astrarun/core/paths.py",
+    "line": 238,
+    "patterns": [
+      "mkdir"
+    ],
+    "code": "cls.machine_db_path().parent.mkdir(parents=True, exist_ok=True)"
+  },
+  {
+    "file": "src/astrarun/core/single_instance.py",
+    "line": 250,
+    "patterns": [
+      "mkdir"
+    ],
+    "code": "trigger_path.parent.mkdir(parents=True, exist_ok=True)"
+  },
+  {
+    "file": "src/astrarun/core/single_instance.py",
+    "line": 251,
+    "patterns": [
+      "write_text_or_bytes"
+    ],
+    "code": "trigger_path.write_text(f\"{time.time()}:{command}\", encoding=\"utf-8\")"
+  },
+  {
+    "file": "src/astrarun/delegation/loop.py",
+    "line": 94,
+    "patterns": [
+      "mkdir"
+    ],
+    "code": "ws_path.mkdir(parents=True, exist_ok=True)"
+  },
+  {
+    "file": "src/astrarun/delegation/loop.py",
+    "line": 97,
+    "patterns": [
+      "mkdir"
+    ],
+    "code": "ws_path.mkdir(parents=True, exist_ok=True)"
+  },
+  {
+    "file": "src/astrarun/delegation/loop.py",
+    "line": 138,
+    "patterns": [
+      "write_text_or_bytes"
+    ],
+    "code": "target_file.write_bytes(content.encode(\"utf-8\"))"
+  },
+  {
+    "file": "src/astrarun/delegation/models.py",
+    "line": 195,
+    "patterns": [
+      "mkdir"
+    ],
+    "code": "p.parent.mkdir(parents=True, exist_ok=True)"
+  },
+  {
+    "file": "src/astrarun/delegation/models.py",
+    "line": 196,
+    "patterns": [
+      "write_text_or_bytes"
+    ],
+    "code": "p.write_text(json.dumps(self.to_dict(), indent=2), encoding=\"utf-8\")"
+  },
+  {
+    "file": "src/astrarun/delegation/proposal.py",
+    "line": 212,
+    "patterns": [
+      "write_text_or_bytes"
+    ],
+    "code": "target_file.write_bytes(patch_text.encode(\"utf-8\"))"
+  },
+  {
+    "file": "src/astrarun/delegation/proposal.py",
+    "line": 222,
+    "patterns": [
+      "write_text_or_bytes"
+    ],
+    "code": "target_file.write_bytes(patch_text.encode(\"utf-8\"))"
+  },
+  {
+    "file": "src/astrarun/execution/runtime.py",
+    "line": 136,
+    "patterns": [
+      "os_getcwd"
+    ],
+    "code": "\"cwd\": request.cwd or os.getcwd(),"
+  },
+  {
+    "file": "src/astrarun/files/service.py",
+    "line": 539,
+    "patterns": [
+      "mkdir"
+    ],
+    "code": "norm_path.parent.mkdir(parents=True, exist_ok=True)"
+  },
+  {
+    "file": "src/astrarun/files/service.py",
+    "line": 546,
+    "patterns": [
+      "write_text_or_bytes"
+    ],
+    "code": "norm_path.write_text(target_text, encoding=\"utf-8\")"
+  },
+  {
+    "file": "src/astrarun/files/service.py",
+    "line": 669,
+    "patterns": [
+      "mkdir"
+    ],
+    "code": "dst_path.parent.mkdir(parents=True, exist_ok=True)"
+  },
+  {
+    "file": "src/astrarun/files/service.py",
+    "line": 682,
+    "patterns": [
+      "open_write"
+    ],
+    "code": "with open(temp_commit, \"wb\") as f_dst:"
+  },
+  {
+    "file": "src/astrarun/learning/dataset_builder.py",
+    "line": 64,
+    "patterns": [
+      "mkdir"
+    ],
+    "code": "out_path.parent.mkdir(parents=True, exist_ok=True)"
+  },
+  {
+    "file": "src/astrarun/learning/dataset_builder.py",
+    "line": 67,
+    "patterns": [
+      "open_write"
+    ],
+    "code": "with open(out_path, \"w\", encoding=\"utf-8\") as f:"
+  },
+  {
+    "file": "src/astrarun/learning/persistence.py",
+    "line": 138,
+    "patterns": [
+      "mkdir"
+    ],
+    "code": "self.db_path.parent.mkdir(parents=True, exist_ok=True)"
+  },
+  {
+    "file": "src/astrarun/learning/persistence.py",
+    "line": 143,
+    "patterns": [
+      "sqlite_connect"
+    ],
+    "code": "conn = sqlite3.connect(str(self.db_path), timeout=10.0)"
+  },
+  {
+    "file": "src/astrarun/lifecycle/repair.py",
+    "line": 163,
+    "patterns": [
+      "mkdir"
+    ],
+    "code": "m_dir.mkdir(parents=True, exist_ok=True)"
+  },
+  {
+    "file": "src/astrarun/lifecycle/repair.py",
+    "line": 165,
+    "patterns": [
+      "write_text_or_bytes"
+    ],
+    "code": "test_file.write_text(\"ok\", encoding=\"utf-8\")"
+  },
+  {
+    "file": "src/astrarun/lifecycle/uninstall.py",
+    "line": 357,
+    "patterns": [
+      "sqlite_connect"
+    ],
+    "code": "conn = sqlite3.connect(str(ledger_db))"
+  },
+  {
+    "file": "src/astrarun/machine/model.py",
+    "line": 61,
+    "patterns": [
+      "mkdir"
+    ],
+    "code": "self.db_path.parent.mkdir(parents=True, exist_ok=True)"
+  },
+  {
+    "file": "src/astrarun/machine/model.py",
+    "line": 87,
+    "patterns": [
+      "sqlite_connect"
+    ],
+    "code": "conn = sqlite3.connect(str(self.db_path))"
+  },
+  {
+    "file": "src/astrarun/machine/model.py",
+    "line": 110,
+    "patterns": [
+      "sqlite_connect"
+    ],
+    "code": "conn = sqlite3.connect(str(self.db_path))"
+  },
+  {
+    "file": "src/astrarun/machine/model.py",
+    "line": 139,
+    "patterns": [
+      "sqlite_connect"
+    ],
+    "code": "conn = sqlite3.connect(str(self.db_path))"
+  },
+  {
+    "file": "src/astrarun/main.py",
+    "line": 77,
+    "patterns": [
+      "mkdir"
+    ],
+    "code": "trigger_path.parent.mkdir(parents=True, exist_ok=True)"
+  },
+  {
+    "file": "src/astrarun/main.py",
+    "line": 78,
+    "patterns": [
+      "write_text_or_bytes"
+    ],
+    "code": "trigger_path.write_text(f\"{time.time()}\", encoding=\"utf-8\")"
+  },
+  {
+    "file": "src/astrarun/main.py",
+    "line": 114,
+    "patterns": [
+      "mkdir"
+    ],
+    "code": "state_path.parent.mkdir(parents=True, exist_ok=True)"
+  },
+  {
+    "file": "src/astrarun/main.py",
+    "line": 130,
+    "patterns": [
+      "open_write"
+    ],
+    "code": "with open(tmp_path, \"w\", encoding=\"utf-8\") as f:"
+  },
+  {
+    "file": "src/astrarun/main.py",
+    "line": 495,
+    "patterns": [
+      "mkdir"
+    ],
+    "code": "trigger_path.parent.mkdir(parents=True, exist_ok=True)"
+  },
+  {
+    "file": "src/astrarun/memory/service.py",
+    "line": 53,
+    "patterns": [
+      "mkdir"
+    ],
+    "code": "self.db_path.parent.mkdir(parents=True, exist_ok=True)"
+  },
+  {
+    "file": "src/astrarun/memory/service.py",
+    "line": 155,
+    "patterns": [
+      "mkdir"
+    ],
+    "code": "self.db_path.parent.mkdir(parents=True, exist_ok=True)"
+  },
+  {
+    "file": "src/astrarun/models/downloader.py",
+    "line": 65,
+    "patterns": [
+      "mkdir"
+    ],
+    "code": "self.target_dir.mkdir(parents=True, exist_ok=True)"
+  },
+  {
+    "file": "src/astrarun/models/downloader.py",
+    "line": 97,
+    "patterns": [
+      "mkdir"
+    ],
+    "code": "dest_path.parent.mkdir(parents=True, exist_ok=True)"
+  },
+  {
+    "file": "src/astrarun/network/quarantine.py",
+    "line": 53,
+    "patterns": [
+      "mkdir"
+    ],
+    "code": "self.quarantine_dir.mkdir(parents=True, exist_ok=True)"
+  },
+  {
+    "file": "src/astrarun/network/quarantine.py",
+    "line": 68,
+    "patterns": [
+      "mkdir"
+    ],
+    "code": "target_dir.mkdir(parents=True, exist_ok=True)"
+  },
+  {
+    "file": "src/astrarun/network/quarantine.py",
+    "line": 71,
+    "patterns": [
+      "write_text_or_bytes"
+    ],
+    "code": "target_file.write_bytes(content)"
+  },
+  {
+    "file": "src/astrarun/network/quarantine.py",
+    "line": 89,
+    "patterns": [
+      "write_text_or_bytes"
+    ],
+    "code": "meta_file.write_text(json.dumps(record.to_dict(), indent=2), encoding=\"utf-8\")"
+  },
+  {
+    "file": "src/astrarun/power/ledger.py",
+    "line": 27,
+    "patterns": [
+      "mkdir"
+    ],
+    "code": "self.db_path.parent.mkdir(parents=True, exist_ok=True)"
+  },
+  {
+    "file": "src/astrarun/power/ledger.py",
+    "line": 31,
+    "patterns": [
+      "sqlite_connect"
+    ],
+    "code": "conn = sqlite3.connect(str(self.db_path))"
+  },
+  {
+    "file": "src/astrarun/power/ledger.py",
+    "line": 68,
+    "patterns": [
+      "sqlite_connect"
+    ],
+    "code": "conn = sqlite3.connect(str(self.db_path))"
+  },
+  {
+    "file": "src/astrarun/power/ledger.py",
+    "line": 92,
+    "patterns": [
+      "sqlite_connect"
+    ],
+    "code": "conn = sqlite3.connect(str(self.db_path))"
+  },
+  {
+    "file": "src/astrarun/rag/store.py",
+    "line": 48,
+    "patterns": [
+      "mkdir"
+    ],
+    "code": "self.db_path.parent.mkdir(parents=True, exist_ok=True)"
+  },
+  {
+    "file": "src/astrarun/rag/store.py",
+    "line": 50,
+    "patterns": [
+      "sqlite_connect"
+    ],
+    "code": "self._conn = sqlite3.connect("
+  },
+  {
+    "file": "src/astrarun/sandbox/appcontainer_launcher.py",
+    "line": 171,
+    "patterns": [
+      "mkdir"
+    ],
+    "code": "output_dir.mkdir(parents=True, exist_ok=True)"
+  },
+  {
+    "file": "src/astrarun/sandbox/appcontainer_launcher.py",
+    "line": 172,
+    "patterns": [
+      "mkdir"
+    ],
+    "code": "temp_dir.mkdir(parents=True, exist_ok=True)"
+  },
+  {
+    "file": "src/astrarun/sandbox/appcontainer_launcher.py",
+    "line": 306,
+    "patterns": [
+      "mkdir"
+    ],
+    "code": "output_dir.mkdir(parents=True, exist_ok=True)"
+  },
+  {
+    "file": "src/astrarun/sandbox/appcontainer_launcher.py",
+    "line": 307,
+    "patterns": [
+      "mkdir"
+    ],
+    "code": "temp_dir.mkdir(parents=True, exist_ok=True)"
+  },
+  {
+    "file": "src/astrarun/sandbox/appcontainer_launcher.py",
+    "line": 308,
+    "patterns": [
+      "mkdir"
+    ],
+    "code": "localappdata_dir.mkdir(parents=True, exist_ok=True)"
+  },
+  {
+    "file": "src/astrarun/sandbox/manager.py",
+    "line": 85,
+    "patterns": [
+      "mkdir"
+    ],
+    "code": "self.base_dir.mkdir(parents=True, exist_ok=True)"
+  },
+  {
+    "file": "src/astrarun/sandbox/manager.py",
+    "line": 159,
+    "patterns": [
+      "mkdir"
+    ],
+    "code": "run_dir.mkdir(parents=True, exist_ok=True)"
+  },
+  {
+    "file": "src/astrarun/sandbox/manager.py",
+    "line": 162,
+    "patterns": [
+      "write_text_or_bytes"
+    ],
+    "code": "script_file.write_bytes(script_code.encode(\"utf-8\"))"
+  },
+  {
+    "file": "src/astrarun/sandbox/manager.py",
+    "line": 367,
+    "patterns": [
+      "mkdir"
+    ],
+    "code": "run_dir.mkdir(parents=True, exist_ok=True)"
+  },
+  {
+    "file": "src/astrarun/sandbox/manager.py",
+    "line": 375,
+    "patterns": [
+      "mkdir"
+    ],
+    "code": "source_dir.mkdir(parents=True, exist_ok=True)"
+  },
+  {
+    "file": "src/astrarun/sandbox/manager.py",
+    "line": 376,
+    "patterns": [
+      "mkdir"
+    ],
+    "code": "output_dir.mkdir(parents=True, exist_ok=True)"
+  },
+  {
+    "file": "src/astrarun/sandbox/manager.py",
+    "line": 377,
+    "patterns": [
+      "mkdir"
+    ],
+    "code": "temp_dir.mkdir(parents=True, exist_ok=True)"
+  },
+  {
+    "file": "src/astrarun/sandbox/manager.py",
+    "line": 378,
+    "patterns": [
+      "mkdir"
+    ],
+    "code": "evidence_dir.mkdir(parents=True, exist_ok=True)"
+  },
+  {
+    "file": "src/astrarun/sandbox/manager.py",
+    "line": 414,
+    "patterns": [
+      "mkdir"
+    ],
+    "code": "target_f.parent.mkdir(parents=True, exist_ok=True)"
+  },
+  {
+    "file": "src/astrarun/sandbox/manager.py",
+    "line": 415,
+    "patterns": [
+      "write_text_or_bytes"
+    ],
+    "code": "target_f.write_bytes(content.encode(\"utf-8\"))"
+  },
+  {
+    "file": "src/astrarun/sandbox/manager.py",
+    "line": 419,
+    "patterns": [
+      "mkdir"
+    ],
+    "code": "(source_dir / norm).parent.mkdir(parents=True, exist_ok=True)"
+  },
+  {
+    "file": "src/astrarun/sandbox/manager.py",
+    "line": 420,
+    "patterns": [
+      "write_text_or_bytes"
+    ],
+    "code": "(source_dir / norm).write_bytes(content.encode(\"utf-8\"))"
+  },
+  {
+    "file": "src/astrarun/security/execution_broker.py",
+    "line": 429,
+    "patterns": [
+      "mkdir"
+    ],
+    "code": "audit_dir.mkdir(parents=True, exist_ok=True)"
+  },
+  {
+    "file": "src/astrarun/security/execution_broker.py",
+    "line": 431,
+    "patterns": [
+      "open_write"
+    ],
+    "code": "with open(audit_file, \"a\", encoding=\"utf-8\") as f:"
+  },
+  {
+    "file": "src/astrarun/security/policies.py",
+    "line": 69,
+    "patterns": [
+      "os_getcwd"
+    ],
+    "code": "os.getcwd(),"
+  },
+  {
+    "file": "src/astrarun/tasks/continuity.py",
+    "line": 44,
+    "patterns": [
+      "mkdir"
+    ],
+    "code": "self.checkpoints_dir.mkdir(parents=True, exist_ok=True)"
+  },
+  {
+    "file": "src/astrarun/tasks/continuity.py",
+    "line": 77,
+    "patterns": [
+      "write_text_or_bytes"
+    ],
+    "code": "file_path.write_text(json.dumps(cp.to_dict(), indent=2), encoding=\"utf-8\")"
+  },
+  {
+    "file": "src/astrarun/tasks/continuity.py",
+    "line": 92,
+    "patterns": [
+      "write_text_or_bytes"
+    ],
+    "code": "file_path.write_text(json.dumps(cp.to_dict(), indent=2), encoding=\"utf-8\")"
+  },
+  {
+    "file": "src/astrarun/tasks/ledger.py",
+    "line": 72,
+    "patterns": [
+      "mkdir"
+    ],
+    "code": "self.db_path.parent.mkdir(parents=True, exist_ok=True)"
+  },
+  {
+    "file": "src/astrarun/tasks/ledger.py",
+    "line": 73,
+    "patterns": [
+      "sqlite_connect"
+    ],
+    "code": "self._conn = sqlite3.connect("
+  },
+  {
+    "file": "src/astrarun/telemetry/collector.py",
+    "line": 77,
+    "patterns": [
+      "mkdir"
+    ],
+    "code": "self.event_file.parent.mkdir(parents=True, exist_ok=True)"
+  },
+  {
+    "file": "src/astrarun/telemetry/collector.py",
+    "line": 78,
+    "patterns": [
+      "open_write"
+    ],
+    "code": "with open(self.event_file, \"a\", encoding=\"utf-8\") as f:"
+  },
+  {
+    "file": "src/astrarun/telemetry/shadow_collector.py",
+    "line": 81,
+    "patterns": [
+      "mkdir"
+    ],
+    "code": "self.event_file.parent.mkdir(parents=True, exist_ok=True)"
+  },
+  {
+    "file": "src/astrarun/telemetry/shadow_collector.py",
+    "line": 82,
+    "patterns": [
+      "open_write"
+    ],
+    "code": "with open(self.event_file, \"a\", encoding=\"utf-8\") as f:"
+  },
+  {
+    "file": "src/astrarun/telemetry/shadow_collector.py",
+    "line": 147,
+    "patterns": [
+      "mkdir"
+    ],
+    "code": "self.event_file.parent.mkdir(parents=True, exist_ok=True)"
+  },
+  {
+    "file": "src/astrarun/telemetry/shadow_collector.py",
+    "line": 148,
+    "patterns": [
+      "open_write"
+    ],
+    "code": "with open(self.event_file, \"a\", encoding=\"utf-8\") as f:"
+  },
+  {
+    "file": "src/astrarun/tools/lifecycle.py",
+    "line": 55,
+    "patterns": [
+      "mkdir"
+    ],
+    "code": "self.storage_path.parent.mkdir(parents=True, exist_ok=True)"
+  },
+  {
+    "file": "src/astrarun/tools/lifecycle.py",
+    "line": 57,
+    "patterns": [
+      "mkdir"
+    ],
+    "code": "self.skills_dir.mkdir(parents=True, exist_ok=True)"
+  },
+  {
+    "file": "src/astrarun/tools/lifecycle.py",
+    "line": 74,
+    "patterns": [
+      "write_text_or_bytes"
+    ],
+    "code": "self.storage_path.write_text(json.dumps(d, indent=2), encoding=\"utf-8\")"
+  },
+  {
+    "file": "src/astrarun/tools/lifecycle.py",
+    "line": 127,
+    "patterns": [
+      "mkdir"
+    ],
+    "code": "skill_dir.mkdir(parents=True, exist_ok=True)"
+  },
+  {
+    "file": "src/astrarun/tools/lifecycle.py",
+    "line": 161,
+    "patterns": [
+      "write_text_or_bytes"
+    ],
+    "code": "skill_file.write_text(md_content, encoding=\"utf-8\")"
+  },
+  {
+    "file": "src/astrarun/tools/system_adapter.py",
+    "line": 122,
+    "patterns": [
+      "path_cwd"
+    ],
+    "code": "dest_file = (Path.cwd() / path_obj).resolve()"
+  },
+  {
+    "file": "src/astrarun/tools/system_adapter.py",
+    "line": 131,
+    "patterns": [
+      "mkdir"
+    ],
+    "code": "dest_file.parent.mkdir(parents=True, exist_ok=True)"
+  },
+  {
+    "file": "src/astrarun/ui/first_run.py",
+    "line": 77,
+    "patterns": [
+      "mkdir"
+    ],
+    "code": "marker.parent.mkdir(parents=True, exist_ok=True)"
+  },
+  {
+    "file": "src/astrarun/ui/first_run.py",
+    "line": 78,
+    "patterns": [
+      "write_text_or_bytes"
+    ],
+    "code": "marker.write_text(f\"completed_version={VERSION}\\n\", encoding=\"utf-8\")"
+  },
+  {
+    "file": "src/astrarun/ui/first_run.py",
+    "line": 521,
+    "patterns": [
+      "mkdir"
+    ],
+    "code": "cfg_path.parent.mkdir(parents=True, exist_ok=True)"
+  },
+  {
+    "file": "src/astrarun/ui/first_run.py",
+    "line": 522,
+    "patterns": [
+      "write_text_or_bytes"
+    ],
+    "code": "cfg_path.write_text(json.dumps(mapping, indent=2), encoding=\"utf-8\")"
+  },
+  {
+    "file": "src/astrarun/ui/settings.py",
+    "line": 574,
+    "patterns": [
+      "mkdir"
+    ],
+    "code": "logs_dir.mkdir(parents=True, exist_ok=True)"
+  },
+  {
+    "file": "src/astrarun/ui/settings.py",
+    "line": 642,
+    "patterns": [
+      "mkdir"
+    ],
+    "code": "p.parent.mkdir(parents=True, exist_ok=True)"
+  },
+  {
+    "file": "src/astrarun/ui/settings.py",
+    "line": 643,
+    "patterns": [
+      "open_write"
+    ],
+    "code": "with open(p, \"w\", encoding=\"utf-8\") as f:"
+  },
+  {
+    "file": "src/astrarun/ui/uninstall_wizard.py",
+    "line": 439,
+    "patterns": [
+      "mkdir"
+    ],
+    "code": "data_dir.mkdir(parents=True, exist_ok=True)"
+  },
+  {
+    "file": "src/astrarun/ui/uninstall_wizard.py",
+    "line": 441,
+    "patterns": [
+      "write_text_or_bytes"
+    ],
+    "code": "plan_file.write_text(json.dumps(plan, indent=2), encoding=\"utf-8\")"
+  },
+  {
+    "file": "src/astrarun/ui/uninstall_wizard.py",
+    "line": 443,
+    "patterns": [
+      "write_text_or_bytes"
+    ],
+    "code": "plan_txt.write_text(\"\\n\".join(plan[\"paths_to_remove\"]), encoding=\"utf-8\")"
+  },
+  {
+    "file": "src/astrarun/usage/store.py",
+    "line": 45,
+    "patterns": [
+      "mkdir"
+    ],
+    "code": "self.data_file.parent.mkdir(parents=True, exist_ok=True)"
+  },
+  {
+    "file": "src/astrarun/usage/store.py",
+    "line": 46,
+    "patterns": [
+      "open_write"
+    ],
+    "code": "with open(self.data_file, \"w\", encoding=\"utf-8\") as f:"
+  },
+  {
+    "file": "src/astrarun/visualization/render_worker.py",
+    "line": 123,
+    "patterns": [
+      "mkdir"
+    ],
+    "code": "output_path.parent.mkdir(parents=True, exist_ok=True)"
+  },
+  {
+    "file": "src/astrarun/visualization/renderer.py",
+    "line": 46,
+    "patterns": [
+      "mkdir"
+    ],
+    "code": "temp_dir.mkdir(parents=True, exist_ok=True)"
+  },
+  {
+    "file": "src/astrarun/visualization/renderer.py",
+    "line": 82,
+    "patterns": [
+      "write_text_or_bytes"
+    ],
+    "code": "temp_spec_file.write_text(validated_spec.model_dump_json(), encoding=\"utf-8\")"
+  },
+  {
+    "file": "src/astrarun/visualization/renderer.py",
+    "line": 95,
+    "patterns": [
+      "mkdir"
+    ],
+    "code": "final_dest.parent.mkdir(parents=True, exist_ok=True)"
+  },
+  {
+    "file": "src/astrarun/workflows/engine.py",
+    "line": 48,
+    "patterns": [
+      "mkdir"
+    ],
+    "code": "self.audit_log_path.parent.mkdir(parents=True, exist_ok=True)"
+  },
+  {
+    "file": "src/astrarun/workflows/engine.py",
+    "line": 188,
+    "patterns": [
+      "open_write"
+    ],
+    "code": "with open(self.audit_log_path, \"a\", encoding=\"utf-8\") as f:"
+  }
+]

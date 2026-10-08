@@ -144,12 +144,14 @@ class AstraApplication:
     Enforces unified lifecycle, dependency injection, and single pipeline entry.
     """
 
-    def __init__(self, config_dir: str = "config"):
-        logger.info("Initializing AstraApplication composition root...")
-        self.config_dir = config_dir
+    def __init__(self, config_dir: Optional[str | Path] = None):
+        from astrarun.core.paths import AstraPaths
+        resolved_config_dir = Path(config_dir) if config_dir else AstraPaths.config_dir()
+        logger.info("Initializing AstraApplication composition root (config_dir=%s)...", resolved_config_dir)
+        self.config_dir = resolved_config_dir
 
         # 1. Config & Logging
-        self.config: AppConfig = load_config(config_dir)
+        self.config: AppConfig = load_config(resolved_config_dir)
         self.settings = self.config.settings
         logger.info("[STARTUP_STAGE] CONFIG_LOADED")
 
@@ -178,7 +180,7 @@ class AstraApplication:
         )
 
         # 4. Project Registry & Workstation Context
-        self.project_registry = ProjectRegistry("workspace.json")
+        self.project_registry = ProjectRegistry()
         self.context_engine = WorkstationContextEngine(
             persistence_file=str(data_dir / "context_state.json"),
             project_registry=self.project_registry,
@@ -1219,6 +1221,8 @@ class AstraApplication:
                     pass
             if hasattr(self, "single_instance") and self.single_instance:
                 self.single_instance.release()
+            from astrarun.core.crash import record_clean_shutdown
+            record_clean_shutdown(reason="app_shutdown")
             logger.info("AstraApplication shutdown complete.")
         except Exception as err:
             logger.error("Error during AstraApplication shutdown: %s", err)

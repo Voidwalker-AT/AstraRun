@@ -1,0 +1,1332 @@
+{
+  "total_audited": 120,
+  "summary_counts": {
+    "BUG": 3,
+    "USER_STATE": 90,
+    "TASK_WORKSPACE": 9,
+    "INTENTIONALLY_CWD_RELATIVE": 1,
+    "SANDBOX_RELATIVE": 17
+  },
+  "items": [
+    {
+      "file": "src/astrarun/agent/planner.py",
+      "line": 673,
+      "code": "temp_path = str(Path(\"data/test_milestone5v_battery.html\").resolve())",
+      "patterns": [
+        "relative_path_data"
+      ],
+      "classification": "BUG",
+      "rationale": "Hardcoded Path('data/test_milestone5v_battery.html').resolve() resolves against process CWD.",
+      "remediation": "Use AstraPaths.data_dir() or AstraPaths.temp_dir()."
+    },
+    {
+      "file": "src/astrarun/app.py",
+      "line": 158,
+      "code": "data_dir.mkdir(parents=True, exist_ok=True)",
+      "patterns": [
+        "mkdir"
+      ],
+      "classification": "USER_STATE",
+      "rationale": "Application runtime state.",
+      "remediation": null
+    },
+    {
+      "file": "src/astrarun/browser/service.py",
+      "line": 98,
+      "code": "profile_dir.mkdir(parents=True, exist_ok=True)",
+      "patterns": [
+        "mkdir"
+      ],
+      "classification": "USER_STATE",
+      "rationale": "Persistent application data/logs/cache resolved via centralized AstraPaths.",
+      "remediation": null
+    },
+    {
+      "file": "src/astrarun/config/migrations.py",
+      "line": 90,
+      "code": "p.write_text(json.dumps(migrated, indent=2), encoding=\"utf-8\")",
+      "patterns": [
+        "write_text_or_bytes"
+      ],
+      "classification": "USER_STATE",
+      "rationale": "Persistent application data/logs/cache resolved via centralized AstraPaths.",
+      "remediation": null
+    },
+    {
+      "file": "src/astrarun/config/migrations.py",
+      "line": 101,
+      "code": "p.parent.mkdir(parents=True, exist_ok=True)",
+      "patterns": [
+        "mkdir"
+      ],
+      "classification": "USER_STATE",
+      "rationale": "Persistent application data/logs/cache resolved via centralized AstraPaths.",
+      "remediation": null
+    },
+    {
+      "file": "src/astrarun/config/migrations.py",
+      "line": 112,
+      "code": "conn = sqlite3.connect(str(p))",
+      "patterns": [
+        "sqlite_connect"
+      ],
+      "classification": "USER_STATE",
+      "rationale": "Persistent application data/logs/cache resolved via centralized AstraPaths.",
+      "remediation": null
+    },
+    {
+      "file": "src/astrarun/context/persistence.py",
+      "line": 33,
+      "code": "self.file_path.parent.mkdir(parents=True, exist_ok=True)",
+      "patterns": [
+        "mkdir"
+      ],
+      "classification": "USER_STATE",
+      "rationale": "Persistent application data/logs/cache resolved via centralized AstraPaths.",
+      "remediation": null
+    },
+    {
+      "file": "src/astrarun/context/persistence.py",
+      "line": 90,
+      "code": "dir_path.mkdir(parents=True, exist_ok=True)",
+      "patterns": [
+        "mkdir"
+      ],
+      "classification": "USER_STATE",
+      "rationale": "Persistent application data/logs/cache resolved via centralized AstraPaths.",
+      "remediation": null
+    },
+    {
+      "file": "src/astrarun/context/persistence.py",
+      "line": 94,
+      "code": "with os.fdopen(fd, \"w\", encoding=\"utf-8\") as f:",
+      "patterns": [
+        "open_write"
+      ],
+      "classification": "USER_STATE",
+      "rationale": "Persistent application data/logs/cache resolved via centralized AstraPaths.",
+      "remediation": null
+    },
+    {
+      "file": "src/astrarun/core/crash.py",
+      "line": 32,
+      "code": "logs_dir.mkdir(parents=True, exist_ok=True)",
+      "patterns": [
+        "mkdir"
+      ],
+      "classification": "USER_STATE",
+      "rationale": "Persistent application data/logs/cache resolved via centralized AstraPaths.",
+      "remediation": null
+    },
+    {
+      "file": "src/astrarun/core/crash.py",
+      "line": 64,
+      "code": "report_path.write_text(json.dumps(report, indent=2), encoding=\"utf-8\")",
+      "patterns": [
+        "write_text_or_bytes"
+      ],
+      "classification": "USER_STATE",
+      "rationale": "Persistent application data/logs/cache resolved via centralized AstraPaths.",
+      "remediation": null
+    },
+    {
+      "file": "src/astrarun/core/crash.py",
+      "line": 100,
+      "code": "data_dir.mkdir(parents=True, exist_ok=True)",
+      "patterns": [
+        "mkdir"
+      ],
+      "classification": "USER_STATE",
+      "rationale": "Persistent application data/logs/cache resolved via centralized AstraPaths.",
+      "remediation": null
+    },
+    {
+      "file": "src/astrarun/core/crash.py",
+      "line": 111,
+      "code": "tmp_file.write_text(json.dumps(payload, indent=2), encoding=\"utf-8\")",
+      "patterns": [
+        "write_text_or_bytes"
+      ],
+      "classification": "USER_STATE",
+      "rationale": "Persistent application data/logs/cache resolved via centralized AstraPaths.",
+      "remediation": null
+    },
+    {
+      "file": "src/astrarun/core/crash.py",
+      "line": 192,
+      "code": "rep_path.write_text(json.dumps(recovery_info, indent=2), encoding=\"utf-8\")",
+      "patterns": [
+        "write_text_or_bytes"
+      ],
+      "classification": "USER_STATE",
+      "rationale": "Persistent application data/logs/cache resolved via centralized AstraPaths.",
+      "remediation": null
+    },
+    {
+      "file": "src/astrarun/core/logging.py",
+      "line": 55,
+      "code": "log_path.parent.mkdir(parents=True, exist_ok=True)",
+      "patterns": [
+        "mkdir"
+      ],
+      "classification": "USER_STATE",
+      "rationale": "Persistent application data/logs/cache resolved via centralized AstraPaths.",
+      "remediation": null
+    },
+    {
+      "file": "src/astrarun/core/paths.py",
+      "line": 131,
+      "code": "d.mkdir(parents=True, exist_ok=True)",
+      "patterns": [
+        "mkdir"
+      ],
+      "classification": "USER_STATE",
+      "rationale": "Persistent application data/logs/cache resolved via centralized AstraPaths.",
+      "remediation": null
+    },
+    {
+      "file": "src/astrarun/core/paths.py",
+      "line": 186,
+      "code": "p.mkdir(parents=True, exist_ok=True)",
+      "patterns": [
+        "mkdir"
+      ],
+      "classification": "USER_STATE",
+      "rationale": "Persistent application data/logs/cache resolved via centralized AstraPaths.",
+      "remediation": null
+    },
+    {
+      "file": "src/astrarun/core/paths.py",
+      "line": 195,
+      "code": "p.mkdir(parents=True, exist_ok=True)",
+      "patterns": [
+        "mkdir"
+      ],
+      "classification": "USER_STATE",
+      "rationale": "Persistent application data/logs/cache resolved via centralized AstraPaths.",
+      "remediation": null
+    },
+    {
+      "file": "src/astrarun/core/paths.py",
+      "line": 201,
+      "code": "p.parent.mkdir(parents=True, exist_ok=True)",
+      "patterns": [
+        "mkdir"
+      ],
+      "classification": "USER_STATE",
+      "rationale": "Persistent application data/logs/cache resolved via centralized AstraPaths.",
+      "remediation": null
+    },
+    {
+      "file": "src/astrarun/core/paths.py",
+      "line": 238,
+      "code": "cls.machine_db_path().parent.mkdir(parents=True, exist_ok=True)",
+      "patterns": [
+        "mkdir"
+      ],
+      "classification": "USER_STATE",
+      "rationale": "Persistent application data/logs/cache resolved via centralized AstraPaths.",
+      "remediation": null
+    },
+    {
+      "file": "src/astrarun/core/single_instance.py",
+      "line": 250,
+      "code": "trigger_path.parent.mkdir(parents=True, exist_ok=True)",
+      "patterns": [
+        "mkdir"
+      ],
+      "classification": "USER_STATE",
+      "rationale": "Persistent application data/logs/cache resolved via centralized AstraPaths.",
+      "remediation": null
+    },
+    {
+      "file": "src/astrarun/core/single_instance.py",
+      "line": 251,
+      "code": "trigger_path.write_text(f\"{time.time()}:{command}\", encoding=\"utf-8\")",
+      "patterns": [
+        "write_text_or_bytes"
+      ],
+      "classification": "USER_STATE",
+      "rationale": "Persistent application data/logs/cache resolved via centralized AstraPaths.",
+      "remediation": null
+    },
+    {
+      "file": "src/astrarun/delegation/loop.py",
+      "line": 94,
+      "code": "ws_path.mkdir(parents=True, exist_ok=True)",
+      "patterns": [
+        "mkdir"
+      ],
+      "classification": "TASK_WORKSPACE",
+      "rationale": "File operations scoped to explicit task workspace or user target.",
+      "remediation": null
+    },
+    {
+      "file": "src/astrarun/delegation/loop.py",
+      "line": 97,
+      "code": "ws_path.mkdir(parents=True, exist_ok=True)",
+      "patterns": [
+        "mkdir"
+      ],
+      "classification": "TASK_WORKSPACE",
+      "rationale": "File operations scoped to explicit task workspace or user target.",
+      "remediation": null
+    },
+    {
+      "file": "src/astrarun/delegation/loop.py",
+      "line": 138,
+      "code": "target_file.write_bytes(content.encode(\"utf-8\"))",
+      "patterns": [
+        "write_text_or_bytes"
+      ],
+      "classification": "TASK_WORKSPACE",
+      "rationale": "File operations scoped to explicit task workspace or user target.",
+      "remediation": null
+    },
+    {
+      "file": "src/astrarun/delegation/models.py",
+      "line": 195,
+      "code": "p.parent.mkdir(parents=True, exist_ok=True)",
+      "patterns": [
+        "mkdir"
+      ],
+      "classification": "TASK_WORKSPACE",
+      "rationale": "File operations scoped to explicit task workspace or user target.",
+      "remediation": null
+    },
+    {
+      "file": "src/astrarun/delegation/models.py",
+      "line": 196,
+      "code": "p.write_text(json.dumps(self.to_dict(), indent=2), encoding=\"utf-8\")",
+      "patterns": [
+        "write_text_or_bytes"
+      ],
+      "classification": "TASK_WORKSPACE",
+      "rationale": "File operations scoped to explicit task workspace or user target.",
+      "remediation": null
+    },
+    {
+      "file": "src/astrarun/delegation/proposal.py",
+      "line": 212,
+      "code": "target_file.write_bytes(patch_text.encode(\"utf-8\"))",
+      "patterns": [
+        "write_text_or_bytes"
+      ],
+      "classification": "USER_STATE",
+      "rationale": "Application runtime state.",
+      "remediation": null
+    },
+    {
+      "file": "src/astrarun/delegation/proposal.py",
+      "line": 222,
+      "code": "target_file.write_bytes(patch_text.encode(\"utf-8\"))",
+      "patterns": [
+        "write_text_or_bytes"
+      ],
+      "classification": "USER_STATE",
+      "rationale": "Application runtime state.",
+      "remediation": null
+    },
+    {
+      "file": "src/astrarun/execution/runtime.py",
+      "line": 136,
+      "code": "\"cwd\": request.cwd or os.getcwd(),",
+      "patterns": [
+        "os_getcwd"
+      ],
+      "classification": "INTENTIONALLY_CWD_RELATIVE",
+      "rationale": "Process execution request specifies working directory; falls back to CWD if unspecified, but should guard against System32.",
+      "remediation": "Add fallback guard to Path.home() if CWD is a system directory."
+    },
+    {
+      "file": "src/astrarun/files/service.py",
+      "line": 539,
+      "code": "norm_path.parent.mkdir(parents=True, exist_ok=True)",
+      "patterns": [
+        "mkdir"
+      ],
+      "classification": "TASK_WORKSPACE",
+      "rationale": "File operations scoped to explicit task workspace or user target.",
+      "remediation": null
+    },
+    {
+      "file": "src/astrarun/files/service.py",
+      "line": 546,
+      "code": "norm_path.write_text(target_text, encoding=\"utf-8\")",
+      "patterns": [
+        "write_text_or_bytes"
+      ],
+      "classification": "TASK_WORKSPACE",
+      "rationale": "File operations scoped to explicit task workspace or user target.",
+      "remediation": null
+    },
+    {
+      "file": "src/astrarun/files/service.py",
+      "line": 669,
+      "code": "dst_path.parent.mkdir(parents=True, exist_ok=True)",
+      "patterns": [
+        "mkdir"
+      ],
+      "classification": "TASK_WORKSPACE",
+      "rationale": "File operations scoped to explicit task workspace or user target.",
+      "remediation": null
+    },
+    {
+      "file": "src/astrarun/files/service.py",
+      "line": 682,
+      "code": "with open(temp_commit, \"wb\") as f_dst:",
+      "patterns": [
+        "open_write"
+      ],
+      "classification": "TASK_WORKSPACE",
+      "rationale": "File operations scoped to explicit task workspace or user target.",
+      "remediation": null
+    },
+    {
+      "file": "src/astrarun/learning/dataset_builder.py",
+      "line": 64,
+      "code": "out_path.parent.mkdir(parents=True, exist_ok=True)",
+      "patterns": [
+        "mkdir"
+      ],
+      "classification": "USER_STATE",
+      "rationale": "Persistent application data/logs/cache resolved via centralized AstraPaths.",
+      "remediation": null
+    },
+    {
+      "file": "src/astrarun/learning/dataset_builder.py",
+      "line": 67,
+      "code": "with open(out_path, \"w\", encoding=\"utf-8\") as f:",
+      "patterns": [
+        "open_write"
+      ],
+      "classification": "USER_STATE",
+      "rationale": "Persistent application data/logs/cache resolved via centralized AstraPaths.",
+      "remediation": null
+    },
+    {
+      "file": "src/astrarun/learning/persistence.py",
+      "line": 138,
+      "code": "self.db_path.parent.mkdir(parents=True, exist_ok=True)",
+      "patterns": [
+        "mkdir"
+      ],
+      "classification": "USER_STATE",
+      "rationale": "Persistent application data/logs/cache resolved via centralized AstraPaths.",
+      "remediation": null
+    },
+    {
+      "file": "src/astrarun/learning/persistence.py",
+      "line": 143,
+      "code": "conn = sqlite3.connect(str(self.db_path), timeout=10.0)",
+      "patterns": [
+        "sqlite_connect"
+      ],
+      "classification": "USER_STATE",
+      "rationale": "Persistent application data/logs/cache resolved via centralized AstraPaths.",
+      "remediation": null
+    },
+    {
+      "file": "src/astrarun/lifecycle/repair.py",
+      "line": 163,
+      "code": "m_dir.mkdir(parents=True, exist_ok=True)",
+      "patterns": [
+        "mkdir"
+      ],
+      "classification": "USER_STATE",
+      "rationale": "Persistent application data/logs/cache resolved via centralized AstraPaths.",
+      "remediation": null
+    },
+    {
+      "file": "src/astrarun/lifecycle/repair.py",
+      "line": 165,
+      "code": "test_file.write_text(\"ok\", encoding=\"utf-8\")",
+      "patterns": [
+        "write_text_or_bytes"
+      ],
+      "classification": "USER_STATE",
+      "rationale": "Persistent application data/logs/cache resolved via centralized AstraPaths.",
+      "remediation": null
+    },
+    {
+      "file": "src/astrarun/lifecycle/uninstall.py",
+      "line": 357,
+      "code": "conn = sqlite3.connect(str(ledger_db))",
+      "patterns": [
+        "sqlite_connect"
+      ],
+      "classification": "USER_STATE",
+      "rationale": "Persistent application data/logs/cache resolved via centralized AstraPaths.",
+      "remediation": null
+    },
+    {
+      "file": "src/astrarun/machine/model.py",
+      "line": 61,
+      "code": "self.db_path.parent.mkdir(parents=True, exist_ok=True)",
+      "patterns": [
+        "mkdir"
+      ],
+      "classification": "USER_STATE",
+      "rationale": "Persistent application data/logs/cache resolved via centralized AstraPaths.",
+      "remediation": null
+    },
+    {
+      "file": "src/astrarun/machine/model.py",
+      "line": 87,
+      "code": "conn = sqlite3.connect(str(self.db_path))",
+      "patterns": [
+        "sqlite_connect"
+      ],
+      "classification": "USER_STATE",
+      "rationale": "Persistent application data/logs/cache resolved via centralized AstraPaths.",
+      "remediation": null
+    },
+    {
+      "file": "src/astrarun/machine/model.py",
+      "line": 110,
+      "code": "conn = sqlite3.connect(str(self.db_path))",
+      "patterns": [
+        "sqlite_connect"
+      ],
+      "classification": "USER_STATE",
+      "rationale": "Persistent application data/logs/cache resolved via centralized AstraPaths.",
+      "remediation": null
+    },
+    {
+      "file": "src/astrarun/machine/model.py",
+      "line": 139,
+      "code": "conn = sqlite3.connect(str(self.db_path))",
+      "patterns": [
+        "sqlite_connect"
+      ],
+      "classification": "USER_STATE",
+      "rationale": "Persistent application data/logs/cache resolved via centralized AstraPaths.",
+      "remediation": null
+    },
+    {
+      "file": "src/astrarun/main.py",
+      "line": 77,
+      "code": "trigger_path.parent.mkdir(parents=True, exist_ok=True)",
+      "patterns": [
+        "mkdir"
+      ],
+      "classification": "USER_STATE",
+      "rationale": "Application runtime state.",
+      "remediation": null
+    },
+    {
+      "file": "src/astrarun/main.py",
+      "line": 78,
+      "code": "trigger_path.write_text(f\"{time.time()}\", encoding=\"utf-8\")",
+      "patterns": [
+        "write_text_or_bytes"
+      ],
+      "classification": "USER_STATE",
+      "rationale": "Application runtime state.",
+      "remediation": null
+    },
+    {
+      "file": "src/astrarun/main.py",
+      "line": 114,
+      "code": "state_path.parent.mkdir(parents=True, exist_ok=True)",
+      "patterns": [
+        "mkdir"
+      ],
+      "classification": "USER_STATE",
+      "rationale": "Application runtime state.",
+      "remediation": null
+    },
+    {
+      "file": "src/astrarun/main.py",
+      "line": 130,
+      "code": "with open(tmp_path, \"w\", encoding=\"utf-8\") as f:",
+      "patterns": [
+        "open_write"
+      ],
+      "classification": "USER_STATE",
+      "rationale": "Application runtime state.",
+      "remediation": null
+    },
+    {
+      "file": "src/astrarun/main.py",
+      "line": 495,
+      "code": "trigger_path.parent.mkdir(parents=True, exist_ok=True)",
+      "patterns": [
+        "mkdir"
+      ],
+      "classification": "USER_STATE",
+      "rationale": "Application runtime state.",
+      "remediation": null
+    },
+    {
+      "file": "src/astrarun/memory/service.py",
+      "line": 53,
+      "code": "self.db_path.parent.mkdir(parents=True, exist_ok=True)",
+      "patterns": [
+        "mkdir"
+      ],
+      "classification": "USER_STATE",
+      "rationale": "Persistent application data/logs/cache resolved via centralized AstraPaths.",
+      "remediation": null
+    },
+    {
+      "file": "src/astrarun/memory/service.py",
+      "line": 155,
+      "code": "self.db_path.parent.mkdir(parents=True, exist_ok=True)",
+      "patterns": [
+        "mkdir"
+      ],
+      "classification": "USER_STATE",
+      "rationale": "Persistent application data/logs/cache resolved via centralized AstraPaths.",
+      "remediation": null
+    },
+    {
+      "file": "src/astrarun/models/downloader.py",
+      "line": 65,
+      "code": "self.target_dir.mkdir(parents=True, exist_ok=True)",
+      "patterns": [
+        "mkdir"
+      ],
+      "classification": "USER_STATE",
+      "rationale": "Persistent application data/logs/cache resolved via centralized AstraPaths.",
+      "remediation": null
+    },
+    {
+      "file": "src/astrarun/models/downloader.py",
+      "line": 97,
+      "code": "dest_path.parent.mkdir(parents=True, exist_ok=True)",
+      "patterns": [
+        "mkdir"
+      ],
+      "classification": "USER_STATE",
+      "rationale": "Persistent application data/logs/cache resolved via centralized AstraPaths.",
+      "remediation": null
+    },
+    {
+      "file": "src/astrarun/network/quarantine.py",
+      "line": 53,
+      "code": "self.quarantine_dir.mkdir(parents=True, exist_ok=True)",
+      "patterns": [
+        "mkdir"
+      ],
+      "classification": "USER_STATE",
+      "rationale": "Persistent application data/logs/cache resolved via centralized AstraPaths.",
+      "remediation": null
+    },
+    {
+      "file": "src/astrarun/network/quarantine.py",
+      "line": 68,
+      "code": "target_dir.mkdir(parents=True, exist_ok=True)",
+      "patterns": [
+        "mkdir"
+      ],
+      "classification": "USER_STATE",
+      "rationale": "Persistent application data/logs/cache resolved via centralized AstraPaths.",
+      "remediation": null
+    },
+    {
+      "file": "src/astrarun/network/quarantine.py",
+      "line": 71,
+      "code": "target_file.write_bytes(content)",
+      "patterns": [
+        "write_text_or_bytes"
+      ],
+      "classification": "USER_STATE",
+      "rationale": "Persistent application data/logs/cache resolved via centralized AstraPaths.",
+      "remediation": null
+    },
+    {
+      "file": "src/astrarun/network/quarantine.py",
+      "line": 89,
+      "code": "meta_file.write_text(json.dumps(record.to_dict(), indent=2), encoding=\"utf-8\")",
+      "patterns": [
+        "write_text_or_bytes"
+      ],
+      "classification": "USER_STATE",
+      "rationale": "Persistent application data/logs/cache resolved via centralized AstraPaths.",
+      "remediation": null
+    },
+    {
+      "file": "src/astrarun/power/ledger.py",
+      "line": 27,
+      "code": "self.db_path.parent.mkdir(parents=True, exist_ok=True)",
+      "patterns": [
+        "mkdir"
+      ],
+      "classification": "USER_STATE",
+      "rationale": "Persistent application data/logs/cache resolved via centralized AstraPaths.",
+      "remediation": null
+    },
+    {
+      "file": "src/astrarun/power/ledger.py",
+      "line": 31,
+      "code": "conn = sqlite3.connect(str(self.db_path))",
+      "patterns": [
+        "sqlite_connect"
+      ],
+      "classification": "USER_STATE",
+      "rationale": "Persistent application data/logs/cache resolved via centralized AstraPaths.",
+      "remediation": null
+    },
+    {
+      "file": "src/astrarun/power/ledger.py",
+      "line": 68,
+      "code": "conn = sqlite3.connect(str(self.db_path))",
+      "patterns": [
+        "sqlite_connect"
+      ],
+      "classification": "USER_STATE",
+      "rationale": "Persistent application data/logs/cache resolved via centralized AstraPaths.",
+      "remediation": null
+    },
+    {
+      "file": "src/astrarun/power/ledger.py",
+      "line": 92,
+      "code": "conn = sqlite3.connect(str(self.db_path))",
+      "patterns": [
+        "sqlite_connect"
+      ],
+      "classification": "USER_STATE",
+      "rationale": "Persistent application data/logs/cache resolved via centralized AstraPaths.",
+      "remediation": null
+    },
+    {
+      "file": "src/astrarun/rag/store.py",
+      "line": 48,
+      "code": "self.db_path.parent.mkdir(parents=True, exist_ok=True)",
+      "patterns": [
+        "mkdir"
+      ],
+      "classification": "USER_STATE",
+      "rationale": "Persistent application data/logs/cache resolved via centralized AstraPaths.",
+      "remediation": null
+    },
+    {
+      "file": "src/astrarun/rag/store.py",
+      "line": 50,
+      "code": "self._conn = sqlite3.connect(",
+      "patterns": [
+        "sqlite_connect"
+      ],
+      "classification": "USER_STATE",
+      "rationale": "Persistent application data/logs/cache resolved via centralized AstraPaths.",
+      "remediation": null
+    },
+    {
+      "file": "src/astrarun/sandbox/appcontainer_launcher.py",
+      "line": 171,
+      "code": "output_dir.mkdir(parents=True, exist_ok=True)",
+      "patterns": [
+        "mkdir"
+      ],
+      "classification": "SANDBOX_RELATIVE",
+      "rationale": "Directory creation and file writes occur strictly inside the ephemeral sandbox container root.",
+      "remediation": null
+    },
+    {
+      "file": "src/astrarun/sandbox/appcontainer_launcher.py",
+      "line": 172,
+      "code": "temp_dir.mkdir(parents=True, exist_ok=True)",
+      "patterns": [
+        "mkdir"
+      ],
+      "classification": "SANDBOX_RELATIVE",
+      "rationale": "Directory creation and file writes occur strictly inside the ephemeral sandbox container root.",
+      "remediation": null
+    },
+    {
+      "file": "src/astrarun/sandbox/appcontainer_launcher.py",
+      "line": 306,
+      "code": "output_dir.mkdir(parents=True, exist_ok=True)",
+      "patterns": [
+        "mkdir"
+      ],
+      "classification": "SANDBOX_RELATIVE",
+      "rationale": "Directory creation and file writes occur strictly inside the ephemeral sandbox container root.",
+      "remediation": null
+    },
+    {
+      "file": "src/astrarun/sandbox/appcontainer_launcher.py",
+      "line": 307,
+      "code": "temp_dir.mkdir(parents=True, exist_ok=True)",
+      "patterns": [
+        "mkdir"
+      ],
+      "classification": "SANDBOX_RELATIVE",
+      "rationale": "Directory creation and file writes occur strictly inside the ephemeral sandbox container root.",
+      "remediation": null
+    },
+    {
+      "file": "src/astrarun/sandbox/appcontainer_launcher.py",
+      "line": 308,
+      "code": "localappdata_dir.mkdir(parents=True, exist_ok=True)",
+      "patterns": [
+        "mkdir"
+      ],
+      "classification": "SANDBOX_RELATIVE",
+      "rationale": "Directory creation and file writes occur strictly inside the ephemeral sandbox container root.",
+      "remediation": null
+    },
+    {
+      "file": "src/astrarun/sandbox/manager.py",
+      "line": 85,
+      "code": "self.base_dir.mkdir(parents=True, exist_ok=True)",
+      "patterns": [
+        "mkdir"
+      ],
+      "classification": "SANDBOX_RELATIVE",
+      "rationale": "Directory creation and file writes occur strictly inside the ephemeral sandbox container root.",
+      "remediation": null
+    },
+    {
+      "file": "src/astrarun/sandbox/manager.py",
+      "line": 159,
+      "code": "run_dir.mkdir(parents=True, exist_ok=True)",
+      "patterns": [
+        "mkdir"
+      ],
+      "classification": "SANDBOX_RELATIVE",
+      "rationale": "Directory creation and file writes occur strictly inside the ephemeral sandbox container root.",
+      "remediation": null
+    },
+    {
+      "file": "src/astrarun/sandbox/manager.py",
+      "line": 162,
+      "code": "script_file.write_bytes(script_code.encode(\"utf-8\"))",
+      "patterns": [
+        "write_text_or_bytes"
+      ],
+      "classification": "SANDBOX_RELATIVE",
+      "rationale": "Directory creation and file writes occur strictly inside the ephemeral sandbox container root.",
+      "remediation": null
+    },
+    {
+      "file": "src/astrarun/sandbox/manager.py",
+      "line": 367,
+      "code": "run_dir.mkdir(parents=True, exist_ok=True)",
+      "patterns": [
+        "mkdir"
+      ],
+      "classification": "SANDBOX_RELATIVE",
+      "rationale": "Directory creation and file writes occur strictly inside the ephemeral sandbox container root.",
+      "remediation": null
+    },
+    {
+      "file": "src/astrarun/sandbox/manager.py",
+      "line": 375,
+      "code": "source_dir.mkdir(parents=True, exist_ok=True)",
+      "patterns": [
+        "mkdir"
+      ],
+      "classification": "SANDBOX_RELATIVE",
+      "rationale": "Directory creation and file writes occur strictly inside the ephemeral sandbox container root.",
+      "remediation": null
+    },
+    {
+      "file": "src/astrarun/sandbox/manager.py",
+      "line": 376,
+      "code": "output_dir.mkdir(parents=True, exist_ok=True)",
+      "patterns": [
+        "mkdir"
+      ],
+      "classification": "SANDBOX_RELATIVE",
+      "rationale": "Directory creation and file writes occur strictly inside the ephemeral sandbox container root.",
+      "remediation": null
+    },
+    {
+      "file": "src/astrarun/sandbox/manager.py",
+      "line": 377,
+      "code": "temp_dir.mkdir(parents=True, exist_ok=True)",
+      "patterns": [
+        "mkdir"
+      ],
+      "classification": "SANDBOX_RELATIVE",
+      "rationale": "Directory creation and file writes occur strictly inside the ephemeral sandbox container root.",
+      "remediation": null
+    },
+    {
+      "file": "src/astrarun/sandbox/manager.py",
+      "line": 378,
+      "code": "evidence_dir.mkdir(parents=True, exist_ok=True)",
+      "patterns": [
+        "mkdir"
+      ],
+      "classification": "SANDBOX_RELATIVE",
+      "rationale": "Directory creation and file writes occur strictly inside the ephemeral sandbox container root.",
+      "remediation": null
+    },
+    {
+      "file": "src/astrarun/sandbox/manager.py",
+      "line": 414,
+      "code": "target_f.parent.mkdir(parents=True, exist_ok=True)",
+      "patterns": [
+        "mkdir"
+      ],
+      "classification": "SANDBOX_RELATIVE",
+      "rationale": "Directory creation and file writes occur strictly inside the ephemeral sandbox container root.",
+      "remediation": null
+    },
+    {
+      "file": "src/astrarun/sandbox/manager.py",
+      "line": 415,
+      "code": "target_f.write_bytes(content.encode(\"utf-8\"))",
+      "patterns": [
+        "write_text_or_bytes"
+      ],
+      "classification": "SANDBOX_RELATIVE",
+      "rationale": "Directory creation and file writes occur strictly inside the ephemeral sandbox container root.",
+      "remediation": null
+    },
+    {
+      "file": "src/astrarun/sandbox/manager.py",
+      "line": 419,
+      "code": "(source_dir / norm).parent.mkdir(parents=True, exist_ok=True)",
+      "patterns": [
+        "mkdir"
+      ],
+      "classification": "SANDBOX_RELATIVE",
+      "rationale": "Directory creation and file writes occur strictly inside the ephemeral sandbox container root.",
+      "remediation": null
+    },
+    {
+      "file": "src/astrarun/sandbox/manager.py",
+      "line": 420,
+      "code": "(source_dir / norm).write_bytes(content.encode(\"utf-8\"))",
+      "patterns": [
+        "write_text_or_bytes"
+      ],
+      "classification": "SANDBOX_RELATIVE",
+      "rationale": "Directory creation and file writes occur strictly inside the ephemeral sandbox container root.",
+      "remediation": null
+    },
+    {
+      "file": "src/astrarun/security/execution_broker.py",
+      "line": 429,
+      "code": "audit_dir.mkdir(parents=True, exist_ok=True)",
+      "patterns": [
+        "mkdir"
+      ],
+      "classification": "USER_STATE",
+      "rationale": "Persistent application data/logs/cache resolved via centralized AstraPaths.",
+      "remediation": null
+    },
+    {
+      "file": "src/astrarun/security/execution_broker.py",
+      "line": 431,
+      "code": "with open(audit_file, \"a\", encoding=\"utf-8\") as f:",
+      "patterns": [
+        "open_write"
+      ],
+      "classification": "USER_STATE",
+      "rationale": "Persistent application data/logs/cache resolved via centralized AstraPaths.",
+      "remediation": null
+    },
+    {
+      "file": "src/astrarun/security/policies.py",
+      "line": 69,
+      "code": "os.getcwd(),",
+      "patterns": [
+        "os_getcwd"
+      ],
+      "classification": "BUG",
+      "rationale": "Ambient os.getcwd() is added to allowed_workspaces by default, allowing arbitrary CWD as workspace.",
+      "remediation": "Remove ambient os.getcwd() from allowed_workspaces; require explicit paths or AstraPaths."
+    },
+    {
+      "file": "src/astrarun/tasks/continuity.py",
+      "line": 44,
+      "code": "self.checkpoints_dir.mkdir(parents=True, exist_ok=True)",
+      "patterns": [
+        "mkdir"
+      ],
+      "classification": "USER_STATE",
+      "rationale": "Persistent application data/logs/cache resolved via centralized AstraPaths.",
+      "remediation": null
+    },
+    {
+      "file": "src/astrarun/tasks/continuity.py",
+      "line": 77,
+      "code": "file_path.write_text(json.dumps(cp.to_dict(), indent=2), encoding=\"utf-8\")",
+      "patterns": [
+        "write_text_or_bytes"
+      ],
+      "classification": "USER_STATE",
+      "rationale": "Persistent application data/logs/cache resolved via centralized AstraPaths.",
+      "remediation": null
+    },
+    {
+      "file": "src/astrarun/tasks/continuity.py",
+      "line": 92,
+      "code": "file_path.write_text(json.dumps(cp.to_dict(), indent=2), encoding=\"utf-8\")",
+      "patterns": [
+        "write_text_or_bytes"
+      ],
+      "classification": "USER_STATE",
+      "rationale": "Persistent application data/logs/cache resolved via centralized AstraPaths.",
+      "remediation": null
+    },
+    {
+      "file": "src/astrarun/tasks/ledger.py",
+      "line": 72,
+      "code": "self.db_path.parent.mkdir(parents=True, exist_ok=True)",
+      "patterns": [
+        "mkdir"
+      ],
+      "classification": "USER_STATE",
+      "rationale": "Persistent application data/logs/cache resolved via centralized AstraPaths.",
+      "remediation": null
+    },
+    {
+      "file": "src/astrarun/tasks/ledger.py",
+      "line": 73,
+      "code": "self._conn = sqlite3.connect(",
+      "patterns": [
+        "sqlite_connect"
+      ],
+      "classification": "USER_STATE",
+      "rationale": "Persistent application data/logs/cache resolved via centralized AstraPaths.",
+      "remediation": null
+    },
+    {
+      "file": "src/astrarun/telemetry/collector.py",
+      "line": 77,
+      "code": "self.event_file.parent.mkdir(parents=True, exist_ok=True)",
+      "patterns": [
+        "mkdir"
+      ],
+      "classification": "USER_STATE",
+      "rationale": "Persistent application data/logs/cache resolved via centralized AstraPaths.",
+      "remediation": null
+    },
+    {
+      "file": "src/astrarun/telemetry/collector.py",
+      "line": 78,
+      "code": "with open(self.event_file, \"a\", encoding=\"utf-8\") as f:",
+      "patterns": [
+        "open_write"
+      ],
+      "classification": "USER_STATE",
+      "rationale": "Persistent application data/logs/cache resolved via centralized AstraPaths.",
+      "remediation": null
+    },
+    {
+      "file": "src/astrarun/telemetry/shadow_collector.py",
+      "line": 81,
+      "code": "self.event_file.parent.mkdir(parents=True, exist_ok=True)",
+      "patterns": [
+        "mkdir"
+      ],
+      "classification": "USER_STATE",
+      "rationale": "Persistent application data/logs/cache resolved via centralized AstraPaths.",
+      "remediation": null
+    },
+    {
+      "file": "src/astrarun/telemetry/shadow_collector.py",
+      "line": 82,
+      "code": "with open(self.event_file, \"a\", encoding=\"utf-8\") as f:",
+      "patterns": [
+        "open_write"
+      ],
+      "classification": "USER_STATE",
+      "rationale": "Persistent application data/logs/cache resolved via centralized AstraPaths.",
+      "remediation": null
+    },
+    {
+      "file": "src/astrarun/telemetry/shadow_collector.py",
+      "line": 147,
+      "code": "self.event_file.parent.mkdir(parents=True, exist_ok=True)",
+      "patterns": [
+        "mkdir"
+      ],
+      "classification": "USER_STATE",
+      "rationale": "Persistent application data/logs/cache resolved via centralized AstraPaths.",
+      "remediation": null
+    },
+    {
+      "file": "src/astrarun/telemetry/shadow_collector.py",
+      "line": 148,
+      "code": "with open(self.event_file, \"a\", encoding=\"utf-8\") as f:",
+      "patterns": [
+        "open_write"
+      ],
+      "classification": "USER_STATE",
+      "rationale": "Persistent application data/logs/cache resolved via centralized AstraPaths.",
+      "remediation": null
+    },
+    {
+      "file": "src/astrarun/tools/lifecycle.py",
+      "line": 55,
+      "code": "self.storage_path.parent.mkdir(parents=True, exist_ok=True)",
+      "patterns": [
+        "mkdir"
+      ],
+      "classification": "USER_STATE",
+      "rationale": "Persistent application data/logs/cache resolved via centralized AstraPaths.",
+      "remediation": null
+    },
+    {
+      "file": "src/astrarun/tools/lifecycle.py",
+      "line": 57,
+      "code": "self.skills_dir.mkdir(parents=True, exist_ok=True)",
+      "patterns": [
+        "mkdir"
+      ],
+      "classification": "USER_STATE",
+      "rationale": "Persistent application data/logs/cache resolved via centralized AstraPaths.",
+      "remediation": null
+    },
+    {
+      "file": "src/astrarun/tools/lifecycle.py",
+      "line": 74,
+      "code": "self.storage_path.write_text(json.dumps(d, indent=2), encoding=\"utf-8\")",
+      "patterns": [
+        "write_text_or_bytes"
+      ],
+      "classification": "USER_STATE",
+      "rationale": "Persistent application data/logs/cache resolved via centralized AstraPaths.",
+      "remediation": null
+    },
+    {
+      "file": "src/astrarun/tools/lifecycle.py",
+      "line": 127,
+      "code": "skill_dir.mkdir(parents=True, exist_ok=True)",
+      "patterns": [
+        "mkdir"
+      ],
+      "classification": "USER_STATE",
+      "rationale": "Persistent application data/logs/cache resolved via centralized AstraPaths.",
+      "remediation": null
+    },
+    {
+      "file": "src/astrarun/tools/lifecycle.py",
+      "line": 161,
+      "code": "skill_file.write_text(md_content, encoding=\"utf-8\")",
+      "patterns": [
+        "write_text_or_bytes"
+      ],
+      "classification": "USER_STATE",
+      "rationale": "Persistent application data/logs/cache resolved via centralized AstraPaths.",
+      "remediation": null
+    },
+    {
+      "file": "src/astrarun/tools/system_adapter.py",
+      "line": 122,
+      "code": "dest_file = (Path.cwd() / path_obj).resolve()",
+      "patterns": [
+        "path_cwd"
+      ],
+      "classification": "BUG",
+      "rationale": "Relative output file path in battery report resolves against Path.cwd().",
+      "remediation": "Resolve relative output paths against get_downloads_directory() or AstraPaths.temp_dir()."
+    },
+    {
+      "file": "src/astrarun/tools/system_adapter.py",
+      "line": 131,
+      "code": "dest_file.parent.mkdir(parents=True, exist_ok=True)",
+      "patterns": [
+        "mkdir"
+      ],
+      "classification": "USER_STATE",
+      "rationale": "Application runtime state.",
+      "remediation": null
+    },
+    {
+      "file": "src/astrarun/ui/first_run.py",
+      "line": 77,
+      "code": "marker.parent.mkdir(parents=True, exist_ok=True)",
+      "patterns": [
+        "mkdir"
+      ],
+      "classification": "USER_STATE",
+      "rationale": "Persistent application data/logs/cache resolved via centralized AstraPaths.",
+      "remediation": null
+    },
+    {
+      "file": "src/astrarun/ui/first_run.py",
+      "line": 78,
+      "code": "marker.write_text(f\"completed_version={VERSION}\\n\", encoding=\"utf-8\")",
+      "patterns": [
+        "write_text_or_bytes"
+      ],
+      "classification": "USER_STATE",
+      "rationale": "Persistent application data/logs/cache resolved via centralized AstraPaths.",
+      "remediation": null
+    },
+    {
+      "file": "src/astrarun/ui/first_run.py",
+      "line": 521,
+      "code": "cfg_path.parent.mkdir(parents=True, exist_ok=True)",
+      "patterns": [
+        "mkdir"
+      ],
+      "classification": "USER_STATE",
+      "rationale": "Persistent application data/logs/cache resolved via centralized AstraPaths.",
+      "remediation": null
+    },
+    {
+      "file": "src/astrarun/ui/first_run.py",
+      "line": 522,
+      "code": "cfg_path.write_text(json.dumps(mapping, indent=2), encoding=\"utf-8\")",
+      "patterns": [
+        "write_text_or_bytes"
+      ],
+      "classification": "USER_STATE",
+      "rationale": "Persistent application data/logs/cache resolved via centralized AstraPaths.",
+      "remediation": null
+    },
+    {
+      "file": "src/astrarun/ui/settings.py",
+      "line": 574,
+      "code": "logs_dir.mkdir(parents=True, exist_ok=True)",
+      "patterns": [
+        "mkdir"
+      ],
+      "classification": "USER_STATE",
+      "rationale": "Persistent application data/logs/cache resolved via centralized AstraPaths.",
+      "remediation": null
+    },
+    {
+      "file": "src/astrarun/ui/settings.py",
+      "line": 642,
+      "code": "p.parent.mkdir(parents=True, exist_ok=True)",
+      "patterns": [
+        "mkdir"
+      ],
+      "classification": "USER_STATE",
+      "rationale": "Persistent application data/logs/cache resolved via centralized AstraPaths.",
+      "remediation": null
+    },
+    {
+      "file": "src/astrarun/ui/settings.py",
+      "line": 643,
+      "code": "with open(p, \"w\", encoding=\"utf-8\") as f:",
+      "patterns": [
+        "open_write"
+      ],
+      "classification": "USER_STATE",
+      "rationale": "Persistent application data/logs/cache resolved via centralized AstraPaths.",
+      "remediation": null
+    },
+    {
+      "file": "src/astrarun/ui/uninstall_wizard.py",
+      "line": 439,
+      "code": "data_dir.mkdir(parents=True, exist_ok=True)",
+      "patterns": [
+        "mkdir"
+      ],
+      "classification": "USER_STATE",
+      "rationale": "Persistent application data/logs/cache resolved via centralized AstraPaths.",
+      "remediation": null
+    },
+    {
+      "file": "src/astrarun/ui/uninstall_wizard.py",
+      "line": 441,
+      "code": "plan_file.write_text(json.dumps(plan, indent=2), encoding=\"utf-8\")",
+      "patterns": [
+        "write_text_or_bytes"
+      ],
+      "classification": "USER_STATE",
+      "rationale": "Persistent application data/logs/cache resolved via centralized AstraPaths.",
+      "remediation": null
+    },
+    {
+      "file": "src/astrarun/ui/uninstall_wizard.py",
+      "line": 443,
+      "code": "plan_txt.write_text(\"\\n\".join(plan[\"paths_to_remove\"]), encoding=\"utf-8\")",
+      "patterns": [
+        "write_text_or_bytes"
+      ],
+      "classification": "USER_STATE",
+      "rationale": "Persistent application data/logs/cache resolved via centralized AstraPaths.",
+      "remediation": null
+    },
+    {
+      "file": "src/astrarun/usage/store.py",
+      "line": 45,
+      "code": "self.data_file.parent.mkdir(parents=True, exist_ok=True)",
+      "patterns": [
+        "mkdir"
+      ],
+      "classification": "USER_STATE",
+      "rationale": "Persistent application data/logs/cache resolved via centralized AstraPaths.",
+      "remediation": null
+    },
+    {
+      "file": "src/astrarun/usage/store.py",
+      "line": 46,
+      "code": "with open(self.data_file, \"w\", encoding=\"utf-8\") as f:",
+      "patterns": [
+        "open_write"
+      ],
+      "classification": "USER_STATE",
+      "rationale": "Persistent application data/logs/cache resolved via centralized AstraPaths.",
+      "remediation": null
+    },
+    {
+      "file": "src/astrarun/visualization/render_worker.py",
+      "line": 123,
+      "code": "output_path.parent.mkdir(parents=True, exist_ok=True)",
+      "patterns": [
+        "mkdir"
+      ],
+      "classification": "USER_STATE",
+      "rationale": "Persistent application data/logs/cache resolved via centralized AstraPaths.",
+      "remediation": null
+    },
+    {
+      "file": "src/astrarun/visualization/renderer.py",
+      "line": 46,
+      "code": "temp_dir.mkdir(parents=True, exist_ok=True)",
+      "patterns": [
+        "mkdir"
+      ],
+      "classification": "USER_STATE",
+      "rationale": "Persistent application data/logs/cache resolved via centralized AstraPaths.",
+      "remediation": null
+    },
+    {
+      "file": "src/astrarun/visualization/renderer.py",
+      "line": 82,
+      "code": "temp_spec_file.write_text(validated_spec.model_dump_json(), encoding=\"utf-8\")",
+      "patterns": [
+        "write_text_or_bytes"
+      ],
+      "classification": "USER_STATE",
+      "rationale": "Persistent application data/logs/cache resolved via centralized AstraPaths.",
+      "remediation": null
+    },
+    {
+      "file": "src/astrarun/visualization/renderer.py",
+      "line": 95,
+      "code": "final_dest.parent.mkdir(parents=True, exist_ok=True)",
+      "patterns": [
+        "mkdir"
+      ],
+      "classification": "USER_STATE",
+      "rationale": "Persistent application data/logs/cache resolved via centralized AstraPaths.",
+      "remediation": null
+    },
+    {
+      "file": "src/astrarun/workflows/engine.py",
+      "line": 48,
+      "code": "self.audit_log_path.parent.mkdir(parents=True, exist_ok=True)",
+      "patterns": [
+        "mkdir"
+      ],
+      "classification": "USER_STATE",
+      "rationale": "Persistent application data/logs/cache resolved via centralized AstraPaths.",
+      "remediation": null
+    },
+    {
+      "file": "src/astrarun/workflows/engine.py",
+      "line": 188,
+      "code": "with open(self.audit_log_path, \"a\", encoding=\"utf-8\") as f:",
+      "patterns": [
+        "open_write"
+      ],
+      "classification": "USER_STATE",
+      "rationale": "Persistent application data/logs/cache resolved via centralized AstraPaths.",
+      "remediation": null
+    }
+  ]
+}

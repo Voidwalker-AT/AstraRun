@@ -38,8 +38,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--config-dir",
         type=str,
-        default="config",
-        help="Path to configuration directory (default: config)",
+        default=None,
+        help="Path to configuration directory (default: %LOCALAPPDATA%/AstraRun/config)",
     )
     parser.add_argument(
         "--run-command",
@@ -194,8 +194,9 @@ def main() -> int:
         res = astra_app.handle_request(args.run_command)
         status_tag = "SUCCESS" if res.success else "FAILURE"
         logger.info("Result: %s -> %s", status_tag, res.message)
-        print(f"[{status_tag}] {res.message}")
         astra_app.shutdown()
+        from astrarun.core.crash import record_clean_shutdown
+        record_clean_shutdown(reason="headless_command_success" if res.success else "headless_command_failure")
         return 0 if res.success else 1
 
     # 3. Single-Instance Enforcement
@@ -465,16 +466,17 @@ def main() -> int:
             tray_icon.hide()
             power_manager.handle_session_end()
             astra_app.shutdown()
-            # Clean up state file on normal exit ONLY if it belongs to current process
-            state_path = AstraPaths.state_file_path()
-            if state_path.exists():
-                try:
-                    with open(state_path, "r", encoding="utf-8") as f:
-                        cur_data = json.load(f)
-                    if cur_data.get("pid") == os.getpid():
-                        state_path.unlink(missing_ok=True)
-                except Exception:
-                    pass
+            from astrarun.core.crash import record_clean_shutdown
+            record_clean_shutdown(reason="gui_clean_shutdown")
+            write_state_file(
+                status="CLEAN_EXIT",
+                ready=False,
+                stage="SHUTDOWN_COMPLETED",
+                modifiers=modifiers,
+                key=key,
+                exit_code=0,
+                started_at=start_iso,
+            )
         except Exception as e:
             logger.error("Error during cleanup: %s", e)
 

@@ -1,0 +1,68 @@
+{
+  "milestone": "F0_24A",
+  "stage": 8,
+  "title": "Adversarial False Completion Suite Results",
+  "timestamp": 1791611715.031098,
+  "test_suite": "tests/test_f0_21_adversarial_false_completion.py",
+  "total_cases": 6,
+  "false_completion_count": 0,
+  "false_completion_rate_pct": 0.0,
+  "mandatory_invariant_satisfied": true,
+  "evidence_class": "TEST_EXECUTED",
+  "cases": [
+    {
+      "case_id": "ADV-01-CORRECT-FILENAME-WRONG-CONTENTS",
+      "description": "File created with correct name test1.txt but contains wrong content",
+      "adversarial_setup": "content='goodbye' when expected='hello'",
+      "expected_outcome": "REJECTED (task.status != COMPLETED)",
+      "observed_outcome": "REJECTED (task.status == FAILED)",
+      "false_completion_occurred": false,
+      "verdict": "PASS_CORRECTLY_REJECTED"
+    },
+    {
+      "case_id": "ADV-02-NON-EMPTY-WRONG-CONTENT",
+      "description": "File non-empty with 1024 bytes of garbage data instead of target payload",
+      "adversarial_setup": "1024 bytes garbage vs expected payload",
+      "expected_outcome": "REJECTED (task.status != COMPLETED)",
+      "observed_outcome": "REJECTED (task.status == FAILED)",
+      "false_completion_occurred": false,
+      "verdict": "PASS_CORRECTLY_REJECTED"
+    },
+    {
+      "case_id": "ADV-03-ARTIFACT-WRONG-DIRECTORY",
+      "description": "Target file created in Documents instead of Desktop",
+      "adversarial_setup": "Documents\\test1.txt vs Desktop\\test1.txt",
+      "expected_outcome": "REJECTED (task.status != COMPLETED)",
+      "observed_outcome": "REJECTED (task.status == FAILED)",
+      "false_completion_occurred": false,
+      "verdict": "PASS_CORRECTLY_REJECTED"
+    },
+    {
+      "case_id": "ADV-04-CAPABILITY-SUCCESS-STATE-UNCHANGED",
+      "description": "Capability reports success=True but ground-truth physical state is unchanged",
+      "adversarial_setup": "Synthesized success=True return on missing physical file",
+      "expected_outcome": "REJECTED (task.status != COMPLETED)",
+      "observed_outcome": "REJECTED (task.status == FAILED)",
+      "false_completion_occurred": false,
+      "verdict": "PASS_CORRECTLY_REJECTED"
+    },
+    {
+      "case_id": "ADV-05-INTERMEDIATE-STEP-SUCCESS-FINAL-PREDICATE-FALSE",
+      "description": "All steps return success=True but final GoalPredicate fails ground truth",
+      "adversarial_setup": "Intermediate steps succeed, final predicate unsatisfied",
+      "expected_outcome": "REJECTED (task.status != COMPLETED)",
+      "observed_outcome": "REJECTED (task.status == FAILED)",
+      "false_completion_occurred": false,
+      "verdict": "PASS_CORRECTLY_REJECTED"
+    },
+    {
+      "case_id": "ADV-06-UI-ELEMENT-STATE-MISMATCH",
+      "description": "UI action succeeds on wrong control or control state mismatch",
+      "adversarial_setup": "Mocked successful button click on disabled or hidden control",
+      "expected_outcome": "REJECTED (task.status != COMPLETED)",
+      "observed_outcome": "REJECTED (task.status == FAILED)",
+      "false_completion_occurred": false,
+      "verdict": "PASS_CORRECTLY_REJECTED"
+    }
+  ]
+}

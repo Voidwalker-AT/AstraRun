@@ -1,8 +1,8 @@
 {
   "milestone": "F0-15",
   "description": "Astra-Owned Application / Window Lifecycle Cleanup Physical Verification",
-  "timestamp": 1791471324.2175486,
-  "timestamp_iso": "2026-10-08 20:25:24",
+  "timestamp": 1791523348.4931931,
+  "timestamp_iso": "2026-10-09 10:52:28",
   "host": {
     "platform": "Windows-11-10.0.26200-SP0",
     "machine": "AMD64",
@@ -23,46 +23,46 @@
     {
       "test": "calculator_lifecycle",
       "status": "PASS",
-      "task_id": "test_f0_15_calc_1791471300",
-      "pid": 18500,
-      "hwnd": 1641278,
+      "task_id": "test_f0_15_calc_1791523324",
+      "pid": 21204,
+      "hwnd": 6423822,
       "calculation": "58+42=",
       "verified_display": "Display is 100",
       "closure_verified": true,
-      "latency_sec": 4.178
+      "latency_sec": 4.684
     },
     {
       "test": "notepad_lifecycle_save_before_close",
       "status": "PASS",
-      "task_id": "test_f0_15_notepad_1791471304",
-      "pid": 2800,
-      "hwnd": 1772228,
-      "artifact_path": "C:\\Users\\hp\\AppData\\Local\\Temp\\astra_f0_15_artifact_1791471304.txt",
-      "sha256": "130af861f0dd07660bf565f51142b60956a5a41f6c01f7369545c8277f850f32",
+      "task_id": "test_f0_15_notepad_1791523329",
+      "pid": 19832,
+      "hwnd": 3213038,
+      "artifact_path": "C:\\Users\\hp\\AppData\\Local\\Temp\\astra_f0_15_artifact_1791523329.txt",
+      "sha256": "48e10b06e736b30e062562f7e2ead2f516ad791193a3cd9c9d0ed9cde228cb23",
       "closure_verified": true,
       "artifact_intact": true,
-      "latency_sec": 4.54
+      "latency_sec": 4.654
     },
     {
       "test": "mixed_ownership_user_protection",
       "status": "PASS",
-      "user_hwnd": 1772350,
-      "user_pid": 1952,
-      "astra_hwnd": 461636,
-      "astra_pid": 17916,
+      "user_hwnd": 1181732,
+      "user_pid": 22764,
+      "astra_hwnd": 1050892,
+      "astra_pid": 22764,
       "user_window_preserved": true,
       "user_content_untouched": true,
       "astra_window_closed": true,
-      "latency_sec": 12.437
+      "latency_sec": 11.639
     },
     {
       "test": "user_takeover_detachment",
       "status": "PASS",
-      "task_id": "test_f0_15_takeover_1791471321",
-      "hwnd": 1968908,
-      "pid": 2500,
+      "task_id": "test_f0_15_takeover_1791523346",
+      "hwnd": 395852,
+      "pid": 20884,
       "preserved_on_takeover": true,
-      "latency_sec": 2.646
+      "latency_sec": 1.996
     },
     {
       "test": "orphan_recovery_and_pid_reuse",

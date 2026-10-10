@@ -1,0 +1,239 @@
+{
+  "timestamp": "2026-10-10T03:22:02.665387+00:00",
+  "phase": "F0-23",
+  "description": "Task-local side-effect ledger audit across clean executions and unrequested mutation scenarios.",
+  "metrics": {
+    "total_evaluated": 32,
+    "passed": 32,
+    "failed": 0,
+    "pass_rate_percent": 100.0,
+    "unrequested_side_effects_detected": 17
+  },
+  "results": [
+    {
+      "scenario": "Clean Document Production",
+      "expected_clean": true,
+      "actual_clean": true,
+      "unrequested_side_effects": [],
+      "passed": true
+    },
+    {
+      "scenario": "GPU Query with Unrequested Window Snap (Contradiction 1D)",
+      "expected_clean": false,
+      "actual_clean": false,
+      "unrequested_side_effects": [
+        {
+          "entry_id": "win_window_snap_1000",
+          "mutation_type": "WINDOW_SNAP",
+          "target": "Active Browser Window (HWND 0x3e8)",
+          "ownership": "USER_OWNED_PREEXISTING",
+          "reason": "Consequential mutation occurred without advancing any contract predicate."
+        }
+      ],
+      "passed": true
+    },
+    {
+      "scenario": "File Save with Unrequested Explorer Windows",
+      "expected_clean": false,
+      "actual_clean": false,
+      "unrequested_side_effects": [
+        {
+          "entry_id": "proc_launch_999",
+          "mutation_type": "PROCESS_LAUNCH",
+          "target": "explorer.exe (PID 999)",
+          "ownership": "ASTRA_OWNED_TASK_RESOURCE",
+          "reason": "Consequential mutation occurred without advancing any contract predicate."
+        },
+        {
+          "entry_id": "win_window_open_3001",
+          "mutation_type": "WINDOW_OPEN",
+          "target": "Desktop (HWND 0xbb9)",
+          "ownership": "ASTRA_OWNED_TASK_RESOURCE",
+          "reason": "Consequential mutation occurred without advancing any contract predicate."
+        }
+      ],
+      "passed": true
+    },
+    {
+      "scenario": "Pre-existing User Process Closed Without Request",
+      "expected_clean": false,
+      "actual_clean": false,
+      "user_violations": [
+        {
+          "entry_id": "proc_kill_200",
+          "target": "vivaldi.exe (PID 200)",
+          "violation": "Pre-existing user-owned resource closed/deleted without request"
+        }
+      ],
+      "passed": true
+    },
+    {
+      "scenario": "Clean Task 1",
+      "expected_clean": true,
+      "actual_clean": true,
+      "passed": true
+    },
+    {
+      "scenario": "Clean Task 2",
+      "expected_clean": true,
+      "actual_clean": true,
+      "passed": true
+    },
+    {
+      "scenario": "Clean Task 3",
+      "expected_clean": true,
+      "actual_clean": true,
+      "passed": true
+    },
+    {
+      "scenario": "Clean Task 4",
+      "expected_clean": true,
+      "actual_clean": true,
+      "passed": true
+    },
+    {
+      "scenario": "Clean Task 5",
+      "expected_clean": true,
+      "actual_clean": true,
+      "passed": true
+    },
+    {
+      "scenario": "Clean Task 6",
+      "expected_clean": true,
+      "actual_clean": true,
+      "passed": true
+    },
+    {
+      "scenario": "Clean Task 7",
+      "expected_clean": true,
+      "actual_clean": true,
+      "passed": true
+    },
+    {
+      "scenario": "Clean Task 8",
+      "expected_clean": true,
+      "actual_clean": true,
+      "passed": true
+    },
+    {
+      "scenario": "Clean Task 9",
+      "expected_clean": true,
+      "actual_clean": true,
+      "passed": true
+    },
+    {
+      "scenario": "Clean Task 10",
+      "expected_clean": true,
+      "actual_clean": true,
+      "passed": true
+    },
+    {
+      "scenario": "Clean Task 11",
+      "expected_clean": true,
+      "actual_clean": true,
+      "passed": true
+    },
+    {
+      "scenario": "Clean Task 12",
+      "expected_clean": true,
+      "actual_clean": true,
+      "passed": true
+    },
+    {
+      "scenario": "Clean Task 13",
+      "expected_clean": true,
+      "actual_clean": true,
+      "passed": true
+    },
+    {
+      "scenario": "Clean Task 14",
+      "expected_clean": true,
+      "actual_clean": true,
+      "passed": true
+    },
+    {
+      "scenario": "Unrequested File Mutation 1",
+      "expected_clean": false,
+      "actual_clean": false,
+      "passed": true
+    },
+    {
+      "scenario": "Unrequested File Mutation 2",
+      "expected_clean": false,
+      "actual_clean": false,
+      "passed": true
+    },
+    {
+      "scenario": "Unrequested File Mutation 3",
+      "expected_clean": false,
+      "actual_clean": false,
+      "passed": true
+    },
+    {
+      "scenario": "Unrequested File Mutation 4",
+      "expected_clean": false,
+      "actual_clean": false,
+      "passed": true
+    },
+    {
+      "scenario": "Unrequested File Mutation 5",
+      "expected_clean": false,
+      "actual_clean": false,
+      "passed": true
+    },
+    {
+      "scenario": "Unrequested File Mutation 6",
+      "expected_clean": false,
+      "actual_clean": false,
+      "passed": true
+    },
+    {
+      "scenario": "Unrequested File Mutation 7",
+      "expected_clean": false,
+      "actual_clean": false,
+      "passed": true
+    },
+    {
+      "scenario": "Unrequested File Mutation 8",
+      "expected_clean": false,
+      "actual_clean": false,
+      "passed": true
+    },
+    {
+      "scenario": "Unrequested File Mutation 9",
+      "expected_clean": false,
+      "actual_clean": false,
+      "passed": true
+    },
+    {
+      "scenario": "Unrequested File Mutation 10",
+      "expected_clean": false,
+      "actual_clean": false,
+      "passed": true
+    },
+    {
+      "scenario": "Unrequested File Mutation 11",
+      "expected_clean": false,
+      "actual_clean": false,
+      "passed": true
+    },
+    {
+      "scenario": "Unrequested File Mutation 12",
+      "expected_clean": false,
+      "actual_clean": false,
+      "passed": true
+    },
+    {
+      "scenario": "Unrequested File Mutation 13",
+      "expected_clean": false,
+      "actual_clean": false,
+      "passed": true
+    },
+    {
+      "scenario": "Unrequested File Mutation 14",
+      "expected_clean": false,
+      "actual_clean": false,
+      "passed": true
+    }
+  ]
+}

@@ -1,0 +1,204 @@
+{
+  "milestone": "F0_24A",
+  "stage": 17,
+  "title": "Evidence Closure and Audit Trail Verification",
+  "timestamp": "2026-10-10T06:36:27.722417+00:00",
+  "summary": {
+    "total_required_audit_artifacts": 17,
+    "present_audit_artifacts": 17,
+    "missing_artifacts_count": 0,
+    "all_artifacts_valid_json": true,
+    "evidence_integrity_satisfied": true,
+    "verdict": "PASS",
+    "evidence_class": "TEST_EXECUTED"
+  },
+  "artifacts_inventory": [
+    {
+      "stage": "Stage 1",
+      "file": "F0_24A_BASELINE.json",
+      "path": "e:\\Workspace\\Active\\AstraRun\\docs\\audit\\F0_24A_BASELINE.json",
+      "exists": true,
+      "json_valid": true,
+      "size_bytes": 44364,
+      "sha256": "89d080d1661549708aea2c70451334c983963b6178b8dc38f258db698969d457",
+      "stage_verdict": "RECORDED",
+      "evidence_class": "FROZEN_PRODUCT_OBSERVED"
+    },
+    {
+      "stage": "Stage 2",
+      "file": "F0_24A_BEFORE_REPRODUCTION.json",
+      "path": "e:\\Workspace\\Active\\AstraRun\\docs\\audit\\F0_24A_BEFORE_REPRODUCTION.json",
+      "exists": true,
+      "json_valid": true,
+      "size_bytes": 118259,
+      "sha256": "4ad64c79b8a9c0466233f817a25d85acfa5eb3865d895995bdd6f1eede63c9cf",
+      "stage_verdict": "RECORDED",
+      "evidence_class": "FROZEN_PRODUCT_OBSERVED"
+    },
+    {
+      "stage": "Stage 3",
+      "file": "F0_24A_EXECUTION_TRACE.json",
+      "path": "e:\\Workspace\\Active\\AstraRun\\docs\\audit\\F0_24A_EXECUTION_TRACE.json",
+      "exists": true,
+      "json_valid": true,
+      "size_bytes": 131129,
+      "sha256": "1ce79f57448f059216ced81de3036c327502fcc31dec8ea28aacd991f39e301a",
+      "stage_verdict": "RECORDED",
+      "evidence_class": "FROZEN_PRODUCT_OBSERVED"
+    },
+    {
+      "stage": "Stage 4",
+      "file": "F0_24A_SOURCE_VS_FROZEN_DIFF.json",
+      "path": "e:\\Workspace\\Active\\AstraRun\\docs\\audit\\F0_24A_SOURCE_VS_FROZEN_DIFF.json",
+      "exists": true,
+      "json_valid": true,
+      "size_bytes": 2878,
+      "sha256": "c2e0a9081ca2c8db54742295cf707acce865564dbb913f2c834713371577a432",
+      "stage_verdict": "RECORDED",
+      "evidence_class": "SOURCE_INSPECTED"
+    },
+    {
+      "stage": "Stage 5A",
+      "file": "F0_24A_INPUT_PATH_INVENTORY.json",
+      "path": "e:\\Workspace\\Active\\AstraRun\\docs\\audit\\F0_24A_INPUT_PATH_INVENTORY.json",
+      "exists": true,
+      "json_valid": true,
+      "size_bytes": 5430,
+      "sha256": "c0f49f286a46a67d945090c486170840438013a6fd5dec225ff47929dcd8bf4f",
+      "stage_verdict": "RECORDED",
+      "evidence_class": "SOURCE_INSPECTED"
+    },
+    {
+      "stage": "Stage 5B",
+      "file": "F0_24A_EXECUTION_PATH_ARCHITECTURE.json",
+      "path": "e:\\Workspace\\Active\\AstraRun\\docs\\audit\\F0_24A_EXECUTION_PATH_ARCHITECTURE.json",
+      "exists": true,
+      "json_valid": true,
+      "size_bytes": 6793,
+      "sha256": "0d165e67addcdd64db84b800b2e74563a06ac10c25f6643dcf8e9268d02cc43b",
+      "stage_verdict": "RECORDED",
+      "evidence_class": "SOURCE_INSPECTED"
+    },
+    {
+      "stage": "Stage 7",
+      "file": "F0_24A_DEV_ACCEPTANCE_RESULTS.json",
+      "path": "e:\\Workspace\\Active\\AstraRun\\docs\\audit\\F0_24A_DEV_ACCEPTANCE_RESULTS.json",
+      "exists": true,
+      "json_valid": true,
+      "size_bytes": 3379,
+      "sha256": "68c7ee244597951ffbb946cc89aba6e9b56772f83772cefaeaa46fcd550360dd",
+      "stage_verdict": "RECORDED",
+      "evidence_class": "PHYSICALLY_OBSERVED"
+    },
+    {
+      "stage": "Stage 8",
+      "file": "F0_24A_FALSE_COMPLETION_RESULTS.json",
+      "path": "e:\\Workspace\\Active\\AstraRun\\docs\\audit\\F0_24A_FALSE_COMPLETION_RESULTS.json",
+      "exists": true,
+      "json_valid": true,
+      "size_bytes": 3176,
+      "sha256": "aa186c36cb4741f5d672ecaa84e8e073cb3a922443a7756c38910d704341cd7c",
+      "stage_verdict": "RECORDED",
+      "evidence_class": "TEST_EXECUTED"
+    },
+    {
+      "stage": "Stage 9",
+      "file": "F0_24A_GENERALIZATION_RESULTS.json",
+      "path": "e:\\Workspace\\Active\\AstraRun\\docs\\audit\\F0_24A_GENERALIZATION_RESULTS.json",
+      "exists": true,
+      "json_valid": true,
+      "size_bytes": 39150,
+      "sha256": "c461f3669889e71705451381c217e1c8cb6192948a56b169d7b9d6827beafb3f",
+      "stage_verdict": "RECORDED",
+      "evidence_class": "TEST_EXECUTED"
+    },
+    {
+      "stage": "Stage 10A",
+      "file": "F0_24A_SECURITY_PROVENANCE.json",
+      "path": "e:\\Workspace\\Active\\AstraRun\\docs\\audit\\F0_24A_SECURITY_PROVENANCE.json",
+      "exists": true,
+      "json_valid": true,
+      "size_bytes": 1078,
+      "sha256": "fc412d7b2ef67e21bde5146a08b43d98b21c248705e0ed3fa2b526a20ffb7f16",
+      "stage_verdict": "RECORDED",
+      "evidence_class": "TEST_EXECUTED"
+    },
+    {
+      "stage": "Stage 10B",
+      "file": "F0_24A_RESOURCE_RESIDUE.json",
+      "path": "e:\\Workspace\\Active\\AstraRun\\docs\\audit\\F0_24A_RESOURCE_RESIDUE.json",
+      "exists": true,
+      "json_valid": true,
+      "size_bytes": 831,
+      "sha256": "935a82d9a0243f9695d7efbd9994932d33423b039f11c7668115369ca69e022a",
+      "stage_verdict": "PASS",
+      "evidence_class": "PHYSICALLY_OBSERVED"
+    },
+    {
+      "stage": "Stage 11",
+      "file": "F0_24A_SOURCE_FREEZE.json",
+      "path": "e:\\Workspace\\Active\\AstraRun\\docs\\audit\\F0_24A_SOURCE_FREEZE.json",
+      "exists": true,
+      "json_valid": true,
+      "size_bytes": 34382,
+      "sha256": "c90ba3cd7bc20ddad12aab9c9bfb3e39688383b7f1805cb16704a5067fa073d5",
+      "stage_verdict": "RECORDED",
+      "evidence_class": "SOURCE_INSPECTED"
+    },
+    {
+      "stage": "Stage 12",
+      "file": "F0_24A_HARNESS_FREEZE.json",
+      "path": "e:\\Workspace\\Active\\AstraRun\\docs\\audit\\F0_24A_HARNESS_FREEZE.json",
+      "exists": true,
+      "json_valid": true,
+      "size_bytes": 340092,
+      "sha256": "ff09c72d3f22783e8b9826cec5cadad2c4b69caff64aa317082b701299b14a35",
+      "stage_verdict": "RECORDED",
+      "evidence_class": "SOURCE_INSPECTED"
+    },
+    {
+      "stage": "Stage 13",
+      "file": "F0_24A_HOLDOUT_MANIFEST.json",
+      "path": "e:\\Workspace\\Active\\AstraRun\\docs\\audit\\F0_24A_HOLDOUT_MANIFEST.json",
+      "exists": true,
+      "json_valid": true,
+      "size_bytes": 4057,
+      "sha256": "1086fc9d9ebd10d8dbb73f2ab97e4064cc895a92dcbfa7adaa69c7a88614c22b",
+      "stage_verdict": "RECORDED",
+      "evidence_class": "SOURCE_INSPECTED"
+    },
+    {
+      "stage": "Stage 14",
+      "file": "F0_24A_BUILD_INSTALL.json",
+      "path": "e:\\Workspace\\Active\\AstraRun\\docs\\audit\\F0_24A_BUILD_INSTALL.json",
+      "exists": true,
+      "json_valid": true,
+      "size_bytes": 1069,
+      "sha256": "0178f70478c12d3e8c198962d705976e14c1a74f9b7aaaf5ced431332e5ca4ac",
+      "stage_verdict": "PASS",
+      "evidence_class": "FROZEN_PRODUCT_OBSERVED"
+    },
+    {
+      "stage": "Stage 15",
+      "file": "F0_24A_PARITY_VERIFICATION.json",
+      "path": "e:\\Workspace\\Active\\AstraRun\\docs\\audit\\F0_24A_PARITY_VERIFICATION.json",
+      "exists": true,
+      "json_valid": true,
+      "size_bytes": 1345,
+      "sha256": "a85cc70d072125f04230dc107476ae551f7c377a375bfc59e79aebdb1446c866",
+      "stage_verdict": "PASS",
+      "evidence_class": "FROZEN_PRODUCT_OBSERVED"
+    },
+    {
+      "stage": "Stage 16",
+      "file": "F0_24A_FROZEN_PRODUCT_RESULTS.json",
+      "path": "e:\\Workspace\\Active\\AstraRun\\docs\\audit\\F0_24A_FROZEN_PRODUCT_RESULTS.json",
+      "exists": true,
+      "json_valid": true,
+      "size_bytes": 6643,
+      "sha256": "8191f1f37f83787531734d24948c04b901d79f84810682d3289850ebdab57e5e",
+      "stage_verdict": "PASS",
+      "evidence_class": "FROZEN_PRODUCT_PHYSICAL_EXECUTION"
+    }
+  ]
+}

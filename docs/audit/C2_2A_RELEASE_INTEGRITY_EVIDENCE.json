@@ -1,6 +1,6 @@
 {
   "milestone": "C2.2A",
-  "timestamp": 1791398020.1636605,
+  "timestamp": 1791482836.92753,
   "qwen_endpoint": "http://127.0.0.1:8089",
   "total_tasks": 7,
   "passed_tasks": 7,
@@ -8,9 +8,9 @@
     {
       "class": "CLASS_1_ALGORITHM_PURE_MATH",
       "task_id": "task_holdout_cls1_math",
-      "latency_ms": 4057.777800000622,
+      "latency_ms": 3738.213899996481,
       "prompt_hash": "51d52321eb7931a26c3ea47084db9a4aa9309cd98aae64dc4bc20b43003a1b9b",
-      "response_hash": "34edd6161fa4af3cd55f4161f424d05c234e81c2fc1d7662da719c3b59dca1d0",
+      "response_hash": "943305d8d525d7140c4915de0c2f67b6ff7c896bc0449a25c5a5ca92a502e923",
       "ast_safe": true,
       "sandbox_status": "SUCCESS",
       "artifact_sha256": "fa7ebba65b42464bb0e04071862a55abd44d4737799e998c6804935380cc6f25",
@@ -19,18 +19,18 @@
     {
       "class": "CLASS_2_CSV_DATA_TRANSFORM",
       "task_id": "task_holdout_cls2_csv",
-      "latency_ms": 5561.902799992822,
+      "latency_ms": 4062.2356999956537,
       "prompt_hash": "5604eafb5059aacc84f0fdb4b3fa1aec66a571be25a6c25ff0ce503f8f8f1935",
-      "response_hash": "cacb9a379e6eda9c44ccdafbb25ef1e0c3b3825487b8799e87aad5e08ccadabf",
+      "response_hash": "c642f37a9d8d744f4c59d478f657cbaeb6df26e931fcf669f6d9929a4a6f5e0b",
       "ast_safe": true,
       "sandbox_status": "SUCCESS",
-      "artifact_sha256": "ba39d8d3d9b64f7eca4c992431f70966a9df4ecc296d646f660a9bdff533b9bf",
+      "artifact_sha256": "0d96876bf51c5622c2c9f539a6a2edadae620f452b75e20d670a582b3f0020f5",
       "verified": true
     },
     {
       "class": "CLASS_3_STATISTICS_SUMMARY",
       "task_id": "task_holdout_cls3_stats",
-      "latency_ms": 5040.768499995465,
+      "latency_ms": 4206.97569999902,
       "prompt_hash": "c1d396db940b1d688470cd25ebf85af671f5d8faca8cc5775e2f7e9ae339f440",
       "response_hash": "16a547488195694cdb4951be78a6248cb3df1ce35358b45608810745cb308902",
       "ast_safe": true,
@@ -41,9 +41,9 @@
     {
       "class": "CLASS_4_2D_VISUALIZATION_SPEC",
       "task_id": "task_holdout_cls4_vis2d",
-      "latency_ms": 4438.503599987598,
+      "latency_ms": 3477.525099995546,
       "prompt_hash": "ca9f42c6874ec537d05c79d14297793c2ac14e81f730d5d794c7a540027171bf",
-      "response_hash": "4e8eca9d46f9fc9fe474f7e50fdc92975430a7de857b909e76454eac86e595de",
+      "response_hash": "f9faa3c825662babc18d2e335895ee81f4f3b0e7fd9f699879d69910ed45b772",
       "ast_safe": true,
       "sandbox_status": "SUCCESS",
       "artifact_sha256": "4f6b6b278586de32d1e035cdee43ee222edc582b74f4a1fae46abef04c3adee3",
@@ -52,9 +52,9 @@
     {
       "class": "CLASS_5_3D_VISUALIZATION_SPEC",
       "task_id": "task_holdout_cls5_vis3d",
-      "latency_ms": 6126.584100013133,
+      "latency_ms": 5186.121999999159,
       "prompt_hash": "0e2e922a033f8953b79a7f54962342787a197695fcec7498876047c5dc0b4c9b",
-      "response_hash": "6cf5fcdfa3634f4a981ae51323e3a819f3c9172dd65bb3ac6c2e593be231c9f4",
+      "response_hash": "395130f6189fd6c988a8eda9953da4c7469bc0f5b76b95bc2c99578e77d2ad15",
       "ast_safe": true,
       "sandbox_status": "SUCCESS",
       "artifact_sha256": "aa71f3fa934bc80efd93b9b869e8ac40fa2220b57513eb88c75ae304c300cc42",
@@ -63,9 +63,9 @@
     {
       "class": "CLASS_6_MULTISTEP_WORKFLOW",
       "task_id": "task_holdout_cls6_workflow",
-      "latency_ms": 5746.980600000825,
+      "latency_ms": 4381.743799996912,
       "prompt_hash": "8254d0d1bfe4afae9cecf64349c6868662510d29ef094314bcb63986b3dd9032",
-      "response_hash": "58d91f6c7fa94b26d5edcee4080b9bcaacccb29636a5cdf8ff26793f2e227fff",
+      "response_hash": "6b9eff490a51a70144204c8dcb62150fab8916fb51151184cd240e2834bc933f",
       "ast_safe": true,
       "sandbox_status": "SUCCESS",
       "artifacts_produced": [

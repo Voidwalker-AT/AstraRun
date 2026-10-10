@@ -1,0 +1,1247 @@
+{
+  "timestamp": "2026-10-09T16:10:12.039162+00:00",
+  "phase": "F0-21",
+  "composite_tree_sha256": "cc1d8f462d1046114d2f2d55bc827b935c345ecc87abbe5078bd0587b1fb0fd6",
+  "frozen_binary": {
+    "path": "dist/AstraRun/AstraRun.exe",
+    "size_bytes": 77481297,
+    "sha256": "d9036cfa065eac3e76b2e518831fa863a00962b72ed156cd838c1cccb7086947"
+  },
+  "test_files": {
+    "tests/test_f0_21_goal_contract.py": {
+      "size_bytes": 25219,
+      "sha256": "96795c1096614b8ab0af13e0fa3bba24942de4ac69992d1d70ed079b1450854f"
+    },
+    "tests/test_f0_21_post_freeze_holdout.py": {
+      "size_bytes": 4993,
+      "sha256": "4a445c337f045da73a77f1818cb29636915a973452c20e63ee6bdd34372c2b42"
+    }
+  },
+  "production_files_count": 306,
+  "production_files": {
+    "src/astrarun/__init__.py": {
+      "size_bytes": 344,
+      "sha256": "6caaa7dfea0a5563ef8e14a9f3f490c69b880c1bd539e4b52b841d58c7a0c605"
+    },
+    "src/astrarun/agent/__init__.py": {
+      "size_bytes": 1276,
+      "sha256": "5ddfc96f272167a737ec81c28c7d485a68a9b15f7ef1db4ee56b67c85d711a64"
+    },
+    "src/astrarun/agent/graph.py": {
+      "size_bytes": 10122,
+      "sha256": "a99c9fa8f19f89dc7415c30217f43d8b2beb1cff24e8c63759a79a3ff43e544e"
+    },
+    "src/astrarun/agent/indexer.py": {
+      "size_bytes": 15845,
+      "sha256": "209125948eee484a5491cdd5be164888aafb56b7813fb60ae2acf877b0faf6e8"
+    },
+    "src/astrarun/agent/locking.py": {
+      "size_bytes": 6094,
+      "sha256": "d3a546668169ea0066d707ffaa83c3afb9a5ef18c5eccb05aba13f6bc43f6d29"
+    },
+    "src/astrarun/agent/loop.py": {
+      "size_bytes": 26530,
+      "sha256": "a9f5106f1a2509c5d3970cf53f970b585032c0ecc1a2f8787ba3d7929054f20d"
+    },
+    "src/astrarun/agent/models.py": {
+      "size_bytes": 28560,
+      "sha256": "55ae1ce1852fb14fbd59be9f01f6960d64ba740d803b2b885d6b5f480208e9bd"
+    },
+    "src/astrarun/agent/observer.py": {
+      "size_bytes": 5257,
+      "sha256": "e2a85f57ea63115c6f197ccf040aa69c17ed875ca35bd6bd822f22303ac4f4a7"
+    },
+    "src/astrarun/agent/planner.py": {
+      "size_bytes": 72174,
+      "sha256": "9f03bc8bffc763fe8d8cdef9e98cbfd9a8a212de0858c5328d82662077c00343"
+    },
+    "src/astrarun/agent/validator.py": {
+      "size_bytes": 7260,
+      "sha256": "028a2b5d5a3750cbbbfceec3be6df5df2c73cb9f86b9110075f6afb0d49df64e"
+    },
+    "src/astrarun/agent/verifier.py": {
+      "size_bytes": 29405,
+      "sha256": "69084d1d8748f32c2861e04cbaf20ffa3e6d3fe6451cb171443ada85a629a88b"
+    },
+    "src/astrarun/ai_bridge/__init__.py": {
+      "size_bytes": 228,
+      "sha256": "19d55f4813e7256c1f96b478ae7a8d57e3aaa65fc237af4c7861073d85c0ded9"
+    },
+    "src/astrarun/ai_bridge/interface.py": {
+      "size_bytes": 1561,
+      "sha256": "b9a5dae698d0c8b68c3a7a077be6a5f2d7b4480b1b0bb7a31152c25bd796c5f3"
+    },
+    "src/astrarun/app.py": {
+      "size_bytes": 69519,
+      "sha256": "0de3d449429ffea8fb415ecbbac50a8fdcbc7313dcef40a9534ef322be4ec11e"
+    },
+    "src/astrarun/applications/__init__.py": {
+      "size_bytes": 409,
+      "sha256": "29e81d308bfbb5a6b5275ca4a935b30476abb3abf9b258cb1775fe44188c693e"
+    },
+    "src/astrarun/applications/service.py": {
+      "size_bytes": 18022,
+      "sha256": "66418aaa9d0a502690c4e1e66fabee19058131b058fdd718e491519ed4905237"
+    },
+    "src/astrarun/brain/__init__.py": {
+      "size_bytes": 3091,
+      "sha256": "cafa27796cd7ab3f43b8a05ef507323d6c44dd74c5ccd33f3951a472bde7dec1"
+    },
+    "src/astrarun/brain/decision/__init__.py": {
+      "size_bytes": 439,
+      "sha256": "de530c66e4af83155216089eba3f3907e34e31e5c08fe8fdc7f11c1f139dfb9c"
+    },
+    "src/astrarun/brain/decision/entity_resolver.py": {
+      "size_bytes": 13536,
+      "sha256": "aa6b427fe2d4ab024c2d28ac6e8765a1a046ac0a18b004b0eeb038b1c6378d4f"
+    },
+    "src/astrarun/brain/decision/intent.py": {
+      "size_bytes": 4138,
+      "sha256": "219a38d5c9d8e816f9fcde8f79d8f41a31242b0e9b7fac0aec47313e046040ae"
+    },
+    "src/astrarun/brain/memory/__init__.py": {
+      "size_bytes": 761,
+      "sha256": "836c30177c381714ba0be673ce5318b5a37c0c0d44b4035f5fe94777d24cc438"
+    },
+    "src/astrarun/brain/models/__init__.py": {
+      "size_bytes": 1494,
+      "sha256": "dc33dcaf492caaace677ee080855c0226f305dd0b648109c1f0d33713b700e5e"
+    },
+    "src/astrarun/brain/reasoning/__init__.py": {
+      "size_bytes": 416,
+      "sha256": "63ab78fb6138f9c4f759d9ef8c2008cc813cf0a5d3412ff6bb855b5dff6a39e3"
+    },
+    "src/astrarun/brain/vision/__init__.py": {
+      "size_bytes": 833,
+      "sha256": "6de95d461b93a35a0effd08696bf1f0c25fbbc642b99d1d2e6b5ebacbbde5ea7"
+    },
+    "src/astrarun/browser/__init__.py": {
+      "size_bytes": 223,
+      "sha256": "8d9be545bc578d60ecaf8f39051957cbe7c3e009e75e8c7b7f61cade08086ff4"
+    },
+    "src/astrarun/browser/service.py": {
+      "size_bytes": 5378,
+      "sha256": "db999fe79295252570b1fbb481a3fa11bb96a561334a4f183add456dcfa164c9"
+    },
+    "src/astrarun/capabilities/__init__.py": {
+      "size_bytes": 781,
+      "sha256": "d0bff9d7f5854f7a1f01164b4e73bc1c74d78211f1c490826762957e36f44882"
+    },
+    "src/astrarun/capabilities/cli.py": {
+      "size_bytes": 1524,
+      "sha256": "351294bb422df8d5ed9177e2839ec23fa99dec5cd0f3ea543b94265304be56a7"
+    },
+    "src/astrarun/capabilities/manifest.py": {
+      "size_bytes": 24350,
+      "sha256": "f862f965f9aef545f0e5f6a9710e3c3dfc44120bff7e69f560d6f87c88926a60"
+    },
+    "src/astrarun/capabilities/models.py": {
+      "size_bytes": 9678,
+      "sha256": "31013d0a619fc45518f4f861ee38bfdc9b6af20237d8f6fac5ab560a2fe3470c"
+    },
+    "src/astrarun/capabilities/registry.py": {
+      "size_bytes": 60679,
+      "sha256": "32beb4cf6cf2f939e8cae72a6e1aa99e7420069987ba7f886157645811a451e8"
+    },
+    "src/astrarun/capabilities/schema.py": {
+      "size_bytes": 6568,
+      "sha256": "38c844833a6c201240a26f45e7be0f24dd57bc51fa6fcfe2e85e949c30f757d9"
+    },
+    "src/astrarun/capabilities/store.py": {
+      "size_bytes": 2487,
+      "sha256": "383143a3288ad7c977bd7feda76e17b12d7f6fc9cfae4ef988010b20c1d3daad"
+    },
+    "src/astrarun/cognition/__init__.py": {
+      "size_bytes": 1075,
+      "sha256": "18d444b2f1df2ad2ebc3598bc348faace4a74b1b1f4bed6d0d0215e08c530d49"
+    },
+    "src/astrarun/cognition/client.py": {
+      "size_bytes": 7586,
+      "sha256": "c5e1300034e48ca4eb207379279a68db028a918ec2deacb5b115b4a861d0bc66"
+    },
+    "src/astrarun/cognition/context.py": {
+      "size_bytes": 4587,
+      "sha256": "4c253dedcf3ef915212db2b88214c3e2a88c86ad01ee4d939361b26a2df00217"
+    },
+    "src/astrarun/cognition/models.py": {
+      "size_bytes": 9706,
+      "sha256": "c10a75eafc1be29fdba1658d258e996acf94f0d0f6a67ccae917567199a384fe"
+    },
+    "src/astrarun/cognition/residency.py": {
+      "size_bytes": 8070,
+      "sha256": "2e0a2aa2fcf28784ea13e0c6d17cc678928277597e7b36cc0aab3ce86c26cd50"
+    },
+    "src/astrarun/cognition/router.py": {
+      "size_bytes": 11969,
+      "sha256": "6d65ecde13859b29c3c7bc7c8ebbefc9ac07e332ecd4a6e2912c4097c97a93f2"
+    },
+    "src/astrarun/cognition/service.py": {
+      "size_bytes": 33729,
+      "sha256": "b6c02996b820f6600435b1af44c82a50e07793e6f6c66a88e5f285d20b95617f"
+    },
+    "src/astrarun/cognition/supervisor.py": {
+      "size_bytes": 12696,
+      "sha256": "a29d13e2f98b2fced207597ac37640146bf4c9af333cb32860b40a15096f510c"
+    },
+    "src/astrarun/computer_use/__init__.py": {
+      "size_bytes": 1021,
+      "sha256": "527397f067bb47b2c65591db9906fe9e7b2f7337dc23b5cb913cadf380de3134"
+    },
+    "src/astrarun/computer_use/browser/__init__.py": {
+      "size_bytes": 180,
+      "sha256": "bad1921615912cd8d9243883e0e1276f2cf5bd8ef38ab9cd9b9748ba587590d8"
+    },
+    "src/astrarun/computer_use/browser/cdp.py": {
+      "size_bytes": 1472,
+      "sha256": "4479227998af74b02c43efd86de73af454d93c7ef4845e8d1c1de5a61eeb9671"
+    },
+    "src/astrarun/computer_use/controller.py": {
+      "size_bytes": 11539,
+      "sha256": "19709295cfeff37f4e0a43ded14e96a379cc51d1c20ec29f92696d275e1fdef9"
+    },
+    "src/astrarun/computer_use/desktop/__init__.py": {
+      "size_bytes": 186,
+      "sha256": "b5d040fef47e7856821cacdbf12ca73ead4b0bd9dd52a191e04edc181aa297cb"
+    },
+    "src/astrarun/computer_use/desktop/lifecycle.py": {
+      "size_bytes": 3071,
+      "sha256": "70c6c305b29b1817d5a3d7608b68aae4d8d202c5f514a03ab929680d4211ac93"
+    },
+    "src/astrarun/computer_use/facade.py": {
+      "size_bytes": 17478,
+      "sha256": "9fad543bb02d134ccc11e4ccb54aaa2b7157c861853346341c306e2fbdfa7202"
+    },
+    "src/astrarun/computer_use/hooks/__init__.py": {
+      "size_bytes": 168,
+      "sha256": "64ee2694713c3e1a273f3521bd37bdccc0fc0b4e33dcec231bea87d2a86ee54c"
+    },
+    "src/astrarun/computer_use/hooks/desktop_attach.py": {
+      "size_bytes": 946,
+      "sha256": "cc035502937d16b6f03b17665b7326bf16db86d9e2c74280f63f4d34b5edc56c"
+    },
+    "src/astrarun/computer_use/input/__init__.py": {
+      "size_bytes": 196,
+      "sha256": "cd71ec45080ac5c15cd86e95e90a430e1b007b159ddddfb1b172908984007db2"
+    },
+    "src/astrarun/computer_use/input/physical.py": {
+      "size_bytes": 2043,
+      "sha256": "32038df6ecfa01cc3bda4c88fa0c62d43e8b974cd0ca0746f89dfb46c988fd50"
+    },
+    "src/astrarun/computer_use/models.py": {
+      "size_bytes": 3676,
+      "sha256": "6ecdbba305c88f2953c9c915092a56ccee5c41936c3e2aaf82db032447112031"
+    },
+    "src/astrarun/computer_use/observation/__init__.py": {
+      "size_bytes": 155,
+      "sha256": "f51116a663ac6c5ac03e1f3cd3840b6e1d0493a09d427190ad29c0c4d11e4a09"
+    },
+    "src/astrarun/computer_use/observation/observer.py": {
+      "size_bytes": 9073,
+      "sha256": "56b0a30be64aa45d0e298ebac2de855e70b14ded055ee972f494a34e09ec9f65"
+    },
+    "src/astrarun/computer_use/perception/__init__.py": {
+      "size_bytes": 189,
+      "sha256": "232c3132e1c2744d11906c26c1de0030693d63772c7c7fcc928c935252dfd6e9"
+    },
+    "src/astrarun/computer_use/perception/screen.py": {
+      "size_bytes": 1347,
+      "sha256": "963dfbdc677d733dc0f8c0eec16dc2be5a79e99c701e7807f44287ec1d02e806"
+    },
+    "src/astrarun/computer_use/session.py": {
+      "size_bytes": 1220,
+      "sha256": "9a1ea754b478c53330020273699d5d2609334eb40a43e0f9ab4d0072cd6249ae"
+    },
+    "src/astrarun/computer_use/ui/__init__.py": {
+      "size_bytes": 192,
+      "sha256": "57e4959cb7e16db8b87bd5a515e596b14b8d73784069063828f3ed618bb839a6"
+    },
+    "src/astrarun/computer_use/ui/automation.py": {
+      "size_bytes": 3077,
+      "sha256": "773c83ea0f86caf7f34c9ca4f31f6094a231e38cb34050b400f2527f8910dca8"
+    },
+    "src/astrarun/computer_use/ui/dialogs.py": {
+      "size_bytes": 8624,
+      "sha256": "36209f74de154412dbc0ac3467fc9022d779cb96ba667574560ae36a52993935"
+    },
+    "src/astrarun/computer_use/world/__init__.py": {
+      "size_bytes": 320,
+      "sha256": "5d24fdc7c1089a52c69e77fda522533ddd30fc7e3eddc05fc0b5dbc74f90362d"
+    },
+    "src/astrarun/computer_use/world/desktop_state.py": {
+      "size_bytes": 6071,
+      "sha256": "4aac0b7f1cf67479cb81922647dbdabaafe2cc118e7ec6f9f338030ef831b780"
+    },
+    "src/astrarun/config/loader.py": {
+      "size_bytes": 7713,
+      "sha256": "eccae54f8030f759752ec9f7953ee016fe6335831f64da21b5040e0bf67bdf4f"
+    },
+    "src/astrarun/config/migrations.py": {
+      "size_bytes": 6726,
+      "sha256": "7f491cfe664130a4f716a66e11b682881d4fe709464383a1fc7ba1f1fb1b9c7d"
+    },
+    "src/astrarun/context/__init__.py": {
+      "size_bytes": 419,
+      "sha256": "c29b83dcf31ba54223ed265c86da69b5aa9ab04692709a67bb0a0e230b2c09cf"
+    },
+    "src/astrarun/context/activity.py": {
+      "size_bytes": 1697,
+      "sha256": "be2f3e975bd8ac2dc0e74be9c877b13871c6e145aa24d57efb17c3010a9809fe"
+    },
+    "src/astrarun/context/engine.py": {
+      "size_bytes": 15269,
+      "sha256": "4c01af5848a353c4435daee53b9a0492d183fbe326f747ec7fab8ea47b493a41"
+    },
+    "src/astrarun/context/models.py": {
+      "size_bytes": 7423,
+      "sha256": "3b0ff34b22547bdee577e82a4403968ff8d9c5ca18590edb1a45e49599bc5dec"
+    },
+    "src/astrarun/context/persistence.py": {
+      "size_bytes": 3843,
+      "sha256": "80c6ee5c2c5246772fe37b531e248eed917c6fc1b31664df5bc2da6d82e4d0e4"
+    },
+    "src/astrarun/context/processes.py": {
+      "size_bytes": 5971,
+      "sha256": "b2608ef77c387958da97a821f671a2a1ab614d98f13169ab7a0d164cbc16c415"
+    },
+    "src/astrarun/context/projects.py": {
+      "size_bytes": 3526,
+      "sha256": "d4b20a0ee1a8aac6f11b310feba417fd7242ac85534dd8bd145b50424018c7ed"
+    },
+    "src/astrarun/core/autostart.py": {
+      "size_bytes": 2986,
+      "sha256": "828b46584832e645c674dde3fa85e929ddbd4a4f4a2ad4064f56c60546059ca7"
+    },
+    "src/astrarun/core/crash.py": {
+      "size_bytes": 12771,
+      "sha256": "69dd6e4fc898bb5ba311fbdcd278021db43074d197e07fec5d8657ead5fff08e"
+    },
+    "src/astrarun/core/evidence.py": {
+      "size_bytes": 1851,
+      "sha256": "fa5d4801deb36111f001e60f3b0506638192ed6bfa582441ff9c55d431e09d38"
+    },
+    "src/astrarun/core/hardware.py": {
+      "size_bytes": 9466,
+      "sha256": "2f632d0eaf663aa543265523695f3c1163e1bbb5117e0a0f92eac8676ae2b6c2"
+    },
+    "src/astrarun/core/logging.py": {
+      "size_bytes": 3025,
+      "sha256": "784a9cc6353a9016664c9683cc44b0f3709c8df9c56181208338a27828702698"
+    },
+    "src/astrarun/core/models.py": {
+      "size_bytes": 4020,
+      "sha256": "12f94bfe19a4d5b0d2aa17e4f129f53362af707d4e233e0ca3eff6d184283118"
+    },
+    "src/astrarun/core/paths.py": {
+      "size_bytes": 9821,
+      "sha256": "bfc858fc65a983d9141efa3946d52813f729fc7f1fde217478a39a5e3f980d68"
+    },
+    "src/astrarun/core/qos.py": {
+      "size_bytes": 4742,
+      "sha256": "6e397949ca6e7bab6a0478875531bd149e8020903c5c1cbe7cbae0edd4f13808"
+    },
+    "src/astrarun/core/single_instance.py": {
+      "size_bytes": 10555,
+      "sha256": "920c39488d09f94bba38d1608d2cfea08a5313f8d0e9f6445c3fea6f1c540ed1"
+    },
+    "src/astrarun/delegation/__init__.py": {
+      "size_bytes": 873,
+      "sha256": "95897404d3291929fce3df333a4441fed76f3eb34a05cc21be14ea1e6bda4ff3"
+    },
+    "src/astrarun/delegation/chatgpt_web.py": {
+      "size_bytes": 2868,
+      "sha256": "1eb430c60b03d967a6d7e90c8284addcb1fc9f93f4a13fa1052711d48eb2362f"
+    },
+    "src/astrarun/delegation/loop.py": {
+      "size_bytes": 11302,
+      "sha256": "0211067fd3c9ca060e9f70430157625b5091fa3fc1f03a09ee971b6b3f171195"
+    },
+    "src/astrarun/delegation/mock.py": {
+      "size_bytes": 6209,
+      "sha256": "9c36ced5ea793cf1625925b43b688f0c6703fa87fa44ce640f9e393971897e7e"
+    },
+    "src/astrarun/delegation/models.py": {
+      "size_bytes": 6837,
+      "sha256": "691453f014a07b75bd41ec56015466eacc45a0d00f4f1f8cf3542420db551f9e"
+    },
+    "src/astrarun/delegation/packager.py": {
+      "size_bytes": 7894,
+      "sha256": "000be855646a275cdac3d7b21ca8287899d5fa505c473a6fa9fb726289cd5679"
+    },
+    "src/astrarun/delegation/proposal.py": {
+      "size_bytes": 7942,
+      "sha256": "292a4d333f3ff71614b7bc43549558682ff8daf47ef476a80452f55f067aae4c"
+    },
+    "src/astrarun/delegation/provider.py": {
+      "size_bytes": 6284,
+      "sha256": "29d290e26250582c576a01d49157f9ebf5dc8609baf99c9e2e9c3f86145b51c8"
+    },
+    "src/astrarun/discovery/__init__.py": {
+      "size_bytes": 356,
+      "sha256": "608e7673dafe3702497b01ae6acf5e666d52be47e9667ab243dd1663a92d84a7"
+    },
+    "src/astrarun/discovery/apps.py": {
+      "size_bytes": 10284,
+      "sha256": "b1507501f1f93bfbcc256e2de9e0c5ca6816c134dc9d609cfa569f93e4cde958"
+    },
+    "src/astrarun/discovery/candidates.py": {
+      "size_bytes": 1598,
+      "sha256": "08226fb521f6766126aa2dccf2d3627a37b1bfa101812160950f9166e9355c71"
+    },
+    "src/astrarun/discovery/entity_resolver.py": {
+      "size_bytes": 400,
+      "sha256": "aaccdd027c7d30446b6d519295f0a14fc21d1e65ae1fd721c44b055088d3581a"
+    },
+    "src/astrarun/discovery/folders.py": {
+      "size_bytes": 4169,
+      "sha256": "4bc211107351f285ce541574fbeb1d23d453358feaec8011302b39808b22399c"
+    },
+    "src/astrarun/discovery/resolver.py": {
+      "size_bytes": 12673,
+      "sha256": "785cf2de22db65c01d97f85352aeaee91ca16b67e25b631409488b9aa49882db"
+    },
+    "src/astrarun/entrypoint.py": {
+      "size_bytes": 1552,
+      "sha256": "7db502d54ce0d0f00734c250d570a9c690a89b7553471c2faf913499a84e46cf"
+    },
+    "src/astrarun/execution/__init__.py": {
+      "size_bytes": 631,
+      "sha256": "78bc98cca1c326abc51205eff1a186603752c69d0dceb58e91412fc62a491023"
+    },
+    "src/astrarun/execution/job_object.py": {
+      "size_bytes": 7916,
+      "sha256": "fe4ea2f008e779fa36b244c9e73e2202ffaf51b61323a96f481fea8340b613ff"
+    },
+    "src/astrarun/execution/models.py": {
+      "size_bytes": 1998,
+      "sha256": "c19ea6ffb59b582a999318d75a510c25e3ef2455374aed61554077a9a8acfcd7"
+    },
+    "src/astrarun/execution/process_tracker.py": {
+      "size_bytes": 5905,
+      "sha256": "96b6ca93c8f32a11fe541d6bbcfe39b96e284accfdbe3169412a568977a0bbf2"
+    },
+    "src/astrarun/execution/runtime.py": {
+      "size_bytes": 14164,
+      "sha256": "5bd1830cd840a5db6d1aac3eb903bde221518b7f890b0aa188de0551bdc77fc7"
+    },
+    "src/astrarun/files/__init__.py": {
+      "size_bytes": 437,
+      "sha256": "26bb35767b84e7282f74fe7c1db8a84c9c562804c6d29f9e3191bf562c208a54"
+    },
+    "src/astrarun/files/index.py": {
+      "size_bytes": 7774,
+      "sha256": "f87e697c0df3a41151b8ec601dcbab83ccf0e29e6ae6600089c7246d8032a50e"
+    },
+    "src/astrarun/files/service.py": {
+      "size_bytes": 31113,
+      "sha256": "f9400e3c5472b116a4ba62ec9a07f42c7646ebf94ae730a291cd60aaf98a679c"
+    },
+    "src/astrarun/hotkeys/manager.py": {
+      "size_bytes": 14127,
+      "sha256": "76ff31362cf587f95e84ee87a1debb94282e88dac046930fd9b1413fb6a42616"
+    },
+    "src/astrarun/interaction/__init__.py": {
+      "size_bytes": 2536,
+      "sha256": "c4efeca8fc1b6049b56f581fba87c7de7bd902d1c59bafbff5acf16ded5ba24b"
+    },
+    "src/astrarun/interaction/clipboard.py": {
+      "size_bytes": 4327,
+      "sha256": "e433d713b5edbc1f9a7d78313679cb1fc3baedf88c631abef4457c279dd91c43"
+    },
+    "src/astrarun/interaction/controller.py": {
+      "size_bytes": 14814,
+      "sha256": "44bed6894b4d69ee24268cec7f6e512d07737a6b059c7b0dec3821501ecf74b1"
+    },
+    "src/astrarun/interaction/discovery.py": {
+      "size_bytes": 16430,
+      "sha256": "c4fd17782a2a42830881ac166e668bd0dff4aaa42b23008e8fb926ac2e84d582"
+    },
+    "src/astrarun/interaction/document.py": {
+      "size_bytes": 12009,
+      "sha256": "ee933a4e81d133b9f4322c4db19208390672b9ee3dd0bc7358aa2c57d2686915"
+    },
+    "src/astrarun/interaction/keyboard.py": {
+      "size_bytes": 9921,
+      "sha256": "c06dfe087c51244a6eed9f4c8e0dfb2dddfaf744ef4593314bc69bbb669e114d"
+    },
+    "src/astrarun/interaction/models.py": {
+      "size_bytes": 6682,
+      "sha256": "31f90e3c3131eda756fd309be287ceec7ba0fc434de2136cbbad361993993a99"
+    },
+    "src/astrarun/interaction/policy.py": {
+      "size_bytes": 5595,
+      "sha256": "cda567a1c5b42637e9a35439e10bb08c600878aa119d2a971e57eb3ea35fc468"
+    },
+    "src/astrarun/interaction/resolver.py": {
+      "size_bytes": 7056,
+      "sha256": "264728646d573cafc64f399e43c63d96ac65bf3ae9bdb7fbf3a2c410a54c12db"
+    },
+    "src/astrarun/interaction/service.py": {
+      "size_bytes": 31176,
+      "sha256": "ba003da5d95b5b1791f467e35f18c9cc350302e7b00569c76617422f7164fe86"
+    },
+    "src/astrarun/interaction/worker.py": {
+      "size_bytes": 3815,
+      "sha256": "ba98eecae627a64e3966dd9a885836e6427f32691022c97668f2bc8d69949969"
+    },
+    "src/astrarun/learning/__init__.py": {
+      "size_bytes": 1434,
+      "sha256": "c6dc0d183a36124860bf03e68dcdbe19e73c48a1d7ac638bc1657f0ea1437306"
+    },
+    "src/astrarun/learning/aliases.py": {
+      "size_bytes": 5519,
+      "sha256": "0512c06f13d79fbfe8348ee7edfb5714e80911a8ec20b66874ec443b2fea1cca"
+    },
+    "src/astrarun/learning/confidence.py": {
+      "size_bytes": 6862,
+      "sha256": "50b1bd4dba75ccdbbf38fde7d4994f8f871c4bb1b8df7d8b3a92b2f936cb9cdc"
+    },
+    "src/astrarun/learning/dataset_builder.py": {
+      "size_bytes": 3697,
+      "sha256": "a0573d81ada993832848294d2b31b7988dc48f9a2858c498062c6ca79774582d"
+    },
+    "src/astrarun/learning/debugger.py": {
+      "size_bytes": 7164,
+      "sha256": "40725cf896767c87af0ec66f41d4609cb67a42690c22091dff518f4402cc3b13"
+    },
+    "src/astrarun/learning/engine.py": {
+      "size_bytes": 7834,
+      "sha256": "f4d086c81807139a0b69a8b26fe300df673563a6e3cd611fe23bd7c782da2680"
+    },
+    "src/astrarun/learning/evidence.py": {
+      "size_bytes": 11962,
+      "sha256": "6bce97a954e22c20bfb64b4d60d469a97465996eaa0e0066988a1ced24cabde5"
+    },
+    "src/astrarun/learning/memory.py": {
+      "size_bytes": 16169,
+      "sha256": "12d634b3f506c811b873279bfc4a1e6ac5c5f4ccc32e08dd6f86287a8fd8dd0d"
+    },
+    "src/astrarun/learning/models.py": {
+      "size_bytes": 13904,
+      "sha256": "7783b01863f7490cce4149e0a5f3fc7a170ccc39062c1da63e845bb7d5fad50e"
+    },
+    "src/astrarun/learning/patterns.py": {
+      "size_bytes": 6408,
+      "sha256": "8d10462eee288e4ccff7ae30f2e33055c83596a4c9e59723931cbe3e40559712"
+    },
+    "src/astrarun/learning/persistence.py": {
+      "size_bytes": 21760,
+      "sha256": "3cae964414f064a35a9447c7ed896167ec4ea2c157975e81895f2462120189bb"
+    },
+    "src/astrarun/learning/skills.py": {
+      "size_bytes": 7957,
+      "sha256": "b458dfa4ea0bbca60c9864fa2ee33af595619b0d9767216e2c1f1ccaacf3c51a"
+    },
+    "src/astrarun/lifecycle/repair.py": {
+      "size_bytes": 7696,
+      "sha256": "454939e51116815f53733139cb814a9a515a7b811230a14d98c1c47284b3bd59"
+    },
+    "src/astrarun/lifecycle/uninstall.py": {
+      "size_bytes": 18585,
+      "sha256": "ddf427178319265de281747b120bde9b5b5dba2e343a8f51c547ae2a4ce031c6"
+    },
+    "src/astrarun/machine/__init__.py": {
+      "size_bytes": 1012,
+      "sha256": "8b1a6efdda0320e70fbbe15ac6f08c64183ae5c0fa724235f3bf7b45333ab5c3"
+    },
+    "src/astrarun/machine/capability_resolver.py": {
+      "size_bytes": 17250,
+      "sha256": "9a1a04eafaab7c44f6907f060390718ce45bb582db884a58d818b7a412a875be"
+    },
+    "src/astrarun/machine/compatibility.py": {
+      "size_bytes": 8396,
+      "sha256": "385f8bec862080965ef965befb5142243f0bd49f7a433b80021272da01bff5f2"
+    },
+    "src/astrarun/machine/diagnostics.py": {
+      "size_bytes": 6982,
+      "sha256": "e7435ec6235361bf4d89cd4f64cd905361f94c8552eacb23789bdf4757962621"
+    },
+    "src/astrarun/machine/fact.py": {
+      "size_bytes": 4350,
+      "sha256": "8cf8645ffa1ed9bd55655e99e95ca8995c797b8bd92401da5a17f6e68fb9310c"
+    },
+    "src/astrarun/machine/model.py": {
+      "size_bytes": 11180,
+      "sha256": "a39e0c113dddb2c817b079d6cd72dc8de725e7dd8803f58e845db49e2d4bb902"
+    },
+    "src/astrarun/machine/providers/__init__.py": {
+      "size_bytes": 597,
+      "sha256": "e5537cd4fc7331c035a801c5ab255a8c8a5bbbe37dfff79b39dd2ee91e885942"
+    },
+    "src/astrarun/machine/providers/base.py": {
+      "size_bytes": 872,
+      "sha256": "da979fb849b1080bb50b6258566ce5d7ab73925d9140e84ca32a647f3030f4ec"
+    },
+    "src/astrarun/machine/providers/hardware.py": {
+      "size_bytes": 23603,
+      "sha256": "61100294707099f44b37031912621788fb3dc93cd30ce327847d71c9663d24e1"
+    },
+    "src/astrarun/machine/providers/os_model.py": {
+      "size_bytes": 4658,
+      "sha256": "accd743f9bf08f321ffe64313575fb78b8cd1e0a769925b3ef8410a429590176"
+    },
+    "src/astrarun/machine/providers/python_env.py": {
+      "size_bytes": 4088,
+      "sha256": "8c813de3c1bb963638583ec2b237b50b45f4b257f90a64c2715e34719ae68ed0"
+    },
+    "src/astrarun/machine/providers/software.py": {
+      "size_bytes": 8726,
+      "sha256": "fcd80ce87a4c57d3152abde4fe29eb6a5483b746e1b9110c81dc4778993213dd"
+    },
+    "src/astrarun/machine/providers/topology.py": {
+      "size_bytes": 4507,
+      "sha256": "caf9b364fa9f1958f9f852f662b3fa26d345c04071098491022b75c1b2ec88a9"
+    },
+    "src/astrarun/machine/query_engine.py": {
+      "size_bytes": 13351,
+      "sha256": "dd39d268b0f2d5a1f6a4745a919d86f1f1a6ba5fe0b0e1395b9a76ee4d89b985"
+    },
+    "src/astrarun/machine/resource_governor.py": {
+      "size_bytes": 6473,
+      "sha256": "615286d79df9dfd3aaa66a0321e9519c8515ada7a2aadf28fca4828f3bd67ae2"
+    },
+    "src/astrarun/machine/resource_snapshot.py": {
+      "size_bytes": 5721,
+      "sha256": "72ff928fffbd1e4743cd4251481aed560069320853fd56e218b254d9a7f1a9f7"
+    },
+    "src/astrarun/main.py": {
+      "size_bytes": 23036,
+      "sha256": "cfc0d2560e8c088a02dedcb3cf8369c2f1738b48809cbaf4db828a8e6514dbf4"
+    },
+    "src/astrarun/memory/__init__.py": {
+      "size_bytes": 340,
+      "sha256": "e63ef2f95ebebb43862335344d75650c2e550145e623db9cd8e2039ae472b4d0"
+    },
+    "src/astrarun/memory/service.py": {
+      "size_bytes": 7202,
+      "sha256": "4ab17756245e2d1eff235c7de750bc3e68dec9d600e5250ee56a888796512a6c"
+    },
+    "src/astrarun/memory/skills.py": {
+      "size_bytes": 3559,
+      "sha256": "9af0736c2b2d3aa94b3f178f5f439d4d7fa554bef1632e6f55a6bdcf2796ad4e"
+    },
+    "src/astrarun/models/downloader.py": {
+      "size_bytes": 7722,
+      "sha256": "6cfab494e5b17188586e764b02b2519c35de6dda2f61a970e48eb52373464ff9"
+    },
+    "src/astrarun/models/manifest.py": {
+      "size_bytes": 6430,
+      "sha256": "8ae8a5dae28917146d2f5e1feda348658b4733c9c65463435e11545cb8be82fc"
+    },
+    "src/astrarun/network/__init__.py": {
+      "size_bytes": 578,
+      "sha256": "29937ebbea6e3f65fd81534e74ea9c03a9aa332161479ab28f15fedc253c9931"
+    },
+    "src/astrarun/network/broker.py": {
+      "size_bytes": 10230,
+      "sha256": "b0a831451ff9f9273076f59a11999da82b8f98bfa50facb8a07c0357ba49c3d1"
+    },
+    "src/astrarun/network/quarantine.py": {
+      "size_bytes": 4084,
+      "sha256": "b6a85082ccca5453fe2991ba9b08e1d4feea8ac3dec5905e702325a49bf1ef13"
+    },
+    "src/astrarun/network/service.py": {
+      "size_bytes": 6017,
+      "sha256": "de2a89ef05adee87c81b0816d6e88750a84d1cf1b8b5d3d2fd107c960e76a040"
+    },
+    "src/astrarun/nlp/__init__.py": {
+      "size_bytes": 771,
+      "sha256": "7ae5597f64d711c124158cfd0ce9e7234b86701952302bc14e9e63e63d3f5d3f"
+    },
+    "src/astrarun/nlp/clause_decomposer.py": {
+      "size_bytes": 22709,
+      "sha256": "3d949bfa341e893c3a0dfe2919c5a56a03e72dc2acd9f1994066239b406c6727"
+    },
+    "src/astrarun/nlp/coreference.py": {
+      "size_bytes": 4360,
+      "sha256": "75822b6385f506f5edf58048d2cef523c48154007cdbe310cb1f31c47232effd"
+    },
+    "src/astrarun/nlp/debugger.py": {
+      "size_bytes": 4454,
+      "sha256": "4688c571ee22aa8beaeebdaf80eb4ed272000d7f489e6407adf428c17b73b084"
+    },
+    "src/astrarun/nlp/deterministic.py": {
+      "size_bytes": 11829,
+      "sha256": "ed26fb8fa08f96fc538dd97b3e2f34bfc8c1e9a90eabef08645f8164740ecd67"
+    },
+    "src/astrarun/nlp/engine.py": {
+      "size_bytes": 5532,
+      "sha256": "1d4468dfd083993ea2629eaa405bcb743e072b677213ab5e11a141cebe372a05"
+    },
+    "src/astrarun/nlp/fusion.py": {
+      "size_bytes": 7347,
+      "sha256": "7cd7c729bbd510f5bf930c84b2e3d860d0bd34982f5fa6b7916589c2407b0df1"
+    },
+    "src/astrarun/nlp/ir.py": {
+      "size_bytes": 10163,
+      "sha256": "76466cb94b66da518f7bc3b867e4e6aa21ebc9e24cc3672f5ea9915b8ea965f1"
+    },
+    "src/astrarun/nlp/lexicon.py": {
+      "size_bytes": 4137,
+      "sha256": "d948edc9c52437a3e60bf368658362f63880bbe4ef248e2ff1d6da29af1242e9"
+    },
+    "src/astrarun/nlp/models.py": {
+      "size_bytes": 9969,
+      "sha256": "ffc4e910c5e244f21891e51e333cc1c1796ce32923df40671224942489f91248"
+    },
+    "src/astrarun/nlp/negation.py": {
+      "size_bytes": 4781,
+      "sha256": "961348c0aa744724b48e7496fffc6aa354cfe2079a77c9d4d72095a27c588a73"
+    },
+    "src/astrarun/nlp/relations.py": {
+      "size_bytes": 3050,
+      "sha256": "b5919a658449b8fefe1af1392dcc977bc029059ddb138b51361b6b62b14cdefa"
+    },
+    "src/astrarun/nlp/spacy_parser.py": {
+      "size_bytes": 1884,
+      "sha256": "c3b8d1e3d787e9d3a86091b9d4efc217d03db83ea39749e13afed55a6bddb4d5"
+    },
+    "src/astrarun/nlp/structure_engine.py": {
+      "size_bytes": 28765,
+      "sha256": "4fb47b73299ca87baa77213c2d0a79315b3d7c1b0ec0acc7e1404e7e2c6d2291"
+    },
+    "src/astrarun/nlp/temporal.py": {
+      "size_bytes": 4003,
+      "sha256": "701b2485f7aab70fbdcb5c8b7c91c3bfbadc35c168996f4c8177e9a015fa12e0"
+    },
+    "src/astrarun/perception/__init__.py": {
+      "size_bytes": 2008,
+      "sha256": "fb0d38a7adf9e599cd564b3a34a1eed75a18690b02bbfb07afa768b2cebd84bc"
+    },
+    "src/astrarun/perception/capture.py": {
+      "size_bytes": 3372,
+      "sha256": "5544a1766eccbe4f1365d1eebfc451cc48e7bbf78c129f604d61a3869736b014"
+    },
+    "src/astrarun/perception/cdp.py": {
+      "size_bytes": 6512,
+      "sha256": "c28f43f6a53a5dc3edd05c3ffe6b13b16e336ddff9528936b84c64c65765cc04"
+    },
+    "src/astrarun/perception/com.py": {
+      "size_bytes": 2932,
+      "sha256": "81d70d5299a77a299255d079189988b48c2a8aba34d537e1ed754b563e48c76a"
+    },
+    "src/astrarun/perception/cv.py": {
+      "size_bytes": 4246,
+      "sha256": "5c4d3b590c099b72009eb684b08b3af2d93709952eacf226489765f408b6ad24"
+    },
+    "src/astrarun/perception/grounder.py": {
+      "size_bytes": 4989,
+      "sha256": "4bbd5712412babe9e8b2639771692f4f5cdc9e63743e2fcbfebe9c1708439c0e"
+    },
+    "src/astrarun/perception/input.py": {
+      "size_bytes": 11613,
+      "sha256": "39ce217bce9d8bc0deb020347f4261c8cbe77658d0392f738abbdf91321d4e7c"
+    },
+    "src/astrarun/perception/models.py": {
+      "size_bytes": 8001,
+      "sha256": "52e35a42ed64df00a135e58b8dccec5efdb010fb82a97a6675ec05adbf21dcc1"
+    },
+    "src/astrarun/perception/ocr.py": {
+      "size_bytes": 3504,
+      "sha256": "04bf1aa7a4c50420c3107ae7bfff033cc30c6199b651cc6cb22fd043b1d69b97"
+    },
+    "src/astrarun/perception/router.py": {
+      "size_bytes": 9417,
+      "sha256": "1ece7ca3d1967648e2a279751f833130802397c4a599dce7a0eecb2822355b72"
+    },
+    "src/astrarun/perception/service.py": {
+      "size_bytes": 3137,
+      "sha256": "311efa7cf186f3ca69897d1f2f54078a62b92009dd58333912b02c27cbc8535e"
+    },
+    "src/astrarun/perception/vlm.py": {
+      "size_bytes": 6352,
+      "sha256": "388c8a27b9a23f425a0cf08c571eef5bf28057512e8e5c2bf245255e465e29c9"
+    },
+    "src/astrarun/policy/__init__.py": {
+      "size_bytes": 206,
+      "sha256": "711611f3a88b4f91aecdbf78be4ddf7e2b50fb8bd9a59e3577530a679a2e1554"
+    },
+    "src/astrarun/policy/action_gate.py": {
+      "size_bytes": 389,
+      "sha256": "070fd3d723dce10e264088ea3813c5a2e08aa2f9fa3463780462b11b33aa5cfd"
+    },
+    "src/astrarun/power/__init__.py": {
+      "size_bytes": 835,
+      "sha256": "8a5e6905090a92474dddb57230551f34363ca1bbd96e0e9c8bc3f3b8ac67ad28"
+    },
+    "src/astrarun/power/budget.py": {
+      "size_bytes": 3189,
+      "sha256": "04f3f745cc34d5bf115e5e46a3ce3ded9b826ed5b959b9af695663c5a5e77d73"
+    },
+    "src/astrarun/power/events.py": {
+      "size_bytes": 1798,
+      "sha256": "a9beb1faad5c591792f5c812615c26c5fcbb45b1c1701de4244334d989d6f6f3"
+    },
+    "src/astrarun/power/ledger.py": {
+      "size_bytes": 4002,
+      "sha256": "cf96b1015dfa88dcbe612d469141a06d47580ebebd6d9a0de1fbacece1427c34"
+    },
+    "src/astrarun/power/listener.py": {
+      "size_bytes": 10972,
+      "sha256": "23df491208ccdd5958bf71f81d058980ac97b28f03326108461af4ff25b4fed3"
+    },
+    "src/astrarun/power/manager.py": {
+      "size_bytes": 11572,
+      "sha256": "b255e8c34a2e5516d477db9a07e0340cb99682c5a819cf4ad638b8ac616f1e80"
+    },
+    "src/astrarun/power/recovery.py": {
+      "size_bytes": 4898,
+      "sha256": "78992d144e80ec9afa43ac295053e58d89058468602fa4e68bcb9d87786c0a4d"
+    },
+    "src/astrarun/processes/__init__.py": {
+      "size_bytes": 450,
+      "sha256": "0a846eef0caf82538c5cd940f337bbbe5e10b383b3fb5150d25b1bcd66dcefd7"
+    },
+    "src/astrarun/processes/service.py": {
+      "size_bytes": 12469,
+      "sha256": "5edc516bf65b178913a957ec9c8bdd96a92d9054a890e83b21f158da529fc2d1"
+    },
+    "src/astrarun/projects/__init__.py": {
+      "size_bytes": 230,
+      "sha256": "2fc5a7ff5b74d2f47a2517f0d9746171de72791f1f0c22cb6e3ab762e125e436"
+    },
+    "src/astrarun/projects/registry.py": {
+      "size_bytes": 11059,
+      "sha256": "4d6642f45cdbdef664ee80469d79e7d431f08468889beba4c98eae3bb12637be"
+    },
+    "src/astrarun/projects/service.py": {
+      "size_bytes": 8860,
+      "sha256": "9e92d7688a4964ac8b438cd7817cf0d927712f071404c76bc76df95a97e28094"
+    },
+    "src/astrarun/rag/__init__.py": {
+      "size_bytes": 1405,
+      "sha256": "9e1eb10688edeca95242e06306fe452979f26c71f6bfeea06b1f7296c8d744ba"
+    },
+    "src/astrarun/rag/context.py": {
+      "size_bytes": 7031,
+      "sha256": "5538976a5cea01a459c60aad6387e375ce12512c5513ccaf18edfbeb69eaa90b"
+    },
+    "src/astrarun/rag/embeddings.py": {
+      "size_bytes": 6050,
+      "sha256": "c1f3b27259bf7cb4bfce0094287b58b593bb3140531d2040f719c8fe44c0aad4"
+    },
+    "src/astrarun/rag/indexer.py": {
+      "size_bytes": 13707,
+      "sha256": "dbda23d068dd6d842934f86b2be20fbc8cb27d9e90a3b0f53e1b7c7da41d9f75"
+    },
+    "src/astrarun/rag/models.py": {
+      "size_bytes": 5159,
+      "sha256": "44b435b0dec198ba661b7056ad0f1dd7c639536bbf505aa0a4e2d58bfa904894"
+    },
+    "src/astrarun/rag/router.py": {
+      "size_bytes": 5963,
+      "sha256": "6f83c4d67502d93c6789884cdbdae04d1c2dec4ba4ce46b04ca427280a0c117f"
+    },
+    "src/astrarun/rag/skills.py": {
+      "size_bytes": 6763,
+      "sha256": "b587ad8e60f0c1a4eb33c04be89f699c005d7e4df5402ba9f36e4374b317a1de"
+    },
+    "src/astrarun/rag/store.py": {
+      "size_bytes": 16862,
+      "sha256": "5b0f96c3ecc9bf74c2a941d1a73059f30bfdf83d904cba35ea4d17efea4cd53a"
+    },
+    "src/astrarun/rag/vector.py": {
+      "size_bytes": 6004,
+      "sha256": "a74abafa32eef8ebe5e82851acceb3b8a8b9ebd8a2a85d30038ea69637dacb0b"
+    },
+    "src/astrarun/rag/worker.py": {
+      "size_bytes": 4001,
+      "sha256": "4bd3e01d9f89a74062a5bbe9cf438f1aca9c72be2b50a2d84576734fa4ae132d"
+    },
+    "src/astrarun/routing/base.py": {
+      "size_bytes": 463,
+      "sha256": "2fb8f15685f1f810d521c3675ebd553d90988a17513a14e36b4d8caa6eebc524"
+    },
+    "src/astrarun/routing/decision_fusion.py": {
+      "size_bytes": 5832,
+      "sha256": "bee876f6511d75b91334a1e71d46d4b4d04a017943225772b941b8fe06ffe577"
+    },
+    "src/astrarun/routing/deterministic.py": {
+      "size_bytes": 10169,
+      "sha256": "09a1adef340d1e9d79ede4856430c8a1a931ac72f4378ffb63105558a710330a"
+    },
+    "src/astrarun/routing/entity_resolver.py": {
+      "size_bytes": 32841,
+      "sha256": "5f43978e3a9d522139372c790122eb44ed36c9c787d5e4024dbf14a1917fc113"
+    },
+    "src/astrarun/routing/fusion.py": {
+      "size_bytes": 14932,
+      "sha256": "001121ceee34acc72215870a3bc55f838597c27cd75534712967a5c895cebffc"
+    },
+    "src/astrarun/routing/input_router.py": {
+      "size_bytes": 7255,
+      "sha256": "19c607dccf06cb88d746a9852818e3a98b69a7587aaf2cd1643d7d9cce7d1b79"
+    },
+    "src/astrarun/routing/jev.py": {
+      "size_bytes": 8081,
+      "sha256": "e815ff845ece0c68536f775093f209770afce77235e9f5a87b11ee24debf8ba8"
+    },
+    "src/astrarun/routing/kev.py": {
+      "size_bytes": 15364,
+      "sha256": "c2c26931c988f36f0e2ff2eab5973b07d94c290d4f310cb8e8d444926bf03ce1"
+    },
+    "src/astrarun/routing/laya.py": {
+      "size_bytes": 23593,
+      "sha256": "cbff9bcf9c107f5c830e47dcffb4518619e46c591095ebcc4f9dfe8736ffdcdd"
+    },
+    "src/astrarun/routing/laya_sandwich.py": {
+      "size_bytes": 11268,
+      "sha256": "e36dc66505686e9eeb93576f8a94fc05230bb3788233b97a492f7e9d75c393ba"
+    },
+    "src/astrarun/routing/laya_worker.py": {
+      "size_bytes": 8351,
+      "sha256": "c7932919fe491b55faadb17bf46c0b1250374a04512ea85ba09ece6cefc9ba36"
+    },
+    "src/astrarun/sandbox/__init__.py": {
+      "size_bytes": 271,
+      "sha256": "33b27fc75097236285996c9fa0eebbabb41644e008792d46d9eb08967c645132"
+    },
+    "src/astrarun/sandbox/appcontainer_launcher.py": {
+      "size_bytes": 18106,
+      "sha256": "97da1b06351f701e943cddcfe99eb10ce16ec6243b56914922b5a51476de14cc"
+    },
+    "src/astrarun/sandbox/manager.py": {
+      "size_bytes": 25910,
+      "sha256": "e09c1a1e9173e64dd1958d62fe2dcfc11f16d543d8ac80af2da56342c1225ed7"
+    },
+    "src/astrarun/sandbox/models.py": {
+      "size_bytes": 2343,
+      "sha256": "1ae31e3d287cd0e45d9e59806abab6bca969965aca91bb51a7c8a1405175d571"
+    },
+    "src/astrarun/sandbox/restricted_launcher.py": {
+      "size_bytes": 16292,
+      "sha256": "ee1f471cf59b60f8268aa0a238ecc19a027facd8581149403e0b0b4741b22d8d"
+    },
+    "src/astrarun/search/__init__.py": {
+      "size_bytes": 410,
+      "sha256": "14494d4f0183ddbccff42b37b37bc5a0f4ef33ed54cc5d563277ba2958b58ea3"
+    },
+    "src/astrarun/search/index.py": {
+      "size_bytes": 6544,
+      "sha256": "9227c2d033a0e1f332279bc6bf0c105975e06557f481b30ee43392b9daf78c01"
+    },
+    "src/astrarun/search/matcher.py": {
+      "size_bytes": 4264,
+      "sha256": "b592cdd5c908179474fa741707a04ca16a38ae5b1d88afeb1ed5b9c8b323d640"
+    },
+    "src/astrarun/search/models.py": {
+      "size_bytes": 2931,
+      "sha256": "8f37d4a3c1e4205d101d69f1416f9667eb7463cabd393df891e7ff2ba11e8157"
+    },
+    "src/astrarun/search/scorer.py": {
+      "size_bytes": 6012,
+      "sha256": "2394e2935ea513c239b6190a721379a6edf42b5cd2c32a0e8b8f3f1f886252c3"
+    },
+    "src/astrarun/security/__init__.py": {
+      "size_bytes": 1021,
+      "sha256": "2ec0cc8318143e0c9e771f948e65eb000a415902b4604a3bba3fe007879bd10f"
+    },
+    "src/astrarun/security/action_gate.py": {
+      "size_bytes": 30120,
+      "sha256": "c81c7714985ba09e8d7b192a0e17aac26f1d21775cad9601f98c58b2fb58e286"
+    },
+    "src/astrarun/security/execution_broker.py": {
+      "size_bytes": 19075,
+      "sha256": "1e629f60050fc71a2bf098b85209f0ab7be9becb6af0f446059c8bd99d6fb4a8"
+    },
+    "src/astrarun/security/models.py": {
+      "size_bytes": 3253,
+      "sha256": "e0ce7bf002def7f741923b8e961a18a996e77b1953d6b96ae4b54358319594af"
+    },
+    "src/astrarun/security/policies.py": {
+      "size_bytes": 14204,
+      "sha256": "42cc030f418d4c480b502a608ff064c4527e8a21051ef67aecc0bc1e1067617e"
+    },
+    "src/astrarun/security/secret_broker.py": {
+      "size_bytes": 6703,
+      "sha256": "61b18a70cf06dee4085265c309029adcc083a6a2c90bf15c9389a8c235b6cee0"
+    },
+    "src/astrarun/security/trust_kernel.py": {
+      "size_bytes": 2963,
+      "sha256": "0ce3bd9116ebc6d8ff7f0c20ffbc3146dbdedfc88222001a7115fefc4e6f4f35"
+    },
+    "src/astrarun/system/__init__.py": {
+      "size_bytes": 400,
+      "sha256": "3cfffd9f264fdaf606b16af7fec6fb8c4102f7ed7a28cc491f7d17396c942f5e"
+    },
+    "src/astrarun/system/service.py": {
+      "size_bytes": 10200,
+      "sha256": "9a0e313e246c78a68c5f80bac4ada5e0c9104e0d433be46e764be82409d7f0a2"
+    },
+    "src/astrarun/tasks/__init__.py": {
+      "size_bytes": 2042,
+      "sha256": "2faa91f91818e025becfc6d8b8b2cbe38bf2cb4ab673d5629ea1192d31d8e534"
+    },
+    "src/astrarun/tasks/cancellation.py": {
+      "size_bytes": 2600,
+      "sha256": "1b5b555caeb0a3a33b6f682b315efab3d04e255d6414243b53b70a91e43e091a"
+    },
+    "src/astrarun/tasks/checkpoints.py": {
+      "size_bytes": 5842,
+      "sha256": "7d8754b9ebbb3d5165ce8725cc2a1102ee1623dc0c45c618f742bda542039e82"
+    },
+    "src/astrarun/tasks/continuity.py": {
+      "size_bytes": 9373,
+      "sha256": "8a203cff3b9255a59f3c52237ea24c7745bd46896cf5a9c1f3a92488465c33f3"
+    },
+    "src/astrarun/tasks/disturbances.py": {
+      "size_bytes": 8375,
+      "sha256": "e5a037eea4080b2589549839976e43f1a2a5473726d6753bc9e91c525842d177"
+    },
+    "src/astrarun/tasks/events.py": {
+      "size_bytes": 2654,
+      "sha256": "8d3ebfdd5ae37475fecb20aed98a478be6fa4022345096c11f5149e387d03dd3"
+    },
+    "src/astrarun/tasks/invariants.py": {
+      "size_bytes": 9924,
+      "sha256": "c69f971b92a271c99668c6317ecb4070c09276c6081e7b0c64cab5f444787198"
+    },
+    "src/astrarun/tasks/ledger.py": {
+      "size_bytes": 47753,
+      "sha256": "77ba69e4e906a5f8843265d99096eb7555d866fd599819aacf34b7cee0069294"
+    },
+    "src/astrarun/tasks/manager.py": {
+      "size_bytes": 18699,
+      "sha256": "2950435d875c9dac61d9391b00bc9a5116634f4d328997543314070ed4227b9f"
+    },
+    "src/astrarun/tasks/models.py": {
+      "size_bytes": 21171,
+      "sha256": "98f18c6866dfb26183f114a1c77fba607f49a8b947ac0edf9c84485c0b49e603"
+    },
+    "src/astrarun/tasks/reconciliation.py": {
+      "size_bytes": 17128,
+      "sha256": "24f0cd9c8beaaff2871bd8ac9a5fe4b3650c8fa5af627d2008132dfa14b41db5"
+    },
+    "src/astrarun/tasks/resource_ledger.py": {
+      "size_bytes": 45761,
+      "sha256": "1bf0ae7547d05a0e94673e2608b914f66db8ff1380db7a31204cc92f34b0f015"
+    },
+    "src/astrarun/tasks/runtime.py": {
+      "size_bytes": 45795,
+      "sha256": "a716e48470810778e99e1d2043e40b17c601d6c0715e3e940a590f3b3f93f0a6"
+    },
+    "src/astrarun/tasks/serialization.py": {
+      "size_bytes": 8214,
+      "sha256": "71b98dc35d8e0671e9b7a50a0a5c8987571435efda62c7fb12c1c9838c20fe8c"
+    },
+    "src/astrarun/telemetry/__init__.py": {
+      "size_bytes": 244,
+      "sha256": "63e64e06310e55cd2f2ee76700231157fab9feccb336e608641daf09bdebd2a0"
+    },
+    "src/astrarun/telemetry/collector.py": {
+      "size_bytes": 2659,
+      "sha256": "e82ab1dfa8d80ff2fc62e3b9b15d0c409fe04b3c104082166c28f24867316d86"
+    },
+    "src/astrarun/telemetry/redactor.py": {
+      "size_bytes": 1078,
+      "sha256": "ce72b9e06cf8bb43596fc705a048376bb5308401774750200247a781a9ec9b1d"
+    },
+    "src/astrarun/telemetry/shadow_collector.py": {
+      "size_bytes": 5598,
+      "sha256": "fac659175a300c5aabad3e53ac6fa9ca2f5712d0a9046b0673058f5f759583ed"
+    },
+    "src/astrarun/tools/apps.py": {
+      "size_bytes": 4760,
+      "sha256": "3d37540c62d802cd5de2f6c7124ac4b7a3029de3b2aadebe525bd7d0911f2302"
+    },
+    "src/astrarun/tools/ast_inspector.py": {
+      "size_bytes": 8261,
+      "sha256": "1a0cdc242b002d1ff446df5cb271b82604c75a86627f4d950c4ca9df5d1c286c"
+    },
+    "src/astrarun/tools/candidate.py": {
+      "size_bytes": 13444,
+      "sha256": "b9c739b50f2479b89c21b4c5e19f1bf3d8f17751f8276c710bf169c43fa8c4dc"
+    },
+    "src/astrarun/tools/dynamic_builder.py": {
+      "size_bytes": 22599,
+      "sha256": "2764efb6b6026e60dc71b52829d8e0f3f4ad5b2997ff5dac3f4c702584add141"
+    },
+    "src/astrarun/tools/folders.py": {
+      "size_bytes": 1561,
+      "sha256": "3c3afe26d84dd8f29211e420e39ff13229d6b9448858a2a107e7600bdb10229f"
+    },
+    "src/astrarun/tools/lifecycle.py": {
+      "size_bytes": 5882,
+      "sha256": "9819809e80295334c0e3f429f6026d340bffaf4a25eb17a3e24df04d5a647097"
+    },
+    "src/astrarun/tools/processes.py": {
+      "size_bytes": 3559,
+      "sha256": "df51307cd9584c159c082e830cbd58d0eba92e90857691a84aef7b3828096251"
+    },
+    "src/astrarun/tools/projects.py": {
+      "size_bytes": 5424,
+      "sha256": "fec5229665aa2cf7c5014caa276dc693260d9bece69c6831543e994bde771f18"
+    },
+    "src/astrarun/tools/registry.py": {
+      "size_bytes": 9781,
+      "sha256": "31774b47ac7b2c11c6bcab189636f4beac361b0c9a31f072155591264148bdfb"
+    },
+    "src/astrarun/tools/system_adapter.py": {
+      "size_bytes": 7719,
+      "sha256": "34dea57fe17c2f6acbf73bcc9219fc416d621876a8bb0aa139e2db14728f36b3"
+    },
+    "src/astrarun/tools/web.py": {
+      "size_bytes": 986,
+      "sha256": "75fde88947a7564deedff8b2edd842c3a7d3ac622013396309ef9748983cc460"
+    },
+    "src/astrarun/tools/wifi.py": {
+      "size_bytes": 18771,
+      "sha256": "a62fd94c03ed07ab5e8400f9768a27aa7b597136fddd04007c1452a27ebfad5c"
+    },
+    "src/astrarun/ui/activity.py": {
+      "size_bytes": 13513,
+      "sha256": "576a62354b11c7e8ce0ab236f8d1440412f69d229be9d0df3389e535d5ed3f9d"
+    },
+    "src/astrarun/ui/cards.py": {
+      "size_bytes": 17558,
+      "sha256": "db5b704bd85bff4b91f8e798618e886b22162022c7a4b4ca118124a8c926222b"
+    },
+    "src/astrarun/ui/diagnostics.py": {
+      "size_bytes": 6519,
+      "sha256": "f01289126c6f963853dd869a8ba76447ea69f5e7c90deb5889f7ae63f25b5519"
+    },
+    "src/astrarun/ui/first_run.py": {
+      "size_bytes": 23272,
+      "sha256": "556dda7fd5e07bd72587de35383023fbd55ddb49f2f1e6fbee13a854dec37f12"
+    },
+    "src/astrarun/ui/history.py": {
+      "size_bytes": 13970,
+      "sha256": "4721f8038ff71a37f21b5e1aacecb441c4a711496ce01751bdfd5c9c46efb18b"
+    },
+    "src/astrarun/ui/hotkey_conflict.py": {
+      "size_bytes": 10078,
+      "sha256": "fe4bd17e637b2f5135dc61be72712a218a7d85e051278bc09e35fc0632d4c10a"
+    },
+    "src/astrarun/ui/hud.py": {
+      "size_bytes": 42240,
+      "sha256": "aa5e7018991130d9a1afd0ac6a73fedaafa2d359d680fd0c7e1d2cf84cc334fb"
+    },
+    "src/astrarun/ui/icons.py": {
+      "size_bytes": 16065,
+      "sha256": "34fb5b4e0be6c4d3f85c4945c4539356c24bc7f8c6ec58bbd51cd5aad7484706"
+    },
+    "src/astrarun/ui/launcher.py": {
+      "size_bytes": 46570,
+      "sha256": "4a327009c88458c756096e84f708473f84e2a152390a1d19869aa66e1ab6bc51"
+    },
+    "src/astrarun/ui/memory.py": {
+      "size_bytes": 14834,
+      "sha256": "7229d11eb289fa98ca266c2fcbe2c89d5cb131bcb0eb765fb0b9c6c4793de478"
+    },
+    "src/astrarun/ui/motion.py": {
+      "size_bytes": 2477,
+      "sha256": "9f6733af773d184a1efad0ac29addffc1b2a3610e7bdcd4c2a0771ff6affcb08"
+    },
+    "src/astrarun/ui/positioning.py": {
+      "size_bytes": 6306,
+      "sha256": "9d129e28248cb0343a5dc5d9e9a2e0e6479dd6534540bd489ed6bb4d46663cc7"
+    },
+    "src/astrarun/ui/presentation.py": {
+      "size_bytes": 10991,
+      "sha256": "027bd8a5c7c9e04c27cfbd6f1739c6a9f789f8bceb3eb72c2c4924c162f6fec5"
+    },
+    "src/astrarun/ui/settings.py": {
+      "size_bytes": 26232,
+      "sha256": "b81ed375a6f16f7449ac09a5acb54f8e9185a3b713112516d8a5e933dc770769"
+    },
+    "src/astrarun/ui/task_center.py": {
+      "size_bytes": 22165,
+      "sha256": "7f6b1f45ae98ca3d90224ea64931dbf24654adbf6e9d85b3cb85956f82e95e0a"
+    },
+    "src/astrarun/ui/theme.py": {
+      "size_bytes": 10304,
+      "sha256": "28441cdd46009a571a88c283e2a3f4a3e5114892babe99ee04e95449916234e4"
+    },
+    "src/astrarun/ui/tray.py": {
+      "size_bytes": 8921,
+      "sha256": "e7b05858346c6b89770680501000a9b961d2eeb19fa3b55753d213c8d6776368"
+    },
+    "src/astrarun/ui/uninstall_wizard.py": {
+      "size_bytes": 18767,
+      "sha256": "49e4e82ae8b9230177e9f56c7faf32bc95eea5f0f88367dd6bc09cda5a0bd32c"
+    },
+    "src/astrarun/usage/__init__.py": {
+      "size_bytes": 99,
+      "sha256": "6ba45490c4d19bb7a084a6a70cd37dc48b5298f45201b43c766b323cd3ba9e25"
+    },
+    "src/astrarun/usage/store.py": {
+      "size_bytes": 3047,
+      "sha256": "aa94f13db4681eb4fc3c6368fa079531da59474ca7651ca06d21442bdac6e8b5"
+    },
+    "src/astrarun/version.py": {
+      "size_bytes": 439,
+      "sha256": "1f4925fc465d9c821421d38ba2f969cd2557dd97ac05ff3a9e70e1d911d83f55"
+    },
+    "src/astrarun/visualization/__init__.py": {
+      "size_bytes": 440,
+      "sha256": "bc514cf5d3279193605ae1b0b3b4153588b2d4d73e1fd4854a7b50f676c64395"
+    },
+    "src/astrarun/visualization/models.py": {
+      "size_bytes": 6702,
+      "sha256": "c20cc17169bf24d47094699990ddd5c00a56cde3c67766535b0b7d3dfab88872"
+    },
+    "src/astrarun/visualization/render_worker.py": {
+      "size_bytes": 5269,
+      "sha256": "0bbeed7193e510764b01959ea620e3cf2d0b365601b23f55f75e2f019b068ccb"
+    },
+    "src/astrarun/visualization/renderer.py": {
+      "size_bytes": 8928,
+      "sha256": "06133f510ed523baced4e8a7eca9f41643005fd11df9afe4a8e3dd79f4ea193b"
+    },
+    "src/astrarun/windows/__init__.py": {
+      "size_bytes": 2288,
+      "sha256": "715f87ac515970e68b6a28bb1e8316c9669ae272ead3ad02450c8b4051cf8ffd"
+    },
+    "src/astrarun/windows/controller.py": {
+      "size_bytes": 22007,
+      "sha256": "9be060380bd65af5738f37b28d0b91011c35f47b3c6253d2e68ec9b49387360d"
+    },
+    "src/astrarun/windows/discovery.py": {
+      "size_bytes": 12167,
+      "sha256": "bd4858892fccf4c99db9f0e9404f70f90af368a5bba144338973ea2eb7d38318"
+    },
+    "src/astrarun/windows/layouts.py": {
+      "size_bytes": 3455,
+      "sha256": "53bae38638dd050086d30614886b0e6d69cf5b12aba4cb067c97a43a47288a4a"
+    },
+    "src/astrarun/windows/models.py": {
+      "size_bytes": 2641,
+      "sha256": "82728275478696bb57403f7c7571e4566bfdf0ae2c64f22426a480ab7c5f44c1"
+    },
+    "src/astrarun/windows/monitors.py": {
+      "size_bytes": 7754,
+      "sha256": "adc50aa23b8c34ee3ffbbb53075937e9a4c762e4b868e97e3d7ffe78cc3483f2"
+    },
+    "src/astrarun/windows/policy.py": {
+      "size_bytes": 4663,
+      "sha256": "c19248ff2f3468dfe82914b6a059739a1b8034a049e294f7c945dc9056f0cc89"
+    },
+    "src/astrarun/windows/resolver.py": {
+      "size_bytes": 10394,
+      "sha256": "1fca2de50af33a232e10b27788ac6cd006dc8eac6ed227e29818b9dca366eab8"
+    },
+    "src/astrarun/windows/undo.py": {
+      "size_bytes": 2440,
+      "sha256": "7c13b34f061542c11061b16d55f414850f65ca0567337a31ead4dcbd830c2caa"
+    },
+    "src/astrarun/workflows/__init__.py": {
+      "size_bytes": 564,
+      "sha256": "7d9d13457cfb230f6e309d1c55d7ed013653d5ad38ca6a3b02ea02a8e2575d64"
+    },
+    "src/astrarun/workflows/compiler.py": {
+      "size_bytes": 41486,
+      "sha256": "63016666878f82c9a81769d56de49cc5202f2ecc7aac9383bbb4d491bb7b78b1"
+    },
+    "src/astrarun/workflows/context.py": {
+      "size_bytes": 7133,
+      "sha256": "d217cb709b372bf08cf32de1d6db808cc319cdf1d50c93815033575a37650131"
+    },
+    "src/astrarun/workflows/engine.py": {
+      "size_bytes": 7321,
+      "sha256": "5ad908114b97ba22691404492f43aa2909e6e49fd57e24b3f172bb2a596e45b0"
+    },
+    "src/astrarun/workflows/models.py": {
+      "size_bytes": 3574,
+      "sha256": "4ff378bd0b1e4290e218ff3d3f6d84c460552c1329f36747b0c8296d216e0b0f"
+    }
+  }
+}

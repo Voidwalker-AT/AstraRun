@@ -1,0 +1,76 @@
+{
+  "audit_version": "1.0",
+  "phase": "F0-19",
+  "migration_map": [
+    {
+      "source_module": "src/astrarun/discovery/entity_resolver.py",
+      "target_domain": "brain.decision",
+      "canonical_location": "src/astrarun/brain/decision/entity_resolver.py",
+      "compatibility_bridge_status": "MAINTAINED",
+      "purpose": "Semantic entity resolution and candidate deduplication."
+    },
+    {
+      "source_module": "src/astrarun/routing/laya.py",
+      "target_domain": "brain.decision",
+      "canonical_location": "src/astrarun/brain/decision/intent.py",
+      "compatibility_bridge_status": "MAINTAINED",
+      "purpose": "Semantic intent classification."
+    },
+    {
+      "source_module": "src/astrarun/agent/planner.py",
+      "target_domain": "brain.reasoning",
+      "canonical_location": "src/astrarun/brain/reasoning/__init__.py (GoalPlanner)",
+      "compatibility_bridge_status": "MAINTAINED",
+      "purpose": "Autonomous goal decomposition and DAG synthesis."
+    },
+    {
+      "source_module": "src/astrarun/agent/loop.py",
+      "target_domain": "brain.reasoning",
+      "canonical_location": "src/astrarun/brain/reasoning/__init__.py (AgentExecutionEngine)",
+      "compatibility_bridge_status": "MAINTAINED",
+      "purpose": "Closed-loop execution engine with replanning."
+    },
+    {
+      "source_module": "src/astrarun/agent/verifier.py",
+      "target_domain": "brain.reasoning",
+      "canonical_location": "src/astrarun/brain/reasoning/__init__.py (GoalVerifier)",
+      "compatibility_bridge_status": "MAINTAINED",
+      "purpose": "Empirical side-effect verification."
+    },
+    {
+      "source_module": "src/astrarun/tasks/resource_ledger.py",
+      "target_domain": "computer_use.desktop",
+      "canonical_location": "src/astrarun/computer_use/desktop/lifecycle.py",
+      "compatibility_bridge_status": "MAINTAINED",
+      "purpose": "Astra-owned resource tracking and cleanup enforcement."
+    },
+    {
+      "source_module": "src/astrarun/interaction/controller.py",
+      "target_domain": "computer_use.ui",
+      "canonical_location": "src/astrarun/computer_use/ui/automation.py",
+      "compatibility_bridge_status": "MAINTAINED",
+      "purpose": "UI Automation accessibility tree interactions."
+    },
+    {
+      "source_module": "src/astrarun/perception/input.py",
+      "target_domain": "computer_use.input",
+      "canonical_location": "src/astrarun/computer_use/input/physical.py",
+      "compatibility_bridge_status": "MAINTAINED",
+      "purpose": "Physical keystrokes, clicks, and user takeover detection."
+    },
+    {
+      "source_module": "src/astrarun/tools/browser.py",
+      "target_domain": "computer_use.browser",
+      "canonical_location": "src/astrarun/computer_use/browser/cdp.py",
+      "compatibility_bridge_status": "MAINTAINED",
+      "purpose": "Browser tabs and CDP navigation."
+    },
+    {
+      "source_module": "src/astrarun/perception/screen.py",
+      "target_domain": "computer_use.perception",
+      "canonical_location": "src/astrarun/computer_use/perception/screen.py",
+      "compatibility_bridge_status": "MAINTAINED",
+      "purpose": "Visual screen pixel capture and bounds inspection."
+    }
+  ]
+}

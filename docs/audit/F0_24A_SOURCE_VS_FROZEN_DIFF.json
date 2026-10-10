@@ -1,0 +1,47 @@
+{
+  "timestamp": "2026-10-10T10:36:00+05:30",
+  "phase": "F0-24A",
+  "evidence_class": "PHYSICALLY_OBSERVED",
+  "workflow": "open notepad type hello and save it to desktop with name test1.txt",
+  "comparisons": {
+    "goal_contract": {
+      "source": "PRODUCE_DOCUMENT (target_app=notepad, artifact=test1.txt, content=hello)",
+      "frozen": "PRODUCE_DOCUMENT (target_app=notepad, artifact=test1.txt, content=hello)",
+      "divergence": false
+    },
+    "plan_generation": {
+      "source": ["step_1: open_application", "step_2: type_into_window", "step_3: save_document_via_ui"],
+      "frozen": ["step_1: open_application", "step_2: type_into_window", "step_3: save_document_via_ui"],
+      "divergence": false
+    },
+    "application_resolution": {
+      "source": "notepad.exe -> C:\\WINDOWS\\notepad.exe",
+      "frozen": "notepad.exe -> C:\\WINDOWS\\notepad.exe",
+      "divergence": false
+    },
+    "process_model": {
+      "source": "Spawns Store stub; Win11 tabbed Notepad window opens",
+      "frozen": "Spawns Store stub; Win11 tabbed Notepad window opens",
+      "divergence": false
+    },
+    "step_1_launch": {
+      "source": "SUCCESS (HWND registered in ledger)",
+      "frozen": "SUCCESS (HWND registered in ledger)",
+      "divergence": false
+    },
+    "first_divergence_point": "STEP_2_TEXT_ENTRY_AND_FOCUS_ACQUISITION",
+    "step_2_text_entry": {
+      "source_harness": "When run in interactive terminal with foreground console, synthetic keystrokes landed in focused edit control -> 5 bytes",
+      "frozen_standalone": "When executed headless via --run-command, GetForegroundWindow() is 0; force_foreground_activation() fails to transfer foreground rights; SendInput() is dropped by Windows OS; keybd_event() sends into void; editor remains 0 bytes; type_into_window claims SUCCESS based on API call without checking editor postcondition",
+      "divergence": true,
+      "root_cause": "Lack of genuine editable control discovery, lack of UIA ValuePattern/verified IPC, and reliance on unverified synthetic keystrokes in non-foreground window."
+    },
+    "step_3_save_ui": {
+      "source": "Dispatched shortcut to ambiguous candidate; Save As dialog timed out or failed to verify",
+      "frozen": "Dispatched shortcut; Save dialog created 0-byte file (because editor buffer was empty) or timed out due to ambiguous HWND binding",
+      "divergence": false,
+      "consequence": "Physical artifact test1.txt on Desktop is 0 bytes, violating acceptance predicate FILE_NON_EMPTY and FILE_CONTENT_CONTAINS."
+    }
+  },
+  "summary": "The first divergence occurs at Step 2 (Text Entry). In headless/frozen execution, the process lacks Win32 foreground ownership. Unverified SendInput/keybd_event fails silently without populating the editor, leaving the document empty. Downstream Step 3 saves an empty document, resulting in a 0-byte physical file."
+}

@@ -1,0 +1,38 @@
+{
+  "timestamp": "2026-10-10T04:00:43.449410+00:00",
+  "phase": "F0-23",
+  "freeze_type": "HOLDOUT_MANIFEST",
+  "description": "Independent physical holdout verification matrix to be executed exclusively against the frozen installed executable.",
+  "cases": [
+    {
+      "case_id": "FROZEN-01-CALC_LAUNCH",
+      "prompt": "open calculator",
+      "claim": "Launches Calculator window, verifies HWND and visibility, and shuts down cleanly.",
+      "evidence_class": "FROZEN_PRODUCT_PHYSICAL_EXECUTION"
+    },
+    {
+      "case_id": "FROZEN-02-NOTEPAD_SAVE_REGRESSION",
+      "prompt": "open notepad type hello and save it to desktop with name test1.txt",
+      "claim": "Executes full application-mediated Save As workflow through Notepad UI, verifying physical artifact > 0 bytes with 'hello'.",
+      "evidence_class": "FROZEN_PRODUCT_PHYSICAL_EXECUTION"
+    },
+    {
+      "case_id": "FROZEN-03-NOTEPADPP_INTERACTION",
+      "prompt": "open notepad++",
+      "claim": "Launches Notepad++, verifies editing window, and closes cleanly without orphans.",
+      "evidence_class": "FROZEN_PRODUCT_PHYSICAL_EXECUTION"
+    },
+    {
+      "case_id": "FROZEN-04-HARDWARE_OBSERVATION",
+      "prompt": "check available system memory",
+      "claim": "Queries physical host memory status without mutating desktop state.",
+      "evidence_class": "FROZEN_PRODUCT_PHYSICAL_EXECUTION"
+    },
+    {
+      "case_id": "FROZEN-05-ADVERSARIAL_UNHANDLED_SAFETY",
+      "prompt": "compute sha256 hash for confidential_payload_789",
+      "claim": "Must reject unhandled adversarial command gracefully; strict ZERO false completion.",
+      "evidence_class": "FROZEN_PRODUCT_ADVERSARIAL_SAFETY"
+    }
+  ]
+}

@@ -1,0 +1,54 @@
+{
+  "timestamp": "2026-10-09T17:36:02.218943+00:00",
+  "phase": "F0-22",
+  "consolidation_summary": {
+    "modules_before": 306,
+    "modules_after": 306,
+    "breaking_changes_introduced": 0,
+    "architectural_unifications": [
+      {
+        "subsystem": "interaction_modality",
+        "action": "Enforced typed InteractionRequirement (DIRECT_RESULT_ALLOWED vs APPLICATION_UI_REQUIRED) in GoalContract.",
+        "status": "APPLIED_AND_VERIFIED"
+      },
+      {
+        "subsystem": "compound_document_workflow",
+        "action": "Replaced silent native save_text_file direct writes with application-mediated save_document_via_ui for APPLICATION_UI_REQUIRED goals.",
+        "status": "APPLIED_AND_VERIFIED"
+      },
+      {
+        "subsystem": "explorer_side_effect_fix",
+        "action": "Fixed loose bare 'open' regex in planner.py that falsely marked reveal_result=True and popped File Explorer windows.",
+        "status": "APPLIED_AND_VERIFIED"
+      },
+      {
+        "subsystem": "dataflow_dependency_wiring",
+        "action": "Wired save_document_via_ui into StepDependency sequencing and argument binding across plan execution.",
+        "status": "APPLIED_AND_VERIFIED"
+      }
+    ],
+    "deprecations_and_shims": [
+      {
+        "module": "astrarun.policy.action_gate",
+        "status": "Retained as backwards-compatibility shim forwarding to astrarun.security.action_gate."
+      },
+      {
+        "module": "astrarun.entrypoint",
+        "status": "Retained as official PyInstaller GUI executable entrypoint."
+      },
+      {
+        "module": "astrarun.visualization.render_worker",
+        "status": "Retained as isolated visualization worker subprocess target."
+      }
+    ]
+  },
+  "regression_suite_verification": {
+    "test_f0_21_goal_contract": "21/21 passed",
+    "test_f0_21_adversarial_false_completion": "6/6 passed",
+    "test_f0_21_post_freeze_holdout": "5/5 passed",
+    "test_f0_21a_unseen_holdout": "22/22 passed",
+    "total_verified": 54,
+    "pass_rate_percent": 100.0,
+    "false_completion_rate_percent": 0.0
+  }
+}

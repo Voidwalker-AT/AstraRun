@@ -1,0 +1,27 @@
+{
+  "milestone": "F0_24A",
+  "stage": 14,
+  "title": "Frozen Binary Build, Packaging & Silent Installation Verification",
+  "timestamp": "2026-10-10T06:28:27.492750+00:00",
+  "compiler": "Inno Setup 6 (ISCC.exe)",
+  "packager": "PyInstaller 6.22.3",
+  "installer": {
+    "path": "E:\\Workspace\\Active\\AstraRun\\dist\\installer\\AstraRun-Setup-1.0.0-rc.6-dogfood.exe",
+    "sha256": "e3ee16c8bd5296f7932f9670510475f0f2a914aed64c652597b1b099d980e80e",
+    "size_bytes": 280571552
+  },
+  "built_binary": {
+    "path": "E:\\Workspace\\Active\\AstraRun\\dist\\AstraRun\\AstraRun.exe",
+    "sha256": "6fb5671b55322809969ee9ab48b2d7ca6332f52e1764628356c70b4bbeca0561",
+    "size_bytes": 77495279
+  },
+  "installed_binary": {
+    "path": "C:\\Users\\hp\\AppData\\Local\\Programs\\AstraRun\\AstraRun.exe",
+    "sha256": "6fb5671b55322809969ee9ab48b2d7ca6332f52e1764628356c70b4bbeca0561",
+    "size_bytes": 77495279
+  },
+  "hash_parity_match": true,
+  "silent_install_exit_code": 0,
+  "evidence_class": "FROZEN_PRODUCT_OBSERVED",
+  "verdict": "PASS"
+}

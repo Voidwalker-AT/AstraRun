@@ -1,0 +1,153 @@
+{
+  "timestamp": "2026-10-10T02:54:16.420112+00:00",
+  "phase": "F0-23",
+  "description": "Authoritative forensic reproduction and root cause breakdown of F0-22 oracle contradictions.",
+  "contradictions": {
+    "1A_WRONG_APPLICATION_MARKED_PASS": {
+      "name": "Wrong Application Marked Pass (Visual Profiler vs Visual Studio Code)",
+      "status": "REPRODUCED_AND_EXPLAINED",
+      "evidence_file": "docs/audit/F0_22_ACCEPTANCE_RESULTS.json",
+      "prompt": "open visual studio code",
+      "observed_output": {
+        "extracted_target": "visual",
+        "resolved_name": "Visual Profiler",
+        "resolved_target": "C:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\bin\\nvvp.bat",
+        "is_ambiguous": true,
+        "ambiguous_candidates": [
+          {
+            "name": "Visual Profiler",
+            "score": 0.78
+          },
+          {
+            "name": "Visual Studio Code",
+            "score": 0.7667
+          },
+          {
+            "name": "Visual Studio Installer",
+            "score": 0.7522
+          }
+        ],
+        "f0_22_evaluator_verdict": "PASS"
+      },
+      "root_cause_analysis": {
+        "parser_defect": "src/astrarun/agent/planner.py line 188 used regex r'\\b(?:open|launch|...)\\s+([a-zA-Z0-9_\\-]+)\\b', matching only the single initial token 'visual' and discarding 'studio code'.",
+        "resolver_defect": "SemanticEntityResolver received isolated query 'visual'. SearchIndex length-ratio scoring gave shorter title 'Visual Profiler' a higher score (0.78) than 'Visual Studio Code' (0.7667). Despite ambiguity (score delta < 0.10), top candidate was returned.",
+        "oracle_defect": "scripts/audit_f0_22_suite.py line 251 asserted only 'ok = (resolved is not None) if should_resolve else (resolved is None)'. It checked zero semantic correspondence between resolved entity ('Visual Profiler') and intended target ('vscode' / 'visual studio code'), ignored the is_ambiguous flag, and verified no real launch or window handle."
+      },
+      "f0_23_corrected_oracle_rule": "Oracle must verify semantic identity: resolved.entity_id or canonical name must match the target alias set; ambiguous resolutions must be rejected or require clarification; and for physical tests, process image name and window title must be verified."
+    },
+    "1B_FAKE_MULTI_APPLICATION_COVERAGE": {
+      "name": "Fake Multi-Application Coverage in Category E",
+      "status": "REPRODUCED_AND_EXPLAINED",
+      "evidence_file": "docs/audit/F0_22_ACCEPTANCE_RESULTS.json",
+      "prompt": "open notepad type hello and save it to desktop with name test1.txt",
+      "observed_classification": "CATEGORY_E_MULTI_APPLICATION",
+      "root_cause_analysis": {
+        "taxonomy_misrepresentation": "F0-22 labeled single-application sequential document interaction (Notepad launch -> type -> Save As) as 'MULTI_APPLICATION' purely because it contained multiple steps and StepDependency dataflow wiring.",
+        "actual_reality": "Only one application (Notepad) participated in the workflow. Zero information was extracted from or transferred to an independent second application."
+      },
+      "f0_23_corrected_oracle_rule": "A genuine MULTI_APPLICATION acceptance workflow requires at least two distinct, independently running application contexts (e.g. App A and App B) participating causally: App A -> extract/observe -> agent state -> transform -> App B -> enter/use -> verification."
+    },
+    "1C_BROWSER_FALSE_POSITIVES": {
+      "name": "Browser False Positives (open_application and dynamic tool counted as browser interaction)",
+      "status": "REPRODUCED_AND_EXPLAINED",
+      "evidence_file": "docs/audit/F0_22_ACCEPTANCE_RESULTS.json",
+      "cases": [
+        {
+          "prompt": "open google.com",
+          "expected_caps": [
+            "open_url",
+            "open_application"
+          ],
+          "actual_caps": [
+            "open_application"
+          ],
+          "f0_22_verdict": "PASS",
+          "flaw": "Treated generic process launching as browser URL navigation without inspecting browser process, tab, or URL."
+        },
+        {
+          "prompt": "search web for python 3.13 docs",
+          "expected_caps": [
+            "search_web",
+            "execute_dynamic_tool"
+          ],
+          "actual_caps": [
+            "execute_dynamic_tool"
+          ],
+          "f0_22_verdict": "PASS",
+          "flaw": "Treated an internal dynamic script as fulfilling a web browser interaction goal without any browser interaction."
+        }
+      ],
+      "f0_23_corrected_oracle_rule": "Browser-mediated goals must verify browser-mediated state: active browser process, valid tab/window, requested URL / navigation state, and actual web interaction, with zero credit for unrelated substitutes."
+    },
+    "1D_UNREQUESTED_SIDE_EFFECT_MARKED_PASS": {
+      "name": "Unrequested Side Effect Marked Pass (snap_window_right during GPU query)",
+      "status": "REPRODUCED_AND_EXPLAINED",
+      "evidence_file": "docs/audit/F0_22_ACCEPTANCE_RESULTS.json",
+      "prompt": "what gpu do i have and how much vram is free right now",
+      "planned_steps": [
+        "gpu_status",
+        "snap_window_right"
+      ],
+      "f0_22_verdict": "PASS",
+      "root_cause_analysis": {
+        "planner_defect": "The phrase 'how much vram is free right now' was matched against capability keywords. Because it contained 'right', 'snap_window_right' matched with score 0.6 and was erroneously included as a sub-goal step.",
+        "oracle_defect": "Harness evaluated 'ok = any(c in (...) for c in caps)', passing if ANY expected capability (like gpu_status) was present. It completely ignored the presence of unexpected consequential side-effects like window snapping."
+      },
+      "f0_23_corrected_oracle_rule": "Any plan or execution containing an unexplained consequential side effect that does not advance a mandatory goal predicate must fail acceptance."
+    },
+    "1E_ROUTING_HOLDOUT_NOT_PERFECT": {
+      "name": "Routing Holdout Failures (3 / 70)",
+      "status": "REPRODUCED_AND_EXPLAINED",
+      "evidence_file": "docs/audit/C1_8_POST_FREEZE_ROUTING_EVIDENCE.json",
+      "failures": [
+        {
+          "prompt": "check available system memory",
+          "expected": "memory_status",
+          "actual": "system_summary",
+          "cause": "Overly broad system_summary capability shadowed granular memory_status capability in scoring."
+        },
+        {
+          "prompt": "check disk status and report memory usage",
+          "expected": "composite_dag_workflow (disk + memory)",
+          "actual": "generate_battery_report",
+          "cause": "The word 'report' heavily triggered 'generate_battery_report', diverting from the multi-intent composite system query."
+        },
+        {
+          "prompt": "work out the roots of this quadratic equation and save them",
+          "expected": "execute_dynamic_tool (math calculation)",
+          "actual": "save_text_file",
+          "cause": "The tail clause 'and save them' dominated the intent classification, dropping the primary mathematical computation goal entirely."
+        }
+      ],
+      "f0_23_corrected_oracle_rule": "Examine multi-intent clause composition and primary vs modifier goal weighting so that output clauses do not discard computational operations, and investigate generic resolution without hardcoded exact-prompt rules."
+    },
+    "1F_GENERIC_REPAIR_7_OF_8": {
+      "name": "Generic Autonomous Repair 7/8 (REPAIR-02 Failure)",
+      "status": "REPRODUCED_AND_EXPLAINED",
+      "evidence_file": "docs/audit/C1_8_GENERIC_REPAIR_EVIDENCE.json",
+      "case_id": "REPAIR-02",
+      "category": "missing_dict_key",
+      "goal": "Parse status dictionary and extract timestamp and message to log.txt",
+      "root_cause_analysis": {
+        "schema_divergence": "The fixture defined dictionary status_data = {'time': '...', 'message': '...'}. The user request asked for 'timestamp' and 'message'.",
+        "repair_failure": "The repair attempt generated code calling status_data.get('timestamp', None). Finding None, it executed the else-branch and printed an error without writing log.txt.",
+        "honest_verdict": "The model failed to generalize synonym key mapping ('timestamp' -> 'time'). In accordance with F0-23 instructions, this limitation is honestly retained and documented rather than benchmark-patched."
+      }
+    },
+    "1G_DIRTY_FREEZE_PROVENANCE": {
+      "name": "Dirty Git Tree at Freeze Time (119 status lines in F0-22)",
+      "status": "REPRODUCED_AND_EXPLAINED",
+      "evidence_file": "docs/audit/F0_22_FREEZE_MANIFEST.json",
+      "classification_of_dirty_files": {
+        "production_code_modifications": 18,
+        "test_and_harness_additions": 14,
+        "generated_audit_artifacts": 42,
+        "packaging_and_installer_configs": 4,
+        "temporary_execution_outputs": 12,
+        "other_workspace_notes": 8
+      },
+      "provenance_resolution": "For F0-23, production changes, test harnesses, and generated audit artifacts must follow strict chronological staging and separate hash recording (F0_23_SOURCE_FREEZE -> F0_23_HARNESS_FREEZE -> F0_23_HOLDOUT_MANIFEST)."
+    }
+  }
+}

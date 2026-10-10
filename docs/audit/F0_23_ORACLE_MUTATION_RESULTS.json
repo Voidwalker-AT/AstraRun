@@ -1,0 +1,103 @@
+{
+  "timestamp": "2026-10-10T03:23:09.657776+00:00",
+  "phase": "F0-23",
+  "description": "Controlled mutation testing of FormalAcceptanceOracle and verifier subsystems.",
+  "metrics": {
+    "total_mutations": 10,
+    "mutants_killed": 10,
+    "mutants_survived": 0,
+    "critical_mutation_survival_rate_percent": 0.0
+  },
+  "results": [
+    {
+      "mutation_id": "mut_01_always_true_verifier",
+      "description": "Mutate GoalVerifier / Oracle to always return true regardless of predicate state",
+      "target_fixture": "fix_03_zero_byte",
+      "unmutated_verdict": "FAIL (HONEST REJECTION)",
+      "mutant_behavior": "ERECTED FALSE PASS (CORRUPTED ORACLE)",
+      "survived": false,
+      "status": "KILLED"
+    },
+    {
+      "mutation_id": "mut_02_accept_any_non_null_entity",
+      "description": "Mutate entity matcher to accept any non-null candidate without semantic identity check",
+      "target_fixture": "fix_01_wrong_app",
+      "unmutated_verdict": "FAIL (HONEST REJECTION)",
+      "mutant_behavior": "ERECTED FALSE PASS (CORRUPTED ORACLE)",
+      "survived": false,
+      "status": "KILLED"
+    },
+    {
+      "mutation_id": "mut_03_ignore_side_effects",
+      "description": "Mutate oracle to ignore unrequested consequential side-effects",
+      "target_fixture": "fix_13_unrequested_snap",
+      "unmutated_verdict": "FAIL (HONEST REJECTION)",
+      "mutant_behavior": "ERECTED FALSE PASS (CORRUPTED ORACLE)",
+      "survived": false,
+      "status": "KILLED"
+    },
+    {
+      "mutation_id": "mut_04_skip_content_verification",
+      "description": "Mutate oracle to skip content matching when file exists",
+      "target_fixture": "fix_04_wrong_content",
+      "unmutated_verdict": "FAIL (HONEST REJECTION)",
+      "mutant_behavior": "ERECTED FALSE PASS (CORRUPTED ORACLE)",
+      "survived": false,
+      "status": "KILLED"
+    },
+    {
+      "mutation_id": "mut_05_skip_modality_verification",
+      "description": "Mutate oracle to permit direct filesystem substitution when UI_REQUIRED",
+      "target_fixture": "fix_06_direct_bypass",
+      "unmutated_verdict": "FAIL (HONEST REJECTION)",
+      "mutant_behavior": "ERECTED FALSE PASS (CORRUPTED ORACLE)",
+      "survived": false,
+      "status": "KILLED"
+    },
+    {
+      "mutation_id": "mut_06_skip_state_transition_observation",
+      "description": "Mutate oracle to trust capability success return code without observing physical state",
+      "target_fixture": "fix_07_no_state_change",
+      "unmutated_verdict": "FAIL (HONEST REJECTION)",
+      "mutant_behavior": "ERECTED FALSE PASS (CORRUPTED ORACLE)",
+      "survived": false,
+      "status": "KILLED"
+    },
+    {
+      "mutation_id": "mut_07_replace_app_with_random_installed",
+      "description": "Mutate entity resolution to accept random installed executable (Visual Profiler for VS Code)",
+      "target_fixture": "fix_17_plausible_wrong_app",
+      "unmutated_verdict": "FAIL (HONEST REJECTION)",
+      "mutant_behavior": "ERECTED FALSE PASS (CORRUPTED ORACLE)",
+      "survived": false,
+      "status": "KILLED"
+    },
+    {
+      "mutation_id": "mut_08_replace_url_verification_with_process_running",
+      "description": "Mutate browser verification to pass if browser process exists regardless of URL",
+      "target_fixture": "fix_09_wrong_url",
+      "unmutated_verdict": "FAIL (HONEST REJECTION)",
+      "mutant_behavior": "ERECTED FALSE PASS (CORRUPTED ORACLE)",
+      "survived": false,
+      "status": "KILLED"
+    },
+    {
+      "mutation_id": "mut_09_drop_action_gate_provenance",
+      "description": "Mutate security verification to ignore ActionGate bypass flags",
+      "target_fixture": "fix_14_security_bypass",
+      "unmutated_verdict": "FAIL (HONEST REJECTION)",
+      "mutant_behavior": "ERECTED FALSE PASS (CORRUPTED ORACLE)",
+      "survived": false,
+      "status": "KILLED"
+    },
+    {
+      "mutation_id": "mut_10_remove_cleanup_check",
+      "description": "Mutate resource accounting to ignore leaked processes and orphan windows",
+      "target_fixture": "fix_15_process_leaked",
+      "unmutated_verdict": "FAIL (HONEST REJECTION)",
+      "mutant_behavior": "ERECTED FALSE PASS (CORRUPTED ORACLE)",
+      "survived": false,
+      "status": "KILLED"
+    }
+  ]
+}

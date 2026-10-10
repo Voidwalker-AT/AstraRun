@@ -1,14 +1,33 @@
 {
   "benchmark": "POST_FREEZE_70_PROMPT_ROUTING_HOLDOUT",
   "total_prompts": 70,
-  "passed": 70,
-  "failed": 0,
-  "overall_accuracy_pct": 100.0,
+  "passed": 67,
+  "failed": 3,
+  "overall_accuracy_pct": 95.71428571428572,
   "dynamic_discrimination_pct": 100.0,
   "destructive_denied_count": 8,
   "destructive_total": 8,
   "accidental_destructive_executions": 0,
-  "failures": [],
+  "failures": [
+    {
+      "prompt": "check available system memory",
+      "category": "paraphrased_known",
+      "expected": "intent=memory_status, tier=SEMANTIC_RETRIEVAL",
+      "actual": "intent=system_summary, tier=SEMANTIC_RETRIEVAL"
+    },
+    {
+      "prompt": "check disk status and report memory usage",
+      "category": "composite",
+      "expected": "intent=composite_dag_workflow, tier=SEMANTIC_RETRIEVAL",
+      "actual": "intent=generate_battery_report, tier=UNKNOWN"
+    },
+    {
+      "prompt": "work out the roots of this quadratic equation and save them",
+      "category": "dynamic_computation",
+      "expected": "intent=execute_dynamic_tool, tier=LOCAL_MODEL",
+      "actual": "intent=save_text_file, tier=SEMANTIC_RETRIEVAL"
+    }
+  ],
   "detailed_results": [
     {
       "prompt": "lock workstation",
@@ -78,9 +97,9 @@
       "category": "paraphrased_known",
       "expected_intent": "memory_status",
       "expected_tier": "SEMANTIC_RETRIEVAL",
-      "actual_intent": "memory_status",
+      "actual_intent": "system_summary",
       "actual_tier": "SEMANTIC_RETRIEVAL",
-      "match": true
+      "match": false
     },
     {
       "prompt": "how much free disk space is left",
@@ -168,9 +187,9 @@
       "category": "composite",
       "expected_intent": "composite_dag_workflow",
       "expected_tier": "SEMANTIC_RETRIEVAL",
-      "actual_intent": "composite_dag_workflow",
-      "actual_tier": "SEMANTIC_RETRIEVAL",
-      "match": true
+      "actual_intent": "generate_battery_report",
+      "actual_tier": "UNKNOWN",
+      "match": false
     },
     {
       "prompt": "inspect network connections and list listening ports",
@@ -393,9 +412,9 @@
       "category": "dynamic_computation",
       "expected_intent": "execute_dynamic_tool",
       "expected_tier": "LOCAL_MODEL",
-      "actual_intent": "execute_dynamic_tool",
-      "actual_tier": "LOCAL_MODEL",
-      "match": true
+      "actual_intent": "save_text_file",
+      "actual_tier": "SEMANTIC_RETRIEVAL",
+      "match": false
     },
     {
       "prompt": "calculate prime factorization of 982451653",

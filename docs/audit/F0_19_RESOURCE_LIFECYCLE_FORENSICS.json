@@ -1,0 +1,46 @@
+{
+  "audit_version": "1.0",
+  "phase": "F0-19",
+  "incident": {
+    "dialog_observed_by_human": true,
+    "referenced_file": "C:\\Users\\hp\\AppData\\Local\\Temp\\user_unrelated_doc_1791471309.txt",
+    "timestamp_in_filename": 1791471309,
+    "incident_description": "User observed an interactive Windows 11 Notepad modal dialog referencing a deleted temporary file (user_unrelated_doc_1791471309.txt) on their desktop."
+  },
+  "root_cause_analysis": {
+    "originating_file": "scripts/test_f0_15_desktop_lifecycle.py",
+    "originating_function": "test_3_mixed_ownership",
+    "code_line_creation": 260,
+    "causal_chain": [
+      "1. In scripts/test_f0_15_desktop_lifecycle.py, test_3_mixed_ownership created user_file = tmp_dir / f'user_unrelated_doc_{int(time.time())}.txt' to simulate pre-existing ambient user document state.",
+      "2. The test launched a mock user Notepad instance via _launch_win32_process('notepad.exe \"{user_file}\"').",
+      "3. In Windows 11, Notepad (Microsoft.WindowsNotepad) is a packaged application with multi-tab support and background tab routing.",
+      "4. At step 7 of the test, teardown attempted to close the mock user Notepad by searching for an element named 'Close' via UI Automation (inspect_window_ui) and invoking it.",
+      "5. When multiple tabs or complex UI structures exist, clicking 'Close' on a UI element either closed an individual tab without terminating the host process or failed to focus the intended window.",
+      "6. Immediately following, the test script executed user_file.unlink() in a try-except block while the Notepad process was still alive and maintaining an open file handle/reference to user_unrelated_doc_1791471309.txt.",
+      "7. Windows 11 Notepad detected that its open backing file was removed from disk, triggering a persistent modal prompt on the user desktop asking whether the user wanted to save changes.",
+      "8. Furthermore, teardown was not wrapped in a try...finally block; any assertion failure prior to line 352 completely bypassed cleanup."
+    ]
+  },
+  "remediation": {
+    "test_harness_fix": {
+      "file": "scripts/test_f0_15_desktop_lifecycle.py",
+      "changes": [
+        "Wrapped test_2, test_3, and test_4 in try...finally blocks.",
+        "In test_3 finally block, captured user_pid is deterministically terminated using psutil.Process(user_pid).terminate() with fallback psutil.Process(user_pid).kill(), followed by process wait.",
+        "Unlinking of temporary test files (user_file, astra_file) is strictly deferred until the process is confirmed dead.",
+        "In test_2 and test_4, identical try...finally blocks guarantee process termination prior to any file unlinking."
+      ]
+    },
+    "runtime_ownership_invariants": {
+      "astra_resource_ledger": "src/astrarun/tasks/resource_ledger.py",
+      "rules": [
+        "Astra closes ONLY resources where astra_created == 1 and user_interacted == 0 and lifecycle_state != USER_TAKEOVER_DETACHED.",
+        "PID reuse protection validates process_creation_time before any termination call.",
+        "SAVE_BEFORE_CLOSE requires artifact existence on disk before releasing window.",
+        "Never kill arbitrary processes by executable name."
+      ]
+    }
+  },
+  "verification_status": "REMEDIATED_AND_ENFORCED"
+}

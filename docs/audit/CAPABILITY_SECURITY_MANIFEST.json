@@ -1,8 +1,8 @@
 {
-  "total_capabilities": 84,
-  "explicitly_classified": 84,
+  "total_capabilities": 85,
+  "explicitly_classified": 85,
   "read_only": 43,
-  "mutating": 41,
+  "mutating": 42,
   "confirmation_required": 3,
   "blocked": 2,
   "unknown_consequential": 0,
@@ -921,6 +921,18 @@
     },
     {
       "id": "set_clipboard_content",
+      "category": "INTERACTION",
+      "operation_kind": "UI_INTERACTION",
+      "risk": "LOW",
+      "mutates_state": true,
+      "requires_confirmation": false,
+      "resource_scope": "interaction",
+      "permission": "AUTO",
+      "read_only": false,
+      "classification_source": "authoritative_manifest"
+    },
+    {
+      "id": "save_document_via_ui",
       "category": "INTERACTION",
       "operation_kind": "UI_INTERACTION",
       "risk": "LOW",

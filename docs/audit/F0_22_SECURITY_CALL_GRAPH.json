@@ -1,0 +1,287 @@
+{
+  "timestamp": "2026-10-09T17:18:18.907574+00:00",
+  "phase": "F0-22",
+  "consequential_action_paths_count": 11,
+  "fail_closed_policy": {
+    "unknown_capabilities": "BLOCKED (ExecutionBroker denies unregistered capabilities with SECURITY_DENY)",
+    "unknown_consequential_operations": "BLOCKED (ExecutionBroker denies UNKNOWN_CONSEQUENTIAL)",
+    "spoofed_categories": "FORCED_TO_ACT (Callers declaring OBSERVE on mutating capabilities are overridden to ACT)",
+    "cognitive_model_authority": "PROHIBITED (LLM/VLM outputs are untrusted suggestions, never authorization tokens)"
+  },
+  "paths": {
+    "filesystem_mutations": {
+      "description": "File creation, writing, deletion, renaming, moving on disk.",
+      "capabilities": [
+        "save_text_file",
+        "create_file",
+        "delete_file",
+        "move_file",
+        "append_file",
+        "write_file"
+      ],
+      "underlying_api": [
+        "pathlib.Path.write_text",
+        "open(..., 'w')",
+        "os.remove",
+        "shutil.move"
+      ],
+      "canonical_entrypoints": [
+        "astrarun.app.AstraApplication._execute_through_broker",
+        "astrarun.agent.loop.AgentExecutionEngine._execute_step_with_closed_loop",
+        "astrarun.tasks.runtime.TaskRuntime.execute_adaptive_plan"
+      ],
+      "broker_enforcement": {
+        "choke_point": "astrarun.security.execution_broker.ExecutionBroker.execute",
+        "category_enforced": "ACT",
+        "action_gate_evaluation": "ActionGate.evaluate_request(gate_request)",
+        "governance_rule": "Enforces filesystem sandbox, protected directory check, path sanitization"
+      },
+      "bypasses_identified": [],
+      "verdict": "SECURE_GOVERNED"
+    },
+    "process_launch": {
+      "description": "Launching Windows applications and external processes.",
+      "capabilities": [
+        "open_application",
+        "launch_app"
+      ],
+      "underlying_api": [
+        "subprocess.Popen",
+        "os.startfile",
+        "win32process.CreateProcess"
+      ],
+      "canonical_entrypoints": [
+        "astrarun.app.AstraApplication._execute_through_broker",
+        "astrarun.agent.loop.AgentExecutionEngine._execute_step_with_closed_loop",
+        "astrarun.tasks.runtime.TaskRuntime.execute_adaptive_plan"
+      ],
+      "broker_enforcement": {
+        "choke_point": "astrarun.security.execution_broker.ExecutionBroker.execute",
+        "category_enforced": "ACT",
+        "action_gate_evaluation": "ActionGate.evaluate_request(gate_request)",
+        "governance_rule": "Enforces process allowlist, checks binary reputation, blocks elevation without explicit prompt"
+      },
+      "bypasses_identified": [
+        {
+          "location": "astrarun.ui.launcher.LauncherWindow.execute_command (fallback path)",
+          "condition": "Triggered ONLY if self.app is None (e.g. headless/mock launcher without AstraApplication).",
+          "disposition": "Deprecate legacy ToolRegistry fallback in launcher; require AstraApplication."
+        }
+      ],
+      "verdict": "SECURE_GOVERNED"
+    },
+    "process_termination": {
+      "description": "Terminating running processes or closing application windows.",
+      "capabilities": [
+        "close_application",
+        "kill_process"
+      ],
+      "underlying_api": [
+        "psutil.Process.terminate",
+        "psutil.Process.kill",
+        "win32gui.PostMessage(WM_CLOSE)"
+      ],
+      "canonical_entrypoints": [
+        "astrarun.app.AstraApplication._execute_through_broker",
+        "astrarun.agent.loop.AgentExecutionEngine._execute_step_with_closed_loop",
+        "astrarun.tasks.runtime.TaskRuntime.execute_adaptive_plan"
+      ],
+      "broker_enforcement": {
+        "choke_point": "astrarun.security.execution_broker.ExecutionBroker.execute",
+        "category_enforced": "ACT",
+        "action_gate_evaluation": "ActionGate.evaluate_request(gate_request)",
+        "governance_rule": "Blocks killing system-critical processes (csrss, winlogon, explorer); permits user-owned app termination."
+      },
+      "bypasses_identified": [],
+      "verdict": "SECURE_GOVERNED"
+    },
+    "keyboard_mouse_input": {
+      "description": "Simulating keystrokes, typing, mouse clicks, and window interactions.",
+      "capabilities": [
+        "type_into_window",
+        "press_keyboard_shortcut",
+        "click_element",
+        "mouse_click",
+        "mouse_move"
+      ],
+      "underlying_api": [
+        "ctypes.windll.user32.SendInput",
+        "pyautogui",
+        "pywinauto.keyboard.send_keys"
+      ],
+      "canonical_entrypoints": [
+        "astrarun.app.AstraApplication._execute_through_broker",
+        "astrarun.agent.loop.AgentExecutionEngine._execute_step_with_closed_loop",
+        "astrarun.tasks.runtime.TaskRuntime.execute_adaptive_plan"
+      ],
+      "broker_enforcement": {
+        "choke_point": "astrarun.security.execution_broker.ExecutionBroker.execute",
+        "category_enforced": "ACT",
+        "action_gate_evaluation": "ActionGate.evaluate_request(gate_request)",
+        "governance_rule": "Verifies target window HWND, prevents injection into elevated or security dialogs (UAC/credential manager)."
+      },
+      "bypasses_identified": [],
+      "verdict": "SECURE_GOVERNED"
+    },
+    "browser_navigation_interactions": {
+      "description": "Controlling web browser via CDP, DOM automation, or navigation.",
+      "capabilities": [
+        "browser_navigate",
+        "browser_click",
+        "browser_type",
+        "browser_extract"
+      ],
+      "underlying_api": [
+        "playwright.async_api",
+        "playwright.sync_api",
+        "CDP connection"
+      ],
+      "canonical_entrypoints": [
+        "astrarun.app.AstraApplication._execute_through_broker",
+        "astrarun.agent.loop.AgentExecutionEngine._execute_step_with_closed_loop"
+      ],
+      "broker_enforcement": {
+        "choke_point": "astrarun.security.execution_broker.ExecutionBroker.execute",
+        "category_enforced": "ACT (for navigation/clicks) / OBSERVE (for passive extraction)",
+        "action_gate_evaluation": "ActionGate.evaluate_request(gate_request)",
+        "governance_rule": "URL allowlist/blocklist, blocks file:// and private intranet schemes unless permitted."
+      },
+      "bypasses_identified": [],
+      "verdict": "SECURE_GOVERNED"
+    },
+    "dynamic_code": {
+      "description": "Executing dynamic code (eval, exec, Python REPL, dynamic script loading).",
+      "capabilities": [
+        "run_python_code",
+        "execute_script"
+      ],
+      "underlying_api": [
+        "subprocess (isolated python worker)",
+        "restricted exec"
+      ],
+      "canonical_entrypoints": [
+        "astrarun.app.AstraApplication._execute_through_broker",
+        "astrarun.tools.dynamic_builder"
+      ],
+      "broker_enforcement": {
+        "choke_point": "astrarun.security.execution_broker.ExecutionBroker.execute",
+        "category_enforced": "ACT",
+        "action_gate_evaluation": "ActionGate.evaluate_request(gate_request)",
+        "governance_rule": "Strictly restricted; requires user confirmation token unless running in isolated sandbox container."
+      },
+      "bypasses_identified": [],
+      "verdict": "SECURE_GOVERNED"
+    },
+    "shell_execution": {
+      "description": "Executing arbitrary cmd.exe or powershell.exe commands.",
+      "capabilities": [
+        "run_shell_command",
+        "execute_cli"
+      ],
+      "underlying_api": [
+        "subprocess.Popen(cmd.exe / powershell.exe)"
+      ],
+      "canonical_entrypoints": [
+        "astrarun.app.AstraApplication._execute_through_broker",
+        "astrarun.agent.loop.AgentExecutionEngine._execute_step_with_closed_loop"
+      ],
+      "broker_enforcement": {
+        "choke_point": "astrarun.security.execution_broker.ExecutionBroker.execute",
+        "category_enforced": "ACT",
+        "action_gate_evaluation": "ActionGate.evaluate_request(gate_request)",
+        "governance_rule": "High-risk gate: blocked by default without explicit confirmation token or allowlisted command."
+      },
+      "bypasses_identified": [],
+      "verdict": "SECURE_GOVERNED"
+    },
+    "network_mutations": {
+      "description": "Making mutating network requests (HTTP POST/PUT/DELETE, raw socket send).",
+      "capabilities": [
+        "http_request_mutate",
+        "send_webhook"
+      ],
+      "underlying_api": [
+        "urllib.request",
+        "httpx",
+        "requests"
+      ],
+      "canonical_entrypoints": [
+        "astrarun.app.AstraApplication._execute_through_broker"
+      ],
+      "broker_enforcement": {
+        "choke_point": "astrarun.security.execution_broker.ExecutionBroker.execute",
+        "category_enforced": "ACT",
+        "action_gate_evaluation": "ActionGate.evaluate_request(gate_request)",
+        "governance_rule": "Domain verification, blocks localhost and RFC1918 internal IPs."
+      },
+      "bypasses_identified": [],
+      "verdict": "SECURE_GOVERNED"
+    },
+    "registry_mutations": {
+      "description": "Modifying Windows registry keys and values.",
+      "capabilities": [
+        "set_registry_value"
+      ],
+      "underlying_api": [
+        "winreg.SetValueEx",
+        "winreg.DeleteValue"
+      ],
+      "canonical_entrypoints": [
+        "astrarun.app.AstraApplication._execute_through_broker"
+      ],
+      "broker_enforcement": {
+        "choke_point": "astrarun.security.execution_broker.ExecutionBroker.execute",
+        "category_enforced": "ACT",
+        "action_gate_evaluation": "ActionGate.evaluate_request(gate_request)",
+        "governance_rule": "Blocked by default; high-risk administrative action requiring explicit elevation token."
+      },
+      "bypasses_identified": [],
+      "verdict": "SECURE_GOVERNED"
+    },
+    "application_close": {
+      "description": "Closing application windows or processes.",
+      "capabilities": [
+        "close_application"
+      ],
+      "underlying_api": [
+        "win32gui.PostMessage(hwnd, WM_CLOSE, 0, 0)",
+        "psutil.terminate"
+      ],
+      "canonical_entrypoints": [
+        "astrarun.app.AstraApplication._execute_through_broker",
+        "astrarun.agent.loop.AgentExecutionEngine._execute_step_with_closed_loop"
+      ],
+      "broker_enforcement": {
+        "choke_point": "astrarun.security.execution_broker.ExecutionBroker.execute",
+        "category_enforced": "ACT",
+        "action_gate_evaluation": "ActionGate.evaluate_request(gate_request)",
+        "governance_rule": "Permitted for user-owned application windows created by task or matching user command."
+      },
+      "bypasses_identified": [],
+      "verdict": "SECURE_GOVERNED"
+    },
+    "artifact_promotion": {
+      "description": "Promoting transient task artifacts to permanent user workspace or desktop locations.",
+      "capabilities": [
+        "promote_artifact",
+        "export_artifact"
+      ],
+      "underlying_api": [
+        "shutil.copy2",
+        "pathlib.Path.replace"
+      ],
+      "canonical_entrypoints": [
+        "astrarun.app.AstraApplication._execute_through_broker",
+        "astrarun.tasks.runtime.TaskRuntime.execute_adaptive_plan"
+      ],
+      "broker_enforcement": {
+        "choke_point": "astrarun.security.execution_broker.ExecutionBroker.execute",
+        "category_enforced": "ACT",
+        "action_gate_evaluation": "ActionGate.evaluate_request(gate_request)",
+        "governance_rule": "Sanitizes filename, checks target path against forbidden system directories."
+      },
+      "bypasses_identified": [],
+      "verdict": "SECURE_GOVERNED"
+    }
+  }
+}

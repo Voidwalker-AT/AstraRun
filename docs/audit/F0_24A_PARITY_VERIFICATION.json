@@ -1,0 +1,36 @@
+{
+  "milestone": "F0_24A",
+  "stage": 15,
+  "title": "Source Runtime vs Frozen Executable Parity Verification",
+  "timestamp": "2026-10-10T06:29:23.629334+00:00",
+  "source_execution": {
+    "runtime": "e:\\Workspace\\Active\\AstraRun\\.venv\\Scripts\\python.exe",
+    "duration_sec": 13.25,
+    "exit_code": 0,
+    "artifact_path": "C:\\Users\\hp\\Desktop\\test1_source_parity.txt",
+    "artifact_exists": true,
+    "artifact_size_bytes": 5,
+    "artifact_content": "hello",
+    "artifact_sha256": "2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824"
+  },
+  "frozen_execution": {
+    "binary_path": "C:\\Users\\hp\\AppData\\Local\\Programs\\AstraRun\\AstraRun.exe",
+    "duration_sec": 12.604,
+    "exit_code": 0,
+    "artifact_path": "C:\\Users\\hp\\Desktop\\test1_frozen_parity.txt",
+    "artifact_exists": true,
+    "artifact_size_bytes": 5,
+    "artifact_content": "hello",
+    "artifact_sha256": "2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824"
+  },
+  "parity_comparison": {
+    "both_artifacts_created": true,
+    "byte_size_parity": true,
+    "content_identity_parity": true,
+    "sha256_hash_parity": true,
+    "zero_byte_anomaly_eliminated": true,
+    "unrequested_side_effects_detected": false
+  },
+  "verdict": "PASS",
+  "evidence_class": "FROZEN_PRODUCT_OBSERVED"
+}

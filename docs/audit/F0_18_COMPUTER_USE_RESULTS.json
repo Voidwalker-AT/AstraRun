@@ -1,0 +1,62 @@
+{
+  "milestone": "F0-18",
+  "title": "Unified Computer-Use Facade & Architecture Verification Results",
+  "verified_at": "2026-10-08T19:47:58+00:00",
+  "platform": "Windows 11 (AMD64, 16 GB RAM, RTX 2050 4 GB VRAM)",
+  "facade_module": "src/astrarun/computer_use/facade.py",
+  "contracts": {
+    "observe": {
+      "method": "ComputerUse.observe(include_windows=True, include_apps=True)",
+      "returns": "ComputerUseObservation",
+      "fields_verified": [
+        "timestamp",
+        "screen_width",
+        "screen_height",
+        "monitors",
+        "foreground_window",
+        "running_applications"
+      ],
+      "status": "PASS",
+      "notes": "Captures system geometry and active window state without visual hallucination or memory leaks."
+    },
+    "discover": {
+      "method": "ComputerUse.discover(refresh=False)",
+      "returns": "List[Dict[str, Any]]",
+      "status": "PASS",
+      "notes": "Excludes maintenance, reset, cache, and troubleshooter shortcuts; returns clean applications catalog."
+    },
+    "resolve": {
+      "method": "ComputerUse.resolve(entity_query='vlc')",
+      "returns": "Tuple[bool, Optional[ResolvedEntity]]",
+      "target_resolved": "C:\\Program Files\\VideoLAN\\VLC\\vlc.exe",
+      "status": "PASS",
+      "notes": "Single canonical executable resolved via binary .lnk parsing; 0 maintenance duplicates returned."
+    },
+    "find_element": {
+      "method": "ComputerUse.find_element(query=ElementQuery)",
+      "returns": "List[UIElement]",
+      "status": "PASS",
+      "notes": "Query contract defined for Windows UI Automation and visual coordinate grounding."
+    },
+    "interact": {
+      "method": "ComputerUse.interact(action=UIAction)",
+      "returns": "CapabilityResult",
+      "enforcement": "ExecutionBroker choke-point",
+      "status": "PASS",
+      "notes": "All computer-use actions strictly routed through ExecutionBroker; direct OS bypassing prohibited."
+    },
+    "verify": {
+      "method": "ComputerUse.verify(condition=VerificationCondition)",
+      "returns": "VerificationResult",
+      "status": "PASS",
+      "notes": "Evaluates post-action window existence, title matching, and process liveness."
+    },
+    "recover": {
+      "method": "ComputerUse.recover(failure=RecoveryAction)",
+      "returns": "CapabilityResult",
+      "status": "PASS",
+      "notes": "Supports focus restoration, application relaunching, and modal dialog dismissal."
+    }
+  },
+  "overall_verdict": "UNIFIED_FACADE_VERIFIED"
+}

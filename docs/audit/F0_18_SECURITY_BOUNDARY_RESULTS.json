@@ -1,0 +1,49 @@
+{
+  "milestone": "F0-18",
+  "title": "Security Kernel & Execution Boundary Verification Results",
+  "verified_at": "2026-10-08T19:47:58+00:00",
+  "platform": "Windows 11 (AMD64, 16 GB RAM, RTX 2050 4 GB VRAM)",
+  "security_choke_points": {
+    "ExecutionBroker": {
+      "role": "Central execution authority for all capabilities and computer-use actions",
+      "fail_closed_test": "PASS (unregistered tool 'arbitrary_unregistered_hack' returned verdict='BLOCK' with 'SECURITY_DENY')",
+      "category_spoof_prevention": "PASS (caller attempting to declare OBSERVE for mutating capability is forcibly reclassified to ACT)"
+    },
+    "ActionGate": {
+      "role": "Security kernel evaluating PathPolicy, CommandPolicy, ASTCodePolicy, and permissions",
+      "destructive_command_blocking": "PASS ('delete system32', 'format c:', 'drop database' blocked immediately)",
+      "path_traversal_blocking": "PASS ('..\\..\\' blocked by PathPolicy)",
+      "shell_injection_blocking": "PASS ('; rm -rf', '&& del', '| format' blocked by CommandPolicy)"
+    },
+    "NegationGuard": {
+      "role": "Rejection of negated action requests prior to execution",
+      "test_cases": ["don't open vlc", "never open calculator", "do not launch notepad"],
+      "verdict": "PASS (all negated requests rejected with explanatory safety warning)"
+    },
+    "ResourceOwnershipLedger": {
+      "role": "F0-15 tracking of Astra-launched applications vs pre-existing user applications",
+      "preservation_test": "PASS ('close vlc' when user-owned VLC is present safely preserves user window; reports 'Pre-existing user windows were safely preserved')"
+    },
+    "ProtectedProcesses": {
+      "role": "Immunity for critical Windows system processes",
+      "protected_list": [
+        "system",
+        "system idle process",
+        "registry",
+        "smss.exe",
+        "csrss.exe",
+        "wininit.exe",
+        "services.exe",
+        "lsass.exe",
+        "svchost.exe",
+        "winlogon.exe",
+        "explorer.exe",
+        "dwm.exe",
+        "spoolsv.exe",
+        "fontdrvhost.exe"
+      ],
+      "verdict": "PASS (termination requests fail closed)"
+    }
+  },
+  "overall_verdict": "SECURITY_BOUNDARIES_INTACT"
+}

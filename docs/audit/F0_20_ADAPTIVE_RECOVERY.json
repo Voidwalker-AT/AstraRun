@@ -1,0 +1,10 @@
+{
+  "test": "acceptance_d_adaptive_divergence_recovery",
+  "status": "PASS",
+  "task_id": "test_f0_20_divergence_1791555017",
+  "hwnd": 2951166,
+  "divergence_injected": "SW_MINIMIZE",
+  "divergence_detected": true,
+  "adaptive_restoration_verified": true,
+  "latency_sec": 7.489
+}

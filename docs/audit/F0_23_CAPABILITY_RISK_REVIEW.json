@@ -1,0 +1,147 @@
+{
+  "timestamp": "2026-10-10T03:54:57.390435+00:00",
+  "phase": "F0-23",
+  "description": "Authoritative forensic security review of 11 critical workstation capabilities.",
+  "total_capabilities_audited": 11,
+  "capabilities": [
+    {
+      "capability_id": "lock_workstation",
+      "current_permission": "AUTO",
+      "operation_kind": "PRIVILEGED_SYSTEM",
+      "risk_level": "LOW",
+      "mutates_state": true,
+      "requires_confirmation": false,
+      "actual_side_effect": "Locks Windows workstation session; triggers LockScreen.",
+      "reversibility": true,
+      "damage_potential": "Temporary user interruption; no data loss.",
+      "policy_assessment": "SAFE_AUTO: Safe for auto execution upon explicit user instruction."
+    },
+    {
+      "capability_id": "run_project_command",
+      "current_permission": "AUTO",
+      "operation_kind": "SHELL_EXEC",
+      "risk_level": "MEDIUM",
+      "mutates_state": true,
+      "requires_confirmation": false,
+      "actual_side_effect": "Executes arbitrary project commands in developer workspace.",
+      "reversibility": false,
+      "damage_potential": "HIGH: Arbitrary file changes, network access, or build mutation.",
+      "policy_assessment": "CONFIRM_OR_SANDBOX: Must enforce project boundary and isolate from host."
+    },
+    {
+      "capability_id": "wifi_connect",
+      "current_permission": "AUTO",
+      "operation_kind": "NETWORK_MUTATE",
+      "risk_level": "LOW",
+      "mutates_state": true,
+      "requires_confirmation": false,
+      "actual_side_effect": "Mutates host network adapter connection state.",
+      "reversibility": true,
+      "damage_potential": "MEDIUM: Network disconnection disrupts active downloads or remote services.",
+      "policy_assessment": "CONFIRM: Network state modification should require operator confirmation or explicit prompt intent."
+    },
+    {
+      "capability_id": "wifi_disconnect",
+      "current_permission": "AUTO",
+      "operation_kind": "NETWORK_MUTATE",
+      "risk_level": "LOW",
+      "mutates_state": true,
+      "requires_confirmation": false,
+      "actual_side_effect": "Mutates host network adapter connection state.",
+      "reversibility": true,
+      "damage_potential": "MEDIUM: Network disconnection disrupts active downloads or remote services.",
+      "policy_assessment": "CONFIRM: Network state modification should require operator confirmation or explicit prompt intent."
+    },
+    {
+      "capability_id": "open_url",
+      "current_permission": "AUTO",
+      "operation_kind": "BROWSER_NAVIGATE",
+      "risk_level": "LOW",
+      "mutates_state": false,
+      "requires_confirmation": false,
+      "actual_side_effect": "Opens external web browser URL.",
+      "reversibility": true,
+      "damage_potential": "LOW: Phishing or untrusted endpoint navigation if unverified.",
+      "policy_assessment": "SAFE_AUTO_WITH_SCHEMA_FILTER: Allowed for verified HTTP/HTTPS; restrict dangerous schemes (javascript:, file:)."
+    },
+    {
+      "capability_id": "close_application",
+      "current_permission": "AUTO",
+      "operation_kind": "APPLICATION_CLOSE",
+      "risk_level": "MEDIUM",
+      "mutates_state": true,
+      "requires_confirmation": false,
+      "actual_side_effect": "Terminates target window or process.",
+      "reversibility": false,
+      "damage_potential": "MEDIUM: Unsaved work loss in dirty document editors.",
+      "policy_assessment": "ASTRA_OWNED_AUTO_SYSTEM_CONFIRM: Safe AUTO for Astra-spawned processes; require confirmation for user-dirty external windows."
+    },
+    {
+      "capability_id": "close_window",
+      "current_permission": "AUTO",
+      "operation_kind": "APPLICATION_CLOSE",
+      "risk_level": "MEDIUM",
+      "mutates_state": true,
+      "requires_confirmation": false,
+      "actual_side_effect": "Terminates target window or process.",
+      "reversibility": false,
+      "damage_potential": "MEDIUM: Unsaved work loss in dirty document editors.",
+      "policy_assessment": "ASTRA_OWNED_AUTO_SYSTEM_CONFIRM: Safe AUTO for Astra-spawned processes; require confirmation for user-dirty external windows."
+    },
+    {
+      "capability_id": "click_ui_element",
+      "current_permission": "AUTO",
+      "operation_kind": "UI_INTERACTION",
+      "risk_level": "MEDIUM",
+      "mutates_state": true,
+      "requires_confirmation": false,
+      "actual_side_effect": "Synthetic UI input invocation.",
+      "reversibility": false,
+      "damage_potential": "MEDIUM: Misclick on destructive buttons if target geometry shifts.",
+      "policy_assessment": "AUTO_WITH_TARGET_VERIFICATION: Permitted with strict pre-click bounds verification and user takeover pause."
+    },
+    {
+      "capability_id": "set_ui_element_value",
+      "current_permission": "AUTO",
+      "operation_kind": "UI_INTERACTION",
+      "risk_level": "MEDIUM",
+      "mutates_state": true,
+      "requires_confirmation": false,
+      "actual_side_effect": "Synthetic UI input invocation.",
+      "reversibility": false,
+      "damage_potential": "MEDIUM: Misclick on destructive buttons if target geometry shifts.",
+      "policy_assessment": "AUTO_WITH_TARGET_VERIFICATION: Permitted with strict pre-click bounds verification and user takeover pause."
+    },
+    {
+      "capability_id": "execute_dynamic_tool",
+      "current_permission": "AUTO",
+      "operation_kind": "DYNAMIC_CODE_EXEC",
+      "risk_level": "MEDIUM",
+      "mutates_state": true,
+      "requires_confirmation": false,
+      "actual_side_effect": "Synthesizes and runs dynamic Python script in sandbox.",
+      "reversibility": false,
+      "damage_potential": "HIGH: CPU/memory consumption, sandbox escape attempts.",
+      "policy_assessment": "SANDBOX_ISOLATED_AUTO: Bounded timeout (10s), restricted imports, isolated temporary directory."
+    },
+    {
+      "capability_id": "consult_delegate",
+      "current_permission": "AUTO",
+      "operation_kind": "DYNAMIC_CODE_EXEC",
+      "risk_level": "MEDIUM",
+      "mutates_state": true,
+      "requires_confirmation": false,
+      "actual_side_effect": "Invokes secondary AI/LLM consultation or external provider.",
+      "reversibility": true,
+      "damage_potential": "LOW: API rate limits, token cost.",
+      "policy_assessment": "AUTO_WITH_RATE_LIMITING: Permitted with budget limits and structured return codes."
+    }
+  ],
+  "recommendations": [
+    "Retain strict ExecutionBroker mediation for all ACT operations.",
+    "Enforce SandboxManager isolation for execute_dynamic_tool with bounded 10s timeout.",
+    "Enforce pre-click target bounding box check on click_ui_element to prevent displaced clicks.",
+    "Enforce scheme validation (http/https only) on open_url.",
+    "Require confirmation for closing user-owned windows containing unsaved documents."
+  ]
+}

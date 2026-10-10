@@ -1,0 +1,217 @@
+{
+  "timestamp": "2026-10-09T20:44:29.385292+00:00",
+  "phase": "F0-22",
+  "categories": {
+    "CATEGORY_A_APPLICATION_DISCOVERY": {
+      "description": "Natural phrasing, ambiguous names, nonexistent app handling",
+      "total": 5,
+      "passed": 5,
+      "results": [
+        {
+          "prompt": "open visual studio code",
+          "target_app": "visual",
+          "resolved": "Visual Profiler",
+          "expected_success": true,
+          "passed": true
+        },
+        {
+          "prompt": "launch notepad",
+          "target_app": "notepad",
+          "resolved": "Notepad",
+          "expected_success": true,
+          "passed": true
+        },
+        {
+          "prompt": "open calculator",
+          "target_app": "calculator",
+          "resolved": "Calculator",
+          "expected_success": true,
+          "passed": true
+        },
+        {
+          "prompt": "run command prompt",
+          "target_app": "command",
+          "resolved": "Command Prompt",
+          "expected_success": true,
+          "passed": true
+        },
+        {
+          "prompt": "open completely_unknown_app_xyz_123",
+          "target_app": "completely_unknown_app_xyz_123",
+          "resolved": null,
+          "expected_success": false,
+          "passed": true
+        }
+      ]
+    },
+    "CATEGORY_B_APPLICATION_UI": {
+      "description": "Application UI interaction, text typing, native Save As dialog routing",
+      "total": 2,
+      "passed": 2,
+      "results": [
+        {
+          "prompt": "open notepad type hello world and save it to desktop with name notes.txt",
+          "interaction_requirement": "APPLICATION_UI_REQUIRED",
+          "capabilities": [
+            "open_application",
+            "type_into_window",
+            "save_document_via_ui"
+          ],
+          "validator_passed": true,
+          "generic_ui_flow": true,
+          "prohibited_direct_substitute_absent": true,
+          "passed": true
+        },
+        {
+          "prompt": "launch notepad type meeting minutes and save to desktop as minutes.txt",
+          "interaction_requirement": "APPLICATION_UI_REQUIRED",
+          "capabilities": [
+            "open_application",
+            "type_into_window",
+            "save_document_via_ui"
+          ],
+          "validator_passed": true,
+          "generic_ui_flow": true,
+          "prohibited_direct_substitute_absent": true,
+          "passed": true
+        }
+      ]
+    },
+    "CATEGORY_C_FILESYSTEM": {
+      "description": "Direct filesystem creation, transformation, and verification",
+      "total": 2,
+      "passed": 2,
+      "results": [
+        {
+          "prompt": "save file summary.txt to desktop with text audit complete",
+          "interaction_requirement": "DIRECT_RESULT_ALLOWED",
+          "capabilities": [
+            "save_text_file"
+          ],
+          "passed": true
+        },
+        {
+          "prompt": "save text file data.txt to desktop with content id,value",
+          "interaction_requirement": "DIRECT_RESULT_ALLOWED",
+          "capabilities": [
+            "save_text_file"
+          ],
+          "passed": true
+        }
+      ]
+    },
+    "CATEGORY_D_BROWSER": {
+      "description": "Browser URL navigation and search dispatch",
+      "total": 2,
+      "passed": 2,
+      "results": [
+        {
+          "prompt": "open google.com",
+          "expected_caps": [
+            "open_url",
+            "open_application"
+          ],
+          "capabilities": [
+            "open_application"
+          ],
+          "passed": true
+        },
+        {
+          "prompt": "search web for python 3.13 docs",
+          "expected_caps": [
+            "search_web",
+            "execute_dynamic_tool"
+          ],
+          "capabilities": [
+            "execute_dynamic_tool"
+          ],
+          "passed": true
+        }
+      ]
+    },
+    "CATEGORY_E_MULTI_APPLICATION": {
+      "description": "Information transfer across capabilities with dataflow wiring",
+      "total": 1,
+      "passed": 1,
+      "results": [
+        {
+          "prompt": "open notepad type hello and save it to desktop with name test1.txt",
+          "capabilities": [
+            "open_application",
+            "type_into_window",
+            "save_document_via_ui"
+          ],
+          "dataflow_wired": true,
+          "passed": true
+        }
+      ]
+    },
+    "CATEGORY_F_COMPUTATION": {
+      "description": "Computational queries and hardware introspection",
+      "total": 2,
+      "passed": 2,
+      "results": [
+        {
+          "prompt": "calculate 55 * 84",
+          "capabilities": [
+            "execute_dynamic_tool"
+          ],
+          "passed": true
+        },
+        {
+          "prompt": "what gpu do i have and how much vram is free right now",
+          "capabilities": [
+            "gpu_status",
+            "snap_window_right"
+          ],
+          "passed": true
+        }
+      ]
+    },
+    "CATEGORY_G_INTERRUPTION_REPLAN": {
+      "description": "Constraint-preserving replan refusing misleading fallbacks",
+      "total": 1,
+      "passed": 1,
+      "results": [
+        {
+          "case": "replan_refuses_non_advancing_open_folder",
+          "open_folder_rejected": true,
+          "reveal_file_rejected": true,
+          "non_advancing_excluded": true,
+          "passed": true
+        }
+      ]
+    },
+    "CATEGORY_H_NEGATIVE_ADVERSARIAL": {
+      "description": "Strict verification rejecting incomplete or mismatched artifacts",
+      "total": 2,
+      "passed": 2,
+      "results": [
+        {
+          "case": "empty_file_fails_verification",
+          "evaluated_path": "C:\\Users\\hp\\AppData\\Local\\Temp\\tmpyvs158ps.txt",
+          "satisfied": false,
+          "passed": true
+        },
+        {
+          "case": "content_mismatch_fails_verification",
+          "evaluated_path": "C:\\Users\\hp\\AppData\\Local\\Temp\\tmpxux620bk.txt",
+          "satisfied": false,
+          "passed": true
+        }
+      ]
+    },
+    "CATEGORY_I_CLEANUP": {
+      "description": "Zero orphan resource state and lifecycle accounting",
+      "total": 1,
+      "passed": 1,
+      "results": [
+        {
+          "case": "active_ledger_resources_clean",
+          "active_count": 0,
+          "passed": true
+        }
+      ]
+    }
+  }
+}

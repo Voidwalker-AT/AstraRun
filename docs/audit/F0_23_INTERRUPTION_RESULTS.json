@@ -1,0 +1,103 @@
+{
+  "timestamp": "2026-10-10T03:53:00.262899+00:00",
+  "phase": "F0-23",
+  "suite": "INTERRUPTION_AND_ADAPTATION_ACCEPTANCE",
+  "total_cases": 3,
+  "passed_cases": 3,
+  "failed_cases": 0,
+  "cases": [
+    {
+      "case_id": "INTERRUPT-01-USER_TAKEOVER",
+      "prompt": "detect conflicting physical user mouse movement and halt synthetic input",
+      "claim": "Physical user input has absolute precedence; system detects cursor drift (>15px) and transitions to PAUSED_USER_ACTIVE.",
+      "evidence_class": "INTERRUPTION_PREVENTATIVE_SAFETY",
+      "predicates": [
+        {
+          "name": "takeover_detected",
+          "mandatory": true,
+          "satisfied": true,
+          "evidence": "Takeover detected: True"
+        },
+        {
+          "name": "state_paused",
+          "mandatory": true,
+          "satisfied": true,
+          "evidence": "InputState: PAUSED_USER_ACTIVE"
+        }
+      ],
+      "unexpected_side_effects": [],
+      "security_provenance": {
+        "broker_invoked": true,
+        "gate_authorized": true,
+        "authority_chain": "PhysicalInputController -> SafetyHalt"
+      },
+      "resource_delta": {
+        "spawned_pids": [],
+        "leaked_pids": []
+      },
+      "verdict": "PASS"
+    },
+    {
+      "case_id": "INTERRUPT-02-TARGET_DISPLACEMENT_OOB",
+      "prompt": "verify target element containment before clicking shifted coordinates",
+      "claim": "Pre-click target verification catches target displacement and rejects out-of-bounds coordinates.",
+      "evidence_class": "INTERRUPTION_PREVENTATIVE_SAFETY",
+      "predicates": [
+        {
+          "name": "displaced_target_rejected",
+          "mandatory": true,
+          "satisfied": true,
+          "evidence": "Verification rejected: valid=False"
+        },
+        {
+          "name": "oob_reason_provided",
+          "mandatory": true,
+          "satisfied": true,
+          "evidence": "TARGET_OOB: Point (250, 250) outside expected bbox x=100 y=100 width=50 height=30"
+        }
+      ],
+      "unexpected_side_effects": [],
+      "security_provenance": {
+        "broker_invoked": true,
+        "gate_authorized": true,
+        "authority_chain": "PhysicalInputController -> PreClickGate"
+      },
+      "resource_delta": {
+        "spawned_pids": [],
+        "leaked_pids": []
+      },
+      "verdict": "PASS"
+    },
+    {
+      "case_id": "INTERRUPT-03-STALE_GENERATION_REJECTION",
+      "prompt": "reject action planned on expired observation generation",
+      "claim": "Observation generations expire or invalidate on world changes, rejecting stale coordinate replays.",
+      "evidence_class": "INTERRUPTION_PREVENTATIVE_SAFETY",
+      "predicates": [
+        {
+          "name": "stale_generation_detected",
+          "mandatory": true,
+          "satisfied": true,
+          "evidence": "is_stale=True"
+        },
+        {
+          "name": "stale_click_prevented",
+          "mandatory": true,
+          "satisfied": true,
+          "evidence": "TARGET_STALE: Observation generation expired or invalidated"
+        }
+      ],
+      "unexpected_side_effects": [],
+      "security_provenance": {
+        "broker_invoked": true,
+        "gate_authorized": true,
+        "authority_chain": "ObservationGeneration -> StalenessGuard"
+      },
+      "resource_delta": {
+        "spawned_pids": [],
+        "leaked_pids": []
+      },
+      "verdict": "PASS"
+    }
+  ]
+}

@@ -1,0 +1,1223 @@
+{
+  "milestone": "F0_24A",
+  "stage": 9,
+  "title": "Cross-Domain Generalization & Stress Corpus Evaluation (120 Cases)",
+  "timestamp": 1791611760.724193,
+  "total_cases": 120,
+  "domains": {
+    "domain_a_document_creation": 3,
+    "domain_b_application_control": 3,
+    "domain_c_filesystem": 2,
+    "domain_d_network": 2,
+    "domain_e_system_utility": 1,
+    "domain_f_dynamic_computation": 2,
+    "domain_g_paraphrase_invariance": 7,
+    "stress_corpus_100": 100
+  },
+  "passed_cases": 119,
+  "false_completion_count": 0,
+  "false_completion_rate_pct": 0.0,
+  "evidence_class": "TEST_EXECUTED",
+  "cases": [
+    {
+      "case_id": "GEN-A1",
+      "domain": "A_DOCUMENT_CREATION",
+      "prompt": "create a file on desktop called meeting.txt with text 'meeting adjourned'",
+      "contract_objective": "PRODUCE_DOCUMENT",
+      "plan_steps_count": 1,
+      "validation_passed": true,
+      "false_completion": false,
+      "verdict": "PASS"
+    },
+    {
+      "case_id": "GEN-A2",
+      "domain": "A_DOCUMENT_CREATION",
+      "prompt": "save notes.txt to Desktop containing summary",
+      "contract_objective": "PRODUCE_DOCUMENT",
+      "plan_steps_count": 1,
+      "validation_passed": true,
+      "false_completion": false,
+      "verdict": "PASS"
+    },
+    {
+      "case_id": "GEN-A3",
+      "domain": "A_DOCUMENT_CREATION",
+      "prompt": "write hello world to desktop as test.txt",
+      "contract_objective": "PRODUCE_DOCUMENT",
+      "plan_steps_count": 1,
+      "validation_passed": true,
+      "false_completion": false,
+      "verdict": "PASS"
+    },
+    {
+      "case_id": "GEN-B1",
+      "domain": "B_APPLICATION_CONTROL",
+      "prompt": "open calculator",
+      "contract_objective": "APPLICATION_CONTROL",
+      "plan_steps_count": 1,
+      "validation_passed": true,
+      "false_completion": false,
+      "verdict": "PASS"
+    },
+    {
+      "case_id": "GEN-B2",
+      "domain": "B_APPLICATION_CONTROL",
+      "prompt": "launch notepad",
+      "contract_objective": "APPLICATION_CONTROL",
+      "plan_steps_count": 1,
+      "validation_passed": true,
+      "false_completion": false,
+      "verdict": "PASS"
+    },
+    {
+      "case_id": "GEN-B3",
+      "domain": "B_APPLICATION_CONTROL",
+      "prompt": "close calculator",
+      "contract_objective": "APPLICATION_CONTROL",
+      "plan_steps_count": 1,
+      "validation_passed": true,
+      "false_completion": false,
+      "verdict": "PASS"
+    },
+    {
+      "case_id": "GEN-C1",
+      "domain": "C_FILESYSTEM",
+      "prompt": "save report.html to Downloads",
+      "contract_objective": "PRODUCE_DOCUMENT",
+      "plan_steps_count": 1,
+      "validation_passed": true,
+      "false_completion": false,
+      "verdict": "PASS"
+    },
+    {
+      "case_id": "GEN-C2",
+      "domain": "C_FILESYSTEM",
+      "prompt": "save document.pdf to Documents",
+      "contract_objective": "PRODUCE_DOCUMENT",
+      "plan_steps_count": 1,
+      "validation_passed": true,
+      "false_completion": false,
+      "verdict": "PASS"
+    },
+    {
+      "case_id": "GEN-D1",
+      "domain": "D_NETWORK",
+      "prompt": "connect to wifi Office_Guest",
+      "contract_objective": "NETWORK_MANAGEMENT",
+      "plan_steps_count": 1,
+      "validation_passed": true,
+      "false_completion": false,
+      "verdict": "PASS"
+    },
+    {
+      "case_id": "GEN-D2",
+      "domain": "D_NETWORK",
+      "prompt": "switch wifi to Home_5G",
+      "contract_objective": "NETWORK_MANAGEMENT",
+      "plan_steps_count": 1,
+      "validation_passed": true,
+      "false_completion": false,
+      "verdict": "PASS"
+    },
+    {
+      "case_id": "GEN-E1",
+      "domain": "E_SYSTEM_UTILITY",
+      "prompt": "run a battery report and save it in Downloads as astra-battery.html",
+      "contract_objective": "PRODUCE_DOCUMENT",
+      "plan_steps_count": 1,
+      "validation_passed": true,
+      "false_completion": false,
+      "verdict": "PASS"
+    },
+    {
+      "case_id": "GEN-F1",
+      "domain": "F_DYNAMIC_COMPUTATION",
+      "prompt": "calculate roots of x^2 - 5x + 6",
+      "contract_objective": "GENERAL_TASK",
+      "plan_steps_count": 1,
+      "validation_passed": true,
+      "false_completion": false,
+      "verdict": "PASS"
+    },
+    {
+      "case_id": "GEN-F2",
+      "domain": "F_DYNAMIC_COMPUTATION",
+      "prompt": "what is 42 * 17?",
+      "contract_objective": "GENERAL_TASK",
+      "plan_steps_count": 0,
+      "validation_passed": false,
+      "false_completion": false,
+      "verdict": "VALIDATION_FLAGGED"
+    },
+    {
+      "case_id": "GEN-G1",
+      "domain": "G_PARAPHRASE",
+      "prompt": "open notepad type hello and save it to desktop with name test1.txt",
+      "contract_objective": "PRODUCE_DOCUMENT",
+      "plan_steps_count": 3,
+      "validation_passed": true,
+      "false_completion": false,
+      "verdict": "PASS"
+    },
+    {
+      "case_id": "GEN-G2",
+      "domain": "G_PARAPHRASE",
+      "prompt": "open notepad and type hello and save it to desktop as test1.txt",
+      "contract_objective": "PRODUCE_DOCUMENT",
+      "plan_steps_count": 3,
+      "validation_passed": true,
+      "false_completion": false,
+      "verdict": "PASS"
+    },
+    {
+      "case_id": "GEN-G3",
+      "domain": "G_PARAPHRASE",
+      "prompt": "launch notepad, write hello, save to desktop named test1.txt",
+      "contract_objective": "PRODUCE_DOCUMENT",
+      "plan_steps_count": 3,
+      "validation_passed": true,
+      "false_completion": false,
+      "verdict": "PASS"
+    },
+    {
+      "case_id": "GEN-G4",
+      "domain": "G_PARAPHRASE",
+      "prompt": "open notepad, type 'hello', save it on desktop with name test1.txt",
+      "contract_objective": "PRODUCE_DOCUMENT",
+      "plan_steps_count": 3,
+      "validation_passed": true,
+      "false_completion": false,
+      "verdict": "PASS"
+    },
+    {
+      "case_id": "GEN-G5",
+      "domain": "G_PARAPHRASE",
+      "prompt": "start notepad type hello and save it in desktop as test1.txt",
+      "contract_objective": "PRODUCE_DOCUMENT",
+      "plan_steps_count": 3,
+      "validation_passed": true,
+      "false_completion": false,
+      "verdict": "PASS"
+    },
+    {
+      "case_id": "GEN-G6",
+      "domain": "G_PARAPHRASE",
+      "prompt": "open notepad and type \"hello\" and save to desktop with name test1.txt",
+      "contract_objective": "PRODUCE_DOCUMENT",
+      "plan_steps_count": 3,
+      "validation_passed": true,
+      "false_completion": false,
+      "verdict": "PASS"
+    },
+    {
+      "case_id": "GEN-G7",
+      "domain": "G_PARAPHRASE",
+      "prompt": "use notepad to type hello and save to desktop as test1.txt",
+      "contract_objective": "PRODUCE_DOCUMENT",
+      "plan_steps_count": 3,
+      "validation_passed": true,
+      "false_completion": false,
+      "verdict": "PASS"
+    },
+    {
+      "case_id": "STRESS-001",
+      "domain": "STRESS_CORPUS",
+      "prompt": "open notepad and save summary_1.txt to Desktop",
+      "contract_objective": "PRODUCE_DOCUMENT",
+      "plan_steps_count": 2,
+      "validation_passed": true,
+      "false_completion": false,
+      "verdict": "PASS"
+    },
+    {
+      "case_id": "STRESS-002",
+      "domain": "STRESS_CORPUS",
+      "prompt": "open notepad and save summary_2.txt to Downloads",
+      "contract_objective": "PRODUCE_DOCUMENT",
+      "plan_steps_count": 2,
+      "validation_passed": true,
+      "false_completion": false,
+      "verdict": "PASS"
+    },
+    {
+      "case_id": "STRESS-003",
+      "domain": "STRESS_CORPUS",
+      "prompt": "open notepad and save summary_3.txt to Documents",
+      "contract_objective": "PRODUCE_DOCUMENT",
+      "plan_steps_count": 2,
+      "validation_passed": true,
+      "false_completion": false,
+      "verdict": "PASS"
+    },
+    {
+      "case_id": "STRESS-004",
+      "domain": "STRESS_CORPUS",
+      "prompt": "open notepad and save summary_4.txt to Temp",
+      "contract_objective": "PRODUCE_DOCUMENT",
+      "plan_steps_count": 2,
+      "validation_passed": true,
+      "false_completion": false,
+      "verdict": "PASS"
+    },
+    {
+      "case_id": "STRESS-005",
+      "domain": "STRESS_CORPUS",
+      "prompt": "open notepad and save summary_5.txt to home",
+      "contract_objective": "PRODUCE_DOCUMENT",
+      "plan_steps_count": 2,
+      "validation_passed": true,
+      "false_completion": false,
+      "verdict": "PASS"
+    },
+    {
+      "case_id": "STRESS-006",
+      "domain": "STRESS_CORPUS",
+      "prompt": "open calculator and save summary_6.txt to Desktop",
+      "contract_objective": "PRODUCE_DOCUMENT",
+      "plan_steps_count": 2,
+      "validation_passed": true,
+      "false_completion": false,
+      "verdict": "PASS"
+    },
+    {
+      "case_id": "STRESS-007",
+      "domain": "STRESS_CORPUS",
+      "prompt": "open calculator and save summary_7.txt to Downloads",
+      "contract_objective": "PRODUCE_DOCUMENT",
+      "plan_steps_count": 2,
+      "validation_passed": true,
+      "false_completion": false,
+      "verdict": "PASS"
+    },
+    {
+      "case_id": "STRESS-008",
+      "domain": "STRESS_CORPUS",
+      "prompt": "open calculator and save summary_8.txt to Documents",
+      "contract_objective": "PRODUCE_DOCUMENT",
+      "plan_steps_count": 2,
+      "validation_passed": true,
+      "false_completion": false,
+      "verdict": "PASS"
+    },
+    {
+      "case_id": "STRESS-009",
+      "domain": "STRESS_CORPUS",
+      "prompt": "open calculator and save summary_9.txt to Temp",
+      "contract_objective": "PRODUCE_DOCUMENT",
+      "plan_steps_count": 2,
+      "validation_passed": true,
+      "false_completion": false,
+      "verdict": "PASS"
+    },
+    {
+      "case_id": "STRESS-010",
+      "domain": "STRESS_CORPUS",
+      "prompt": "open calculator and save summary_10.txt to home",
+      "contract_objective": "PRODUCE_DOCUMENT",
+      "plan_steps_count": 2,
+      "validation_passed": true,
+      "false_completion": false,
+      "verdict": "PASS"
+    },
+    {
+      "case_id": "STRESS-011",
+      "domain": "STRESS_CORPUS",
+      "prompt": "open wordpad and save summary_11.txt to Desktop",
+      "contract_objective": "PRODUCE_DOCUMENT",
+      "plan_steps_count": 2,
+      "validation_passed": true,
+      "false_completion": false,
+      "verdict": "PASS"
+    },
+    {
+      "case_id": "STRESS-012",
+      "domain": "STRESS_CORPUS",
+      "prompt": "open wordpad and save summary_12.txt to Downloads",
+      "contract_objective": "PRODUCE_DOCUMENT",
+      "plan_steps_count": 2,
+      "validation_passed": true,
+      "false_completion": false,
+      "verdict": "PASS"
+    },
+    {
+      "case_id": "STRESS-013",
+      "domain": "STRESS_CORPUS",
+      "prompt": "open wordpad and save summary_13.txt to Documents",
+      "contract_objective": "PRODUCE_DOCUMENT",
+      "plan_steps_count": 2,
+      "validation_passed": true,
+      "false_completion": false,
+      "verdict": "PASS"
+    },
+    {
+      "case_id": "STRESS-014",
+      "domain": "STRESS_CORPUS",
+      "prompt": "open wordpad and save summary_14.txt to Temp",
+      "contract_objective": "PRODUCE_DOCUMENT",
+      "plan_steps_count": 2,
+      "validation_passed": true,
+      "false_completion": false,
+      "verdict": "PASS"
+    },
+    {
+      "case_id": "STRESS-015",
+      "domain": "STRESS_CORPUS",
+      "prompt": "open wordpad and save summary_15.txt to home",
+      "contract_objective": "PRODUCE_DOCUMENT",
+      "plan_steps_count": 2,
+      "validation_passed": true,
+      "false_completion": false,
+      "verdict": "PASS"
+    },
+    {
+      "case_id": "STRESS-016",
+      "domain": "STRESS_CORPUS",
+      "prompt": "open paint and save summary_16.txt to Desktop",
+      "contract_objective": "PRODUCE_DOCUMENT",
+      "plan_steps_count": 2,
+      "validation_passed": true,
+      "false_completion": false,
+      "verdict": "PASS"
+    },
+    {
+      "case_id": "STRESS-017",
+      "domain": "STRESS_CORPUS",
+      "prompt": "open paint and save summary_17.txt to Downloads",
+      "contract_objective": "PRODUCE_DOCUMENT",
+      "plan_steps_count": 2,
+      "validation_passed": true,
+      "false_completion": false,
+      "verdict": "PASS"
+    },
+    {
+      "case_id": "STRESS-018",
+      "domain": "STRESS_CORPUS",
+      "prompt": "open paint and save summary_18.txt to Documents",
+      "contract_objective": "PRODUCE_DOCUMENT",
+      "plan_steps_count": 2,
+      "validation_passed": true,
+      "false_completion": false,
+      "verdict": "PASS"
+    },
+    {
+      "case_id": "STRESS-019",
+      "domain": "STRESS_CORPUS",
+      "prompt": "open paint and save summary_19.txt to Temp",
+      "contract_objective": "PRODUCE_DOCUMENT",
+      "plan_steps_count": 2,
+      "validation_passed": true,
+      "false_completion": false,
+      "verdict": "PASS"
+    },
+    {
+      "case_id": "STRESS-020",
+      "domain": "STRESS_CORPUS",
+      "prompt": "open paint and save summary_20.txt to home",
+      "contract_objective": "PRODUCE_DOCUMENT",
+      "plan_steps_count": 2,
+      "validation_passed": true,
+      "false_completion": false,
+      "verdict": "PASS"
+    },
+    {
+      "case_id": "STRESS-021",
+      "domain": "STRESS_CORPUS",
+      "prompt": "launch notepad and save summary_21.txt to Desktop",
+      "contract_objective": "PRODUCE_DOCUMENT",
+      "plan_steps_count": 2,
+      "validation_passed": true,
+      "false_completion": false,
+      "verdict": "PASS"
+    },
+    {
+      "case_id": "STRESS-022",
+      "domain": "STRESS_CORPUS",
+      "prompt": "launch notepad and save summary_22.txt to Downloads",
+      "contract_objective": "PRODUCE_DOCUMENT",
+      "plan_steps_count": 2,
+      "validation_passed": true,
+      "false_completion": false,
+      "verdict": "PASS"
+    },
+    {
+      "case_id": "STRESS-023",
+      "domain": "STRESS_CORPUS",
+      "prompt": "launch notepad and save summary_23.txt to Documents",
+      "contract_objective": "PRODUCE_DOCUMENT",
+      "plan_steps_count": 2,
+      "validation_passed": true,
+      "false_completion": false,
+      "verdict": "PASS"
+    },
+    {
+      "case_id": "STRESS-024",
+      "domain": "STRESS_CORPUS",
+      "prompt": "launch notepad and save summary_24.txt to Temp",
+      "contract_objective": "PRODUCE_DOCUMENT",
+      "plan_steps_count": 2,
+      "validation_passed": true,
+      "false_completion": false,
+      "verdict": "PASS"
+    },
+    {
+      "case_id": "STRESS-025",
+      "domain": "STRESS_CORPUS",
+      "prompt": "launch notepad and save summary_25.txt to home",
+      "contract_objective": "PRODUCE_DOCUMENT",
+      "plan_steps_count": 2,
+      "validation_passed": true,
+      "false_completion": false,
+      "verdict": "PASS"
+    },
+    {
+      "case_id": "STRESS-026",
+      "domain": "STRESS_CORPUS",
+      "prompt": "launch calculator and save summary_26.txt to Desktop",
+      "contract_objective": "PRODUCE_DOCUMENT",
+      "plan_steps_count": 2,
+      "validation_passed": true,
+      "false_completion": false,
+      "verdict": "PASS"
+    },
+    {
+      "case_id": "STRESS-027",
+      "domain": "STRESS_CORPUS",
+      "prompt": "launch calculator and save summary_27.txt to Downloads",
+      "contract_objective": "PRODUCE_DOCUMENT",
+      "plan_steps_count": 2,
+      "validation_passed": true,
+      "false_completion": false,
+      "verdict": "PASS"
+    },
+    {
+      "case_id": "STRESS-028",
+      "domain": "STRESS_CORPUS",
+      "prompt": "launch calculator and save summary_28.txt to Documents",
+      "contract_objective": "PRODUCE_DOCUMENT",
+      "plan_steps_count": 2,
+      "validation_passed": true,
+      "false_completion": false,
+      "verdict": "PASS"
+    },
+    {
+      "case_id": "STRESS-029",
+      "domain": "STRESS_CORPUS",
+      "prompt": "launch calculator and save summary_29.txt to Temp",
+      "contract_objective": "PRODUCE_DOCUMENT",
+      "plan_steps_count": 2,
+      "validation_passed": true,
+      "false_completion": false,
+      "verdict": "PASS"
+    },
+    {
+      "case_id": "STRESS-030",
+      "domain": "STRESS_CORPUS",
+      "prompt": "launch calculator and save summary_30.txt to home",
+      "contract_objective": "PRODUCE_DOCUMENT",
+      "plan_steps_count": 2,
+      "validation_passed": true,
+      "false_completion": false,
+      "verdict": "PASS"
+    },
+    {
+      "case_id": "STRESS-031",
+      "domain": "STRESS_CORPUS",
+      "prompt": "launch wordpad and save summary_31.txt to Desktop",
+      "contract_objective": "PRODUCE_DOCUMENT",
+      "plan_steps_count": 2,
+      "validation_passed": true,
+      "false_completion": false,
+      "verdict": "PASS"
+    },
+    {
+      "case_id": "STRESS-032",
+      "domain": "STRESS_CORPUS",
+      "prompt": "launch wordpad and save summary_32.txt to Downloads",
+      "contract_objective": "PRODUCE_DOCUMENT",
+      "plan_steps_count": 2,
+      "validation_passed": true,
+      "false_completion": false,
+      "verdict": "PASS"
+    },
+    {
+      "case_id": "STRESS-033",
+      "domain": "STRESS_CORPUS",
+      "prompt": "launch wordpad and save summary_33.txt to Documents",
+      "contract_objective": "PRODUCE_DOCUMENT",
+      "plan_steps_count": 2,
+      "validation_passed": true,
+      "false_completion": false,
+      "verdict": "PASS"
+    },
+    {
+      "case_id": "STRESS-034",
+      "domain": "STRESS_CORPUS",
+      "prompt": "launch wordpad and save summary_34.txt to Temp",
+      "contract_objective": "PRODUCE_DOCUMENT",
+      "plan_steps_count": 2,
+      "validation_passed": true,
+      "false_completion": false,
+      "verdict": "PASS"
+    },
+    {
+      "case_id": "STRESS-035",
+      "domain": "STRESS_CORPUS",
+      "prompt": "launch wordpad and save summary_35.txt to home",
+      "contract_objective": "PRODUCE_DOCUMENT",
+      "plan_steps_count": 2,
+      "validation_passed": true,
+      "false_completion": false,
+      "verdict": "PASS"
+    },
+    {
+      "case_id": "STRESS-036",
+      "domain": "STRESS_CORPUS",
+      "prompt": "launch paint and save summary_36.txt to Desktop",
+      "contract_objective": "PRODUCE_DOCUMENT",
+      "plan_steps_count": 2,
+      "validation_passed": true,
+      "false_completion": false,
+      "verdict": "PASS"
+    },
+    {
+      "case_id": "STRESS-037",
+      "domain": "STRESS_CORPUS",
+      "prompt": "launch paint and save summary_37.txt to Downloads",
+      "contract_objective": "PRODUCE_DOCUMENT",
+      "plan_steps_count": 2,
+      "validation_passed": true,
+      "false_completion": false,
+      "verdict": "PASS"
+    },
+    {
+      "case_id": "STRESS-038",
+      "domain": "STRESS_CORPUS",
+      "prompt": "launch paint and save summary_38.txt to Documents",
+      "contract_objective": "PRODUCE_DOCUMENT",
+      "plan_steps_count": 2,
+      "validation_passed": true,
+      "false_completion": false,
+      "verdict": "PASS"
+    },
+    {
+      "case_id": "STRESS-039",
+      "domain": "STRESS_CORPUS",
+      "prompt": "launch paint and save summary_39.txt to Temp",
+      "contract_objective": "PRODUCE_DOCUMENT",
+      "plan_steps_count": 2,
+      "validation_passed": true,
+      "false_completion": false,
+      "verdict": "PASS"
+    },
+    {
+      "case_id": "STRESS-040",
+      "domain": "STRESS_CORPUS",
+      "prompt": "launch paint and save summary_40.txt to home",
+      "contract_objective": "PRODUCE_DOCUMENT",
+      "plan_steps_count": 2,
+      "validation_passed": true,
+      "false_completion": false,
+      "verdict": "PASS"
+    },
+    {
+      "case_id": "STRESS-041",
+      "domain": "STRESS_CORPUS",
+      "prompt": "start notepad and save summary_41.txt to Desktop",
+      "contract_objective": "PRODUCE_DOCUMENT",
+      "plan_steps_count": 2,
+      "validation_passed": true,
+      "false_completion": false,
+      "verdict": "PASS"
+    },
+    {
+      "case_id": "STRESS-042",
+      "domain": "STRESS_CORPUS",
+      "prompt": "start notepad and save summary_42.txt to Downloads",
+      "contract_objective": "PRODUCE_DOCUMENT",
+      "plan_steps_count": 2,
+      "validation_passed": true,
+      "false_completion": false,
+      "verdict": "PASS"
+    },
+    {
+      "case_id": "STRESS-043",
+      "domain": "STRESS_CORPUS",
+      "prompt": "start notepad and save summary_43.txt to Documents",
+      "contract_objective": "PRODUCE_DOCUMENT",
+      "plan_steps_count": 2,
+      "validation_passed": true,
+      "false_completion": false,
+      "verdict": "PASS"
+    },
+    {
+      "case_id": "STRESS-044",
+      "domain": "STRESS_CORPUS",
+      "prompt": "start notepad and save summary_44.txt to Temp",
+      "contract_objective": "PRODUCE_DOCUMENT",
+      "plan_steps_count": 2,
+      "validation_passed": true,
+      "false_completion": false,
+      "verdict": "PASS"
+    },
+    {
+      "case_id": "STRESS-045",
+      "domain": "STRESS_CORPUS",
+      "prompt": "start notepad and save summary_45.txt to home",
+      "contract_objective": "PRODUCE_DOCUMENT",
+      "plan_steps_count": 2,
+      "validation_passed": true,
+      "false_completion": false,
+      "verdict": "PASS"
+    },
+    {
+      "case_id": "STRESS-046",
+      "domain": "STRESS_CORPUS",
+      "prompt": "start calculator and save summary_46.txt to Desktop",
+      "contract_objective": "PRODUCE_DOCUMENT",
+      "plan_steps_count": 2,
+      "validation_passed": true,
+      "false_completion": false,
+      "verdict": "PASS"
+    },
+    {
+      "case_id": "STRESS-047",
+      "domain": "STRESS_CORPUS",
+      "prompt": "start calculator and save summary_47.txt to Downloads",
+      "contract_objective": "PRODUCE_DOCUMENT",
+      "plan_steps_count": 2,
+      "validation_passed": true,
+      "false_completion": false,
+      "verdict": "PASS"
+    },
+    {
+      "case_id": "STRESS-048",
+      "domain": "STRESS_CORPUS",
+      "prompt": "start calculator and save summary_48.txt to Documents",
+      "contract_objective": "PRODUCE_DOCUMENT",
+      "plan_steps_count": 2,
+      "validation_passed": true,
+      "false_completion": false,
+      "verdict": "PASS"
+    },
+    {
+      "case_id": "STRESS-049",
+      "domain": "STRESS_CORPUS",
+      "prompt": "start calculator and save summary_49.txt to Temp",
+      "contract_objective": "PRODUCE_DOCUMENT",
+      "plan_steps_count": 2,
+      "validation_passed": true,
+      "false_completion": false,
+      "verdict": "PASS"
+    },
+    {
+      "case_id": "STRESS-050",
+      "domain": "STRESS_CORPUS",
+      "prompt": "start calculator and save summary_50.txt to home",
+      "contract_objective": "PRODUCE_DOCUMENT",
+      "plan_steps_count": 2,
+      "validation_passed": true,
+      "false_completion": false,
+      "verdict": "PASS"
+    },
+    {
+      "case_id": "STRESS-051",
+      "domain": "STRESS_CORPUS",
+      "prompt": "start wordpad and save summary_51.txt to Desktop",
+      "contract_objective": "PRODUCE_DOCUMENT",
+      "plan_steps_count": 2,
+      "validation_passed": true,
+      "false_completion": false,
+      "verdict": "PASS"
+    },
+    {
+      "case_id": "STRESS-052",
+      "domain": "STRESS_CORPUS",
+      "prompt": "start wordpad and save summary_52.txt to Downloads",
+      "contract_objective": "PRODUCE_DOCUMENT",
+      "plan_steps_count": 2,
+      "validation_passed": true,
+      "false_completion": false,
+      "verdict": "PASS"
+    },
+    {
+      "case_id": "STRESS-053",
+      "domain": "STRESS_CORPUS",
+      "prompt": "start wordpad and save summary_53.txt to Documents",
+      "contract_objective": "PRODUCE_DOCUMENT",
+      "plan_steps_count": 2,
+      "validation_passed": true,
+      "false_completion": false,
+      "verdict": "PASS"
+    },
+    {
+      "case_id": "STRESS-054",
+      "domain": "STRESS_CORPUS",
+      "prompt": "start wordpad and save summary_54.txt to Temp",
+      "contract_objective": "PRODUCE_DOCUMENT",
+      "plan_steps_count": 2,
+      "validation_passed": true,
+      "false_completion": false,
+      "verdict": "PASS"
+    },
+    {
+      "case_id": "STRESS-055",
+      "domain": "STRESS_CORPUS",
+      "prompt": "start wordpad and save summary_55.txt to home",
+      "contract_objective": "PRODUCE_DOCUMENT",
+      "plan_steps_count": 2,
+      "validation_passed": true,
+      "false_completion": false,
+      "verdict": "PASS"
+    },
+    {
+      "case_id": "STRESS-056",
+      "domain": "STRESS_CORPUS",
+      "prompt": "start paint and save summary_56.txt to Desktop",
+      "contract_objective": "PRODUCE_DOCUMENT",
+      "plan_steps_count": 2,
+      "validation_passed": true,
+      "false_completion": false,
+      "verdict": "PASS"
+    },
+    {
+      "case_id": "STRESS-057",
+      "domain": "STRESS_CORPUS",
+      "prompt": "start paint and save summary_57.txt to Downloads",
+      "contract_objective": "PRODUCE_DOCUMENT",
+      "plan_steps_count": 2,
+      "validation_passed": true,
+      "false_completion": false,
+      "verdict": "PASS"
+    },
+    {
+      "case_id": "STRESS-058",
+      "domain": "STRESS_CORPUS",
+      "prompt": "start paint and save summary_58.txt to Documents",
+      "contract_objective": "PRODUCE_DOCUMENT",
+      "plan_steps_count": 2,
+      "validation_passed": true,
+      "false_completion": false,
+      "verdict": "PASS"
+    },
+    {
+      "case_id": "STRESS-059",
+      "domain": "STRESS_CORPUS",
+      "prompt": "start paint and save summary_59.txt to Temp",
+      "contract_objective": "PRODUCE_DOCUMENT",
+      "plan_steps_count": 2,
+      "validation_passed": true,
+      "false_completion": false,
+      "verdict": "PASS"
+    },
+    {
+      "case_id": "STRESS-060",
+      "domain": "STRESS_CORPUS",
+      "prompt": "start paint and save summary_60.txt to home",
+      "contract_objective": "PRODUCE_DOCUMENT",
+      "plan_steps_count": 2,
+      "validation_passed": true,
+      "false_completion": false,
+      "verdict": "PASS"
+    },
+    {
+      "case_id": "STRESS-061",
+      "domain": "STRESS_CORPUS",
+      "prompt": "create notepad and save summary_61.txt to Desktop",
+      "contract_objective": "PRODUCE_DOCUMENT",
+      "plan_steps_count": 1,
+      "validation_passed": true,
+      "false_completion": false,
+      "verdict": "PASS"
+    },
+    {
+      "case_id": "STRESS-062",
+      "domain": "STRESS_CORPUS",
+      "prompt": "create notepad and save summary_62.txt to Downloads",
+      "contract_objective": "PRODUCE_DOCUMENT",
+      "plan_steps_count": 1,
+      "validation_passed": true,
+      "false_completion": false,
+      "verdict": "PASS"
+    },
+    {
+      "case_id": "STRESS-063",
+      "domain": "STRESS_CORPUS",
+      "prompt": "create notepad and save summary_63.txt to Documents",
+      "contract_objective": "PRODUCE_DOCUMENT",
+      "plan_steps_count": 1,
+      "validation_passed": true,
+      "false_completion": false,
+      "verdict": "PASS"
+    },
+    {
+      "case_id": "STRESS-064",
+      "domain": "STRESS_CORPUS",
+      "prompt": "create notepad and save summary_64.txt to Temp",
+      "contract_objective": "PRODUCE_DOCUMENT",
+      "plan_steps_count": 1,
+      "validation_passed": true,
+      "false_completion": false,
+      "verdict": "PASS"
+    },
+    {
+      "case_id": "STRESS-065",
+      "domain": "STRESS_CORPUS",
+      "prompt": "create notepad and save summary_65.txt to home",
+      "contract_objective": "PRODUCE_DOCUMENT",
+      "plan_steps_count": 1,
+      "validation_passed": true,
+      "false_completion": false,
+      "verdict": "PASS"
+    },
+    {
+      "case_id": "STRESS-066",
+      "domain": "STRESS_CORPUS",
+      "prompt": "create calculator and save summary_66.txt to Desktop",
+      "contract_objective": "PRODUCE_DOCUMENT",
+      "plan_steps_count": 1,
+      "validation_passed": true,
+      "false_completion": false,
+      "verdict": "PASS"
+    },
+    {
+      "case_id": "STRESS-067",
+      "domain": "STRESS_CORPUS",
+      "prompt": "create calculator and save summary_67.txt to Downloads",
+      "contract_objective": "PRODUCE_DOCUMENT",
+      "plan_steps_count": 1,
+      "validation_passed": true,
+      "false_completion": false,
+      "verdict": "PASS"
+    },
+    {
+      "case_id": "STRESS-068",
+      "domain": "STRESS_CORPUS",
+      "prompt": "create calculator and save summary_68.txt to Documents",
+      "contract_objective": "PRODUCE_DOCUMENT",
+      "plan_steps_count": 1,
+      "validation_passed": true,
+      "false_completion": false,
+      "verdict": "PASS"
+    },
+    {
+      "case_id": "STRESS-069",
+      "domain": "STRESS_CORPUS",
+      "prompt": "create calculator and save summary_69.txt to Temp",
+      "contract_objective": "PRODUCE_DOCUMENT",
+      "plan_steps_count": 1,
+      "validation_passed": true,
+      "false_completion": false,
+      "verdict": "PASS"
+    },
+    {
+      "case_id": "STRESS-070",
+      "domain": "STRESS_CORPUS",
+      "prompt": "create calculator and save summary_70.txt to home",
+      "contract_objective": "PRODUCE_DOCUMENT",
+      "plan_steps_count": 1,
+      "validation_passed": true,
+      "false_completion": false,
+      "verdict": "PASS"
+    },
+    {
+      "case_id": "STRESS-071",
+      "domain": "STRESS_CORPUS",
+      "prompt": "create wordpad and save summary_71.txt to Desktop",
+      "contract_objective": "PRODUCE_DOCUMENT",
+      "plan_steps_count": 1,
+      "validation_passed": true,
+      "false_completion": false,
+      "verdict": "PASS"
+    },
+    {
+      "case_id": "STRESS-072",
+      "domain": "STRESS_CORPUS",
+      "prompt": "create wordpad and save summary_72.txt to Downloads",
+      "contract_objective": "PRODUCE_DOCUMENT",
+      "plan_steps_count": 1,
+      "validation_passed": true,
+      "false_completion": false,
+      "verdict": "PASS"
+    },
+    {
+      "case_id": "STRESS-073",
+      "domain": "STRESS_CORPUS",
+      "prompt": "create wordpad and save summary_73.txt to Documents",
+      "contract_objective": "PRODUCE_DOCUMENT",
+      "plan_steps_count": 1,
+      "validation_passed": true,
+      "false_completion": false,
+      "verdict": "PASS"
+    },
+    {
+      "case_id": "STRESS-074",
+      "domain": "STRESS_CORPUS",
+      "prompt": "create wordpad and save summary_74.txt to Temp",
+      "contract_objective": "PRODUCE_DOCUMENT",
+      "plan_steps_count": 1,
+      "validation_passed": true,
+      "false_completion": false,
+      "verdict": "PASS"
+    },
+    {
+      "case_id": "STRESS-075",
+      "domain": "STRESS_CORPUS",
+      "prompt": "create wordpad and save summary_75.txt to home",
+      "contract_objective": "PRODUCE_DOCUMENT",
+      "plan_steps_count": 1,
+      "validation_passed": true,
+      "false_completion": false,
+      "verdict": "PASS"
+    },
+    {
+      "case_id": "STRESS-076",
+      "domain": "STRESS_CORPUS",
+      "prompt": "create paint and save summary_76.txt to Desktop",
+      "contract_objective": "PRODUCE_DOCUMENT",
+      "plan_steps_count": 1,
+      "validation_passed": true,
+      "false_completion": false,
+      "verdict": "PASS"
+    },
+    {
+      "case_id": "STRESS-077",
+      "domain": "STRESS_CORPUS",
+      "prompt": "create paint and save summary_77.txt to Downloads",
+      "contract_objective": "PRODUCE_DOCUMENT",
+      "plan_steps_count": 1,
+      "validation_passed": true,
+      "false_completion": false,
+      "verdict": "PASS"
+    },
+    {
+      "case_id": "STRESS-078",
+      "domain": "STRESS_CORPUS",
+      "prompt": "create paint and save summary_78.txt to Documents",
+      "contract_objective": "PRODUCE_DOCUMENT",
+      "plan_steps_count": 1,
+      "validation_passed": true,
+      "false_completion": false,
+      "verdict": "PASS"
+    },
+    {
+      "case_id": "STRESS-079",
+      "domain": "STRESS_CORPUS",
+      "prompt": "create paint and save summary_79.txt to Temp",
+      "contract_objective": "PRODUCE_DOCUMENT",
+      "plan_steps_count": 1,
+      "validation_passed": true,
+      "false_completion": false,
+      "verdict": "PASS"
+    },
+    {
+      "case_id": "STRESS-080",
+      "domain": "STRESS_CORPUS",
+      "prompt": "create paint and save summary_80.txt to home",
+      "contract_objective": "PRODUCE_DOCUMENT",
+      "plan_steps_count": 1,
+      "validation_passed": true,
+      "false_completion": false,
+      "verdict": "PASS"
+    },
+    {
+      "case_id": "STRESS-081",
+      "domain": "STRESS_CORPUS",
+      "prompt": "save notepad and save summary_81.txt to Desktop",
+      "contract_objective": "PRODUCE_DOCUMENT",
+      "plan_steps_count": 2,
+      "validation_passed": true,
+      "false_completion": false,
+      "verdict": "PASS"
+    },
+    {
+      "case_id": "STRESS-082",
+      "domain": "STRESS_CORPUS",
+      "prompt": "save notepad and save summary_82.txt to Downloads",
+      "contract_objective": "PRODUCE_DOCUMENT",
+      "plan_steps_count": 2,
+      "validation_passed": true,
+      "false_completion": false,
+      "verdict": "PASS"
+    },
+    {
+      "case_id": "STRESS-083",
+      "domain": "STRESS_CORPUS",
+      "prompt": "save notepad and save summary_83.txt to Documents",
+      "contract_objective": "PRODUCE_DOCUMENT",
+      "plan_steps_count": 2,
+      "validation_passed": true,
+      "false_completion": false,
+      "verdict": "PASS"
+    },
+    {
+      "case_id": "STRESS-084",
+      "domain": "STRESS_CORPUS",
+      "prompt": "save notepad and save summary_84.txt to Temp",
+      "contract_objective": "PRODUCE_DOCUMENT",
+      "plan_steps_count": 2,
+      "validation_passed": true,
+      "false_completion": false,
+      "verdict": "PASS"
+    },
+    {
+      "case_id": "STRESS-085",
+      "domain": "STRESS_CORPUS",
+      "prompt": "save notepad and save summary_85.txt to home",
+      "contract_objective": "PRODUCE_DOCUMENT",
+      "plan_steps_count": 2,
+      "validation_passed": true,
+      "false_completion": false,
+      "verdict": "PASS"
+    },
+    {
+      "case_id": "STRESS-086",
+      "domain": "STRESS_CORPUS",
+      "prompt": "save calculator and save summary_86.txt to Desktop",
+      "contract_objective": "PRODUCE_DOCUMENT",
+      "plan_steps_count": 2,
+      "validation_passed": true,
+      "false_completion": false,
+      "verdict": "PASS"
+    },
+    {
+      "case_id": "STRESS-087",
+      "domain": "STRESS_CORPUS",
+      "prompt": "save calculator and save summary_87.txt to Downloads",
+      "contract_objective": "PRODUCE_DOCUMENT",
+      "plan_steps_count": 2,
+      "validation_passed": true,
+      "false_completion": false,
+      "verdict": "PASS"
+    },
+    {
+      "case_id": "STRESS-088",
+      "domain": "STRESS_CORPUS",
+      "prompt": "save calculator and save summary_88.txt to Documents",
+      "contract_objective": "PRODUCE_DOCUMENT",
+      "plan_steps_count": 2,
+      "validation_passed": true,
+      "false_completion": false,
+      "verdict": "PASS"
+    },
+    {
+      "case_id": "STRESS-089",
+      "domain": "STRESS_CORPUS",
+      "prompt": "save calculator and save summary_89.txt to Temp",
+      "contract_objective": "PRODUCE_DOCUMENT",
+      "plan_steps_count": 2,
+      "validation_passed": true,
+      "false_completion": false,
+      "verdict": "PASS"
+    },
+    {
+      "case_id": "STRESS-090",
+      "domain": "STRESS_CORPUS",
+      "prompt": "save calculator and save summary_90.txt to home",
+      "contract_objective": "PRODUCE_DOCUMENT",
+      "plan_steps_count": 2,
+      "validation_passed": true,
+      "false_completion": false,
+      "verdict": "PASS"
+    },
+    {
+      "case_id": "STRESS-091",
+      "domain": "STRESS_CORPUS",
+      "prompt": "save wordpad and save summary_91.txt to Desktop",
+      "contract_objective": "PRODUCE_DOCUMENT",
+      "plan_steps_count": 2,
+      "validation_passed": true,
+      "false_completion": false,
+      "verdict": "PASS"
+    },
+    {
+      "case_id": "STRESS-092",
+      "domain": "STRESS_CORPUS",
+      "prompt": "save wordpad and save summary_92.txt to Downloads",
+      "contract_objective": "PRODUCE_DOCUMENT",
+      "plan_steps_count": 2,
+      "validation_passed": true,
+      "false_completion": false,
+      "verdict": "PASS"
+    },
+    {
+      "case_id": "STRESS-093",
+      "domain": "STRESS_CORPUS",
+      "prompt": "save wordpad and save summary_93.txt to Documents",
+      "contract_objective": "PRODUCE_DOCUMENT",
+      "plan_steps_count": 2,
+      "validation_passed": true,
+      "false_completion": false,
+      "verdict": "PASS"
+    },
+    {
+      "case_id": "STRESS-094",
+      "domain": "STRESS_CORPUS",
+      "prompt": "save wordpad and save summary_94.txt to Temp",
+      "contract_objective": "PRODUCE_DOCUMENT",
+      "plan_steps_count": 2,
+      "validation_passed": true,
+      "false_completion": false,
+      "verdict": "PASS"
+    },
+    {
+      "case_id": "STRESS-095",
+      "domain": "STRESS_CORPUS",
+      "prompt": "save wordpad and save summary_95.txt to home",
+      "contract_objective": "PRODUCE_DOCUMENT",
+      "plan_steps_count": 2,
+      "validation_passed": true,
+      "false_completion": false,
+      "verdict": "PASS"
+    },
+    {
+      "case_id": "STRESS-096",
+      "domain": "STRESS_CORPUS",
+      "prompt": "save paint and save summary_96.txt to Desktop",
+      "contract_objective": "PRODUCE_DOCUMENT",
+      "plan_steps_count": 2,
+      "validation_passed": true,
+      "false_completion": false,
+      "verdict": "PASS"
+    },
+    {
+      "case_id": "STRESS-097",
+      "domain": "STRESS_CORPUS",
+      "prompt": "save paint and save summary_97.txt to Downloads",
+      "contract_objective": "PRODUCE_DOCUMENT",
+      "plan_steps_count": 2,
+      "validation_passed": true,
+      "false_completion": false,
+      "verdict": "PASS"
+    },
+    {
+      "case_id": "STRESS-098",
+      "domain": "STRESS_CORPUS",
+      "prompt": "save paint and save summary_98.txt to Documents",
+      "contract_objective": "PRODUCE_DOCUMENT",
+      "plan_steps_count": 2,
+      "validation_passed": true,
+      "false_completion": false,
+      "verdict": "PASS"
+    },
+    {
+      "case_id": "STRESS-099",
+      "domain": "STRESS_CORPUS",
+      "prompt": "save paint and save summary_99.txt to Temp",
+      "contract_objective": "PRODUCE_DOCUMENT",
+      "plan_steps_count": 2,
+      "validation_passed": true,
+      "false_completion": false,
+      "verdict": "PASS"
+    },
+    {
+      "case_id": "STRESS-100",
+      "domain": "STRESS_CORPUS",
+      "prompt": "save paint and save summary_100.txt to home",
+      "contract_objective": "PRODUCE_DOCUMENT",
+      "plan_steps_count": 2,
+      "validation_passed": true,
+      "false_completion": false,
+      "verdict": "PASS"
+    }
+  ]
+}

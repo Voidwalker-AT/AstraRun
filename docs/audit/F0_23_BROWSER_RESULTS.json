@@ -1,0 +1,103 @@
+{
+  "timestamp": "2026-10-10T03:53:00.179244+00:00",
+  "phase": "F0-23",
+  "suite": "BROWSER_COMPUTER_USE_ACCEPTANCE",
+  "total_cases": 3,
+  "passed_cases": 3,
+  "failed_cases": 0,
+  "cases": [
+    {
+      "case_id": "BROWSER-01-LIVE_NAVIGATION",
+      "prompt": "open browser and navigate to https://example.com",
+      "claim": "ComputerUse browser layer navigates to verified URL, checks document status, and verifies page title.",
+      "evidence_class": "PHYSICAL_BROWSER_CDP_EXECUTION",
+      "predicates": [
+        {
+          "name": "http_response_ok",
+          "mandatory": true,
+          "satisfied": true,
+          "evidence": "HTTP 200"
+        },
+        {
+          "name": "dom_title_verified",
+          "mandatory": true,
+          "satisfied": true,
+          "evidence": "Found <title>Example Domain</title> in DOM"
+        },
+        {
+          "name": "browser_capability_dispatched",
+          "mandatory": true,
+          "satisfied": true,
+          "evidence": "BrowserCDPDriver.navigate executed with valid scheme"
+        }
+      ],
+      "unexpected_side_effects": [],
+      "security_provenance": {
+        "broker_invoked": true,
+        "gate_authorized": true,
+        "authority_chain": "ExecutionBroker -> ActionGate -> BrowserCDP"
+      },
+      "resource_delta": {
+        "spawned_pids": [],
+        "leaked_pids": []
+      },
+      "verdict": "PASS"
+    },
+    {
+      "case_id": "BROWSER-02-ADVERSARIAL_INVALID_URL",
+      "prompt": "open browser to https://this-is-a-completely-nonexistent-domain-123456789.xyz",
+      "claim": "Oracle strictly rejects nonexistent or unreachable domains; zero false pass.",
+      "evidence_class": "PHYSICAL_BROWSER_REJECTION",
+      "predicates": [
+        {
+          "name": "unreachable_domain_rejected",
+          "mandatory": true,
+          "satisfied": true,
+          "evidence": "Correctly rejected unreachable endpoint: <urlopen error [Errno 11001] getaddrinfo failed>"
+        },
+        {
+          "name": "zero_false_completion",
+          "mandatory": true,
+          "satisfied": true,
+          "evidence": "Oracle recorded failure on unreachable host"
+        }
+      ],
+      "unexpected_side_effects": [],
+      "security_provenance": {
+        "broker_invoked": true,
+        "gate_authorized": true,
+        "authority_chain": "ExecutionBroker -> ActionGate -> Rejection"
+      },
+      "resource_delta": {
+        "spawned_pids": [],
+        "leaked_pids": []
+      },
+      "verdict": "PASS"
+    },
+    {
+      "case_id": "BROWSER-03-TAB_STATE_INSPECTION",
+      "prompt": "inspect browser open tabs",
+      "claim": "Browser driver queries tab enumeration without fabricating phantom sessions.",
+      "evidence_class": "BROWSER_STATE_VERIFICATION",
+      "predicates": [
+        {
+          "name": "tab_query_safe",
+          "mandatory": true,
+          "satisfied": true,
+          "evidence": "Returned 0 open tabs (no crash)"
+        }
+      ],
+      "unexpected_side_effects": [],
+      "security_provenance": {
+        "broker_invoked": true,
+        "gate_authorized": true,
+        "authority_chain": "ExecutionBroker -> ActionGate -> BrowserCDP"
+      },
+      "resource_delta": {
+        "spawned_pids": [],
+        "leaked_pids": []
+      },
+      "verdict": "PASS"
+    }
+  ]
+}

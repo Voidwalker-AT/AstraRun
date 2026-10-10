@@ -1,0 +1,8 @@
+{
+  "tier_0": "Win32 window and process enumeration (EnumWindows, GetWindowThreadProcessId)",
+  "tier_1": "Microsoft UI Automation & DialogDetector (#32770, modal discovery)",
+  "state_hash": "Deterministic SHA-256 computed across fg window, visible window bounds, dialogs, takeover",
+  "desktop_attachment": "ensure_desktop_attached attached to interactive Default desktop",
+  "modality_preservation": "Goal/PlanStep interaction_requirement (APPLICATION_UI vs DIRECT_RESULT)",
+  "audit_evidence": "Generated in docs/audit/"
+}

@@ -1,0 +1,1734 @@
+{
+  "timestamp": "2026-10-09T17:16:14.319738+00:00",
+  "phase": "F0-22",
+  "total_modules_audited": 306,
+  "architectural_layers": {
+    "BRAIN": {
+      "count": 34,
+      "modules": [
+        "astrarun.brain",
+        "astrarun.brain.decision",
+        "astrarun.brain.decision.entity_resolver",
+        "astrarun.brain.decision.intent",
+        "astrarun.brain.memory",
+        "astrarun.brain.models",
+        "astrarun.brain.reasoning",
+        "astrarun.brain.vision",
+        "astrarun.nlp",
+        "astrarun.nlp.clause_decomposer",
+        "astrarun.nlp.coreference",
+        "astrarun.nlp.debugger",
+        "astrarun.nlp.deterministic",
+        "astrarun.nlp.engine",
+        "astrarun.nlp.fusion",
+        "astrarun.nlp.ir",
+        "astrarun.nlp.lexicon",
+        "astrarun.nlp.models",
+        "astrarun.nlp.negation",
+        "astrarun.nlp.relations",
+        "astrarun.nlp.spacy_parser",
+        "astrarun.nlp.structure_engine",
+        "astrarun.nlp.temporal",
+        "astrarun.routing.base",
+        "astrarun.routing.decision_fusion",
+        "astrarun.routing.deterministic",
+        "astrarun.routing.entity_resolver",
+        "astrarun.routing.fusion",
+        "astrarun.routing.input_router",
+        "astrarun.routing.jev",
+        "astrarun.routing.kev",
+        "astrarun.routing.laya",
+        "astrarun.routing.laya_sandwich",
+        "astrarun.routing.laya_worker"
+      ]
+    },
+    "AGENT_RUNTIME": {
+      "count": 34,
+      "modules": [
+        "astrarun.agent",
+        "astrarun.agent.graph",
+        "astrarun.agent.indexer",
+        "astrarun.agent.locking",
+        "astrarun.agent.loop",
+        "astrarun.agent.models",
+        "astrarun.agent.observer",
+        "astrarun.agent.planner",
+        "astrarun.agent.validator",
+        "astrarun.agent.verifier",
+        "astrarun.execution",
+        "astrarun.execution.job_object",
+        "astrarun.execution.models",
+        "astrarun.execution.process_tracker",
+        "astrarun.execution.runtime",
+        "astrarun.tasks",
+        "astrarun.tasks.cancellation",
+        "astrarun.tasks.checkpoints",
+        "astrarun.tasks.continuity",
+        "astrarun.tasks.disturbances",
+        "astrarun.tasks.events",
+        "astrarun.tasks.invariants",
+        "astrarun.tasks.ledger",
+        "astrarun.tasks.manager",
+        "astrarun.tasks.models",
+        "astrarun.tasks.reconciliation",
+        "astrarun.tasks.resource_ledger",
+        "astrarun.tasks.runtime",
+        "astrarun.tasks.serialization",
+        "astrarun.workflows",
+        "astrarun.workflows.compiler",
+        "astrarun.workflows.context",
+        "astrarun.workflows.engine",
+        "astrarun.workflows.models"
+      ]
+    },
+    "COMPUTER_USE": {
+      "count": 51,
+      "modules": [
+        "astrarun.capabilities",
+        "astrarun.capabilities.cli",
+        "astrarun.capabilities.manifest",
+        "astrarun.capabilities.models",
+        "astrarun.capabilities.registry",
+        "astrarun.capabilities.schema",
+        "astrarun.capabilities.store",
+        "astrarun.computer_use",
+        "astrarun.computer_use.browser",
+        "astrarun.computer_use.browser.cdp",
+        "astrarun.computer_use.controller",
+        "astrarun.computer_use.desktop",
+        "astrarun.computer_use.desktop.lifecycle",
+        "astrarun.computer_use.facade",
+        "astrarun.computer_use.hooks",
+        "astrarun.computer_use.hooks.desktop_attach",
+        "astrarun.computer_use.input",
+        "astrarun.computer_use.input.physical",
+        "astrarun.computer_use.models",
+        "astrarun.computer_use.observation",
+        "astrarun.computer_use.observation.observer",
+        "astrarun.computer_use.perception",
+        "astrarun.computer_use.perception.screen",
+        "astrarun.computer_use.session",
+        "astrarun.computer_use.ui",
+        "astrarun.computer_use.ui.automation",
+        "astrarun.computer_use.ui.dialogs",
+        "astrarun.computer_use.world",
+        "astrarun.computer_use.world.desktop_state",
+        "astrarun.interaction",
+        "astrarun.interaction.clipboard",
+        "astrarun.interaction.controller",
+        "astrarun.interaction.discovery",
+        "astrarun.interaction.document",
+        "astrarun.interaction.keyboard",
+        "astrarun.interaction.models",
+        "astrarun.interaction.policy",
+        "astrarun.interaction.resolver",
+        "astrarun.interaction.service",
+        "astrarun.interaction.worker",
+        "astrarun.system",
+        "astrarun.system.service",
+        "astrarun.windows",
+        "astrarun.windows.controller",
+        "astrarun.windows.discovery",
+        "astrarun.windows.layouts",
+        "astrarun.windows.models",
+        "astrarun.windows.monitors",
+        "astrarun.windows.policy",
+        "astrarun.windows.resolver",
+        "astrarun.windows.undo"
+      ]
+    },
+    "MEMORY": {
+      "count": 15,
+      "modules": [
+        "astrarun.learning",
+        "astrarun.learning.aliases",
+        "astrarun.learning.confidence",
+        "astrarun.learning.dataset_builder",
+        "astrarun.learning.debugger",
+        "astrarun.learning.engine",
+        "astrarun.learning.evidence",
+        "astrarun.learning.memory",
+        "astrarun.learning.models",
+        "astrarun.learning.patterns",
+        "astrarun.learning.persistence",
+        "astrarun.learning.skills",
+        "astrarun.memory",
+        "astrarun.memory.service",
+        "astrarun.memory.skills"
+      ]
+    },
+    "SECURITY": {
+      "count": 7,
+      "modules": [
+        "astrarun.security",
+        "astrarun.security.action_gate",
+        "astrarun.security.execution_broker",
+        "astrarun.security.models",
+        "astrarun.security.policies",
+        "astrarun.security.secret_broker",
+        "astrarun.security.trust_kernel"
+      ]
+    },
+    "UI": {
+      "count": 22,
+      "modules": [
+        "astrarun.ui.activity",
+        "astrarun.ui.cards",
+        "astrarun.ui.diagnostics",
+        "astrarun.ui.first_run",
+        "astrarun.ui.history",
+        "astrarun.ui.hotkey_conflict",
+        "astrarun.ui.hud",
+        "astrarun.ui.icons",
+        "astrarun.ui.launcher",
+        "astrarun.ui.memory",
+        "astrarun.ui.motion",
+        "astrarun.ui.positioning",
+        "astrarun.ui.presentation",
+        "astrarun.ui.settings",
+        "astrarun.ui.task_center",
+        "astrarun.ui.theme",
+        "astrarun.ui.tray",
+        "astrarun.ui.uninstall_wizard",
+        "astrarun.visualization",
+        "astrarun.visualization.models",
+        "astrarun.visualization.render_worker",
+        "astrarun.visualization.renderer"
+      ]
+    },
+    "MODEL_RUNTIME": {
+      "count": 2,
+      "modules": [
+        "astrarun.models.downloader",
+        "astrarun.models.manifest"
+      ]
+    },
+    "CORE_SHARED": {
+      "count": 141,
+      "modules": [
+        "astrarun.",
+        "astrarun.ai_bridge",
+        "astrarun.ai_bridge.interface",
+        "astrarun.app",
+        "astrarun.applications",
+        "astrarun.applications.service",
+        "astrarun.browser",
+        "astrarun.browser.service",
+        "astrarun.cognition",
+        "astrarun.cognition.client",
+        "astrarun.cognition.context",
+        "astrarun.cognition.models",
+        "astrarun.cognition.residency",
+        "astrarun.cognition.router",
+        "astrarun.cognition.service",
+        "astrarun.cognition.supervisor",
+        "astrarun.config.loader",
+        "astrarun.config.migrations",
+        "astrarun.context",
+        "astrarun.context.activity",
+        "astrarun.context.engine",
+        "astrarun.context.models",
+        "astrarun.context.persistence",
+        "astrarun.context.processes",
+        "astrarun.context.projects",
+        "astrarun.core.autostart",
+        "astrarun.core.crash",
+        "astrarun.core.evidence",
+        "astrarun.core.hardware",
+        "astrarun.core.logging",
+        "astrarun.core.models",
+        "astrarun.core.paths",
+        "astrarun.core.qos",
+        "astrarun.core.single_instance",
+        "astrarun.delegation",
+        "astrarun.delegation.chatgpt_web",
+        "astrarun.delegation.loop",
+        "astrarun.delegation.mock",
+        "astrarun.delegation.models",
+        "astrarun.delegation.packager",
+        "astrarun.delegation.proposal",
+        "astrarun.delegation.provider",
+        "astrarun.discovery",
+        "astrarun.discovery.apps",
+        "astrarun.discovery.candidates",
+        "astrarun.discovery.entity_resolver",
+        "astrarun.discovery.folders",
+        "astrarun.discovery.resolver",
+        "astrarun.entrypoint",
+        "astrarun.files",
+        "astrarun.files.index",
+        "astrarun.files.service",
+        "astrarun.hotkeys.manager",
+        "astrarun.lifecycle.repair",
+        "astrarun.lifecycle.uninstall",
+        "astrarun.machine",
+        "astrarun.machine.capability_resolver",
+        "astrarun.machine.compatibility",
+        "astrarun.machine.diagnostics",
+        "astrarun.machine.fact",
+        "astrarun.machine.model",
+        "astrarun.machine.providers",
+        "astrarun.machine.providers.base",
+        "astrarun.machine.providers.hardware",
+        "astrarun.machine.providers.os_model",
+        "astrarun.machine.providers.python_env",
+        "astrarun.machine.providers.software",
+        "astrarun.machine.providers.topology",
+        "astrarun.machine.query_engine",
+        "astrarun.machine.resource_governor",
+        "astrarun.machine.resource_snapshot",
+        "astrarun.main",
+        "astrarun.network",
+        "astrarun.network.broker",
+        "astrarun.network.quarantine",
+        "astrarun.network.service",
+        "astrarun.perception",
+        "astrarun.perception.capture",
+        "astrarun.perception.cdp",
+        "astrarun.perception.com",
+        "astrarun.perception.cv",
+        "astrarun.perception.grounder",
+        "astrarun.perception.input",
+        "astrarun.perception.models",
+        "astrarun.perception.ocr",
+        "astrarun.perception.router",
+        "astrarun.perception.service",
+        "astrarun.perception.vlm",
+        "astrarun.policy",
+        "astrarun.policy.action_gate",
+        "astrarun.power",
+        "astrarun.power.budget",
+        "astrarun.power.events",
+        "astrarun.power.ledger",
+        "astrarun.power.listener",
+        "astrarun.power.manager",
+        "astrarun.power.recovery",
+        "astrarun.processes",
+        "astrarun.processes.service",
+        "astrarun.projects",
+        "astrarun.projects.registry",
+        "astrarun.projects.service",
+        "astrarun.rag",
+        "astrarun.rag.context",
+        "astrarun.rag.embeddings",
+        "astrarun.rag.indexer",
+        "astrarun.rag.models",
+        "astrarun.rag.router",
+        "astrarun.rag.skills",
+        "astrarun.rag.store",
+        "astrarun.rag.vector",
+        "astrarun.rag.worker",
+        "astrarun.sandbox",
+        "astrarun.sandbox.appcontainer_launcher",
+        "astrarun.sandbox.manager",
+        "astrarun.sandbox.models",
+        "astrarun.sandbox.restricted_launcher",
+        "astrarun.search",
+        "astrarun.search.index",
+        "astrarun.search.matcher",
+        "astrarun.search.models",
+        "astrarun.search.scorer",
+        "astrarun.telemetry",
+        "astrarun.telemetry.collector",
+        "astrarun.telemetry.redactor",
+        "astrarun.telemetry.shadow_collector",
+        "astrarun.tools.apps",
+        "astrarun.tools.ast_inspector",
+        "astrarun.tools.candidate",
+        "astrarun.tools.dynamic_builder",
+        "astrarun.tools.folders",
+        "astrarun.tools.lifecycle",
+        "astrarun.tools.processes",
+        "astrarun.tools.projects",
+        "astrarun.tools.registry",
+        "astrarun.tools.system_adapter",
+        "astrarun.tools.web",
+        "astrarun.tools.wifi",
+        "astrarun.usage",
+        "astrarun.usage.store",
+        "astrarun.version"
+      ]
+    }
+  },
+  "boundary_violations": {
+    "count": 3,
+    "findings": [
+      {
+        "source_file": "src/astrarun/routing/laya.py",
+        "layer": "BRAIN",
+        "line": 136,
+        "violation": "Layer BRAIN directly spawns processes via subprocess.Popen.",
+        "severity": "HIGH",
+        "disposition": "Route through ExecutionBroker or canonical process supervisor."
+      },
+      {
+        "source_file": "src/astrarun/ui/diagnostics.py",
+        "layer": "UI",
+        "line": 92,
+        "violation": "Layer UI directly spawns processes via subprocess.run.",
+        "severity": "HIGH",
+        "disposition": "Route through ExecutionBroker or canonical process supervisor."
+      },
+      {
+        "source_file": "src/astrarun/visualization/renderer.py",
+        "layer": "UI",
+        "line": 129,
+        "violation": "Layer UI directly spawns processes via subprocess.Popen.",
+        "severity": "HIGH",
+        "disposition": "Route through ExecutionBroker or canonical process supervisor."
+      }
+    ]
+  },
+  "architectural_smells": {
+    "total_count": 147,
+    "by_classification": {
+      "DEVELOPER_MACHINE_PATH": 4,
+      "MILESTONE_ID_IN_RUNTIME": 2,
+      "SILENT_EXCEPTION_SWALLOWING": 141
+    },
+    "findings": [
+      {
+        "file": "src/astrarun/agent/loop.py",
+        "line": 265,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/agent/loop.py",
+        "line": 331,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/agent/planner.py",
+        "line": 93,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/agent/validator.py",
+        "line": 167,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/agent/verifier.py",
+        "line": 28,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/app.py",
+        "line": 120,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/app.py",
+        "line": 543,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/app.py",
+        "line": 1349,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/applications/service.py",
+        "line": 52,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/applications/service.py",
+        "line": 453,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/applications/service.py",
+        "line": 461,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/brain/decision/entity_resolver.py",
+        "line": 118,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/brain/decision/entity_resolver.py",
+        "line": 130,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/brain/decision/entity_resolver.py",
+        "line": 80,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/browser/service.py",
+        "line": 133,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/capabilities/models.py",
+        "line": 154,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/capabilities/registry.py",
+        "line": 217,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/cognition/residency.py",
+        "line": 154,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/cognition/residency.py",
+        "line": 146,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/cognition/service.py",
+        "line": 722,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/computer_use/browser/cdp.py",
+        "line": 25,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/computer_use/controller.py",
+        "line": 85,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/computer_use/desktop/lifecycle.py",
+        "line": 19,
+        "symbol": "F0-15",
+        "classification": "MILESTONE_ID_IN_RUNTIME",
+        "runtime_relevance": "Hardcoded milestone identifier 'F0-15' in code.",
+        "recommended_disposition": "REPLACE with generic parameter or configuration."
+      },
+      {
+        "file": "src/astrarun/computer_use/facade.py",
+        "line": 81,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/computer_use/facade.py",
+        "line": 254,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/computer_use/facade.py",
+        "line": 134,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/computer_use/facade.py",
+        "line": 165,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/computer_use/facade.py",
+        "line": 101,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/computer_use/facade.py",
+        "line": 116,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/computer_use/facade.py",
+        "line": 228,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/computer_use/hooks/desktop_attach.py",
+        "line": 26,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/computer_use/observation/observer.py",
+        "line": 26,
+        "symbol": "F0-20",
+        "classification": "MILESTONE_ID_IN_RUNTIME",
+        "runtime_relevance": "Hardcoded milestone identifier 'F0-20' in code.",
+        "recommended_disposition": "REPLACE with generic parameter or configuration."
+      },
+      {
+        "file": "src/astrarun/computer_use/observation/observer.py",
+        "line": 71,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/computer_use/observation/observer.py",
+        "line": 79,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/computer_use/observation/observer.py",
+        "line": 208,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/computer_use/ui/automation.py",
+        "line": 33,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/computer_use/ui/dialogs.py",
+        "line": 109,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/config/migrations.py",
+        "line": 182,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/context/processes.py",
+        "line": 168,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/core/crash.py",
+        "line": 98,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/core/crash.py",
+        "line": 130,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/core/crash.py",
+        "line": 317,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/core/crash.py",
+        "line": 219,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/core/crash.py",
+        "line": 226,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/core/crash.py",
+        "line": 287,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/core/hardware.py",
+        "line": 226,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/core/hardware.py",
+        "line": 192,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/core/logging.py",
+        "line": 30,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/core/logging.py",
+        "line": 86,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/core/paths.py",
+        "line": 262,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/core/single_instance.py",
+        "line": 252,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/discovery/folders.py",
+        "line": 25,
+        "symbol": "E:/Workspace",
+        "classification": "DEVELOPER_MACHINE_PATH",
+        "runtime_relevance": "Developer path 'E:/Workspace' baked into runtime code.",
+        "recommended_disposition": "REPLACE with standard OS paths (e.g. os.environ['USERPROFILE'] or tempfile)."
+      },
+      {
+        "file": "src/astrarun/discovery/folders.py",
+        "line": 28,
+        "symbol": "E:/Workspace",
+        "classification": "DEVELOPER_MACHINE_PATH",
+        "runtime_relevance": "Developer path 'E:/Workspace' baked into runtime code.",
+        "recommended_disposition": "REPLACE with standard OS paths (e.g. os.environ['USERPROFILE'] or tempfile)."
+      },
+      {
+        "file": "src/astrarun/discovery/folders.py",
+        "line": 29,
+        "symbol": "E:/Workspace",
+        "classification": "DEVELOPER_MACHINE_PATH",
+        "runtime_relevance": "Developer path 'E:/Workspace' baked into runtime code.",
+        "recommended_disposition": "REPLACE with standard OS paths (e.g. os.environ['USERPROFILE'] or tempfile)."
+      },
+      {
+        "file": "src/astrarun/entrypoint.py",
+        "line": 22,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/execution/runtime.py",
+        "line": 280,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/files/service.py",
+        "line": 84,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/files/service.py",
+        "line": 74,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/files/service.py",
+        "line": 101,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/files/service.py",
+        "line": 216,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/files/service.py",
+        "line": 776,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/interaction/controller.py",
+        "line": 147,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/interaction/discovery.py",
+        "line": 347,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/interaction/discovery.py",
+        "line": 353,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/interaction/discovery.py",
+        "line": 359,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/interaction/discovery.py",
+        "line": 365,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/interaction/discovery.py",
+        "line": 371,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/interaction/discovery.py",
+        "line": 377,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/interaction/document.py",
+        "line": 70,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/interaction/keyboard.py",
+        "line": 178,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/interaction/keyboard.py",
+        "line": 269,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/interaction/policy.py",
+        "line": 130,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/interaction/service.py",
+        "line": 45,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/interaction/service.py",
+        "line": 732,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/interaction/service.py",
+        "line": 742,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/interaction/service.py",
+        "line": 635,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/interaction/worker.py",
+        "line": 94,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/lifecycle/uninstall.py",
+        "line": 410,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/machine/providers/hardware.py",
+        "line": 209,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/machine/providers/hardware.py",
+        "line": 117,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/machine/providers/hardware.py",
+        "line": 592,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/machine/providers/os_model.py",
+        "line": 51,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/machine/providers/os_model.py",
+        "line": 60,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/machine/providers/software.py",
+        "line": 201,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/machine/query_engine.py",
+        "line": 277,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/machine/resource_snapshot.py",
+        "line": 100,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/machine/resource_snapshot.py",
+        "line": 108,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/machine/resource_snapshot.py",
+        "line": 89,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/machine/resource_snapshot.py",
+        "line": 134,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/machine/resource_snapshot.py",
+        "line": 145,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/models/downloader.py",
+        "line": 112,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/network/broker.py",
+        "line": 146,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/nlp/lexicon.py",
+        "line": 16,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/perception/cv.py",
+        "line": 90,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/power/ledger.py",
+        "line": 110,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/power/recovery.py",
+        "line": 76,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/processes/service.py",
+        "line": 186,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/processes/service.py",
+        "line": 195,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/projects/registry.py",
+        "line": 4,
+        "symbol": "E:\\\\Workspace",
+        "classification": "DEVELOPER_MACHINE_PATH",
+        "runtime_relevance": "Developer path 'E:\\\\Workspace' baked into runtime code.",
+        "recommended_disposition": "REPLACE with standard OS paths (e.g. os.environ['USERPROFILE'] or tempfile)."
+      },
+      {
+        "file": "src/astrarun/projects/service.py",
+        "line": 197,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/rag/indexer.py",
+        "line": 328,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/routing/laya.py",
+        "line": 306,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/routing/laya.py",
+        "line": 159,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/routing/laya.py",
+        "line": 256,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/routing/laya.py",
+        "line": 320,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/routing/laya.py",
+        "line": 164,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/routing/laya_worker.py",
+        "line": 34,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/routing/laya_worker.py",
+        "line": 190,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/sandbox/appcontainer_launcher.py",
+        "line": 228,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/sandbox/manager.py",
+        "line": 130,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/security/action_gate.py",
+        "line": 567,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/security/policies.py",
+        "line": 33,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/security/policies.py",
+        "line": 317,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/tasks/cancellation.py",
+        "line": 57,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/tasks/cancellation.py",
+        "line": 83,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/tasks/cancellation.py",
+        "line": 55,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/tasks/ledger.py",
+        "line": 101,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/tasks/ledger.py",
+        "line": 231,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/tasks/ledger.py",
+        "line": 1071,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/tasks/reconciliation.py",
+        "line": 205,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/tasks/resource_ledger.py",
+        "line": 59,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/tasks/resource_ledger.py",
+        "line": 89,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/tasks/resource_ledger.py",
+        "line": 351,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/tasks/resource_ledger.py",
+        "line": 87,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/tasks/resource_ledger.py",
+        "line": 450,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/tasks/resource_ledger.py",
+        "line": 592,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/tasks/resource_ledger.py",
+        "line": 575,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/tasks/resource_ledger.py",
+        "line": 936,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/tasks/resource_ledger.py",
+        "line": 448,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/tasks/resource_ledger.py",
+        "line": 85,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/tasks/resource_ledger.py",
+        "line": 934,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/tasks/resource_ledger.py",
+        "line": 411,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/tools/apps.py",
+        "line": 132,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/tools/dynamic_builder.py",
+        "line": 261,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/ui/diagnostics.py",
+        "line": 101,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/ui/launcher.py",
+        "line": 1011,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/ui/launcher.py",
+        "line": 1021,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/ui/launcher.py",
+        "line": 347,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/ui/launcher.py",
+        "line": 1041,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/ui/motion.py",
+        "line": 48,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/ui/presentation.py",
+        "line": 41,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/windows/controller.py",
+        "line": 132,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/windows/controller.py",
+        "line": 155,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/windows/controller.py",
+        "line": 165,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/windows/discovery.py",
+        "line": 44,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/windows/discovery.py",
+        "line": 155,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      },
+      {
+        "file": "src/astrarun/windows/policy.py",
+        "line": 67,
+        "symbol": "except Exception: pass",
+        "classification": "SILENT_EXCEPTION_SWALLOWING",
+        "runtime_relevance": "Swallows errors silently without logging or re-raising.",
+        "recommended_disposition": "Log with logger.debug/warning or raise specific exception."
+      }
+    ]
+  },
+  "brain_subsystems": {
+    "routers": [
+      {
+        "class": "CognitiveRouter",
+        "file": "src/astrarun/cognition/router.py",
+        "module": "astrarun.cognition.router"
+      },
+      {
+        "class": "RoutingContext",
+        "file": "src/astrarun/core/models.py",
+        "module": "astrarun.core.models"
+      },
+      {
+        "class": "PerceptionRouter",
+        "file": "src/astrarun/perception/router.py",
+        "module": "astrarun.perception.router"
+      },
+      {
+        "class": "RetrievalRouter",
+        "file": "src/astrarun/rag/router.py",
+        "module": "astrarun.rag.router"
+      },
+      {
+        "class": "BaseRouter",
+        "file": "src/astrarun/routing/base.py",
+        "module": "astrarun.routing.base"
+      },
+      {
+        "class": "DeterministicRouter",
+        "file": "src/astrarun/routing/deterministic.py",
+        "module": "astrarun.routing.deterministic"
+      },
+      {
+        "class": "JevRouter",
+        "file": "src/astrarun/routing/jev.py",
+        "module": "astrarun.routing.jev"
+      },
+      {
+        "class": "KevRouter",
+        "file": "src/astrarun/routing/kev.py",
+        "module": "astrarun.routing.kev"
+      },
+      {
+        "class": "LayaRouter",
+        "file": "src/astrarun/routing/laya.py",
+        "module": "astrarun.routing.laya"
+      },
+      {
+        "class": "LayaSandwichRouter",
+        "file": "src/astrarun/routing/laya_sandwich.py",
+        "module": "astrarun.routing.laya_sandwich"
+      },
+      {
+        "class": "RoutingEventCollector",
+        "file": "src/astrarun/telemetry/collector.py",
+        "module": "astrarun.telemetry.collector"
+      }
+    ],
+    "planners": [
+      {
+        "class": "PlanningLevel",
+        "file": "src/astrarun/agent/models.py",
+        "module": "astrarun.agent.models"
+      },
+      {
+        "class": "GoalPlanner",
+        "file": "src/astrarun/agent/planner.py",
+        "module": "astrarun.agent.planner"
+      }
+    ],
+    "verifiers": [
+      {
+        "class": "StepVerifier",
+        "file": "src/astrarun/agent/verifier.py",
+        "module": "astrarun.agent.verifier"
+      },
+      {
+        "class": "GoalVerifier",
+        "file": "src/astrarun/agent/verifier.py",
+        "module": "astrarun.agent.verifier"
+      },
+      {
+        "class": "VerifierStrategy",
+        "file": "src/astrarun/capabilities/schema.py",
+        "module": "astrarun.capabilities.schema"
+      },
+      {
+        "class": "LayaVerifierResult",
+        "file": "src/astrarun/routing/laya_sandwich.py",
+        "module": "astrarun.routing.laya_sandwich"
+      }
+    ],
+    "model_participation": {
+      "laya_neural_router": {
+        "role": "Fast local transformer intent classifier (100M parameter model / ONNX)",
+        "referenced_in_files_count": 16,
+        "files": [
+          "src/astrarun/app.py",
+          "src/astrarun/brain/decision/intent.py",
+          "src/astrarun/cognition/router.py",
+          "src/astrarun/config/loader.py",
+          "src/astrarun/core/models.py",
+          "src/astrarun/main.py",
+          "src/astrarun/nlp/engine.py",
+          "src/astrarun/nlp/fusion.py",
+          "src/astrarun/nlp/ir.py",
+          "src/astrarun/routing/decision_fusion.py",
+          "src/astrarun/routing/fusion.py",
+          "src/astrarun/routing/jev.py",
+          "src/astrarun/routing/laya.py",
+          "src/astrarun/routing/laya_sandwich.py",
+          "src/astrarun/routing/laya_worker.py",
+          "src/astrarun/telemetry/shadow_collector.py"
+        ]
+      },
+      "spark_llm_planner": {
+        "role": "Local reasoning model (Spark GGUF via llama-cpp) for complex plans & replanning",
+        "referenced_in_files_count": 15,
+        "files": [
+          "src/astrarun/cognition/models.py",
+          "src/astrarun/cognition/router.py",
+          "src/astrarun/cognition/service.py",
+          "src/astrarun/cognition/supervisor.py",
+          "src/astrarun/config/loader.py",
+          "src/astrarun/discovery/resolver.py",
+          "src/astrarun/machine/capability_resolver.py",
+          "src/astrarun/models/manifest.py",
+          "src/astrarun/ui/cards.py",
+          "src/astrarun/ui/first_run.py",
+          "src/astrarun/ui/hud.py",
+          "src/astrarun/ui/icons.py",
+          "src/astrarun/ui/launcher.py",
+          "src/astrarun/ui/task_center.py",
+          "src/astrarun/ui/tray.py"
+        ]
+      },
+      "qwen_vlm": {
+        "role": "Vision-Language model for screen understanding, visual grounding, and OCR validation",
+        "referenced_in_files_count": 12,
+        "files": [
+          "src/astrarun/cognition/models.py",
+          "src/astrarun/cognition/router.py",
+          "src/astrarun/cognition/service.py",
+          "src/astrarun/config/loader.py",
+          "src/astrarun/delegation/provider.py",
+          "src/astrarun/discovery/resolver.py",
+          "src/astrarun/machine/capability_resolver.py",
+          "src/astrarun/models/manifest.py",
+          "src/astrarun/routing/kev.py",
+          "src/astrarun/tools/candidate.py",
+          "src/astrarun/tools/dynamic_builder.py",
+          "src/astrarun/ui/first_run.py"
+        ]
+      }
+    }
+  },
+  "computer_use_subsystems": {
+    "win32_hwnd_count": 1,
+    "uiautomation_count": 13,
+    "sendinput_count": 21,
+    "screen_capture_count": 1,
+    "ocr_count": 0,
+    "browser_cdp_count": 7,
+    "subprocess_count": 32,
+    "filesystem_write_count": 27
+  }
+}

@@ -1,0 +1,65 @@
+{
+  "timestamp": "2026-10-09T17:33:33.287724+00:00",
+  "phase": "F0-22",
+  "total_mutants": 6,
+  "killed_mutants": 6,
+  "survived_mutants": 0,
+  "mutation_score_percent": 100.0,
+  "all_mutants_killed": true,
+  "mutants": [
+    {
+      "mutant_id": "MUTANT_1_DROP_REQUIRED_TEXT",
+      "description": "Drop required content constraint from GoalContract",
+      "component": "GoalContract & GoalPlanner",
+      "injected_fault": "Removed 'content' constraint with expected_value='hello'",
+      "detected": true,
+      "detection_mechanism": "InformationLossDetector / GoalContract validation",
+      "status": "KILLED"
+    },
+    {
+      "mutant_id": "MUTANT_2_SKIP_TYPING_ACTION",
+      "description": "Skip typing action in proposed execution plan",
+      "component": "PlanQualityValidator",
+      "injected_fault": "Removed type_into_window step from plan with required content 'hello'",
+      "detected": true,
+      "detection_mechanism": "PlanQualityValidator.validate_plan -> information loss rejection",
+      "status": "KILLED"
+    },
+    {
+      "mutant_id": "MUTANT_3_VERIFIER_DETECTS_MISSING_FILE",
+      "description": "Assert GoalVerifier rejects non-existent destination artifact",
+      "component": "GoalVerifier & FileExistsPredicate",
+      "injected_fault": "Target path pointed to non-existent disk location",
+      "detected": true,
+      "detection_mechanism": "GoalVerifier.evaluate -> FileExistsPredicate returned False",
+      "status": "KILLED"
+    },
+    {
+      "mutant_id": "MUTANT_4_BYPASS_ACTION_GATE",
+      "description": "Dispatch unknown / unclassified capability through ExecutionBroker",
+      "component": "ExecutionBroker & ActionGate",
+      "injected_fault": "Injected unregistered capability 'unregistered_hostile_hack'",
+      "detected": true,
+      "detection_mechanism": "ExecutionBroker unregistered capability choke-point -> SECURITY_DENY",
+      "status": "KILLED"
+    },
+    {
+      "mutant_id": "MUTANT_5_WRONG_DESTINATION",
+      "description": "Artifact placed in wrong destination directory",
+      "component": "GoalVerifier & PathPredicate",
+      "injected_fault": "Destination path set to non-existent subfolder",
+      "detected": true,
+      "detection_mechanism": "GoalVerifier.evaluate -> FileExistsPredicate caught directory mismatch",
+      "status": "KILLED"
+    },
+    {
+      "mutant_id": "MUTANT_6_SPOOFED_OBSERVE_CATEGORY",
+      "description": "Caller attempts to declare OBSERVE on mutating capability to bypass gate",
+      "component": "ExecutionBroker Category Derivation",
+      "injected_fault": "Set category=OBSERVE on mutating capability 'save_text_file'",
+      "detected": true,
+      "detection_mechanism": "ExecutionBroker authoritative derivation forced category to ACT",
+      "status": "KILLED"
+    }
+  ]
+}

@@ -1,0 +1,590 @@
+{
+  "timestamp": "2026-10-10T03:20:33.304884+00:00",
+  "phase": "F0-23",
+  "description": "Semantic entity identity evaluation across installed apps, aliases, and adversarial fixtures.",
+  "metrics": {
+    "total_evaluated": 55,
+    "passed": 55,
+    "failed": 0,
+    "pass_rate_percent": 100.0,
+    "adversarial_rejections_verified": 10,
+    "false_positives": 0
+  },
+  "results": [
+    {
+      "prompt": "open visual studio code",
+      "mode": "POSITIVE_RESOLUTION",
+      "extracted_app": "visual studio code",
+      "resolved_name": "Visual Studio Code",
+      "resolved_id": "visual studio code",
+      "confidence": 1.0,
+      "oracle_verdict": "PASS",
+      "reason": "Exact semantic match with Visual Studio Code.",
+      "passed": true
+    },
+    {
+      "prompt": "launch notepad",
+      "mode": "POSITIVE_RESOLUTION",
+      "extracted_app": "notepad",
+      "resolved_name": "Notepad",
+      "resolved_id": "notepad",
+      "confidence": 1.0,
+      "oracle_verdict": "PASS",
+      "reason": "Exact semantic match with Notepad.",
+      "passed": true
+    },
+    {
+      "prompt": "open calculator",
+      "mode": "POSITIVE_RESOLUTION",
+      "extracted_app": "calculator",
+      "resolved_name": "Calculator",
+      "resolved_id": "calc",
+      "confidence": 1.0,
+      "oracle_verdict": "PASS",
+      "reason": "Exact semantic match with Calculator.",
+      "passed": true
+    },
+    {
+      "prompt": "run command prompt",
+      "mode": "POSITIVE_RESOLUTION",
+      "extracted_app": "command prompt",
+      "resolved_name": "Command Prompt",
+      "resolved_id": "command prompt",
+      "confidence": 1.0,
+      "oracle_verdict": "PASS",
+      "reason": "Exact semantic match with Command Prompt.",
+      "passed": true
+    },
+    {
+      "prompt": "launch powershell",
+      "mode": "POSITIVE_RESOLUTION",
+      "extracted_app": "powershell",
+      "resolved_name": "Windows PowerShell",
+      "resolved_id": "powershell",
+      "confidence": 1.0,
+      "oracle_verdict": "PASS",
+      "reason": "Exact semantic match with Windows PowerShell.",
+      "passed": true
+    },
+    {
+      "prompt": "open file explorer",
+      "mode": "POSITIVE_RESOLUTION",
+      "extracted_app": "file explorer",
+      "resolved_name": "File Explorer",
+      "resolved_id": "file explorer",
+      "confidence": 1.0,
+      "oracle_verdict": "PASS",
+      "reason": "Exact semantic match with File Explorer.",
+      "passed": true
+    },
+    {
+      "prompt": "launch wt",
+      "mode": "POSITIVE_RESOLUTION",
+      "extracted_app": "wt",
+      "resolved_name": "Windows Terminal",
+      "resolved_id": "wt",
+      "confidence": 1.0,
+      "oracle_verdict": "PASS",
+      "reason": "Exact semantic match with Windows Terminal.",
+      "passed": true
+    },
+    {
+      "prompt": "open cmd",
+      "mode": "POSITIVE_RESOLUTION",
+      "extracted_app": "cmd",
+      "resolved_name": "Command Prompt",
+      "resolved_id": "cmd",
+      "confidence": 1.0,
+      "oracle_verdict": "PASS",
+      "reason": "Exact semantic match with Command Prompt.",
+      "passed": true
+    },
+    {
+      "prompt": "open calc",
+      "mode": "POSITIVE_RESOLUTION",
+      "extracted_app": "calc",
+      "resolved_name": "Calculator",
+      "resolved_id": "calc",
+      "confidence": 1.0,
+      "oracle_verdict": "PASS",
+      "reason": "Exact semantic match with Calculator.",
+      "passed": true
+    },
+    {
+      "prompt": "start vivaldi",
+      "mode": "POSITIVE_RESOLUTION",
+      "extracted_app": "vivaldi",
+      "resolved_name": "Vivaldi Browser",
+      "resolved_id": "vivaldi",
+      "confidence": 1.0,
+      "oracle_verdict": "PASS",
+      "reason": "Exact semantic match with Vivaldi Browser.",
+      "passed": true
+    },
+    {
+      "prompt": "open vscode",
+      "mode": "POSITIVE_RESOLUTION",
+      "extracted_app": "vscode",
+      "resolved_name": "Visual Studio Code",
+      "resolved_id": "code",
+      "confidence": 0.96,
+      "oracle_verdict": "PASS",
+      "reason": "Acronym match 'vscode' -> Visual Studio Code.",
+      "passed": true
+    },
+    {
+      "prompt": "launch pwsh",
+      "mode": "POSITIVE_RESOLUTION",
+      "extracted_app": "pwsh",
+      "resolved_name": "PowerShell 7",
+      "resolved_id": "pwsh",
+      "confidence": 1.0,
+      "oracle_verdict": "PASS",
+      "reason": "Exact semantic match with PowerShell 7.",
+      "passed": true
+    },
+    {
+      "prompt": "open task manager",
+      "mode": "POSITIVE_RESOLUTION",
+      "extracted_app": "task manager",
+      "resolved_name": "Task Manager",
+      "resolved_id": "task manager",
+      "confidence": 1.0,
+      "oracle_verdict": "PASS",
+      "reason": "Exact semantic match with Task Manager.",
+      "passed": true
+    },
+    {
+      "prompt": "open paint",
+      "mode": "POSITIVE_RESOLUTION",
+      "extracted_app": "paint",
+      "resolved_name": "Mspaint",
+      "resolved_id": "mspaint",
+      "confidence": 0.8428571428571429,
+      "oracle_verdict": "PASS",
+      "reason": "Exact semantic match with Mspaint.",
+      "passed": true
+    },
+    {
+      "prompt": "open control panel",
+      "mode": "POSITIVE_RESOLUTION",
+      "extracted_app": "control panel",
+      "resolved_name": "Control Panel",
+      "resolved_id": "control panel",
+      "confidence": 1.0,
+      "oracle_verdict": "PASS",
+      "reason": "Exact semantic match with Control Panel.",
+      "passed": true
+    },
+    {
+      "prompt": "launch character map",
+      "mode": "POSITIVE_RESOLUTION",
+      "extracted_app": "character map",
+      "resolved_name": "Character Map",
+      "resolved_id": "character map",
+      "confidence": 1.0,
+      "oracle_verdict": "PASS",
+      "reason": "Exact semantic match with Character Map.",
+      "passed": true
+    },
+    {
+      "prompt": "open anaconda prompt",
+      "mode": "POSITIVE_RESOLUTION",
+      "extracted_app": "anaconda prompt",
+      "resolved_name": "Anaconda Prompt",
+      "resolved_id": "anaconda prompt",
+      "confidence": 1.0,
+      "oracle_verdict": "PASS",
+      "reason": "Exact semantic match with Anaconda Prompt.",
+      "passed": true
+    },
+    {
+      "prompt": "launch adobe acrobat",
+      "mode": "POSITIVE_RESOLUTION",
+      "extracted_app": "adobe acrobat",
+      "resolved_name": "Adobe Acrobat",
+      "resolved_id": "adobe acrobat",
+      "confidence": 1.0,
+      "oracle_verdict": "PASS",
+      "reason": "Exact semantic match with Adobe Acrobat.",
+      "passed": true
+    },
+    {
+      "prompt": "start antigravity ide",
+      "mode": "POSITIVE_RESOLUTION",
+      "extracted_app": "antigravity ide",
+      "resolved_name": "Antigravity IDE",
+      "resolved_id": "antigravity ide",
+      "confidence": 1.0,
+      "oracle_verdict": "PASS",
+      "reason": "Exact semantic match with Antigravity IDE.",
+      "passed": true
+    },
+    {
+      "prompt": "open access",
+      "mode": "POSITIVE_RESOLUTION",
+      "extracted_app": "access",
+      "resolved_name": "Access",
+      "resolved_id": "access",
+      "confidence": 1.0,
+      "oracle_verdict": "PASS",
+      "reason": "Exact semantic match with Access.",
+      "passed": true
+    },
+    {
+      "prompt": "launch autohotkey dash",
+      "mode": "POSITIVE_RESOLUTION",
+      "extracted_app": "autohotkey dash",
+      "resolved_name": "AutoHotkey Dash",
+      "resolved_id": "autohotkey dash",
+      "confidence": 1.0,
+      "oracle_verdict": "PASS",
+      "reason": "Exact semantic match with AutoHotkey Dash.",
+      "passed": true
+    },
+    {
+      "prompt": "open windows terminal",
+      "mode": "POSITIVE_RESOLUTION",
+      "extracted_app": "windows terminal",
+      "resolved_name": "Windows Terminal",
+      "resolved_id": "wt",
+      "confidence": 1.0,
+      "oracle_verdict": "PASS",
+      "reason": "Exact semantic match with Windows Terminal.",
+      "passed": true
+    },
+    {
+      "prompt": "run administrative tools",
+      "mode": "POSITIVE_RESOLUTION",
+      "extracted_app": "administrative",
+      "resolved_name": "Administrative Tools",
+      "resolved_id": "administrative tools",
+      "confidence": 0.84,
+      "oracle_verdict": "PASS",
+      "reason": "Exact semantic match with Administrative Tools.",
+      "passed": true
+    },
+    {
+      "prompt": "open powershell 7",
+      "mode": "POSITIVE_RESOLUTION",
+      "extracted_app": "powershell 7",
+      "resolved_name": "PowerShell 7",
+      "resolved_id": "pwsh",
+      "confidence": 1.0,
+      "oracle_verdict": "PASS",
+      "reason": "Exact semantic match with PowerShell 7.",
+      "passed": true
+    },
+    {
+      "prompt": "start alacritty",
+      "mode": "POSITIVE_RESOLUTION",
+      "extracted_app": "alacritty",
+      "resolved_name": "Alacritty (Ubuntu)",
+      "resolved_id": "alacritty (ubuntu)",
+      "confidence": 0.7999999999999999,
+      "oracle_verdict": "PASS",
+      "reason": "Exact semantic match with Alacritty (Ubuntu).",
+      "passed": true
+    },
+    {
+      "prompt": "open completely_unknown_app_xyz_123",
+      "mode": "NONEXISTENT_REJECTION",
+      "extracted_app": "completely_unknown_app_xyz_123",
+      "resolved": null,
+      "oracle_verdict": "PASS",
+      "reason": "Correctly rejected non-existent entity",
+      "passed": true
+    },
+    {
+      "prompt": "launch fake_nonexistent_tool_404",
+      "mode": "NONEXISTENT_REJECTION",
+      "extracted_app": "fake_nonexistent_tool_404",
+      "resolved": null,
+      "oracle_verdict": "PASS",
+      "reason": "Correctly rejected non-existent entity",
+      "passed": true
+    },
+    {
+      "prompt": "open non_existent_editor_9999",
+      "mode": "NONEXISTENT_REJECTION",
+      "extracted_app": "non_existent_editor_9999",
+      "resolved": null,
+      "oracle_verdict": "PASS",
+      "reason": "Correctly rejected non-existent entity",
+      "passed": true
+    },
+    {
+      "prompt": "run imaginary_software_alpha_omega",
+      "mode": "NONEXISTENT_REJECTION",
+      "extracted_app": "imaginary_software_alpha_omega",
+      "resolved": null,
+      "oracle_verdict": "PASS",
+      "reason": "Correctly rejected non-existent entity",
+      "passed": true
+    },
+    {
+      "prompt": "start missing_binary_daemon_11",
+      "mode": "NONEXISTENT_REJECTION",
+      "extracted_app": "missing_binary_daemon_11",
+      "resolved": null,
+      "oracle_verdict": "PASS",
+      "reason": "Correctly rejected non-existent entity",
+      "passed": true
+    },
+    {
+      "prompt": "open visual studio code",
+      "mode": "ADVERSARIAL_REJECTION",
+      "extracted_app": "visual studio code",
+      "injected_candidate": "Visual Profiler",
+      "oracle_verdict": "REJECTED",
+      "reason": "Semantic mismatch: expected code editor but resolved 'Visual Profiler'.",
+      "passed": true
+    },
+    {
+      "prompt": "open visual studio code",
+      "mode": "ADVERSARIAL_REJECTION",
+      "extracted_app": "visual studio code",
+      "injected_candidate": "Visual Studio Installer",
+      "oracle_verdict": "REJECTED",
+      "reason": "Semantic mismatch: expected code editor but resolved 'Visual Studio Installer'.",
+      "passed": true
+    },
+    {
+      "prompt": "open command prompt",
+      "mode": "ADVERSARIAL_REJECTION",
+      "extracted_app": "command prompt",
+      "injected_candidate": "Windows Terminal",
+      "oracle_verdict": "REJECTED",
+      "reason": "Semantic mismatch: expected Command Prompt but resolved 'Windows Terminal'.",
+      "passed": true
+    },
+    {
+      "prompt": "open word",
+      "mode": "ADVERSARIAL_REJECTION",
+      "extracted_app": "word",
+      "injected_candidate": "wordpad",
+      "oracle_verdict": "REJECTED",
+      "reason": "Expected 'word' but no entity was resolved.",
+      "passed": true
+    },
+    {
+      "prompt": "open chrome",
+      "mode": "ADVERSARIAL_REJECTION",
+      "extracted_app": "chrome",
+      "injected_candidate": "chromium",
+      "oracle_verdict": "REJECTED",
+      "reason": "Expected 'chrome' but no entity was resolved.",
+      "passed": true
+    },
+    {
+      "prompt": "open notepad",
+      "mode": "ADVERSARIAL_REJECTION",
+      "extracted_app": "notepad",
+      "injected_candidate": "wordpad",
+      "oracle_verdict": "REJECTED",
+      "reason": "Expected 'notepad' but no entity was resolved.",
+      "passed": true
+    },
+    {
+      "prompt": "open calculator",
+      "mode": "ADVERSARIAL_REJECTION",
+      "extracted_app": "calculator",
+      "injected_candidate": "calc_tax_tool",
+      "oracle_verdict": "REJECTED",
+      "reason": "Expected 'calculator' but no entity was resolved.",
+      "passed": true
+    },
+    {
+      "prompt": "open powershell",
+      "mode": "ADVERSARIAL_REJECTION",
+      "extracted_app": "powershell",
+      "injected_candidate": "Command Prompt",
+      "oracle_verdict": "REJECTED",
+      "reason": "Could not establish semantic identity between 'powershell' and 'Command Prompt'.",
+      "passed": true
+    },
+    {
+      "prompt": "launch vivaldi",
+      "mode": "ADVERSARIAL_REJECTION",
+      "extracted_app": "vivaldi",
+      "injected_candidate": "firefox",
+      "oracle_verdict": "REJECTED",
+      "reason": "Expected 'vivaldi' but no entity was resolved.",
+      "passed": true
+    },
+    {
+      "prompt": "open task manager",
+      "mode": "ADVERSARIAL_REJECTION",
+      "extracted_app": "task manager",
+      "injected_candidate": "Resource Monitor",
+      "oracle_verdict": "REJECTED",
+      "reason": "Insufficient token overlap (0%) between 'task manager' and 'Resource Monitor'.",
+      "passed": true
+    },
+    {
+      "prompt": "please launch the visual studio code editor for me",
+      "mode": "POSITIVE_RESOLUTION",
+      "extracted_app": "visual studio code",
+      "resolved_name": "Visual Studio Code",
+      "resolved_id": "visual studio code",
+      "confidence": 1.0,
+      "oracle_verdict": "PASS",
+      "reason": "Exact semantic match with Visual Studio Code.",
+      "passed": true
+    },
+    {
+      "prompt": "bring up command prompt right now",
+      "mode": "POSITIVE_RESOLUTION",
+      "extracted_app": "",
+      "resolved_name": "Command Prompt",
+      "resolved_id": "command prompt",
+      "confidence": 1.0,
+      "oracle_verdict": "PASS",
+      "reason": "Exact semantic match with Command Prompt.",
+      "passed": true
+    },
+    {
+      "prompt": "switch to calculator please",
+      "mode": "POSITIVE_RESOLUTION",
+      "extracted_app": "",
+      "resolved_name": "Calculator",
+      "resolved_id": "calc",
+      "confidence": 1.0,
+      "oracle_verdict": "PASS",
+      "reason": "Exact semantic match with Calculator.",
+      "passed": true
+    },
+    {
+      "prompt": "can you open notepad",
+      "mode": "POSITIVE_RESOLUTION",
+      "extracted_app": "notepad",
+      "resolved_name": "Notepad",
+      "resolved_id": "notepad",
+      "confidence": 1.0,
+      "oracle_verdict": "PASS",
+      "reason": "Exact semantic match with Notepad.",
+      "passed": true
+    },
+    {
+      "prompt": "start up powershell",
+      "mode": "POSITIVE_RESOLUTION",
+      "extracted_app": "powershell",
+      "resolved_name": "Windows PowerShell",
+      "resolved_id": "powershell",
+      "confidence": 1.0,
+      "oracle_verdict": "PASS",
+      "reason": "Exact semantic match with Windows PowerShell.",
+      "passed": true
+    },
+    {
+      "prompt": "open the file explorer window",
+      "mode": "POSITIVE_RESOLUTION",
+      "extracted_app": "file explorer",
+      "resolved_name": "File Explorer",
+      "resolved_id": "file explorer",
+      "confidence": 1.0,
+      "oracle_verdict": "PASS",
+      "reason": "Exact semantic match with File Explorer.",
+      "passed": true
+    },
+    {
+      "prompt": "launch the character map tool",
+      "mode": "POSITIVE_RESOLUTION",
+      "extracted_app": "character map",
+      "resolved_name": "Character Map",
+      "resolved_id": "character map",
+      "confidence": 1.0,
+      "oracle_verdict": "PASS",
+      "reason": "Exact semantic match with Character Map.",
+      "passed": true
+    },
+    {
+      "prompt": "bring up task manager now",
+      "mode": "POSITIVE_RESOLUTION",
+      "extracted_app": "",
+      "resolved_name": "Task Manager",
+      "resolved_id": "task manager",
+      "confidence": 1.0,
+      "oracle_verdict": "PASS",
+      "reason": "Exact semantic match with Task Manager.",
+      "passed": true
+    },
+    {
+      "prompt": "open the paint application",
+      "mode": "POSITIVE_RESOLUTION",
+      "extracted_app": "paint",
+      "resolved_name": "Mspaint",
+      "resolved_id": "mspaint",
+      "confidence": 0.8428571428571429,
+      "oracle_verdict": "PASS",
+      "reason": "Exact semantic match with Mspaint.",
+      "passed": true
+    },
+    {
+      "prompt": "open the control panel window",
+      "mode": "POSITIVE_RESOLUTION",
+      "extracted_app": "control panel",
+      "resolved_name": "Control Panel",
+      "resolved_id": "control panel",
+      "confidence": 1.0,
+      "oracle_verdict": "PASS",
+      "reason": "Exact semantic match with Control Panel.",
+      "passed": true
+    },
+    {
+      "prompt": "launch anaconda prompt utility",
+      "mode": "POSITIVE_RESOLUTION",
+      "extracted_app": "anaconda prompt",
+      "resolved_name": "Anaconda Prompt",
+      "resolved_id": "anaconda prompt",
+      "confidence": 1.0,
+      "oracle_verdict": "PASS",
+      "reason": "Exact semantic match with Anaconda Prompt.",
+      "passed": true
+    },
+    {
+      "prompt": "open adobe acrobat reader",
+      "mode": "POSITIVE_RESOLUTION",
+      "extracted_app": "adobe acrobat reader",
+      "resolved_name": "Adobe Acrobat",
+      "resolved_id": "adobe acrobat",
+      "confidence": 0.7333333333333333,
+      "oracle_verdict": "PASS",
+      "reason": "Exact semantic match with Adobe Acrobat.",
+      "passed": true
+    },
+    {
+      "prompt": "start antigravity ide for me",
+      "mode": "POSITIVE_RESOLUTION",
+      "extracted_app": "antigravity ide",
+      "resolved_name": "Antigravity IDE",
+      "resolved_id": "antigravity ide",
+      "confidence": 1.0,
+      "oracle_verdict": "PASS",
+      "reason": "Exact semantic match with Antigravity IDE.",
+      "passed": true
+    },
+    {
+      "prompt": "execute microsoft access app",
+      "mode": "POSITIVE_RESOLUTION",
+      "extracted_app": "microsoft access",
+      "resolved_name": "Access",
+      "resolved_id": "access",
+      "confidence": 1.0,
+      "oracle_verdict": "PASS",
+      "reason": "Exact semantic match with Access.",
+      "passed": true
+    },
+    {
+      "prompt": "launch autohotkey dash tool",
+      "mode": "POSITIVE_RESOLUTION",
+      "extracted_app": "autohotkey dash",
+      "resolved_name": "AutoHotkey Dash",
+      "resolved_id": "autohotkey dash",
+      "confidence": 1.0,
+      "oracle_verdict": "PASS",
+      "reason": "Exact semantic match with AutoHotkey Dash.",
+      "passed": true
+    }
+  ]
+}

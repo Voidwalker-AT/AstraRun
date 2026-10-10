@@ -1,0 +1,121 @@
+{
+  "timestamp": "2026-10-10T03:53:00.261896+00:00",
+  "phase": "F0-23",
+  "suite": "GENUINE_MULTI_APPLICATION_ACCEPTANCE",
+  "total_cases": 3,
+  "passed_cases": 3,
+  "failed_cases": 0,
+  "cases": [
+    {
+      "case_id": "MULTI-APP-01-SYS_TO_DOC",
+      "prompt": "extract system memory status and record in memory_log.txt",
+      "claim": "Information causally flows: App A (System CLI/psutil) -> Task State -> App B (File persistence) -> verification.",
+      "evidence_class": "MULTI_APP_CAUSAL_FLOW",
+      "predicates": [
+        {
+          "name": "app_a_extracted",
+          "mandatory": true,
+          "satisfied": true,
+          "evidence": "Total: 16024MB, Available: 3424MB, Percent: 78.6%"
+        },
+        {
+          "name": "app_b_persisted",
+          "mandatory": true,
+          "satisfied": true,
+          "evidence": "e:\\Workspace\\Active\\AstraRun\\outputs\\memory_log.txt"
+        },
+        {
+          "name": "causal_data_intact",
+          "mandatory": true,
+          "satisfied": true,
+          "evidence": "Verified memory figure 16024MB in output"
+        }
+      ],
+      "unexpected_side_effects": [],
+      "security_provenance": {
+        "broker_invoked": true,
+        "gate_authorized": true,
+        "authority_chain": "ExecutionBroker -> ActionGate -> MultiStep"
+      },
+      "resource_delta": {
+        "spawned_pids": [],
+        "leaked_pids": []
+      },
+      "verdict": "PASS"
+    },
+    {
+      "case_id": "MULTI-APP-02-COMPUTE_TO_LOG",
+      "prompt": "compute prime numbers up to 30 and write to primes_log.txt",
+      "claim": "Information causally flows: App A (Python dynamic engine) -> Task State -> App B (Disk storage) -> verification.",
+      "evidence_class": "MULTI_APP_CAUSAL_FLOW",
+      "predicates": [
+        {
+          "name": "app_a_computed",
+          "mandatory": true,
+          "satisfied": true,
+          "evidence": "[2, 3, 5, 7, 11, 13, 17, 19, 23, 29]"
+        },
+        {
+          "name": "app_b_stored",
+          "mandatory": true,
+          "satisfied": true,
+          "evidence": "e:\\Workspace\\Active\\AstraRun\\outputs\\primes_log.txt"
+        },
+        {
+          "name": "causal_data_intact",
+          "mandatory": true,
+          "satisfied": true,
+          "evidence": "Primes: [2, 3, 5, 7, 11, 13, 17, 19, 23, 29]"
+        }
+      ],
+      "unexpected_side_effects": [],
+      "security_provenance": {
+        "broker_invoked": true,
+        "gate_authorized": true,
+        "authority_chain": "ExecutionBroker -> ActionGate -> DynamicExecution"
+      },
+      "resource_delta": {
+        "spawned_pids": [],
+        "leaked_pids": []
+      },
+      "verdict": "PASS"
+    },
+    {
+      "case_id": "MULTI-APP-03-WEB_TO_SUMMARY",
+      "prompt": "fetch example.com heading and write to web_summary.txt",
+      "claim": "Information causally flows: App A (Browser/HTTP) -> Task State -> App B (File) -> verification.",
+      "evidence_class": "MULTI_APP_CAUSAL_FLOW",
+      "predicates": [
+        {
+          "name": "app_a_extracted_title",
+          "mandatory": true,
+          "satisfied": true,
+          "evidence": "Title: 'Example Domain'"
+        },
+        {
+          "name": "app_b_persisted",
+          "mandatory": true,
+          "satisfied": true,
+          "evidence": "e:\\Workspace\\Active\\AstraRun\\outputs\\web_summary.txt"
+        },
+        {
+          "name": "causal_data_intact",
+          "mandatory": true,
+          "satisfied": true,
+          "evidence": "Title: Example Domain"
+        }
+      ],
+      "unexpected_side_effects": [],
+      "security_provenance": {
+        "broker_invoked": true,
+        "gate_authorized": true,
+        "authority_chain": "ExecutionBroker -> ActionGate -> BrowserToDoc"
+      },
+      "resource_delta": {
+        "spawned_pids": [],
+        "leaked_pids": []
+      },
+      "verdict": "PASS"
+    }
+  ]
+}

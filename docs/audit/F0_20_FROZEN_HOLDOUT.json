@@ -1,0 +1,291 @@
+{
+  "milestone": "F0-20",
+  "title": "Frozen Holdout & Performance Audit",
+  "timestamp": 1791557102.4290166,
+  "timestamp_iso": "2026-10-09 20:15:02",
+  "frozen_holdout_tasks": [
+    {
+      "test": "acceptance_a_live_perception",
+      "status": "PASS",
+      "state_hash": "67ca90da95c76a3c36dc3606799724076d38c62fe9747d25a7162675dc16bb61",
+      "visible_windows": 10,
+      "dialogs": 0,
+      "observation_latency_ms": 188.35,
+      "zero_mutation_verified": true
+    },
+    {
+      "test": "acceptance_b_unfamiliar_application",
+      "status": "PASS",
+      "app": "charmap",
+      "hwnd": 1180922,
+      "pid": 20256,
+      "controls_before": 25,
+      "controls_after": 38,
+      "state_change_verified": true,
+      "closed_cleanly": true,
+      "latency_sec": 4.038
+    },
+    {
+      "test": "acceptance_c_multistep_perceptual_closed_loop",
+      "status": "PASS",
+      "task_id": "test_f0_20_multistep_1791555008",
+      "steps_count": 5,
+      "traces_count": 5,
+      "traces": [
+        {
+          "step_id": "step_1_launch",
+          "capability_id": "open_application",
+          "arguments": {
+            "app": "notepad",
+            "task_id": "test_f0_20_multistep_1791555008"
+          },
+          "observation_before": {
+            "state_hash": "67ca90da95c76a3c36dc3606799724076d38c62fe9747d25a7162675dc16bb61",
+            "fg_window": null,
+            "visible_windows": 10,
+            "dialogs": []
+          },
+          "expected_transition": "Launch Notepad application",
+          "selected_action": "open_application",
+          "broker_verdict": "ALLOW",
+          "execution_result": {
+            "success": true,
+            "message": "Application 'notepad' launched successfully (PID=20100, HWND=1445170).",
+            "data": {
+              "app": "notepad",
+              "path": "C:\\WINDOWS\\notepad.exe",
+              "resource_id": "02bb9394-d961-4b44-8159-867c159dc355",
+              "pid": 20100,
+              "hwnd": 1445170,
+              "astra_created": true,
+              "process_creation_time": 1791555009.2783442
+            }
+          },
+          "observation_after": {
+            "state_hash": "95e905aa1861a0943c84c07c1c8aee046409fe6cd85526865134f49e61530880",
+            "fg_window": "Notepad",
+            "visible_windows": 16,
+            "dialogs": []
+          },
+          "transition_verified": true
+        },
+        {
+          "step_id": "step_2_focus",
+          "capability_id": "focus_window",
+          "arguments": {
+            "window": "notepad",
+            "task_id": "test_f0_20_multistep_1791555008"
+          },
+          "observation_before": {
+            "state_hash": "515179b7afa0fefbb413815b21091c9dd776ed670901a30aa841be88b184fb21",
+            "fg_window": "Notepad",
+            "visible_windows": 21,
+            "dialogs": []
+          },
+          "expected_transition": "Focus Notepad window",
+          "selected_action": "focus_window",
+          "broker_verdict": "ALLOW",
+          "execution_result": {
+            "success": true,
+            "message": "Brought window 1445170 to foreground focus.",
+            "data": {
+              "hwnd": 1445170,
+              "action": "focus"
+            }
+          },
+          "observation_after": {
+            "state_hash": "e68d66b814dfa5aab6224051f02dd11b22540e8144c425b9b8a1281e32f1b116",
+            "fg_window": "*Verified Content From UIA SetValue - Notepad",
+            "visible_windows": 21,
+            "dialogs": []
+          },
+          "transition_verified": true
+        },
+        {
+          "step_id": "step_3_type",
+          "capability_id": "type_into_window",
+          "arguments": {
+            "text": "AstraRun F0-20 Perceptual Loop Verified 1791555008.726548",
+            "window": "notepad",
+            "task_id": "test_f0_20_multistep_1791555008"
+          },
+          "observation_before": {
+            "state_hash": "7f9fee630b27818a25e94350b232713c7f98bc68fee7d5a9b3c8785526ded2f9",
+            "fg_window": "*Verified Content From UIA SetValue - Notepad",
+            "visible_windows": 21,
+            "dialogs": []
+          },
+          "expected_transition": "Type verified content into Notepad",
+          "selected_action": "type_into_window",
+          "broker_verdict": "ALLOW",
+          "execution_result": {
+            "success": true,
+            "message": "Entered 57 characters.",
+            "data": {
+              "length": 57,
+              "hwnd": 1445170,
+              "text": "AstraRun F0-20 Perceptual Loop Verified 1791555008.726548",
+              "result": "AstraRun F0-20 Perceptual Loop Verified 1791555008.726548"
+            }
+          },
+          "observation_after": {
+            "state_hash": "7f9fee630b27818a25e94350b232713c7f98bc68fee7d5a9b3c8785526ded2f9",
+            "fg_window": "*Verified Content From UIA SetValue - Notepad",
+            "visible_windows": 21,
+            "dialogs": []
+          },
+          "transition_verified": true
+        },
+        {
+          "step_id": "step_4_ui_save",
+          "capability_id": "save_document_via_ui",
+          "arguments": {
+            "path": "C:\\Users\\hp\\AppData\\Local\\Temp\\astra_f0_20_multistep_1791555008.txt",
+            "window": "notepad",
+            "task_id": "test_f0_20_multistep_1791555008"
+          },
+          "observation_before": {
+            "state_hash": "7f9fee630b27818a25e94350b232713c7f98bc68fee7d5a9b3c8785526ded2f9",
+            "fg_window": "*Verified Content From UIA SetValue - Notepad",
+            "visible_windows": 21,
+            "dialogs": []
+          },
+          "expected_transition": "Save document via native application UI Save As dialog",
+          "selected_action": "save_document_via_ui",
+          "broker_verdict": "ALLOW",
+          "execution_result": {
+            "success": true,
+            "message": "Document successfully saved via application UI to 'C:\\Users\\hp\\AppData\\Local\\Temp\\astra_f0_20_multistep_1791555008.txt'.",
+            "data": {
+              "path": "C:\\Users\\hp\\AppData\\Local\\Temp\\astra_f0_20_multistep_1791555008.txt",
+              "filename": "astra_f0_20_multistep_1791555008.txt",
+              "hwnd": 1445170,
+              "window_title": "astra_f0_20_multistep_1791555008.txt - Notepad",
+              "interaction_modality": "APPLICATION_UI",
+              "file_size": 97
+            }
+          },
+          "observation_after": {
+            "state_hash": "75331ee7f7095e9ebb43a552f479c32c390eb34761f8118b8150cc8fafa4c51b",
+            "fg_window": "astra_f0_20_multistep_1791555008.txt - Notepad",
+            "visible_windows": 21,
+            "dialogs": []
+          },
+          "transition_verified": true
+        },
+        {
+          "step_id": "step_5_close",
+          "capability_id": "close_application",
+          "arguments": {
+            "app": "notepad",
+            "task_id": "test_f0_20_multistep_1791555008"
+          },
+          "observation_before": {
+            "state_hash": "75331ee7f7095e9ebb43a552f479c32c390eb34761f8118b8150cc8fafa4c51b",
+            "fg_window": "astra_f0_20_multistep_1791555008.txt - Notepad",
+            "visible_windows": 21,
+            "dialogs": []
+          },
+          "expected_transition": "Close Notepad application cleanly",
+          "selected_action": "close_application",
+          "broker_verdict": "ALLOW",
+          "execution_result": {
+            "success": true,
+            "message": "Closed 1 Astra-owned instance(s) of 'notepad'.",
+            "data": {
+              "app": "notepad",
+              "windows_closed": 1
+            }
+          },
+          "observation_after": {
+            "state_hash": "712725f8258319ee0329e81e5c67851fe7165cec305f074fb3e4ed3e89082037",
+            "fg_window": "*AstraRun F0-20 Perceptual Loop Veri - Notepad",
+            "visible_windows": 20,
+            "dialogs": []
+          },
+          "transition_verified": true
+        }
+      ],
+      "artifact_path": "C:\\Users\\hp\\AppData\\Local\\Temp\\astra_f0_20_multistep_1791555008.txt",
+      "artifact_sha256": "edba46ece7a55fae10424c5b2a87bc11f294bf0a86dd39619f3b5a338082389d",
+      "latency_sec": 7.125
+    },
+    {
+      "test": "acceptance_d_adaptive_divergence_recovery",
+      "status": "PASS",
+      "task_id": "test_f0_20_divergence_1791555017",
+      "hwnd": 2951166,
+      "divergence_injected": "SW_MINIMIZE",
+      "divergence_detected": true,
+      "adaptive_restoration_verified": true,
+      "latency_sec": 7.489
+    },
+    {
+      "test": "acceptance_e_clean_desktop_state",
+      "status": "PASS",
+      "visible_windows": 10,
+      "dialogs": 0,
+      "astra_owned_resources": 0,
+      "zero_debris_verified": true,
+      "latency_sec": 0.002
+    },
+    {
+      "test": "acceptance_f_screen_understanding_proof",
+      "status": "PASS",
+      "observation_a": {
+        "window_hwnd": 1510440,
+        "bounds": [
+          166,
+          234,
+          622,
+          442
+        ],
+        "target_click_point": [
+          477,
+          455
+        ]
+      },
+      "observation_b": {
+        "window_hwnd": 1510440,
+        "bounds": [
+          373,
+          409,
+          587,
+          287
+        ],
+        "target_click_point": [
+          666,
+          552
+        ]
+      },
+      "delta_coordinates": [
+        189,
+        97
+      ],
+      "causal_difference_proven": true,
+      "latency_sec": 2.797
+    },
+    {
+      "test": "acceptance_g_human_failure_reproduction_and_resolution",
+      "status": "PASS",
+      "artifact_path": "C:\\Users\\hp\\AppData\\Local\\Temp\\astra_f0_20_human_repro_1791555030.txt",
+      "save_via_ui_verified": true,
+      "fresh_launch_dialogs": 0,
+      "tabstate_orphan_leak_prevented": true,
+      "latency_sec": 8.528
+    }
+  ],
+  "performance_metrics": {
+    "idle_cpu_percent": 38.3,
+    "idle_ram_mb": 12050.82,
+    "active_observation_cpu_percent": 38.3,
+    "screenshot_latency_ms": 61.12,
+    "uia_observation_latency_ms": 0.87,
+    "world_state_update_latency_ms": 7.12
+  },
+  "frozen_target_binary": {
+    "exe_path": "dist/AstraRun/AstraRun.exe",
+    "installer_path": "dist/installer/AstraRun-Setup-1.0.0-rc.6-dogfood.exe",
+    "verified_status": "READY_FOR_HUMAN_DOGFOOD"
+  }
+}

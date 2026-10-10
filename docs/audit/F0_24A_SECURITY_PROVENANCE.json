@@ -1,0 +1,37 @@
+{
+  "milestone": "F0_24A",
+  "stage": 10,
+  "title": "Security Mediation & Execution Provenance Audit",
+  "timestamp": 1791612031.3214955,
+  "execution_broker_enforced": true,
+  "action_gate_enforced": true,
+  "provenance_tracking": "STRICT_TASK_ID_MANDATORY",
+  "checks": [
+    {
+      "check_id": "SEC-01-DESTRUCTIVE-BLOCK",
+      "description": "Block destructive format command via ActionGate",
+      "target": "format C: /Q /Y",
+      "verdict": "PASS"
+    },
+    {
+      "check_id": "SEC-02-SAFE-CAPABILITY-PERMIT",
+      "description": "Permit registered safe capability via ExecutionBroker",
+      "target": "get_clipboard_content",
+      "blocked": false,
+      "success": true,
+      "verdict": "PASS"
+    },
+    {
+      "check_id": "SEC-03-UI-INTERACTION-MEDIATION",
+      "description": "Verify UI document save passes through ExecutionBroker governance",
+      "blocked": false,
+      "verdict": "PASS"
+    }
+  ],
+  "summary": {
+    "total_checks": 3,
+    "passed": 3,
+    "failed": 0,
+    "evidence_class": "TEST_EXECUTED"
+  }
+}

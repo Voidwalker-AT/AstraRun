@@ -1,0 +1,1059 @@
+{
+  "timestamp": "2026-10-09T17:18:59.303537+00:00",
+  "phase": "F0-22",
+  "total_test_files_on_disk": 428,
+  "vendored_upstream_benchmark_tests_count": 344,
+  "first_party_astrarun_tests_count": 84,
+  "classification_breakdown": {
+    "INTEGRATION_PROCESS": 4,
+    "INTEGRATION": 20,
+    "SOURCE_TREE_OS": 11,
+    "FIXTURE_INTEGRATION": 17,
+    "MOCK": 20,
+    "UNIT": 12
+  },
+  "overstated_tests_count": 2,
+  "overstated_tests": [
+    {
+      "file": "eval_v1/test_c2_2_post_freeze_holdout.py",
+      "claimed_by_name": "test_c2_2_post_freeze_holdout",
+      "actual_classification": "SOURCE_TREE_OS",
+      "discrepancies": [
+        "Previously treated as holdout; modified/iterated post-creation, now serves as REGRESSION suite."
+      ],
+      "corrected_classification": "SOURCE_TREE_OS"
+    },
+    {
+      "file": "test_f0_21_post_freeze_holdout.py",
+      "claimed_by_name": "test_f0_21_post_freeze_holdout",
+      "actual_classification": "INTEGRATION",
+      "discrepancies": [
+        "Previously treated as holdout; modified/iterated post-creation, now serves as REGRESSION suite."
+      ],
+      "corrected_classification": "INTEGRATION"
+    }
+  ],
+  "vendored_repositories": [
+    "tests/benchmarks/phase17/upstream/browser_use",
+    "tests/benchmarks/phase17/upstream/ufo",
+    "tests/benchmarks/phase17/upstream/osworld",
+    "tests/benchmarks/phase17/upstream/open_interpreter",
+    "tests/benchmarks/phase17/upstream/windows_agent_arena"
+  ],
+  "first_party_test_suite_inventory": [
+    {
+      "file": "benchmarks/phase17/test_compact_ui_format.py",
+      "claimed_by_name": "test_compact_ui_format",
+      "actual_classification": "INTEGRATION_PROCESS",
+      "characteristics": {
+        "uses_mock": false,
+        "uses_os_live": false,
+        "uses_subprocess": true,
+        "uses_frozen_exe": false,
+        "uses_fixtures": false
+      }
+    },
+    {
+      "file": "benchmarks/phase18/test_normalization_benchmark.py",
+      "claimed_by_name": "test_normalization_benchmark",
+      "actual_classification": "INTEGRATION",
+      "characteristics": {
+        "uses_mock": false,
+        "uses_os_live": false,
+        "uses_subprocess": false,
+        "uses_frozen_exe": false,
+        "uses_fixtures": false
+      }
+    },
+    {
+      "file": "benchmarks/phase18/test_structured_visual_benchmark.py",
+      "claimed_by_name": "test_structured_visual_benchmark",
+      "actual_classification": "INTEGRATION",
+      "characteristics": {
+        "uses_mock": false,
+        "uses_os_live": false,
+        "uses_subprocess": false,
+        "uses_frozen_exe": false,
+        "uses_fixtures": false
+      }
+    },
+    {
+      "file": "benchmarks/phase18/test_vram_coexistence.py",
+      "claimed_by_name": "test_vram_coexistence",
+      "actual_classification": "INTEGRATION_PROCESS",
+      "characteristics": {
+        "uses_mock": false,
+        "uses_os_live": false,
+        "uses_subprocess": true,
+        "uses_frozen_exe": false,
+        "uses_fixtures": false
+      }
+    },
+    {
+      "file": "benchmarks/phase18/test_windows_tts.py",
+      "claimed_by_name": "test_windows_tts",
+      "actual_classification": "INTEGRATION_PROCESS",
+      "characteristics": {
+        "uses_mock": false,
+        "uses_os_live": false,
+        "uses_subprocess": true,
+        "uses_frozen_exe": false,
+        "uses_fixtures": false
+      }
+    },
+    {
+      "file": "cognitive_spine/test_acceptance_3d_vis.py",
+      "claimed_by_name": "test_acceptance_3d_vis",
+      "actual_classification": "INTEGRATION",
+      "characteristics": {
+        "uses_mock": false,
+        "uses_os_live": false,
+        "uses_subprocess": false,
+        "uses_frozen_exe": false,
+        "uses_fixtures": false
+      }
+    },
+    {
+      "file": "cognitive_spine/test_candidate_tool.py",
+      "claimed_by_name": "test_candidate_tool",
+      "actual_classification": "SOURCE_TREE_OS",
+      "characteristics": {
+        "uses_mock": false,
+        "uses_os_live": true,
+        "uses_subprocess": true,
+        "uses_frozen_exe": false,
+        "uses_fixtures": false
+      }
+    },
+    {
+      "file": "cognitive_spine/test_modelservice.py",
+      "claimed_by_name": "test_modelservice",
+      "actual_classification": "FIXTURE_INTEGRATION",
+      "characteristics": {
+        "uses_mock": false,
+        "uses_os_live": false,
+        "uses_subprocess": false,
+        "uses_frozen_exe": false,
+        "uses_fixtures": true
+      }
+    },
+    {
+      "file": "cognitive_spine/test_self_repair.py",
+      "claimed_by_name": "test_self_repair",
+      "actual_classification": "INTEGRATION",
+      "characteristics": {
+        "uses_mock": false,
+        "uses_os_live": false,
+        "uses_subprocess": false,
+        "uses_frozen_exe": false,
+        "uses_fixtures": false
+      }
+    },
+    {
+      "file": "delegation/test_delegated_orchestration.py",
+      "claimed_by_name": "test_delegated_orchestration",
+      "actual_classification": "MOCK",
+      "characteristics": {
+        "uses_mock": true,
+        "uses_os_live": false,
+        "uses_subprocess": false,
+        "uses_frozen_exe": false,
+        "uses_fixtures": false
+      }
+    },
+    {
+      "file": "delegation/test_dogfood_chatgpt_workflow.py",
+      "claimed_by_name": "test_dogfood_chatgpt_workflow",
+      "actual_classification": "INTEGRATION",
+      "characteristics": {
+        "uses_mock": false,
+        "uses_os_live": false,
+        "uses_subprocess": false,
+        "uses_frozen_exe": false,
+        "uses_fixtures": false
+      }
+    },
+    {
+      "file": "eval_v1/test_c2_2_post_freeze_holdout.py",
+      "claimed_by_name": "test_c2_2_post_freeze_holdout",
+      "actual_classification": "SOURCE_TREE_OS",
+      "characteristics": {
+        "uses_mock": false,
+        "uses_os_live": true,
+        "uses_subprocess": false,
+        "uses_frozen_exe": false,
+        "uses_fixtures": false
+      },
+      "overstatement_reasons": [
+        "Previously treated as holdout; modified/iterated post-creation, now serves as REGRESSION suite."
+      ]
+    },
+    {
+      "file": "eval_v1/test_c2_2a_positive_intelligence_holdout.py",
+      "claimed_by_name": "test_c2_2a_positive_intelligence_holdout",
+      "actual_classification": "FIXTURE_INTEGRATION",
+      "characteristics": {
+        "uses_mock": false,
+        "uses_os_live": false,
+        "uses_subprocess": true,
+        "uses_frozen_exe": false,
+        "uses_fixtures": true
+      }
+    },
+    {
+      "file": "test_agent_runtime.py",
+      "claimed_by_name": "test_agent_runtime",
+      "actual_classification": "INTEGRATION",
+      "characteristics": {
+        "uses_mock": false,
+        "uses_os_live": false,
+        "uses_subprocess": false,
+        "uses_frozen_exe": false,
+        "uses_fixtures": false
+      }
+    },
+    {
+      "file": "test_battery_report.py",
+      "claimed_by_name": "test_battery_report",
+      "actual_classification": "INTEGRATION",
+      "characteristics": {
+        "uses_mock": false,
+        "uses_os_live": false,
+        "uses_subprocess": false,
+        "uses_frozen_exe": false,
+        "uses_fixtures": false
+      }
+    },
+    {
+      "file": "test_config.py",
+      "claimed_by_name": "test_config",
+      "actual_classification": "INTEGRATION",
+      "characteristics": {
+        "uses_mock": false,
+        "uses_os_live": false,
+        "uses_subprocess": false,
+        "uses_frozen_exe": false,
+        "uses_fixtures": false
+      }
+    },
+    {
+      "file": "test_f0_17_production_routing.py",
+      "claimed_by_name": "test_f0_17_production_routing",
+      "actual_classification": "FIXTURE_INTEGRATION",
+      "characteristics": {
+        "uses_mock": false,
+        "uses_os_live": false,
+        "uses_subprocess": false,
+        "uses_frozen_exe": false,
+        "uses_fixtures": true
+      }
+    },
+    {
+      "file": "test_f0_18_computer_use_generalization.py",
+      "claimed_by_name": "test_f0_18_computer_use_generalization",
+      "actual_classification": "FIXTURE_INTEGRATION",
+      "characteristics": {
+        "uses_mock": false,
+        "uses_os_live": false,
+        "uses_subprocess": false,
+        "uses_frozen_exe": false,
+        "uses_fixtures": true
+      }
+    },
+    {
+      "file": "test_f0_19_brain_computer_use.py",
+      "claimed_by_name": "test_f0_19_brain_computer_use",
+      "actual_classification": "SOURCE_TREE_OS",
+      "characteristics": {
+        "uses_mock": false,
+        "uses_os_live": true,
+        "uses_subprocess": false,
+        "uses_frozen_exe": false,
+        "uses_fixtures": false
+      }
+    },
+    {
+      "file": "test_f0_21_adversarial_false_completion.py",
+      "claimed_by_name": "test_f0_21_adversarial_false_completion",
+      "actual_classification": "FIXTURE_INTEGRATION",
+      "characteristics": {
+        "uses_mock": false,
+        "uses_os_live": false,
+        "uses_subprocess": false,
+        "uses_frozen_exe": false,
+        "uses_fixtures": true
+      }
+    },
+    {
+      "file": "test_f0_21_goal_contract.py",
+      "claimed_by_name": "test_f0_21_goal_contract",
+      "actual_classification": "INTEGRATION",
+      "characteristics": {
+        "uses_mock": false,
+        "uses_os_live": false,
+        "uses_subprocess": false,
+        "uses_frozen_exe": false,
+        "uses_fixtures": false
+      }
+    },
+    {
+      "file": "test_f0_21_post_freeze_holdout.py",
+      "claimed_by_name": "test_f0_21_post_freeze_holdout",
+      "actual_classification": "INTEGRATION",
+      "characteristics": {
+        "uses_mock": false,
+        "uses_os_live": false,
+        "uses_subprocess": false,
+        "uses_frozen_exe": false,
+        "uses_fixtures": false
+      },
+      "overstatement_reasons": [
+        "Previously treated as holdout; modified/iterated post-creation, now serves as REGRESSION suite."
+      ]
+    },
+    {
+      "file": "test_f0_21a_unseen_holdout.py",
+      "claimed_by_name": "test_f0_21a_unseen_holdout",
+      "actual_classification": "INTEGRATION",
+      "characteristics": {
+        "uses_mock": false,
+        "uses_os_live": false,
+        "uses_subprocess": false,
+        "uses_frozen_exe": false,
+        "uses_fixtures": false
+      }
+    },
+    {
+      "file": "test_generality_and_plugin.py",
+      "claimed_by_name": "test_generality_and_plugin",
+      "actual_classification": "INTEGRATION",
+      "characteristics": {
+        "uses_mock": false,
+        "uses_os_live": false,
+        "uses_subprocess": false,
+        "uses_frozen_exe": false,
+        "uses_fixtures": false
+      }
+    },
+    {
+      "file": "test_integration.py",
+      "claimed_by_name": "test_integration",
+      "actual_classification": "FIXTURE_INTEGRATION",
+      "characteristics": {
+        "uses_mock": false,
+        "uses_os_live": false,
+        "uses_subprocess": false,
+        "uses_frozen_exe": false,
+        "uses_fixtures": true
+      }
+    },
+    {
+      "file": "test_kev_router.py",
+      "claimed_by_name": "test_kev_router",
+      "actual_classification": "MOCK",
+      "characteristics": {
+        "uses_mock": true,
+        "uses_os_live": false,
+        "uses_subprocess": false,
+        "uses_frozen_exe": false,
+        "uses_fixtures": false
+      }
+    },
+    {
+      "file": "test_laya_router.py",
+      "claimed_by_name": "test_laya_router",
+      "actual_classification": "MOCK",
+      "characteristics": {
+        "uses_mock": true,
+        "uses_os_live": false,
+        "uses_subprocess": false,
+        "uses_frozen_exe": false,
+        "uses_fixtures": false
+      }
+    },
+    {
+      "file": "test_milestone1_security_runtime.py",
+      "claimed_by_name": "test_milestone1_security_runtime",
+      "actual_classification": "FIXTURE_INTEGRATION",
+      "characteristics": {
+        "uses_mock": false,
+        "uses_os_live": false,
+        "uses_subprocess": true,
+        "uses_frozen_exe": false,
+        "uses_fixtures": true
+      }
+    },
+    {
+      "file": "test_milestone2_cognitive_subsystem.py",
+      "claimed_by_name": "test_milestone2_cognitive_subsystem",
+      "actual_classification": "MOCK",
+      "characteristics": {
+        "uses_mock": true,
+        "uses_os_live": false,
+        "uses_subprocess": false,
+        "uses_frozen_exe": false,
+        "uses_fixtures": false
+      }
+    },
+    {
+      "file": "test_milestone2_live_models.py",
+      "claimed_by_name": "test_milestone2_live_models",
+      "actual_classification": "INTEGRATION_PROCESS",
+      "characteristics": {
+        "uses_mock": false,
+        "uses_os_live": false,
+        "uses_subprocess": true,
+        "uses_frozen_exe": false,
+        "uses_fixtures": false
+      }
+    },
+    {
+      "file": "test_milestone3_rag_subsystem.py",
+      "claimed_by_name": "test_milestone3_rag_subsystem",
+      "actual_classification": "FIXTURE_INTEGRATION",
+      "characteristics": {
+        "uses_mock": false,
+        "uses_os_live": false,
+        "uses_subprocess": false,
+        "uses_frozen_exe": false,
+        "uses_fixtures": true
+      }
+    },
+    {
+      "file": "test_milestone4_perception_control.py",
+      "claimed_by_name": "test_milestone4_perception_control",
+      "actual_classification": "SOURCE_TREE_OS",
+      "characteristics": {
+        "uses_mock": false,
+        "uses_os_live": true,
+        "uses_subprocess": false,
+        "uses_frozen_exe": false,
+        "uses_fixtures": false
+      }
+    },
+    {
+      "file": "test_milestone5_resident_app.py",
+      "claimed_by_name": "test_milestone5_resident_app",
+      "actual_classification": "MOCK",
+      "characteristics": {
+        "uses_mock": true,
+        "uses_os_live": false,
+        "uses_subprocess": true,
+        "uses_frozen_exe": false,
+        "uses_fixtures": false
+      }
+    },
+    {
+      "file": "test_milestone5p_visual_system.py",
+      "claimed_by_name": "test_milestone5p_visual_system",
+      "actual_classification": "FIXTURE_INTEGRATION",
+      "characteristics": {
+        "uses_mock": false,
+        "uses_os_live": false,
+        "uses_subprocess": false,
+        "uses_frozen_exe": false,
+        "uses_fixtures": true
+      }
+    },
+    {
+      "file": "test_milestone7a_adaptive_resilience.py",
+      "claimed_by_name": "test_milestone7a_adaptive_resilience",
+      "actual_classification": "MOCK",
+      "characteristics": {
+        "uses_mock": true,
+        "uses_os_live": false,
+        "uses_subprocess": false,
+        "uses_frozen_exe": false,
+        "uses_fixtures": false
+      }
+    },
+    {
+      "file": "test_milestone7b_dynamic_tooling.py",
+      "claimed_by_name": "test_milestone7b_dynamic_tooling",
+      "actual_classification": "SOURCE_TREE_OS",
+      "characteristics": {
+        "uses_mock": true,
+        "uses_os_live": true,
+        "uses_subprocess": true,
+        "uses_frozen_exe": false,
+        "uses_fixtures": false
+      }
+    },
+    {
+      "file": "test_milestone7c_machine_intelligence.py",
+      "claimed_by_name": "test_milestone7c_machine_intelligence",
+      "actual_classification": "MOCK",
+      "characteristics": {
+        "uses_mock": true,
+        "uses_os_live": false,
+        "uses_subprocess": false,
+        "uses_frozen_exe": false,
+        "uses_fixtures": false
+      }
+    },
+    {
+      "file": "test_motion_and_hud_v2.py",
+      "claimed_by_name": "test_motion_and_hud_v2",
+      "actual_classification": "FIXTURE_INTEGRATION",
+      "characteristics": {
+        "uses_mock": false,
+        "uses_os_live": false,
+        "uses_subprocess": false,
+        "uses_frozen_exe": false,
+        "uses_fixtures": true
+      }
+    },
+    {
+      "file": "test_neural_nlp_sandwich.py",
+      "claimed_by_name": "test_neural_nlp_sandwich",
+      "actual_classification": "FIXTURE_INTEGRATION",
+      "characteristics": {
+        "uses_mock": false,
+        "uses_os_live": false,
+        "uses_subprocess": false,
+        "uses_frozen_exe": false,
+        "uses_fixtures": true
+      }
+    },
+    {
+      "file": "test_positioning.py",
+      "claimed_by_name": "test_positioning",
+      "actual_classification": "INTEGRATION",
+      "characteristics": {
+        "uses_mock": false,
+        "uses_os_live": false,
+        "uses_subprocess": false,
+        "uses_frozen_exe": false,
+        "uses_fixtures": false
+      }
+    },
+    {
+      "file": "test_rc0_1_durable_pause_and_discovery.py",
+      "claimed_by_name": "test_rc0_1_durable_pause_and_discovery",
+      "actual_classification": "FIXTURE_INTEGRATION",
+      "characteristics": {
+        "uses_mock": false,
+        "uses_os_live": false,
+        "uses_subprocess": false,
+        "uses_frozen_exe": false,
+        "uses_fixtures": true
+      }
+    },
+    {
+      "file": "test_rc0_power_lifecycle_and_qos.py",
+      "claimed_by_name": "test_rc0_power_lifecycle_and_qos",
+      "actual_classification": "INTEGRATION",
+      "characteristics": {
+        "uses_mock": false,
+        "uses_os_live": false,
+        "uses_subprocess": false,
+        "uses_frozen_exe": false,
+        "uses_fixtures": false
+      }
+    },
+    {
+      "file": "test_rc3_hotfix1.py",
+      "claimed_by_name": "test_rc3_hotfix1",
+      "actual_classification": "INTEGRATION",
+      "characteristics": {
+        "uses_mock": false,
+        "uses_os_live": false,
+        "uses_subprocess": false,
+        "uses_frozen_exe": false,
+        "uses_fixtures": false
+      }
+    },
+    {
+      "file": "test_rc5_product_hardening.py",
+      "claimed_by_name": "test_rc5_product_hardening",
+      "actual_classification": "MOCK",
+      "characteristics": {
+        "uses_mock": true,
+        "uses_os_live": false,
+        "uses_subprocess": false,
+        "uses_frozen_exe": false,
+        "uses_fixtures": true
+      }
+    },
+    {
+      "file": "test_rc6_launcher_hotkey.py",
+      "claimed_by_name": "test_rc6_launcher_hotkey",
+      "actual_classification": "SOURCE_TREE_OS",
+      "characteristics": {
+        "uses_mock": false,
+        "uses_os_live": true,
+        "uses_subprocess": false,
+        "uses_frozen_exe": false,
+        "uses_fixtures": false
+      }
+    },
+    {
+      "file": "test_routing.py",
+      "claimed_by_name": "test_routing",
+      "actual_classification": "FIXTURE_INTEGRATION",
+      "characteristics": {
+        "uses_mock": false,
+        "uses_os_live": false,
+        "uses_subprocess": false,
+        "uses_frozen_exe": false,
+        "uses_fixtures": true
+      }
+    },
+    {
+      "file": "test_search.py",
+      "claimed_by_name": "test_search",
+      "actual_classification": "INTEGRATION",
+      "characteristics": {
+        "uses_mock": false,
+        "uses_os_live": false,
+        "uses_subprocess": false,
+        "uses_frozen_exe": false,
+        "uses_fixtures": false
+      }
+    },
+    {
+      "file": "test_security_regression.py",
+      "claimed_by_name": "test_security_regression",
+      "actual_classification": "MOCK",
+      "characteristics": {
+        "uses_mock": true,
+        "uses_os_live": false,
+        "uses_subprocess": false,
+        "uses_frozen_exe": false,
+        "uses_fixtures": true
+      }
+    },
+    {
+      "file": "test_telemetry.py",
+      "claimed_by_name": "test_telemetry",
+      "actual_classification": "INTEGRATION",
+      "characteristics": {
+        "uses_mock": false,
+        "uses_os_live": false,
+        "uses_subprocess": false,
+        "uses_frozen_exe": false,
+        "uses_fixtures": false
+      }
+    },
+    {
+      "file": "test_tools.py",
+      "claimed_by_name": "test_tools",
+      "actual_classification": "INTEGRATION",
+      "characteristics": {
+        "uses_mock": false,
+        "uses_os_live": false,
+        "uses_subprocess": false,
+        "uses_frozen_exe": false,
+        "uses_fixtures": false
+      }
+    },
+    {
+      "file": "test_ui.py",
+      "claimed_by_name": "test_ui",
+      "actual_classification": "FIXTURE_INTEGRATION",
+      "characteristics": {
+        "uses_mock": false,
+        "uses_os_live": false,
+        "uses_subprocess": false,
+        "uses_frozen_exe": false,
+        "uses_fixtures": true
+      }
+    },
+    {
+      "file": "test_ui_v02.py",
+      "claimed_by_name": "test_ui_v02",
+      "actual_classification": "FIXTURE_INTEGRATION",
+      "characteristics": {
+        "uses_mock": false,
+        "uses_os_live": false,
+        "uses_subprocess": false,
+        "uses_frozen_exe": false,
+        "uses_fixtures": true
+      }
+    },
+    {
+      "file": "test_usage.py",
+      "claimed_by_name": "test_usage",
+      "actual_classification": "INTEGRATION",
+      "characteristics": {
+        "uses_mock": false,
+        "uses_os_live": false,
+        "uses_subprocess": false,
+        "uses_frozen_exe": false,
+        "uses_fixtures": false
+      }
+    },
+    {
+      "file": "test_v0101_hotfix_dwell.py",
+      "claimed_by_name": "test_v0101_hotfix_dwell",
+      "actual_classification": "MOCK",
+      "characteristics": {
+        "uses_mock": true,
+        "uses_os_live": false,
+        "uses_subprocess": false,
+        "uses_frozen_exe": false,
+        "uses_fixtures": true
+      }
+    },
+    {
+      "file": "test_v0101_launcher_hud.py",
+      "claimed_by_name": "test_v0101_launcher_hud",
+      "actual_classification": "MOCK",
+      "characteristics": {
+        "uses_mock": true,
+        "uses_os_live": false,
+        "uses_subprocess": false,
+        "uses_frozen_exe": false,
+        "uses_fixtures": true
+      }
+    },
+    {
+      "file": "test_v0101_resident_lifecycle.py",
+      "claimed_by_name": "test_v0101_resident_lifecycle",
+      "actual_classification": "MOCK",
+      "characteristics": {
+        "uses_mock": true,
+        "uses_os_live": false,
+        "uses_subprocess": false,
+        "uses_frozen_exe": false,
+        "uses_fixtures": false
+      }
+    },
+    {
+      "file": "test_v0102_compound_pipeline.py",
+      "claimed_by_name": "test_v0102_compound_pipeline",
+      "actual_classification": "MOCK",
+      "characteristics": {
+        "uses_mock": true,
+        "uses_os_live": false,
+        "uses_subprocess": false,
+        "uses_frozen_exe": false,
+        "uses_fixtures": true
+      }
+    },
+    {
+      "file": "test_v010_interaction.py",
+      "claimed_by_name": "test_v010_interaction",
+      "actual_classification": "MOCK",
+      "characteristics": {
+        "uses_mock": true,
+        "uses_os_live": false,
+        "uses_subprocess": false,
+        "uses_frozen_exe": false,
+        "uses_fixtures": true
+      }
+    },
+    {
+      "file": "test_v05_ensemble.py",
+      "claimed_by_name": "test_v05_ensemble",
+      "actual_classification": "MOCK",
+      "characteristics": {
+        "uses_mock": true,
+        "uses_os_live": false,
+        "uses_subprocess": false,
+        "uses_frozen_exe": false,
+        "uses_fixtures": true
+      }
+    },
+    {
+      "file": "test_v065_nlp.py",
+      "claimed_by_name": "test_v065_nlp",
+      "actual_classification": "INTEGRATION",
+      "characteristics": {
+        "uses_mock": false,
+        "uses_os_live": false,
+        "uses_subprocess": false,
+        "uses_frozen_exe": false,
+        "uses_fixtures": false
+      }
+    },
+    {
+      "file": "test_v06_actions.py",
+      "claimed_by_name": "test_v06_actions",
+      "actual_classification": "MOCK",
+      "characteristics": {
+        "uses_mock": true,
+        "uses_os_live": false,
+        "uses_subprocess": true,
+        "uses_frozen_exe": false,
+        "uses_fixtures": true
+      }
+    },
+    {
+      "file": "test_v07_capabilities.py",
+      "claimed_by_name": "test_v07_capabilities",
+      "actual_classification": "MOCK",
+      "characteristics": {
+        "uses_mock": true,
+        "uses_os_live": false,
+        "uses_subprocess": true,
+        "uses_frozen_exe": false,
+        "uses_fixtures": true
+      }
+    },
+    {
+      "file": "test_v085_learning.py",
+      "claimed_by_name": "test_v085_learning",
+      "actual_classification": "FIXTURE_INTEGRATION",
+      "characteristics": {
+        "uses_mock": false,
+        "uses_os_live": false,
+        "uses_subprocess": false,
+        "uses_frozen_exe": false,
+        "uses_fixtures": true
+      }
+    },
+    {
+      "file": "test_v08_tasks.py",
+      "claimed_by_name": "test_v08_tasks",
+      "actual_classification": "MOCK",
+      "characteristics": {
+        "uses_mock": true,
+        "uses_os_live": false,
+        "uses_subprocess": true,
+        "uses_frozen_exe": false,
+        "uses_fixtures": true
+      }
+    },
+    {
+      "file": "test_v09_daily_driver.py",
+      "claimed_by_name": "test_v09_daily_driver",
+      "actual_classification": "MOCK",
+      "characteristics": {
+        "uses_mock": true,
+        "uses_os_live": false,
+        "uses_subprocess": false,
+        "uses_frozen_exe": false,
+        "uses_fixtures": true
+      }
+    },
+    {
+      "file": "test_wifi_capabilities.py",
+      "claimed_by_name": "test_wifi_capabilities",
+      "actual_classification": "FIXTURE_INTEGRATION",
+      "characteristics": {
+        "uses_mock": false,
+        "uses_os_live": false,
+        "uses_subprocess": false,
+        "uses_frozen_exe": false,
+        "uses_fixtures": true
+      }
+    },
+    {
+      "file": "unit/test_ast_differential_security.py",
+      "claimed_by_name": "test_ast_differential_security",
+      "actual_classification": "SOURCE_TREE_OS",
+      "characteristics": {
+        "uses_mock": false,
+        "uses_os_live": true,
+        "uses_subprocess": true,
+        "uses_frozen_exe": false,
+        "uses_fixtures": false
+      }
+    },
+    {
+      "file": "unit/test_astra_paths.py",
+      "claimed_by_name": "test_astra_paths",
+      "actual_classification": "MOCK",
+      "characteristics": {
+        "uses_mock": true,
+        "uses_os_live": false,
+        "uses_subprocess": false,
+        "uses_frozen_exe": false,
+        "uses_fixtures": false
+      }
+    },
+    {
+      "file": "unit/test_broker_bidirectional_security.py",
+      "claimed_by_name": "test_broker_bidirectional_security",
+      "actual_classification": "SOURCE_TREE_OS",
+      "characteristics": {
+        "uses_mock": false,
+        "uses_os_live": true,
+        "uses_subprocess": true,
+        "uses_frozen_exe": false,
+        "uses_fixtures": false
+      }
+    },
+    {
+      "file": "unit/test_browser_service.py",
+      "claimed_by_name": "test_browser_service",
+      "actual_classification": "UNIT",
+      "characteristics": {
+        "uses_mock": false,
+        "uses_os_live": false,
+        "uses_subprocess": false,
+        "uses_frozen_exe": false,
+        "uses_fixtures": false
+      }
+    },
+    {
+      "file": "unit/test_c2_2_broker_dry_run_and_revision.py",
+      "claimed_by_name": "test_c2_2_broker_dry_run_and_revision",
+      "actual_classification": "UNIT",
+      "characteristics": {
+        "uses_mock": false,
+        "uses_os_live": false,
+        "uses_subprocess": false,
+        "uses_frozen_exe": false,
+        "uses_fixtures": false
+      }
+    },
+    {
+      "file": "unit/test_c2_2_concurrency_ceiling.py",
+      "claimed_by_name": "test_c2_2_concurrency_ceiling",
+      "actual_classification": "UNIT",
+      "characteristics": {
+        "uses_mock": false,
+        "uses_os_live": false,
+        "uses_subprocess": false,
+        "uses_frozen_exe": false,
+        "uses_fixtures": false
+      }
+    },
+    {
+      "file": "unit/test_c2_2_sealed_artifact_promotion.py",
+      "claimed_by_name": "test_c2_2_sealed_artifact_promotion",
+      "actual_classification": "UNIT",
+      "characteristics": {
+        "uses_mock": false,
+        "uses_os_live": false,
+        "uses_subprocess": false,
+        "uses_frozen_exe": false,
+        "uses_fixtures": false
+      }
+    },
+    {
+      "file": "unit/test_c2_2_trusted_visualization.py",
+      "claimed_by_name": "test_c2_2_trusted_visualization",
+      "actual_classification": "UNIT",
+      "characteristics": {
+        "uses_mock": false,
+        "uses_os_live": false,
+        "uses_subprocess": false,
+        "uses_frozen_exe": false,
+        "uses_fixtures": false
+      }
+    },
+    {
+      "file": "unit/test_c2_2a_adaptive_continuity.py",
+      "claimed_by_name": "test_c2_2a_adaptive_continuity",
+      "actual_classification": "UNIT",
+      "characteristics": {
+        "uses_mock": false,
+        "uses_os_live": false,
+        "uses_subprocess": false,
+        "uses_frozen_exe": false,
+        "uses_fixtures": false
+      }
+    },
+    {
+      "file": "unit/test_c2_2a_missing_security_probes.py",
+      "claimed_by_name": "test_c2_2a_missing_security_probes",
+      "actual_classification": "SOURCE_TREE_OS",
+      "characteristics": {
+        "uses_mock": true,
+        "uses_os_live": true,
+        "uses_subprocess": true,
+        "uses_frozen_exe": false,
+        "uses_fixtures": true
+      }
+    },
+    {
+      "file": "unit/test_c2_adversarial_suite.py",
+      "claimed_by_name": "test_c2_adversarial_suite",
+      "actual_classification": "SOURCE_TREE_OS",
+      "characteristics": {
+        "uses_mock": true,
+        "uses_os_live": true,
+        "uses_subprocess": true,
+        "uses_frozen_exe": false,
+        "uses_fixtures": true
+      }
+    },
+    {
+      "file": "unit/test_capability_manifest_consistency.py",
+      "claimed_by_name": "test_capability_manifest_consistency",
+      "actual_classification": "UNIT",
+      "characteristics": {
+        "uses_mock": false,
+        "uses_os_live": false,
+        "uses_subprocess": false,
+        "uses_frozen_exe": false,
+        "uses_fixtures": false
+      }
+    },
+    {
+      "file": "unit/test_execution_broker.py",
+      "claimed_by_name": "test_execution_broker",
+      "actual_classification": "UNIT",
+      "characteristics": {
+        "uses_mock": false,
+        "uses_os_live": false,
+        "uses_subprocess": false,
+        "uses_frozen_exe": false,
+        "uses_fixtures": false
+      }
+    },
+    {
+      "file": "unit/test_f0_15_resource_lifecycle.py",
+      "claimed_by_name": "test_f0_15_resource_lifecycle",
+      "actual_classification": "SOURCE_TREE_OS",
+      "characteristics": {
+        "uses_mock": true,
+        "uses_os_live": true,
+        "uses_subprocess": false,
+        "uses_frozen_exe": false,
+        "uses_fixtures": true
+      }
+    },
+    {
+      "file": "unit/test_generic_repair_holdout.py",
+      "claimed_by_name": "test_generic_repair_holdout",
+      "actual_classification": "UNIT",
+      "characteristics": {
+        "uses_mock": false,
+        "uses_os_live": false,
+        "uses_subprocess": false,
+        "uses_frozen_exe": false,
+        "uses_fixtures": false
+      }
+    },
+    {
+      "file": "unit/test_memory_service.py",
+      "claimed_by_name": "test_memory_service",
+      "actual_classification": "UNIT",
+      "characteristics": {
+        "uses_mock": false,
+        "uses_os_live": false,
+        "uses_subprocess": false,
+        "uses_frozen_exe": false,
+        "uses_fixtures": false
+      }
+    },
+    {
+      "file": "unit/test_post_freeze_routing_holdout.py",
+      "claimed_by_name": "test_post_freeze_routing_holdout",
+      "actual_classification": "UNIT",
+      "characteristics": {
+        "uses_mock": false,
+        "uses_os_live": false,
+        "uses_subprocess": false,
+        "uses_frozen_exe": false,
+        "uses_fixtures": false
+      }
+    },
+    {
+      "file": "unit/test_unseen_intent_routing.py",
+      "claimed_by_name": "test_unseen_intent_routing",
+      "actual_classification": "UNIT",
+      "characteristics": {
+        "uses_mock": false,
+        "uses_os_live": false,
+        "uses_subprocess": false,
+        "uses_frozen_exe": false,
+        "uses_fixtures": false
+      }
+    }
+  ]
+}

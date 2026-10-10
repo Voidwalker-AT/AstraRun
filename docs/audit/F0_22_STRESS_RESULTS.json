@@ -1,0 +1,19 @@
+{
+  "timestamp": "2026-10-09T20:44:36.252893+00:00",
+  "phase": "F0-22",
+  "metrics": {
+    "semantic_requests_evaluated": 110,
+    "semantic_requests_passed": 110,
+    "entity_resolution_evaluated": 55,
+    "entity_resolution_passed": 55,
+    "goal_contracts_evaluated": 52,
+    "goal_contracts_preserved": 52,
+    "replan_cases_evaluated": 100,
+    "replan_cases_recovered_monotonically": 100,
+    "false_completion_count": 0,
+    "false_completion_rate": 0.0,
+    "wrong_action_count": 0,
+    "unrequested_side_effects": 0,
+    "security_bypasses": 0
+  }
+}

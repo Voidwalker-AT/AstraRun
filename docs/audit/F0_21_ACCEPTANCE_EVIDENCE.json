@@ -1,0 +1,608 @@
+{
+  "timestamp": "2026-10-09T16:09:14.135904+00:00",
+  "phase": "F0-21",
+  "objective": "Goal-Preserving Agent Intelligence",
+  "tests": {
+    "test_1_human_observed_reproduction": {
+      "status": "PASS",
+      "prompt": "open notepad type hello and save it to desktop with name test1.txt",
+      "contract": {
+        "contract_id": "gc_3fa8431a",
+        "original_utterance": "open notepad type hello and save it to desktop with name test1.txt",
+        "objective": "PRODUCE_DOCUMENT",
+        "target_application": "notepad",
+        "target_artifact": "test1.txt",
+        "target_location": "Desktop",
+        "entities": {
+          "artifact": "test1.txt",
+          "location": "Desktop",
+          "content": "hello",
+          "application": "notepad"
+        },
+        "constraints": [
+          {
+            "constraint_id": "c_7cc055",
+            "constraint_type": "TARGET_ARTIFACT",
+            "description": "Artifact named test1.txt",
+            "target_key": "artifact",
+            "expected_value": "test1.txt",
+            "status": "SATISFIED",
+            "is_mandatory": true,
+            "evidence": {}
+          },
+          {
+            "constraint_id": "c_2f031c",
+            "constraint_type": "OUTPUT_LOCATION",
+            "description": "Output location Desktop",
+            "target_key": "location",
+            "expected_value": "Desktop",
+            "status": "SATISFIED",
+            "is_mandatory": true,
+            "evidence": {}
+          },
+          {
+            "constraint_id": "c_73da95",
+            "constraint_type": "REQUIRED_CONTENT",
+            "description": "Required content 'hello'",
+            "target_key": "content",
+            "expected_value": "hello",
+            "status": "SATISFIED",
+            "is_mandatory": true,
+            "evidence": {}
+          },
+          {
+            "constraint_id": "c_65bb51",
+            "constraint_type": "TARGET_APPLICATION",
+            "description": "Target application notepad",
+            "target_key": "app",
+            "expected_value": "notepad",
+            "status": "SATISFIED",
+            "is_mandatory": false,
+            "evidence": {}
+          }
+        ],
+        "acceptance_predicates": [
+          {
+            "predicate_id": "pred_bdeaa2",
+            "predicate_type": "FILE_EXISTS",
+            "description": "File exists at C:\\Users\\hp\\Desktop\\test1.txt",
+            "parameters": {
+              "path": "C:\\Users\\hp\\Desktop\\test1.txt"
+            },
+            "is_mandatory": true,
+            "status": "SATISFIED",
+            "evidence": {},
+            "error_message": null
+          },
+          {
+            "predicate_id": "pred_f9ee87",
+            "predicate_type": "FILE_NON_EMPTY",
+            "description": "File is non-empty at C:\\Users\\hp\\Desktop\\test1.txt",
+            "parameters": {
+              "path": "C:\\Users\\hp\\Desktop\\test1.txt"
+            },
+            "is_mandatory": true,
+            "status": "SATISFIED",
+            "evidence": {},
+            "error_message": null
+          },
+          {
+            "predicate_id": "pred_727ca0",
+            "predicate_type": "FILE_CONTENT_CONTAINS",
+            "description": "File contains 'hello'",
+            "parameters": {
+              "path": "C:\\Users\\hp\\Desktop\\test1.txt",
+              "contains": "hello"
+            },
+            "is_mandatory": true,
+            "status": "SATISFIED",
+            "evidence": {},
+            "error_message": null
+          }
+        ],
+        "forbidden_outcomes": [],
+        "provenance": {
+          "parser": "GoalPlanner.extract_goal_contract"
+        },
+        "created_at": 1791562154.1378152
+      },
+      "steps": [
+        {
+          "step_id": "step_1",
+          "capability_id": "open_application",
+          "arguments": {
+            "app": "notepad"
+          },
+          "argument_bindings": {
+            "app": {
+              "parameter": "app",
+              "value": "notepad",
+              "source_type": "USER_TEXT",
+              "source_reference": "open notepad",
+              "confidence": 1.0
+            }
+          },
+          "description": "Launch a verified local application executable",
+          "human_label": "Launch a verified local application executable",
+          "state": "COMPLETED",
+          "dependencies": [],
+          "condition": null,
+          "interaction_tier": "TIER_A_NATIVE",
+          "interaction_requirement": "EITHER",
+          "verifier_strategy": "WINDOW_READY",
+          "verifier_params": {
+            "app": "notepad"
+          },
+          "satisfies_predicates": [
+            "APPLICATION_RUNNING",
+            "WINDOW_ACTIVE"
+          ],
+          "requires_predicates": [],
+          "declared_effects": [
+            "SPAWNS_PROCESS",
+            "MODIFIES_WINDOW"
+          ],
+          "result": {
+            "success": true,
+            "capability": "open_application",
+            "message": "Application 'notepad' launched successfully (PID=2740, HWND=6491572).",
+            "data": {
+              "app": "notepad",
+              "path": "C:\\WINDOWS\\notepad.exe",
+              "resource_id": "74bdfa78-dd41-4cb5-a975-7d039f0fe39e",
+              "pid": 2740,
+              "hwnd": 6491572,
+              "astra_created": true,
+              "process_creation_time": 1791562154.895425
+            },
+            "error": null,
+            "error_code": null,
+            "context_updates": [],
+            "provenance": {},
+            "latency_ms": 1082.133000018075
+          },
+          "observation": {
+            "observation_id": "obs_4e2d50d6",
+            "step_id": "step_1",
+            "timestamp": 1791562155.2948694,
+            "machine_state": {
+              "timestamp": 1791562155.2437568,
+              "foreground": {
+                "hwnd": 6491572,
+                "title": "Notepad",
+                "pid": 2740
+              },
+              "power": {
+                "available": true,
+                "ac_connected": true,
+                "battery_pct": 100,
+                "battery_flag": 1
+              },
+              "wifi": {
+                "connected": true,
+                "ssid": "JioFiber-home5G",
+                "signal_quality": 71
+              }
+            },
+            "raw_output": "{'app': 'notepad', 'path': 'C:\\\\WINDOWS\\\\notepad.exe', 'resource_id': '74bdfa78-dd41-4cb5-a975-7d039f0fe39e', 'pid': 2740, 'hwnd': 6491572, 'astra_created': True, 'process_creation_time': 1791562154.895425}",
+            "extracted_facts": {
+              "foreground_window": "Notepad",
+              "foreground_hwnd": 6491572
+            },
+            "tier": "TIER_A_NATIVE",
+            "source": "general",
+            "confidence": 1.0,
+            "freshness_ttl_s": 60.0,
+            "is_fresh": true
+          },
+          "verification": {
+            "step_id": "step_1",
+            "verifier_strategy": "WINDOW_READY",
+            "verified": true,
+            "message": "Target window (HWND 6491572) is valid and visible.",
+            "evidence": {
+              "hwnd": 6491572,
+              "is_window": true,
+              "is_visible": true
+            },
+            "timestamp": 1791562155.2953465,
+            "duration_ms": 0.1272000081371516
+          },
+          "retry_count": 0,
+          "max_retries": 1,
+          "started_at": 1791562154.1549416,
+          "completed_at": 1791562155.2960393,
+          "duration_ms": 1141.0869000246748,
+          "error": null,
+          "weight": 1.0
+        },
+        {
+          "step_id": "step_2",
+          "capability_id": "type_into_window",
+          "arguments": {
+            "text": "hello",
+            "hwnd": 0,
+            "app_name": "notepad",
+            "window": "C:\\WINDOWS\\notepad.exe"
+          },
+          "argument_bindings": {
+            "text": {
+              "parameter": "text",
+              "value": "hello",
+              "source_type": "USER_TEXT",
+              "source_reference": "type hello",
+              "confidence": 1.0
+            },
+            "hwnd": {
+              "parameter": "hwnd",
+              "value": 0,
+              "source_type": "USER_TEXT",
+              "source_reference": "type hello",
+              "confidence": 1.0
+            },
+            "window": {
+              "parameter": "window",
+              "value": "C:\\WINDOWS\\notepad.exe",
+              "source_type": "PREVIOUS_STEP",
+              "source_reference": "step_1.application_out",
+              "confidence": 1.0
+            }
+          },
+          "description": "Type literal text into the active/focused control without shell evaluation",
+          "human_label": "Type literal text into the active/focused control without shell evaluation",
+          "state": "COMPLETED",
+          "dependencies": [
+            {
+              "step_id": "step_1",
+              "required_state": "COMPLETED",
+              "data_mapping": {}
+            }
+          ],
+          "condition": null,
+          "interaction_tier": "TIER_C_UI_AUTOMATION",
+          "interaction_requirement": "APPLICATION_UI",
+          "verifier_strategy": "RETURN_CODE_ONLY",
+          "verifier_params": {
+            "text": "hello",
+            "hwnd": 0,
+            "app_name": "notepad",
+            "window": "C:\\WINDOWS\\notepad.exe"
+          },
+          "satisfies_predicates": [
+            "DOCUMENT_CONTENT_WRITTEN"
+          ],
+          "requires_predicates": [
+            "WINDOW_ACTIVE"
+          ],
+          "declared_effects": [
+            "WRITES_CONTENT",
+            "MODIFIES_WINDOW"
+          ],
+          "result": {
+            "success": true,
+            "capability": "type_into_window",
+            "message": "Entered 5 characters.",
+            "data": {
+              "length": 5,
+              "hwnd": 6491572,
+              "text": "hello",
+              "result": "hello"
+            },
+            "error": null,
+            "error_code": null,
+            "context_updates": [],
+            "provenance": {},
+            "latency_ms": 3921.9008999934886
+          },
+          "observation": {
+            "observation_id": "obs_6d06584d",
+            "step_id": "step_2",
+            "timestamp": 1791562159.2598271,
+            "machine_state": {
+              "timestamp": 1791562159.2260628,
+              "foreground": {
+                "hwnd": 6491572,
+                "title": "*hellohello - Notepad",
+                "pid": 2740
+              },
+              "power": {
+                "available": true,
+                "ac_connected": true,
+                "battery_pct": 100,
+                "battery_flag": 1
+              },
+              "wifi": {
+                "connected": true,
+                "ssid": "JioFiber-home5G",
+                "signal_quality": 71
+              }
+            },
+            "raw_output": "{'length': 5, 'hwnd': 6491572, 'text': 'hello', 'result': 'hello'}",
+            "extracted_facts": {
+              "foreground_window": "*hellohello - Notepad",
+              "foreground_hwnd": 6491572
+            },
+            "tier": "TIER_C_UI_AUTOMATION",
+            "source": "general",
+            "confidence": 1.0,
+            "freshness_ttl_s": 60.0,
+            "is_fresh": true
+          },
+          "verification": {
+            "step_id": "step_2",
+            "verifier_strategy": "RETURN_CODE_ONLY",
+            "verified": true,
+            "message": "Return code succeeded.",
+            "evidence": {
+              "result_message": "Entered 5 characters."
+            },
+            "timestamp": 1791562159.2598994,
+            "duration_ms": 0.008100003469735384
+          },
+          "retry_count": 0,
+          "max_retries": 1,
+          "started_at": 1791562155.296299,
+          "completed_at": 1791562159.260122,
+          "duration_ms": 3963.7699000013527,
+          "error": null,
+          "weight": 1.0
+        },
+        {
+          "step_id": "step_3",
+          "capability_id": "save_text_file",
+          "arguments": {
+            "path": "C:\\Users\\hp\\Desktop\\test1.txt",
+            "filename": "test1.txt",
+            "folder": "desktop",
+            "app_name": "notepad",
+            "text": "hello",
+            "content": "hello"
+          },
+          "argument_bindings": {
+            "path": {
+              "parameter": "path",
+              "value": "C:\\Users\\hp\\Desktop\\test1.txt",
+              "source_type": "USER_TEXT",
+              "source_reference": "save it to desktop with name test1.txt",
+              "confidence": 1.0
+            },
+            "filename": {
+              "parameter": "filename",
+              "value": "test1.txt",
+              "source_type": "USER_TEXT",
+              "source_reference": "save it to desktop with name test1.txt",
+              "confidence": 1.0
+            },
+            "folder": {
+              "parameter": "folder",
+              "value": "desktop",
+              "source_type": "USER_TEXT",
+              "source_reference": "save it to desktop with name test1.txt",
+              "confidence": 1.0
+            }
+          },
+          "description": "Save or write text content to a destination file on disk",
+          "human_label": "Save text to C:\\Users\\hp\\Desktop\\test1.txt",
+          "state": "COMPLETED",
+          "dependencies": [
+            {
+              "step_id": "step_2",
+              "required_state": "COMPLETED",
+              "data_mapping": {}
+            }
+          ],
+          "condition": null,
+          "interaction_tier": "TIER_A_NATIVE",
+          "interaction_requirement": "EITHER",
+          "verifier_strategy": "FILE_NON_EMPTY",
+          "verifier_params": {
+            "path": "C:\\Users\\hp\\Desktop\\test1.txt",
+            "filename": "test1.txt",
+            "folder": "desktop",
+            "app_name": "notepad",
+            "text": "hello",
+            "content": "hello"
+          },
+          "satisfies_predicates": [
+            "FILE_EXISTS",
+            "FILE_NON_EMPTY",
+            "FILE_CONTENT_CONTAINS"
+          ],
+          "requires_predicates": [],
+          "declared_effects": [
+            "CREATES_FILE",
+            "MODIFIES_FILE",
+            "WRITES_CONTENT"
+          ],
+          "result": {
+            "success": true,
+            "capability": "save_text_file",
+            "message": "Saved text to 'C:\\Users\\hp\\Desktop\\test1.txt'.",
+            "data": {
+              "path": "C:\\Users\\hp\\Desktop\\test1.txt",
+              "filename": "test1.txt",
+              "output_file": "C:\\Users\\hp\\Desktop\\test1.txt",
+              "bytes_written": 5
+            },
+            "error": null,
+            "error_code": null,
+            "context_updates": [],
+            "provenance": {},
+            "latency_ms": 1.779600017471239
+          },
+          "observation": {
+            "observation_id": "obs_c4bffa5c",
+            "step_id": "step_3",
+            "timestamp": 1791562159.3021438,
+            "machine_state": {
+              "timestamp": 1791562159.26725,
+              "foreground": {
+                "hwnd": 6491572,
+                "title": "*hellohello - Notepad",
+                "pid": 2740
+              },
+              "power": {
+                "available": true,
+                "ac_connected": true,
+                "battery_pct": 100,
+                "battery_flag": 1
+              },
+              "wifi": {
+                "connected": true,
+                "ssid": "JioFiber-home5G",
+                "signal_quality": 71
+              }
+            },
+            "raw_output": "{'path': 'C:\\\\Users\\\\hp\\\\Desktop\\\\test1.txt', 'filename': 'test1.txt', 'output_file': 'C:\\\\Users\\\\hp\\\\Desktop\\\\test1.txt', 'bytes_written': 5}",
+            "extracted_facts": {
+              "foreground_window": "*hellohello - Notepad",
+              "foreground_hwnd": 6491572
+            },
+            "tier": "TIER_A_NATIVE",
+            "source": "general",
+            "confidence": 1.0,
+            "freshness_ttl_s": 60.0,
+            "is_fresh": true
+          },
+          "verification": {
+            "step_id": "step_3",
+            "verifier_strategy": "FILE_NON_EMPTY",
+            "verified": true,
+            "message": "Verified file exists and is non-empty (5 bytes).",
+            "evidence": {
+              "path": "C:\\Users\\hp\\Desktop\\test1.txt",
+              "exists": true,
+              "size_bytes": 5
+            },
+            "timestamp": 1791562159.3023713,
+            "duration_ms": 0.1823000202421099
+          },
+          "retry_count": 0,
+          "max_retries": 1,
+          "started_at": 1791562159.260272,
+          "completed_at": 1791562159.3025618,
+          "duration_ms": 42.223700002068654,
+          "error": null,
+          "weight": 1.0
+        }
+      ],
+      "physical_artifact": {
+        "path": "C:\\Users\\hp\\Desktop\\test1.txt",
+        "size_bytes": 5,
+        "sha256": "2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824",
+        "content": "hello"
+      },
+      "goal_verification": {
+        "status": "GOAL_COMPLETED",
+        "completed": true,
+        "message": "All goal contract acceptance predicates satisfied.",
+        "missing_criteria": [],
+        "evidence": {
+          "file_exists_pred_bdeaa2": {
+            "path": "C:\\Users\\hp\\Desktop\\test1.txt",
+            "exists": true,
+            "size": 5
+          },
+          "file_non_empty_pred_f9ee87": {
+            "path": "C:\\Users\\hp\\Desktop\\test1.txt",
+            "exists": true,
+            "size": 5,
+            "non_empty": true
+          },
+          "file_content_pred_727ca0": {
+            "path": "C:\\Users\\hp\\Desktop\\test1.txt",
+            "contains": true,
+            "expected": "hello"
+          }
+        }
+      }
+    },
+    "test_2_paraphrase_invariance": {
+      "status": "PASS",
+      "variants": [
+        {
+          "prompt": "open notepad type hello and save it to desktop with name test1.txt",
+          "contract_artifact": "test1.txt",
+          "contract_content": "hello",
+          "plan_steps_count": 3,
+          "save_has_content": true
+        },
+        {
+          "prompt": "open notepad and type hello and save it to desktop as test1.txt",
+          "contract_artifact": "test1.txt",
+          "contract_content": "hello",
+          "plan_steps_count": 3,
+          "save_has_content": true
+        },
+        {
+          "prompt": "launch notepad, write hello, save to desktop named test1.txt",
+          "contract_artifact": "test1.txt",
+          "contract_content": "hello",
+          "plan_steps_count": 3,
+          "save_has_content": true
+        },
+        {
+          "prompt": "open notepad, type 'hello', save it on desktop with name test1.txt",
+          "contract_artifact": "test1.txt",
+          "contract_content": "hello",
+          "plan_steps_count": 3,
+          "save_has_content": true
+        },
+        {
+          "prompt": "start notepad type hello and save it in desktop as test1.txt",
+          "contract_artifact": "test1.txt",
+          "contract_content": "hello",
+          "plan_steps_count": 3,
+          "save_has_content": true
+        },
+        {
+          "prompt": "open notepad and type \"hello\" and save to desktop with name test1.txt",
+          "contract_artifact": "test1.txt",
+          "contract_content": "hello",
+          "plan_steps_count": 3,
+          "save_has_content": true
+        }
+      ]
+    },
+    "test_3_information_loss_prevention": {
+      "status": "PASS",
+      "validation_result": {
+        "status": "INVALID",
+        "is_valid": false,
+        "issues": [
+          "Information-loss detected: Required content 'hello' is not addressed in any proposed plan step."
+        ],
+        "clarification_prompt": null
+      }
+    },
+    "test_4_recovery_monotonicity": {
+      "status": "PASS",
+      "rejected_substitutions": [
+        "open_folder",
+        "reveal_file"
+      ],
+      "valid_replan": {
+        "revision_id": "rev_4d87f4ae",
+        "task_id": "task_e83a5fbe",
+        "previous_plan_version": 1,
+        "new_plan_version": 2,
+        "reason": "Step 'step_3' (save_text_file) failed; dynamically substituted with 'save_document_via_ui' advancing unsatisfied predicates: ['FILE_EXISTS', 'FILE_NON_EMPTY', 'FILE_CONTENT_CONTAINS'].",
+        "observation_ids": [],
+        "added_steps": [
+          "step_replan_9a5ca4"
+        ],
+        "removed_steps": [
+          "step_3"
+        ],
+        "modified_dependencies": {},
+        "timestamp": 1791562159.5018497
+      }
+    },
+    "test_5_stress_corpus": {
+      "status": "PASS",
+      "total_requests": 105,
+      "false_completions": 0,
+      "false_completion_rate": 0.0
+    }
+  }
+}

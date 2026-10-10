@@ -1,0 +1,146 @@
+{
+  "source_commit": "96b651b795d6c2a96f7044489284feb35a63f760",
+  "source_tree_hash": "a569fa66a47970248dfedf0d6a4840cd74da90798fff745418d3967d17eff62c",
+  "exe_path": "E:\\Workspace\\Active\\AstraRun\\dist\\AstraRun\\AstraRun.exe",
+  "exe_sha256": "E2EEC375B5257BD6B477F3E96B0A5463465E0BD733F0BF7DB1A46F081730C08C",
+  "exe_size_bytes": 77365418,
+  "installer_path": "E:\\Workspace\\Active\\AstraRun\\dist\\installer\\AstraRun-Setup-1.0.0-rc.6-dogfood.exe",
+  "installer_sha256": "C89BA285CF1496C9850823A537EB9A5335193675AF7D497141EA889C364B1117",
+  "installer_size_bytes": 267838579,
+  "installed_exe_path": "C:\\Users\\hp\\AppData\\Local\\Programs\\AstraRun\\AstraRun.exe",
+  "installed_exe_sha256": "E2EEC375B5257BD6B477F3E96B0A5463465E0BD733F0BF7DB1A46F081730C08C",
+  "installed_exe_size_bytes": 77365418,
+  "build_timestamp": "2026-10-08T15:29:48.875845+00:00",
+  "audit_timestamp": "2026-10-08T15:50:48.955814+00:00",
+  "host": {
+    "platform": "Windows-11-10.0.26200-SP0",
+    "machine": "AMD64",
+    "python": "3.13.0"
+  },
+  "cwd_independence": {
+    "pass": true,
+    "cwd_tested": "C:\\Windows\\System32",
+    "exit_code": 0,
+    "system32_data_created": false,
+    "latency_ms": 2792.6050999958534
+  },
+  "laya_frozen_smoke": {
+    "pass": true,
+    "intent_returned": "open_app",
+    "confidence": 0.5452,
+    "probabilities": {
+      "open_app": 0.7265,
+      "open_folder": 0.005,
+      "open_url": 0.0341,
+      "open_project": 0.0151,
+      "find_file": 0.0067,
+      "process_action": 0.0221,
+      "system_action": 0.0212,
+      "ai_query": 0.0096,
+      "browser_action": 0.1324,
+      "unknown": 0.0273
+    },
+    "exit_code": 0,
+    "latency_ms": 8943.484299990814,
+    "raw_response": {
+      "id": "smoke-laya-f016",
+      "intent": "open_app",
+      "confidence": 0.5452,
+      "probabilities": {
+        "open_app": 0.7265,
+        "open_folder": 0.005,
+        "open_url": 0.0341,
+        "open_project": 0.0151,
+        "find_file": 0.0067,
+        "process_action": 0.0221,
+        "system_action": 0.0212,
+        "ai_query": 0.0096,
+        "browser_action": 0.1324,
+        "unknown": 0.0273
+      },
+      "raw_result": {
+        "model": "laya-rl-agent",
+        "answers": {
+          "intent": {
+            "type": "choice",
+            "choice": "open_app",
+            "probabilities": {
+              "open_app": 0.7265,
+              "open_folder": 0.005,
+              "open_url": 0.0341,
+              "open_project": 0.0151,
+              "find_file": 0.0067,
+              "process_action": 0.0221,
+              "system_action": 0.0212,
+              "ai_query": 0.0096,
+              "browser_action": 0.1324,
+              "unknown": 0.0273
+            },
+            "confidence": 0.5452,
+            "answer_confidence": 0.7265,
+            "action": {
+              "act_probability": 1.0
+            }
+          }
+        },
+        "usage": {
+          "input_tokens": 144,
+          "output_tokens": 0
+        }
+      },
+      "latency_ms": 676.03,
+      "error": null
+    },
+    "torchvision_nms_error": false,
+    "evidence_class": "FROZEN_EXE_AUTOMATED"
+  },
+  "local_model_smoke": {
+    "pass": true,
+    "model": "Spark-X2.5-1.7B-Q4_K_M.gguf",
+    "backend": "http://127.0.0.1:8090",
+    "intent": "calculator",
+    "confidence": 0.98,
+    "entities": {
+      "action": "open",
+      "target": "calculator",
+      "value": "58 + 42"
+    },
+    "reasoning": "The query explicitly requests opening a calculator and performing a simple arithmetic calculation, which matches the intent of calculator operation.",
+    "latency_ms": 5668.962399999145,
+    "evidence_class": "FROZEN_EXE_AUTOMATED"
+  },
+  "resident_smoke": {
+    "pass": true,
+    "pid": 20428,
+    "startup_latency_seconds": 2.3245222568511963,
+    "residency_duration_seconds": 10.0,
+    "tray_active": true,
+    "hotkey_registered": "Alt+Space",
+    "no_console_window": true,
+    "evidence_class": "FROZEN_EXE_AUTOMATED"
+  },
+  "alt_space_smoke": {
+    "pass": 1,
+    "launcher_hwnd": 2034298,
+    "hwnd_exists": true,
+    "hwnd_visible": true,
+    "ipc_response": {
+      "status": "OK",
+      "command": "SHOW_MAIN_UI",
+      "action": "SHOW_MAIN_UI_TRIGGERED"
+    },
+    "evidence_class": "FROZEN_EXE_AUTOMATED"
+  },
+  "lifecycle_frozen_smoke": {
+    "pass": true,
+    "resource_id": "a5a8f0ef-4250-45fc-9770-23ed3bd3575d",
+    "pid": 7884,
+    "hwnd": 2755276,
+    "astra_created": true,
+    "closed_cleanly": true,
+    "evidence_class": "FROZEN_EXE_AUTOMATED"
+  },
+  "log_path": "C:\\Users\\hp\\AppData\\Local\\AstraRun\\logs\\astrarun.log",
+  "automated_verdict": "PASS",
+  "human_verdict": "PENDING"
+}

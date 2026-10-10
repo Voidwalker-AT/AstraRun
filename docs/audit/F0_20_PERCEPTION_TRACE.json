@@ -1,0 +1,36 @@
+{
+  "test": "acceptance_f_screen_understanding_proof",
+  "status": "PASS",
+  "observation_a": {
+    "window_hwnd": 1510440,
+    "bounds": [
+      166,
+      234,
+      622,
+      442
+    ],
+    "target_click_point": [
+      477,
+      455
+    ]
+  },
+  "observation_b": {
+    "window_hwnd": 1510440,
+    "bounds": [
+      373,
+      409,
+      587,
+      287
+    ],
+    "target_click_point": [
+      666,
+      552
+    ]
+  },
+  "delta_coordinates": [
+    189,
+    97
+  ],
+  "causal_difference_proven": true,
+  "latency_sec": 2.797
+}

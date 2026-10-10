@@ -1,0 +1,66 @@
+{
+  "milestone": "F0-17",
+  "description": "Production routing fix verification for natural language 'can u open calculator'",
+  "commit_sha": "96b651b795d6c2a96f7044489284feb35a63f760",
+  "source_tree_hash": "600939d1e2b34da6fad1ef7192555d0d32195c16af94c000f4d774fb7e460091",
+  "installed_exe_path": "C:\\Users\\hp\\AppData\\Local\\Programs\\AstraRun\\AstraRun.exe",
+  "installed_exe_sha256": "9C511E1F1BCA3C30D8043864DA0EE593A1DA5406647DBAA34C1C865CCBF9225F",
+  "installed_exe_size_bytes": 77369548,
+  "installer_path": "E:\\Workspace\\Active\\AstraRun\\dist\\installer\\AstraRun-Setup-1.0.0-rc.6-dogfood.exe",
+  "installer_sha256": "649E48569E67904823304995DC2F747F7BDED96F5F7618AB79F3FAA89C269474",
+  "installer_size_bytes": 280463477,
+  "test_timestamp": "2026-10-08T19:08:28.222192+00:00",
+  "human_reported_defect": {
+    "query": "can u open calculator",
+    "previous_observed_error": "Blocked: Blocked: Target tool 'unknown' is not registered",
+    "expected_outcome": "Calculator window opens without error; registered in AstraResourceLedger"
+  },
+  "tests": {
+    "headless_routing": {
+      "pass": true,
+      "command": "can u open calculator",
+      "exit_code": 0,
+      "latency_ms": 3623.1226999952924,
+      "calculator_procs_count": 1,
+      "ledger_resource_count": 1,
+      "ledger_resource_id": "90c987af-f252-49c3-b21c-fa272c260509",
+      "ledger_pid": 8036,
+      "ledger_hwnd": 2820986,
+      "astra_created": true,
+      "unknown_tool_error_absent": true
+    },
+    "gui_ipc_routing": {
+      "pass": true,
+      "query": "can u open calculator",
+      "resident_pid": 13908,
+      "ipc_summon_response": {
+        "status": "OK",
+        "command": "SHOW_MAIN_UI",
+        "action": "SHOW_MAIN_UI_TRIGGERED"
+      },
+      "ipc_execute_response": {
+        "status": "OK",
+        "command": "EXECUTE_COMMAND",
+        "action": "QUERY_SUBMITTED",
+        "query": "can u open calculator"
+      },
+      "calculator_procs_count": 1,
+      "ledger_resource_count": 1,
+      "ledger_resource_id": "05ff3f00-874b-4e6b-80f6-968a867ab241",
+      "ledger_pid": 19592,
+      "ledger_hwnd": null,
+      "astra_created": true,
+      "unknown_tool_error_absent": true,
+      "clean_shutdown_exit_code": 0,
+      "abnormal_termination_detected": false
+    }
+  },
+  "overall_verdict": "PASS",
+  "human_verification_status": "READY_FOR_HUMAN_RETEST",
+  "instructions_for_user": [
+    "1. Launch AstraRun from the Start Menu or desktop shortcut.",
+    "2. Press Alt+Space to summon the launcher.",
+    "3. Type 'can u open calculator' and press Enter.",
+    "4. Confirm that Calculator opens promptly and no 'Blocked' error appears."
+  ]
+}

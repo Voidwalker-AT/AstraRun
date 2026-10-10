@@ -1,0 +1,114 @@
+{
+  "phase": "F0-18",
+  "title": "Universal Computer-Use Architecture, Semantic Entity Resolution & General Agent Execution",
+  "status": "READY_FOR_HUMAN_RETEST",
+  "timestamp": "2026-10-09T03:20:00+05:30",
+  "platform": {
+    "os": "Windows 11 Build 26200",
+    "cpu": "Intel Core i5-12450H (8 cores / 12 threads)",
+    "ram_total_gb": 16,
+    "gpu": "NVIDIA GeForce RTX 2050 Mobile (4 GB VRAM)",
+    "vram_limit_mb": 4096
+  },
+  "provenance": {
+    "baseline_git_commit": "96b651b795d6c2a96f7044489284feb35a63f760",
+    "source_tree_hash_sha256": "ef89661d95a527f8344e3a2140e14777a892da25ce7de9a5f33ca9e5e677970e",
+    "dist_executable": {
+      "path": "E:\\Workspace\\Active\\AstraRun\\dist\\AstraRun\\AstraRun.exe",
+      "size_bytes": 77397985,
+      "sha256": "54F6D6C4A4E48641F0D8D866CDA2D2B6E30F65366814D538EDDC02714B8A06EA"
+    },
+    "installer_executable": {
+      "path": "E:\\Workspace\\Active\\AstraRun\\dist\\installer\\AstraRun-Setup-1.0.0-rc.6-dogfood.exe",
+      "size_bytes": 280461259,
+      "sha256": "197BB721ED2C2FC50E42D2A794D5D92FF8853C282895BFD4FEA07EF3225C0418"
+    },
+    "installed_target_executable": {
+      "path": "C:\\Users\\hp\\AppData\\Local\\Programs\\AstraRun\\AstraRun.exe",
+      "size_bytes": 77397985,
+      "sha256": "54F6D6C4A4E48641F0D8D866CDA2D2B6E30F65366814D538EDDC02714B8A06EA"
+    }
+  },
+  "verified_capabilities": {
+    "count": 84,
+    "registry_status": "FUNCTIONAL",
+    "action_gate": "ENFORCED",
+    "execution_broker": "ENFORCED",
+    "resource_ledger": "ACTIVE_WITH_LIFECYCLE_PROTECTION"
+  },
+  "automated_verification_matrix": [
+    {
+      "test_suite": "tests/test_f0_18_computer_use_generalization.py",
+      "total_tests": 18,
+      "passed": 18,
+      "failed": 0,
+      "status": "PASSED"
+    },
+    {
+      "test_suite": "tests/test_f0_17_production_routing.py",
+      "total_tests": 26,
+      "passed": 26,
+      "failed": 0,
+      "status": "PASSED"
+    },
+    {
+      "test_suite": "tests/test_v07_capabilities.py",
+      "total_tests": 43,
+      "passed": 43,
+      "failed": 0,
+      "status": "PASSED"
+    }
+  ],
+  "frozen_product_acceptance_probes": [
+    {
+      "command": "can u open calculator",
+      "target_binary": "C:\\Users\\hp\\AppData\\Local\\Programs\\AstraRun\\AstraRun.exe",
+      "result_status": "SUCCESS",
+      "exit_code": 0,
+      "observed_output": "Application 'calc' launched successfully (PID=11340, HWND=1639806).",
+      "lifecycle_ledger_entry": "Resource registered in SQLite ledger (type=APPLICATION, astra_created=True, policy=AUTO_CLOSE_ON_COMPLETION)"
+    },
+    {
+      "command": "can u close calculator",
+      "target_binary": "C:\\Users\\hp\\AppData\\Local\\Programs\\AstraRun\\AstraRun.exe",
+      "result_status": "SUCCESS",
+      "exit_code": 0,
+      "observed_output": "Closed 1 Astra-owned instance(s) of 'calculator'.",
+      "lifecycle_ledger_entry": "Win32 WM_CLOSE posted to HWND 1639806, ledger updated to CLOSED, user pre-existing windows untouched"
+    },
+    {
+      "command": "don't open calculator",
+      "target_binary": "C:\\Users\\hp\\AppData\\Local\\Programs\\AstraRun\\AstraRun.exe",
+      "result_status": "SUCCESS_BLOCKED",
+      "exit_code": 1,
+      "observed_output": "Action blocked: Request contains negation for 'don't open calculator'.",
+      "security_boundary": "Deterministic router negation guard intercepted request before OS capability dispatch"
+    },
+    {
+      "command": "is vlc installed",
+      "target_binary": "C:\\Users\\hp\\AppData\\Local\\Programs\AstraRun\\AstraRun.exe",
+      "result_status": "SUCCESS",
+      "exit_code": 0,
+      "observed_output": "Yes, Vlc is installed at C:\\Program Files\\VideoLAN\\VLC\\vlc.exe.",
+      "entity_resolution": "SemanticEntityResolver resolved canonical executable stem without picking reset or cache utilities"
+    },
+    {
+      "command": "calculate 15 * 4",
+      "target_binary": "C:\\Users\\hp\\AppData\\Local\\Programs\\AstraRun\\AstraRun.exe",
+      "result_status": "SUCCESS",
+      "exit_code": 0,
+      "observed_output": "15 * 4 = 60",
+      "computational_intent": "Resolved via internal computational intent class with 0 external processes spawned"
+    }
+  ],
+  "human_test_instructions": [
+    "1. Start AstraRun by launching 'C:\\Users\\hp\\AppData\\Local\\Programs\\AstraRun\\AstraRun.exe' or via Start Menu / System Tray.",
+    "2. Summon the HUD using global hotkey 'Alt+Space'.",
+    "3. Input 'can u open calculator' -> Verify Calculator opens and HUD confirms launch.",
+    "4. Input 'can u close calculator' -> Verify Calculator window closes cleanly.",
+    "5. Input 'open vlc' -> Verify genuine VLC Media Player opens (not reset or cache utilities).",
+    "6. Input 'don't open vlc' -> Verify action is safely rejected.",
+    "7. Input 'is vlc installed' -> Verify read-only confirmation without launching processes.",
+    "8. Input 'calculate 25 * 4' -> Verify immediate calculation result (100) in launcher/HUD."
+  ]
+}

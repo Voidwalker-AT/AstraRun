@@ -1,0 +1,163 @@
+{
+  "milestone": "F0-18",
+  "title": "General Intent Routing Evidence Across 12 Semantic Classes",
+  "verified_at": "2026-10-08T19:47:58+00:00",
+  "platform": "Windows 11 (AMD64, 16 GB RAM, RTX 2050 4 GB VRAM)",
+  "test_suite": "tests/test_f0_18_computer_use_generalization.py",
+  "intent_classes": [
+    {
+      "class_id": 1,
+      "class_name": "APPLICATION_LAUNCH",
+      "queries_tested": [
+        "can u open calculator",
+        "open vlc",
+        "launch notepad",
+        "start paint"
+      ],
+      "routed_target": "open_application",
+      "execution_path": "DeterministicRouter -> SemanticEntityResolver -> ExecutionBroker -> open_application",
+      "verdict": "PASS",
+      "notes": "Entity resolved to canonical executable without maintenance noise or hardcoded application lists."
+    },
+    {
+      "class_id": 2,
+      "class_name": "APPLICATION_CLOSE",
+      "queries_tested": [
+        "close vlc",
+        "quit paint"
+      ],
+      "routed_target": "close_application",
+      "execution_path": "StructureEngine -> WorkflowCompiler -> ExecutionBroker -> close_application",
+      "verdict": "PASS",
+      "notes": "Resource ownership respected under F0-15: closes Astra-owned instances, preserves pre-existing user windows."
+    },
+    {
+      "class_id": 3,
+      "class_name": "READ_ONLY_OBSERVATION",
+      "queries_tested": [
+        "is vlc installed?",
+        "check if notepad is installed",
+        "is vlc running?",
+        "check if calculator is running"
+      ],
+      "routed_target": "find_application / is_application_running",
+      "execution_path": "Fast Early Handler -> SemanticEntityResolver -> Read-Only Check",
+      "verdict": "PASS",
+      "notes": "Non-mutating inquiry executed without launching apps or mutating workstation state."
+    },
+    {
+      "class_id": 4,
+      "class_name": "GENERAL_CONVERSATION",
+      "queries_tested": [
+        "hello",
+        "hi",
+        "good morning"
+      ],
+      "routed_target": "conversational",
+      "execution_path": "Fast Early Handler -> Conversational Responder",
+      "verdict": "PASS",
+      "notes": "Polite greeting handled without attempting computer-use tool invocation or opening apps."
+    },
+    {
+      "class_id": 5,
+      "class_name": "NEGATION_SAFETY",
+      "queries_tested": [
+        "don't open vlc",
+        "never open calculator",
+        "do not launch notepad"
+      ],
+      "routed_target": "blocked_negation",
+      "execution_path": "ClauseDecomposer -> DeterministicRouter Negation Guard -> Fail Closed",
+      "verdict": "PASS",
+      "notes": "Negation strictly detected and execution aborted before ExecutionBroker or OS dispatch."
+    },
+    {
+      "class_id": 6,
+      "class_name": "COMPUTATIONAL_TASK",
+      "queries_tested": [
+        "count to 100",
+        "what is 25 * 4",
+        "calculate 100 + 50"
+      ],
+      "routed_target": "computational_task",
+      "execution_path": "Fast Early Handler -> AST Safe Evaluator -> TaskLedger",
+      "verdict": "PASS",
+      "notes": "Direct computation without launching external Calculator application or executing arbitrary shell code."
+    },
+    {
+      "class_id": 7,
+      "class_name": "SYSTEM_QUERY",
+      "queries_tested": [
+        "cpu status",
+        "battery status",
+        "system summary"
+      ],
+      "routed_target": "get_cpu_status / get_battery_status / get_system_summary",
+      "execution_path": "CapabilityRegistry -> ExecutionBroker -> Read-Only System Adapter",
+      "verdict": "PASS",
+      "notes": "Read-only metrics gathered with zero workstation state mutation."
+    },
+    {
+      "class_id": 8,
+      "class_name": "FILE_OPERATION",
+      "queries_tested": [
+        "reveal file README.md",
+        "find file config.json"
+      ],
+      "routed_target": "reveal_file / find_file",
+      "execution_path": "PathPolicy -> ExecutionBroker -> File Adapter",
+      "verdict": "PASS",
+      "notes": "Path safety enforced; script execution and path traversal strictly blocked."
+    },
+    {
+      "class_id": 9,
+      "class_name": "WINDOW_MANAGEMENT",
+      "queries_tested": [
+        "snap left",
+        "minimize window",
+        "list windows"
+      ],
+      "routed_target": "snap_window / list_windows",
+      "execution_path": "WindowResolver -> ExecutionBroker -> Win32 User32 Controller",
+      "verdict": "PASS",
+      "notes": "AstraRun window excluded from manipulation; undo restore stack maintained."
+    },
+    {
+      "class_id": 10,
+      "class_name": "BROWSER_ACTION",
+      "queries_tested": [
+        "open url https://github.com"
+      ],
+      "routed_target": "open_url",
+      "execution_path": "ActionGate -> ExecutionBroker -> Default Browser Launcher",
+      "verdict": "PASS",
+      "notes": "URL scheme validation enforced; file:// and dangerous protocol handlers blocked."
+    },
+    {
+      "class_id": 11,
+      "class_name": "REASONING_REQUIRED",
+      "queries_tested": [
+        "why is the sky blue",
+        "explain how transformers work"
+      ],
+      "routed_target": "reasoning_required / spark_cognitive",
+      "execution_path": "CognitiveRouter -> Spark Interactive Cognitive Engine",
+      "verdict": "PASS",
+      "notes": "Complex semantic query passed to local language model without invoking workstation tools."
+    },
+    {
+      "class_id": 12,
+      "class_name": "DANGEROUS_BLOCKED",
+      "queries_tested": [
+        "delete system32",
+        "format c:",
+        "drop database"
+      ],
+      "routed_target": "BLOCKED",
+      "execution_path": "ActionGate Security Kernel -> Hard Block",
+      "verdict": "PASS",
+      "notes": "Destructive patterns rejected immediately with ActionGate BLOCK verdict."
+    }
+  ],
+  "overall_verdict": "ALL_12_CLASSES_VERIFIED"
+}

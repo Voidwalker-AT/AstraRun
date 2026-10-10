@@ -1,0 +1,97 @@
+{
+  "milestone": "F0-18",
+  "title": "Universal Computer-Use Architecture, Semantic Entity Resolution & General Agent Execution",
+  "status": "IMPLEMENTED_AND_VERIFIED",
+  "platform": "Windows 11 (AMD64, 16 GB RAM, RTX 2050 4 GB VRAM)",
+  "hardware_budget": {
+    "vram_limit_mb": 4096,
+    "quantization": "Q4_K_M",
+    "architecture_paradigm": "Dual-engine hybrid (Laya deterministic fast-path + Spark reasoning + UIA/CDP grounding)"
+  },
+  "modules_created": [
+    {
+      "path": "src/astrarun/computer_use/__init__.py",
+      "description": "Unified computer_use package entrypoint exposing ComputerUse facade and data models"
+    },
+    {
+      "path": "src/astrarun/computer_use/models.py",
+      "description": "Contract models: ComputerUseObservation, UIElement, UIAction, VerificationCondition, VerificationResult, RecoveryAction"
+    },
+    {
+      "path": "src/astrarun/computer_use/facade.py",
+      "description": "ComputerUse facade unifying observe(), discover(), resolve(), find_element(), interact(), verify(), recover()"
+    },
+    {
+      "path": "src/astrarun/discovery/entity_resolver.py",
+      "description": "Pure-Python binary .lnk target resolver, SemanticEntityResolver with candidate clustering and read-only observation queries"
+    },
+    {
+      "path": "tests/test_f0_18_computer_use_generalization.py",
+      "description": "Comprehensive 18-case test suite verifying entity resolution, 12 intent classes, ComputerUse facade contracts, and ActionGate security boundaries"
+    },
+    {
+      "path": "docs/architecture-research/F0_18_UNIVERSAL_COMPUTER_USE_ARCHITECTURE.md",
+      "description": "Comprehensive research synthesis of Microsoft UFO2, UIA, OmniParser, Browser Use, CDP, and OSWorld-V2 within 4GB VRAM constraints"
+    }
+  ],
+  "modules_modified": [
+    {
+      "path": "src/astrarun/discovery/apps.py",
+      "changes": "Expanded maintenance exclude_words ('reset preferences and cache files', 'reset', 'troubleshoot', 'skinned') to prevent clutter candidates"
+    },
+    {
+      "path": "src/astrarun/search/index.py",
+      "changes": "Integrated pure-Python .lnk target resolution and canonical target deduplication so multiple shortcuts pointing to the same EXE resolve to a single canonical entry"
+    },
+    {
+      "path": "src/astrarun/nlp/clause_decomposer.py",
+      "changes": "Added observation, computational, and generic close patterns; guaranteed negation tokens flag clauses as negated"
+    },
+    {
+      "path": "src/astrarun/nlp/structure_engine.py",
+      "changes": "Replaced hardcoded 19-application regex with general entity patterns for close_application, find_application, and is_application_running"
+    },
+    {
+      "path": "src/astrarun/workflows/compiler.py",
+      "changes": "Added compilation rules for find_application and is_application_running; generalized close_application"
+    },
+    {
+      "path": "src/astrarun/routing/deterministic.py",
+      "changes": "Integrated negation safety guard, generalized close/quit verbs, and wired in SemanticEntityResolver"
+    },
+    {
+      "path": "src/astrarun/applications/service.py",
+      "changes": "Generalized tabbed window handling into TABBED_APPLICATION_ADAPTERS rather than app-specific hardcoding"
+    },
+    {
+      "path": "src/astrarun/tasks/runtime.py",
+      "changes": "Generalized invariant violation recovery relaunch logic for arbitrary applications"
+    },
+    {
+      "path": "src/astrarun/tasks/resource_ledger.py",
+      "changes": "Replaced hardcoded calc/notepad aliases with dynamic entity resolution"
+    },
+    {
+      "path": "src/astrarun/app.py",
+      "changes": "Added fast early handlers for negation safety, conversational queries, computational tasks, and read-only observation queries"
+    }
+  ],
+  "application_specific_cleanups": [
+    {
+      "target": "Calculator & Notepad hardcoded aliases",
+      "resolution": "Removed hardcoded alias checks; queries now resolve dynamically through SemanticEntityResolver and SearchIndex"
+    },
+    {
+      "target": "VLC multiple candidate explosion",
+      "resolution": "Resolved by pure-Python .lnk physical target resolution and maintenance exclusion filter; canonical executable stem boosted"
+    },
+    {
+      "target": "Tabbed application hardcoding",
+      "resolution": "Abstracted to generic TABBED_APPLICATION_ADAPTERS dictionary supporting extensible multi-tab applications"
+    },
+    {
+      "target": "Invariant recovery relaunch",
+      "resolution": "Abstracted to generic executable resolution and launch instead of calc/notepad special cases"
+    }
+  ]
+}

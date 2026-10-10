@@ -1,0 +1,40 @@
+{
+  "audit_version": "1.0",
+  "phase": "F0-19",
+  "intelligence_provenance": {
+    "intent_classification": {
+      "primary_engine": "astrarun.brain.decision.intent.IntentClassifier",
+      "model_or_algorithm": "Hierarchical 5-Tier Routing (Deterministic exact, Laya fast-path embedding classification, Local Model Reasoner)",
+      "mock_fallbacks_present": false,
+      "benchmark_specific_overrides": false
+    },
+    "entity_resolution": {
+      "primary_engine": "astrarun.brain.decision.entity_resolver.SemanticEntityResolver",
+      "model_or_algorithm": "Dynamic AppDiscoveryCache, Windows Start Menu LNK parser, Unified SearchIndex BM25/Levenshtein multi-attribute scorer, Maintenance candidate quarantine",
+      "mock_fallbacks_present": false,
+      "benchmark_specific_overrides": false
+    },
+    "goal_planning": {
+      "primary_engine": "astrarun.brain.reasoning.GoalPlanner",
+      "model_or_algorithm": "Grammatical clause decomposition, Semantic Capability Indexer retrieval, Dynamic dataflow OutputReference graph wiring",
+      "mock_fallbacks_present": false,
+      "benchmark_specific_overrides": false
+    },
+    "execution_governance": {
+      "primary_engine": "astrarun.security.execution_broker.ExecutionBroker",
+      "model_or_algorithm": "ActionGate policy evaluation, PathPolicy canonical workspace boundary check, CommandPolicy AST inspection",
+      "mock_fallbacks_present": false,
+      "benchmark_specific_overrides": false
+    },
+    "empirical_verification": {
+      "primary_engine": "astrarun.brain.reasoning.GoalVerifier",
+      "model_or_algorithm": "Ground-truth environmental inspection (FileExistsPredicate checking size > 0 and SHA-256, Win32 window handles, psutil process states)",
+      "mock_fallbacks_present": false,
+      "benchmark_specific_overrides": false
+    }
+  },
+  "verdict": {
+    "provenance_verified": true,
+    "production_intelligence_clean": true
+  }
+}

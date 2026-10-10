@@ -1,0 +1,92 @@
+{
+  "inventory_version": "1.0",
+  "phase": "F0-19",
+  "domains": {
+    "brain": {
+      "path": "src/astrarun/brain",
+      "responsibility": "Decides semantic intent, reasons, plans, replans, selects capabilities, interprets observations, and verifies semantic completion. Contains ZERO OS automation primitives.",
+      "submodules": [
+        {
+          "name": "astrarun.brain.decision",
+          "classes": ["IntentClassifier", "SemanticEntityResolver", "ResolvedEntity"],
+          "dependencies": ["astrarun.search.index", "astrarun.routing.laya", "astrarun.nlp.clause_decomposer"]
+        },
+        {
+          "name": "astrarun.brain.reasoning",
+          "classes": ["GoalPlanner", "AgentExecutionEngine", "GoalVerifier", "StepVerifier", "ExecutionGraph"],
+          "dependencies": ["astrarun.capabilities.registry", "astrarun.security.execution_broker", "astrarun.agent.models"]
+        },
+        {
+          "name": "astrarun.brain.memory",
+          "classes": ["BrainMemory"],
+          "dependencies": ["astrarun.memory.service"]
+        },
+        {
+          "name": "astrarun.brain.vision",
+          "classes": ["VisualGrounding"],
+          "dependencies": []
+        },
+        {
+          "name": "astrarun.brain.models",
+          "classes": ["BrainDecision", "BrainIntent", "Goal", "Plan", "PlanStep", "AgentTask"],
+          "dependencies": ["astrarun.cognition.models", "astrarun.agent.models"]
+        }
+      ],
+      "facade": "astrarun.brain.Brain"
+    },
+    "computer_use": {
+      "path": "src/astrarun/computer_use",
+      "responsibility": "Exposes generic mechanisms for observing and controlling Windows desktop applications, browsers, UI automation trees, and physical input. Contains ZERO semantic intent decision-making logic.",
+      "submodules": [
+        {
+          "name": "astrarun.computer_use.desktop",
+          "classes": ["DesktopLifecycle"],
+          "dependencies": ["astrarun.tasks.resource_ledger", "astrarun.tools.apps"]
+        },
+        {
+          "name": "astrarun.computer_use.ui",
+          "classes": ["UIAutomationDriver"],
+          "dependencies": ["astrarun.interaction.discovery", "astrarun.interaction.controller"]
+        },
+        {
+          "name": "astrarun.computer_use.browser",
+          "classes": ["BrowserCDPDriver"],
+          "dependencies": ["astrarun.tools.browser"]
+        },
+        {
+          "name": "astrarun.computer_use.input",
+          "classes": ["PhysicalInputDriver"],
+          "dependencies": ["astrarun.perception.input", "astrarun.interaction.controller"]
+        },
+        {
+          "name": "astrarun.computer_use.perception",
+          "classes": ["ScreenPerception"],
+          "dependencies": ["astrarun.perception.screen"]
+        },
+        {
+          "name": "astrarun.computer_use.session",
+          "classes": ["ApplicationSession", "SessionState"],
+          "dependencies": []
+        },
+        {
+          "name": "astrarun.computer_use.models",
+          "classes": ["ComputerUseObservation", "UIElement", "UIAction", "VerificationCondition", "VerificationResult", "RecoveryAction"],
+          "dependencies": []
+        }
+      ],
+      "controller": "astrarun.computer_use.ComputerUseController",
+      "facade": "astrarun.computer_use.ComputerUse"
+    },
+    "security_authority": {
+      "path": "src/astrarun/security",
+      "responsibility": "Independent authority governing all capability dispatches and verifying permissions before OS execution.",
+      "components": [
+        "ExecutionBroker",
+        "ActionGate",
+        "TrustKernel",
+        "PathPolicy",
+        "CommandPolicy"
+      ]
+    }
+  }
+}

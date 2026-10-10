@@ -1,0 +1,760 @@
+{
+  "timestamp": "2026-10-10T04:00:08.377146+00:00",
+  "phase": "F0-23",
+  "description": "Comprehensive audit of repository inventory, module distribution, large files, god objects, and architectural overlap boundaries.",
+  "summary": {
+    "total_production_python_files": 309,
+    "total_directories": 45,
+    "files_by_directory": {
+      "computer_use": 22,
+      "ui": 18,
+      "machine": 16,
+      "nlp": 15,
+      "tasks": 14,
+      "learning": 12,
+      "perception": 12,
+      "tools": 12,
+      "interaction": 11,
+      "routing": 11,
+      "agent": 10,
+      "rag": 10,
+      "core": 9,
+      "windows": 9,
+      "brain": 8,
+      "cognition": 8,
+      "delegation": 8,
+      "capabilities": 7,
+      "context": 7,
+      "power": 7,
+      "security": 7,
+      "discovery": 6,
+      "root": 5,
+      "execution": 5,
+      "sandbox": 5,
+      "search": 5,
+      "workflows": 5,
+      "network": 4,
+      "telemetry": 4,
+      "visualization": 4,
+      "evaluation": 3,
+      "files": 3,
+      "memory": 3,
+      "projects": 3,
+      "ai_bridge": 2,
+      "applications": 2,
+      "browser": 2,
+      "config": 2,
+      "lifecycle": 2,
+      "models": 2,
+      "policy": 2,
+      "processes": 2,
+      "system": 2,
+      "usage": 2,
+      "hotkeys": 1
+    },
+    "duplicate_basenames_count": 40,
+    "duplicate_basenames": {
+      "indexer.py": [
+        "src/astrarun/agent/indexer.py",
+        "src/astrarun/rag/indexer.py"
+      ],
+      "loop.py": [
+        "src/astrarun/agent/loop.py",
+        "src/astrarun/delegation/loop.py"
+      ],
+      "models.py": [
+        "src/astrarun/agent/models.py",
+        "src/astrarun/capabilities/models.py",
+        "src/astrarun/cognition/models.py",
+        "src/astrarun/computer_use/models.py",
+        "src/astrarun/context/models.py",
+        "src/astrarun/core/models.py",
+        "src/astrarun/delegation/models.py",
+        "src/astrarun/execution/models.py",
+        "src/astrarun/interaction/models.py",
+        "src/astrarun/learning/models.py",
+        "src/astrarun/nlp/models.py",
+        "src/astrarun/perception/models.py",
+        "src/astrarun/rag/models.py",
+        "src/astrarun/sandbox/models.py",
+        "src/astrarun/search/models.py",
+        "src/astrarun/security/models.py",
+        "src/astrarun/tasks/models.py",
+        "src/astrarun/visualization/models.py",
+        "src/astrarun/windows/models.py",
+        "src/astrarun/workflows/models.py"
+      ],
+      "observer.py": [
+        "src/astrarun/agent/observer.py",
+        "src/astrarun/computer_use/observation/observer.py"
+      ],
+      "service.py": [
+        "src/astrarun/applications/service.py",
+        "src/astrarun/browser/service.py",
+        "src/astrarun/cognition/service.py",
+        "src/astrarun/files/service.py",
+        "src/astrarun/interaction/service.py",
+        "src/astrarun/memory/service.py",
+        "src/astrarun/network/service.py",
+        "src/astrarun/perception/service.py",
+        "src/astrarun/processes/service.py",
+        "src/astrarun/projects/service.py",
+        "src/astrarun/system/service.py"
+      ],
+      "manifest.py": [
+        "src/astrarun/capabilities/manifest.py",
+        "src/astrarun/models/manifest.py"
+      ],
+      "registry.py": [
+        "src/astrarun/capabilities/registry.py",
+        "src/astrarun/projects/registry.py",
+        "src/astrarun/tools/registry.py"
+      ],
+      "store.py": [
+        "src/astrarun/capabilities/store.py",
+        "src/astrarun/rag/store.py",
+        "src/astrarun/usage/store.py"
+      ],
+      "context.py": [
+        "src/astrarun/cognition/context.py",
+        "src/astrarun/rag/context.py",
+        "src/astrarun/workflows/context.py"
+      ],
+      "router.py": [
+        "src/astrarun/cognition/router.py",
+        "src/astrarun/perception/router.py",
+        "src/astrarun/rag/router.py"
+      ],
+      "controller.py": [
+        "src/astrarun/computer_use/controller.py",
+        "src/astrarun/interaction/controller.py",
+        "src/astrarun/windows/controller.py"
+      ],
+      "activity.py": [
+        "src/astrarun/context/activity.py",
+        "src/astrarun/ui/activity.py"
+      ],
+      "engine.py": [
+        "src/astrarun/context/engine.py",
+        "src/astrarun/learning/engine.py",
+        "src/astrarun/nlp/engine.py",
+        "src/astrarun/workflows/engine.py"
+      ],
+      "persistence.py": [
+        "src/astrarun/context/persistence.py",
+        "src/astrarun/learning/persistence.py"
+      ],
+      "processes.py": [
+        "src/astrarun/context/processes.py",
+        "src/astrarun/tools/processes.py"
+      ],
+      "projects.py": [
+        "src/astrarun/context/projects.py",
+        "src/astrarun/tools/projects.py"
+      ],
+      "evidence.py": [
+        "src/astrarun/core/evidence.py",
+        "src/astrarun/learning/evidence.py"
+      ],
+      "hardware.py": [
+        "src/astrarun/core/hardware.py",
+        "src/astrarun/machine/providers/hardware.py"
+      ],
+      "apps.py": [
+        "src/astrarun/discovery/apps.py",
+        "src/astrarun/tools/apps.py"
+      ],
+      "entity_resolver.py": [
+        "src/astrarun/discovery/entity_resolver.py",
+        "src/astrarun/routing/entity_resolver.py",
+        "src/astrarun/brain/decision/entity_resolver.py"
+      ],
+      "folders.py": [
+        "src/astrarun/discovery/folders.py",
+        "src/astrarun/tools/folders.py"
+      ],
+      "resolver.py": [
+        "src/astrarun/discovery/resolver.py",
+        "src/astrarun/interaction/resolver.py",
+        "src/astrarun/windows/resolver.py"
+      ],
+      "runtime.py": [
+        "src/astrarun/execution/runtime.py",
+        "src/astrarun/tasks/runtime.py"
+      ],
+      "index.py": [
+        "src/astrarun/files/index.py",
+        "src/astrarun/search/index.py"
+      ],
+      "manager.py": [
+        "src/astrarun/hotkeys/manager.py",
+        "src/astrarun/power/manager.py",
+        "src/astrarun/sandbox/manager.py",
+        "src/astrarun/tasks/manager.py"
+      ],
+      "discovery.py": [
+        "src/astrarun/interaction/discovery.py",
+        "src/astrarun/windows/discovery.py"
+      ],
+      "policy.py": [
+        "src/astrarun/interaction/policy.py",
+        "src/astrarun/windows/policy.py"
+      ],
+      "worker.py": [
+        "src/astrarun/interaction/worker.py",
+        "src/astrarun/rag/worker.py"
+      ],
+      "debugger.py": [
+        "src/astrarun/learning/debugger.py",
+        "src/astrarun/nlp/debugger.py"
+      ],
+      "memory.py": [
+        "src/astrarun/learning/memory.py",
+        "src/astrarun/ui/memory.py"
+      ],
+      "skills.py": [
+        "src/astrarun/learning/skills.py",
+        "src/astrarun/memory/skills.py",
+        "src/astrarun/rag/skills.py"
+      ],
+      "diagnostics.py": [
+        "src/astrarun/machine/diagnostics.py",
+        "src/astrarun/ui/diagnostics.py"
+      ],
+      "deterministic.py": [
+        "src/astrarun/nlp/deterministic.py",
+        "src/astrarun/routing/deterministic.py"
+      ],
+      "fusion.py": [
+        "src/astrarun/nlp/fusion.py",
+        "src/astrarun/routing/fusion.py"
+      ],
+      "cdp.py": [
+        "src/astrarun/perception/cdp.py",
+        "src/astrarun/computer_use/browser/cdp.py"
+      ],
+      "action_gate.py": [
+        "src/astrarun/policy/action_gate.py",
+        "src/astrarun/security/action_gate.py"
+      ],
+      "events.py": [
+        "src/astrarun/power/events.py",
+        "src/astrarun/tasks/events.py"
+      ],
+      "ledger.py": [
+        "src/astrarun/power/ledger.py",
+        "src/astrarun/tasks/ledger.py"
+      ],
+      "base.py": [
+        "src/astrarun/routing/base.py",
+        "src/astrarun/machine/providers/base.py"
+      ],
+      "lifecycle.py": [
+        "src/astrarun/tools/lifecycle.py",
+        "src/astrarun/computer_use/desktop/lifecycle.py"
+      ]
+    },
+    "large_files_exceeding_500_lines": 35,
+    "god_objects_detected": 7
+  },
+  "large_file_and_god_object_audit": [
+    {
+      "path": "src/astrarun/agent/planner.py",
+      "line_count": 1479,
+      "classes_count": 1,
+      "functions_count": 0,
+      "is_god_object": true,
+      "distinct_responsibilities": [
+        "NLP goal extraction",
+        "RAG turn context building",
+        "Heuristic syntactic clause decomposition",
+        "DAG construction & dependency wiring",
+        "OutputReference dataflow binding",
+        "Repair & replanning synthesis"
+      ],
+      "recommended_split_boundaries": [
+        "Extract dataflow dependency wiring into astrarun/agent/dependency_binder.py",
+        "Extract turn context synthesis into astrarun/agent/context_synthesizer.py",
+        "Retain planner.py for core DAG compilation"
+      ]
+    },
+    {
+      "path": "src/astrarun/capabilities/registry.py",
+      "line_count": 1424,
+      "classes_count": 1,
+      "functions_count": 0,
+      "is_god_object": true,
+      "distinct_responsibilities": [
+        "Capability catalog & storage",
+        "Built-in capability registration (50+ tools)",
+        "Permission & security enforcement",
+        "Execution dispatch & parameter validation",
+        "Dynamic schema export"
+      ],
+      "recommended_split_boundaries": [
+        "Partition built-in registrations across domain packages (desktop, window, sys, agent)",
+        "Retain registry.py as lean schema storage and dispatch engine"
+      ]
+    },
+    {
+      "path": "src/astrarun/app.py",
+      "line_count": 1357,
+      "classes_count": 3,
+      "functions_count": 0,
+      "is_god_object": true,
+      "distinct_responsibilities": [
+        "Lifecycle & single-instance",
+        "Direct CLI commands",
+        "Dispatcher for all capabilities",
+        "Task manager orchestration",
+        "Agent goal bridge",
+        "Hotkey & GUI event coordination"
+      ],
+      "recommended_split_boundaries": [
+        "Extract direct system commands into astrarun/routing/commands.py",
+        "Extract computational handlers into astrarun/capabilities/computation.py",
+        "Retain app.py purely as application coordinator"
+      ]
+    },
+    {
+      "path": "src/astrarun/ui/launcher.py",
+      "line_count": 1129,
+      "classes_count": 3,
+      "functions_count": 0,
+      "is_god_object": true,
+      "distinct_responsibilities": [
+        "Complex module with multi-function responsibilities"
+      ],
+      "recommended_split_boundaries": [
+        "Decompose into modular domain components"
+      ]
+    },
+    {
+      "path": "src/astrarun/tasks/runtime.py",
+      "line_count": 1107,
+      "classes_count": 4,
+      "functions_count": 0,
+      "is_god_object": true,
+      "distinct_responsibilities": [
+        "Complex module with multi-function responsibilities"
+      ],
+      "recommended_split_boundaries": [
+        "Decompose into modular domain components"
+      ]
+    },
+    {
+      "path": "src/astrarun/tasks/ledger.py",
+      "line_count": 1073,
+      "classes_count": 1,
+      "functions_count": 0,
+      "is_god_object": true,
+      "distinct_responsibilities": [
+        "Complex module with multi-function responsibilities"
+      ],
+      "recommended_split_boundaries": [
+        "Decompose into modular domain components"
+      ]
+    },
+    {
+      "path": "src/astrarun/ui/hud.py",
+      "line_count": 1053,
+      "classes_count": 6,
+      "functions_count": 0,
+      "is_god_object": true,
+      "distinct_responsibilities": [
+        "Complex module with multi-function responsibilities"
+      ],
+      "recommended_split_boundaries": [
+        "Decompose into modular domain components"
+      ]
+    },
+    {
+      "path": "src/astrarun/tasks/resource_ledger.py",
+      "line_count": 973,
+      "classes_count": 7,
+      "functions_count": 2,
+      "is_god_object": false,
+      "distinct_responsibilities": [
+        "Complex module with multi-function responsibilities"
+      ],
+      "recommended_split_boundaries": [
+        "Decompose into modular domain components"
+      ]
+    },
+    {
+      "path": "src/astrarun/workflows/compiler.py",
+      "line_count": 889,
+      "classes_count": 1,
+      "functions_count": 0,
+      "is_god_object": false,
+      "distinct_responsibilities": [
+        "Workflow compilation",
+        "Clause to capability resolution",
+        "Plan validation"
+      ],
+      "recommended_split_boundaries": [
+        "Single responsibility workflow compiler; keep intact"
+      ]
+    },
+    {
+      "path": "src/astrarun/interaction/service.py",
+      "line_count": 825,
+      "classes_count": 0,
+      "functions_count": 13,
+      "is_god_object": false,
+      "distinct_responsibilities": [
+        "Complex module with multi-function responsibilities"
+      ],
+      "recommended_split_boundaries": [
+        "Decompose into modular domain components"
+      ]
+    },
+    {
+      "path": "src/astrarun/files/service.py",
+      "line_count": 784,
+      "classes_count": 1,
+      "functions_count": 12,
+      "is_god_object": false,
+      "distinct_responsibilities": [
+        "Complex module with multi-function responsibilities"
+      ],
+      "recommended_split_boundaries": [
+        "Decompose into modular domain components"
+      ]
+    },
+    {
+      "path": "src/astrarun/routing/entity_resolver.py",
+      "line_count": 782,
+      "classes_count": 2,
+      "functions_count": 0,
+      "is_god_object": false,
+      "distinct_responsibilities": [
+        "Complex module with multi-function responsibilities"
+      ],
+      "recommended_split_boundaries": [
+        "Decompose into modular domain components"
+      ]
+    },
+    {
+      "path": "src/astrarun/agent/models.py",
+      "line_count": 770,
+      "classes_count": 36,
+      "functions_count": 0,
+      "is_god_object": false,
+      "distinct_responsibilities": [
+        "Complex module with multi-function responsibilities"
+      ],
+      "recommended_split_boundaries": [
+        "Decompose into modular domain components"
+      ]
+    },
+    {
+      "path": "src/astrarun/cognition/service.py",
+      "line_count": 726,
+      "classes_count": 1,
+      "functions_count": 0,
+      "is_god_object": false,
+      "distinct_responsibilities": [
+        "Complex module with multi-function responsibilities"
+      ],
+      "recommended_split_boundaries": [
+        "Decompose into modular domain components"
+      ]
+    },
+    {
+      "path": "src/astrarun/agent/verifier.py",
+      "line_count": 696,
+      "classes_count": 12,
+      "functions_count": 0,
+      "is_god_object": false,
+      "distinct_responsibilities": [
+        "Complex module with multi-function responsibilities"
+      ],
+      "recommended_split_boundaries": [
+        "Decompose into modular domain components"
+      ]
+    },
+    {
+      "path": "src/astrarun/security/action_gate.py",
+      "line_count": 687,
+      "classes_count": 3,
+      "functions_count": 0,
+      "is_god_object": false,
+      "distinct_responsibilities": [
+        "Complex module with multi-function responsibilities"
+      ],
+      "recommended_split_boundaries": [
+        "Decompose into modular domain components"
+      ]
+    },
+    {
+      "path": "src/astrarun/capabilities/manifest.py",
+      "line_count": 672,
+      "classes_count": 0,
+      "functions_count": 1,
+      "is_god_object": false,
+      "distinct_responsibilities": [
+        "Complex module with multi-function responsibilities"
+      ],
+      "recommended_split_boundaries": [
+        "Decompose into modular domain components"
+      ]
+    },
+    {
+      "path": "src/astrarun/ui/settings.py",
+      "line_count": 670,
+      "classes_count": 1,
+      "functions_count": 0,
+      "is_god_object": false,
+      "distinct_responsibilities": [
+        "Complex module with multi-function responsibilities"
+      ],
+      "recommended_split_boundaries": [
+        "Decompose into modular domain components"
+      ]
+    },
+    {
+      "path": "src/astrarun/tasks/models.py",
+      "line_count": 658,
+      "classes_count": 10,
+      "functions_count": 1,
+      "is_god_object": false,
+      "distinct_responsibilities": [
+        "Complex module with multi-function responsibilities"
+      ],
+      "recommended_split_boundaries": [
+        "Decompose into modular domain components"
+      ]
+    },
+    {
+      "path": "src/astrarun/machine/providers/hardware.py",
+      "line_count": 625,
+      "classes_count": 1,
+      "functions_count": 0,
+      "is_god_object": false,
+      "distinct_responsibilities": [
+        "Complex module with multi-function responsibilities"
+      ],
+      "recommended_split_boundaries": [
+        "Decompose into modular domain components"
+      ]
+    },
+    {
+      "path": "src/astrarun/sandbox/manager.py",
+      "line_count": 615,
+      "classes_count": 1,
+      "functions_count": 0,
+      "is_god_object": false,
+      "distinct_responsibilities": [
+        "Complex module with multi-function responsibilities"
+      ],
+      "recommended_split_boundaries": [
+        "Decompose into modular domain components"
+      ]
+    },
+    {
+      "path": "src/astrarun/nlp/structure_engine.py",
+      "line_count": 593,
+      "classes_count": 1,
+      "functions_count": 0,
+      "is_god_object": false,
+      "distinct_responsibilities": [
+        "SpaCy NLP linguistic parsing",
+        "Regex clause fallback",
+        "Compound intent DAG extraction"
+      ],
+      "recommended_split_boundaries": [
+        "Well-scoped NLP parser; keep intact"
+      ]
+    },
+    {
+      "path": "src/astrarun/routing/laya.py",
+      "line_count": 587,
+      "classes_count": 5,
+      "functions_count": 0,
+      "is_god_object": false,
+      "distinct_responsibilities": [
+        "Complex module with multi-function responsibilities"
+      ],
+      "recommended_split_boundaries": [
+        "Decompose into modular domain components"
+      ]
+    },
+    {
+      "path": "src/astrarun/windows/controller.py",
+      "line_count": 583,
+      "classes_count": 0,
+      "functions_count": 14,
+      "is_god_object": false,
+      "distinct_responsibilities": [
+        "Complex module with multi-function responsibilities"
+      ],
+      "recommended_split_boundaries": [
+        "Decompose into modular domain components"
+      ]
+    },
+    {
+      "path": "src/astrarun/ui/task_center.py",
+      "line_count": 582,
+      "classes_count": 4,
+      "functions_count": 1,
+      "is_god_object": false,
+      "distinct_responsibilities": [
+        "Complex module with multi-function responsibilities"
+      ],
+      "recommended_split_boundaries": [
+        "Decompose into modular domain components"
+      ]
+    },
+    {
+      "path": "src/astrarun/main.py",
+      "line_count": 574,
+      "classes_count": 0,
+      "functions_count": 4,
+      "is_god_object": false,
+      "distinct_responsibilities": [
+        "Complex module with multi-function responsibilities"
+      ],
+      "recommended_split_boundaries": [
+        "Decompose into modular domain components"
+      ]
+    },
+    {
+      "path": "src/astrarun/learning/persistence.py",
+      "line_count": 568,
+      "classes_count": 1,
+      "functions_count": 0,
+      "is_god_object": false,
+      "distinct_responsibilities": [
+        "Complex module with multi-function responsibilities"
+      ],
+      "recommended_split_boundaries": [
+        "Decompose into modular domain components"
+      ]
+    },
+    {
+      "path": "src/astrarun/lifecycle/uninstall.py",
+      "line_count": 546,
+      "classes_count": 2,
+      "functions_count": 6,
+      "is_god_object": false,
+      "distinct_responsibilities": [
+        "Complex module with multi-function responsibilities"
+      ],
+      "recommended_split_boundaries": [
+        "Decompose into modular domain components"
+      ]
+    },
+    {
+      "path": "src/astrarun/ui/first_run.py",
+      "line_count": 540,
+      "classes_count": 1,
+      "functions_count": 2,
+      "is_god_object": false,
+      "distinct_responsibilities": [
+        "Complex module with multi-function responsibilities"
+      ],
+      "recommended_split_boundaries": [
+        "Decompose into modular domain components"
+      ]
+    },
+    {
+      "path": "src/astrarun/agent/loop.py",
+      "line_count": 537,
+      "classes_count": 2,
+      "functions_count": 0,
+      "is_god_object": false,
+      "distinct_responsibilities": [
+        "Complex module with multi-function responsibilities"
+      ],
+      "recommended_split_boundaries": [
+        "Decompose into modular domain components"
+      ]
+    },
+    {
+      "path": "src/astrarun/tasks/manager.py",
+      "line_count": 529,
+      "classes_count": 1,
+      "functions_count": 0,
+      "is_god_object": false,
+      "distinct_responsibilities": [
+        "Complex module with multi-function responsibilities"
+      ],
+      "recommended_split_boundaries": [
+        "Decompose into modular domain components"
+      ]
+    },
+    {
+      "path": "src/astrarun/ui/cards.py",
+      "line_count": 524,
+      "classes_count": 4,
+      "functions_count": 0,
+      "is_god_object": false,
+      "distinct_responsibilities": [
+        "Complex module with multi-function responsibilities"
+      ],
+      "recommended_split_boundaries": [
+        "Decompose into modular domain components"
+      ]
+    },
+    {
+      "path": "src/astrarun/tools/wifi.py",
+      "line_count": 515,
+      "classes_count": 10,
+      "functions_count": 4,
+      "is_god_object": false,
+      "distinct_responsibilities": [
+        "Complex module with multi-function responsibilities"
+      ],
+      "recommended_split_boundaries": [
+        "Decompose into modular domain components"
+      ]
+    },
+    {
+      "path": "src/astrarun/applications/service.py",
+      "line_count": 501,
+      "classes_count": 0,
+      "functions_count": 8,
+      "is_god_object": false,
+      "distinct_responsibilities": [
+        "Complex module with multi-function responsibilities"
+      ],
+      "recommended_split_boundaries": [
+        "Decompose into modular domain components"
+      ]
+    },
+    {
+      "path": "src/astrarun/tools/dynamic_builder.py",
+      "line_count": 500,
+      "classes_count": 6,
+      "functions_count": 1,
+      "is_god_object": false,
+      "distinct_responsibilities": [
+        "Complex module with multi-function responsibilities"
+      ],
+      "recommended_split_boundaries": [
+        "Decompose into modular domain components"
+      ]
+    }
+  ],
+  "architectural_overlap_findings": {
+    "interaction_vs_computer_use": {
+      "observation": "Both astrarun.interaction and astrarun.computer_use provide desktop and UIA drivers.",
+      "status": "CONSOLIDATED_VIA_FACADE",
+      "finding": "ComputerUse acts as canonical top-level facade. interaction provides specialized low-level win32/comtypes bindings.",
+      "recommendation": "Preserve ComputerUse facade as single public computer-use entry point; do not create duplicate desktop hooks."
+    },
+    "perception_vs_interaction_input": {
+      "observation": "NativeInputController in perception.input and PhysicalInputController in computer_use.input.",
+      "status": "ALIGNED",
+      "finding": "NativeInputController provides raw Win32 SendInput and takeover detection; ComputerUse delegates to it.",
+      "recommendation": "Retain NativeInputController as authoritative physical controller."
+    },
+    "search_index_vs_entity_resolver": {
+      "observation": "SearchIndex in search/index.py and SemanticEntityResolver in discovery/entity_resolver.py.",
+      "status": "COLLABORATIVE",
+      "finding": "SearchIndex provides fast fuzzy n-gram token retrieval; SemanticEntityResolver applies semantic normalization, alias resolution, and candidate filtering.",
+      "recommendation": "Maintain SearchIndex as retrieval layer and SemanticEntityResolver as decision layer."
+    }
+  }
+}

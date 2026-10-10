@@ -1,0 +1,90 @@
+{
+  "timestamp": "2026-10-10T03:54:57.023527+00:00",
+  "phase": "F0-23",
+  "authority_chain": "ActionProposal -> ExecutionBroker -> ActionGate -> Authorized Execution",
+  "total_tests": 5,
+  "passed_tests": 5,
+  "failed_tests": 0,
+  "all_security_tests_passed": true,
+  "bypass_vulnerabilities_detected": 0,
+  "tests": [
+    {
+      "test_id": "SEC-01-AUTHORIZED_OBSERVATION",
+      "description": "Legitimate observation passes through ExecutionBroker and ActionGate with valid audit trail.",
+      "input_proposal": {
+        "category": "OBSERVE",
+        "capability_id": "is_application_running",
+        "parameters": {
+          "app": "notepad"
+        },
+        "source": "agent_planner",
+        "task_id": "task_sec_01",
+        "plan_revision": 1,
+        "step_id": null,
+        "dry_run": false,
+        "reason": null
+      },
+      "broker_verdict": "ALLOW",
+      "blocked": false,
+      "audit_id_present": true,
+      "authority_chain_verified": true,
+      "passed": true
+    },
+    {
+      "test_id": "SEC-02-CATEGORY_SPOOFING_PREVENTED",
+      "description": "Broker detects mutating capability masquerading as OBSERVE and authoritatively forces to ACT.",
+      "input_proposal": {
+        "category": "OBSERVE",
+        "capability_id": "save_text_file",
+        "parameters": {
+          "path": "outputs/spoof.txt",
+          "content": "spoof"
+        },
+        "source": "untrusted_caller",
+        "task_id": "task_sec_02",
+        "plan_revision": 1,
+        "step_id": null,
+        "dry_run": false,
+        "reason": null
+      },
+      "broker_verdict": "ALLOW",
+      "blocked": false,
+      "passed": true,
+      "evidence": "Broker evaluated authoritative metadata (mutates_state=True) over caller-supplied category."
+    },
+    {
+      "test_id": "SEC-03-UNREGISTERED_CAPABILITY_DENIED",
+      "description": "ExecutionBroker strictly blocks unregistered capabilities by default.",
+      "input_proposal": {
+        "category": "ACT",
+        "capability_id": "unregistered_dangerous_action_xyz",
+        "parameters": {
+          "cmd": "rm -rf /"
+        },
+        "source": "adversarial_test",
+        "task_id": "task_sec_03",
+        "plan_revision": 1,
+        "step_id": null,
+        "dry_run": false,
+        "reason": null
+      },
+      "broker_verdict": "BLOCK",
+      "blocked": true,
+      "message": "SECURITY_DENY: Unknown or unregistered capability 'unregistered_dangerous_action_xyz'. Consequential execution denied.",
+      "passed": true
+    },
+    {
+      "test_id": "SEC-04-BROKER_DISPATCH_SCOPE_ENFORCEMENT",
+      "description": "BrokerDispatchScope verifies execution is mediated by ExecutionBroker.",
+      "active_outside_broker": false,
+      "passed": true,
+      "evidence": "BrokerDispatchScope is inactive outside of Broker mediation, rejecting unmediated dispatch."
+    },
+    {
+      "test_id": "SEC-05-AUDIT_TRAIL_INTEGRITY",
+      "description": "Broker preserves complete chronological audit trail of all evaluated proposals.",
+      "records_logged": 3,
+      "passed": true
+    }
+  ]
+}

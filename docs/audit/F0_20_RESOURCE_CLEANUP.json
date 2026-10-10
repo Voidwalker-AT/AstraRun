@@ -1,0 +1,9 @@
+{
+  "test": "acceptance_e_clean_desktop_state",
+  "status": "PASS",
+  "visible_windows": 10,
+  "dialogs": 0,
+  "astra_owned_resources": 0,
+  "zero_debris_verified": true,
+  "latency_sec": 0.002
+}

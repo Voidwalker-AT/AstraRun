@@ -1,0 +1,31 @@
+{
+  "audit_version": "1.0",
+  "phase": "F0-19",
+  "hardcoding_audit": {
+    "calculator": {
+      "has_hardcoded_routing_branch": false,
+      "resolution_mechanism": "Dynamic AppDiscoveryCache and SearchIndex keyword matching on 'calc' / 'calculator'.",
+      "interaction_mechanism": "Generic UIA Button/InvokePattern or CLI."
+    },
+    "notepad": {
+      "has_hardcoded_routing_branch": false,
+      "resolution_mechanism": "Dynamic AppDiscoveryCache and SearchIndex keyword matching on 'notepad'.",
+      "interaction_mechanism": "Generic UIA Document/Edit ValuePattern or type_into_window."
+    },
+    "vlc": {
+      "has_hardcoded_routing_branch": false,
+      "resolution_mechanism": "Dynamic AppDiscoveryCache and SearchIndex with maintenance candidate quarantine (excludes reset/preferences shortcuts).",
+      "interaction_mechanism": "Generic application launch and UIA controls."
+    },
+    "chatgpt": {
+      "has_hardcoded_routing_branch": false,
+      "resolution_mechanism": "Delegated AI advisor routing under ProviderRegistry contract.",
+      "interaction_mechanism": "Structured CLI or browser session."
+    }
+  },
+  "overall_verdict": {
+    "zero_application_hardcoding_enforced": true,
+    "generic_ufo2_inspired_abstractions_verified": true,
+    "pure_semantic_and_graph_reasoning": true
+  }
+}

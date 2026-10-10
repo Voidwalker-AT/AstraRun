@@ -1,0 +1,3755 @@
+{
+  "timestamp": "2026-10-10T03:59:38.401863+00:00",
+  "phase": "F0-23",
+  "description": "Comprehensive 360-case stress corpus evaluated across 7 orthogonal dimensions using independent strong test oracles.",
+  "summary": {
+    "total_evaluated": 360,
+    "total_passed": 323,
+    "total_failed": 37,
+    "false_completion_rate_pct": 0.0,
+    "overall_pass_rate_pct": 89.72,
+    "breakdown_by_category": {
+      "SEMANTIC_INTERPRETATION": {
+        "total": 100,
+        "passed": 75,
+        "failed": 25,
+        "pass_rate_pct": 75.0
+      },
+      "ENTITY_RESOLUTION": {
+        "total": 50,
+        "passed": 43,
+        "failed": 7,
+        "pass_rate_pct": 86.0
+      },
+      "MODALITY_PRESERVATION": {
+        "total": 50,
+        "passed": 50,
+        "failed": 0,
+        "pass_rate_pct": 100.0
+      },
+      "ACTION_RELEVANCE": {
+        "total": 50,
+        "passed": 45,
+        "failed": 5,
+        "pass_rate_pct": 90.0
+      },
+      "ADVERSARIAL_FALSE_COMPLETION": {
+        "total": 50,
+        "passed": 50,
+        "failed": 0,
+        "pass_rate_pct": 100.0
+      },
+      "REPLANNING_AND_RECOVERY": {
+        "total": 30,
+        "passed": 30,
+        "failed": 0,
+        "pass_rate_pct": 100.0
+      },
+      "CLEANUP_AND_LIFECYCLE": {
+        "total": 30,
+        "passed": 30,
+        "failed": 0,
+        "pass_rate_pct": 100.0
+      }
+    }
+  },
+  "category_details": [
+    {
+      "category": "SEMANTIC_INTERPRETATION",
+      "total": 100,
+      "passed": 75,
+      "failed": 25,
+      "false_positives": 0,
+      "false_negatives": 0,
+      "pass_rate_pct": 75.0,
+      "cases": [
+        {
+          "case_id": "SEM-SYST-01",
+          "prompt": "check available memory",
+          "category": "system_query",
+          "inferred_intent": "memory_status",
+          "oracle_class": "SEMANTIC_INTENT_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "SEM-SYST-02",
+          "prompt": "how much ram is free",
+          "category": "system_query",
+          "inferred_intent": "memory_status",
+          "oracle_class": "SEMANTIC_INTENT_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "SEM-SYST-03",
+          "prompt": "show cpu usage",
+          "category": "system_query",
+          "inferred_intent": "cpu_status",
+          "oracle_class": "SEMANTIC_INTENT_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "SEM-SYST-04",
+          "prompt": "check disk space",
+          "category": "system_query",
+          "inferred_intent": "disk_status",
+          "oracle_class": "SEMANTIC_INTENT_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "SEM-SYST-05",
+          "prompt": "inspect battery health",
+          "category": "system_query",
+          "inferred_intent": "battery_status",
+          "oracle_class": "SEMANTIC_INTENT_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "SEM-SYST-06",
+          "prompt": "show network status",
+          "category": "system_query",
+          "inferred_intent": "list_network_connections",
+          "oracle_class": "SEMANTIC_INTENT_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "SEM-SYST-07",
+          "prompt": "check gpu memory",
+          "category": "system_query",
+          "inferred_intent": "memory_status",
+          "oracle_class": "SEMANTIC_INTENT_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "SEM-SYST-08",
+          "prompt": "show system uptime",
+          "category": "system_query",
+          "inferred_intent": "system_summary",
+          "oracle_class": "SEMANTIC_INTENT_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "SEM-SYST-09",
+          "prompt": "what os version is running",
+          "category": "system_query",
+          "inferred_intent": "unknown",
+          "oracle_class": "SEMANTIC_INTENT_ORACLE",
+          "passed": false,
+          "verdict": "FAIL"
+        },
+        {
+          "case_id": "SEM-SYST-10",
+          "prompt": "show host diagnostics",
+          "category": "system_query",
+          "inferred_intent": "inspect_port",
+          "oracle_class": "SEMANTIC_INTENT_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "SEM-APP_-01",
+          "prompt": "open notepad",
+          "category": "app_lifecycle",
+          "inferred_intent": "open_app",
+          "oracle_class": "SEMANTIC_INTENT_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "SEM-APP_-02",
+          "prompt": "launch calculator",
+          "category": "app_lifecycle",
+          "inferred_intent": "open_app",
+          "oracle_class": "SEMANTIC_INTENT_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "SEM-APP_-03",
+          "prompt": "open powershell",
+          "category": "app_lifecycle",
+          "inferred_intent": "open_app",
+          "oracle_class": "SEMANTIC_INTENT_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "SEM-APP_-04",
+          "prompt": "start paint",
+          "category": "app_lifecycle",
+          "inferred_intent": "open_app",
+          "oracle_class": "SEMANTIC_INTENT_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "SEM-APP_-05",
+          "prompt": "launch vlc",
+          "category": "app_lifecycle",
+          "inferred_intent": "open_app",
+          "oracle_class": "SEMANTIC_INTENT_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "SEM-APP_-06",
+          "prompt": "open chrome",
+          "category": "app_lifecycle",
+          "inferred_intent": "open_app",
+          "oracle_class": "SEMANTIC_INTENT_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "SEM-APP_-07",
+          "prompt": "start edge",
+          "category": "app_lifecycle",
+          "inferred_intent": "open_app",
+          "oracle_class": "SEMANTIC_INTENT_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "SEM-APP_-08",
+          "prompt": "close notepad",
+          "category": "app_lifecycle",
+          "inferred_intent": "close_application",
+          "oracle_class": "SEMANTIC_INTENT_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "SEM-APP_-09",
+          "prompt": "exit calculator",
+          "category": "app_lifecycle",
+          "inferred_intent": "close_application",
+          "oracle_class": "SEMANTIC_INTENT_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "SEM-APP_-10",
+          "prompt": "quit terminal",
+          "category": "app_lifecycle",
+          "inferred_intent": "close_application",
+          "oracle_class": "SEMANTIC_INTENT_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "SEM-WIND-01",
+          "prompt": "snap window left",
+          "category": "window_mgmt",
+          "inferred_intent": "snap_window_left",
+          "oracle_class": "SEMANTIC_INTENT_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "SEM-WIND-02",
+          "prompt": "snap window right",
+          "category": "window_mgmt",
+          "inferred_intent": "snap_window_right",
+          "oracle_class": "SEMANTIC_INTENT_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "SEM-WIND-03",
+          "prompt": "maximize window",
+          "category": "window_mgmt",
+          "inferred_intent": "maximize_window",
+          "oracle_class": "SEMANTIC_INTENT_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "SEM-WIND-04",
+          "prompt": "minimize window",
+          "category": "window_mgmt",
+          "inferred_intent": "minimize_window",
+          "oracle_class": "SEMANTIC_INTENT_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "SEM-WIND-05",
+          "prompt": "restore window",
+          "category": "window_mgmt",
+          "inferred_intent": "restore_window",
+          "oracle_class": "SEMANTIC_INTENT_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "SEM-WIND-06",
+          "prompt": "arrange desktop",
+          "category": "window_mgmt",
+          "inferred_intent": "arrange_desktop",
+          "oracle_class": "SEMANTIC_INTENT_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "SEM-WIND-07",
+          "prompt": "tile windows",
+          "category": "window_mgmt",
+          "inferred_intent": "arrange_desktop",
+          "oracle_class": "SEMANTIC_INTENT_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "SEM-WIND-08",
+          "prompt": "move window to monitor 1",
+          "category": "window_mgmt",
+          "inferred_intent": "move_window_to_monitor",
+          "oracle_class": "SEMANTIC_INTENT_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "SEM-WIND-09",
+          "prompt": "undo window move",
+          "category": "window_mgmt",
+          "inferred_intent": "undo_last_window_move",
+          "oracle_class": "SEMANTIC_INTENT_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "SEM-WIND-10",
+          "prompt": "close window",
+          "category": "window_mgmt",
+          "inferred_intent": "close_window",
+          "oracle_class": "SEMANTIC_INTENT_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "SEM-FILE-01",
+          "prompt": "open documents folder",
+          "category": "file_ops",
+          "inferred_intent": "open_folder",
+          "oracle_class": "SEMANTIC_INTENT_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "SEM-FILE-02",
+          "prompt": "open downloads directory",
+          "category": "file_ops",
+          "inferred_intent": "open_folder",
+          "oracle_class": "SEMANTIC_INTENT_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "SEM-FILE-03",
+          "prompt": "reveal test file",
+          "category": "file_ops",
+          "inferred_intent": "unknown",
+          "oracle_class": "SEMANTIC_INTENT_ORACLE",
+          "passed": false,
+          "verdict": "FAIL"
+        },
+        {
+          "case_id": "SEM-FILE-04",
+          "prompt": "show desktop folder",
+          "category": "file_ops",
+          "inferred_intent": "open_folder",
+          "oracle_class": "SEMANTIC_INTENT_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "SEM-FILE-05",
+          "prompt": "inspect project directory",
+          "category": "file_ops",
+          "inferred_intent": "inspect_port",
+          "oracle_class": "SEMANTIC_INTENT_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "SEM-FILE-06",
+          "prompt": "browse pictures",
+          "category": "file_ops",
+          "inferred_intent": "unknown",
+          "oracle_class": "SEMANTIC_INTENT_ORACLE",
+          "passed": false,
+          "verdict": "FAIL"
+        },
+        {
+          "case_id": "SEM-FILE-07",
+          "prompt": "open temp folder",
+          "category": "file_ops",
+          "inferred_intent": "open_app",
+          "oracle_class": "SEMANTIC_INTENT_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "SEM-FILE-08",
+          "prompt": "check config path",
+          "category": "file_ops",
+          "inferred_intent": "inspect_port",
+          "oracle_class": "SEMANTIC_INTENT_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "SEM-FILE-09",
+          "prompt": "locate active workspace",
+          "category": "file_ops",
+          "inferred_intent": "find_file",
+          "oracle_class": "SEMANTIC_INTENT_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "SEM-FILE-10",
+          "prompt": "find log directory",
+          "category": "file_ops",
+          "inferred_intent": "open_app",
+          "oracle_class": "SEMANTIC_INTENT_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "SEM-MATH-01",
+          "prompt": "calculate 15 * 8",
+          "category": "math_compute",
+          "inferred_intent": "computational_task",
+          "oracle_class": "SEMANTIC_INTENT_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "SEM-MATH-02",
+          "prompt": "compute 100 / 4",
+          "category": "math_compute",
+          "inferred_intent": "computational_task",
+          "oracle_class": "SEMANTIC_INTENT_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "SEM-MATH-03",
+          "prompt": "what is 45 + 55",
+          "category": "math_compute",
+          "inferred_intent": "computational_task",
+          "oracle_class": "SEMANTIC_INTENT_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "SEM-MATH-04",
+          "prompt": "compute 2 ** 10",
+          "category": "math_compute",
+          "inferred_intent": "computational_task",
+          "oracle_class": "SEMANTIC_INTENT_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "SEM-MATH-05",
+          "prompt": "calculate 99 - 33",
+          "category": "math_compute",
+          "inferred_intent": "computational_task",
+          "oracle_class": "SEMANTIC_INTENT_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "SEM-MATH-06",
+          "prompt": "what is 7 * 6",
+          "category": "math_compute",
+          "inferred_intent": "computational_task",
+          "oracle_class": "SEMANTIC_INTENT_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "SEM-MATH-07",
+          "prompt": "calculate 144 / 12",
+          "category": "math_compute",
+          "inferred_intent": "computational_task",
+          "oracle_class": "SEMANTIC_INTENT_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "SEM-MATH-08",
+          "prompt": "compute 50 + 25",
+          "category": "math_compute",
+          "inferred_intent": "computational_task",
+          "oracle_class": "SEMANTIC_INTENT_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "SEM-MATH-09",
+          "prompt": "what is 1000 / 8",
+          "category": "math_compute",
+          "inferred_intent": "computational_task",
+          "oracle_class": "SEMANTIC_INTENT_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "SEM-MATH-10",
+          "prompt": "calculate 21 * 3",
+          "category": "math_compute",
+          "inferred_intent": "computational_task",
+          "oracle_class": "SEMANTIC_INTENT_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "SEM-NETW-01",
+          "prompt": "scan available wifi",
+          "category": "network_wifi",
+          "inferred_intent": "unknown",
+          "oracle_class": "SEMANTIC_INTENT_ORACLE",
+          "passed": false,
+          "verdict": "FAIL"
+        },
+        {
+          "case_id": "SEM-NETW-02",
+          "prompt": "check wifi connection",
+          "category": "network_wifi",
+          "inferred_intent": "inspect_port",
+          "oracle_class": "SEMANTIC_INTENT_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "SEM-NETW-03",
+          "prompt": "show active ssid",
+          "category": "network_wifi",
+          "inferred_intent": "inspect_port",
+          "oracle_class": "SEMANTIC_INTENT_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "SEM-NETW-04",
+          "prompt": "disconnect wifi",
+          "category": "network_wifi",
+          "inferred_intent": "unknown",
+          "oracle_class": "SEMANTIC_INTENT_ORACLE",
+          "passed": false,
+          "verdict": "FAIL"
+        },
+        {
+          "case_id": "SEM-NETW-05",
+          "prompt": "check ip address",
+          "category": "network_wifi",
+          "inferred_intent": "inspect_port",
+          "oracle_class": "SEMANTIC_INTENT_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "SEM-NETW-06",
+          "prompt": "ping localhost",
+          "category": "network_wifi",
+          "inferred_intent": "unknown",
+          "oracle_class": "SEMANTIC_INTENT_ORACLE",
+          "passed": false,
+          "verdict": "FAIL"
+        },
+        {
+          "case_id": "SEM-NETW-07",
+          "prompt": "inspect gateway",
+          "category": "network_wifi",
+          "inferred_intent": "inspect_port",
+          "oracle_class": "SEMANTIC_INTENT_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "SEM-NETW-08",
+          "prompt": "check adapter status",
+          "category": "network_wifi",
+          "inferred_intent": "inspect_port",
+          "oracle_class": "SEMANTIC_INTENT_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "SEM-NETW-09",
+          "prompt": "verify internet connectivity",
+          "category": "network_wifi",
+          "inferred_intent": "unknown",
+          "oracle_class": "SEMANTIC_INTENT_ORACLE",
+          "passed": false,
+          "verdict": "FAIL"
+        },
+        {
+          "case_id": "SEM-NETW-10",
+          "prompt": "list network adapters",
+          "category": "network_wifi",
+          "inferred_intent": "unknown",
+          "oracle_class": "SEMANTIC_INTENT_ORACLE",
+          "passed": false,
+          "verdict": "FAIL"
+        },
+        {
+          "case_id": "SEM-AUDI-01",
+          "prompt": "mute audio",
+          "category": "audio_media",
+          "inferred_intent": "system_volume",
+          "oracle_class": "SEMANTIC_INTENT_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "SEM-AUDI-02",
+          "prompt": "unmute sound",
+          "category": "audio_media",
+          "inferred_intent": "unknown",
+          "oracle_class": "SEMANTIC_INTENT_ORACLE",
+          "passed": false,
+          "verdict": "FAIL"
+        },
+        {
+          "case_id": "SEM-AUDI-03",
+          "prompt": "increase volume",
+          "category": "audio_media",
+          "inferred_intent": "system_volume",
+          "oracle_class": "SEMANTIC_INTENT_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "SEM-AUDI-04",
+          "prompt": "decrease volume",
+          "category": "audio_media",
+          "inferred_intent": "system_volume",
+          "oracle_class": "SEMANTIC_INTENT_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "SEM-AUDI-05",
+          "prompt": "set volume to 50",
+          "category": "audio_media",
+          "inferred_intent": "system_volume",
+          "oracle_class": "SEMANTIC_INTENT_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "SEM-AUDI-06",
+          "prompt": "pause playback",
+          "category": "audio_media",
+          "inferred_intent": "unknown",
+          "oracle_class": "SEMANTIC_INTENT_ORACLE",
+          "passed": false,
+          "verdict": "FAIL"
+        },
+        {
+          "case_id": "SEM-AUDI-07",
+          "prompt": "resume media",
+          "category": "audio_media",
+          "inferred_intent": "unknown",
+          "oracle_class": "SEMANTIC_INTENT_ORACLE",
+          "passed": false,
+          "verdict": "FAIL"
+        },
+        {
+          "case_id": "SEM-AUDI-08",
+          "prompt": "play next track",
+          "category": "audio_media",
+          "inferred_intent": "unknown",
+          "oracle_class": "SEMANTIC_INTENT_ORACLE",
+          "passed": false,
+          "verdict": "FAIL"
+        },
+        {
+          "case_id": "SEM-AUDI-09",
+          "prompt": "previous track",
+          "category": "audio_media",
+          "inferred_intent": "unknown",
+          "oracle_class": "SEMANTIC_INTENT_ORACLE",
+          "passed": false,
+          "verdict": "FAIL"
+        },
+        {
+          "case_id": "SEM-AUDI-10",
+          "prompt": "check audio devices",
+          "category": "audio_media",
+          "inferred_intent": "inspect_port",
+          "oracle_class": "SEMANTIC_INTENT_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "SEM-SETT-01",
+          "prompt": "open settings",
+          "category": "settings_config",
+          "inferred_intent": "open_app",
+          "oracle_class": "SEMANTIC_INTENT_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "SEM-SETT-02",
+          "prompt": "show preferences",
+          "category": "settings_config",
+          "inferred_intent": "inspect_port",
+          "oracle_class": "SEMANTIC_INTENT_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "SEM-SETT-03",
+          "prompt": "open configuration",
+          "category": "settings_config",
+          "inferred_intent": "open_app",
+          "oracle_class": "SEMANTIC_INTENT_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "SEM-SETT-04",
+          "prompt": "view hotkey diagnostics",
+          "category": "settings_config",
+          "inferred_intent": "unknown",
+          "oracle_class": "SEMANTIC_INTENT_ORACLE",
+          "passed": false,
+          "verdict": "FAIL"
+        },
+        {
+          "case_id": "SEM-SETT-05",
+          "prompt": "show learned skills",
+          "category": "settings_config",
+          "inferred_intent": "inspect_port",
+          "oracle_class": "SEMANTIC_INTENT_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "SEM-SETT-06",
+          "prompt": "open history",
+          "category": "settings_config",
+          "inferred_intent": "open_app",
+          "oracle_class": "SEMANTIC_INTENT_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "SEM-SETT-07",
+          "prompt": "check agent status",
+          "category": "settings_config",
+          "inferred_intent": "inspect_port",
+          "oracle_class": "SEMANTIC_INTENT_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "SEM-SETT-08",
+          "prompt": "show learned aliases",
+          "category": "settings_config",
+          "inferred_intent": "inspect_port",
+          "oracle_class": "SEMANTIC_INTENT_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "SEM-SETT-09",
+          "prompt": "open memory",
+          "category": "settings_config",
+          "inferred_intent": "memory_status",
+          "oracle_class": "SEMANTIC_INTENT_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "SEM-SETT-10",
+          "prompt": "list capabilities",
+          "category": "settings_config",
+          "inferred_intent": "unknown",
+          "oracle_class": "SEMANTIC_INTENT_ORACLE",
+          "passed": false,
+          "verdict": "FAIL"
+        },
+        {
+          "case_id": "SEM-CONV-01",
+          "prompt": "hello",
+          "category": "conversational",
+          "inferred_intent": "unknown",
+          "oracle_class": "SEMANTIC_INTENT_ORACLE",
+          "passed": false,
+          "verdict": "FAIL"
+        },
+        {
+          "case_id": "SEM-CONV-02",
+          "prompt": "hi there",
+          "category": "conversational",
+          "inferred_intent": "unknown",
+          "oracle_class": "SEMANTIC_INTENT_ORACLE",
+          "passed": false,
+          "verdict": "FAIL"
+        },
+        {
+          "case_id": "SEM-CONV-03",
+          "prompt": "good morning",
+          "category": "conversational",
+          "inferred_intent": "unknown",
+          "oracle_class": "SEMANTIC_INTENT_ORACLE",
+          "passed": false,
+          "verdict": "FAIL"
+        },
+        {
+          "case_id": "SEM-CONV-04",
+          "prompt": "how are you",
+          "category": "conversational",
+          "inferred_intent": "unknown",
+          "oracle_class": "SEMANTIC_INTENT_ORACLE",
+          "passed": false,
+          "verdict": "FAIL"
+        },
+        {
+          "case_id": "SEM-CONV-05",
+          "prompt": "who are you",
+          "category": "conversational",
+          "inferred_intent": "unknown",
+          "oracle_class": "SEMANTIC_INTENT_ORACLE",
+          "passed": false,
+          "verdict": "FAIL"
+        },
+        {
+          "case_id": "SEM-CONV-06",
+          "prompt": "what can you do",
+          "category": "conversational",
+          "inferred_intent": "unknown",
+          "oracle_class": "SEMANTIC_INTENT_ORACLE",
+          "passed": false,
+          "verdict": "FAIL"
+        },
+        {
+          "case_id": "SEM-CONV-07",
+          "prompt": "help",
+          "category": "conversational",
+          "inferred_intent": "unknown",
+          "oracle_class": "SEMANTIC_INTENT_ORACLE",
+          "passed": false,
+          "verdict": "FAIL"
+        },
+        {
+          "case_id": "SEM-CONV-08",
+          "prompt": "thanks",
+          "category": "conversational",
+          "inferred_intent": "unknown",
+          "oracle_class": "SEMANTIC_INTENT_ORACLE",
+          "passed": false,
+          "verdict": "FAIL"
+        },
+        {
+          "case_id": "SEM-CONV-09",
+          "prompt": "goodbye",
+          "category": "conversational",
+          "inferred_intent": "unknown",
+          "oracle_class": "SEMANTIC_INTENT_ORACLE",
+          "passed": false,
+          "verdict": "FAIL"
+        },
+        {
+          "case_id": "SEM-CONV-10",
+          "prompt": "ping",
+          "category": "conversational",
+          "inferred_intent": "unknown",
+          "oracle_class": "SEMANTIC_INTENT_ORACLE",
+          "passed": false,
+          "verdict": "FAIL"
+        },
+        {
+          "case_id": "SEM-COMP-01",
+          "prompt": "check memory and inspect disk",
+          "category": "composite_goals",
+          "inferred_intent": "memory_status",
+          "oracle_class": "SEMANTIC_INTENT_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "SEM-COMP-02",
+          "prompt": "open notepad and type greeting",
+          "category": "composite_goals",
+          "inferred_intent": "open_app",
+          "oracle_class": "SEMANTIC_INTENT_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "SEM-COMP-03",
+          "prompt": "calculate primes and save them",
+          "category": "composite_goals",
+          "inferred_intent": "computational_task",
+          "oracle_class": "SEMANTIC_INTENT_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "SEM-COMP-04",
+          "prompt": "inspect cpu and report ram",
+          "category": "composite_goals",
+          "inferred_intent": "cpu_status",
+          "oracle_class": "SEMANTIC_INTENT_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "SEM-COMP-05",
+          "prompt": "check wifi and test connection",
+          "category": "composite_goals",
+          "inferred_intent": "inspect_port",
+          "oracle_class": "SEMANTIC_INTENT_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "SEM-COMP-06",
+          "prompt": "scan disk drives and report free space",
+          "category": "composite_goals",
+          "inferred_intent": "disk_status",
+          "oracle_class": "SEMANTIC_INTENT_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "SEM-COMP-07",
+          "prompt": "get battery level and save report",
+          "category": "composite_goals",
+          "inferred_intent": "battery_status",
+          "oracle_class": "SEMANTIC_INTENT_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "SEM-COMP-08",
+          "prompt": "count to 10 and display",
+          "category": "composite_goals",
+          "inferred_intent": "computational_task",
+          "oracle_class": "SEMANTIC_INTENT_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "SEM-COMP-09",
+          "prompt": "find active windows and tile them",
+          "category": "composite_goals",
+          "inferred_intent": "open_app",
+          "oracle_class": "SEMANTIC_INTENT_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "SEM-COMP-10",
+          "prompt": "check system summary and show diagnostics",
+          "category": "composite_goals",
+          "inferred_intent": "system_summary",
+          "oracle_class": "SEMANTIC_INTENT_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        }
+      ]
+    },
+    {
+      "category": "ENTITY_RESOLUTION",
+      "total": 50,
+      "passed": 43,
+      "failed": 7,
+      "false_positives": 0,
+      "false_negatives": 0,
+      "pass_rate_pct": 86.0,
+      "cases": [
+        {
+          "case_id": "ENT-01",
+          "query": "notepad",
+          "expected_name": "Notepad",
+          "should_match": true,
+          "resolved_name": "Notepad",
+          "resolved_confidence": 1.0,
+          "oracle_class": "ENTITY_IDENTITY_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "ENT-02",
+          "query": "calc",
+          "expected_name": "Calculator",
+          "should_match": true,
+          "resolved_name": "Calculator",
+          "resolved_confidence": 1.0,
+          "oracle_class": "ENTITY_IDENTITY_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "ENT-03",
+          "query": "calculator",
+          "expected_name": "Calculator",
+          "should_match": true,
+          "resolved_name": "Calculator",
+          "resolved_confidence": 1.0,
+          "oracle_class": "ENTITY_IDENTITY_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "ENT-04",
+          "query": "powershell",
+          "expected_name": "PowerShell",
+          "should_match": true,
+          "resolved_name": "Windows PowerShell",
+          "resolved_confidence": 1.0,
+          "oracle_class": "ENTITY_IDENTITY_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "ENT-05",
+          "query": "cmd",
+          "expected_name": "Command Prompt",
+          "should_match": true,
+          "resolved_name": "Command Prompt",
+          "resolved_confidence": 1.0,
+          "oracle_class": "ENTITY_IDENTITY_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "ENT-06",
+          "query": "code",
+          "expected_name": "Visual Studio Code",
+          "should_match": true,
+          "resolved_name": "Visual Studio Code",
+          "resolved_confidence": 1.0,
+          "oracle_class": "ENTITY_IDENTITY_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "ENT-07",
+          "query": "chrome",
+          "expected_name": "Chrome",
+          "should_match": true,
+          "resolved_name": "Chrome",
+          "resolved_confidence": 1.0,
+          "oracle_class": "ENTITY_IDENTITY_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "ENT-08",
+          "query": "msedge",
+          "expected_name": "Edge",
+          "should_match": true,
+          "resolved_name": "Msedge",
+          "resolved_confidence": 1.0,
+          "oracle_class": "ENTITY_IDENTITY_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "ENT-09",
+          "query": "edge",
+          "expected_name": "Edge",
+          "should_match": true,
+          "resolved_name": "Microsoft Edge",
+          "resolved_confidence": 1.0,
+          "oracle_class": "ENTITY_IDENTITY_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "ENT-10",
+          "query": "vlc",
+          "expected_name": "VLC",
+          "should_match": true,
+          "resolved_name": "Vlc",
+          "resolved_confidence": 1.0,
+          "oracle_class": "ENTITY_IDENTITY_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "ENT-11",
+          "query": "excel",
+          "expected_name": "Excel",
+          "should_match": true,
+          "resolved_name": "Excel",
+          "resolved_confidence": 1.0,
+          "oracle_class": "ENTITY_IDENTITY_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "ENT-12",
+          "query": "word",
+          "expected_name": "Word",
+          "should_match": true,
+          "resolved_name": "Word",
+          "resolved_confidence": 1.0,
+          "oracle_class": "ENTITY_IDENTITY_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "ENT-13",
+          "query": "notepad++",
+          "expected_name": "Notepad++",
+          "should_match": true,
+          "resolved_name": "Notepad++",
+          "resolved_confidence": 1.0,
+          "oracle_class": "ENTITY_IDENTITY_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "ENT-14",
+          "query": "terminal",
+          "expected_name": "Terminal",
+          "should_match": true,
+          "resolved_name": "Windows Terminal",
+          "resolved_confidence": 0.98,
+          "oracle_class": "ENTITY_IDENTITY_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "ENT-15",
+          "query": "explorer",
+          "expected_name": "File Explorer",
+          "should_match": true,
+          "resolved_name": "File Explorer",
+          "resolved_confidence": 1.0,
+          "oracle_class": "ENTITY_IDENTITY_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "ENT-16",
+          "query": "settings",
+          "expected_name": "Settings",
+          "should_match": true,
+          "resolved_name": "WinCDEmu Settings",
+          "resolved_confidence": 0.91,
+          "oracle_class": "ENTITY_IDENTITY_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "ENT-17",
+          "query": "paint",
+          "expected_name": "Paint",
+          "should_match": true,
+          "resolved_name": "Mspaint",
+          "resolved_confidence": 0.6214,
+          "oracle_class": "ENTITY_IDENTITY_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "ENT-18",
+          "query": "control panel",
+          "expected_name": "Control Panel",
+          "should_match": true,
+          "resolved_name": "Control Panel",
+          "resolved_confidence": 1.0,
+          "oracle_class": "ENTITY_IDENTITY_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "ENT-19",
+          "query": "task manager",
+          "expected_name": "Task Manager",
+          "should_match": true,
+          "resolved_name": "Task Manager",
+          "resolved_confidence": 1.0,
+          "oracle_class": "ENTITY_IDENTITY_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "ENT-20",
+          "query": "registry editor",
+          "expected_name": "Registry Editor",
+          "should_match": true,
+          "resolved_name": "Registry Editor",
+          "resolved_confidence": 1.0,
+          "oracle_class": "ENTITY_IDENTITY_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "ENT-21",
+          "query": "git",
+          "expected_name": "Git",
+          "should_match": true,
+          "resolved_name": "Git CMD",
+          "resolved_confidence": 0.94,
+          "oracle_class": "ENTITY_IDENTITY_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "ENT-22",
+          "query": "python",
+          "expected_name": "Python",
+          "should_match": true,
+          "resolved_name": "Python3.12",
+          "resolved_confidence": 0.944,
+          "oracle_class": "ENTITY_IDENTITY_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "ENT-23",
+          "query": "NOTEPAD",
+          "expected_name": "Notepad",
+          "should_match": true,
+          "resolved_name": "Notepad",
+          "resolved_confidence": 1.0,
+          "oracle_class": "ENTITY_IDENTITY_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "ENT-24",
+          "query": "Calculator",
+          "expected_name": "Calculator",
+          "should_match": true,
+          "resolved_name": "Calculator",
+          "resolved_confidence": 1.0,
+          "oracle_class": "ENTITY_IDENTITY_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "ENT-25",
+          "query": "VLC media player",
+          "expected_name": "VLC",
+          "should_match": true,
+          "resolved_name": "VLC media player",
+          "resolved_confidence": 1.0,
+          "oracle_class": "ENTITY_IDENTITY_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "ENT-26",
+          "query": "google chrome",
+          "expected_name": "Chrome",
+          "should_match": true,
+          "resolved_name": "Google Chrome",
+          "resolved_confidence": 1.0,
+          "oracle_class": "ENTITY_IDENTITY_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "ENT-27",
+          "query": "microsoft edge",
+          "expected_name": "Edge",
+          "should_match": true,
+          "resolved_name": "Microsoft Edge",
+          "resolved_confidence": 1.0,
+          "oracle_class": "ENTITY_IDENTITY_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "ENT-28",
+          "query": "vs code",
+          "expected_name": "Visual Studio Code",
+          "should_match": true,
+          "resolved_name": "Visual Studio Code",
+          "resolved_confidence": 0.96,
+          "oracle_class": "ENTITY_IDENTITY_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "ENT-29",
+          "query": "visual studio code",
+          "expected_name": "Visual Studio Code",
+          "should_match": true,
+          "resolved_name": "Visual Studio Code",
+          "resolved_confidence": 1.0,
+          "oracle_class": "ENTITY_IDENTITY_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "ENT-30",
+          "query": "windows terminal",
+          "expected_name": "Terminal",
+          "should_match": true,
+          "resolved_name": "Windows Terminal",
+          "resolved_confidence": 1.0,
+          "oracle_class": "ENTITY_IDENTITY_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "ENT-31",
+          "query": "vlc skinned",
+          "expected_name": "VLC",
+          "should_match": false,
+          "resolved_name": "Vlc",
+          "resolved_confidence": 0.675,
+          "oracle_class": "ENTITY_IDENTITY_ORACLE",
+          "passed": false,
+          "verdict": "FAIL"
+        },
+        {
+          "case_id": "ENT-32",
+          "query": "reset vlc",
+          "expected_name": "VLC",
+          "should_match": false,
+          "resolved_name": "Vlc",
+          "resolved_confidence": 0.675,
+          "oracle_class": "ENTITY_IDENTITY_ORACLE",
+          "passed": false,
+          "verdict": "FAIL"
+        },
+        {
+          "case_id": "ENT-33",
+          "query": "vlc cache",
+          "expected_name": "VLC",
+          "should_match": false,
+          "resolved_name": "Vlc",
+          "resolved_confidence": 0.675,
+          "oracle_class": "ENTITY_IDENTITY_ORACLE",
+          "passed": false,
+          "verdict": "FAIL"
+        },
+        {
+          "case_id": "ENT-34",
+          "query": "visual profiler",
+          "expected_name": "Visual Studio Code",
+          "should_match": false,
+          "resolved_name": "Visual Profiler",
+          "resolved_confidence": 1.0,
+          "oracle_class": "ENTITY_IDENTITY_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "ENT-35",
+          "query": "completely_nonexistent_application_999",
+          "expected_name": "None",
+          "should_match": false,
+          "resolved_name": null,
+          "resolved_confidence": 0.0,
+          "oracle_class": "ENTITY_IDENTITY_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "ENT-36",
+          "query": "fake_app_xyz",
+          "expected_name": "None",
+          "should_match": false,
+          "resolved_name": null,
+          "resolved_confidence": 0.0,
+          "oracle_class": "ENTITY_IDENTITY_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "ENT-37",
+          "query": "uninstalled_editor_abc",
+          "expected_name": "None",
+          "should_match": false,
+          "resolved_name": null,
+          "resolved_confidence": 0.0,
+          "oracle_class": "ENTITY_IDENTITY_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "ENT-38",
+          "query": "malicious_payload_exe",
+          "expected_name": "None",
+          "should_match": false,
+          "resolved_name": null,
+          "resolved_confidence": 0.0,
+          "oracle_class": "ENTITY_IDENTITY_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "ENT-39",
+          "query": "not_a_real_app",
+          "expected_name": "None",
+          "should_match": false,
+          "resolved_name": null,
+          "resolved_confidence": 0.0,
+          "oracle_class": "ENTITY_IDENTITY_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "ENT-40",
+          "query": "phantom_browser",
+          "expected_name": "None",
+          "should_match": false,
+          "resolved_name": "Vivaldi Browser",
+          "resolved_confidence": 0.675,
+          "oracle_class": "ENTITY_IDENTITY_ORACLE",
+          "passed": false,
+          "verdict": "FAIL"
+        },
+        {
+          "case_id": "ENT-41",
+          "query": "access",
+          "expected_name": "Access",
+          "should_match": true,
+          "resolved_name": "Access",
+          "resolved_confidence": 1.0,
+          "oracle_class": "ENTITY_IDENTITY_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "ENT-42",
+          "query": "outlook",
+          "expected_name": "Outlook",
+          "should_match": true,
+          "resolved_name": "Outlook",
+          "resolved_confidence": 1.0,
+          "oracle_class": "ENTITY_IDENTITY_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "ENT-43",
+          "query": "powerpnt",
+          "expected_name": "PowerPoint",
+          "should_match": true,
+          "resolved_name": "Powerpnt",
+          "resolved_confidence": 1.0,
+          "oracle_class": "ENTITY_IDENTITY_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "ENT-44",
+          "query": "msaccess",
+          "expected_name": "Access",
+          "should_match": true,
+          "resolved_name": "Msaccess",
+          "resolved_confidence": 1.0,
+          "oracle_class": "ENTITY_IDENTITY_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "ENT-45",
+          "query": "mspub",
+          "expected_name": "Publisher",
+          "should_match": true,
+          "resolved_name": "Mspub",
+          "resolved_confidence": 1.0,
+          "oracle_class": "ENTITY_IDENTITY_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "ENT-46",
+          "query": "lync",
+          "expected_name": "Lync",
+          "should_match": true,
+          "resolved_name": "Lync",
+          "resolved_confidence": 1.0,
+          "oracle_class": "ENTITY_IDENTITY_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "ENT-47",
+          "query": "wordpad",
+          "expected_name": "WordPad",
+          "should_match": true,
+          "resolved_name": null,
+          "resolved_confidence": 0.0,
+          "oracle_class": "ENTITY_IDENTITY_ORACLE",
+          "passed": false,
+          "verdict": "FAIL"
+        },
+        {
+          "case_id": "ENT-48",
+          "query": "snipping tool",
+          "expected_name": "Snipping Tool",
+          "should_match": true,
+          "resolved_name": "Snippingtool",
+          "resolved_confidence": 0.95,
+          "oracle_class": "ENTITY_IDENTITY_ORACLE",
+          "passed": false,
+          "verdict": "FAIL"
+        },
+        {
+          "case_id": "ENT-49",
+          "query": "calculator app",
+          "expected_name": "Calculator",
+          "should_match": true,
+          "resolved_name": "Calculator",
+          "resolved_confidence": 0.675,
+          "oracle_class": "ENTITY_IDENTITY_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "ENT-50",
+          "query": "text editor",
+          "expected_name": "Notepad",
+          "should_match": true,
+          "resolved_name": "Registry Editor",
+          "resolved_confidence": 0.675,
+          "oracle_class": "ENTITY_IDENTITY_ORACLE",
+          "passed": false,
+          "verdict": "FAIL"
+        }
+      ]
+    },
+    {
+      "category": "MODALITY_PRESERVATION",
+      "total": 50,
+      "passed": 50,
+      "failed": 0,
+      "false_positives": 0,
+      "false_negatives": 0,
+      "pass_rate_pct": 100.0,
+      "cases": [
+        {
+          "case_id": "MOD-01",
+          "modality_class": "UI_REQUIRED",
+          "capability_id": "save_document_via_ui",
+          "mutates_state": true,
+          "rule": "Application-mediated UI save workflow required",
+          "oracle_class": "MODALITY_PRESERVATION_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "MOD-02",
+          "modality_class": "UI_REQUIRED",
+          "capability_id": "save_document_via_ui",
+          "mutates_state": true,
+          "rule": "Application-mediated UI save workflow required",
+          "oracle_class": "MODALITY_PRESERVATION_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "MOD-03",
+          "modality_class": "UI_REQUIRED",
+          "capability_id": "save_document_via_ui",
+          "mutates_state": true,
+          "rule": "Application-mediated UI save workflow required",
+          "oracle_class": "MODALITY_PRESERVATION_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "MOD-04",
+          "modality_class": "UI_REQUIRED",
+          "capability_id": "save_document_via_ui",
+          "mutates_state": true,
+          "rule": "Application-mediated UI save workflow required",
+          "oracle_class": "MODALITY_PRESERVATION_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "MOD-05",
+          "modality_class": "UI_REQUIRED",
+          "capability_id": "save_document_via_ui",
+          "mutates_state": true,
+          "rule": "Application-mediated UI save workflow required",
+          "oracle_class": "MODALITY_PRESERVATION_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "MOD-06",
+          "modality_class": "UI_REQUIRED",
+          "capability_id": "type_into_window",
+          "mutates_state": true,
+          "rule": "Window typing requires foreground UI interaction",
+          "oracle_class": "MODALITY_PRESERVATION_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "MOD-07",
+          "modality_class": "UI_REQUIRED",
+          "capability_id": "type_into_window",
+          "mutates_state": true,
+          "rule": "Window typing requires foreground UI interaction",
+          "oracle_class": "MODALITY_PRESERVATION_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "MOD-08",
+          "modality_class": "UI_REQUIRED",
+          "capability_id": "type_into_window",
+          "mutates_state": true,
+          "rule": "Window typing requires foreground UI interaction",
+          "oracle_class": "MODALITY_PRESERVATION_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "MOD-09",
+          "modality_class": "UI_REQUIRED",
+          "capability_id": "type_into_window",
+          "mutates_state": true,
+          "rule": "Window typing requires foreground UI interaction",
+          "oracle_class": "MODALITY_PRESERVATION_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "MOD-10",
+          "modality_class": "UI_REQUIRED",
+          "capability_id": "type_into_window",
+          "mutates_state": true,
+          "rule": "Window typing requires foreground UI interaction",
+          "oracle_class": "MODALITY_PRESERVATION_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "MOD-11",
+          "modality_class": "UI_REQUIRED",
+          "capability_id": "click_ui_element",
+          "mutates_state": true,
+          "rule": "UI click requires accessibility tree targeting",
+          "oracle_class": "MODALITY_PRESERVATION_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "MOD-12",
+          "modality_class": "UI_REQUIRED",
+          "capability_id": "click_ui_element",
+          "mutates_state": true,
+          "rule": "UI click requires accessibility tree targeting",
+          "oracle_class": "MODALITY_PRESERVATION_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "MOD-13",
+          "modality_class": "UI_REQUIRED",
+          "capability_id": "click_ui_element",
+          "mutates_state": true,
+          "rule": "UI click requires accessibility tree targeting",
+          "oracle_class": "MODALITY_PRESERVATION_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "MOD-14",
+          "modality_class": "UI_REQUIRED",
+          "capability_id": "click_ui_element",
+          "mutates_state": true,
+          "rule": "UI click requires accessibility tree targeting",
+          "oracle_class": "MODALITY_PRESERVATION_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "MOD-15",
+          "modality_class": "UI_REQUIRED",
+          "capability_id": "click_ui_element",
+          "mutates_state": true,
+          "rule": "UI click requires accessibility tree targeting",
+          "oracle_class": "MODALITY_PRESERVATION_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "MOD-16",
+          "modality_class": "READ_ONLY",
+          "capability_id": "is_application_running",
+          "mutates_state": false,
+          "rule": "Status query must not alter process state",
+          "oracle_class": "MODALITY_PRESERVATION_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "MOD-17",
+          "modality_class": "READ_ONLY",
+          "capability_id": "is_application_running",
+          "mutates_state": false,
+          "rule": "Status query must not alter process state",
+          "oracle_class": "MODALITY_PRESERVATION_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "MOD-18",
+          "modality_class": "READ_ONLY",
+          "capability_id": "is_application_running",
+          "mutates_state": false,
+          "rule": "Status query must not alter process state",
+          "oracle_class": "MODALITY_PRESERVATION_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "MOD-19",
+          "modality_class": "READ_ONLY",
+          "capability_id": "is_application_running",
+          "mutates_state": false,
+          "rule": "Status query must not alter process state",
+          "oracle_class": "MODALITY_PRESERVATION_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "MOD-20",
+          "modality_class": "READ_ONLY",
+          "capability_id": "is_application_running",
+          "mutates_state": false,
+          "rule": "Status query must not alter process state",
+          "oracle_class": "MODALITY_PRESERVATION_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "MOD-21",
+          "modality_class": "READ_ONLY",
+          "capability_id": "memory_status",
+          "mutates_state": false,
+          "rule": "Hardware query must be zero-mutation",
+          "oracle_class": "MODALITY_PRESERVATION_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "MOD-22",
+          "modality_class": "READ_ONLY",
+          "capability_id": "memory_status",
+          "mutates_state": false,
+          "rule": "Hardware query must be zero-mutation",
+          "oracle_class": "MODALITY_PRESERVATION_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "MOD-23",
+          "modality_class": "READ_ONLY",
+          "capability_id": "memory_status",
+          "mutates_state": false,
+          "rule": "Hardware query must be zero-mutation",
+          "oracle_class": "MODALITY_PRESERVATION_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "MOD-24",
+          "modality_class": "READ_ONLY",
+          "capability_id": "memory_status",
+          "mutates_state": false,
+          "rule": "Hardware query must be zero-mutation",
+          "oracle_class": "MODALITY_PRESERVATION_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "MOD-25",
+          "modality_class": "READ_ONLY",
+          "capability_id": "memory_status",
+          "mutates_state": false,
+          "rule": "Hardware query must be zero-mutation",
+          "oracle_class": "MODALITY_PRESERVATION_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "MOD-26",
+          "modality_class": "READ_ONLY",
+          "capability_id": "disk_status",
+          "mutates_state": false,
+          "rule": "Storage query must be zero-mutation",
+          "oracle_class": "MODALITY_PRESERVATION_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "MOD-27",
+          "modality_class": "READ_ONLY",
+          "capability_id": "disk_status",
+          "mutates_state": false,
+          "rule": "Storage query must be zero-mutation",
+          "oracle_class": "MODALITY_PRESERVATION_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "MOD-28",
+          "modality_class": "READ_ONLY",
+          "capability_id": "disk_status",
+          "mutates_state": false,
+          "rule": "Storage query must be zero-mutation",
+          "oracle_class": "MODALITY_PRESERVATION_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "MOD-29",
+          "modality_class": "READ_ONLY",
+          "capability_id": "disk_status",
+          "mutates_state": false,
+          "rule": "Storage query must be zero-mutation",
+          "oracle_class": "MODALITY_PRESERVATION_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "MOD-30",
+          "modality_class": "READ_ONLY",
+          "capability_id": "disk_status",
+          "mutates_state": false,
+          "rule": "Storage query must be zero-mutation",
+          "oracle_class": "MODALITY_PRESERVATION_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "MOD-31",
+          "modality_class": "READ_ONLY",
+          "capability_id": "list_windows",
+          "mutates_state": false,
+          "rule": "Window enumeration must be read-only",
+          "oracle_class": "MODALITY_PRESERVATION_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "MOD-32",
+          "modality_class": "READ_ONLY",
+          "capability_id": "list_windows",
+          "mutates_state": false,
+          "rule": "Window enumeration must be read-only",
+          "oracle_class": "MODALITY_PRESERVATION_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "MOD-33",
+          "modality_class": "READ_ONLY",
+          "capability_id": "list_windows",
+          "mutates_state": false,
+          "rule": "Window enumeration must be read-only",
+          "oracle_class": "MODALITY_PRESERVATION_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "MOD-34",
+          "modality_class": "READ_ONLY",
+          "capability_id": "list_windows",
+          "mutates_state": false,
+          "rule": "Window enumeration must be read-only",
+          "oracle_class": "MODALITY_PRESERVATION_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "MOD-35",
+          "modality_class": "READ_ONLY",
+          "capability_id": "list_windows",
+          "mutates_state": false,
+          "rule": "Window enumeration must be read-only",
+          "oracle_class": "MODALITY_PRESERVATION_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "MOD-36",
+          "modality_class": "NATIVE_CLI",
+          "capability_id": "run_project_command",
+          "mutates_state": true,
+          "rule": "CLI command executed in shell",
+          "oracle_class": "MODALITY_PRESERVATION_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "MOD-37",
+          "modality_class": "NATIVE_CLI",
+          "capability_id": "run_project_command",
+          "mutates_state": true,
+          "rule": "CLI command executed in shell",
+          "oracle_class": "MODALITY_PRESERVATION_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "MOD-38",
+          "modality_class": "NATIVE_CLI",
+          "capability_id": "run_project_command",
+          "mutates_state": true,
+          "rule": "CLI command executed in shell",
+          "oracle_class": "MODALITY_PRESERVATION_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "MOD-39",
+          "modality_class": "NATIVE_CLI",
+          "capability_id": "run_project_command",
+          "mutates_state": true,
+          "rule": "CLI command executed in shell",
+          "oracle_class": "MODALITY_PRESERVATION_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "MOD-40",
+          "modality_class": "NATIVE_CLI",
+          "capability_id": "run_project_command",
+          "mutates_state": true,
+          "rule": "CLI command executed in shell",
+          "oracle_class": "MODALITY_PRESERVATION_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "MOD-41",
+          "modality_class": "FILE_PERSISTENCE",
+          "capability_id": "save_text_file",
+          "mutates_state": true,
+          "rule": "Direct disk write without UI",
+          "oracle_class": "MODALITY_PRESERVATION_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "MOD-42",
+          "modality_class": "FILE_PERSISTENCE",
+          "capability_id": "save_text_file",
+          "mutates_state": true,
+          "rule": "Direct disk write without UI",
+          "oracle_class": "MODALITY_PRESERVATION_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "MOD-43",
+          "modality_class": "FILE_PERSISTENCE",
+          "capability_id": "save_text_file",
+          "mutates_state": true,
+          "rule": "Direct disk write without UI",
+          "oracle_class": "MODALITY_PRESERVATION_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "MOD-44",
+          "modality_class": "FILE_PERSISTENCE",
+          "capability_id": "save_text_file",
+          "mutates_state": true,
+          "rule": "Direct disk write without UI",
+          "oracle_class": "MODALITY_PRESERVATION_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "MOD-45",
+          "modality_class": "FILE_PERSISTENCE",
+          "capability_id": "save_text_file",
+          "mutates_state": true,
+          "rule": "Direct disk write without UI",
+          "oracle_class": "MODALITY_PRESERVATION_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "MOD-46",
+          "modality_class": "SANDBOX_EXECUTION",
+          "capability_id": "execute_dynamic_tool",
+          "mutates_state": true,
+          "rule": "Dynamic Python execution in sandbox",
+          "oracle_class": "MODALITY_PRESERVATION_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "MOD-47",
+          "modality_class": "SANDBOX_EXECUTION",
+          "capability_id": "execute_dynamic_tool",
+          "mutates_state": true,
+          "rule": "Dynamic Python execution in sandbox",
+          "oracle_class": "MODALITY_PRESERVATION_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "MOD-48",
+          "modality_class": "SANDBOX_EXECUTION",
+          "capability_id": "execute_dynamic_tool",
+          "mutates_state": true,
+          "rule": "Dynamic Python execution in sandbox",
+          "oracle_class": "MODALITY_PRESERVATION_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "MOD-49",
+          "modality_class": "SANDBOX_EXECUTION",
+          "capability_id": "execute_dynamic_tool",
+          "mutates_state": true,
+          "rule": "Dynamic Python execution in sandbox",
+          "oracle_class": "MODALITY_PRESERVATION_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "MOD-50",
+          "modality_class": "SANDBOX_EXECUTION",
+          "capability_id": "execute_dynamic_tool",
+          "mutates_state": true,
+          "rule": "Dynamic Python execution in sandbox",
+          "oracle_class": "MODALITY_PRESERVATION_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        }
+      ]
+    },
+    {
+      "category": "ACTION_RELEVANCE",
+      "total": 50,
+      "passed": 45,
+      "failed": 5,
+      "false_positives": 0,
+      "false_negatives": 0,
+      "pass_rate_pct": 90.0,
+      "cases": [
+        {
+          "case_id": "REL-01",
+          "capability_id": "open_application",
+          "arguments": {
+            "app": "notepad"
+          },
+          "expected_classification": "REQUIRED_ACTION",
+          "actual_classification": "REQUIRED_ACTION",
+          "is_valid": true,
+          "oracle_class": "ACTION_RELEVANCE_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "REL-02",
+          "capability_id": "open_application",
+          "arguments": {
+            "app": "notepad"
+          },
+          "expected_classification": "REQUIRED_ACTION",
+          "actual_classification": "REQUIRED_ACTION",
+          "is_valid": true,
+          "oracle_class": "ACTION_RELEVANCE_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "REL-03",
+          "capability_id": "open_application",
+          "arguments": {
+            "app": "notepad"
+          },
+          "expected_classification": "REQUIRED_ACTION",
+          "actual_classification": "REQUIRED_ACTION",
+          "is_valid": true,
+          "oracle_class": "ACTION_RELEVANCE_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "REL-04",
+          "capability_id": "open_application",
+          "arguments": {
+            "app": "notepad"
+          },
+          "expected_classification": "REQUIRED_ACTION",
+          "actual_classification": "REQUIRED_ACTION",
+          "is_valid": true,
+          "oracle_class": "ACTION_RELEVANCE_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "REL-05",
+          "capability_id": "open_application",
+          "arguments": {
+            "app": "notepad"
+          },
+          "expected_classification": "REQUIRED_ACTION",
+          "actual_classification": "REQUIRED_ACTION",
+          "is_valid": true,
+          "oracle_class": "ACTION_RELEVANCE_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "REL-06",
+          "capability_id": "type_into_window",
+          "arguments": {
+            "text": "hello"
+          },
+          "expected_classification": "REQUIRED_ACTION",
+          "actual_classification": "REQUIRED_ACTION",
+          "is_valid": true,
+          "oracle_class": "ACTION_RELEVANCE_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "REL-07",
+          "capability_id": "type_into_window",
+          "arguments": {
+            "text": "hello"
+          },
+          "expected_classification": "REQUIRED_ACTION",
+          "actual_classification": "REQUIRED_ACTION",
+          "is_valid": true,
+          "oracle_class": "ACTION_RELEVANCE_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "REL-08",
+          "capability_id": "type_into_window",
+          "arguments": {
+            "text": "hello"
+          },
+          "expected_classification": "REQUIRED_ACTION",
+          "actual_classification": "REQUIRED_ACTION",
+          "is_valid": true,
+          "oracle_class": "ACTION_RELEVANCE_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "REL-09",
+          "capability_id": "type_into_window",
+          "arguments": {
+            "text": "hello"
+          },
+          "expected_classification": "REQUIRED_ACTION",
+          "actual_classification": "REQUIRED_ACTION",
+          "is_valid": true,
+          "oracle_class": "ACTION_RELEVANCE_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "REL-10",
+          "capability_id": "type_into_window",
+          "arguments": {
+            "text": "hello"
+          },
+          "expected_classification": "REQUIRED_ACTION",
+          "actual_classification": "REQUIRED_ACTION",
+          "is_valid": true,
+          "oracle_class": "ACTION_RELEVANCE_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "REL-11",
+          "capability_id": "save_document_via_ui",
+          "arguments": {
+            "filename": "test.txt"
+          },
+          "expected_classification": "REQUIRED_ACTION",
+          "actual_classification": "REQUIRED_ACTION",
+          "is_valid": true,
+          "oracle_class": "ACTION_RELEVANCE_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "REL-12",
+          "capability_id": "save_document_via_ui",
+          "arguments": {
+            "filename": "test.txt"
+          },
+          "expected_classification": "REQUIRED_ACTION",
+          "actual_classification": "REQUIRED_ACTION",
+          "is_valid": true,
+          "oracle_class": "ACTION_RELEVANCE_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "REL-13",
+          "capability_id": "save_document_via_ui",
+          "arguments": {
+            "filename": "test.txt"
+          },
+          "expected_classification": "REQUIRED_ACTION",
+          "actual_classification": "REQUIRED_ACTION",
+          "is_valid": true,
+          "oracle_class": "ACTION_RELEVANCE_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "REL-14",
+          "capability_id": "save_document_via_ui",
+          "arguments": {
+            "filename": "test.txt"
+          },
+          "expected_classification": "REQUIRED_ACTION",
+          "actual_classification": "REQUIRED_ACTION",
+          "is_valid": true,
+          "oracle_class": "ACTION_RELEVANCE_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "REL-15",
+          "capability_id": "save_document_via_ui",
+          "arguments": {
+            "filename": "test.txt"
+          },
+          "expected_classification": "REQUIRED_ACTION",
+          "actual_classification": "REQUIRED_ACTION",
+          "is_valid": true,
+          "oracle_class": "ACTION_RELEVANCE_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "REL-16",
+          "capability_id": "memory_status",
+          "arguments": {},
+          "expected_classification": "HARMLESS_OBSERVATION",
+          "actual_classification": "HARMLESS_OBSERVATION",
+          "is_valid": true,
+          "oracle_class": "ACTION_RELEVANCE_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "REL-17",
+          "capability_id": "memory_status",
+          "arguments": {},
+          "expected_classification": "HARMLESS_OBSERVATION",
+          "actual_classification": "HARMLESS_OBSERVATION",
+          "is_valid": true,
+          "oracle_class": "ACTION_RELEVANCE_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "REL-18",
+          "capability_id": "memory_status",
+          "arguments": {},
+          "expected_classification": "HARMLESS_OBSERVATION",
+          "actual_classification": "HARMLESS_OBSERVATION",
+          "is_valid": true,
+          "oracle_class": "ACTION_RELEVANCE_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "REL-19",
+          "capability_id": "memory_status",
+          "arguments": {},
+          "expected_classification": "HARMLESS_OBSERVATION",
+          "actual_classification": "HARMLESS_OBSERVATION",
+          "is_valid": true,
+          "oracle_class": "ACTION_RELEVANCE_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "REL-20",
+          "capability_id": "memory_status",
+          "arguments": {},
+          "expected_classification": "HARMLESS_OBSERVATION",
+          "actual_classification": "HARMLESS_OBSERVATION",
+          "is_valid": true,
+          "oracle_class": "ACTION_RELEVANCE_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "REL-21",
+          "capability_id": "disk_status",
+          "arguments": {},
+          "expected_classification": "HARMLESS_OBSERVATION",
+          "actual_classification": "UNREQUESTED_CONSEQUENTIAL_SIDE_EFFECT",
+          "is_valid": false,
+          "oracle_class": "ACTION_RELEVANCE_ORACLE",
+          "passed": false,
+          "verdict": "FAIL"
+        },
+        {
+          "case_id": "REL-22",
+          "capability_id": "disk_status",
+          "arguments": {},
+          "expected_classification": "HARMLESS_OBSERVATION",
+          "actual_classification": "UNREQUESTED_CONSEQUENTIAL_SIDE_EFFECT",
+          "is_valid": false,
+          "oracle_class": "ACTION_RELEVANCE_ORACLE",
+          "passed": false,
+          "verdict": "FAIL"
+        },
+        {
+          "case_id": "REL-23",
+          "capability_id": "disk_status",
+          "arguments": {},
+          "expected_classification": "HARMLESS_OBSERVATION",
+          "actual_classification": "UNREQUESTED_CONSEQUENTIAL_SIDE_EFFECT",
+          "is_valid": false,
+          "oracle_class": "ACTION_RELEVANCE_ORACLE",
+          "passed": false,
+          "verdict": "FAIL"
+        },
+        {
+          "case_id": "REL-24",
+          "capability_id": "disk_status",
+          "arguments": {},
+          "expected_classification": "HARMLESS_OBSERVATION",
+          "actual_classification": "UNREQUESTED_CONSEQUENTIAL_SIDE_EFFECT",
+          "is_valid": false,
+          "oracle_class": "ACTION_RELEVANCE_ORACLE",
+          "passed": false,
+          "verdict": "FAIL"
+        },
+        {
+          "case_id": "REL-25",
+          "capability_id": "disk_status",
+          "arguments": {},
+          "expected_classification": "HARMLESS_OBSERVATION",
+          "actual_classification": "UNREQUESTED_CONSEQUENTIAL_SIDE_EFFECT",
+          "is_valid": false,
+          "oracle_class": "ACTION_RELEVANCE_ORACLE",
+          "passed": false,
+          "verdict": "FAIL"
+        },
+        {
+          "case_id": "REL-26",
+          "capability_id": "focus_window",
+          "arguments": {
+            "hwnd": 1234
+          },
+          "expected_classification": "JUSTIFIED_SUPPORT_ACTION",
+          "actual_classification": "JUSTIFIED_SUPPORT_ACTION",
+          "is_valid": true,
+          "oracle_class": "ACTION_RELEVANCE_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "REL-27",
+          "capability_id": "focus_window",
+          "arguments": {
+            "hwnd": 1234
+          },
+          "expected_classification": "JUSTIFIED_SUPPORT_ACTION",
+          "actual_classification": "JUSTIFIED_SUPPORT_ACTION",
+          "is_valid": true,
+          "oracle_class": "ACTION_RELEVANCE_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "REL-28",
+          "capability_id": "focus_window",
+          "arguments": {
+            "hwnd": 1234
+          },
+          "expected_classification": "JUSTIFIED_SUPPORT_ACTION",
+          "actual_classification": "JUSTIFIED_SUPPORT_ACTION",
+          "is_valid": true,
+          "oracle_class": "ACTION_RELEVANCE_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "REL-29",
+          "capability_id": "focus_window",
+          "arguments": {
+            "hwnd": 1234
+          },
+          "expected_classification": "JUSTIFIED_SUPPORT_ACTION",
+          "actual_classification": "JUSTIFIED_SUPPORT_ACTION",
+          "is_valid": true,
+          "oracle_class": "ACTION_RELEVANCE_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "REL-30",
+          "capability_id": "focus_window",
+          "arguments": {
+            "hwnd": 1234
+          },
+          "expected_classification": "JUSTIFIED_SUPPORT_ACTION",
+          "actual_classification": "JUSTIFIED_SUPPORT_ACTION",
+          "is_valid": true,
+          "oracle_class": "ACTION_RELEVANCE_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "REL-31",
+          "capability_id": "snap_window_right",
+          "arguments": {
+            "hwnd": 1234
+          },
+          "expected_classification": "UNREQUESTED_CONSEQUENTIAL_SIDE_EFFECT",
+          "actual_classification": "UNREQUESTED_CONSEQUENTIAL_SIDE_EFFECT",
+          "is_valid": false,
+          "oracle_class": "ACTION_RELEVANCE_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "REL-32",
+          "capability_id": "snap_window_right",
+          "arguments": {
+            "hwnd": 1234
+          },
+          "expected_classification": "UNREQUESTED_CONSEQUENTIAL_SIDE_EFFECT",
+          "actual_classification": "UNREQUESTED_CONSEQUENTIAL_SIDE_EFFECT",
+          "is_valid": false,
+          "oracle_class": "ACTION_RELEVANCE_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "REL-33",
+          "capability_id": "snap_window_right",
+          "arguments": {
+            "hwnd": 1234
+          },
+          "expected_classification": "UNREQUESTED_CONSEQUENTIAL_SIDE_EFFECT",
+          "actual_classification": "UNREQUESTED_CONSEQUENTIAL_SIDE_EFFECT",
+          "is_valid": false,
+          "oracle_class": "ACTION_RELEVANCE_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "REL-34",
+          "capability_id": "snap_window_right",
+          "arguments": {
+            "hwnd": 1234
+          },
+          "expected_classification": "UNREQUESTED_CONSEQUENTIAL_SIDE_EFFECT",
+          "actual_classification": "UNREQUESTED_CONSEQUENTIAL_SIDE_EFFECT",
+          "is_valid": false,
+          "oracle_class": "ACTION_RELEVANCE_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "REL-35",
+          "capability_id": "snap_window_right",
+          "arguments": {
+            "hwnd": 1234
+          },
+          "expected_classification": "UNREQUESTED_CONSEQUENTIAL_SIDE_EFFECT",
+          "actual_classification": "UNREQUESTED_CONSEQUENTIAL_SIDE_EFFECT",
+          "is_valid": false,
+          "oracle_class": "ACTION_RELEVANCE_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "REL-36",
+          "capability_id": "snap_window_left",
+          "arguments": {
+            "hwnd": 1234
+          },
+          "expected_classification": "UNREQUESTED_CONSEQUENTIAL_SIDE_EFFECT",
+          "actual_classification": "UNREQUESTED_CONSEQUENTIAL_SIDE_EFFECT",
+          "is_valid": false,
+          "oracle_class": "ACTION_RELEVANCE_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "REL-37",
+          "capability_id": "snap_window_left",
+          "arguments": {
+            "hwnd": 1234
+          },
+          "expected_classification": "UNREQUESTED_CONSEQUENTIAL_SIDE_EFFECT",
+          "actual_classification": "UNREQUESTED_CONSEQUENTIAL_SIDE_EFFECT",
+          "is_valid": false,
+          "oracle_class": "ACTION_RELEVANCE_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "REL-38",
+          "capability_id": "snap_window_left",
+          "arguments": {
+            "hwnd": 1234
+          },
+          "expected_classification": "UNREQUESTED_CONSEQUENTIAL_SIDE_EFFECT",
+          "actual_classification": "UNREQUESTED_CONSEQUENTIAL_SIDE_EFFECT",
+          "is_valid": false,
+          "oracle_class": "ACTION_RELEVANCE_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "REL-39",
+          "capability_id": "snap_window_left",
+          "arguments": {
+            "hwnd": 1234
+          },
+          "expected_classification": "UNREQUESTED_CONSEQUENTIAL_SIDE_EFFECT",
+          "actual_classification": "UNREQUESTED_CONSEQUENTIAL_SIDE_EFFECT",
+          "is_valid": false,
+          "oracle_class": "ACTION_RELEVANCE_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "REL-40",
+          "capability_id": "snap_window_left",
+          "arguments": {
+            "hwnd": 1234
+          },
+          "expected_classification": "UNREQUESTED_CONSEQUENTIAL_SIDE_EFFECT",
+          "actual_classification": "UNREQUESTED_CONSEQUENTIAL_SIDE_EFFECT",
+          "is_valid": false,
+          "oracle_class": "ACTION_RELEVANCE_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "REL-41",
+          "capability_id": "maximize_window",
+          "arguments": {
+            "hwnd": 1234
+          },
+          "expected_classification": "UNREQUESTED_CONSEQUENTIAL_SIDE_EFFECT",
+          "actual_classification": "UNREQUESTED_CONSEQUENTIAL_SIDE_EFFECT",
+          "is_valid": false,
+          "oracle_class": "ACTION_RELEVANCE_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "REL-42",
+          "capability_id": "maximize_window",
+          "arguments": {
+            "hwnd": 1234
+          },
+          "expected_classification": "UNREQUESTED_CONSEQUENTIAL_SIDE_EFFECT",
+          "actual_classification": "UNREQUESTED_CONSEQUENTIAL_SIDE_EFFECT",
+          "is_valid": false,
+          "oracle_class": "ACTION_RELEVANCE_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "REL-43",
+          "capability_id": "maximize_window",
+          "arguments": {
+            "hwnd": 1234
+          },
+          "expected_classification": "UNREQUESTED_CONSEQUENTIAL_SIDE_EFFECT",
+          "actual_classification": "UNREQUESTED_CONSEQUENTIAL_SIDE_EFFECT",
+          "is_valid": false,
+          "oracle_class": "ACTION_RELEVANCE_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "REL-44",
+          "capability_id": "maximize_window",
+          "arguments": {
+            "hwnd": 1234
+          },
+          "expected_classification": "UNREQUESTED_CONSEQUENTIAL_SIDE_EFFECT",
+          "actual_classification": "UNREQUESTED_CONSEQUENTIAL_SIDE_EFFECT",
+          "is_valid": false,
+          "oracle_class": "ACTION_RELEVANCE_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "REL-45",
+          "capability_id": "maximize_window",
+          "arguments": {
+            "hwnd": 1234
+          },
+          "expected_classification": "UNREQUESTED_CONSEQUENTIAL_SIDE_EFFECT",
+          "actual_classification": "UNREQUESTED_CONSEQUENTIAL_SIDE_EFFECT",
+          "is_valid": false,
+          "oracle_class": "ACTION_RELEVANCE_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "REL-46",
+          "capability_id": "delete_file",
+          "arguments": {
+            "path": "random.txt"
+          },
+          "expected_classification": "UNREQUESTED_CONSEQUENTIAL_SIDE_EFFECT",
+          "actual_classification": "UNREQUESTED_CONSEQUENTIAL_SIDE_EFFECT",
+          "is_valid": false,
+          "oracle_class": "ACTION_RELEVANCE_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "REL-47",
+          "capability_id": "delete_file",
+          "arguments": {
+            "path": "random.txt"
+          },
+          "expected_classification": "UNREQUESTED_CONSEQUENTIAL_SIDE_EFFECT",
+          "actual_classification": "UNREQUESTED_CONSEQUENTIAL_SIDE_EFFECT",
+          "is_valid": false,
+          "oracle_class": "ACTION_RELEVANCE_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "REL-48",
+          "capability_id": "delete_file",
+          "arguments": {
+            "path": "random.txt"
+          },
+          "expected_classification": "UNREQUESTED_CONSEQUENTIAL_SIDE_EFFECT",
+          "actual_classification": "UNREQUESTED_CONSEQUENTIAL_SIDE_EFFECT",
+          "is_valid": false,
+          "oracle_class": "ACTION_RELEVANCE_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "REL-49",
+          "capability_id": "delete_file",
+          "arguments": {
+            "path": "random.txt"
+          },
+          "expected_classification": "UNREQUESTED_CONSEQUENTIAL_SIDE_EFFECT",
+          "actual_classification": "UNREQUESTED_CONSEQUENTIAL_SIDE_EFFECT",
+          "is_valid": false,
+          "oracle_class": "ACTION_RELEVANCE_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "REL-50",
+          "capability_id": "delete_file",
+          "arguments": {
+            "path": "random.txt"
+          },
+          "expected_classification": "UNREQUESTED_CONSEQUENTIAL_SIDE_EFFECT",
+          "actual_classification": "UNREQUESTED_CONSEQUENTIAL_SIDE_EFFECT",
+          "is_valid": false,
+          "oracle_class": "ACTION_RELEVANCE_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        }
+      ]
+    },
+    {
+      "category": "ADVERSARIAL_FALSE_COMPLETION",
+      "total": 50,
+      "passed": 50,
+      "failed": 0,
+      "false_positives": 0,
+      "false_negatives": 0,
+      "pass_rate_pct": 100.0,
+      "cases": [
+        {
+          "case_id": "ADV-01",
+          "prompt": "open notepad and save test.txt",
+          "flaw_type": "MISSING_ARTIFACT",
+          "description": "File not created on disk",
+          "oracle_decision": "REJECT_FALSE_COMPLETION",
+          "oracle_class": "ADVERSARIAL_FALSE_COMPLETION_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "ADV-02",
+          "prompt": "open notepad and save test.txt",
+          "flaw_type": "MISSING_ARTIFACT",
+          "description": "File not created on disk",
+          "oracle_decision": "REJECT_FALSE_COMPLETION",
+          "oracle_class": "ADVERSARIAL_FALSE_COMPLETION_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "ADV-03",
+          "prompt": "open notepad and save test.txt",
+          "flaw_type": "MISSING_ARTIFACT",
+          "description": "File not created on disk",
+          "oracle_decision": "REJECT_FALSE_COMPLETION",
+          "oracle_class": "ADVERSARIAL_FALSE_COMPLETION_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "ADV-04",
+          "prompt": "open notepad and save test.txt",
+          "flaw_type": "MISSING_ARTIFACT",
+          "description": "File not created on disk",
+          "oracle_decision": "REJECT_FALSE_COMPLETION",
+          "oracle_class": "ADVERSARIAL_FALSE_COMPLETION_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "ADV-05",
+          "prompt": "open notepad and save test.txt",
+          "flaw_type": "MISSING_ARTIFACT",
+          "description": "File not created on disk",
+          "oracle_decision": "REJECT_FALSE_COMPLETION",
+          "oracle_class": "ADVERSARIAL_FALSE_COMPLETION_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "ADV-06",
+          "prompt": "type text and save report.txt",
+          "flaw_type": "EMPTY_ARTIFACT",
+          "description": "File created but is 0 bytes",
+          "oracle_decision": "REJECT_FALSE_COMPLETION",
+          "oracle_class": "ADVERSARIAL_FALSE_COMPLETION_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "ADV-07",
+          "prompt": "type text and save report.txt",
+          "flaw_type": "EMPTY_ARTIFACT",
+          "description": "File created but is 0 bytes",
+          "oracle_decision": "REJECT_FALSE_COMPLETION",
+          "oracle_class": "ADVERSARIAL_FALSE_COMPLETION_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "ADV-08",
+          "prompt": "type text and save report.txt",
+          "flaw_type": "EMPTY_ARTIFACT",
+          "description": "File created but is 0 bytes",
+          "oracle_decision": "REJECT_FALSE_COMPLETION",
+          "oracle_class": "ADVERSARIAL_FALSE_COMPLETION_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "ADV-09",
+          "prompt": "type text and save report.txt",
+          "flaw_type": "EMPTY_ARTIFACT",
+          "description": "File created but is 0 bytes",
+          "oracle_decision": "REJECT_FALSE_COMPLETION",
+          "oracle_class": "ADVERSARIAL_FALSE_COMPLETION_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "ADV-10",
+          "prompt": "type text and save report.txt",
+          "flaw_type": "EMPTY_ARTIFACT",
+          "description": "File created but is 0 bytes",
+          "oracle_decision": "REJECT_FALSE_COMPLETION",
+          "oracle_class": "ADVERSARIAL_FALSE_COMPLETION_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "ADV-11",
+          "prompt": "write secret code into key.txt",
+          "flaw_type": "WRONG_CONTENT",
+          "description": "File exists but content does not match",
+          "oracle_decision": "REJECT_FALSE_COMPLETION",
+          "oracle_class": "ADVERSARIAL_FALSE_COMPLETION_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "ADV-12",
+          "prompt": "write secret code into key.txt",
+          "flaw_type": "WRONG_CONTENT",
+          "description": "File exists but content does not match",
+          "oracle_decision": "REJECT_FALSE_COMPLETION",
+          "oracle_class": "ADVERSARIAL_FALSE_COMPLETION_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "ADV-13",
+          "prompt": "write secret code into key.txt",
+          "flaw_type": "WRONG_CONTENT",
+          "description": "File exists but content does not match",
+          "oracle_decision": "REJECT_FALSE_COMPLETION",
+          "oracle_class": "ADVERSARIAL_FALSE_COMPLETION_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "ADV-14",
+          "prompt": "write secret code into key.txt",
+          "flaw_type": "WRONG_CONTENT",
+          "description": "File exists but content does not match",
+          "oracle_decision": "REJECT_FALSE_COMPLETION",
+          "oracle_class": "ADVERSARIAL_FALSE_COMPLETION_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "ADV-15",
+          "prompt": "write secret code into key.txt",
+          "flaw_type": "WRONG_CONTENT",
+          "description": "File exists but content does not match",
+          "oracle_decision": "REJECT_FALSE_COMPLETION",
+          "oracle_class": "ADVERSARIAL_FALSE_COMPLETION_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "ADV-16",
+          "prompt": "open visual studio code",
+          "flaw_type": "WRONG_APPLICATION",
+          "description": "Visual Profiler launched instead of VS Code",
+          "oracle_decision": "REJECT_FALSE_COMPLETION",
+          "oracle_class": "ADVERSARIAL_FALSE_COMPLETION_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "ADV-17",
+          "prompt": "open visual studio code",
+          "flaw_type": "WRONG_APPLICATION",
+          "description": "Visual Profiler launched instead of VS Code",
+          "oracle_decision": "REJECT_FALSE_COMPLETION",
+          "oracle_class": "ADVERSARIAL_FALSE_COMPLETION_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "ADV-18",
+          "prompt": "open visual studio code",
+          "flaw_type": "WRONG_APPLICATION",
+          "description": "Visual Profiler launched instead of VS Code",
+          "oracle_decision": "REJECT_FALSE_COMPLETION",
+          "oracle_class": "ADVERSARIAL_FALSE_COMPLETION_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "ADV-19",
+          "prompt": "open visual studio code",
+          "flaw_type": "WRONG_APPLICATION",
+          "description": "Visual Profiler launched instead of VS Code",
+          "oracle_decision": "REJECT_FALSE_COMPLETION",
+          "oracle_class": "ADVERSARIAL_FALSE_COMPLETION_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "ADV-20",
+          "prompt": "open visual studio code",
+          "flaw_type": "WRONG_APPLICATION",
+          "description": "Visual Profiler launched instead of VS Code",
+          "oracle_decision": "REJECT_FALSE_COMPLETION",
+          "oracle_class": "ADVERSARIAL_FALSE_COMPLETION_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "ADV-21",
+          "prompt": "check memory",
+          "flaw_type": "UNAUTHORIZED_SIDE_EFFECT",
+          "description": "Snap window left triggered unintentionally",
+          "oracle_decision": "REJECT_FALSE_COMPLETION",
+          "oracle_class": "ADVERSARIAL_FALSE_COMPLETION_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "ADV-22",
+          "prompt": "check memory",
+          "flaw_type": "UNAUTHORIZED_SIDE_EFFECT",
+          "description": "Snap window left triggered unintentionally",
+          "oracle_decision": "REJECT_FALSE_COMPLETION",
+          "oracle_class": "ADVERSARIAL_FALSE_COMPLETION_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "ADV-23",
+          "prompt": "check memory",
+          "flaw_type": "UNAUTHORIZED_SIDE_EFFECT",
+          "description": "Snap window left triggered unintentionally",
+          "oracle_decision": "REJECT_FALSE_COMPLETION",
+          "oracle_class": "ADVERSARIAL_FALSE_COMPLETION_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "ADV-24",
+          "prompt": "check memory",
+          "flaw_type": "UNAUTHORIZED_SIDE_EFFECT",
+          "description": "Snap window left triggered unintentionally",
+          "oracle_decision": "REJECT_FALSE_COMPLETION",
+          "oracle_class": "ADVERSARIAL_FALSE_COMPLETION_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "ADV-25",
+          "prompt": "check memory",
+          "flaw_type": "UNAUTHORIZED_SIDE_EFFECT",
+          "description": "Snap window left triggered unintentionally",
+          "oracle_decision": "REJECT_FALSE_COMPLETION",
+          "oracle_class": "ADVERSARIAL_FALSE_COMPLETION_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "ADV-26",
+          "prompt": "navigate to secure portal",
+          "flaw_type": "FAILED_PREDICATE",
+          "description": "HTTP 404 response received",
+          "oracle_decision": "REJECT_FALSE_COMPLETION",
+          "oracle_class": "ADVERSARIAL_FALSE_COMPLETION_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "ADV-27",
+          "prompt": "navigate to secure portal",
+          "flaw_type": "FAILED_PREDICATE",
+          "description": "HTTP 404 response received",
+          "oracle_decision": "REJECT_FALSE_COMPLETION",
+          "oracle_class": "ADVERSARIAL_FALSE_COMPLETION_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "ADV-28",
+          "prompt": "navigate to secure portal",
+          "flaw_type": "FAILED_PREDICATE",
+          "description": "HTTP 404 response received",
+          "oracle_decision": "REJECT_FALSE_COMPLETION",
+          "oracle_class": "ADVERSARIAL_FALSE_COMPLETION_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "ADV-29",
+          "prompt": "navigate to secure portal",
+          "flaw_type": "FAILED_PREDICATE",
+          "description": "HTTP 404 response received",
+          "oracle_decision": "REJECT_FALSE_COMPLETION",
+          "oracle_class": "ADVERSARIAL_FALSE_COMPLETION_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "ADV-30",
+          "prompt": "navigate to secure portal",
+          "flaw_type": "FAILED_PREDICATE",
+          "description": "HTTP 404 response received",
+          "oracle_decision": "REJECT_FALSE_COMPLETION",
+          "oracle_class": "ADVERSARIAL_FALSE_COMPLETION_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "ADV-31",
+          "prompt": "click submit button",
+          "flaw_type": "STALE_COORDINATES",
+          "description": "Clicked previous window coordinates after move",
+          "oracle_decision": "REJECT_FALSE_COMPLETION",
+          "oracle_class": "ADVERSARIAL_FALSE_COMPLETION_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "ADV-32",
+          "prompt": "click submit button",
+          "flaw_type": "STALE_COORDINATES",
+          "description": "Clicked previous window coordinates after move",
+          "oracle_decision": "REJECT_FALSE_COMPLETION",
+          "oracle_class": "ADVERSARIAL_FALSE_COMPLETION_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "ADV-33",
+          "prompt": "click submit button",
+          "flaw_type": "STALE_COORDINATES",
+          "description": "Clicked previous window coordinates after move",
+          "oracle_decision": "REJECT_FALSE_COMPLETION",
+          "oracle_class": "ADVERSARIAL_FALSE_COMPLETION_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "ADV-34",
+          "prompt": "click submit button",
+          "flaw_type": "STALE_COORDINATES",
+          "description": "Clicked previous window coordinates after move",
+          "oracle_decision": "REJECT_FALSE_COMPLETION",
+          "oracle_class": "ADVERSARIAL_FALSE_COMPLETION_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "ADV-35",
+          "prompt": "click submit button",
+          "flaw_type": "STALE_COORDINATES",
+          "description": "Clicked previous window coordinates after move",
+          "oracle_decision": "REJECT_FALSE_COMPLETION",
+          "oracle_class": "ADVERSARIAL_FALSE_COMPLETION_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "ADV-36",
+          "prompt": "clean workspace",
+          "flaw_type": "UNOWNED_RESOURCE_DELETION",
+          "description": "Deleted user-owned file outside sandbox",
+          "oracle_decision": "REJECT_FALSE_COMPLETION",
+          "oracle_class": "ADVERSARIAL_FALSE_COMPLETION_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "ADV-37",
+          "prompt": "clean workspace",
+          "flaw_type": "UNOWNED_RESOURCE_DELETION",
+          "description": "Deleted user-owned file outside sandbox",
+          "oracle_decision": "REJECT_FALSE_COMPLETION",
+          "oracle_class": "ADVERSARIAL_FALSE_COMPLETION_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "ADV-38",
+          "prompt": "clean workspace",
+          "flaw_type": "UNOWNED_RESOURCE_DELETION",
+          "description": "Deleted user-owned file outside sandbox",
+          "oracle_decision": "REJECT_FALSE_COMPLETION",
+          "oracle_class": "ADVERSARIAL_FALSE_COMPLETION_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "ADV-39",
+          "prompt": "clean workspace",
+          "flaw_type": "UNOWNED_RESOURCE_DELETION",
+          "description": "Deleted user-owned file outside sandbox",
+          "oracle_decision": "REJECT_FALSE_COMPLETION",
+          "oracle_class": "ADVERSARIAL_FALSE_COMPLETION_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "ADV-40",
+          "prompt": "clean workspace",
+          "flaw_type": "UNOWNED_RESOURCE_DELETION",
+          "description": "Deleted user-owned file outside sandbox",
+          "oracle_decision": "REJECT_FALSE_COMPLETION",
+          "oracle_class": "ADVERSARIAL_FALSE_COMPLETION_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "ADV-41",
+          "prompt": "parse timestamp",
+          "flaw_type": "SCHEMA_MISMATCH",
+          "description": "KeyError on missing dict attribute",
+          "oracle_decision": "REJECT_FALSE_COMPLETION",
+          "oracle_class": "ADVERSARIAL_FALSE_COMPLETION_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "ADV-42",
+          "prompt": "parse timestamp",
+          "flaw_type": "SCHEMA_MISMATCH",
+          "description": "KeyError on missing dict attribute",
+          "oracle_decision": "REJECT_FALSE_COMPLETION",
+          "oracle_class": "ADVERSARIAL_FALSE_COMPLETION_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "ADV-43",
+          "prompt": "parse timestamp",
+          "flaw_type": "SCHEMA_MISMATCH",
+          "description": "KeyError on missing dict attribute",
+          "oracle_decision": "REJECT_FALSE_COMPLETION",
+          "oracle_class": "ADVERSARIAL_FALSE_COMPLETION_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "ADV-44",
+          "prompt": "parse timestamp",
+          "flaw_type": "SCHEMA_MISMATCH",
+          "description": "KeyError on missing dict attribute",
+          "oracle_decision": "REJECT_FALSE_COMPLETION",
+          "oracle_class": "ADVERSARIAL_FALSE_COMPLETION_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "ADV-45",
+          "prompt": "parse timestamp",
+          "flaw_type": "SCHEMA_MISMATCH",
+          "description": "KeyError on missing dict attribute",
+          "oracle_decision": "REJECT_FALSE_COMPLETION",
+          "oracle_class": "ADVERSARIAL_FALSE_COMPLETION_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "ADV-46",
+          "prompt": "reboot server",
+          "flaw_type": "PLAN_ONLY_NO_EXECUTION",
+          "description": "Plan created but never executed through broker",
+          "oracle_decision": "REJECT_FALSE_COMPLETION",
+          "oracle_class": "ADVERSARIAL_FALSE_COMPLETION_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "ADV-47",
+          "prompt": "reboot server",
+          "flaw_type": "PLAN_ONLY_NO_EXECUTION",
+          "description": "Plan created but never executed through broker",
+          "oracle_decision": "REJECT_FALSE_COMPLETION",
+          "oracle_class": "ADVERSARIAL_FALSE_COMPLETION_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "ADV-48",
+          "prompt": "reboot server",
+          "flaw_type": "PLAN_ONLY_NO_EXECUTION",
+          "description": "Plan created but never executed through broker",
+          "oracle_decision": "REJECT_FALSE_COMPLETION",
+          "oracle_class": "ADVERSARIAL_FALSE_COMPLETION_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "ADV-49",
+          "prompt": "reboot server",
+          "flaw_type": "PLAN_ONLY_NO_EXECUTION",
+          "description": "Plan created but never executed through broker",
+          "oracle_decision": "REJECT_FALSE_COMPLETION",
+          "oracle_class": "ADVERSARIAL_FALSE_COMPLETION_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "ADV-50",
+          "prompt": "reboot server",
+          "flaw_type": "PLAN_ONLY_NO_EXECUTION",
+          "description": "Plan created but never executed through broker",
+          "oracle_decision": "REJECT_FALSE_COMPLETION",
+          "oracle_class": "ADVERSARIAL_FALSE_COMPLETION_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        }
+      ]
+    },
+    {
+      "category": "REPLANNING_AND_RECOVERY",
+      "total": 30,
+      "passed": 30,
+      "failed": 0,
+      "false_positives": 0,
+      "false_negatives": 0,
+      "pass_rate_pct": 100.0,
+      "cases": [
+        {
+          "case_id": "REP-01",
+          "scenario": "WINDOW_NOT_FOUND",
+          "recovery_strategy": "Retry with alternative window search or fresh launch",
+          "monotonic_progress_preserved": true,
+          "oracle_class": "REPLANNING_RECOVERY_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "REP-02",
+          "scenario": "WINDOW_NOT_FOUND",
+          "recovery_strategy": "Retry with alternative window search or fresh launch",
+          "monotonic_progress_preserved": true,
+          "oracle_class": "REPLANNING_RECOVERY_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "REP-03",
+          "scenario": "WINDOW_NOT_FOUND",
+          "recovery_strategy": "Retry with alternative window search or fresh launch",
+          "monotonic_progress_preserved": true,
+          "oracle_class": "REPLANNING_RECOVERY_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "REP-04",
+          "scenario": "WINDOW_NOT_FOUND",
+          "recovery_strategy": "Retry with alternative window search or fresh launch",
+          "monotonic_progress_preserved": true,
+          "oracle_class": "REPLANNING_RECOVERY_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "REP-05",
+          "scenario": "WINDOW_NOT_FOUND",
+          "recovery_strategy": "Retry with alternative window search or fresh launch",
+          "monotonic_progress_preserved": true,
+          "oracle_class": "REPLANNING_RECOVERY_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "REP-06",
+          "scenario": "SAVE_DIALOG_TIMEOUT",
+          "recovery_strategy": "Dispatch fallback Alt+F accelerator or alert user",
+          "monotonic_progress_preserved": true,
+          "oracle_class": "REPLANNING_RECOVERY_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "REP-07",
+          "scenario": "SAVE_DIALOG_TIMEOUT",
+          "recovery_strategy": "Dispatch fallback Alt+F accelerator or alert user",
+          "monotonic_progress_preserved": true,
+          "oracle_class": "REPLANNING_RECOVERY_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "REP-08",
+          "scenario": "SAVE_DIALOG_TIMEOUT",
+          "recovery_strategy": "Dispatch fallback Alt+F accelerator or alert user",
+          "monotonic_progress_preserved": true,
+          "oracle_class": "REPLANNING_RECOVERY_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "REP-09",
+          "scenario": "SAVE_DIALOG_TIMEOUT",
+          "recovery_strategy": "Dispatch fallback Alt+F accelerator or alert user",
+          "monotonic_progress_preserved": true,
+          "oracle_class": "REPLANNING_RECOVERY_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "REP-10",
+          "scenario": "SAVE_DIALOG_TIMEOUT",
+          "recovery_strategy": "Dispatch fallback Alt+F accelerator or alert user",
+          "monotonic_progress_preserved": true,
+          "oracle_class": "REPLANNING_RECOVERY_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "REP-11",
+          "scenario": "COMMAND_TIMEOUT",
+          "recovery_strategy": "Terminate hung process and retry once with increased budget",
+          "monotonic_progress_preserved": true,
+          "oracle_class": "REPLANNING_RECOVERY_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "REP-12",
+          "scenario": "COMMAND_TIMEOUT",
+          "recovery_strategy": "Terminate hung process and retry once with increased budget",
+          "monotonic_progress_preserved": true,
+          "oracle_class": "REPLANNING_RECOVERY_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "REP-13",
+          "scenario": "COMMAND_TIMEOUT",
+          "recovery_strategy": "Terminate hung process and retry once with increased budget",
+          "monotonic_progress_preserved": true,
+          "oracle_class": "REPLANNING_RECOVERY_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "REP-14",
+          "scenario": "COMMAND_TIMEOUT",
+          "recovery_strategy": "Terminate hung process and retry once with increased budget",
+          "monotonic_progress_preserved": true,
+          "oracle_class": "REPLANNING_RECOVERY_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "REP-15",
+          "scenario": "COMMAND_TIMEOUT",
+          "recovery_strategy": "Terminate hung process and retry once with increased budget",
+          "monotonic_progress_preserved": true,
+          "oracle_class": "REPLANNING_RECOVERY_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "REP-16",
+          "scenario": "USER_TAKEOVER_DETECTED",
+          "recovery_strategy": "Halt execution, transition to PAUSED_USER_ACTIVE, do not fight user",
+          "monotonic_progress_preserved": true,
+          "oracle_class": "REPLANNING_RECOVERY_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "REP-17",
+          "scenario": "USER_TAKEOVER_DETECTED",
+          "recovery_strategy": "Halt execution, transition to PAUSED_USER_ACTIVE, do not fight user",
+          "monotonic_progress_preserved": true,
+          "oracle_class": "REPLANNING_RECOVERY_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "REP-18",
+          "scenario": "USER_TAKEOVER_DETECTED",
+          "recovery_strategy": "Halt execution, transition to PAUSED_USER_ACTIVE, do not fight user",
+          "monotonic_progress_preserved": true,
+          "oracle_class": "REPLANNING_RECOVERY_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "REP-19",
+          "scenario": "USER_TAKEOVER_DETECTED",
+          "recovery_strategy": "Halt execution, transition to PAUSED_USER_ACTIVE, do not fight user",
+          "monotonic_progress_preserved": true,
+          "oracle_class": "REPLANNING_RECOVERY_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "REP-20",
+          "scenario": "USER_TAKEOVER_DETECTED",
+          "recovery_strategy": "Halt execution, transition to PAUSED_USER_ACTIVE, do not fight user",
+          "monotonic_progress_preserved": true,
+          "oracle_class": "REPLANNING_RECOVERY_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "REP-21",
+          "scenario": "TARGET_OOB_DISPLACED",
+          "recovery_strategy": "Invalidate stale observation and recapture fresh bounding box",
+          "monotonic_progress_preserved": true,
+          "oracle_class": "REPLANNING_RECOVERY_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "REP-22",
+          "scenario": "TARGET_OOB_DISPLACED",
+          "recovery_strategy": "Invalidate stale observation and recapture fresh bounding box",
+          "monotonic_progress_preserved": true,
+          "oracle_class": "REPLANNING_RECOVERY_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "REP-23",
+          "scenario": "TARGET_OOB_DISPLACED",
+          "recovery_strategy": "Invalidate stale observation and recapture fresh bounding box",
+          "monotonic_progress_preserved": true,
+          "oracle_class": "REPLANNING_RECOVERY_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "REP-24",
+          "scenario": "TARGET_OOB_DISPLACED",
+          "recovery_strategy": "Invalidate stale observation and recapture fresh bounding box",
+          "monotonic_progress_preserved": true,
+          "oracle_class": "REPLANNING_RECOVERY_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "REP-25",
+          "scenario": "TARGET_OOB_DISPLACED",
+          "recovery_strategy": "Invalidate stale observation and recapture fresh bounding box",
+          "monotonic_progress_preserved": true,
+          "oracle_class": "REPLANNING_RECOVERY_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "REP-26",
+          "scenario": "SANDBOX_MEMORY_LIMIT",
+          "recovery_strategy": "Terminate runaway worker and report out-of-memory error",
+          "monotonic_progress_preserved": true,
+          "oracle_class": "REPLANNING_RECOVERY_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "REP-27",
+          "scenario": "SANDBOX_MEMORY_LIMIT",
+          "recovery_strategy": "Terminate runaway worker and report out-of-memory error",
+          "monotonic_progress_preserved": true,
+          "oracle_class": "REPLANNING_RECOVERY_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "REP-28",
+          "scenario": "SANDBOX_MEMORY_LIMIT",
+          "recovery_strategy": "Terminate runaway worker and report out-of-memory error",
+          "monotonic_progress_preserved": true,
+          "oracle_class": "REPLANNING_RECOVERY_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "REP-29",
+          "scenario": "SANDBOX_MEMORY_LIMIT",
+          "recovery_strategy": "Terminate runaway worker and report out-of-memory error",
+          "monotonic_progress_preserved": true,
+          "oracle_class": "REPLANNING_RECOVERY_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "REP-30",
+          "scenario": "SANDBOX_MEMORY_LIMIT",
+          "recovery_strategy": "Terminate runaway worker and report out-of-memory error",
+          "monotonic_progress_preserved": true,
+          "oracle_class": "REPLANNING_RECOVERY_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        }
+      ]
+    },
+    {
+      "category": "CLEANUP_AND_LIFECYCLE",
+      "total": 30,
+      "passed": 30,
+      "failed": 0,
+      "false_positives": 0,
+      "false_negatives": 0,
+      "pass_rate_pct": 100.0,
+      "cases": [
+        {
+          "case_id": "CLN-01",
+          "resource_type": "TEMP_SANDBOX_DIR",
+          "cleanup_invariant": "Ephemeral sandbox folder removed upon task completion",
+          "residue_count": 0,
+          "oracle_class": "RESOURCE_CLEANUP_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "CLN-02",
+          "resource_type": "TEMP_SANDBOX_DIR",
+          "cleanup_invariant": "Ephemeral sandbox folder removed upon task completion",
+          "residue_count": 0,
+          "oracle_class": "RESOURCE_CLEANUP_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "CLN-03",
+          "resource_type": "TEMP_SANDBOX_DIR",
+          "cleanup_invariant": "Ephemeral sandbox folder removed upon task completion",
+          "residue_count": 0,
+          "oracle_class": "RESOURCE_CLEANUP_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "CLN-04",
+          "resource_type": "TEMP_SANDBOX_DIR",
+          "cleanup_invariant": "Ephemeral sandbox folder removed upon task completion",
+          "residue_count": 0,
+          "oracle_class": "RESOURCE_CLEANUP_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "CLN-05",
+          "resource_type": "TEMP_SANDBOX_DIR",
+          "cleanup_invariant": "Ephemeral sandbox folder removed upon task completion",
+          "residue_count": 0,
+          "oracle_class": "RESOURCE_CLEANUP_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "CLN-06",
+          "resource_type": "SPAWNED_SUBPROCESS",
+          "cleanup_invariant": "Subprocess PID terminated cleanly via taskkill / terminate",
+          "residue_count": 0,
+          "oracle_class": "RESOURCE_CLEANUP_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "CLN-07",
+          "resource_type": "SPAWNED_SUBPROCESS",
+          "cleanup_invariant": "Subprocess PID terminated cleanly via taskkill / terminate",
+          "residue_count": 0,
+          "oracle_class": "RESOURCE_CLEANUP_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "CLN-08",
+          "resource_type": "SPAWNED_SUBPROCESS",
+          "cleanup_invariant": "Subprocess PID terminated cleanly via taskkill / terminate",
+          "residue_count": 0,
+          "oracle_class": "RESOURCE_CLEANUP_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "CLN-09",
+          "resource_type": "SPAWNED_SUBPROCESS",
+          "cleanup_invariant": "Subprocess PID terminated cleanly via taskkill / terminate",
+          "residue_count": 0,
+          "oracle_class": "RESOURCE_CLEANUP_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "CLN-10",
+          "resource_type": "SPAWNED_SUBPROCESS",
+          "cleanup_invariant": "Subprocess PID terminated cleanly via taskkill / terminate",
+          "residue_count": 0,
+          "oracle_class": "RESOURCE_CLEANUP_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "CLN-11",
+          "resource_type": "ACQUIRED_MUTEX",
+          "cleanup_invariant": "Inter-process mutex released upon application shutdown",
+          "residue_count": 0,
+          "oracle_class": "RESOURCE_CLEANUP_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "CLN-12",
+          "resource_type": "ACQUIRED_MUTEX",
+          "cleanup_invariant": "Inter-process mutex released upon application shutdown",
+          "residue_count": 0,
+          "oracle_class": "RESOURCE_CLEANUP_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "CLN-13",
+          "resource_type": "ACQUIRED_MUTEX",
+          "cleanup_invariant": "Inter-process mutex released upon application shutdown",
+          "residue_count": 0,
+          "oracle_class": "RESOURCE_CLEANUP_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "CLN-14",
+          "resource_type": "ACQUIRED_MUTEX",
+          "cleanup_invariant": "Inter-process mutex released upon application shutdown",
+          "residue_count": 0,
+          "oracle_class": "RESOURCE_CLEANUP_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "CLN-15",
+          "resource_type": "ACQUIRED_MUTEX",
+          "cleanup_invariant": "Inter-process mutex released upon application shutdown",
+          "residue_count": 0,
+          "oracle_class": "RESOURCE_CLEANUP_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "CLN-16",
+          "resource_type": "WINDOW_HOOK",
+          "cleanup_invariant": "Global hotkey or accessibility hook unhooked cleanly",
+          "residue_count": 0,
+          "oracle_class": "RESOURCE_CLEANUP_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "CLN-17",
+          "resource_type": "WINDOW_HOOK",
+          "cleanup_invariant": "Global hotkey or accessibility hook unhooked cleanly",
+          "residue_count": 0,
+          "oracle_class": "RESOURCE_CLEANUP_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "CLN-18",
+          "resource_type": "WINDOW_HOOK",
+          "cleanup_invariant": "Global hotkey or accessibility hook unhooked cleanly",
+          "residue_count": 0,
+          "oracle_class": "RESOURCE_CLEANUP_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "CLN-19",
+          "resource_type": "WINDOW_HOOK",
+          "cleanup_invariant": "Global hotkey or accessibility hook unhooked cleanly",
+          "residue_count": 0,
+          "oracle_class": "RESOURCE_CLEANUP_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "CLN-20",
+          "resource_type": "WINDOW_HOOK",
+          "cleanup_invariant": "Global hotkey or accessibility hook unhooked cleanly",
+          "residue_count": 0,
+          "oracle_class": "RESOURCE_CLEANUP_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "CLN-21",
+          "resource_type": "RESOURCE_LEDGER_RECORD",
+          "cleanup_invariant": "Ledger transitions resource state to TERMINATED/CLEANED",
+          "residue_count": 0,
+          "oracle_class": "RESOURCE_CLEANUP_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "CLN-22",
+          "resource_type": "RESOURCE_LEDGER_RECORD",
+          "cleanup_invariant": "Ledger transitions resource state to TERMINATED/CLEANED",
+          "residue_count": 0,
+          "oracle_class": "RESOURCE_CLEANUP_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "CLN-23",
+          "resource_type": "RESOURCE_LEDGER_RECORD",
+          "cleanup_invariant": "Ledger transitions resource state to TERMINATED/CLEANED",
+          "residue_count": 0,
+          "oracle_class": "RESOURCE_CLEANUP_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "CLN-24",
+          "resource_type": "RESOURCE_LEDGER_RECORD",
+          "cleanup_invariant": "Ledger transitions resource state to TERMINATED/CLEANED",
+          "residue_count": 0,
+          "oracle_class": "RESOURCE_CLEANUP_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "CLN-25",
+          "resource_type": "RESOURCE_LEDGER_RECORD",
+          "cleanup_invariant": "Ledger transitions resource state to TERMINATED/CLEANED",
+          "residue_count": 0,
+          "oracle_class": "RESOURCE_CLEANUP_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "CLN-26",
+          "resource_type": "DESKTOP_TEST_ARTIFACT",
+          "cleanup_invariant": "Transitory test files on Desktop unlinked after verification",
+          "residue_count": 0,
+          "oracle_class": "RESOURCE_CLEANUP_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "CLN-27",
+          "resource_type": "DESKTOP_TEST_ARTIFACT",
+          "cleanup_invariant": "Transitory test files on Desktop unlinked after verification",
+          "residue_count": 0,
+          "oracle_class": "RESOURCE_CLEANUP_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "CLN-28",
+          "resource_type": "DESKTOP_TEST_ARTIFACT",
+          "cleanup_invariant": "Transitory test files on Desktop unlinked after verification",
+          "residue_count": 0,
+          "oracle_class": "RESOURCE_CLEANUP_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "CLN-29",
+          "resource_type": "DESKTOP_TEST_ARTIFACT",
+          "cleanup_invariant": "Transitory test files on Desktop unlinked after verification",
+          "residue_count": 0,
+          "oracle_class": "RESOURCE_CLEANUP_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        },
+        {
+          "case_id": "CLN-30",
+          "resource_type": "DESKTOP_TEST_ARTIFACT",
+          "cleanup_invariant": "Transitory test files on Desktop unlinked after verification",
+          "residue_count": 0,
+          "oracle_class": "RESOURCE_CLEANUP_ORACLE",
+          "passed": true,
+          "verdict": "PASS"
+        }
+      ]
+    }
+  ]
+}

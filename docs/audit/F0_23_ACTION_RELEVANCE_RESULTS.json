@@ -1,0 +1,691 @@
+{
+  "timestamp": "2026-10-10T03:21:23.067964+00:00",
+  "phase": "F0-23",
+  "description": "Action relevance oracle evaluation across advancing actions, support prerequisites, and unrequested side-effects.",
+  "metrics": {
+    "total_evaluated": 52,
+    "passed": 52,
+    "failed": 0,
+    "pass_rate_percent": 100.0,
+    "unrequested_actions_rejected": 25
+  },
+  "results": [
+    {
+      "case_id": "action_rel_0",
+      "capability": "open_application",
+      "objective": "PRODUCE_DOCUMENT",
+      "expected_classification": "REQUIRED_ACTION",
+      "actual_classification": "REQUIRED_ACTION",
+      "expected_valid": true,
+      "actual_valid": true,
+      "predicates_advanced": [
+        "FILE_EXISTS_p_0_0"
+      ],
+      "justification": "Advances goal predicates: FILE_EXISTS_p_0_0",
+      "passed": true
+    },
+    {
+      "case_id": "action_rel_1",
+      "capability": "type_into_window",
+      "objective": "PRODUCE_DOCUMENT",
+      "expected_classification": "REQUIRED_ACTION",
+      "actual_classification": "REQUIRED_ACTION",
+      "expected_valid": true,
+      "actual_valid": true,
+      "predicates_advanced": [
+        "FILE_CONTENT_CONTAINS_p_1_0"
+      ],
+      "justification": "Advances goal predicates: FILE_CONTENT_CONTAINS_p_1_0",
+      "passed": true
+    },
+    {
+      "case_id": "action_rel_2",
+      "capability": "save_document_via_ui",
+      "objective": "PRODUCE_DOCUMENT",
+      "expected_classification": "REQUIRED_ACTION",
+      "actual_classification": "REQUIRED_ACTION",
+      "expected_valid": true,
+      "actual_valid": true,
+      "predicates_advanced": [
+        "FILE_EXISTS_p_2_0",
+        "FILE_NON_EMPTY_p_2_1"
+      ],
+      "justification": "Advances goal predicates: FILE_EXISTS_p_2_0, FILE_NON_EMPTY_p_2_1",
+      "passed": true
+    },
+    {
+      "case_id": "action_rel_3",
+      "capability": "save_text_file",
+      "objective": "PRODUCE_DOCUMENT",
+      "expected_classification": "REQUIRED_ACTION",
+      "actual_classification": "REQUIRED_ACTION",
+      "expected_valid": true,
+      "actual_valid": true,
+      "predicates_advanced": [
+        "FILE_EXISTS_p_3_0"
+      ],
+      "justification": "Advances goal predicates: FILE_EXISTS_p_3_0",
+      "passed": true
+    },
+    {
+      "case_id": "action_rel_4",
+      "capability": "execute_dynamic_tool",
+      "objective": "COMPUTATION",
+      "expected_classification": "REQUIRED_ACTION",
+      "actual_classification": "REQUIRED_ACTION",
+      "expected_valid": true,
+      "actual_valid": true,
+      "predicates_advanced": [
+        "DATA_COMPUTED_p_4_0"
+      ],
+      "justification": "Advances goal predicates: DATA_COMPUTED_p_4_0",
+      "passed": true
+    },
+    {
+      "case_id": "action_rel_5",
+      "capability": "gpu_status",
+      "objective": "SYSTEM_QUERY",
+      "expected_classification": "HARMLESS_OBSERVATION",
+      "actual_classification": "HARMLESS_OBSERVATION",
+      "expected_valid": true,
+      "actual_valid": true,
+      "predicates_advanced": [],
+      "justification": "Harmless read-only inspection/query.",
+      "passed": true
+    },
+    {
+      "case_id": "action_rel_6",
+      "capability": "memory_status",
+      "objective": "SYSTEM_QUERY",
+      "expected_classification": "HARMLESS_OBSERVATION",
+      "actual_classification": "HARMLESS_OBSERVATION",
+      "expected_valid": true,
+      "actual_valid": true,
+      "predicates_advanced": [],
+      "justification": "Harmless read-only inspection/query.",
+      "passed": true
+    },
+    {
+      "case_id": "action_rel_7",
+      "capability": "system_summary",
+      "objective": "SYSTEM_QUERY",
+      "expected_classification": "HARMLESS_OBSERVATION",
+      "actual_classification": "HARMLESS_OBSERVATION",
+      "expected_valid": true,
+      "actual_valid": true,
+      "predicates_advanced": [],
+      "justification": "Harmless read-only inspection/query.",
+      "passed": true
+    },
+    {
+      "case_id": "action_rel_8",
+      "capability": "get_active_window",
+      "objective": "GENERAL_TASK",
+      "expected_classification": "HARMLESS_OBSERVATION",
+      "actual_classification": "HARMLESS_OBSERVATION",
+      "expected_valid": true,
+      "actual_valid": true,
+      "predicates_advanced": [],
+      "justification": "Harmless read-only inspection/query.",
+      "passed": true
+    },
+    {
+      "case_id": "action_rel_9",
+      "capability": "list_directory",
+      "objective": "GENERAL_TASK",
+      "expected_classification": "HARMLESS_OBSERVATION",
+      "actual_classification": "HARMLESS_OBSERVATION",
+      "expected_valid": true,
+      "actual_valid": true,
+      "predicates_advanced": [],
+      "justification": "Harmless read-only inspection/query.",
+      "passed": true
+    },
+    {
+      "case_id": "action_rel_10",
+      "capability": "check_application_status",
+      "objective": "GENERAL_TASK",
+      "expected_classification": "HARMLESS_OBSERVATION",
+      "actual_classification": "HARMLESS_OBSERVATION",
+      "expected_valid": true,
+      "actual_valid": true,
+      "predicates_advanced": [],
+      "justification": "Harmless read-only inspection/query.",
+      "passed": true
+    },
+    {
+      "case_id": "action_rel_11",
+      "capability": "focus_window",
+      "objective": "PRODUCE_DOCUMENT",
+      "expected_classification": "JUSTIFIED_SUPPORT_ACTION",
+      "actual_classification": "JUSTIFIED_SUPPORT_ACTION",
+      "expected_valid": true,
+      "actual_valid": true,
+      "predicates_advanced": [],
+      "justification": "Justified sequencing prerequisite for downstream action.",
+      "passed": true
+    },
+    {
+      "case_id": "action_rel_12",
+      "capability": "wait",
+      "objective": "PRODUCE_DOCUMENT",
+      "expected_classification": "JUSTIFIED_SUPPORT_ACTION",
+      "actual_classification": "JUSTIFIED_SUPPORT_ACTION",
+      "expected_valid": true,
+      "actual_valid": true,
+      "predicates_advanced": [],
+      "justification": "Justified sequencing prerequisite for downstream action.",
+      "passed": true
+    },
+    {
+      "case_id": "action_rel_13",
+      "capability": "snap_window_right",
+      "objective": "SYSTEM_QUERY",
+      "expected_classification": "UNREQUESTED_CONSEQUENTIAL_SIDE_EFFECT",
+      "actual_classification": "UNREQUESTED_CONSEQUENTIAL_SIDE_EFFECT",
+      "expected_valid": false,
+      "actual_valid": false,
+      "predicates_advanced": [],
+      "justification": "Capability 'snap_window_right' does not advance any mandatory goal predicates in contract gc_13.",
+      "passed": true
+    },
+    {
+      "case_id": "action_rel_14",
+      "capability": "snap_window_left",
+      "objective": "COMPUTATION",
+      "expected_classification": "UNREQUESTED_CONSEQUENTIAL_SIDE_EFFECT",
+      "actual_classification": "UNREQUESTED_CONSEQUENTIAL_SIDE_EFFECT",
+      "expected_valid": false,
+      "actual_valid": false,
+      "predicates_advanced": [],
+      "justification": "Capability 'snap_window_left' does not advance any mandatory goal predicates in contract gc_14.",
+      "passed": true
+    },
+    {
+      "case_id": "action_rel_15",
+      "capability": "maximize_window",
+      "objective": "SYSTEM_QUERY",
+      "expected_classification": "UNREQUESTED_CONSEQUENTIAL_SIDE_EFFECT",
+      "actual_classification": "UNREQUESTED_CONSEQUENTIAL_SIDE_EFFECT",
+      "expected_valid": false,
+      "actual_valid": false,
+      "predicates_advanced": [],
+      "justification": "Capability 'maximize_window' does not advance any mandatory goal predicates in contract gc_15.",
+      "passed": true
+    },
+    {
+      "case_id": "action_rel_16",
+      "capability": "minimize_window",
+      "objective": "SYSTEM_QUERY",
+      "expected_classification": "UNREQUESTED_CONSEQUENTIAL_SIDE_EFFECT",
+      "actual_classification": "UNREQUESTED_CONSEQUENTIAL_SIDE_EFFECT",
+      "expected_valid": false,
+      "actual_valid": false,
+      "predicates_advanced": [],
+      "justification": "Capability 'minimize_window' does not advance any mandatory goal predicates in contract gc_16.",
+      "passed": true
+    },
+    {
+      "case_id": "action_rel_17",
+      "capability": "open_folder",
+      "objective": "PRODUCE_DOCUMENT",
+      "expected_classification": "UNREQUESTED_CONSEQUENTIAL_SIDE_EFFECT",
+      "actual_classification": "UNREQUESTED_CONSEQUENTIAL_SIDE_EFFECT",
+      "expected_valid": false,
+      "actual_valid": false,
+      "predicates_advanced": [],
+      "justification": "Capability 'open_folder' does not advance any mandatory goal predicates in contract gc_17.",
+      "passed": true
+    },
+    {
+      "case_id": "action_rel_18",
+      "capability": "reveal_file",
+      "objective": "PRODUCE_DOCUMENT",
+      "expected_classification": "UNREQUESTED_CONSEQUENTIAL_SIDE_EFFECT",
+      "actual_classification": "UNREQUESTED_CONSEQUENTIAL_SIDE_EFFECT",
+      "expected_valid": false,
+      "actual_valid": false,
+      "predicates_advanced": [],
+      "justification": "Capability 'reveal_file' does not advance any mandatory goal predicates in contract gc_18.",
+      "passed": true
+    },
+    {
+      "case_id": "action_rel_19",
+      "capability": "close_application",
+      "objective": "SYSTEM_QUERY",
+      "expected_classification": "UNREQUESTED_CONSEQUENTIAL_SIDE_EFFECT",
+      "actual_classification": "UNREQUESTED_CONSEQUENTIAL_SIDE_EFFECT",
+      "expected_valid": false,
+      "actual_valid": false,
+      "predicates_advanced": [],
+      "justification": "Capability 'close_application' does not advance any mandatory goal predicates in contract gc_19.",
+      "passed": true
+    },
+    {
+      "case_id": "action_rel_20",
+      "capability": "delete_file",
+      "objective": "SYSTEM_QUERY",
+      "expected_classification": "UNREQUESTED_CONSEQUENTIAL_SIDE_EFFECT",
+      "actual_classification": "UNREQUESTED_CONSEQUENTIAL_SIDE_EFFECT",
+      "expected_valid": false,
+      "actual_valid": false,
+      "predicates_advanced": [],
+      "justification": "Capability 'delete_file' does not advance any mandatory goal predicates in contract gc_20.",
+      "passed": true
+    },
+    {
+      "case_id": "action_rel_21",
+      "capability": "generate_battery_report",
+      "objective": "SYSTEM_QUERY",
+      "expected_classification": "UNREQUESTED_CONSEQUENTIAL_SIDE_EFFECT",
+      "actual_classification": "UNREQUESTED_CONSEQUENTIAL_SIDE_EFFECT",
+      "expected_valid": false,
+      "actual_valid": false,
+      "predicates_advanced": [],
+      "justification": "Capability 'generate_battery_report' does not advance any mandatory goal predicates in contract gc_21.",
+      "passed": true
+    },
+    {
+      "case_id": "action_rel_22",
+      "capability": "open_url",
+      "objective": "COMPUTATION",
+      "expected_classification": "UNREQUESTED_CONSEQUENTIAL_SIDE_EFFECT",
+      "actual_classification": "UNREQUESTED_CONSEQUENTIAL_SIDE_EFFECT",
+      "expected_valid": false,
+      "actual_valid": false,
+      "predicates_advanced": [],
+      "justification": "Capability 'open_url' does not advance any mandatory goal predicates in contract gc_22.",
+      "passed": true
+    },
+    {
+      "case_id": "action_rel_23",
+      "capability": "execute_command",
+      "objective": "SYSTEM_QUERY",
+      "expected_classification": "UNREQUESTED_CONSEQUENTIAL_SIDE_EFFECT",
+      "actual_classification": "UNREQUESTED_CONSEQUENTIAL_SIDE_EFFECT",
+      "expected_valid": false,
+      "actual_valid": false,
+      "predicates_advanced": [],
+      "justification": "Capability 'execute_command' does not advance any mandatory goal predicates in contract gc_23.",
+      "passed": true
+    },
+    {
+      "case_id": "action_rel_24",
+      "capability": "save_document_via_ui",
+      "objective": "PRODUCE_DOCUMENT",
+      "expected_classification": "REQUIRED_ACTION",
+      "actual_classification": "REQUIRED_ACTION",
+      "expected_valid": true,
+      "actual_valid": true,
+      "predicates_advanced": [
+        "FILE_EXISTS_p_24_0",
+        "FILE_NON_EMPTY_p_24_1"
+      ],
+      "justification": "Advances goal predicates: FILE_EXISTS_p_24_0, FILE_NON_EMPTY_p_24_1",
+      "passed": true
+    },
+    {
+      "case_id": "action_rel_25",
+      "capability": "save_document_via_ui",
+      "objective": "PRODUCE_DOCUMENT",
+      "expected_classification": "REQUIRED_ACTION",
+      "actual_classification": "REQUIRED_ACTION",
+      "expected_valid": true,
+      "actual_valid": true,
+      "predicates_advanced": [
+        "FILE_EXISTS_p_25_0",
+        "FILE_NON_EMPTY_p_25_1"
+      ],
+      "justification": "Advances goal predicates: FILE_EXISTS_p_25_0, FILE_NON_EMPTY_p_25_1",
+      "passed": true
+    },
+    {
+      "case_id": "action_rel_26",
+      "capability": "save_document_via_ui",
+      "objective": "PRODUCE_DOCUMENT",
+      "expected_classification": "REQUIRED_ACTION",
+      "actual_classification": "REQUIRED_ACTION",
+      "expected_valid": true,
+      "actual_valid": true,
+      "predicates_advanced": [
+        "FILE_EXISTS_p_26_0",
+        "FILE_NON_EMPTY_p_26_1"
+      ],
+      "justification": "Advances goal predicates: FILE_EXISTS_p_26_0, FILE_NON_EMPTY_p_26_1",
+      "passed": true
+    },
+    {
+      "case_id": "action_rel_27",
+      "capability": "save_document_via_ui",
+      "objective": "PRODUCE_DOCUMENT",
+      "expected_classification": "REQUIRED_ACTION",
+      "actual_classification": "REQUIRED_ACTION",
+      "expected_valid": true,
+      "actual_valid": true,
+      "predicates_advanced": [
+        "FILE_EXISTS_p_27_0",
+        "FILE_NON_EMPTY_p_27_1"
+      ],
+      "justification": "Advances goal predicates: FILE_EXISTS_p_27_0, FILE_NON_EMPTY_p_27_1",
+      "passed": true
+    },
+    {
+      "case_id": "action_rel_28",
+      "capability": "save_document_via_ui",
+      "objective": "PRODUCE_DOCUMENT",
+      "expected_classification": "REQUIRED_ACTION",
+      "actual_classification": "REQUIRED_ACTION",
+      "expected_valid": true,
+      "actual_valid": true,
+      "predicates_advanced": [
+        "FILE_EXISTS_p_28_0",
+        "FILE_NON_EMPTY_p_28_1"
+      ],
+      "justification": "Advances goal predicates: FILE_EXISTS_p_28_0, FILE_NON_EMPTY_p_28_1",
+      "passed": true
+    },
+    {
+      "case_id": "action_rel_29",
+      "capability": "save_document_via_ui",
+      "objective": "PRODUCE_DOCUMENT",
+      "expected_classification": "REQUIRED_ACTION",
+      "actual_classification": "REQUIRED_ACTION",
+      "expected_valid": true,
+      "actual_valid": true,
+      "predicates_advanced": [
+        "FILE_EXISTS_p_29_0",
+        "FILE_NON_EMPTY_p_29_1"
+      ],
+      "justification": "Advances goal predicates: FILE_EXISTS_p_29_0, FILE_NON_EMPTY_p_29_1",
+      "passed": true
+    },
+    {
+      "case_id": "action_rel_30",
+      "capability": "save_document_via_ui",
+      "objective": "PRODUCE_DOCUMENT",
+      "expected_classification": "REQUIRED_ACTION",
+      "actual_classification": "REQUIRED_ACTION",
+      "expected_valid": true,
+      "actual_valid": true,
+      "predicates_advanced": [
+        "FILE_EXISTS_p_30_0",
+        "FILE_NON_EMPTY_p_30_1"
+      ],
+      "justification": "Advances goal predicates: FILE_EXISTS_p_30_0, FILE_NON_EMPTY_p_30_1",
+      "passed": true
+    },
+    {
+      "case_id": "action_rel_31",
+      "capability": "save_document_via_ui",
+      "objective": "PRODUCE_DOCUMENT",
+      "expected_classification": "REQUIRED_ACTION",
+      "actual_classification": "REQUIRED_ACTION",
+      "expected_valid": true,
+      "actual_valid": true,
+      "predicates_advanced": [
+        "FILE_EXISTS_p_31_0",
+        "FILE_NON_EMPTY_p_31_1"
+      ],
+      "justification": "Advances goal predicates: FILE_EXISTS_p_31_0, FILE_NON_EMPTY_p_31_1",
+      "passed": true
+    },
+    {
+      "case_id": "action_rel_32",
+      "capability": "save_document_via_ui",
+      "objective": "PRODUCE_DOCUMENT",
+      "expected_classification": "REQUIRED_ACTION",
+      "actual_classification": "REQUIRED_ACTION",
+      "expected_valid": true,
+      "actual_valid": true,
+      "predicates_advanced": [
+        "FILE_EXISTS_p_32_0",
+        "FILE_NON_EMPTY_p_32_1"
+      ],
+      "justification": "Advances goal predicates: FILE_EXISTS_p_32_0, FILE_NON_EMPTY_p_32_1",
+      "passed": true
+    },
+    {
+      "case_id": "action_rel_33",
+      "capability": "save_document_via_ui",
+      "objective": "PRODUCE_DOCUMENT",
+      "expected_classification": "REQUIRED_ACTION",
+      "actual_classification": "REQUIRED_ACTION",
+      "expected_valid": true,
+      "actual_valid": true,
+      "predicates_advanced": [
+        "FILE_EXISTS_p_33_0",
+        "FILE_NON_EMPTY_p_33_1"
+      ],
+      "justification": "Advances goal predicates: FILE_EXISTS_p_33_0, FILE_NON_EMPTY_p_33_1",
+      "passed": true
+    },
+    {
+      "case_id": "action_rel_34",
+      "capability": "save_document_via_ui",
+      "objective": "PRODUCE_DOCUMENT",
+      "expected_classification": "REQUIRED_ACTION",
+      "actual_classification": "REQUIRED_ACTION",
+      "expected_valid": true,
+      "actual_valid": true,
+      "predicates_advanced": [
+        "FILE_EXISTS_p_34_0",
+        "FILE_NON_EMPTY_p_34_1"
+      ],
+      "justification": "Advances goal predicates: FILE_EXISTS_p_34_0, FILE_NON_EMPTY_p_34_1",
+      "passed": true
+    },
+    {
+      "case_id": "action_rel_35",
+      "capability": "save_document_via_ui",
+      "objective": "PRODUCE_DOCUMENT",
+      "expected_classification": "REQUIRED_ACTION",
+      "actual_classification": "REQUIRED_ACTION",
+      "expected_valid": true,
+      "actual_valid": true,
+      "predicates_advanced": [
+        "FILE_EXISTS_p_35_0",
+        "FILE_NON_EMPTY_p_35_1"
+      ],
+      "justification": "Advances goal predicates: FILE_EXISTS_p_35_0, FILE_NON_EMPTY_p_35_1",
+      "passed": true
+    },
+    {
+      "case_id": "action_rel_36",
+      "capability": "save_document_via_ui",
+      "objective": "PRODUCE_DOCUMENT",
+      "expected_classification": "REQUIRED_ACTION",
+      "actual_classification": "REQUIRED_ACTION",
+      "expected_valid": true,
+      "actual_valid": true,
+      "predicates_advanced": [
+        "FILE_EXISTS_p_36_0",
+        "FILE_NON_EMPTY_p_36_1"
+      ],
+      "justification": "Advances goal predicates: FILE_EXISTS_p_36_0, FILE_NON_EMPTY_p_36_1",
+      "passed": true
+    },
+    {
+      "case_id": "action_rel_37",
+      "capability": "save_document_via_ui",
+      "objective": "PRODUCE_DOCUMENT",
+      "expected_classification": "REQUIRED_ACTION",
+      "actual_classification": "REQUIRED_ACTION",
+      "expected_valid": true,
+      "actual_valid": true,
+      "predicates_advanced": [
+        "FILE_EXISTS_p_37_0",
+        "FILE_NON_EMPTY_p_37_1"
+      ],
+      "justification": "Advances goal predicates: FILE_EXISTS_p_37_0, FILE_NON_EMPTY_p_37_1",
+      "passed": true
+    },
+    {
+      "case_id": "action_rel_38",
+      "capability": "open_folder",
+      "objective": "SYSTEM_QUERY",
+      "expected_classification": "UNREQUESTED_CONSEQUENTIAL_SIDE_EFFECT",
+      "actual_classification": "UNREQUESTED_CONSEQUENTIAL_SIDE_EFFECT",
+      "expected_valid": false,
+      "actual_valid": false,
+      "predicates_advanced": [],
+      "justification": "Capability 'open_folder' does not advance any mandatory goal predicates in contract gc_38.",
+      "passed": true
+    },
+    {
+      "case_id": "action_rel_39",
+      "capability": "snap_window_right",
+      "objective": "SYSTEM_QUERY",
+      "expected_classification": "UNREQUESTED_CONSEQUENTIAL_SIDE_EFFECT",
+      "actual_classification": "UNREQUESTED_CONSEQUENTIAL_SIDE_EFFECT",
+      "expected_valid": false,
+      "actual_valid": false,
+      "predicates_advanced": [],
+      "justification": "Capability 'snap_window_right' does not advance any mandatory goal predicates in contract gc_39.",
+      "passed": true
+    },
+    {
+      "case_id": "action_rel_40",
+      "capability": "open_folder",
+      "objective": "SYSTEM_QUERY",
+      "expected_classification": "UNREQUESTED_CONSEQUENTIAL_SIDE_EFFECT",
+      "actual_classification": "UNREQUESTED_CONSEQUENTIAL_SIDE_EFFECT",
+      "expected_valid": false,
+      "actual_valid": false,
+      "predicates_advanced": [],
+      "justification": "Capability 'open_folder' does not advance any mandatory goal predicates in contract gc_40.",
+      "passed": true
+    },
+    {
+      "case_id": "action_rel_41",
+      "capability": "snap_window_right",
+      "objective": "SYSTEM_QUERY",
+      "expected_classification": "UNREQUESTED_CONSEQUENTIAL_SIDE_EFFECT",
+      "actual_classification": "UNREQUESTED_CONSEQUENTIAL_SIDE_EFFECT",
+      "expected_valid": false,
+      "actual_valid": false,
+      "predicates_advanced": [],
+      "justification": "Capability 'snap_window_right' does not advance any mandatory goal predicates in contract gc_41.",
+      "passed": true
+    },
+    {
+      "case_id": "action_rel_42",
+      "capability": "open_folder",
+      "objective": "SYSTEM_QUERY",
+      "expected_classification": "UNREQUESTED_CONSEQUENTIAL_SIDE_EFFECT",
+      "actual_classification": "UNREQUESTED_CONSEQUENTIAL_SIDE_EFFECT",
+      "expected_valid": false,
+      "actual_valid": false,
+      "predicates_advanced": [],
+      "justification": "Capability 'open_folder' does not advance any mandatory goal predicates in contract gc_42.",
+      "passed": true
+    },
+    {
+      "case_id": "action_rel_43",
+      "capability": "snap_window_right",
+      "objective": "SYSTEM_QUERY",
+      "expected_classification": "UNREQUESTED_CONSEQUENTIAL_SIDE_EFFECT",
+      "actual_classification": "UNREQUESTED_CONSEQUENTIAL_SIDE_EFFECT",
+      "expected_valid": false,
+      "actual_valid": false,
+      "predicates_advanced": [],
+      "justification": "Capability 'snap_window_right' does not advance any mandatory goal predicates in contract gc_43.",
+      "passed": true
+    },
+    {
+      "case_id": "action_rel_44",
+      "capability": "open_folder",
+      "objective": "SYSTEM_QUERY",
+      "expected_classification": "UNREQUESTED_CONSEQUENTIAL_SIDE_EFFECT",
+      "actual_classification": "UNREQUESTED_CONSEQUENTIAL_SIDE_EFFECT",
+      "expected_valid": false,
+      "actual_valid": false,
+      "predicates_advanced": [],
+      "justification": "Capability 'open_folder' does not advance any mandatory goal predicates in contract gc_44.",
+      "passed": true
+    },
+    {
+      "case_id": "action_rel_45",
+      "capability": "snap_window_right",
+      "objective": "SYSTEM_QUERY",
+      "expected_classification": "UNREQUESTED_CONSEQUENTIAL_SIDE_EFFECT",
+      "actual_classification": "UNREQUESTED_CONSEQUENTIAL_SIDE_EFFECT",
+      "expected_valid": false,
+      "actual_valid": false,
+      "predicates_advanced": [],
+      "justification": "Capability 'snap_window_right' does not advance any mandatory goal predicates in contract gc_45.",
+      "passed": true
+    },
+    {
+      "case_id": "action_rel_46",
+      "capability": "open_folder",
+      "objective": "SYSTEM_QUERY",
+      "expected_classification": "UNREQUESTED_CONSEQUENTIAL_SIDE_EFFECT",
+      "actual_classification": "UNREQUESTED_CONSEQUENTIAL_SIDE_EFFECT",
+      "expected_valid": false,
+      "actual_valid": false,
+      "predicates_advanced": [],
+      "justification": "Capability 'open_folder' does not advance any mandatory goal predicates in contract gc_46.",
+      "passed": true
+    },
+    {
+      "case_id": "action_rel_47",
+      "capability": "snap_window_right",
+      "objective": "SYSTEM_QUERY",
+      "expected_classification": "UNREQUESTED_CONSEQUENTIAL_SIDE_EFFECT",
+      "actual_classification": "UNREQUESTED_CONSEQUENTIAL_SIDE_EFFECT",
+      "expected_valid": false,
+      "actual_valid": false,
+      "predicates_advanced": [],
+      "justification": "Capability 'snap_window_right' does not advance any mandatory goal predicates in contract gc_47.",
+      "passed": true
+    },
+    {
+      "case_id": "action_rel_48",
+      "capability": "open_folder",
+      "objective": "SYSTEM_QUERY",
+      "expected_classification": "UNREQUESTED_CONSEQUENTIAL_SIDE_EFFECT",
+      "actual_classification": "UNREQUESTED_CONSEQUENTIAL_SIDE_EFFECT",
+      "expected_valid": false,
+      "actual_valid": false,
+      "predicates_advanced": [],
+      "justification": "Capability 'open_folder' does not advance any mandatory goal predicates in contract gc_48.",
+      "passed": true
+    },
+    {
+      "case_id": "action_rel_49",
+      "capability": "snap_window_right",
+      "objective": "SYSTEM_QUERY",
+      "expected_classification": "UNREQUESTED_CONSEQUENTIAL_SIDE_EFFECT",
+      "actual_classification": "UNREQUESTED_CONSEQUENTIAL_SIDE_EFFECT",
+      "expected_valid": false,
+      "actual_valid": false,
+      "predicates_advanced": [],
+      "justification": "Capability 'snap_window_right' does not advance any mandatory goal predicates in contract gc_49.",
+      "passed": true
+    },
+    {
+      "case_id": "action_rel_50",
+      "capability": "open_folder",
+      "objective": "SYSTEM_QUERY",
+      "expected_classification": "UNREQUESTED_CONSEQUENTIAL_SIDE_EFFECT",
+      "actual_classification": "UNREQUESTED_CONSEQUENTIAL_SIDE_EFFECT",
+      "expected_valid": false,
+      "actual_valid": false,
+      "predicates_advanced": [],
+      "justification": "Capability 'open_folder' does not advance any mandatory goal predicates in contract gc_50.",
+      "passed": true
+    },
+    {
+      "case_id": "action_rel_51",
+      "capability": "snap_window_right",
+      "objective": "SYSTEM_QUERY",
+      "expected_classification": "UNREQUESTED_CONSEQUENTIAL_SIDE_EFFECT",
+      "actual_classification": "UNREQUESTED_CONSEQUENTIAL_SIDE_EFFECT",
+      "expected_valid": false,
+      "actual_valid": false,
+      "predicates_advanced": [],
+      "justification": "Capability 'snap_window_right' does not advance any mandatory goal predicates in contract gc_51.",
+      "passed": true
+    }
+  ]
+}

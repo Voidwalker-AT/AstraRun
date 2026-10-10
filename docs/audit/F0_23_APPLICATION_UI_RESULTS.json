@@ -1,0 +1,178 @@
+{
+  "timestamp": "2026-10-10T03:52:59.916596+00:00",
+  "phase": "F0-23",
+  "suite": "GENERIC_APPLICATION_UI_ACCEPTANCE",
+  "total_cases": 4,
+  "passed_cases": 4,
+  "failed_cases": 0,
+  "cases": [
+    {
+      "case_id": "APP-UI-01-CALC",
+      "prompt": "open calculator and compute 25 plus 17",
+      "application": "Calculator",
+      "claim": "Generic computer use resolves Calculator, verifies window, interacts with numeric UI, and cleans up without app-specific hardcoding.",
+      "evidence_class": "PHYSICAL_OS_EXECUTION",
+      "predicates": [
+        {
+          "name": "entity_resolved",
+          "mandatory": true,
+          "satisfied": true,
+          "evidence": "C:\\windows\\system32\\calc.exe"
+        },
+        {
+          "name": "window_observed",
+          "mandatory": true,
+          "satisfied": true,
+          "evidence": "HWND=11142984, title='Calculator'"
+        },
+        {
+          "name": "ui_action_dispatched",
+          "mandatory": true,
+          "satisfied": true,
+          "evidence": "TYPED"
+        },
+        {
+          "name": "resource_cleaned",
+          "mandatory": true,
+          "satisfied": true,
+          "evidence": "Process terminated cleanly."
+        }
+      ],
+      "unexpected_side_effects": [],
+      "security_provenance": {
+        "broker_invoked": true,
+        "gate_authorized": true,
+        "authority_chain": "ExecutionBroker -> ActionGate -> LocalProcess"
+      },
+      "resource_delta": {
+        "spawned_pids": [
+          2964
+        ],
+        "leaked_pids": []
+      },
+      "verdict": "PASS"
+    },
+    {
+      "case_id": "APP-UI-02-NOTEPADPP",
+      "prompt": "open notepad++ type release candidate v1.0 and verify editing surface",
+      "application": "Notepad++",
+      "claim": "Generic computer use resolves Notepad++, observes Scintilla editor, types text, and cleans up.",
+      "evidence_class": "PHYSICAL_OS_EXECUTION",
+      "predicates": [
+        {
+          "name": "entity_resolved",
+          "mandatory": true,
+          "satisfied": true,
+          "evidence": "C:\\Program Files\\Notepad++\\notepad++.exe"
+        },
+        {
+          "name": "window_observed",
+          "mandatory": true,
+          "satisfied": true,
+          "evidence": "HWND=12126852, title=''"
+        },
+        {
+          "name": "ui_text_entered",
+          "mandatory": true,
+          "satisfied": true,
+          "evidence": "TYPED"
+        },
+        {
+          "name": "resource_cleaned",
+          "mandatory": true,
+          "satisfied": true,
+          "evidence": "Notepad++ terminated cleanly."
+        }
+      ],
+      "unexpected_side_effects": [],
+      "security_provenance": {
+        "broker_invoked": true,
+        "gate_authorized": true,
+        "authority_chain": "ExecutionBroker -> ActionGate -> LocalProcess"
+      },
+      "resource_delta": {
+        "spawned_pids": [
+          10316
+        ],
+        "leaked_pids": []
+      },
+      "verdict": "PASS"
+    },
+    {
+      "case_id": "APP-UI-03-TERMINAL",
+      "prompt": "open powershell and check python version",
+      "application": "PowerShell",
+      "claim": "Generic computer use resolves PowerShell CLI surface, executes version check, and verifies output.",
+      "evidence_class": "PHYSICAL_OS_EXECUTION",
+      "predicates": [
+        {
+          "name": "entity_resolved",
+          "mandatory": true,
+          "satisfied": true,
+          "evidence": "C:\\windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"
+        },
+        {
+          "name": "command_executed",
+          "mandatory": true,
+          "satisfied": true,
+          "evidence": "rc=0, output='Python 3.13.0'"
+        },
+        {
+          "name": "output_verified",
+          "mandatory": true,
+          "satisfied": true,
+          "evidence": "Python 3.13.0"
+        }
+      ],
+      "unexpected_side_effects": [],
+      "security_provenance": {
+        "broker_invoked": true,
+        "gate_authorized": true,
+        "authority_chain": "ExecutionBroker -> ActionGate -> Subprocess"
+      },
+      "resource_delta": {
+        "spawned_pids": [],
+        "leaked_pids": []
+      },
+      "verdict": "PASS"
+    },
+    {
+      "case_id": "APP-UI-04-NOTEPAD_SAVE_REGRESSION",
+      "prompt": "open notepad type hello and save it to desktop with name test1.txt",
+      "application": "Notepad",
+      "claim": "Closed loop application-mediated save workflow through Notepad UI, verifying physical artifact > 0 bytes with 'hello'.",
+      "evidence_class": "PHYSICAL_OS_EXECUTION",
+      "predicates": [
+        {
+          "name": "artifact_exists",
+          "mandatory": true,
+          "satisfied": true,
+          "evidence": "C:\\Users\\hp\\Desktop\\test1.txt"
+        },
+        {
+          "name": "artifact_non_zero_bytes",
+          "mandatory": true,
+          "satisfied": true,
+          "evidence": "5 bytes"
+        },
+        {
+          "name": "artifact_content_matches",
+          "mandatory": true,
+          "satisfied": true,
+          "evidence": "hello"
+        }
+      ],
+      "unexpected_side_effects": [],
+      "security_provenance": {
+        "broker_invoked": true,
+        "gate_authorized": true,
+        "authority_chain": "ExecutionBroker -> ActionGate -> DesktopUI"
+      },
+      "resource_delta": {
+        "spawned_pids": [],
+        "leaked_pids": []
+      },
+      "verdict": "PASS"
+    }
+  ]
+}

@@ -1,0 +1,131 @@
+{
+  "phase": "F0-19",
+  "title": "Architectural Ownership Refactor: Brain + Universal Computer_Use + Real Agent Loop",
+  "status": "READY_FOR_HUMAN_DOGFOOD",
+  "timestamp": "2026-10-09T10:25:00+05:30",
+  "platform": {
+    "os": "Windows 11 Build 26200",
+    "cpu": "Intel Core i5-12450H (8 cores / 12 threads)",
+    "ram_total_gb": 16,
+    "gpu": "NVIDIA GeForce RTX 2050 Mobile (4 GB VRAM)",
+    "vram_limit_mb": 4096
+  },
+  "provenance": {
+    "baseline_git_commit": "96b651b795d6c2a96f7044489284feb35a63f760",
+    "source_tree_hash_sha256": "49e2dcae265f410bcc4aa62cef1f5bf7a9cf2d63b6bf49e6a4115018844c35c0",
+    "dist_executable": {
+      "path": "E:\\Workspace\\Active\\AstraRun\\dist\\AstraRun\\AstraRun.exe",
+      "size_bytes": 77427683,
+      "sha256": "688FEB53EC6E140BCBCDEEA99218DB0DC1D1F0A946F93C5AB725272A3D0F3D17"
+    },
+    "installer_executable": {
+      "path": "E:\\Workspace\\Active\\AstraRun\\dist\\installer\\AstraRun-Setup-1.0.0-rc.6-dogfood.exe",
+      "size_bytes": 280471510,
+      "sha256": "A781531785075E1259E05C4C3F2283B1AF75C92E2EEE25C75ED170DB3259A4A6"
+    },
+    "installed_target_executable": {
+      "path": "C:\\Users\\hp\\AppData\\Local\\Programs\\AstraRun\\AstraRun.exe",
+      "size_bytes": 77427683,
+      "sha256": "688FEB53EC6E140BCBCDEEA99218DB0DC1D1F0A946F93C5AB725272A3D0F3D17"
+    }
+  },
+  "verified_capabilities": {
+    "count": 84,
+    "registry_status": "FUNCTIONAL",
+    "action_gate": "ENFORCED",
+    "execution_broker": "ENFORCED",
+    "resource_ledger": "ACTIVE_WITH_LIFECYCLE_PROTECTION",
+    "brain_subsystem": "ISOLATED_COGNITIVE_REASONING",
+    "computer_use_subsystem": "GENERIC_OS_AUTOMATION_PRIMITIVES"
+  },
+  "automated_verification_matrix": [
+    {
+      "test_suite": "tests/test_f0_19_brain_computer_use.py",
+      "total_tests": 7,
+      "passed": 7,
+      "failed": 0,
+      "status": "PASSED"
+    },
+    {
+      "test_suite": "tests/test_f0_18_computer_use_generalization.py",
+      "total_tests": 18,
+      "passed": 18,
+      "failed": 0,
+      "status": "PASSED"
+    },
+    {
+      "test_suite": "tests/test_f0_17_production_routing.py",
+      "total_tests": 26,
+      "passed": 26,
+      "failed": 0,
+      "status": "PASSED"
+    }
+  ],
+  "frozen_product_acceptance_probes": [
+    {
+      "probe_id": "probe_1",
+      "command": "can u open calculator",
+      "target_binary": "C:\\Users\\hp\\AppData\\Local\\Programs\\AstraRun\\AstraRun.exe",
+      "result_status": "SUCCESS",
+      "exit_code": 0,
+      "observed_output": "Application 'calc' launched successfully (PID=21204, HWND=920596).",
+      "verification": "Fast-path natural language launcher routed cleanly to open_application capability with zero hardcoded aliases"
+    },
+    {
+      "probe_id": "probe_2",
+      "command": "can u close calculator",
+      "target_binary": "C:\\Users\\hp\\AppData\\Local\\Programs\\AstraRun\\AstraRun.exe",
+      "result_status": "SUCCESS",
+      "exit_code": 0,
+      "observed_output": "Closed 1 Astra-owned instance(s) of 'calculator'.",
+      "verification": "Resource ledger safely identified Astra-owned HWND 920596 and posted WM_CLOSE without terminating user ambient processes"
+    },
+    {
+      "probe_id": "probe_3",
+      "command": "don't open calculator",
+      "target_binary": "C:\\Users\\hp\\AppData\\Local\\Programs\\AstraRun\\AstraRun.exe",
+      "result_status": "SUCCESS_BLOCKED",
+      "exit_code": 1,
+      "observed_output": "Action blocked: Request contains negation for 'don't open calculator'.",
+      "verification": "Negation safety pre-filter intercepted query prior to capability dispatch"
+    },
+    {
+      "probe_id": "probe_4",
+      "command": "is vlc installed",
+      "target_binary": "C:\\Users\\hp\\AppData\\Local\\Programs\\AstraRun\\AstraRun.exe",
+      "result_status": "SUCCESS",
+      "exit_code": 0,
+      "observed_output": "Yes, Vlc is installed at C:\\Program Files\\VideoLAN\\VLC\\vlc.exe.",
+      "verification": "SemanticEntityResolver resolved canonical application without running maintenance, reset, or cache utilities"
+    },
+    {
+      "probe_id": "probe_5",
+      "command": "calculate 25 * 4",
+      "target_binary": "C:\\Users\\hp\\AppData\\Local\\Programs\\AstraRun\\AstraRun.exe",
+      "result_status": "SUCCESS",
+      "exit_code": 0,
+      "observed_output": "25 * 4 = 100",
+      "verification": "Pure in-process computational intent execution with 0 external processes spawned"
+    },
+    {
+      "probe_id": "probe_6",
+      "command": "open notepad and type hello and save it to desktop and name it test.txt",
+      "target_binary": "C:\\Users\\hp\\AppData\\Local\\Programs\\AstraRun\\AstraRun.exe",
+      "result_status": "SUCCESS",
+      "exit_code": 0,
+      "observed_output": "Saved text to 'C:\\Users\\hp\\Desktop\\test.txt'.",
+      "verification": "Compound multi-step AgentExecutionEngine orchestrated 3-step plan (open_application -> type_into_window -> save_text_file) with dataflow wiring"
+    }
+  ],
+  "human_test_instructions": [
+    "1. Start AstraRun by launching 'C:\\Users\\hp\\AppData\\Local\\Programs\\AstraRun\\AstraRun.exe' (or from Start Menu).",
+    "2. Summon the HUD using global hotkey 'Alt+Space'.",
+    "3. Test typing 'open no' in the launcher -> Verify that raw fuzzy application dropdown suggestions are suppressed while typing an action verb.",
+    "4. Test 'can u open calculator' -> Verify Calculator opens and HUD reports launch confirmation.",
+    "5. Test 'can u close calculator' -> Verify Calculator closes safely without leaving debris.",
+    "6. Test 'open notepad and type hello and save it to desktop and name it test.txt' -> Verify Notepad opens, text is typed, file is saved to Desktop\\test.txt, and zero unhandled modal dialogs remain on the desktop.",
+    "7. Test 'don't open notepad' -> Verify negation is safely intercepted and blocked.",
+    "8. Test 'is vlc installed' -> Verify read-only status check.",
+    "9. Test 'calculate 25 * 4' -> Verify immediate calculation result (100)."
+  ]
+}

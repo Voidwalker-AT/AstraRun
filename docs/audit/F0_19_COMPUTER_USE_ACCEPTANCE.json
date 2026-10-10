@@ -1,0 +1,47 @@
+{
+  "audit_version": "1.0",
+  "phase": "F0-19",
+  "acceptance_gates": {
+    "gate_1_unhardcoded_execution": {
+      "prompt": "open notepad and type hello and save it to desktop and name it test.txt",
+      "status": "PASSED",
+      "evidence": {
+        "decomposed_steps": [
+          {"step_id": "step_1", "capability": "open_application", "args": {"app": "notepad"}},
+          {"step_id": "step_2", "capability": "type_into_window", "args": {"text": "hello", "app_name": "notepad"}},
+          {"step_id": "step_3", "capability": "save_text_file", "args": {"path": "C:\\Users\\hp\\Desktop\\test.txt", "text": "hello"}}
+        ],
+        "execution_result": "Success: True",
+        "file_created_verified": true,
+        "content_verified": "hello",
+        "test_debris_cleaned": true
+      }
+    },
+    "gate_2_failure_recovery_and_takeover": {
+      "status": "PASSED",
+      "evidence": {
+        "bounded_replan_verified": true,
+        "max_replan_budget_enforced": 3,
+        "human_takeover_detection_verified": true,
+        "takeover_detachment_preserves_user_window": true
+      }
+    },
+    "gate_3_domain_invariants": {
+      "status": "PASSED",
+      "evidence": {
+        "brain_domain_zero_os_automation": true,
+        "computer_use_zero_semantic_intent": true,
+        "security_authority_strictly_enforced": true
+      }
+    },
+    "gate_4_resource_lifecycle": {
+      "status": "PASSED",
+      "evidence": {
+        "forensic_audit_file": "docs/audit/F0_19_RESOURCE_LIFECYCLE_FORENSICS.json",
+        "leaked_dialog_root_cause_resolved": true,
+        "try_finally_process_kill_enforced_in_test_harnesses": true
+      }
+    }
+  },
+  "overall_status": "ALL_GATES_PASSED"
+}

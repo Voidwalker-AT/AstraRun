@@ -1,9 +1,9 @@
 {
   "benchmark": "SECTION_J_GENERIC_REPAIR_GENERALIZATION_HOLDOUT",
   "total_programs": 8,
-  "repaired_successfully": 8,
-  "failed_repairs": 0,
-  "success_rate_pct": 100.0,
+  "repaired_successfully": 7,
+  "failed_repairs": 1,
+  "success_rate_pct": 87.5,
   "security_escapes": 0,
   "threshold_pct": 75.0,
   "min_required_repairs": 6,
@@ -16,27 +16,25 @@
       "repair_attempts": 1,
       "revisions_recorded": 3,
       "artifacts_found": [
-        "C:\\Users\\hp\\AppData\\LocalLow\\AstraRun\\sandbox\\repair_holdout_repair_01_1791397380174\\report.txt"
+        "C:\\Users\\hp\\AppData\\LocalLow\\AstraRun\\sandbox\\repair_holdout_repair_01_1791576692102\\report.txt"
       ],
       "expected_artifact": "report.txt",
       "exit_code": 0,
-      "duration_sec": 6.42,
+      "duration_sec": 5.72,
       "final_source": "subtotal = 120\ntax = 15\ntotal = subtotal + tax\nwith open(\"report.txt\", \"w\", encoding=\"utf-8\") as f:\n    f.write(f\"Total: {total}\\n\")"
     },
     {
       "id": "REPAIR-02",
       "category": "missing_dict_key",
       "goal": "Parse status dictionary and extract timestamp and message to log.txt",
-      "is_success": true,
+      "is_success": false,
       "repair_attempts": 1,
       "revisions_recorded": 3,
-      "artifacts_found": [
-        "C:\\Users\\hp\\AppData\\LocalLow\\AstraRun\\sandbox\\repair_holdout_repair_02_1791397386596\\log.txt"
-      ],
+      "artifacts_found": [],
       "expected_artifact": "log.txt",
       "exit_code": 0,
-      "duration_sec": 2.23,
-      "final_source": "status_data = {\"time\": \"2026-10-06T12:00:00Z\", \"message\": \"All systems normal\"}\nts = status_data.get(\"timestamp\", \"No timestamp provided\")\nmsg = status_data.get(\"message\", \"No message provided\")\nwith open(\"log.txt\", \"w\", encoding=\"utf-8\") as f:\n    f.write(f\"[{ts}] {msg}\\n\")"
+      "duration_sec": 2.53,
+      "final_source": "status_data = {\"time\": \"2026-10-06T12:00:00Z\", \"message\": \"All systems normal\"}\nts = status_data.get(\"timestamp\", None)\nmsg = status_data.get(\"message\", None)\nif ts is not None and msg is not None:\n    with open(\"log.txt\", \"w\", encoding=\"utf-8\") as f:\n        f.write(f\"[{ts}] {msg}\\n\")\nelse:\n    print(\"Error: 'timestamp' or 'message' not found in status_data\")"
     },
     {
       "id": "REPAIR-03",
@@ -46,12 +44,12 @@
       "repair_attempts": 1,
       "revisions_recorded": 3,
       "artifacts_found": [
-        "C:\\Users\\hp\\AppData\\LocalLow\\AstraRun\\sandbox\\repair_holdout_repair_03_1791397388826\\active.txt"
+        "C:\\Users\\hp\\AppData\\LocalLow\\AstraRun\\sandbox\\repair_holdout_repair_03_1791576700356\\active.txt"
       ],
       "expected_artifact": "active.txt",
       "exit_code": 0,
-      "duration_sec": 2.19,
-      "final_source": "servers = [\"web-01\", \"web-02\", \"db-primary\", \"cache-redis\"]\nif servers:  # Check if the list is not empty\n    last_server = servers[-1]  # Get the last item in the list\n    with open(\"active.txt\", \"w\", encoding=\"utf-8\") as f:\n        f.write(last_server + \"\\n\")\nelse:\n    print(\"The server list is empty.\")"
+      "duration_sec": 2.26,
+      "final_source": "servers = [\"web-01\", \"web-02\", \"db-primary\", \"cache-redis\"]\nif servers:  # Check if the list is not empty\n    last_server = servers[-1]  # Use the last element of the list\n    with open(\"active.txt\", \"w\", encoding=\"utf-8\") as f:\n        f.write(last_server + \"\\n\")\nelse:\n    print(\"The server list is empty.\")"
     },
     {
       "id": "REPAIR-04",
@@ -61,11 +59,11 @@
       "repair_attempts": 1,
       "revisions_recorded": 3,
       "artifacts_found": [
-        "C:\\Users\\hp\\AppData\\LocalLow\\AstraRun\\sandbox\\repair_holdout_repair_04_1791397391016\\point.txt"
+        "C:\\Users\\hp\\AppData\\LocalLow\\AstraRun\\sandbox\\repair_holdout_repair_04_1791576702620\\point.txt"
       ],
       "expected_artifact": "point.txt",
       "exit_code": 0,
-      "duration_sec": 1.95,
+      "duration_sec": 1.64,
       "final_source": "coords = (10, 20)\nx, y = coords\nwith open(\"point.txt\", \"w\", encoding=\"utf-8\") as f:\n    f.write(f\"Point({x}, {y})\\n\")"
     },
     {
@@ -76,11 +74,11 @@
       "repair_attempts": 1,
       "revisions_recorded": 3,
       "artifacts_found": [
-        "C:\\Users\\hp\\AppData\\LocalLow\\AstraRun\\sandbox\\repair_holdout_repair_05_1791397392967\\config.json"
+        "C:\\Users\\hp\\AppData\\LocalLow\\AstraRun\\sandbox\\repair_holdout_repair_05_1791576704256\\config.json"
       ],
       "expected_artifact": "config.json",
       "exit_code": 0,
-      "duration_sec": 1.95,
+      "duration_sec": 1.54,
       "final_source": "from pathlib import Path\nout_dir = Path(\".\")\nout_file = out_dir / \"config.json\"\nwith open(out_file, \"w\", encoding=\"utf-8\") as f:\n    f.write('{\"status\": \"ok\"}\\n')"
     },
     {
@@ -91,11 +89,11 @@
       "repair_attempts": 1,
       "revisions_recorded": 3,
       "artifacts_found": [
-        "C:\\Users\\hp\\AppData\\LocalLow\\AstraRun\\sandbox\\repair_holdout_repair_06_1791397394913\\signature.bin"
+        "C:\\Users\\hp\\AppData\\LocalLow\\AstraRun\\sandbox\\repair_holdout_repair_06_1791576705792\\signature.bin"
       ],
       "expected_artifact": "signature.bin",
       "exit_code": 0,
-      "duration_sec": 1.6,
+      "duration_sec": 1.3,
       "final_source": "sig = b\"\\x89PNG\\r\\n\\x1a\\n\"\nwith open(\"signature.bin\", \"wb\") as f:\n    f.write(sig)"
     },
     {
@@ -106,11 +104,11 @@
       "repair_attempts": 1,
       "revisions_recorded": 3,
       "artifacts_found": [
-        "C:\\Users\\hp\\AppData\\LocalLow\\AstraRun\\sandbox\\repair_holdout_repair_07_1791397396511\\timestamp.txt"
+        "C:\\Users\\hp\\AppData\\LocalLow\\AstraRun\\sandbox\\repair_holdout_repair_07_1791576707087\\timestamp.txt"
       ],
       "expected_artifact": "timestamp.txt",
       "exit_code": 0,
-      "duration_sec": 1.93,
+      "duration_sec": 1.51,
       "final_source": "import time\nts = time.strftime(\"%Y-%m-%d %H:%M:%S\")\nwith open(\"timestamp.txt\", \"w\", encoding=\"utf-8\") as f:\n    f.write(ts + \"\\n\")"
     },
     {
@@ -121,11 +119,11 @@
       "repair_attempts": 1,
       "revisions_recorded": 3,
       "artifacts_found": [
-        "C:\\Users\\hp\\AppData\\LocalLow\\AstraRun\\sandbox\\repair_holdout_repair_08_1791397398444\\result.txt"
+        "C:\\Users\\hp\\AppData\\LocalLow\\AstraRun\\sandbox\\repair_holdout_repair_08_1791576708597\\result.txt"
       ],
       "expected_artifact": "result.txt",
       "exit_code": 0,
-      "duration_sec": 2.34,
+      "duration_sec": 1.8,
       "final_source": "total = sum(range(1, 11))  # Corrected the range to include 10\nassert total == 55, f\"Expected total 55 but got {total}\"\nwith open(\"result.txt\", \"w\", encoding=\"utf-8\") as f:\n    f.write(str(total) + \"\\n\")"
     }
   ]

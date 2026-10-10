@@ -1,0 +1,135 @@
+{
+  "timestamp": "2026-10-10T05:10:00.000000+00:00",
+  "phase": "F0-24A",
+  "audit_type": "EXECUTION_PATH_ARCHITECTURE",
+  "summary": {
+    "total_modules_audited": 9,
+    "classification_counts": {
+      "KEEP": 7,
+      "MERGE_LATER": 2,
+      "REMOVE_NOW": 0
+    },
+    "canonical_input_path": "UIA_IPC_PRIMARY",
+    "fallback_input_path": "WIN32_MESSAGE_CLIPBOARD_FALLBACK",
+    "synthetic_keystroke_policy": "LAST_RESORT_WITH_MANDATORY_VERIFICATION"
+  },
+  "modules": {
+    "src/astrarun/interaction/service.py": {
+      "classification": "KEEP",
+      "role": "High-level workstation capabilities for UI interaction, element resolution, and capability dispatch.",
+      "responsibilities": [
+        "inspect_ui",
+        "click_element",
+        "set_value",
+        "toggle_checkbox",
+        "select_tab",
+        "focus_control",
+        "scroll_control",
+        "press_shortcut",
+        "resolve_editable_element",
+        "type_literal_text"
+      ],
+      "flaw_identified": "type_literal_text silently reported success without verifying editor buffer state, and relied on foreground-dependent SendInput/keybd_event even when headless/background execution had GetForegroundWindow() == 0.",
+      "remediation": "Prioritize UIA ValuePattern IPC directly into editable control buffer; fallback to focused paste; verify postcondition via TextPattern or ValuePattern; return failure if editor buffer remains empty."
+    },
+    "src/astrarun/interaction/controller.py": {
+      "classification": "KEEP",
+      "role": "Semantic UI control mutation controller using COM IUIAutomation patterns.",
+      "responsibilities": [
+        "_get_com_element",
+        "invoke_element",
+        "set_element_value",
+        "toggle_element",
+        "select_element",
+        "scroll_element",
+        "focus_element"
+      ],
+      "flaw_identified": "_get_com_element relied on rigid compound property conditions that occasionally failed on dynamic WinUI 3 / XAML wrapper elements; fallback typing in set_element_value lacked postcondition verification.",
+      "remediation": "Strengthen element matching with robust control type fallbacks; ensure ValuePattern and TextPattern query interfaces handle varied COM implementations gracefully."
+    },
+    "src/astrarun/interaction/document.py": {
+      "classification": "KEEP",
+      "role": "Application document lifecycle and native file saving capabilities.",
+      "responsibilities": [
+        "save_document_via_ui",
+        "_find_file_dialog_edit_control",
+        "_find_dialog_button"
+      ],
+      "flaw_identified": "save_document_via_ui relied exclusively on legacy Win32 EnumChildWindows searching for 'Edit' and 'Button' classes (which fail in modern DirectUIHWND/IFileDialog Common Item Dialogs), relied on Alt+N/Alt+S keyboard accelerators requiring active foreground focus, and verified destination file existence without checking file_size > 0.",
+      "remediation": "Upgrade Save As dialog interaction to native UIA COM tree: locate File Name Edit control via UIA ValuePattern; set full path directly; invoke Save button via UIA InvokePattern; handle confirmation dialogs via UIA/Win32; verify physical file exists AND file_size > 0."
+    },
+    "src/astrarun/interaction/keyboard.py": {
+      "classification": "KEEP",
+      "role": "Win32 keyboard simulation, shortcut parsing, and SendInput/keybd_event dispatch.",
+      "responsibilities": [
+        "parse_shortcut",
+        "dispatch_shortcut",
+        "type_text_into_active"
+      ],
+      "notes": "Retained for non-UIA legacy desktop controls, game windows, and global hotkeys, but demoted from primary input path for editable text controls."
+    },
+    "src/astrarun/interaction/clipboard.py": {
+      "classification": "KEEP",
+      "role": "Win32 clipboard manipulation for atomic text transfer.",
+      "responsibilities": [
+        "get_clipboard_text",
+        "set_clipboard_text"
+      ],
+      "notes": "Useful secondary transport when UIA ValuePattern is unsupported (e.g. Scintilla/Notepad++)."
+    },
+    "src/astrarun/interaction/discovery.py": {
+      "classification": "KEEP",
+      "role": "UI Automation element tree enumeration and bounding box discovery.",
+      "responsibilities": [
+        "inspect_window_ui",
+        "_ensure_desktop_attached"
+      ],
+      "notes": "Core perception engine for window UI controls."
+    },
+    "src/astrarun/interaction/resolver.py": {
+      "classification": "KEEP",
+      "role": "Semantic fuzzy matching and scoring for UI controls.",
+      "responsibilities": [
+        "UIElementResolver.resolve"
+      ],
+      "notes": "Matches target natural language query against discovered control names, automation IDs, and types."
+    },
+    "src/astrarun/computer_use/ui/dialogs.py": {
+      "classification": "MERGE_LATER",
+      "role": "Secondary dialog detector from computer_use package.",
+      "responsibilities": [
+        "DialogDetector.detect_dialogs"
+      ],
+      "notes": "Overlaps with interaction/document.py dialog discovery. Should be consolidated into interaction package in subsequent cleanup."
+    },
+    "src/astrarun/computer_use/hooks/desktop_attach.py": {
+      "classification": "MERGE_LATER",
+      "role": "Desktop input attachment hook.",
+      "responsibilities": [
+        "ensure_desktop_attached"
+      ],
+      "notes": "Duplicate of windows/discovery.py::_ensure_desktop_attached. Consolidate to single source of truth."
+    }
+  },
+  "canonical_execution_flow": {
+    "step_1_launch": {
+      "capability": "launch_application",
+      "verification": "Process ID verified alive and window HWND discovered in OS window manager."
+    },
+    "step_2_text_entry": {
+      "capability": "type_literal_text",
+      "mechanism_1_primary": "UIA ValuePattern.SetValue on discovered editable control (works without foreground focus).",
+      "mechanism_2_fallback": "Win32 control message (EM_REPLACESEL / WM_SETTEXT) or window focus + clipboard paste (Ctrl+V).",
+      "mandatory_verification": "Check UIA TextPattern / ValuePattern or window title dirty state. FAIL if control text is empty."
+    },
+    "step_3_save_document": {
+      "capability": "save_document_via_ui",
+      "trigger": "UIA File -> Save as menu item invoke, with keyboard shortcut (Ctrl+Shift+S / Ctrl+S) fallback.",
+      "dialog_discovery": "Locate Save As / Save window via Win32 EnumWindows + UIA Dialog detection.",
+      "path_entry": "Locate File name Edit control in dialog via UIA and apply ValuePattern.SetValue(dest_path).",
+      "commit": "Invoke Save button via UIA InvokePattern or BM_CLICK.",
+      "confirmation": "Detect and accept overwrite confirmation if present.",
+      "mandatory_verification": "Verify physical file exists on disk AND os.path.getsize(dest_path) > 0."
+    }
+  }
+}

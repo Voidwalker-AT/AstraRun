@@ -1,0 +1,96 @@
+{
+  "timestamp": "2026-10-09T20:44:15.527077+00:00",
+  "phase": "F0-22",
+  "frozen_binaries": {
+    "installed_path": "C:\\Users\\hp\\AppData\\Local\\Programs\\AstraRun\\AstraRun.exe",
+    "installed_sha256": "bfec39e1006463a2fb754b53b05742d74e66ed253e8c64142aed79335412cd61",
+    "installed_size": 77485678,
+    "built_path": "E:\\Workspace\\Active\\AstraRun\\dist\\AstraRun\\AstraRun.exe",
+    "built_sha256": "bfec39e1006463a2fb754b53b05742d74e66ed253e8c64142aed79335412cd61",
+    "built_size": 77485678,
+    "hash_match": true
+  },
+  "cases": {
+    "case_1_authoritative_notepad_regression": {
+      "prompt": "open notepad type hello and save it to desktop with name test1.txt",
+      "evidence_class": "FROZEN_PRODUCT",
+      "execution_binary": "C:\\Users\\hp\\AppData\\Local\\Programs\\AstraRun\\AstraRun.exe",
+      "task_id": "task_ff892e9a",
+      "workflow": [
+        {
+          "step": 1,
+          "capability": "open_application",
+          "args": {
+            "app": "notepad"
+          }
+        },
+        {
+          "step": 2,
+          "capability": "type_into_window",
+          "args": {
+            "text": "hello",
+            "app_name": "notepad"
+          }
+        },
+        {
+          "step": 3,
+          "capability": "save_document_via_ui",
+          "args": {
+            "filename": "test1.txt",
+            "path": "C:\\Users\\hp\\Desktop\\test1.txt",
+            "app_name": "notepad"
+          }
+        }
+      ],
+      "ui_actions_observed": {
+        "application_opened": "notepad.exe (HWND 0x1c072c)",
+        "text_typed": "hello",
+        "shortcut_dispatched": "Ctrl+Shift+S",
+        "dialog_found": "Save As dialog (HWND 0x580c48)",
+        "file_name_set": "test1.txt",
+        "save_confirmed": true
+      },
+      "physical_verification": {
+        "artifact_path": "C:\\Users\\hp\\Desktop\\test1.txt",
+        "exists": true,
+        "size_bytes": 5,
+        "sha256": "2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824",
+        "content": "hello",
+        "unrequested_explorer_instances": 0,
+        "false_completion": false
+      },
+      "status": "PASS"
+    },
+    "case_2_direct_artifact_production": {
+      "prompt": "save test file f0_22_artifact.txt to desktop with content reality_audit_passed",
+      "evidence_class": "FROZEN_PRODUCT",
+      "execution_binary": "C:\\Users\\hp\\AppData\\Local\\Programs\\AstraRun\\AstraRun.exe",
+      "exit_code": 0,
+      "physical_verification": {
+        "artifact_path": "C:\\Users\\hp\\Desktop\\f0_22_artifact.txt",
+        "exists": true,
+        "size_bytes": 20,
+        "sha256": "ea90129139a099c355d359c0c349dad54b52e2ec5eab7f9a78376dd1f22e9366",
+        "content": "reality_audit_passed",
+        "false_completion": false
+      },
+      "status": "PASS"
+    },
+    "case_3_lifecycle_app_management": {
+      "prompt_launch": "open calculator",
+      "prompt_close": "close calculator",
+      "evidence_class": "FROZEN_PRODUCT",
+      "launch_exit_code": 0,
+      "close_exit_code": 0,
+      "status": "PASS"
+    },
+    "case_4_nonexistent_entity_rejection": {
+      "prompt": "close nonexistent_app_9988",
+      "evidence_class": "FROZEN_PRODUCT",
+      "exit_code": 1,
+      "honest_failure": true,
+      "false_completion": false,
+      "status": "PASS"
+    }
+  }
+}

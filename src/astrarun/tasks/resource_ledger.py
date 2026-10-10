@@ -801,6 +801,23 @@ class AstraResourceLedger:
         if resource.document_path and resource.content_classification == ContentClassification.TEMPORARY_TEST_CONTENT:
             clean_notepad_tabstate_for_path(resource.document_path)
 
+        # Post-close verification: do not claim CLOSED while process/window remains.
+        process_still_alive = bool(resource.pid and psutil.pid_exists(resource.pid))
+        window_still_alive = False
+        if user32 and resource.hwnd:
+            try:
+                window_still_alive = bool(user32.IsWindow(resource.hwnd))
+            except Exception:
+                window_still_alive = False
+
+        if process_still_alive or window_still_alive:
+            self.update_lifecycle_state(resource.resource_id, ResourceLifecycleState.ACTIVE)
+            logger.warning(
+                "[RESOURCE_CLEAN_FAILED] Resource %s still live (process_alive=%s, window_alive=%s)",
+                resource.resource_id, process_still_alive, window_still_alive
+            )
+            return False
+
         self.update_lifecycle_state(resource.resource_id, ResourceLifecycleState.CLOSED)
         logger.info("[RESOURCE_CLEANED] Successfully cleaned up resource %s", resource.resource_id)
         return True
@@ -846,16 +863,24 @@ class AstraResourceLedger:
     def cleanup_task_resources(
         self,
         task_id: str,
-        task_status: Any,
+        task_status: Any = "COMPLETED",
     ) -> Dict[str, Any]:
         """
         Execute deterministic cleanup for all resources owned by task_id.
         Applies try/finally semantics across SUCCESS, FAILURE, USER_CANCEL, and TIMEOUT.
+
+        Returns a truthful report. PASS_CLEAN is only implied when process_cleaned_up
+        is True (or there was never a task-owned process) and no cleanup exception occurred.
         """
         resources = self.list_resources_for_task(task_id)
         cleaned_count = 0
         preserved_count = 0
         detached_count = 0
+        failed_count = 0
+        cleanup_exception: Optional[str] = None
+        had_task_owned_process = any(bool(r.pid) for r in resources)
+        remaining_active = 0
+        process_cleaned_up = True
 
         status_str = getattr(task_status, "value", str(task_status)).upper()
         is_success = status_str in ("COMPLETED", "SUCCESS")
@@ -865,42 +890,104 @@ class AstraResourceLedger:
             task_id, status_str, len(resources)
         )
 
-        for res in resources:
-            if res.lifecycle_state in (ResourceLifecycleState.CLOSED, ResourceLifecycleState.ORPHANED_CLEANED):
-                continue
-
-            if res.user_interacted or res.lifecycle_state == ResourceLifecycleState.USER_TAKEOVER_DETACHED:
-                detached_count += 1
-                continue
-
-            # Policy checks on failure/cancellation
-            if not is_success:
-                if res.cleanup_policy == CleanupPolicy.PRESERVE_ON_FAILURE:
-                    logger.info("[RESOURCE_PRESERVED_ON_FAILURE] %s preserved for analysis.", res.resource_id)
-                    preserved_count += 1
-                    continue
-                if res.content_classification == ContentClassification.TASK_ARTIFACT:
-                    # Do not discard valuable partially created user work on unexpected failure
-                    logger.info("[RESOURCE_PRESERVED_ARTIFACT] %s preserved due to TASK_ARTIFACT content.", res.resource_id)
-                    preserved_count += 1
+        try:
+            for res in resources:
+                if res.lifecycle_state in (ResourceLifecycleState.CLOSED, ResourceLifecycleState.ORPHANED_CLEANED):
                     continue
 
-            # Execute targeted closure
-            ok = self.close_owned_resource(res)
-            if ok:
-                cleaned_count += 1
-            else:
-                preserved_count += 1
+                if res.user_interacted or res.lifecycle_state == ResourceLifecycleState.USER_TAKEOVER_DETACHED:
+                    detached_count += 1
+                    continue
+
+                # Policy checks on failure/cancellation
+                if not is_success:
+                    if res.cleanup_policy == CleanupPolicy.PRESERVE_ON_FAILURE:
+                        logger.info("[RESOURCE_PRESERVED_ON_FAILURE] %s preserved for analysis.", res.resource_id)
+                        preserved_count += 1
+                        continue
+                    if res.content_classification == ContentClassification.TASK_ARTIFACT:
+                        # Do not discard valuable partially created user work on unexpected failure
+                        logger.info("[RESOURCE_PRESERVED_ARTIFACT] %s preserved due to TASK_ARTIFACT content.", res.resource_id)
+                        preserved_count += 1
+                        continue
+
+                # Execute targeted closure
+                try:
+                    ok = self.close_owned_resource(res)
+                except Exception as close_err:
+                    cleanup_exception = str(close_err)
+                    failed_count += 1
+                    continue
+                if ok:
+                    cleaned_count += 1
+                else:
+                    preserved_count += 1
+                    if res.pid and psutil.pid_exists(res.pid):
+                        process_cleaned_up = False
+                    if res.hwnd:
+                        try:
+                            if sys.platform == "win32" and ctypes.windll.user32.IsWindow(res.hwnd):
+                                process_cleaned_up = False
+                        except Exception:
+                            process_cleaned_up = False
+
+            for res in self.list_resources_for_task(task_id):
+                if res.lifecycle_state not in (
+                    ResourceLifecycleState.CLOSED,
+                    ResourceLifecycleState.ORPHANED_CLEANED,
+                    ResourceLifecycleState.STALE_REUSED,
+                    ResourceLifecycleState.USER_TAKEOVER_DETACHED,
+                ):
+                    if res.user_interacted:
+                        continue
+                    remaining_active += 1
+                    if res.pid and psutil.pid_exists(res.pid):
+                        process_cleaned_up = False
+        except Exception as err:
+            cleanup_exception = str(err)
+            process_cleaned_up = False
+
+        # No task-owned process => process lifecycle is vacuously clean.
+        if not had_task_owned_process and process_cleaned_up:
+            process_cleaned_up = True
+
+        clean_ok = (
+            cleanup_exception is None
+            and remaining_active == 0
+            and process_cleaned_up
+            and failed_count == 0
+        )
+
+        orphaned_processes = 0 if process_cleaned_up else 1
+        orphaned_windows = 0 if remaining_active == 0 else remaining_active
 
         logger.info(
-            "[TASK_CLEANUP_COMPLETED] task_id=%s: cleaned=%d, preserved=%d, detached=%d",
-            task_id, cleaned_count, preserved_count, detached_count
+            "[TASK_CLEANUP_COMPLETED] task_id=%s: cleaned=%d, preserved=%d, detached=%d, "
+            "failed=%d, remaining_active=%d, process_cleaned_up=%s, exception=%s",
+            task_id, cleaned_count, preserved_count, detached_count,
+            failed_count, remaining_active, process_cleaned_up, cleanup_exception
         )
         return {
             "task_id": task_id,
             "cleaned_count": cleaned_count,
             "preserved_count": preserved_count,
             "detached_count": detached_count,
+            "failed_count": failed_count,
+            "remaining_active_resources": remaining_active,
+            # Affirmative ownership/lifecycle measurements for fail-closed oracle use.
+            "resources_owned": bool(resources),
+            "process_cleanup_required": had_task_owned_process,
+            "process_residue_measured": True,
+            "window_residue_measured": True,
+            "ledger_residue_measured": True,
+            "process_cleaned_up": process_cleaned_up,
+            "cleanup_executed": True,
+            "cleanup_exception": cleanup_exception,
+            "orphaned_processes": orphaned_processes,
+            "orphaned_windows": orphaned_windows,
+            "active_ledger_resources": remaining_active,
+            "clean": clean_ok,
+            "verdict": "PASS_CLEAN" if clean_ok else "FAIL",
         }
 
     # -------------------------------------------------------------------------

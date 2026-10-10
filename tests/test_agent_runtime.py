@@ -157,6 +157,65 @@ class TestClosedLoopExecution:
     """Tests for closed-loop execution, retries, and cancellation."""
 
     def test_successful_closed_loop(self):
+        import tempfile
+        from pathlib import Path
+
+        from astrarun.agent.models import GoalContract, GoalPredicate, PredicateType
+
+        reg = CapabilityRegistry()
+        with tempfile.TemporaryDirectory() as td:
+            artifact = Path(td) / "result.txt"
+
+            def _handler(val=0, path=""):
+                target = Path(path) if path else artifact
+                target.write_text(str(val), encoding="utf-8")
+                return CapabilityResult.ok("mock_action", f"Handled {val}", data={"path": str(target)})
+
+            reg.register(
+                Capability(
+                    id="mock_action",
+                    category=CapabilityCategory.SYSTEM,
+                    description="Mock action",
+                    args_schema={"val": int, "path": str},
+                    handler=_handler,
+                )
+            )
+
+            engine = AgentExecutionEngine(registry=reg)
+            step = PlanStep(
+                step_id="step1",
+                capability_id="mock_action",
+                arguments={"val": 42, "path": str(artifact)},
+                verifier_strategy=VerifierStrategy.FILE_NON_EMPTY,
+                verifier_params={"path": str(artifact)},
+            )
+            contract = GoalContract(
+                original_utterance="Run mock action and produce result.txt",
+                objective="PRODUCE_ARTIFACT",
+                acceptance_predicates=[
+                    GoalPredicate(
+                        predicate_type=PredicateType.FILE_NON_EMPTY,
+                        parameters={"path": str(artifact)},
+                        is_mandatory=True,
+                    )
+                ],
+            )
+            task = AgentTask(
+                goal=Goal(raw_prompt="Run mock action", contract=contract),
+                plan=Plan(steps=[step]),
+                contract=contract,
+            )
+            res_task = engine.run_task(task)
+
+            assert res_task.status == AgentTaskStatus.COMPLETED
+            assert step.state == StepState.COMPLETED
+            assert step.verification is not None
+            assert step.verification.verified is True
+            assert len(res_task.observations) == 1
+
+    def test_return_code_only_is_not_step_completion(self):
+        from astrarun.agent.models import GoalContract, GoalPredicate, PredicateType
+
         reg = CapabilityRegistry()
         reg.register(
             Capability(
@@ -167,25 +226,30 @@ class TestClosedLoopExecution:
                 handler=lambda val=0: CapabilityResult.ok("mock_action", f"Handled {val}", data={"val": val}),
             )
         )
-
         engine = AgentExecutionEngine(registry=reg)
         step = PlanStep(
             step_id="step1",
             capability_id="mock_action",
-            arguments={"val": 42},
+            arguments={"val": 1},
             verifier_strategy=VerifierStrategy.RETURN_CODE_ONLY,
         )
-        task = AgentTask(
-            goal=Goal(raw_prompt="Run mock action"),
-            plan=Plan(steps=[step]),
+        contract = GoalContract(
+            original_utterance="Run mock action",
+            objective="GENERAL",
+            acceptance_predicates=[
+                GoalPredicate(predicate_type=PredicateType.DATA_COMPUTED, parameters={"payload": "1"}, is_mandatory=True)
+            ],
         )
-
+        task = AgentTask(
+            goal=Goal(raw_prompt="Run mock action", contract=contract),
+            plan=Plan(steps=[step]),
+            contract=contract,
+        )
         res_task = engine.run_task(task)
-        assert res_task.status == AgentTaskStatus.COMPLETED
-        assert step.state == StepState.COMPLETED
+        # Dispatch success must not complete a physical/observed goal.
+        assert res_task.status == AgentTaskStatus.FAILED
         assert step.verification is not None
-        assert step.verification.verified is True
-        assert len(res_task.observations) == 1
+        assert step.verification.verified is False
 
     def test_task_cancellation(self):
         reg = CapabilityRegistry()

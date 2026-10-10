@@ -8,6 +8,13 @@ from enum import Enum
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Set, Tuple
 
+from astrarun.evaluation.execution_truth import (
+    ExecutionStage,
+    ExecutionTruthOracle,
+    evaluate_resource_cleanup,
+    summarize_case_outcomes,
+)
+
 
 class AcceptanceDimension(str, Enum):
     """Independent evaluation dimensions required for trustworthy task acceptance."""
@@ -71,6 +78,7 @@ class TaskAcceptanceReport:
     resource_delta: Dict[str, Any] = field(default_factory=dict)
     model_provenance: Dict[str, Any] = field(default_factory=dict)
     summary_message: str = ""
+    execution_truth: Dict[str, Any] = field(default_factory=dict)
 
     def to_dict(self) -> Dict[str, Any]:
         return {
@@ -85,6 +93,7 @@ class TaskAcceptanceReport:
             "resource_delta": self.resource_delta,
             "model_provenance": self.model_provenance,
             "summary_message": self.summary_message,
+            "execution_truth": self.execution_truth,
         }
 
 
@@ -133,13 +142,18 @@ class FormalAcceptanceOracle:
         )
 
         # 2. ENTITY CORRECTNESS
+        # Vacuous pass is forbidden: empty entity evidence is not proof of correct app identity.
         entity_preds = [p for p in all_predicates if p.dimension == AcceptanceDimension.ENTITY_CORRECTNESS]
-        entity_passed = True
-        entity_reasons = []
-        for p in entity_preds:
-            if p.is_mandatory and not p.satisfied:
-                entity_passed = False
-                entity_reasons.append(p.failure_reason)
+        entity_reasons: List[str] = []
+        if not entity_preds:
+            entity_passed = False
+            entity_reasons.append("ENTITY_CORRECTNESS has no evidence predicates; identity unverified")
+        else:
+            entity_passed = True
+            for p in entity_preds:
+                if p.is_mandatory and not p.satisfied:
+                    entity_passed = False
+                    entity_reasons.append(p.failure_reason)
         dim_verdicts[AcceptanceDimension.ENTITY_CORRECTNESS.value] = DimensionVerdict(
             dimension=AcceptanceDimension.ENTITY_CORRECTNESS,
             passed=entity_passed,
@@ -184,9 +198,19 @@ class FormalAcceptanceOracle:
         )
 
         # 5. EXECUTION REALITY
+        # Planning validity or an empty/absent trace is never physical execution evidence.
         exec_preds = [p for p in all_predicates if p.dimension == AcceptanceDimension.EXECUTION_REALITY]
+        exec_reasons: List[str] = []
         exec_passed = True
-        exec_reasons = []
+        has_execution_trace = bool(execution_trace)
+        if not has_execution_trace:
+            exec_passed = False
+            exec_reasons.append(
+                "EXECUTION_REALITY failed: no execution trace provided (planning is not execution)"
+            )
+        if not exec_preds:
+            exec_passed = False
+            exec_reasons.append("EXECUTION_REALITY has no evidence predicates; physical execution unverified")
         for p in exec_preds:
             if p.is_mandatory and not p.satisfied:
                 exec_passed = False
@@ -252,14 +276,11 @@ class FormalAcceptanceOracle:
         )
 
         # 9. RESOURCE CLEANUP
+        # Missing delta, uncleaned process, cleanup exception, or never-executed cleanup => FAIL.
         r_delta = resource_delta or {}
-        orphans = (
-            r_delta.get("orphaned_processes", 0)
-            + r_delta.get("orphaned_windows", 0)
-            + r_delta.get("active_ledger_resources", 0)
-        )
-        cleanup_passed = orphans == 0
-        cleanup_reasons = [] if cleanup_passed else [f"{orphans} leaked resources remaining on physical OS"]
+        cleanup_stage = evaluate_resource_cleanup(resource_delta)
+        cleanup_passed = cleanup_stage.satisfied
+        cleanup_reasons = [] if cleanup_passed else [cleanup_stage.reason]
         dim_verdicts[AcceptanceDimension.RESOURCE_CLEANUP.value] = DimensionVerdict(
             dimension=AcceptanceDimension.RESOURCE_CLEANUP,
             passed=cleanup_passed,
@@ -311,6 +332,37 @@ class FormalAcceptanceOracle:
 
         summary = "All 11 acceptance dimensions satisfied." if all_passed else "; ".join(fail_msgs)
 
+        # Staged completion truth: PASS may only claim GOAL_COMPLETED when the full chain holds.
+        truth = ExecutionTruthOracle().evaluate(
+            case_id=case_id,
+            plan_valid=dim_verdicts.get(AcceptanceDimension.PLAN_RELEVANCE.value, DimensionVerdict(
+                dimension=AcceptanceDimension.PLAN_RELEVANCE, passed=False, score=0.0
+            )).passed,
+            action_dispatched=has_execution_trace,
+            action_succeeded=dim_verdicts.get(AcceptanceDimension.EXECUTION_REALITY.value, DimensionVerdict(
+                dimension=AcceptanceDimension.EXECUTION_REALITY, passed=False, score=0.0
+            )).passed,
+            state_observed=dim_verdicts.get(AcceptanceDimension.STATE_TRANSITION_CORRECTNESS.value, DimensionVerdict(
+                dimension=AcceptanceDimension.STATE_TRANSITION_CORRECTNESS, passed=False, score=0.0
+            )).passed or dim_verdicts.get(AcceptanceDimension.OUTPUT_CORRECTNESS.value, DimensionVerdict(
+                dimension=AcceptanceDimension.OUTPUT_CORRECTNESS, passed=False, score=0.0
+            )).passed,
+            postcondition_satisfied=dim_verdicts.get(AcceptanceDimension.OUTPUT_CORRECTNESS.value, DimensionVerdict(
+                dimension=AcceptanceDimension.OUTPUT_CORRECTNESS, passed=False, score=0.0
+            )).passed,
+            resource_cleanup_verified=cleanup_passed,
+            extra={"overall_verdict": overall_verdict},
+        )
+        # Dimensional FAIL must never be upgraded by staged truth.
+        if not all_passed:
+            truth.goal_completed = False
+            if truth.blocked_reason == "":
+                truth.blocked_reason = "One or more acceptance dimensions failed"
+        if not truth.goal_completed and overall_verdict == "PASS":
+            overall_verdict = "FAIL"
+            all_passed = False
+            summary = "Overall PASS blocked by incomplete execution-truth stage chain."
+
         return TaskAcceptanceReport(
             case_id=case_id,
             prompt=prompt,
@@ -323,4 +375,10 @@ class FormalAcceptanceOracle:
             resource_delta=r_delta,
             model_provenance=model_provenance or {},
             summary_message=summary,
+            execution_truth=truth.to_dict(),
         )
+
+
+def summarize_generalization_cases(case_outcomes: List[Dict[str, Any]]) -> Dict[str, Any]:
+    """Public helper: honest multi-dimensional generalization accounting."""
+    return summarize_case_outcomes(case_outcomes)

@@ -73,6 +73,22 @@ def main():
             summary_obj = parsed_json.get("summary")
             summary_verdict = summary_obj.get("verdict") if isinstance(summary_obj, dict) else None
             verdict = parsed_json.get("verdict") or summary_verdict or "RECORDED"
+            # Contradiction gate: PASS_CLEAN with process_cleaned_up=false is not clean.
+            checks = parsed_json.get("checks")
+            if isinstance(checks, list):
+                for check in checks:
+                    if not isinstance(check, dict):
+                        continue
+                    if check.get("verdict") in ("PASS", "PASS_CLEAN") and check.get("process_cleaned_up") is False:
+                        verdict = "FAIL"
+                        print(
+                            f"[{stage_label}] CONTRADICTION: process_cleaned_up=false cannot coexist with "
+                            f"{check.get('verdict')}; forcing FAIL"
+                        )
+            if summary_obj.get("verdict") in ("PASS", "PASS_CLEAN"):
+                for key in ("process_cleaned_up", "cleanup_verified"):
+                    if summary_obj.get(key) is False:
+                        verdict = "FAIL"
         except Exception as e:
             json_valid = False
             verdict = f"CORRUPT: {e}"
@@ -92,6 +108,7 @@ def main():
 
     all_exist = len(missing_files) == 0
     all_valid_json = all(r.get("json_valid", False) for r in records)
+    # PASS_CLEAN is only accepted when nested contradictions were already forced to FAIL.
     all_stages_clean = all(r.get("stage_verdict") in ("PASS", "PASS_CLEAN", "RECORDED") for r in records)
 
     evidence_closure_verdict = "PASS" if (all_exist and all_valid_json and all_stages_clean) else "FAIL"

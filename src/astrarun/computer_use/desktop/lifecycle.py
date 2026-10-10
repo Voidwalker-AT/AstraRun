@@ -70,11 +70,33 @@ class DesktopLifecycle:
             },
         )
 
-    def close_application(self, task_id: str) -> CapabilityResult:
+    def close_application(self, task_id: str, task_status: str = "COMPLETED") -> CapabilityResult:
         """Clean up only Astra-owned resources for the given task_id."""
-        report = self.ledger.cleanup_task_resources(task_id)
-        return CapabilityResult.ok(
+        try:
+            report = self.ledger.cleanup_task_resources(task_id, task_status)
+        except Exception as err:
+            return CapabilityResult.fail(
+                capability="close_application",
+                message=f"Cleanup raised exception: {err}",
+                data={"cleanup_exception": str(err), "verdict": "FAIL", "clean": False},
+            )
+        ok = bool(report.get("clean", False)) and report.get("verdict") == "PASS_CLEAN"
+        if ok:
+            return CapabilityResult.ok(
+                capability="close_application",
+                message=(
+                    f"Cleaned up task resources: {report['cleaned_count']} closed, "
+                    f"{report['detached_count']} detached."
+                ),
+                data=report,
+            )
+        return CapabilityResult.fail(
             capability="close_application",
-            message=f"Cleaned up task resources: {report['cleaned_count']} closed, {report['detached_count']} detached.",
+            message=(
+                "Cleanup did not verify clean: "
+                f"process_cleaned_up={report.get('process_cleaned_up')}, "
+                f"remaining_active={report.get('remaining_active_resources')}, "
+                f"exception={report.get('cleanup_exception')}"
+            ),
             data=report,
         )

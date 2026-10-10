@@ -221,22 +221,55 @@ class AgentExecutionEngine:
 
                     if goal_ver.completed:
                         # 3. Post-Task Resource & Dialog Cleanliness Check (Requirement 6, 7, 8)
+                        # Cleanup failures and unverified residue must block COMPLETED.
+                        cleanup_failed = False
+                        cleanup_error = ""
                         try:
                             from astrarun.computer_use.observation import DesktopObserver
                             final_state = DesktopObserver.get_instance().observe(task_id=task.task_id)
-                            if final_state.has_astra_debris():
-                                logger.info("Task %s completed with residual Astra-owned resources; initiating cleanup...", task.task_id)
-                                from astrarun.tasks.resource_ledger import AstraResourceLedger
-                                AstraResourceLedger.get_instance().cleanup_task_resources(task.task_id)
-                                time.sleep(0.3)
-                                post_clean = DesktopObserver.get_instance().observe(task_id=task.task_id)
-                                if post_clean.has_astra_debris():
-                                    task.status = AgentTaskStatus.FAILED
-                                    task.error = f"RESIDUAL_LEAK: Astra-owned windows/dialogs remained open after task {task.task_id}."
-                                    self.listener.on_task_failed(task, task.error)
-                                    return task
+                            needs_cleanup = True
+                            try:
+                                needs_cleanup = bool(final_state.has_astra_debris())
+                            except Exception:
+                                needs_cleanup = True
+                            if needs_cleanup:
+                                logger.info(
+                                    "Task %s completed goals with residual Astra-owned resources; initiating cleanup...",
+                                    task.task_id,
+                                )
+                            from astrarun.tasks.resource_ledger import AstraResourceLedger
+                            from astrarun.tasks.models import TaskStatus
+                            try:
+                                status_for_cleanup = TaskStatus.COMPLETED
+                            except Exception:
+                                status_for_cleanup = "COMPLETED"
+                            report = AstraResourceLedger.get_instance().cleanup_task_resources(
+                                task.task_id, status_for_cleanup
+                            )
+                            time.sleep(0.3)
+                            post_clean = DesktopObserver.get_instance().observe(task_id=task.task_id)
+                            debris_remains = bool(post_clean.has_astra_debris())
+                            report_ok = bool(report.get("clean", False)) and not debris_remains
+                            task.context["cleanup_report"] = report
+                            if not report_ok:
+                                cleanup_failed = True
+                                cleanup_error = (
+                                    f"RESIDUAL_LEAK: cleanup unverified "
+                                    f"(process_cleaned_up={report.get('process_cleaned_up')}, "
+                                    f"remaining_active={report.get('remaining_active_resources')}, "
+                                    f"debris_remains={debris_remains}, "
+                                    f"exception={report.get('cleanup_exception')})."
+                                )
                         except Exception as ex:
-                            logger.debug("Post-task cleanup verification omitted: %s", ex)
+                            # Swallowing cleanup exceptions and still reporting PASS is forbidden.
+                            cleanup_failed = True
+                            cleanup_error = f"RESIDUAL_LEAK: cleanup verification raised exception: {ex}"
+
+                        if cleanup_failed:
+                            task.status = AgentTaskStatus.FAILED
+                            task.error = cleanup_error
+                            self.listener.on_task_failed(task, task.error)
+                            return task
 
                         task.status = AgentTaskStatus.COMPLETED
                         task.progress_pct = 100.0
@@ -261,9 +294,32 @@ class AgentExecutionEngine:
             if task.status in (AgentTaskStatus.FAILED, AgentTaskStatus.CANCELLED):
                 try:
                     from astrarun.tasks.resource_ledger import AstraResourceLedger
-                    AstraResourceLedger.get_instance().cleanup_task_resources(task.task_id)
-                except Exception:
-                    pass
+                    from astrarun.tasks.models import TaskStatus
+                    try:
+                        status_for_cleanup = TaskStatus.CANCELLED if task.status == AgentTaskStatus.CANCELLED else TaskStatus.FAILED
+                    except Exception:
+                        status_for_cleanup = "CANCELLED" if task.status == AgentTaskStatus.CANCELLED else "FAILED"
+                    report = AstraResourceLedger.get_instance().cleanup_task_resources(
+                        task.task_id, status_for_cleanup
+                    )
+                    task.context.setdefault("cleanup_report", report)
+                except Exception as cleanup_err:
+                    # Record cleanup failure truthfully; never claim clean on exception.
+                    task.context["cleanup_report"] = {
+                        "cleanup_exception": str(cleanup_err),
+                        "clean": False,
+                        "verdict": "FAIL",
+                        "resources_owned": True,
+                        "process_cleanup_required": True,
+                        "process_residue_measured": False,
+                        "window_residue_measured": False,
+                        "ledger_residue_measured": False,
+                        "process_cleaned_up": False,
+                        "cleanup_executed": True,
+                        "orphaned_processes": None,
+                        "orphaned_windows": None,
+                        "active_ledger_resources": None,
+                    }
             # Always ensure all resource locks are cleanly released
             self.lock_manager.release_all_for_task(task.task_id)
 

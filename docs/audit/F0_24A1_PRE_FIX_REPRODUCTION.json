@@ -1,0 +1,63 @@
+{
+  "milestone": "F0_24A.1",
+  "title": "Pre-fix false-completion mechanism reproduction",
+  "evidence_class": "SOURCE_TREE_REPRODUCTION",
+  "results": [
+    {
+      "contradiction": "A_editable_surface_typing_failed_but_pass",
+      "verified": false,
+      "message": "UI text state failed: expected 'hello' not observed in UI (dispatch reported 5 chars, which is not postcondition evidence).",
+      "evidence": {
+        "hwnd": 4917538,
+        "window_title": "test1_source_parity.txt - Notepad",
+        "uia_inspection_error": "No module named 'comtypes'",
+        "keystroke_dispatched_chars": 5,
+        "matched_via": ""
+      },
+      "mechanism": "StepVerifier.UI_ELEMENT_STATE treats successful keystroke injection (result.success + length>0) as proof that the editable surface contains the text.",
+      "false_completion": false
+    },
+    {
+      "contradiction": "B_generalization_119_of_120_as_100",
+      "passed_cases": 119,
+      "total_cases": 120,
+      "false_completion_count": 0,
+      "honest_fraction": "119/120",
+      "honest_pass_rate_pct": 99.1667,
+      "misleading_zero_false_completion_as_100pct": 100.0,
+      "accounting_violations_detected": [
+        "Reported 100.0% implies perfect success but fraction is 119/120 (99.1667%)",
+        "Reported 100.0% inconsistent with honest 99.1667%"
+      ],
+      "production_accounting_kills_fabrication": true,
+      "mechanism": "F0_24A_GENERALIZATION_RESULTS.json records passed_cases=119 of total_cases=120 and false_completion_rate_pct=0.0. Downstream reporting that treats '0.0% false completion' as overall 100% success misrepresents generalization. summarize_case_outcomes/assert_pass_rate_not_fabricated now reject that collapse.",
+      "false_completion": true,
+      "killed_by_production_helper": true
+    },
+    {
+      "contradiction": "C_resource_cleanup_false_pass",
+      "cleanup_dimension_passed": false,
+      "process_cleaned_up": false,
+      "pass_clean_with_uncleaned_process": false,
+      "mechanism": "FormalAcceptanceOracle RESOURCE_CLEANUP treats missing resource_delta as orphans==0. verify_f0_24a_evidence_closure accepts stage_verdict PASS_CLEAN without checking process_cleaned_up. F0_24A_RESOURCE_RESIDUE.json literally pairs process_cleaned_up=false with verdict=PASS_CLEAN.",
+      "false_completion": false
+    },
+    {
+      "contradiction": "D_planning_as_execution_evidence",
+      "null_contract_completed": false,
+      "null_contract_status": "GOAL_INCOMPLETE",
+      "unexecuted_plan_completed": false,
+      "unexecuted_plan_status": "GOAL_INCOMPLETE",
+      "mechanism": "GoalVerifier.evaluate returns GOAL_COMPLETED when contract is None. validate_plan success is independent of physical execution; any harness that counts validation_passed as success treats planning as execution.",
+      "false_completion": false
+    },
+    {
+      "contradiction": "E_partial_ui_progress_as_completion",
+      "file_exists_only_completed": false,
+      "return_code_only_verified": false,
+      "mechanism": "FILE_EXISTS alone + content constraint without content predicate must not complete a PRODUCE_DOCUMENT goal. RETURN_CODE_ONLY is dispatch evidence only.",
+      "false_completion": false
+    }
+  ],
+  "any_false_completion": true
+}

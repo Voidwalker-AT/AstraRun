@@ -50,9 +50,19 @@ class StepVerifier:
                 evidence["error"] = result.error
 
             elif strategy == VerifierStrategy.RETURN_CODE_ONLY:
-                verified = True
-                message = "Return code succeeded."
+                # Dispatch/return-code success is ACTION_SUCCEEDED, never STATE_OBSERVED or POSTCONDITION.
+                verified = False
+                message = (
+                    "RETURN_CODE_ONLY is insufficient for completion: success is dispatch-level only. "
+                    "Observed state or a postcondition strategy is required."
+                )
                 evidence["result_message"] = result.message
+                evidence["dispatch_only"] = True
+                if result.data and isinstance(result.data, dict):
+                    evidence["observed_artifact_hint"] = {
+                        k: result.data.get(k) for k in ("path", "output_file", "artifact", "pid", "hwnd")
+                        if k in result.data
+                    }
 
             elif strategy in (VerifierStrategy.FILE_EXISTS, VerifierStrategy.FILE_NON_EMPTY):
                 target_path = (
@@ -145,9 +155,12 @@ class StepVerifier:
                         verified = False
                         message = f"No windows found matching query '{title_query}'."
                 else:
-                    # Fallback to result success
-                    verified = result.success
-                    message = "Window assumed ready based on successful launch."
+                    # Launch success alone is not window identity/visibility evidence.
+                    verified = False
+                    message = (
+                        "WINDOW_READY requires hwnd or title observation; capability success alone is not evidence."
+                    )
+                    evidence["missing_window_identity"] = True
 
             elif strategy == VerifierStrategy.WINDOW_CLOSED:
                 hwnd = params.get("hwnd") or step.arguments.get("hwnd")
@@ -162,8 +175,11 @@ class StepVerifier:
                         verified = False
                         message = f"Window HWND {hwnd} is still open."
                 else:
-                    verified = result.success
-                    message = "Window close confirmed via return code."
+                    verified = False
+                    message = (
+                        "WINDOW_CLOSED requires observing the target hwnd is gone; return code alone is not evidence."
+                    )
+                    evidence["missing_window_identity"] = True
 
             elif strategy == VerifierStrategy.NETWORK_SSID:
                 expected_ssid = params.get("ssid") or step.arguments.get("ssid")
@@ -201,8 +217,11 @@ class StepVerifier:
                     verified = found
                     message = f"Process '{proc_name}' is {'running' if found else 'not running'}."
                 else:
-                    verified = result.success
-                    message = "Process running verified via capability result."
+                    verified = False
+                    message = (
+                        "PROCESS_RUNNING requires pid or process-name observation; capability success alone is not evidence."
+                    )
+                    evidence["missing_process_identity"] = True
 
             elif strategy == VerifierStrategy.UI_ELEMENT_STATE:
                 expected_text = params.get("text") or step.arguments.get("text") or ""
@@ -211,9 +230,14 @@ class StepVerifier:
 
                 from astrarun.interaction.policy import is_simulated_interaction_validation
                 if sys.platform != "win32" or is_simulated_interaction_validation():
-                    verified = result.success
-                    message = f"Simulated UI element state verified for text: '{expected_text}'"
+                    # Simulation records dispatch only; it must never claim physical postconditions.
+                    verified = False
+                    message = (
+                        f"Simulated UI environment cannot attest text presence for '{expected_text}'. "
+                        "Physical UI observation is required."
+                    )
                     evidence["simulated"] = True
+                    evidence["dispatch_only"] = True
                 else:
                     import ctypes
                     user32 = ctypes.windll.user32
@@ -251,20 +275,39 @@ class StepVerifier:
                         except Exception as ex:
                             evidence["uia_inspection_error"] = str(ex)
 
-                    # 3. Controlled confirmation via successful keystroke dispatch and active target
-                    if not text_found and result.success and user32.IsWindow(target_hwnd):
-                        typed_len = result.data.get("length", 0) if isinstance(result.data, dict) else 0
-                        if typed_len > 0:
-                            text_found = True
-                            matched_via = f"Keystroke injection verified ({typed_len} chars) into HWND {target_hwnd}"
-
+                    # 3. Dispatch success is NOT surface content evidence.
+                    # Keystroke injection may succeed while the wrong window has focus or
+                    # the editable surface never received the text.
+                    typed_len = 0
+                    if isinstance(result.data, dict):
+                        try:
+                            typed_len = int(result.data.get("length", 0) or 0)
+                        except (TypeError, ValueError):
+                            typed_len = 0
+                    if typed_len > 0:
+                        evidence["keystroke_dispatched_chars"] = typed_len
                     evidence["matched_via"] = matched_via
                     verified = text_found
-                    message = f"UI text state verified: {matched_via}" if text_found else f"UI text state failed: expected '{expected_text}' not observed in UI."
+                    if text_found:
+                        message = f"UI text state verified: {matched_via}"
+                    else:
+                        message = (
+                            f"UI text state failed: expected '{expected_text}' not observed in UI"
+                            + (
+                                f" (dispatch reported {typed_len} chars, which is not postcondition evidence)."
+                                if typed_len > 0
+                                else "."
+                            )
+                        )
 
             else:
-                verified = result.success
-                message = f"Default verification using capability success: {result.success}"
+                # Unknown strategies must not invent completion from capability success.
+                verified = False
+                message = (
+                    f"Unsupported verifier strategy '{strategy}'; capability success is not completion evidence."
+                )
+                evidence["unsupported_strategy"] = True
+                evidence["result_success"] = bool(result.success)
 
         except Exception as exc:
             logger.error("Verification raised unexpected exception: %s", exc, exc_info=True)
@@ -334,7 +377,8 @@ class ProcessRunningPredicate(AcceptancePredicate):
             running = psutil.pid_exists(self.pid)
             return running, f"Process PID {self.pid} is {'running' if running else 'not running'}", {"pid": self.pid, "running": running}
         if self.name:
-            found = any(p.name().lower() == self.name.lower() for p in psutil.process_iter(['name']))
+            expected = self.name.lower().replace(".exe", "")
+            found = any(p.name().lower().replace(".exe", "") == expected for p in psutil.process_iter(['name']))
             return found, f"Process {self.name} is {'running' if found else 'not running'}", {"name": self.name, "running": found}
         return False, "No PID or process name specified", {}
 
@@ -418,10 +462,18 @@ class ApplicationRunningPredicate(AcceptancePredicate):
 
     def evaluate(self, context: dict[str, Any]) -> tuple[bool, str, dict[str, Any]]:
         import psutil
-        q = self.app_name.lower().replace(".exe", "")
-        running = any(q in p.name().lower() for p in psutil.process_iter(['name']))
+        expected = self.app_name.lower().replace(".exe", "").strip()
+        expected_tokens = [t for t in expected.split() if t]
+        running = False
+        matched = ""
+        for p in psutil.process_iter(['name']):
+            pname = (p.name() or "").lower().replace(".exe", "").strip()
+            if pname == expected or (expected_tokens and all(t in pname for t in expected_tokens)):
+                running = True
+                matched = pname
+                break
         msg = f"Application '{self.app_name}' is running" if running else f"Application '{self.app_name}' is not running"
-        return running, msg, {"app": self.app_name, "running": running}
+        return running, msg, {"app": self.app_name, "running": running, "matched_process": matched}
 
 
 class NetworkConnectedPredicate(AcceptancePredicate):
@@ -468,9 +520,12 @@ class GoalVerifier:
 
         if not contract:
             return GoalVerificationResult(
-                status=GoalVerificationStatus.GOAL_COMPLETED,
-                completed=True,
-                message="No goal contract provided; skipping predicate checks.",
+                status=GoalVerificationStatus.GOAL_INCOMPLETE,
+                completed=False,
+                message=(
+                    "No goal contract provided; completion cannot be claimed without postcondition evidence."
+                ),
+                missing_criteria=["Missing GoalContract / acceptance predicates"],
             )
 
         for pred in getattr(contract, "acceptance_predicates", []):
@@ -573,6 +628,49 @@ class GoalVerifier:
                     pred.status = PredicateStatus.VIOLATED
                     pred.error_message = msg
 
+        # Document production postconditions: FILE_EXISTS alone is never enough for save/edit.
+        # Opening an editor or creating a 0-byte path is not evidence of typed/saved content.
+        objective = str(getattr(contract, "objective", "") or "").upper()
+        preds = list(getattr(contract, "acceptance_predicates", []) or [])
+        pred_types = {getattr(p.predicate_type, "value", str(p.predicate_type)) for p in preds}
+        if objective in ("PRODUCE_DOCUMENT", "EDIT_DOCUMENT", "PRODUCE_ARTIFACT"):
+            if PredicateType.FILE_NON_EMPTY.value not in pred_types and PredicateType.FILE_CONTENT_CONTAINS.value not in pred_types \
+                    and PredicateType.FILE_CONTENT_EQUALS.value not in pred_types:
+                # Infer a path from FILE_EXISTS parameters and enforce non-empty on disk.
+                exists_paths = [
+                    (p.parameters or {}).get("path")
+                    for p in preds
+                    if getattr(p.predicate_type, "value", str(p.predicate_type)) == PredicateType.FILE_EXISTS.value
+                    and (p.parameters or {}).get("path")
+                ]
+                for path in exists_paths:
+                    ok, msg, ev = FileNonEmptyPredicate(path).evaluate({})
+                    evidence[f"doc_strength_non_empty_{Path(path).name}"] = ev
+                    if not ok:
+                        missing.append(
+                            f"Document objective requires non-empty artifact; FILE_EXISTS alone is insufficient. {msg}"
+                        )
+            # If contract has content constraints, require content predicates (not just exists).
+            content_constraints = [
+                c for c in getattr(contract, "constraints", []) or []
+                if getattr(c, "target_key", "") in ("content", "text", "required_content")
+                or "content" in str(getattr(c, "constraint_type", "")).lower()
+            ]
+            for c in content_constraints:
+                expected = str(getattr(c, "expected_value", "") or "").strip()
+                if not expected:
+                    continue
+                has_content_pred = any(
+                    getattr(p.predicate_type, "value", str(p.predicate_type))
+                    in (PredicateType.FILE_CONTENT_CONTAINS.value, PredicateType.FILE_CONTENT_EQUALS.value)
+                    for p in preds
+                )
+                if not has_content_pred:
+                    missing.append(
+                        "Document objective has a content constraint but no content postcondition predicate; "
+                        "partial UI progress cannot complete the goal."
+                    )
+
         completed = len(missing) == 0
         status = GoalVerificationStatus.GOAL_COMPLETED if completed else GoalVerificationStatus.GOAL_INCOMPLETE
         msg = "All goal contract acceptance predicates satisfied." if completed else f"Unsatisfied goal predicates: {'; '.join(missing)}"
@@ -597,9 +695,25 @@ class GoalVerifier:
         evidence: dict[str, Any] = {}
 
         # 1. Plan execution health check
-        all_completed = all(s.state.value in ("COMPLETED", "SKIPPED") for s in plan.steps)
-        if not all_completed:
-            missing.append("Not all plan steps reached terminal completion.")
+        # Planning validity alone is never completion: require at least one real step
+        # that reached COMPLETED with a verification that was actually verified.
+        plan_steps = list(getattr(plan, "steps", []) or [])
+        if not plan_steps:
+            missing.append("Plan contains no executed steps; planning is not execution.")
+        else:
+            all_completed = all(s.state.value in ("COMPLETED", "SKIPPED") for s in plan_steps)
+            if not all_completed:
+                missing.append("Not all plan steps reached terminal completion.")
+            executed_verified = [
+                s for s in plan_steps
+                if s.state.value == "COMPLETED"
+                and getattr(s, "verification", None) is not None
+                and getattr(s.verification, "verified", False) is True
+            ]
+            if not executed_verified:
+                missing.append(
+                    "No plan step reached COMPLETED with empirical verification; dispatch/validation is not execution success."
+                )
 
         # 2. Evaluate GoalContract acceptance predicates if present
         contract = getattr(goal, "contract", None)
@@ -608,6 +722,8 @@ class GoalVerifier:
             if not contract_res.completed:
                 missing.extend(contract_res.missing_criteria)
             evidence.update(contract_res.evidence)
+        else:
+            missing.append("Goal has no acceptance contract; cannot verify postconditions.")
 
         # 3. Check legacy criteria explicitly declared on goal
         for criterion in getattr(goal, "success_criteria", []):

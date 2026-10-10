@@ -51,3 +51,15 @@ $RECYCLE.BIN/
 # Scratch & temporary verification files
 scratch/
 
+
+# Local coding-agent state
+.mimocode/
+
+# Runtime and physical-test outputs
+outputs/
+
+# Local milestone prompt captures
+f0_*_prompt.txt
+
+# Ad-hoc frozen-product verification output
+test1_frozen_result.json

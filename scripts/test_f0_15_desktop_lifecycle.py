@@ -49,6 +49,7 @@ from astrarun.tasks.resource_ledger import (
     ResourceLifecycleState,
     ResourceType,
     _ensure_desktop_attached,
+    clean_notepad_tabstate_for_path,
 )
 from astrarun.tools.apps import _launch_win32_process
 from astrarun.windows.controller import focus_window
@@ -153,97 +154,112 @@ def test_2_notepad_lifecycle() -> Dict[str, Any]:
     test_file.write_text("INITIAL_EMPTY\n", encoding="utf-8")
     print(f"[*] Created target artifact file: {test_file}")
 
-    t0 = time.time()
-    # 1. Astra launches Notepad with SAVE_BEFORE_CLOSE policy
-    open_res = open_application(
-        "notepad",
-        target=str(test_file),
-        task_id=task_id,
-        cleanup_policy=CleanupPolicy.SAVE_BEFORE_CLOSE,
-        content_classification=ContentClassification.TASK_ARTIFACT,
-    )
-    assert open_res.success, f"Failed to launch Notepad: {open_res.message}"
-    np_data = open_res.data or {}
-    astra_pid = np_data.get("pid")
-    astra_hwnd = np_data.get("hwnd")
-    res_id = np_data.get("resource_id")
-    print(f"[+] Astra launched Notepad: ResourceID={res_id}, PID={astra_pid}, HWND={astra_hwnd}")
-    assert astra_hwnd is not None, "Notepad HWND must be captured!"
+    astra_pid = None
+    astra_hwnd = None
 
-    # 2. Wait and focus
-    time.sleep(1.0)
-    focus_res = focus_window(astra_hwnd, pid=astra_pid)
-    print(f"[*] Focused Notepad window: {focus_res.success}")
-    time.sleep(0.5)
-
-    # 3. Enter verified text content into 'Text editor' element
-    unique_content = f"AstraRun Phase F0-15 Verified Content [Timestamp={time.time()}]\nDeterministic artifact line."
-    elems = inspect_window_ui(astra_hwnd, max_depth=5)
-    editor_found = False
-    for el in elems:
-        if el.name == "Text editor":
-            set_res = set_element_value(el, unique_content)
-            print(f"[*] Set text in 'Text editor': {set_res[1]}")
-            assert set_res[0], f"Failed setting editor value: {set_res[1]}"
-            editor_found = True
-            break
-    assert editor_found, "Could not find 'Text editor' element in Notepad window!"
-    time.sleep(0.5)
-
-    # 4. Save document via Ctrl+S
-    sc = parse_shortcut("ctrl+s")
-    sc_res = dispatch_shortcut(sc, target_hwnd=astra_hwnd)
-    print(f"[*] Dispatched save shortcut Ctrl+S: {sc_res[1]}")
-    time.sleep(1.0)
-
-    # 5. Read back artifact from disk and compute SHA-256
-    disk_text = test_file.read_text(encoding="utf-8")
-    disk_sha256 = hashlib.sha256(disk_text.encode("utf-8")).hexdigest()
-    print(f"[+] Artifact on disk verified: length={len(disk_text)}, SHA-256={disk_sha256}")
-    assert unique_content in disk_text, f"Disk content does not match typed text! Content: {disk_text!r}"
-
-    # 6. Close ONLY Astra's Notepad instance (enforcing SAVE_BEFORE_CLOSE verification)
-    close_res = close_application("notepad", task_id=task_id)
-    print(f"[*] Astra close_application result: {close_res.success} ({close_res.message})")
-    assert close_res.success, f"Failed to close Notepad: {close_res.message}"
-
-    # 7. Verify window is closed and artifact file remains 100% intact
-    time.sleep(0.8)
-    _ensure_desktop_attached()
-    is_window_alive = bool(user32.IsWindow(astra_hwnd)) if user32 else False
-    after_windows = get_current_desktop_windows()
-    np_after = [w for w in after_windows if w["hwnd"] == astra_hwnd]
-
-    print(f"[+] IsWindow alive: {is_window_alive}, Windows matching Astra HWND: {len(np_after)}")
-    assert not is_window_alive, f"Notepad HWND {astra_hwnd} is still alive!"
-    assert len(np_after) == 0, f"Notepad window {astra_hwnd} still visible!"
-
-    # Verify file intact after closure
-    assert test_file.exists(), "Target artifact file was deleted or lost!"
-    final_text = test_file.read_text(encoding="utf-8")
-    final_sha256 = hashlib.sha256(final_text.encode("utf-8")).hexdigest()
-    assert final_sha256 == disk_sha256, "Artifact file hash changed after window closure!"
-    print(f"[+] Post-closure artifact hash identical: {final_sha256}")
-
-    # Teardown temp file
     try:
-        test_file.unlink()
-    except Exception:
-        pass
+        t0 = time.time()
+        # 1. Astra launches Notepad with SAVE_BEFORE_CLOSE policy
+        open_res = open_application(
+            "notepad",
+            target=str(test_file),
+            task_id=task_id,
+            cleanup_policy=CleanupPolicy.SAVE_BEFORE_CLOSE,
+            content_classification=ContentClassification.TASK_ARTIFACT,
+        )
+        assert open_res.success, f"Failed to launch Notepad: {open_res.message}"
+        np_data = open_res.data or {}
+        astra_pid = np_data.get("pid")
+        astra_hwnd = np_data.get("hwnd")
+        res_id = np_data.get("resource_id")
+        print(f"[+] Astra launched Notepad: ResourceID={res_id}, PID={astra_pid}, HWND={astra_hwnd}")
+        assert astra_hwnd is not None, "Notepad HWND must be captured!"
 
-    print("[PASS] TEST 2: Notepad lifecycle completed; artifact preserved on disk.")
-    return {
-        "test": "notepad_lifecycle_save_before_close",
-        "status": "PASS",
-        "task_id": task_id,
-        "pid": astra_pid,
-        "hwnd": astra_hwnd,
-        "artifact_path": str(test_file),
-        "sha256": final_sha256,
-        "closure_verified": True,
-        "artifact_intact": True,
-        "latency_sec": round(time.time() - t0, 3),
-    }
+        # 2. Wait and focus
+        time.sleep(1.0)
+        focus_res = focus_window(astra_hwnd, pid=astra_pid)
+        print(f"[*] Focused Notepad window: {focus_res.success}")
+        time.sleep(0.5)
+
+        # 3. Enter verified text content into 'Text editor' element
+        unique_content = f"AstraRun Phase F0-15 Verified Content [Timestamp={time.time()}]\nDeterministic artifact line."
+        elems = inspect_window_ui(astra_hwnd, max_depth=5)
+        editor_found = False
+        for el in elems:
+            if el.name == "Text editor":
+                set_res = set_element_value(el, unique_content)
+                print(f"[*] Set text in 'Text editor': {set_res[1]}")
+                assert set_res[0], f"Failed setting editor value: {set_res[1]}"
+                editor_found = True
+                break
+        assert editor_found, "Could not find 'Text editor' element in Notepad window!"
+        time.sleep(0.5)
+
+        # 4. Save document via Ctrl+S
+        sc = parse_shortcut("ctrl+s")
+        sc_res = dispatch_shortcut(sc, target_hwnd=astra_hwnd)
+        print(f"[*] Dispatched save shortcut Ctrl+S: {sc_res[1]}")
+        time.sleep(1.0)
+
+        # 5. Read back artifact from disk and compute SHA-256
+        disk_text = test_file.read_text(encoding="utf-8")
+        disk_sha256 = hashlib.sha256(disk_text.encode("utf-8")).hexdigest()
+        print(f"[+] Artifact on disk verified: length={len(disk_text)}, SHA-256={disk_sha256}")
+        assert unique_content in disk_text, f"Disk content does not match typed text! Content: {disk_text!r}"
+
+        # 6. Close ONLY Astra's Notepad instance (enforcing SAVE_BEFORE_CLOSE verification)
+        close_res = close_application("notepad", task_id=task_id)
+        print(f"[*] Astra close_application result: {close_res.success} ({close_res.message})")
+        assert close_res.success, f"Failed to close Notepad: {close_res.message}"
+
+        # 7. Verify window is closed and artifact file remains 100% intact
+        time.sleep(0.8)
+        _ensure_desktop_attached()
+        is_window_alive = bool(user32.IsWindow(astra_hwnd)) if user32 else False
+        after_windows = get_current_desktop_windows()
+        np_after = [w for w in after_windows if w["hwnd"] == astra_hwnd]
+
+        print(f"[+] IsWindow alive: {is_window_alive}, Windows matching Astra HWND: {len(np_after)}")
+        assert not is_window_alive, f"Notepad HWND {astra_hwnd} is still alive!"
+        assert len(np_after) == 0, f"Notepad window {astra_hwnd} still visible!"
+
+        # Verify file intact after closure
+        assert test_file.exists(), "Target artifact file was deleted or lost!"
+        final_text = test_file.read_text(encoding="utf-8")
+        final_sha256 = hashlib.sha256(final_text.encode("utf-8")).hexdigest()
+        assert final_sha256 == disk_sha256, "Artifact file hash changed after window closure!"
+        print(f"[+] Post-closure artifact hash identical: {final_sha256}")
+
+        print("[PASS] TEST 2: Notepad lifecycle completed; artifact preserved on disk.")
+        return {
+            "test": "notepad_lifecycle_save_before_close",
+            "status": "PASS",
+            "task_id": task_id,
+            "pid": astra_pid,
+            "hwnd": astra_hwnd,
+            "artifact_path": str(test_file),
+            "sha256": final_sha256,
+            "closure_verified": True,
+            "artifact_intact": True,
+            "latency_sec": round(time.time() - t0, 3),
+        }
+    finally:
+        # Teardown: ensure process is dead and tabstate is purged before removing test file
+        if astra_pid and psutil.pid_exists(astra_pid):
+            try:
+                p = psutil.Process(astra_pid)
+                p.kill()
+                p.wait(timeout=1.0)
+            except Exception:
+                pass
+        clean_notepad_tabstate_for_path(str(test_file))
+        time.sleep(0.2)
+        try:
+            if test_file.exists():
+                test_file.unlink()
+        except Exception:
+            pass
+
 
 
 def test_3_mixed_ownership() -> Dict[str, Any]:
@@ -263,111 +279,133 @@ def test_3_mixed_ownership() -> Dict[str, Any]:
     user_initial_hash = hashlib.sha256(user_content.encode("utf-8")).hexdigest()
     print(f"[*] Created User document: {user_file} (SHA-256: {user_initial_hash})")
 
-    # Step 1: User launches Notepad A independently (simulating ambient user work)
-    t0 = time.time()
-    ok_user_launch = _launch_win32_process(f'notepad.exe "{user_file}"')
-    assert ok_user_launch, "Failed to launch pre-existing user Notepad A"
-    time.sleep(2.0)
-
-    # Locate User Notepad A window
-    _ensure_desktop_attached()
-    user_windows = get_current_desktop_windows()
     user_hwnd: Optional[int] = None
     user_pid: Optional[int] = None
-    for w in user_windows:
-        if "notepad" in w["app_id"] and user_file.name.lower() in w["title"].lower():
-            user_hwnd = w["hwnd"]
-            user_pid = w["pid"]
-            break
+    astra_hwnd: Optional[int] = None
+    astra_pid: Optional[int] = None
 
-    print(f"[+] User Notepad A active: HWND={user_hwnd}, PID={user_pid}")
-    assert user_hwnd is not None, "Failed to discover User Notepad A window handle!"
-
-    # Step 2: Astra begins task and opens Notepad B
-    task_id = f"test_f0_15_mixed_{int(time.time())}"
-    astra_file = tmp_dir / f"astra_task_doc_{int(time.time())}.txt"
-    astra_file.write_text("ASTRA INITIAL\n", encoding="utf-8")
-
-    open_b_res = open_application(
-        "notepad",
-        target=str(astra_file),
-        task_id=task_id,
-        cleanup_policy=CleanupPolicy.AUTO_CLOSE_ON_COMPLETION,
-        content_classification=ContentClassification.TEMPORARY_TEST_CONTENT,
-    )
-    assert open_b_res.success, f"Failed to launch Astra Notepad B: {open_b_res.message}"
-    b_data = open_b_res.data or {}
-    astra_hwnd = b_data.get("hwnd")
-    astra_pid = b_data.get("pid")
-    print(f"[+] Astra launched Notepad B: HWND={astra_hwnd}, PID={astra_pid}")
-    assert astra_hwnd is not None, "Astra Notepad B HWND must be captured!"
-
-    # Step 3: Validate strict separation of instances
-    print(f"[*] Comparing instance handles: User HWND {user_hwnd} != Astra HWND {astra_hwnd}")
-    assert user_hwnd != astra_hwnd, "User and Astra must have distinct HWNDs!"
-    time.sleep(1.0)
-
-    # Step 4: Astra interacts with Notepad B
-    focus_b = focus_window(astra_hwnd, pid=astra_pid)
-    time.sleep(0.5)
-    elems_b = inspect_window_ui(astra_hwnd, max_depth=5)
-    for el in elems_b:
-        if el.name == "Text editor":
-            set_element_value(el, "Task B ephemeral execution completed.")
-            break
-    time.sleep(0.5)
-
-    # Step 5: Astra Task finishes -> executes cleanup for task_id
-    ledger = AstraResourceLedger.get_instance()
-    cleanup_result = ledger.cleanup_task_resources(task_id, TaskStatus.COMPLETED)
-    print(f"[*] Task cleanup executed: {cleanup_result}")
-
-    # Step 6: CRITICAL VERIFICATION:
-    # 6a. Astra's Notepad B must be CLOSED
-    time.sleep(1.0)
-    _ensure_desktop_attached()
-    is_astra_alive = bool(user32.IsWindow(astra_hwnd)) if user32 else False
-    print(f"[+] Astra Notepad B alive: {is_astra_alive} (expected False)")
-    assert not is_astra_alive, f"Astra Notepad B (HWND {astra_hwnd}) was NOT closed!"
-
-    # 6b. User's Notepad A MUST STILL BE OPEN AND RESPONSIVE!
-    is_user_alive = bool(user32.IsWindow(user_hwnd)) if user32 else False
-    print(f"[+] User Notepad A alive: {is_user_alive} (expected True)")
-    assert is_user_alive, f"CRITICAL FAILURE: Pre-existing User Notepad A (HWND {user_hwnd}) was destroyed by Astra!"
-
-    # 6c. User's file content MUST BE 100% UNTOUCHED
-    current_user_text = user_file.read_text(encoding="utf-8")
-    current_user_hash = hashlib.sha256(current_user_text.encode("utf-8")).hexdigest()
-    print(f"[+] User file content preserved: hash={current_user_hash} (initial={user_initial_hash})")
-    assert current_user_hash == user_initial_hash, "User file was modified during task execution!"
-
-    # Step 7: Teardown test User Notepad A
-    print("[*] Cleaning up User Notepad A from test harness...")
-    _ensure_desktop_attached()
-    for e in inspect_window_ui(user_hwnd, max_depth=5):
-        if e.name == "Close":
-            invoke_element(e)
-            break
-    time.sleep(0.8)
     try:
-        user_file.unlink()
-        astra_file.unlink()
-    except Exception:
-        pass
+        # Step 1: User launches Notepad A independently (simulating ambient user work)
+        t0 = time.time()
+        ok_user_launch = _launch_win32_process(f'notepad.exe "{user_file}"')
+        assert ok_user_launch, "Failed to launch pre-existing user Notepad A"
+        time.sleep(2.0)
 
-    print("[PASS] TEST 3: Mixed ownership invariant strictly enforced. Pre-existing user window protected.")
-    return {
-        "test": "mixed_ownership_user_protection",
-        "status": "PASS",
-        "user_hwnd": user_hwnd,
-        "user_pid": user_pid,
-        "astra_hwnd": astra_hwnd,
-        "astra_pid": astra_pid,
-        "user_window_preserved": True,
-        "user_content_untouched": True,
-        "astra_window_closed": True,
-        "latency_sec": round(time.time() - t0, 3),
-    }
+        # Locate User Notepad A window
+        _ensure_desktop_attached()
+        user_windows = get_current_desktop_windows()
+        for w in user_windows:
+            if "notepad" in w["app_id"] and user_file.name.lower() in w["title"].lower():
+                user_hwnd = w["hwnd"]
+                user_pid = w["pid"]
+                break
+
+        print(f"[+] User Notepad A active: HWND={user_hwnd}, PID={user_pid}")
+        assert user_hwnd is not None, "Failed to discover User Notepad A window handle!"
+
+        # Step 2: Astra begins task and opens Notepad B
+        task_id = f"test_f0_15_mixed_{int(time.time())}"
+        astra_file = tmp_dir / f"astra_task_doc_{int(time.time())}.txt"
+        astra_file.write_text("ASTRA INITIAL\n", encoding="utf-8")
+
+        open_b_res = open_application(
+            "notepad",
+            target=str(astra_file),
+            task_id=task_id,
+            cleanup_policy=CleanupPolicy.AUTO_CLOSE_ON_COMPLETION,
+            content_classification=ContentClassification.TEMPORARY_TEST_CONTENT,
+        )
+        assert open_b_res.success, f"Failed to launch Astra Notepad B: {open_b_res.message}"
+        b_data = open_b_res.data or {}
+        astra_hwnd = b_data.get("hwnd")
+        astra_pid = b_data.get("pid")
+        print(f"[+] Astra launched Notepad B: HWND={astra_hwnd}, PID={astra_pid}")
+        assert astra_hwnd is not None, "Astra Notepad B HWND must be captured!"
+
+        # Step 3: Validate strict separation of instances
+        print(f"[*] Comparing instance handles: User HWND {user_hwnd} != Astra HWND {astra_hwnd}")
+        assert user_hwnd != astra_hwnd, "User and Astra must have distinct HWNDs!"
+        time.sleep(1.0)
+
+        # Step 4: Astra interacts with Notepad B
+        focus_b = focus_window(astra_hwnd, pid=astra_pid)
+        time.sleep(0.5)
+        elems_b = inspect_window_ui(astra_hwnd, max_depth=5)
+        for el in elems_b:
+            if el.name == "Text editor":
+                set_element_value(el, "Task B ephemeral execution completed.")
+                break
+        time.sleep(0.5)
+
+        # Step 5: Astra Task finishes -> executes cleanup for task_id
+        ledger = AstraResourceLedger.get_instance()
+        cleanup_result = ledger.cleanup_task_resources(task_id, TaskStatus.COMPLETED)
+        print(f"[*] Task cleanup executed: {cleanup_result}")
+
+        # Step 6: CRITICAL VERIFICATION:
+        # 6a. Astra's Notepad B must be CLOSED
+        time.sleep(1.0)
+        _ensure_desktop_attached()
+        is_astra_alive = bool(user32.IsWindow(astra_hwnd)) if user32 else False
+        print(f"[+] Astra Notepad B alive: {is_astra_alive} (expected False)")
+        assert not is_astra_alive, f"Astra Notepad B (HWND {astra_hwnd}) was NOT closed!"
+
+        # 6b. User's Notepad A MUST STILL BE OPEN AND RESPONSIVE!
+        is_user_alive = bool(user32.IsWindow(user_hwnd)) if user32 else False
+        print(f"[+] User Notepad A alive: {is_user_alive} (expected True)")
+        assert is_user_alive, f"CRITICAL FAILURE: Pre-existing User Notepad A (HWND {user_hwnd}) was destroyed by Astra!"
+
+        # 6c. User's file content MUST BE 100% UNTOUCHED
+        current_user_text = user_file.read_text(encoding="utf-8")
+        current_user_hash = hashlib.sha256(current_user_text.encode("utf-8")).hexdigest()
+        print(f"[+] User file content preserved: hash={current_user_hash} (initial={user_initial_hash})")
+        assert current_user_hash == user_initial_hash, "User file was modified during task execution!"
+
+        print("[PASS] TEST 3: Mixed ownership invariant strictly enforced. Pre-existing user window protected.")
+        return {
+            "test": "mixed_ownership_user_protection",
+            "status": "PASS",
+            "user_hwnd": user_hwnd,
+            "user_pid": user_pid,
+            "astra_hwnd": astra_hwnd,
+            "astra_pid": astra_pid,
+            "user_window_preserved": True,
+            "user_content_untouched": True,
+            "astra_window_closed": True,
+            "latency_sec": round(time.time() - t0, 3),
+        }
+    finally:
+        # Step 7: Deterministic teardown of test harness User Notepad A in finally block
+        print("[*] Deterministically terminating test-scoped User Notepad A...")
+        if user_pid and psutil.pid_exists(user_pid):
+            try:
+                proc = psutil.Process(user_pid)
+                proc.terminate()
+                try:
+                    proc.wait(timeout=1.5)
+                except psutil.TimeoutExpired:
+                    proc.kill()
+                    proc.wait(timeout=1.5)
+            except Exception as e:
+                print(f"[!] Warning terminating user_pid {user_pid}: {e}")
+        # Only after process is completely terminated, purge tabstate and remove temporary test files
+        time.sleep(0.3)
+        clean_notepad_tabstate_for_path(str(user_file))
+        if 'astra_file' in locals():
+            clean_notepad_tabstate_for_path(str(astra_file))
+        time.sleep(0.2)
+        try:
+            if user_file.exists():
+                user_file.unlink()
+        except Exception as e:
+            print(f"[!] Warning unlinking user_file: {e}")
+        try:
+            if 'astra_file' in locals() and astra_file.exists():
+                astra_file.unlink()
+        except Exception:
+            pass
+
+
 
 
 def test_4_user_takeover_detachment() -> Dict[str, Any]:
@@ -383,53 +421,62 @@ def test_4_user_takeover_detachment() -> Dict[str, Any]:
     ledger = AstraResourceLedger.get_instance()
 
     t0 = time.time()
-    # 1. Astra launches Notepad
-    open_res = open_application("notepad", task_id=task_id)
-    assert open_res.success, f"Failed to launch Notepad: {open_res.message}"
-    data = open_res.data or {}
-    hwnd = data.get("hwnd")
-    pid = data.get("pid")
-    print(f"[+] Astra launched Notepad: HWND={hwnd}, PID={pid}")
-    assert hwnd is not None, "HWND required"
+    hwnd: Optional[int] = None
+    pid: Optional[int] = None
 
-    time.sleep(1.0)
-    # 2. Simulate User Takeover on window
-    detached_res = ledger.mark_user_takeover_for_window(hwnd)
-    print(f"[*] Marked user takeover for HWND {hwnd}: state={detached_res.lifecycle_state.value if detached_res else None}")
-    assert detached_res is not None
-    assert detached_res.lifecycle_state == ResourceLifecycleState.USER_TAKEOVER_DETACHED
+    try:
+        # 1. Astra launches Notepad
+        open_res = open_application("notepad", task_id=task_id)
+        assert open_res.success, f"Failed to launch Notepad: {open_res.message}"
+        data = open_res.data or {}
+        hwnd = data.get("hwnd")
+        pid = data.get("pid")
+        print(f"[+] Astra launched Notepad: HWND={hwnd}, PID={pid}")
+        assert hwnd is not None, "HWND required"
 
-    # 3. Task Completes -> Try to clean up
-    cleanup_report = ledger.cleanup_task_resources(task_id, TaskStatus.COMPLETED)
-    print(f"[*] Cleanup report: {cleanup_report}")
-    assert cleanup_report["cleaned_count"] == 0, "Detached window should not be cleaned!"
-    assert cleanup_report["detached_count"] >= 1, "Detached window must be recorded as detached!"
+        time.sleep(1.0)
+        # 2. Simulate User Takeover on window
+        detached_res = ledger.mark_user_takeover_for_window(hwnd)
+        print(f"[*] Marked user takeover for HWND {hwnd}: state={detached_res.lifecycle_state.value if detached_res else None}")
+        assert detached_res is not None
+        assert detached_res.lifecycle_state == ResourceLifecycleState.USER_TAKEOVER_DETACHED
 
-    # 4. Verify window is STILL OPEN on desktop
-    time.sleep(0.5)
-    _ensure_desktop_attached()
-    is_alive = bool(user32.IsWindow(hwnd)) if user32 else False
-    print(f"[+] Window alive after task completion: {is_alive} (expected True)")
-    assert is_alive, f"Window HWND {hwnd} was unexpectedly closed after user takeover!"
+        # 3. Task Completes -> Try to clean up
+        cleanup_report = ledger.cleanup_task_resources(task_id, TaskStatus.COMPLETED)
+        print(f"[*] Cleanup report: {cleanup_report}")
+        assert cleanup_report["cleaned_count"] == 0, "Detached window should not be cleaned!"
+        assert cleanup_report["detached_count"] >= 1, "Detached window must be recorded as detached!"
 
-    # 5. Teardown
-    _ensure_desktop_attached()
-    for e in inspect_window_ui(hwnd, max_depth=5):
-        if e.name == "Close":
-            invoke_element(e)
-            break
-    time.sleep(0.5)
+        # 4. Verify window is STILL OPEN on desktop
+        time.sleep(0.5)
+        _ensure_desktop_attached()
+        is_alive = bool(user32.IsWindow(hwnd)) if user32 else False
+        print(f"[+] Window alive after task completion: {is_alive} (expected True)")
+        assert is_alive, f"Window HWND {hwnd} was unexpectedly closed after user takeover!"
 
-    print("[PASS] TEST 4: User takeover window successfully detached and preserved.")
-    return {
-        "test": "user_takeover_detachment",
-        "status": "PASS",
-        "task_id": task_id,
-        "hwnd": hwnd,
-        "pid": pid,
-        "preserved_on_takeover": True,
-        "latency_sec": round(time.time() - t0, 3),
-    }
+        print("[PASS] TEST 4: User takeover window successfully detached and preserved.")
+        return {
+            "test": "user_takeover_detachment",
+            "status": "PASS",
+            "task_id": task_id,
+            "hwnd": hwnd,
+            "pid": pid,
+            "preserved_on_takeover": True,
+            "latency_sec": round(time.time() - t0, 3),
+        }
+    finally:
+        # Step 5: Deterministic teardown of test window in test harness
+        if pid and psutil.pid_exists(pid):
+            try:
+                proc = psutil.Process(pid)
+                proc.terminate()
+                try:
+                    proc.wait(timeout=1.5)
+                except psutil.TimeoutExpired:
+                    proc.kill()
+                    proc.wait(timeout=1.5)
+            except Exception:
+                pass
 
 
 def test_5_orphan_recovery_and_pid_reuse() -> Dict[str, Any]:
@@ -528,7 +575,16 @@ def main() -> int:
         r5 = test_5_orphan_recovery_and_pid_reuse()
         results.append(r5)
 
+        # Verification of Zero Desktop Debris via DesktopObserver
+        from astrarun.computer_use.observation.observer import DesktopObserver
+        obs = DesktopObserver()
+        final_state = obs.observe_state()
+        print(f"[*] Post-audit desktop state: {len(final_state.visible_windows)} visible windows, {len(final_state.active_dialogs)} dialogs")
+        assert not final_state.has_astra_debris(), f"Desktop debris detected after tests: {[d.to_dict() for d in final_state.active_dialogs]}"
+        print("[+] Verified ZERO desktop debris remaining.")
+
     except Exception as ex:
+
         logger.exception("Acceptance audit failure: %s", ex)
         print(f"\n[FAIL] Audit encountered critical exception: {ex}")
         return 1

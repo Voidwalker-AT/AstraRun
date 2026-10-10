@@ -622,6 +622,14 @@ AUTHORITATIVE_CAPABILITY_MANIFEST: Dict[str, CapabilitySecurityMetadata] = {
         requires_confirmation=False,
         resource_scope="interaction",
     ),
+    "save_document_via_ui": CapabilitySecurityMetadata(
+        operation_kind=CapabilityOperationKind.UI_INTERACTION,
+        risk=RiskLevel.LOW,
+        mutates_state=True,
+        requires_confirmation=False,
+        resource_scope="interaction",
+    ),
+
 
     # =========================================================================
     # WORKFLOW / DYNAMIC EXECUTION (2)

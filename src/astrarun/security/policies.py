@@ -64,9 +64,14 @@ class PathPolicy:
         allowed_workspace_roots: Optional[List[str]] = None,
         disallowed_system_roots: Optional[List[str]] = None,
     ) -> None:
+        import tempfile
         from astrarun.core.paths import AstraPaths
         raw_workspaces = allowed_workspace_roots or [
             r"E:\Workspace",
+            str(Path.home() / "Desktop"),
+            str(Path.home() / "Downloads"),
+            str(Path.home() / "Documents"),
+            tempfile.gettempdir(),
             str(AstraPaths.data_dir()),
             str(AstraPaths.sandbox_dir()),
         ]

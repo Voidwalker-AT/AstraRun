@@ -107,9 +107,72 @@ def _get_window_current_snapshot(hwnd: int, pid: int | None = None) -> WindowLay
     )
 
 
-def focus_window(hwnd: int, pid: int | None = None) -> CapabilityResult:
+def focus_window(
+    hwnd: Optional[int] = None,
+    pid: int | None = None,
+    window: Optional[str] = None,
+    window_name: Optional[str] = None,
+    app_name: Optional[str] = None,
+    task_id: Optional[str] = None,
+) -> CapabilityResult:
     """Safely bring a window to foreground focus and restore if minimized."""
     t0 = time.perf_counter()
+
+    # Resolve HWND if query passed by name
+    target_hwnd = hwnd
+    if not target_hwnd or target_hwnd <= 0:
+        if task_id:
+            try:
+                from astrarun.tasks.resource_ledger import AstraResourceLedger
+                task_res = AstraResourceLedger.get_instance().list_resources_for_task(task_id)
+                for r in reversed(task_res):
+                    if r.hwnd and r.lifecycle_state in ("ACTIVE", "LAUNCHED", "DISCOVERED"):
+                        target_hwnd = r.hwnd
+                        break
+            except Exception:
+                pass
+
+    if not target_hwnd or target_hwnd <= 0:
+        query = window or window_name or app_name
+        if query:
+            try:
+                from astrarun.windows.resolver import WindowResolver
+                res = WindowResolver().resolve(query)
+                if res.window and res.window.hwnd:
+                    target_hwnd = res.window.hwnd
+                elif res.candidates:
+                    try:
+                        from astrarun.tasks.resource_ledger import AstraResourceLedger
+                        active_astra = AstraResourceLedger.get_instance().list_active_astra_resources()
+                        active_hwnds = {r.hwnd for r in active_astra if r.hwnd}
+                        astra_matches = [c for c in res.candidates if c.hwnd in active_hwnds]
+                        if astra_matches:
+                            target_hwnd = astra_matches[0].hwnd
+                        else:
+                            target_hwnd = res.candidates[0].hwnd
+                    except Exception:
+                        target_hwnd = res.candidates[0].hwnd
+            except Exception:
+                pass
+        if not target_hwnd or target_hwnd <= 0:
+            try:
+                from astrarun.computer_use.observation import DesktopObserver
+                st = DesktopObserver.get_instance().observe()
+                if query:
+                    w = st.find_window_by_app(query)
+                    if w:
+                        target_hwnd = w.hwnd
+            except Exception:
+                pass
+
+    if not target_hwnd or target_hwnd <= 0:
+        return CapabilityResult.fail(
+            "focus_window",
+            f"Could not resolve target window for focus (hwnd={hwnd}, window={window or window_name or app_name}).",
+            error_code=CapabilityErrorCode.TARGET_NOT_FOUND if hasattr(CapabilityErrorCode, 'TARGET_NOT_FOUND') else CapabilityErrorCode.NOT_FOUND,
+        )
+
+    hwnd = target_hwnd
     valid, msg, code = validate_window_identity(hwnd, expected_pid=pid)
     if not valid:
         return CapabilityResult.fail("focus_window", msg, error_code=code)

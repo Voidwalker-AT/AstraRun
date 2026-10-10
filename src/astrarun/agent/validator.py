@@ -33,12 +33,12 @@ class PlanQualityValidator:
     def __init__(self, registry: Optional[CapabilityRegistry] = None):
         self.registry = registry or CapabilityRegistry()
 
-    def validate(self, plan: Plan) -> PlanValidationResult:
+    def validate(self, plan: Plan, goal_contract: Optional[Any] = None) -> PlanValidationResult:
         """Alias for validate_plan."""
-        return self.validate_plan(plan)
+        return self.validate_plan(plan, goal_contract=goal_contract)
 
-    def validate_plan(self, plan: Plan) -> PlanValidationResult:
-        """Validate candidate plan across static, structural, and policy dimensions."""
+    def validate_plan(self, plan: Plan, goal_contract: Optional[Any] = None) -> PlanValidationResult:
+        """Validate candidate plan across static, structural, policy, and information-loss dimensions."""
         issues: list[str] = []
 
         if not plan.steps:
@@ -47,6 +47,13 @@ class PlanQualityValidator:
                 is_valid=False,
                 issues=["Plan contains no executable steps."],
             )
+
+        # 0. Information-Loss Invariant: verify all mandatory constraints are addressed
+        contract = goal_contract or getattr(plan, "contract", None)
+        if contract and hasattr(contract, "detect_information_loss"):
+            loss_issues = contract.detect_information_loss(plan.steps)
+            if loss_issues:
+                issues.extend(loss_issues)
 
         step_ids = {s.step_id for s in plan.steps}
         if len(step_ids) != len(plan.steps):

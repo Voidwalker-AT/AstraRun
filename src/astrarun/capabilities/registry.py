@@ -133,8 +133,8 @@ class CapabilityRegistry:
             params.append(ParameterSchema(name=name, type_name=type_str, description=f"Parameter {name}", required=is_req))
 
         effects = [SideEffect.READ_ONLY] if cap.read_only else [SideEffect.SYSTEM_STATE]
-        if "file" in cap.id or "report" in cap.id:
-            effects = [SideEffect.CREATES_FILE] if not cap.read_only else [SideEffect.READ_ONLY]
+        if "file" in cap.id or "report" in cap.id or "save" in cap.id or "document" in cap.id:
+            effects = [SideEffect.CREATES_FILE, SideEffect.MODIFIES_FILE] if not cap.read_only else [SideEffect.READ_ONLY]
 
         return CapabilitySchema(
             id=cap.id,
@@ -880,7 +880,7 @@ class CapabilityRegistry:
             id="focus_window",
             category=CapabilityCategory.WINDOW,
             description="Bring a target window to foreground focus",
-            args_schema={"hwnd": int, "pid": Optional[int]},
+            args_schema={"hwnd": Optional[int], "pid": Optional[int], "window": Optional[str], "window_name": Optional[str], "app_name": Optional[str], "task_id": Optional[str]},
             risk=ToolRisk.LOW,
             read_only=False,
             handler=focus_window,
@@ -1182,7 +1182,7 @@ class CapabilityRegistry:
             id="type_into_window",
             category=CapabilityCategory.INTERACTION,
             description="Type literal text into the active or specified window control",
-            args_schema={"text": str, "app_name": str, "hwnd": int},
+            args_schema={"text": str, "app_name": Optional[str], "hwnd": Optional[int], "window": Optional[str], "target": Optional[str], "task_id": Optional[str]},
             risk=ToolRisk.LOW,
             read_only=False,
             handler=type_literal_text,
@@ -1208,6 +1208,19 @@ class CapabilityRegistry:
             handler=set_clipboard,
             permission=CapabilityPermission.AUTO,
         ))
+        from astrarun.interaction.document import save_document_via_ui
+        self.register(Capability(
+            id="save_document_via_ui",
+            category=CapabilityCategory.INTERACTION,
+            description="Save the active document within an application through native UI interaction and dialogs",
+            args_schema={"filename": str, "folder": Optional[str], "path": Optional[str], "hwnd": Optional[int], "app_name": Optional[str], "window": Optional[str], "task_id": Optional[str]},
+            risk=ToolRisk.LOW,
+            read_only=False,
+            handler=save_document_via_ui,
+            permission=CapabilityPermission.AUTO,
+            context_effects=["document_saved"],
+        ))
+
 
         # ---------------------------------------------------------
         # V0.11 NATIVE WI-FI & SYSTEM UTILITY CAPABILITIES

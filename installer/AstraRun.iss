@@ -42,6 +42,7 @@ Name: "autostart"; Description: "Start AstraRun automatically when signing in to
 
 [Files]
 Source: "..\dist\AstraRun\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "..\config\*"; DestDir: "{app}\config"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "..\resources\icons\AstraRun.ico"; DestDir: "{app}\resources\icons"; Flags: ignoreversion
 
 [Icons]

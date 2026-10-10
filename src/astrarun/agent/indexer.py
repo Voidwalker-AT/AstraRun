@@ -269,6 +269,13 @@ class CapabilitySemanticIndex:
                     matched_terms.append("context:browser_url")
                 elif cap_id == "open_file":
                     score -= 1.20
+            if "open" in all_tokens:
+                if any("app" in t or t in ("calc", "calculator", "notepad", "terminal", "browser", "editor") for t in all_tokens):
+                    if cap_id == "open_application":
+                        score += 0.80
+                        matched_terms.append("context:open_app")
+                    elif cap_id == "open_file":
+                        score -= 0.80
 
             # 2. Verb matches (+0.35 specific action, +0.10 generic)
             matched_verbs = entry.verbs.intersection(q_tokens)
@@ -305,6 +312,42 @@ class CapabilitySemanticIndex:
             # If arrange_desktop, require explicit arrangement action verb
             if cap_id == "arrange_desktop" and not any(w in all_tokens for w in ("arrange", "tile", "cascade", "organize", "grid", "layout")):
                 score = 0.0
+
+            # If snap_window, require explicit window management terms (disallow accidental match on adverbial "right now")
+            if cap_id in ("snap_window_right", "snap_window_left"):
+                if not any(w in all_tokens for w in ("snap", "tile", "dock", "window", "half")):
+                    score = 0.0
+
+            # 7. Hardware Subsystem Specificity & Domain Conflict Rules
+            hw_domains = {"battery", "memory", "ram", "cpu", "gpu", "vram", "disk", "storage"}
+            query_hw = hw_domains.intersection(all_tokens)
+            cap_hw = set()
+            for hw in ("battery", "memory", "cpu", "gpu", "disk"):
+                if hw in cap_id.lower():
+                    cap_hw.add(hw)
+                if hw == "memory" and "ram" in cap_id.lower():
+                    cap_hw.add("memory")
+            if cap_id == "gpu_status":
+                cap_hw.add("gpu")
+                cap_hw.add("vram")
+                if "vram" in all_tokens:
+                    matched_terms.append("domain:gpu_vram")
+            if cap_id == "memory_status" and ("ram" in all_tokens or "memory" in all_tokens):
+                cap_hw.add("ram")
+                matched_terms.append("domain:system_memory")
+
+            if query_hw:
+                # If query specifically mentions a hardware domain and capability belongs to an opposing domain, penalize
+                if cap_hw and not (query_hw.intersection(cap_hw) or ("ram" in query_hw and "memory" in cap_hw)):
+                    score -= 1.0
+
+                # If query mentions a specific hardware domain, boost capabilities specializing in it
+                if cap_hw.intersection(query_hw) or ("memory" in cap_hw and "ram" in query_hw):
+                    score += 0.40
+
+                # Broad summary tools yield to specialized tools when a specific subsystem is requested
+                if cap_id == "system_summary" and query_hw:
+                    score -= 0.25
 
             # Grounding check: Incidental noun-only matches without verb/domain/id/arg get downweighted
             has_grounding = any(

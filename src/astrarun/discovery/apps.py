@@ -201,7 +201,13 @@ class AppDiscoveryCache:
         if programdata:
             start_menu_dirs.append(Path(programdata) / "Microsoft" / "Windows" / "Start Menu" / "Programs")
 
-        exclude_words = {"uninstall", "help", "documentation", "readme", "website", "remove", "setup", "license"}
+        exclude_words = {
+            "uninstall", "help", "documentation", "readme", "website", "remove", "setup", "license",
+            "reset", "cache", "preferences", "troubleshoot", "troubleshooting", "diagnostic", "repair",
+            "safe mode", "safemode", "crash reporter", "feedback", "report issue", "release notes",
+            "changelog", "manual", "getting started", "whats new", "what's new", "eula", "donate",
+            "register", "profile manager", "skinned"
+        }
 
         for menu_dir in start_menu_dirs:
             if not menu_dir.exists():
@@ -211,7 +217,7 @@ class AppDiscoveryCache:
                     stem_clean = lnk.stem.strip()
                     lower_stem = stem_clean.lower()
 
-                    # Filter out uninstaller/help shortcuts
+                    # Filter out uninstaller/help/maintenance/secondary skin shortcuts
                     if any(w in lower_stem for w in exclude_words):
                         continue
 
@@ -230,8 +236,25 @@ class AppDiscoveryCache:
                         discovered[lower_stem] = app_info
                     if norm_key not in discovered:
                         discovered[norm_key] = app_info
+
+                    if lower_stem.startswith("microsoft "):
+                        alt_key = lower_stem.replace("microsoft ", "").strip()
+                        if alt_key and alt_key not in discovered:
+                            discovered[alt_key] = app_info
+                    elif lower_stem in ("access", "word", "excel", "powerpoint", "edge", "teams", "store"):
+                        ms_key = f"microsoft {lower_stem}"
+                        if ms_key not in discovered:
+                            discovered[ms_key] = app_info
             except Exception as err:
                 logger.debug("Error scanning Start Menu at %s: %s", menu_dir, err)
+
+        # Standard display names and aliases
+        for key, display_name, exe_name in STANDARD_APPS:
+            if key in discovered:
+                discovered[key].name = display_name
+                dn_key = display_name.lower()
+                if dn_key not in discovered:
+                    discovered[dn_key] = discovered[key]
 
         self._apps = discovered
 

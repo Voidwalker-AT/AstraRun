@@ -22,6 +22,9 @@ ACTION_VERBS = [
     "show ",
     "go to ",
     "goto ",
+    "bring up ",
+    "close ",
+    "quit ",
 ]
 
 # Strict execution threshold: fuzzy matches below this score will NOT auto-execute on raw Enter
@@ -41,6 +44,12 @@ def normalize_request(request: str) -> tuple[str, str]:
     for verb in ACTION_VERBS:
         if cleaned.startswith(verb):
             target = cleaned[len(verb):].strip()
+            if target.startswith("the "):
+                target = target[4:].strip()
+            elif target.startswith("a "):
+                target = target[2:].strip()
+            elif target.startswith("an "):
+                target = target[3:].strip()
             return verb.strip(), target
 
     return "", cleaned
@@ -74,12 +83,24 @@ class DeterministicRouter(BaseRouter):
         if not raw_text:
             return Decision.unknown("", "Empty input")
 
+        if re.search(r'\b(?:don\'t|dont|do\s+not|never)\b', raw_text.lower()):
+            return Decision.unknown(raw_text, "Negated action request")
+
         if has_compound_indicators(raw_text):
             return Decision.unknown(raw_text, "Compound or multi-clause request requires NLP/Workflow engine")
 
         verb, target = normalize_request(raw_text)
         decision: Decision | None = None
         target_id: str | None = None
+
+        if verb.strip() in ("close", "quit"):
+            return Decision(
+                tool="close_application",
+                args={"app": target},
+                confidence=0.95,
+                source="deterministic",
+                explanation=f"Close application '{target}'",
+            )
 
         # 1. Check for internal management commands
         if target in ("refresh apps", "refresh", "reload apps", "reload index"):
@@ -151,6 +172,21 @@ class DeterministicRouter(BaseRouter):
                 explanation=f"Application matched '{target}' -> {app_info.name}"
             )
             target_id = f"app:{target}"
+
+        # 5b. Semantic Entity Resolver for canonical applications
+        elif context.search_index is not None:
+            from astrarun.discovery.entity_resolver import SemanticEntityResolver
+            resolver = SemanticEntityResolver(app_cache=None, search_index=context.search_index)
+            res_ent = resolver.resolve_application(target)
+            if res_ent and not res_ent.is_ambiguous and res_ent.is_installed:
+                decision = Decision(
+                    tool="open_app",
+                    args={"app": res_ent.name.lower(), "path": res_ent.target_path},
+                    confidence=res_ent.confidence,
+                    source="deterministic_entity_resolver",
+                    explanation=f"Canonical application matched '{target}' -> {res_ent.name}",
+                )
+                target_id = res_ent.entity_id
 
         # 6. Fallback to Fuzzy Search Index if available
         if decision is None and context.search_index is not None:

@@ -3,10 +3,31 @@
 from __future__ import annotations
 
 import json
+import sys
 from pathlib import Path
 from typing import Any
 
-_DEFAULT_LEXICON_PATH = Path(__file__).resolve().parent.parent.parent.parent / "config" / "nlp_lexicon.json"
+def _resolve_default_lexicon_path() -> Path:
+    try:
+        from astrarun.core.paths import get_install_root
+        install_lex = get_install_root() / "config" / "nlp_lexicon.json"
+        if install_lex.exists():
+            return install_lex
+    except Exception:
+        pass
+    if getattr(sys, "frozen", False):
+        exe_parent = Path(sys.executable).resolve().parent
+        exe_lex = exe_parent / "config" / "nlp_lexicon.json"
+        if exe_lex.exists():
+            return exe_lex
+        internal_lex = exe_parent / "_internal" / "config" / "nlp_lexicon.json"
+        if internal_lex.exists():
+            return internal_lex
+    repo_lex = Path(__file__).resolve().parent.parent.parent.parent / "config" / "nlp_lexicon.json"
+    return repo_lex
+
+
+_DEFAULT_LEXICON_PATH = _resolve_default_lexicon_path()
 
 _CACHED_LEXICON: dict[str, Any] | None = None
 
@@ -17,7 +38,7 @@ def get_lexicon(path: Path | None = None) -> dict[str, Any]:
     if _CACHED_LEXICON is not None and path is None:
         return _CACHED_LEXICON
 
-    target = path or _DEFAULT_LEXICON_PATH
+    target = path or _resolve_default_lexicon_path()
     if target.exists():
         with open(target, "r", encoding="utf-8") as f:
             data = json.load(f)
@@ -42,7 +63,7 @@ def get_lexicon(path: Path | None = None) -> dict[str, Any]:
                 "precedence_after": ["after"],
             },
             "negation_markers": ["don't", "dont", "do not", "never", "avoid", "stop", "not", "without", "except"],
-            "politeness_prefixes": ["can you please", "could you please", "would you mind", "please", "can you", "could you", "kindly"],
+            "politeness_prefixes": ["can you please", "could you please", "would you mind", "please", "can you", "could you", "kindly", "can u", "could u", "would u", "will you", "plz", "pls"],
             "temporal_synonyms": {
                 "yesterday": ["yesterday"],
                 "today": ["today"],

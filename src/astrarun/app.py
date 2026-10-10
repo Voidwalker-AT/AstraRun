@@ -179,6 +179,13 @@ class AstraApplication:
             aliases=self.config.aliases,
         )
 
+        # 3b. Semantic Entity Resolver
+        from astrarun.discovery.entity_resolver import SemanticEntityResolver
+        self.semantic_entity_resolver = SemanticEntityResolver(
+            app_cache=self.app_cache,
+            search_index=self.search_index,
+        )
+
         # 4. Project Registry & Workstation Context
         self.project_registry = ProjectRegistry()
         self.context_engine = WorkstationContextEngine(
@@ -302,6 +309,23 @@ class AstraApplication:
         except Exception as e:
             logger.warning("Could not execute orphan resource recovery: %s", e)
 
+        # 14. Universal Brain & ComputerUse Subsystems (F0-19)
+        from astrarun.brain import Brain
+        from astrarun.computer_use import ComputerUse, ComputerUseController
+        self.brain = Brain(
+            planner=self.agent_engine.planner if hasattr(self, "agent_engine") and self.agent_engine else None,
+            agent_engine=self.agent_engine if hasattr(self, "agent_engine") else None,
+            entity_resolver=self.semantic_entity_resolver,
+        )
+        self.computer_use = ComputerUse(
+            app_cache=self.app_cache,
+            entity_resolver=self.semantic_entity_resolver,
+            execution_broker=self.execution_broker,
+            resource_ledger=self.resource_ledger if hasattr(self, "resource_ledger") else None,
+            browser_service=self.browser_service,
+        )
+        self.computer_use_controller = ComputerUseController()
+
         logger.info("AstraApplication composition root ready. Registered capabilities: %d", len(self.capability_registry.list_capabilities()))
 
     def get_interrupted_task_prompt(self) -> Optional[Dict[str, Any]]:
@@ -423,11 +447,11 @@ class AstraApplication:
             source=source,
         )
         broker_res = self.execution_broker.execute(prop)
-        err_code = CapabilityErrorCode.NONE
+        err_code = None
         if broker_res.requires_confirmation:
             err_code = CapabilityErrorCode.PERMISSION_DENIED
         elif broker_res.blocked:
-            err_code = CapabilityErrorCode.PERMISSION_DENIED
+            err_code = CapabilityErrorCode.BLOCKED
 
         return CapabilityResult(
             capability=capability_id,
@@ -476,6 +500,92 @@ class AstraApplication:
         # 1. DIRECT NAVIGATION & SYSTEM COMMANDS
         # -------------------------------------------------------------
         lower_q = clean.lower()
+
+        # Negation boundary safety invariant
+        if re.search(r'\b(?:don\'t|dont|do\s+not|never)\s+(?:open|launch|start|run|close|delete|format|kill|remove)\b', lower_q):
+            return ExecutionResult(type="blocked", success=False, message=f"Action blocked: Request contains negation for '{clean}'.")
+
+        # Conversational / Greetings
+        from astrarun.routing.input_router import CONVERSATIONAL_EXACT, get_conversational_response
+        lower_clean = re.sub(r"[!.,?]+$", "", lower_q).strip()
+        if lower_clean in CONVERSATIONAL_EXACT:
+            return ExecutionResult(type="conversational", success=True, message=get_conversational_response(clean))
+
+        # Computational: Count to N
+        count_m = re.match(r"^count\s+to\s+(\d+)$", lower_q.strip())
+        if count_m:
+            n = int(count_m.group(1))
+            capped_n = min(n, 100)
+            count_str = ", ".join(str(i) for i in range(1, capped_n + 1))
+            if n > 100:
+                count_str += f", ... (capped at 100 of {n})"
+            task = self.task_manager.create_task(request_text=clean, source="user_computation")
+            self.task_manager.transition_status(task.id, TaskStatus.RUNNING)
+            cap_res = CapabilityResult.ok(capability="computational_task", message=f"Counted to {n}: {count_str}", data={"n": n})
+            self._complete_task(task, cap_res)
+            return ExecutionResult(type="computational", success=True, message=f"Counted to {n}: {count_str}", task=task, capability_result=cap_res, data={"n": n})
+
+        # Computational: Basic Math
+        math_m = re.match(r"^(?:what\s+is|calculate|compute)\s+(\d+(?:\.\d+)?\s*[\+\-\*\/]\s*\d+(?:\.\d+)?)\??$", lower_q.strip())
+        if math_m:
+            expr = math_m.group(1).strip()
+            try:
+                import ast, operator
+                ops = {ast.Add: operator.add, ast.Sub: operator.sub, ast.Mult: operator.mul, ast.Div: operator.truediv}
+                node = ast.parse(expr, mode='eval').body
+                if isinstance(node, ast.BinOp) and type(node.op) in ops and isinstance(node.left, ast.Constant) and isinstance(node.right, ast.Constant):
+                    calc_res = ops[type(node.op)](node.left.value, node.right.value)
+                    task = self.task_manager.create_task(request_text=clean, source="user_computation")
+                    self.task_manager.transition_status(task.id, TaskStatus.RUNNING)
+                    cap_res = CapabilityResult.ok(capability="computational_task", message=f"{expr} = {calc_res}", data={"result": calc_res})
+                    self._complete_task(task, cap_res)
+                    return ExecutionResult(type="computational", success=True, message=f"{expr} = {calc_res}", task=task, capability_result=cap_res)
+            except Exception:
+                pass
+
+        # Read-Only Observation: Is App Installed?
+        inst_m = re.match(r"^(?:is\s+(?:the\s+)?([a-zA-Z0-9_\-\.]+)\s+installed|check\s+if\s+(?:the\s+)?([a-zA-Z0-9_\-\.]+)\s+is\s+installed|do\s+i\s+have\s+([a-zA-Z0-9_\-\.]+)(?:\s+installed)?)\??$", lower_q.strip())
+        if inst_m:
+            target_app = (inst_m.group(1) or inst_m.group(2) or inst_m.group(3)).strip()
+            from astrarun.discovery.entity_resolver import SemanticEntityResolver
+            resolver = SemanticEntityResolver(app_cache=self.app_cache, search_index=self.search_index)
+            is_inst, res_ent = resolver.is_app_installed(target_app)
+            task = self.task_manager.create_task(request_text=clean, source="user_observation")
+            self.task_manager.transition_status(task.id, TaskStatus.RUNNING)
+            msg = f"Yes, {res_ent.name} is installed at {res_ent.target_path}." if (is_inst and res_ent) else f"No, application '{target_app}' is not installed."
+            cap_res = CapabilityResult.ok(capability="find_application", message=msg, data={"installed": is_inst, "target": target_app, "path": res_ent.target_path if res_ent else None})
+            self._complete_task(task, cap_res)
+            return ExecutionResult(type="observation", success=True, message=msg, task=task, capability_result=cap_res)
+
+        # Read-Only Observation: Is App Running?
+        run_m = re.match(r"^(?:is\s+(?:the\s+)?([a-zA-Z0-9_\-\.]+)\s+(?:currently\s+)?running|check\s+if\s+(?:the\s+)?([a-zA-Z0-9_\-\.]+)\s+is\s+(?:currently\s+)?running)\??$", lower_q.strip())
+        if run_m:
+            target_app = (run_m.group(1) or run_m.group(2)).strip()
+            from astrarun.discovery.entity_resolver import SemanticEntityResolver
+            resolver = SemanticEntityResolver(app_cache=self.app_cache, search_index=self.search_index)
+            is_run, pids, res_ent = resolver.is_app_running(target_app)
+            task = self.task_manager.create_task(request_text=clean, source="user_observation")
+            self.task_manager.transition_status(task.id, TaskStatus.RUNNING)
+            app_label = res_ent.name if res_ent else target_app
+            msg = f"Yes, {app_label} is currently running (PID {', '.join(str(p) for p in pids)})." if is_run else f"No, {app_label} is not running."
+            cap_res = CapabilityResult.ok(capability="is_application_running", message=msg, data={"running": is_run, "pids": pids, "app": target_app})
+            self._complete_task(task, cap_res)
+            return ExecutionResult(type="observation", success=True, message=msg, task=task, capability_result=cap_res)
+
+        # Application Close
+        close_m = re.match(r"^(?:close|quit|exit)\s+(?:the\s+)?([a-zA-Z0-9_\-\.]+)\??$", lower_q.strip())
+        if close_m:
+            target_app = close_m.group(1).strip()
+            if target_app not in ("window", "this", "that", "it", "tab"):
+                task = self.task_manager.create_task(request_text=clean, source="user_close_app")
+                self.task_manager.transition_status(task.id, TaskStatus.RUNNING)
+                cap_res = self._execute_through_broker("close_application", {"app": target_app}, task_id=task.id)
+                if cap_res.success:
+                    self._complete_task(task, cap_res)
+                    return ExecutionResult(type="capability_result", success=True, message=cap_res.message, task=task, capability_result=cap_res)
+                else:
+                    self._fail_task(task, cap_res.message, capability="close_application")
+                    return ExecutionResult(type="error", success=False, message=cap_res.message, task=task, capability_result=cap_res)
 
         if lower_q in ("history", "open history", "show history"):
             return ExecutionResult(type="command", success=True, message="open_history")
@@ -532,12 +642,11 @@ class AstraApplication:
         # 1.25 AUTONOMOUS WORKSTATION AGENT GOALS (v0.11 / v0.11.1)
         # -------------------------------------------------------------
         from astrarun.agent.models import AgentTaskStatus
-        import re
 
         is_agent_goal = False
         if re.search(r"\bbattery\s+report\b", clean, re.IGNORECASE) or re.search(r"\b(?:scan|check|show|connect|disconnect).*wifi\b|\bwifi\b", clean, re.IGNORECASE):
             is_agent_goal = True
-        elif has_compound and any(w in lower_q for w in ("save", "report", "reverse", "summary", "find", "metrics")):
+        elif has_compound:
             is_agent_goal = True
         elif hasattr(self, "agent_engine") and self.agent_engine and hasattr(self, "_builtin_capability_ids"):
             # Check if indexer has a high-confidence match for dynamic / plug-in capabilities (e.g. reverse_text)
@@ -557,6 +666,7 @@ class AstraApplication:
                     message=msg,
                     data=res_data,
                     capability_result=last_step.result if last_step else None,
+                    task=agent_task,
                 )
             elif agent_task.status == AgentTaskStatus.FAILED and "Invalid plan" in (agent_task.error or ""):
                 # If plan was invalid or unresolvable by agent runtime, fall through to rich interactive pipeline
@@ -566,6 +676,7 @@ class AstraApplication:
                     type="error",
                     success=False,
                     message=agent_task.error or "Agent goal execution failed.",
+                    task=agent_task,
                 )
 
 
@@ -735,15 +846,17 @@ class AstraApplication:
         # 2. FAST PATH: Instant Deterministic Routing (< 3ms)
         # -------------------------------------------------------------
         # Check if the query is a simple prefix or single-word app launch (rejecting compound requests)
-        words = clean.split()
+        from astrarun.nlp.clause_decomposer import strip_politeness
+        action_clean = strip_politeness(clean)
+        words = action_clean.split()
         has_compound = any(c in f" {clean.lower()} " for c in (" and ", " then ", " with ", " & ", ";", ", then ", ", and "))
-        is_simple_verb = not has_compound and words[0].lower() in ("open", "launch", "start", "show", "go", "run") and len(words) <= 3
-        is_single_term = not has_compound and len(words) == 1 and not re.search(r"[:#\d]", clean)
+        is_simple_verb = not has_compound and len(words) > 0 and words[0].lower() in ("open", "launch", "start", "show", "go", "run", "bring", "close", "quit", "terminate", "kill") and len(words) <= 4
+        is_single_term = not has_compound and len(words) == 1 and not re.search(r"[:#\d]", action_clean)
 
         if is_simple_verb or is_single_term:
-            decision = self.deterministic_router.route(clean, self.routing_context)
+            decision = self.deterministic_router.route(action_clean, self.routing_context)
             if decision.is_resolved and decision.tool != "unknown":
-                logger.info("Fast path triggered: '%s' -> %s", clean, decision.tool)
+                logger.info("Fast path triggered: '%s' (orig: '%s') -> %s", action_clean, clean, decision.tool)
                 task = self.task_manager.create_task(request_text=clean, source="user_fast_path")
                 self.task_manager.transition_status(task.id, TaskStatus.RUNNING)
 
@@ -972,10 +1085,21 @@ class AstraApplication:
             # Successfully parsed and compiled -> transition to READY
             self.task_manager.transition_status(task.id, TaskStatus.READY)
 
+            # If no executable steps were produced by compiler
+            if not proposal.steps:
+                unsupported_detail = "; ".join(proposal.unsupported_clauses) if proposal.unsupported_clauses else "No executable actions identified."
+                self._fail_task(task, f"Unsupported command: {unsupported_detail}")
+                return ExecutionResult(
+                    type="unsupported",
+                    success=False,
+                    message=f"I couldn't identify an executable action for '{clean}'.",
+                    task=task,
+                )
+
             # Evaluate Proposal through ActionGate Safety Arbiter
-            first_step = proposal.steps[0] if proposal.steps else None
-            tool_name = first_step.tool if first_step else "unknown"
-            args = first_step.arguments if first_step else {}
+            first_step = proposal.steps[0]
+            tool_name = first_step.tool
+            args = first_step.arguments
             action = ProposedAction(
                 action_type=tool_name,
                 raw_query=clean,
@@ -995,7 +1119,7 @@ class AstraApplication:
                 return ExecutionResult(
                     type="blocked",
                     success=False,
-                    message=f"Blocked: {gate_decision.reason}",
+                    message=gate_decision.reason,
                     task=task,
                 )
 

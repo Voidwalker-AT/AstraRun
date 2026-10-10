@@ -160,6 +160,199 @@ class PlanStatus(str, Enum):
     CANCELLED = "CANCELLED"
 
 
+class InteractionRequirement(str, Enum):
+    """Execution modality requirement enforced by GoalPlanner and StepVerifier."""
+    DIRECT_RESULT_ALLOWED = "DIRECT_RESULT_ALLOWED"
+    APPLICATION_UI_REQUIRED = "APPLICATION_UI_REQUIRED"
+    BROWSER_UI_REQUIRED = "BROWSER_UI_REQUIRED"
+    SPECIFIC_TOOL_REQUIRED = "SPECIFIC_TOOL_REQUIRED"
+    ANY_VALID_METHOD = "ANY_VALID_METHOD"
+
+    # Compatibility aliases
+    DIRECT_RESULT = "DIRECT_RESULT_ALLOWED"
+    APPLICATION_UI = "APPLICATION_UI_REQUIRED"
+    BROWSER_UI = "BROWSER_UI_REQUIRED"
+    EITHER = "ANY_VALID_METHOD"
+
+
+
+class ConstraintStatus(str, Enum):
+    """Lifecycle status of a semantic constraint."""
+    UNSATISFIED = "UNSATISFIED"
+    IN_PROGRESS = "IN_PROGRESS"
+    SATISFIED = "SATISFIED"
+    SUPERSEDED_BY_USER = "SUPERSEDED_BY_USER"
+    IMPOSSIBLE = "IMPOSSIBLE"
+
+
+class ConstraintType(str, Enum):
+    """Semantic classification of a goal constraint."""
+    REQUIRED_CONTENT = "REQUIRED_CONTENT"
+    OUTPUT_LOCATION = "OUTPUT_LOCATION"
+    TARGET_ARTIFACT = "TARGET_ARTIFACT"
+    TARGET_APPLICATION = "TARGET_APPLICATION"
+    SYSTEM_STATE = "SYSTEM_STATE"
+    NETWORK_STATE = "NETWORK_STATE"
+    COMPUTATION_OUTPUT = "COMPUTATION_OUTPUT"
+    CUSTOM = "CUSTOM"
+
+
+@dataclass
+class SemanticConstraint:
+    """Explicit tracked constraint extracted from user intent."""
+    constraint_id: str = field(default_factory=lambda: f"c_{uuid.uuid4().hex[:6]}")
+    constraint_type: ConstraintType = ConstraintType.CUSTOM
+    description: str = ""
+    target_key: str = ""
+    expected_value: Any = None
+    status: ConstraintStatus = ConstraintStatus.UNSATISFIED
+    is_mandatory: bool = True
+    evidence: dict[str, Any] = field(default_factory=dict)
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "constraint_id": self.constraint_id,
+            "constraint_type": self.constraint_type.value,
+            "description": self.description,
+            "target_key": self.target_key,
+            "expected_value": self.expected_value,
+            "status": self.status.value,
+            "is_mandatory": self.is_mandatory,
+            "evidence": self.evidence,
+        }
+
+
+class PredicateType(str, Enum):
+    """Domain-level verifiable state predicate."""
+    FILE_EXISTS = "FILE_EXISTS"
+    FILE_NON_EMPTY = "FILE_NON_EMPTY"
+    FILE_CONTENT_CONTAINS = "FILE_CONTENT_CONTAINS"
+    FILE_CONTENT_EQUALS = "FILE_CONTENT_EQUALS"
+    APPLICATION_RUNNING = "APPLICATION_RUNNING"
+    WINDOW_ACTIVE = "WINDOW_ACTIVE"
+    NETWORK_CONNECTED = "NETWORK_CONNECTED"
+    DATA_COMPUTED = "DATA_COMPUTED"
+    CUSTOM = "CUSTOM"
+
+
+class PredicateStatus(str, Enum):
+    """Evaluation status of an acceptance predicate."""
+    PENDING = "PENDING"
+    SATISFIED = "SATISFIED"
+    VIOLATED = "VIOLATED"
+    UNKNOWN = "UNKNOWN"
+
+
+@dataclass
+class GoalPredicate:
+    """Verifiable condition that must hold for goal completion."""
+    predicate_id: str = field(default_factory=lambda: f"pred_{uuid.uuid4().hex[:6]}")
+    predicate_type: PredicateType = PredicateType.CUSTOM
+    description: str = ""
+    parameters: dict[str, Any] = field(default_factory=dict)
+    is_mandatory: bool = True
+    status: PredicateStatus = PredicateStatus.PENDING
+    evidence: dict[str, Any] = field(default_factory=dict)
+    error_message: Optional[str] = None
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "predicate_id": self.predicate_id,
+            "predicate_type": self.predicate_type.value,
+            "description": self.description,
+            "parameters": self.parameters,
+            "is_mandatory": self.is_mandatory,
+            "status": self.status.value,
+            "evidence": self.evidence,
+            "error_message": self.error_message,
+        }
+
+
+@dataclass
+class GoalContract:
+    """
+    Durable, typed semantic contract representing the user's intent.
+    Preserves all entities, constraints, and acceptance predicates across
+    planning, execution, replanning, and final verification.
+    """
+    contract_id: str = field(default_factory=lambda: f"gc_{uuid.uuid4().hex[:8]}")
+    original_utterance: str = ""
+    objective: str = ""
+    target_application: Optional[str] = None
+    target_artifact: Optional[str] = None
+    target_location: Optional[str] = None
+    entities: dict[str, Any] = field(default_factory=dict)
+    constraints: list[SemanticConstraint] = field(default_factory=list)
+    acceptance_predicates: list[GoalPredicate] = field(default_factory=list)
+    interaction_requirement: InteractionRequirement = InteractionRequirement.DIRECT_RESULT_ALLOWED
+    forbidden_outcomes: list[str] = field(default_factory=list)
+    provenance: dict[str, Any] = field(default_factory=dict)
+    created_at: float = field(default_factory=time.time)
+
+    def get_constraint(self, key: str) -> Optional[SemanticConstraint]:
+        for c in self.constraints:
+            if c.target_key == key:
+                return c
+        return None
+
+    def get_mandatory_predicates(self) -> list[GoalPredicate]:
+        return [p for p in self.acceptance_predicates if p.is_mandatory]
+
+    def has_unsatisfied_mandatory_predicates(self) -> bool:
+        return any(p.is_mandatory and p.status != PredicateStatus.SATISFIED for p in self.acceptance_predicates)
+
+    def detect_information_loss(self, proposed_steps: list[Any]) -> list[str]:
+        """
+        Information-Loss Invariant: Detect if any mandatory constraint
+        is completely missing or dropped in the proposed plan steps.
+        """
+        violations = []
+        req_content = self.get_constraint("content") or self.get_constraint("text") or self.get_constraint("required_content")
+        if req_content and req_content.expected_value:
+            expected_val = str(req_content.expected_value).strip()
+            has_content_in_steps = any(
+                str(getattr(s, "arguments", {}).get("text", "")).strip() == expected_val
+                or str(getattr(s, "arguments", {}).get("content", "")).strip() == expected_val
+                for s in proposed_steps
+            )
+            if not has_content_in_steps:
+                violations.append(
+                    f"Information-loss detected: Required content '{expected_val}' is not addressed in any proposed plan step."
+                )
+
+        req_artifact = self.get_constraint("artifact") or self.get_constraint("filename") or self.get_constraint("target_artifact")
+        if req_artifact and req_artifact.expected_value:
+            expected_art = str(req_artifact.expected_value).strip().lower()
+            has_artifact = any(
+                expected_art in str(getattr(s, "arguments", {}).get("filename", "")).lower()
+                or expected_art in str(getattr(s, "arguments", {}).get("path", "")).lower()
+                for s in proposed_steps
+            )
+            if not has_artifact:
+                violations.append(
+                    f"Information-loss detected: Target artifact '{expected_art}' is not addressed in any proposed plan step."
+                )
+
+        return violations
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "contract_id": self.contract_id,
+            "original_utterance": self.original_utterance,
+            "objective": self.objective,
+            "target_application": self.target_application,
+            "target_artifact": self.target_artifact,
+            "target_location": self.target_location,
+            "entities": self.entities,
+            "constraints": [c.to_dict() for c in self.constraints],
+            "acceptance_predicates": [p.to_dict() for p in self.acceptance_predicates],
+            "interaction_requirement": self.interaction_requirement.value,
+            "forbidden_outcomes": self.forbidden_outcomes,
+            "provenance": self.provenance,
+            "created_at": self.created_at,
+        }
+
+
 @dataclass
 class Goal:
     """High-level user goal model."""
@@ -169,6 +362,8 @@ class Goal:
     target_entities: list[str] = field(default_factory=list)
     parameters: dict[str, Any] = field(default_factory=dict)
     success_criteria: list[str] = field(default_factory=list)
+    interaction_requirement: InteractionRequirement = InteractionRequirement.EITHER
+    contract: Optional[GoalContract] = None
     created_at: float = field(default_factory=time.time)
 
     def to_dict(self) -> dict[str, Any]:
@@ -179,8 +374,12 @@ class Goal:
             "target_entities": self.target_entities,
             "parameters": self.parameters,
             "success_criteria": self.success_criteria,
+            "interaction_requirement": self.interaction_requirement.value,
+            "contract": self.contract.to_dict() if self.contract else None,
             "created_at": self.created_at,
         }
+
+
 
 
 @dataclass
@@ -334,8 +533,12 @@ class PlanStep:
     dependencies: list[StepDependency] = field(default_factory=list)
     condition: Optional[PlanCondition] = None
     interaction_tier: InteractionTier = InteractionTier.TIER_A_NATIVE
+    interaction_requirement: InteractionRequirement = InteractionRequirement.EITHER
     verifier_strategy: VerifierStrategy = VerifierStrategy.RETURN_CODE_ONLY
     verifier_params: dict[str, Any] = field(default_factory=dict)
+    satisfies_predicates: list[str] = field(default_factory=list)
+    requires_predicates: list[str] = field(default_factory=list)
+    declared_effects: list[str] = field(default_factory=list)
     result: Optional[CapabilityResult] = None
     observation: Optional[Observation] = None
     verification: Optional[Verification] = None
@@ -359,8 +562,12 @@ class PlanStep:
             "dependencies": [d.to_dict() for d in self.dependencies],
             "condition": self.condition.to_dict() if self.condition else None,
             "interaction_tier": self.interaction_tier.value,
+            "interaction_requirement": self.interaction_requirement.value,
             "verifier_strategy": self.verifier_strategy.value,
             "verifier_params": self.verifier_params,
+            "satisfies_predicates": self.satisfies_predicates,
+            "requires_predicates": self.requires_predicates,
+            "declared_effects": self.declared_effects,
             "result": self.result.to_dict() if self.result else None,
             "observation": self.observation.to_dict() if self.observation else None,
             "verification": self.verification.to_dict() if self.verification else None,
@@ -488,6 +695,7 @@ class Plan:
     created_at: float = field(default_factory=time.time)
     status: PlanStatus = PlanStatus.DRAFT
     context: dict[str, Any] = field(default_factory=dict)
+    contract: Optional[GoalContract] = None
 
     def get_step(self, step_id: str) -> Optional[PlanStep]:
         for step in self.steps:
@@ -506,6 +714,7 @@ class Plan:
             "created_at": self.created_at,
             "status": self.status.value,
             "context": self.context,
+            "contract": self.contract.to_dict() if self.contract else None,
         }
 
 
@@ -530,8 +739,11 @@ class AgentTask:
     progress_pct: float = 0.0
     estimated_remaining_ms: float = 0.0
     cancellation_requested: bool = False
+    execution_traces: list[dict[str, Any]] = field(default_factory=list)
+    contract: Optional[GoalContract] = None
 
     def to_dict(self) -> dict[str, Any]:
+        contract_data = self.contract.to_dict() if self.contract else (self.goal.contract.to_dict() if self.goal and self.goal.contract else None)
         return {
             "task_id": self.task_id,
             "goal": self.goal.to_dict(),
@@ -546,10 +758,13 @@ class AgentTask:
             "observations": [o.to_dict() for o in self.observations],
             "replans": [r.to_dict() for r in self.replans],
             "revisions": [r.to_dict() for r in self.revisions],
+            "execution_traces": self.execution_traces,
             "goal_verification": self.goal_verification.to_dict() if self.goal_verification else None,
             "progress_mode": self.progress_mode.value,
             "progress_pct": self.progress_pct,
             "estimated_remaining_ms": self.estimated_remaining_ms,
             "cancellation_requested": self.cancellation_requested,
+            "contract": contract_data,
         }
+
 

@@ -290,6 +290,12 @@ class WorkflowCompiler:
             elif clause.action == "close_application":
                 app_ent = next((e for e in clause.entities if e.type == NLPEntityType.APPLICATION), None)
                 app_name = app_ent.normalized if app_ent else None
+                if not app_name:
+                    m = re.search(r'\b(?:close|quit|exit)\s+(?:the\s+|an?\s+)?([a-zA-Z0-9_\-\.]+)', clause.text, re.I)
+                    if m:
+                        cand = m.group(1).lower()
+                        if cand not in ("the", "a", "an", "this", "that", "it", "window", "tab"):
+                            app_name = cand
                 if app_name:
                     steps.append(WorkflowStep(
                         step_id=f"step_{step_counter}",
@@ -300,6 +306,52 @@ class WorkflowCompiler:
                         source_clause_idx=clause.idx,
                     ))
                     preview_lines.append(f"{step_counter}. Close application {app_name}")
+                    step_counter += 1
+                else:
+                    unsupported_clauses.append(clause.text)
+
+            elif clause.action in ("find_application", "is_application_installed"):
+                app_ent = next((e for e in clause.entities if e.type == NLPEntityType.APPLICATION), None)
+                app_name = app_ent.normalized if app_ent else None
+                if not app_name:
+                    m = re.search(r'\b(?:is\s+(?:the\s+|an?\s+)?|check\s+if\s+(?:the\s+|an?\s+)?|do\s+i\s+have\s+)([a-zA-Z0-9_\-\.]+)', clause.text, re.I)
+                    if m:
+                        cand = m.group(1).lower()
+                        if cand not in ("the", "a", "an", "it"):
+                            app_name = cand
+                if app_name:
+                    steps.append(WorkflowStep(
+                        step_id=f"step_{step_counter}",
+                        name=f"Check if {app_name} is installed",
+                        tool="find_application",
+                        arguments={"app": app_name},
+                        critical=True,
+                        source_clause_idx=clause.idx,
+                    ))
+                    preview_lines.append(f"{step_counter}. Check if {app_name} is installed")
+                    step_counter += 1
+                else:
+                    unsupported_clauses.append(clause.text)
+
+            elif clause.action == "is_application_running":
+                app_ent = next((e for e in clause.entities if e.type == NLPEntityType.APPLICATION), None)
+                app_name = app_ent.normalized if app_ent else None
+                if not app_name:
+                    m = re.search(r'\b(?:is\s+(?:the\s+|an?\s+)?|check\s+if\s+(?:the\s+|an?\s+)?)([a-zA-Z0-9_\-\.]+)\s+(?:currently\s+)?running', clause.text, re.I)
+                    if m:
+                        cand = m.group(1).lower()
+                        if cand not in ("the", "a", "an", "it"):
+                            app_name = cand
+                if app_name:
+                    steps.append(WorkflowStep(
+                        step_id=f"step_{step_counter}",
+                        name=f"Check if {app_name} is running",
+                        tool="is_application_running",
+                        arguments={"app": app_name},
+                        critical=True,
+                        source_clause_idx=clause.idx,
+                    ))
+                    preview_lines.append(f"{step_counter}. Check if {app_name} is running")
                     step_counter += 1
                 else:
                     unsupported_clauses.append(clause.text)
@@ -320,9 +372,11 @@ class WorkflowCompiler:
                 app_ent = next((e for e in clause.entities if e.type == NLPEntityType.APPLICATION), None)
                 app_name = app_ent.normalized if app_ent else None
                 if not app_name:
-                    m = re.search(r'\b(?:open|launch|start|run)\s+([a-zA-Z0-9_\-\.]+)', clause.text, re.I)
+                    m = re.search(r'\b(?:open|launch|start|run|bring\s+up)\s+(?:the\s+|an?\s+)?([a-zA-Z0-9_\-\.]+)', clause.text, re.I)
                     if m:
-                        app_name = m.group(1).lower()
+                        candidate_app = m.group(1).lower()
+                        if candidate_app not in ("the", "a", "an", "this", "that", "it", "project", "repo", "folder", "window", "url", "file"):
+                            app_name = candidate_app
                 if app_name:
                     steps.append(WorkflowStep(
                         step_id=f"step_{step_counter}",

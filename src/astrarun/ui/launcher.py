@@ -619,16 +619,20 @@ class LauncherWindow(QDialog):
         from astrarun.routing.input_router import classify_launcher_input, InputIntent
         intent = classify_launcher_input(clean)
 
-        # Natural language, Questions, and Goals must NEVER show application search suggestions
-        if intent in (InputIntent.NATURAL_LANGUAGE, InputIntent.QUESTION, InputIntent.GOAL):
+        # Action commands, Natural language, Questions, and Goals must NEVER show auto-complete dropdown
+        action_prefixes = ("open ", "launch ", "start ", "run ", "close ", "type ", "press ", "click ", "can u ", "can you ")
+        if intent in (InputIntent.NATURAL_LANGUAGE, InputIntent.QUESTION, InputIntent.GOAL, InputIntent.DIRECT_APP_INTENT) or \
+           clean.lower().startswith(action_prefixes):
             self.suggestions_list.hide()
             self._adjust_height(expanded=False)
             return
 
-        # Strip action verb prefix for search
-        from astrarun.routing.deterministic import normalize_request
-        _, target = normalize_request(clean)
-        search_query = target if target else clean
+        # Explicit search prefixes: only show search dropdown if explicitly searching or raw keyword
+        is_explicit_search = clean.lower().startswith(("search ", "find ", "? "))
+        if is_explicit_search:
+            search_query = clean.split(maxsplit=1)[1] if len(clean.split()) > 1 else ""
+        else:
+            search_query = clean
 
         if len(search_query) < 2 or not self.context or not self.context.search_index:
             self.suggestions_list.hide()
@@ -636,8 +640,8 @@ class LauncherWindow(QDialog):
             return
 
         raw_results = self.context.search_index.search(search_query, limit=self.max_suggestions)
-        # Strict confidence filter: only show candidates with score >= 0.60
-        results = [r for r in raw_results if r.score >= 0.60]
+        # Strict confidence filter: only show candidates with score >= 0.75
+        results = [r for r in raw_results if r.score >= 0.75]
 
         if results:
             self.suggestions_list.clear()
@@ -879,7 +883,8 @@ class LauncherWindow(QDialog):
             self.mount_card(card, target_height=180)
 
         elif res.type == "blocked":
-            self.show_feedback(f"Blocked: {res.message}", is_error=True)
+            blocked_msg = res.message if res.message.startswith("Blocked:") else f"Blocked: {res.message}"
+            self.show_feedback(blocked_msg, is_error=True)
 
         elif res.type == "reasoning_required":
             self.show_feedback("Complex diagnostic reasoning required (AI Bridge unconfigured).", is_error=True)

@@ -132,6 +132,7 @@ class AgentExecutionEngine:
             goal=goal,
             plan=plan,
             status=AgentTaskStatus.PENDING,
+            contract=goal.contract,
         )
 
         return self.run_task(task)
@@ -140,10 +141,21 @@ class AgentExecutionEngine:
         """Run execution graph until all steps complete, fail, or task is cancelled."""
         task.status = AgentTaskStatus.RUNNING
         task.started_at = time.time()
+        if not task.contract and getattr(task.goal, "contract", None):
+            task.contract = task.goal.contract
         self.listener.on_task_started(task)
 
-        # 1. Validate Plan Quality (Quality Gate)
-        val_result = self.validator.validate_plan(task.plan)
+        # 0. Pre-Task Ambient Observation Snapshot (Hierarchical Perception)
+        try:
+            from astrarun.computer_use.observation import DesktopObserver
+            initial_state = DesktopObserver.get_instance().observe(task_id=task.task_id)
+            task.context["initial_world_state_hash"] = initial_state.compute_state_hash()
+            task.context["initial_world_state"] = initial_state.to_dict()
+        except Exception as ex:
+            logger.debug("Initial world state capture omitted: %s", ex)
+
+        # 1. Validate Plan Quality (Quality Gate & Information Loss Check)
+        val_result = self.validator.validate_plan(task.plan, goal_contract=task.contract)
         if not val_result.is_valid:
             logger.error("Plan validation failed for task %s: %s", task.task_id, val_result.issues)
             task.status = AgentTaskStatus.FAILED
@@ -208,6 +220,24 @@ class AgentExecutionEngine:
                     task.goal_verification = goal_ver
 
                     if goal_ver.completed:
+                        # 3. Post-Task Resource & Dialog Cleanliness Check (Requirement 6, 7, 8)
+                        try:
+                            from astrarun.computer_use.observation import DesktopObserver
+                            final_state = DesktopObserver.get_instance().observe(task_id=task.task_id)
+                            if final_state.has_astra_debris():
+                                logger.info("Task %s completed with residual Astra-owned resources; initiating cleanup...", task.task_id)
+                                from astrarun.tasks.resource_ledger import AstraResourceLedger
+                                AstraResourceLedger.get_instance().cleanup_task_resources(task.task_id)
+                                time.sleep(0.3)
+                                post_clean = DesktopObserver.get_instance().observe(task_id=task.task_id)
+                                if post_clean.has_astra_debris():
+                                    task.status = AgentTaskStatus.FAILED
+                                    task.error = f"RESIDUAL_LEAK: Astra-owned windows/dialogs remained open after task {task.task_id}."
+                                    self.listener.on_task_failed(task, task.error)
+                                    return task
+                        except Exception as ex:
+                            logger.debug("Post-task cleanup verification omitted: %s", ex)
+
                         task.status = AgentTaskStatus.COMPLETED
                         task.progress_pct = 100.0
                         task.completed_at = time.time()
@@ -222,18 +252,33 @@ class AgentExecutionEngine:
                     self.listener.on_task_failed(task, task.error or "Execution graph encountered errors")
 
         finally:
+            if task.goal_verification is None:
+                last_step = task.plan.steps[-1] if task.plan.steps else None
+                last_data = last_step.result.data if (last_step and last_step.result) else {}
+                task.goal_verification = self.goal_verifier.verify_goal(task.goal, task.plan, last_data)
+
+            # Guaranteed cleanup of transient test/task resources on failure or cancellation (Req 8)
+            if task.status in (AgentTaskStatus.FAILED, AgentTaskStatus.CANCELLED):
+                try:
+                    from astrarun.tasks.resource_ledger import AstraResourceLedger
+                    AstraResourceLedger.get_instance().cleanup_task_resources(task.task_id)
+                except Exception:
+                    pass
             # Always ensure all resource locks are cleanly released
             self.lock_manager.release_all_for_task(task.task_id)
 
         return task
 
+
     def _execute_step_with_closed_loop(
         self,
         task: AgentTask,
         step: PlanStep,
-        graph: ExecutionGraph,
+        graph: Optional[ExecutionGraph] = None,
     ) -> bool:
         """Execute single step through: ACT -> OBSERVE -> VERIFY (with retries)."""
+        if graph is None:
+            graph = ExecutionGraph(task.plan)
         task.current_step_id = step.step_id
         step.state = StepState.RUNNING
         step.started_at = time.time()
@@ -250,8 +295,65 @@ class AgentExecutionEngine:
 
         try:
             while step.retry_count <= step.max_retries:
-                # 1. ACT (mandatorily governed via ExecutionBroker)
+                # 1. PRE-OBSERVATION & ADAPTIVE DIVERGENCE CHECK (Req 4, 12)
                 t_act_start = time.perf_counter()
+                pre_world_state = None
+                try:
+                    from astrarun.computer_use.observation import DesktopObserver
+                    pre_world_state = DesktopObserver.get_instance().observe(task_id=task.task_id)
+                except Exception as ex:
+                    logger.debug("Pre-observation skipped: %s", ex)
+
+                # Adaptive Check 1: User physical takeover
+                if pre_world_state and pre_world_state.user_takeover_active:
+                    logger.warning("Physical takeover active; pausing step %s.", step.step_id)
+                    step.state = StepState.BLOCKED
+                    step.error = "Physical user input detected. Step paused."
+                    return False
+
+                # Adaptive Check 2: Target window minimized or lost focus for UI interaction
+                target_query = step.arguments.get("app_name") or step.arguments.get("window") or step.arguments.get("app")
+                if pre_world_state:
+                    w_obs = None
+                    # Priority 1: Check task's actively owned resource window from ledger
+                    if task and task.task_id:
+                        try:
+                            from astrarun.tasks.resource_ledger import AstraResourceLedger
+                            task_res = AstraResourceLedger.get_instance().list_resources_for_task(task.task_id)
+                            for r in reversed(task_res):
+                                if r.hwnd:
+                                    for w in pre_world_state.visible_windows:
+                                        if w.hwnd == r.hwnd:
+                                            w_obs = w
+                                            break
+                                    if w_obs:
+                                        break
+                        except Exception:
+                            pass
+
+                    # Priority 2: Match by target query
+                    if not w_obs and target_query:
+                        w_obs = pre_world_state.find_window_by_app(target_query)
+                        if not w_obs:
+                            for w in pre_world_state.visible_windows:
+                                title_match = bool(w.title and target_query.lower() in w.title.lower())
+                                app_match = bool(getattr(w, "app_name", None) and target_query.lower() in w.app_name.lower())
+                                if title_match or app_match:
+                                    w_obs = w
+                                    break
+
+                    if w_obs and w_obs.is_minimized:
+                        logger.info("Target window (HWND %d) is minimized; restoring to foreground...", w_obs.hwnd)
+                        try:
+                            from astrarun.ui.presentation import force_foreground_activation
+                            import ctypes
+                            ctypes.windll.user32.ShowWindow(w_obs.hwnd, 9)  # SW_RESTORE
+                            force_foreground_activation(w_obs.hwnd)
+                            time.sleep(0.3)
+                        except Exception as ex:
+                            logger.debug("Adaptive window restore error: %s", ex)
+
+                # 2. ACT (mandatorily governed via ExecutionBroker)
                 if not self.execution_broker:
                     raise RuntimeError("SECURITY_VIOLATION: ExecutionBroker is absent; execution prohibited.")
 
@@ -283,8 +385,15 @@ class AgentExecutionEngine:
                     )
                 step.result = result
 
-                # 2. OBSERVE
+                # 3. POST-OBSERVATION
                 step.state = StepState.VERIFYING
+                post_world_state = None
+                try:
+                    from astrarun.computer_use.observation import DesktopObserver
+                    post_world_state = DesktopObserver.get_instance().observe(task_id=task.task_id)
+                except Exception as ex:
+                    logger.debug("Post-observation skipped: %s", ex)
+
                 observation = self.observer.capture_observation(
                     step_id=step.step_id,
                     raw_output=result.data,
@@ -293,14 +402,58 @@ class AgentExecutionEngine:
                 step.observation = observation
                 task.observations.append(observation)
 
-                # 3. VERIFY
+                # 4. VERIFY & RECORD FULL TRACE (Req 4)
                 verification = self.verifier.verify(step, result, context=task.context)
                 step.verification = verification
+
+                # Record execution trace entry with before/after state
+                trace_entry = {
+                    "step_id": step.step_id,
+                    "capability_id": step.capability_id,
+                    "arguments": step.arguments,
+                    "observation_before": {
+                        "state_hash": pre_world_state.compute_state_hash() if pre_world_state else None,
+                        "fg_window": pre_world_state.foreground_window.title if (pre_world_state and pre_world_state.foreground_window) else None,
+                        "visible_windows": len(pre_world_state.visible_windows) if pre_world_state else 0,
+                        "dialogs": [d.title for d in pre_world_state.dialogs] if pre_world_state else [],
+                    },
+                    "expected_transition": step.description,
+                    "selected_action": step.capability_id,
+                    "broker_verdict": "BLOCK" if broker_res.blocked else "ALLOW",
+                    "execution_result": {
+                        "success": result.success,
+                        "message": result.message,
+                        "data": result.data,
+                    },
+                    "observation_after": {
+                        "state_hash": post_world_state.compute_state_hash() if post_world_state else None,
+                        "fg_window": post_world_state.foreground_window.title if (post_world_state and post_world_state.foreground_window) else None,
+                        "visible_windows": len(post_world_state.visible_windows) if post_world_state else 0,
+                        "dialogs": [d.title for d in post_world_state.dialogs] if post_world_state else [],
+                    },
+                    "transition_verified": verification.verified,
+                }
+                task.execution_traces.append(trace_entry)
 
                 if verification.verified:
                     step.state = StepState.COMPLETED
                     step.completed_at = time.time()
                     step.duration_ms = (time.perf_counter() - t_act_start) * 1000.0
+
+                    # Update contract constraints & predicates
+                    if getattr(task, "contract", None):
+                        from astrarun.agent.models import ConstraintStatus, PredicateStatus
+                        for pred in task.contract.acceptance_predicates:
+                            if pred.predicate_type.value in step.satisfies_predicates:
+                                pred.status = PredicateStatus.SATISFIED
+                        if any(e in ("CREATES_FILE", "WRITES_CONTENT") for e in step.declared_effects):
+                            for c in task.contract.constraints:
+                                if c.target_key in ("artifact", "location", "content", "text"):
+                                    c.status = ConstraintStatus.SATISFIED
+                        if "SPAWNS_PROCESS" in step.declared_effects:
+                            for c in task.contract.constraints:
+                                if c.target_key == "app":
+                                    c.status = ConstraintStatus.SATISFIED
 
                     # Update context with any updates emitted by capability
                     for upd in result.context_updates:
@@ -308,6 +461,7 @@ class AgentExecutionEngine:
 
                     self.listener.on_step_completed(task, step, verification)
                     return True
+
 
                 # Step not verified; check for retry
                 step.retry_count += 1
@@ -333,6 +487,9 @@ class AgentExecutionEngine:
     def _attempt_replan(self, task: AgentTask, failed_step: PlanStep, graph: ExecutionGraph) -> bool:
         """Attempt dynamic replanning or graceful degradation for a failed step."""
         logger.info("Evaluating dynamic replan options for failed step: %s", failed_step.step_id)
+        if len(task.replans) >= 3:
+            logger.warning("Maximum dynamic replan attempts (3) exceeded for task %s; aborting replan.", task.task_id)
+            return False
 
         # 1. Fallback tier degradation (e.g. UIA typing -> SendInput typing)
         if failed_step.capability_id == "type_into_window" and failed_step.interaction_tier == InteractionTier.TIER_C_UI_AUTOMATION:

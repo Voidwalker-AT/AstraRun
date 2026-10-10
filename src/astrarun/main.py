@@ -62,6 +62,12 @@ def parse_args() -> argparse.Namespace:
         action="store_true",
         help="Launch the first-run configuration wizard",
     )
+    parser.add_argument(
+        "--result-file",
+        type=str,
+        default=None,
+        help="Path to write structured JSON task result for verification",
+    )
     parsed, _ = parser.parse_known_args()
     if isinstance(parsed.run_command, list):
         parsed.run_command = " ".join(parsed.run_command) if parsed.run_command else None
@@ -194,6 +200,33 @@ def main() -> int:
         res = astra_app.handle_request(args.run_command)
         status_tag = "SUCCESS" if res.success else "FAILURE"
         logger.info("Result: %s -> %s", status_tag, res.message)
+
+        task_obj = getattr(res, "task", None)
+        task_id = getattr(task_obj, "task_id", getattr(task_obj, "id", "no_task_id")) if task_obj else "no_task_id"
+        print(f"[ASTRARUN_RESULT] status={status_tag} task_id={task_id} message={res.message}")
+
+        if getattr(args, "result_file", None):
+            try:
+                res_path = Path(args.result_file)
+                res_path.parent.mkdir(parents=True, exist_ok=True)
+                payload: dict[str, Any] = {
+                    "success": res.success,
+                    "status": status_tag,
+                    "message": res.message,
+                    "type": res.type,
+                    "task_id": task_id,
+                }
+                if task_obj and hasattr(task_obj, "to_dict"):
+                    payload["task"] = task_obj.to_dict()
+                elif task_obj and hasattr(task_obj, "plan"):
+                    payload["plan"] = task_obj.plan.to_dict() if hasattr(task_obj.plan, "to_dict") else {}
+                    payload["contract"] = task_obj.contract.to_dict() if hasattr(task_obj, "contract") and task_obj.contract else {}
+                    payload["goal_verification"] = task_obj.goal_verification.to_dict() if getattr(task_obj, "goal_verification", None) else {}
+                with open(res_path, "w", encoding="utf-8") as rf:
+                    json.dump(payload, rf, indent=2, default=str)
+            except Exception as jerr:
+                logger.warning("Could not write result file: %s", jerr)
+
         astra_app.shutdown()
         from astrarun.core.crash import record_clean_shutdown
         record_clean_shutdown(reason="headless_command_success" if res.success else "headless_command_failure")

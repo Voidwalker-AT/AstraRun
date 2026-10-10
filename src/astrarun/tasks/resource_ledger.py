@@ -12,6 +12,7 @@ Enforces the core invariant:
 from __future__ import annotations
 
 import ctypes
+from ctypes import wintypes
 import json
 import logging
 import os
@@ -59,7 +60,38 @@ def _ensure_desktop_attached() -> None:
         pass
 
 
+def clean_notepad_tabstate_for_path(document_path: str) -> None:
+    """Clean Windows 11 Notepad TabState session file for a temporary or test document path."""
+    if not document_path:
+        return
+    try:
+        import glob
+        localappdata = os.environ.get("LOCALAPPDATA", "")
+        tabstate_dir = os.path.join(localappdata, "Packages", "Microsoft.WindowsNotepad_8wekyb3d8bbwe", "LocalState", "TabState")
+        if not os.path.exists(tabstate_dir):
+            return
+        target_stem = os.path.basename(document_path).lower()
+        target_path_lower = os.path.abspath(document_path).lower()
+        for f in glob.glob(os.path.join(tabstate_dir, "*.bin")):
+            try:
+                with open(f, "rb") as fp:
+                    raw = fp.read()
+                raw_u16 = raw.decode("utf-16le", errors="ignore").lower()
+                if target_stem in raw_u16 or target_path_lower in raw_u16:
+                    base = os.path.basename(f).split(".")[0]
+                    for sibling in glob.glob(os.path.join(tabstate_dir, f"{base}*")):
+                        try:
+                            os.remove(sibling)
+                        except Exception:
+                            pass
+            except Exception:
+                pass
+    except Exception:
+        pass
+
+
 class ResourceType(str, Enum):
+
     APPLICATION = "APPLICATION"
     WINDOW = "WINDOW"
     BROWSER_INSTANCE = "BROWSER_INSTANCE"
@@ -305,14 +337,20 @@ class AstraResourceLedger:
         proc_create_time: Optional[float] = None
         pid_found_at: Optional[float] = None
         user32 = ctypes.windll.user32 if sys.platform == "win32" else None
-        from ctypes import wintypes
 
         target_name_lower = (expected_name_or_class or "").lower().replace(".exe", "")
         aliases = [target_name_lower] if target_name_lower else []
-        if target_name_lower in ("calc", "calculator"):
-            aliases.extend(["calc", "calculator", "calculatorapp"])
-        elif target_name_lower == "notepad":
-            aliases.extend(["notepad", "text editor"])
+        try:
+            from pathlib import Path
+            from astrarun.discovery.entity_resolver import SemanticEntityResolver
+            resolver = SemanticEntityResolver()
+            res_ent = resolver.resolve_application(target_name_lower)
+            if res_ent:
+                stem = Path(res_ent.target_path).stem.lower()
+                aliases.extend([stem, res_ent.name.lower()])
+        except Exception:
+            pass
+        aliases = list(set([a for a in aliases if a]))
 
         while time.time() < deadline:
             time.sleep(0.15)
@@ -378,16 +416,45 @@ class AstraResourceLedger:
             if new_pid and new_hwnd:
                 break
 
-            # If PID found but no window appeared after 2.0s, terminate polling
-            if new_pid and pid_found_at and (time.time() - pid_found_at >= 2.0):
+            # If PID found but no window appeared after 4.0s, terminate polling
+            if new_pid and pid_found_at and (time.time() - pid_found_at >= 4.0):
                 break
 
             # If HWND found without PID, terminate polling
             if new_hwnd and not new_pid:
                 break
 
-        # If a new process was identified, create registered OwnedResource
+        # Fallback check for new window if PID was found but HWND was still None
+        if not new_hwnd and sys.platform == "win32":
+            for h, (w_pid, w_title, w_cls) in current_hwnds.items():
+                if h not in pre_snapshot.hwnds:
+                    t_low = w_title.lower()
+                    if aliases and any(a in t_low for a in aliases):
+                        new_hwnd = h
+                        if not new_pid:
+                            new_pid = w_pid
+                        break
+
+        # If window HWND was found on Windows, ensure new_pid is the actual window process PID
+        if new_hwnd and sys.platform == "win32":
+            try:
+                pbuf = wintypes.DWORD()
+                ctypes.windll.user32.GetWindowThreadProcessId(new_hwnd, ctypes.byref(pbuf))
+                window_pid = pbuf.value
+                if window_pid and psutil.pid_exists(window_pid):
+                    new_pid = window_pid
+                    try:
+                        proc_create_time = psutil.Process(new_pid).create_time()
+                    except Exception:
+                        pass
+            except Exception:
+                pass
+
+        # If a new process or window was identified, create registered OwnedResource
         astra_created = bool(new_pid or new_hwnd)
+        meta = dict(metadata or {})
+        if expected_name_or_class and "app" not in meta:
+            meta["app"] = expected_name_or_class
         resource = OwnedResource(
             task_id=task_id,
             resource_type=resource_type,
@@ -401,7 +468,7 @@ class AstraResourceLedger:
             cleanup_policy=cleanup_policy,
             content_classification=content_classification,
             lifecycle_state=ResourceLifecycleState.ACTIVE if astra_created else ResourceLifecycleState.DISCOVERED,
-            metadata=metadata or {},
+            metadata=meta,
         )
         self.register_resource(resource)
         logger.info(
@@ -471,6 +538,25 @@ class AstraResourceLedger:
                 ORDER BY created_at ASC;
             """)
             return [self._row_to_resource(r) for r in cursor.fetchall()]
+
+    def get_resource_for_hwnd(self, hwnd: int) -> Optional[OwnedResource]:
+        with self._lock:
+            conn = self._get_connection()
+            cursor = conn.execute("SELECT * FROM owned_resources WHERE hwnd = ? AND lifecycle_state IN ('ACTIVE', 'LAUNCHED', 'SAVING', 'SAVED');", (hwnd,))
+            row = cursor.fetchone()
+            if row:
+                return self._row_to_resource(row)
+            return None
+
+    def get_resource_for_pid(self, pid: int) -> Optional[OwnedResource]:
+        with self._lock:
+            conn = self._get_connection()
+            cursor = conn.execute("SELECT * FROM owned_resources WHERE pid = ? AND lifecycle_state IN ('ACTIVE', 'LAUNCHED', 'SAVING', 'SAVED');", (pid,))
+            row = cursor.fetchone()
+            if row:
+                return self._row_to_resource(row)
+            return None
+
 
     def update_lifecycle_state(
         self,
@@ -711,9 +797,14 @@ class AstraResourceLedger:
             except (psutil.NoSuchProcess, psutil.AccessDenied):
                 pass
 
+        # Clean Notepad TabState files if temporary test document to prevent modal orphans
+        if resource.document_path and resource.content_classification == ContentClassification.TEMPORARY_TEST_CONTENT:
+            clean_notepad_tabstate_for_path(resource.document_path)
+
         self.update_lifecycle_state(resource.resource_id, ResourceLifecycleState.CLOSED)
         logger.info("[RESOURCE_CLEANED] Successfully cleaned up resource %s", resource.resource_id)
         return True
+
 
     def _handle_unexpected_save_dialog(self, resource: OwnedResource) -> None:
         """Inspect and handle any Save/Don't Save dialog presented upon WM_CLOSE."""
@@ -827,8 +918,26 @@ class AstraResourceLedger:
         logger.info("[ORPHAN_RECOVERY_STARTED] Found %d active Astra resources.", len(active_resources))
 
         for res in active_resources:
-            # If PID is recorded, check its liveness and creation time
-            if not res.pid or not psutil.pid_exists(res.pid):
+            # If HWND is recorded on Windows, verify whether the window is still open
+            window_alive = False
+            user32 = ctypes.windll.user32 if sys.platform == "win32" else None
+            if user32 and res.hwnd:
+                try:
+                    if user32.IsWindow(res.hwnd):
+                        window_alive = True
+                        pbuf = wintypes.DWORD()
+                        user32.GetWindowThreadProcessId(res.hwnd, ctypes.byref(pbuf))
+                        if pbuf.value and psutil.pid_exists(pbuf.value):
+                            res.pid = pbuf.value
+                            try:
+                                res.process_creation_time = psutil.Process(res.pid).create_time()
+                            except Exception:
+                                pass
+                except Exception:
+                    pass
+
+            # If neither window nor PID is alive, mark CLOSED
+            if not window_alive and (not res.pid or not psutil.pid_exists(res.pid)):
                 self.update_lifecycle_state(res.resource_id, ResourceLifecycleState.CLOSED)
                 recovery_results.append({"resource_id": res.resource_id, "action": "CLOSED_NOT_FOUND"})
                 continue

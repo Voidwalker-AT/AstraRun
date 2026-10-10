@@ -52,6 +52,7 @@ class SearchIndex:
             alias_map.setdefault(target_key.lower(), []).append(alias.lower())
 
         # 1. Index Applications with strict identity deduplication
+        from astrarun.discovery.entity_resolver import resolve_lnk_target
         seen_targets: dict[str, str] = {}
         seen_names: dict[str, str] = {}
 
@@ -62,8 +63,9 @@ class SearchIndex:
                 cand_aliases.append(stem)
 
             try:
+                real_target = resolve_lnk_target(app.path) or app.path
                 from pathlib import Path
-                canonical_target = Path(app.path).resolve().as_posix().lower()
+                canonical_target = Path(real_target).resolve().as_posix().lower()
             except Exception:
                 canonical_target = app.path.strip().lower()
             import re
@@ -75,18 +77,28 @@ class SearchIndex:
                 for alias in cand_aliases:
                     if alias not in existing_cand.aliases:
                         existing_cand.aliases.append(alias)
+                # Prefer more descriptive display name if available
+                if len(app.name) > len(existing_cand.name):
+                    old_name = existing_cand.name
+                    existing_cand.name = app.name
+                    if old_name not in existing_cand.aliases:
+                        existing_cand.aliases.append(old_name)
+                # Prefer direct .exe path over .lnk
+                if app.path.lower().endswith(".exe") and existing_cand.target.lower().endswith(".lnk"):
+                    existing_cand.target = app.path
                 existing_cand._precompute_terms()
                 continue
 
             cand_id = f"app:{app_key}"
+            target_to_use = resolve_lnk_target(app.path) or app.path
             new_cand = SearchCandidate(
                 id=cand_id,
                 name=app.name,
                 category=CandidateCategory.APP,
-                target=app.path,
+                target=target_to_use,
                 aliases=cand_aliases,
                 description=app.description or "Application",
-                metadata={"key": app_key, "path": app.path},
+                metadata={"key": app_key, "path": target_to_use, "original_path": app.path},
             )
             self.add(new_cand)
             seen_targets[canonical_target] = cand_id

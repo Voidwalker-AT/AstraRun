@@ -14,6 +14,11 @@ src_dir = repo_root / "src"
 added_files = [
     (str(repo_root / "resources" / "icons" / "AstraRun.ico"), "resources/icons"),
     (str(repo_root / "resources" / "icons" / "AstraRun.png"), "resources/icons"),
+    (str(repo_root / "config" / "nlp_lexicon.json"), "config"),
+    (str(repo_root / "config" / "aliases.json"), "config"),
+    (str(repo_root / "config" / "apps.json"), "config"),
+    (str(repo_root / "config" / "settings.json"), "config"),
+    (str(repo_root / "config" / "urls.json"), "config"),
 ]
 
 hidden_imports = [
@@ -109,14 +114,13 @@ hidden_imports = [
     "astrarun.routing.laya_worker",
     "astrarun.hotkeys",
     "astrarun.hotkeys.manager",
-    "astrarun.ui.hotkey_conflict",
-] + collect_submodules("astrarun")
+] + collect_submodules("astrarun") + collect_submodules("laya") + collect_submodules("spacy") + collect_submodules("en_core_web_sm")
 
 a = Analysis(
     [str(src_dir / "astrarun" / "entrypoint.py")],
     pathex=[str(src_dir)],
     binaries=[],
-    datas=added_files,
+    datas=added_files + collect_data_files("spacy") + collect_data_files("en_core_web_sm"),
     hiddenimports=hidden_imports,
     hookspath=[],
     hooksconfig={},

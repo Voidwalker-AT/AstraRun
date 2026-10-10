@@ -69,15 +69,29 @@ _ACTION_PATTERNS: list[tuple[re.Pattern, str, str]] = [
     (re.compile(r'\b(?:type\s+|enter\s+text\s+)\b', re.I), "type_text", "interaction_action"),
     (re.compile(r'\b(?:press\s+|shortcut\s+)\b', re.I), "press_keyboard_shortcut", "interaction_action"),
     (re.compile(r'\b(?:click\s+)\b', re.I), "click_ui_element", "interaction_action"),
+    (re.compile(r'\b(?:is\s+(?:the\s+)?([a-zA-Z0-9_\-\.]+)\s+installed|check\s+if\s+(?:the\s+)?([a-zA-Z0-9_\-\.]+)\s+is\s+installed|do\s+i\s+have\s+([a-zA-Z0-9_\-\.]+)(?:\s+installed)?)\b', re.I), "find_application", "observation_action"),
+    (re.compile(r'\b(?:is\s+(?:the\s+)?([a-zA-Z0-9_\-\.]+)\s+(?:currently\s+)?running|check\s+if\s+(?:the\s+)?([a-zA-Z0-9_\-\.]+)\s+is\s+(?:currently\s+)?running)\b', re.I), "is_application_running", "observation_action"),
+    (re.compile(r'\b(?:count\s+to\s+\d+|what\s+is\s+\d+\s*[\+\-\*\/]\s*\d+|calculate\s+|compute\s+)\b', re.I), "computational_task", "computational_action"),
+    (re.compile(r'\b(?:close|quit|exit)\s+(?:the\s+)?([a-zA-Z0-9_\-\.]+)\b', re.I), "close_application", "application_action"),
     (re.compile(r'\b(?:open\s+(?:project|repo|my\s+project)|bring\s+up\s+project|switch\s+to\s+project|load\s+project)\b', re.I), "open_project", "project_action"),
-    (re.compile(r'\b(?:open|launch|start|run|bring\s+up)\b', re.I), "open_project", "launcher_action"),
+    (re.compile(r'\b(?:open|launch|start|run|bring\s+up)\b', re.I), "open_app", "launcher_action"),
 ]
 
 
 def strip_politeness(text: str) -> str:
     """Strip polite framing words while preserving core content."""
     lexicon = get_lexicon()
-    prefixes = lexicon.get("politeness_prefixes", [])
+    prefixes = list(lexicon.get("politeness_prefixes", []))
+    built_in_prefixes = [
+        "can you please", "could you please", "would you please",
+        "can u please", "could u please", "would u please",
+        "would you mind", "can you", "could you", "would you",
+        "will you", "can u", "could u", "would u", "will u",
+        "please", "plz", "pls", "kindly", "hey astra", "astra",
+    ]
+    for p in built_in_prefixes:
+        if p not in prefixes:
+            prefixes.append(p)
     result = text.strip()
     
     # Check leading prefixes
@@ -89,8 +103,8 @@ def strip_politeness(text: str) -> str:
             break
 
     # Strip trailing please / thank you
-    result = re.sub(r'(?i),\s*please\s*$', '', result)
-    result = re.sub(r'(?i)\s+please\s*$', '', result)
+    result = re.sub(r'(?i),\s*(?:please|plz|pls|thank you|thanks)\s*$', '', result)
+    result = re.sub(r'(?i)\s+(?:please|plz|pls|thank you|thanks)\s*$', '', result)
     return result
 
 
@@ -100,6 +114,7 @@ def infer_action_and_intent(
 ) -> tuple[str, str, float]:
     """Determine the canonical action, intent category, and confidence for a clause."""
     text_clean = clause_text.strip()
+    core_text = strip_politeness(text_clean)
     
     # 1. Check for AI query semantics (questions like "why is port 3000 busy")
     if re.search(r'\b(?:why\s+is|explain|diagnose|analyze|how\s+do\s+i|write\s+code|why\s+did\s+my\s+server|figure\s+out|fix\s+my|decide\s+which)\b', text_clean, re.I):
@@ -117,6 +132,21 @@ def infer_action_and_intent(
 
     if re.search(r'\b(?:show\s+running\s+applications|show\s+running\s+apps|list\s+running\s+applications|list\s+running\s+apps|running\s+applications|running\s+apps)\b', text_clean, re.I):
         return ("list_running_applications", "application_action", 0.98)
+
+    # Observation queries (installed / running)
+    if re.search(r'\b(?:is\s+(?:the\s+)?([a-zA-Z0-9_\-\.]+)\s+installed|check\s+if\s+(?:the\s+)?([a-zA-Z0-9_\-\.]+)\s+is\s+installed|do\s+i\s+have\s+([a-zA-Z0-9_\-\.]+)(?:\s+installed)?)\b', text_clean, re.I):
+        return ("find_application", "observation_action", 0.98)
+
+    if re.search(r'\b(?:is\s+(?:the\s+)?([a-zA-Z0-9_\-\.]+)\s+(?:currently\s+)?running|check\s+if\s+(?:the\s+)?([a-zA-Z0-9_\-\.]+)\s+is\s+(?:currently\s+)?running)\b', text_clean, re.I):
+        return ("is_application_running", "observation_action", 0.98)
+
+    # Computational / counting
+    if re.search(r'\b(?:count\s+to\s+\d+|what\s+is\s+\d+\s*[\+\-\*\/]\s*\d+|calculate\s+|compute\s+)\b', text_clean, re.I):
+        return ("computational_task", "computational_action", 0.98)
+
+    # Close application (generic, not requiring prior has_app entity)
+    if re.search(r'\b(?:close|quit|exit)\s+(?:the\s+)?([a-zA-Z0-9_\-\.]+)\b', text_clean, re.I) and not re.search(r'\b(?:window|this|that|tab)\b', text_clean, re.I):
+        return ("close_application", "application_action", 0.95)
 
     if has_app and re.search(r'\b(?:focus|switch\s+to)\b', text_clean, re.I):
         return ("focus_application", "application_action", 0.95)
@@ -273,11 +303,11 @@ def infer_action_and_intent(
 
     # Check pattern matches
     for pat, act, intent in _ACTION_PATTERNS:
-        if pat.search(text_clean):
+        if pat.search(core_text) or pat.search(text_clean):
             return (act, intent, 0.85)
 
     # Default fallback
-    return ("open_project" if "project" in text_clean.lower() else "unsupported", "unknown", 0.5)
+    return ("open_project" if "project" in text_clean.lower() or "project" in core_text.lower() else "unsupported", "unknown", 0.5)
 
 
 def decompose_clauses(

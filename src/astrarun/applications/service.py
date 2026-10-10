@@ -219,15 +219,20 @@ def find_application(name: str) -> CapabilityResult:
 
 
 def open_application(
-    app: str,
+    app: str = "",
     path: Optional[str] = None,
     target: Optional[str] = None,
     task_id: Optional[str] = None,
     cleanup_policy: Optional[CleanupPolicy | str] = None,
     content_classification: Optional[ContentClassification | str] = None,
+    app_name: Optional[str] = None,
+    application: Optional[str] = None,
 ) -> CapabilityResult:
     """Launch a verified local application with task-scoped resource ownership."""
     t0 = time.perf_counter()
+    app = app or app_name or application or ""
+    if not app and target:
+        app = target
     resolved_path = path
     resolved_target = target
 
@@ -272,14 +277,22 @@ def open_application(
             resource_type=ResourceType.APPLICATION,
         )
 
-        # Tabbed application fallback (Windows 11 Notepad / Terminal):
+        # Declarative Tabbed application adapter (Windows 11 Notepad, Windows Terminal, etc.):
         # If pre-existing instances absorbed the launch into a tab, spawn a distinct window for task isolation
-        if not owned_res.hwnd and app.lower().replace(".exe", "") == "notepad":
+        TABBED_APPLICATION_ADAPTERS = {
+            "notepad": {"hotkey": "ctrl+shift+n", "title_token": "notepad"},
+            "windowsterminal": {"hotkey": "ctrl+shift+n", "title_token": "terminal"},
+            "terminal": {"hotkey": "ctrl+shift+n", "title_token": "terminal"},
+            "wt": {"hotkey": "ctrl+shift+n", "title_token": "terminal"},
+        }
+        app_clean = app.lower().replace(".exe", "").replace(" ", "")
+        if not owned_res.hwnd and app_clean in TABBED_APPLICATION_ADAPTERS:
+            adapter = TABBED_APPLICATION_ADAPTERS[app_clean]
             for h, (w_pid, w_title, _) in pre_snap.hwnds.items():
-                if "notepad" in w_title.lower():
-                    logger.info("[TABBED_APP_SEPARATION] Pre-existing Notepad detected; spawning isolated task window via Ctrl+Shift+N.")
+                if adapter["title_token"] in w_title.lower():
+                    logger.info("[TABBED_APP_SEPARATION] Pre-existing tabbed app %s detected; spawning isolated task window via %s.", app, adapter["hotkey"])
                     from astrarun.interaction.keyboard import dispatch_shortcut, parse_shortcut
-                    sc = parse_shortcut("ctrl+shift+n")
+                    sc = parse_shortcut(adapter["hotkey"])
                     dispatch_shortcut(sc, target_hwnd=h)
                     time.sleep(0.8)
                     owned_res = ledger.identify_and_register_launched_resource(
@@ -293,6 +306,25 @@ def open_application(
                         resource_type=ResourceType.APPLICATION,
                     )
                     break
+
+        # Document session cleanliness invariant:
+        # If a document application is launched fresh without an explicit file path target,
+        # ensure the initial active document is clean and unpolluted by OS session restore.
+        if owned_res.hwnd and sys.platform == "win32" and not resolved_target and not resolved_path:
+            app_clean = app.lower().replace(".exe", "").replace(" ", "")
+            if app_clean in ("notepad", "texteditor"):
+                try:
+                    import ctypes
+                    user32 = ctypes.windll.user32
+                    buf = ctypes.create_unicode_buffer(512)
+                    user32.GetWindowTextW(owned_res.hwnd, buf, 512)
+                    if buf.value.startswith("*"):
+                        logger.info("[SESSION_RESTORE_ISOLATION] Restored dirty buffer detected in %s; dispatching Ctrl+N for clean document.", app)
+                        from astrarun.interaction.keyboard import dispatch_shortcut, parse_shortcut
+                        dispatch_shortcut(parse_shortcut("Ctrl+N"), target_hwnd=owned_res.hwnd)
+                        time.sleep(0.3)
+                except Exception as ex:
+                    logger.debug("Session restore isolation check error: %s", ex)
 
         res_data = {
             "app": app,
@@ -375,15 +407,18 @@ def focus_application(app: str) -> CapabilityResult:
 
 
 def close_application(
-    app: str,
+    app: str = "",
     task_id: Optional[str] = None,
     resource_id: Optional[str] = None,
+    app_name: Optional[str] = None,
+    application: Optional[str] = None,
 ) -> CapabilityResult:
     """
     Gracefully close ONLY Astra-owned application windows and processes.
     Strict Invariant: NEVER terminates pre-existing user windows.
     """
     t0 = time.perf_counter()
+    app = app or app_name or application or ""
     if sys.platform != "win32":
         return CapabilityResult.fail(
             capability="close_application",
@@ -394,6 +429,39 @@ def close_application(
     clean_app = app.strip().lower().replace(".exe", "")
     ledger = AstraResourceLedger.get_instance()
 
+    from astrarun.discovery.entity_resolver import SemanticEntityResolver
+    resolver = SemanticEntityResolver.get_instance()
+    resolved = resolver.resolve_application(app)
+    target_names = {clean_app, app.strip().lower()}
+    if resolved:
+        target_names.add(resolved.name.lower())
+        target_names.add(Path(resolved.target_path).stem.lower())
+        target_names.add(Path(resolved.target_path).name.lower())
+
+    def _matches_resource(res: Any) -> bool:
+        meta_str = str(res.metadata).lower()
+        cap_str = (res.launching_capability or "").lower()
+        doc_str = (res.document_path or "").lower()
+        if any(name in cap_str or name in doc_str or name in meta_str for name in target_names):
+            return True
+        if res.pid:
+            try:
+                pname = psutil.Process(res.pid).name().lower()
+                pstem = pname.replace(".exe", "")
+                if any(name == pstem or name == pname or name in pname or pname in name for name in target_names):
+                    return True
+            except Exception:
+                pass
+        if res.hwnd and sys.platform == "win32":
+            try:
+                import win32gui
+                title = win32gui.GetWindowText(res.hwnd).lower()
+                if any(name in title for name in target_names):
+                    return True
+            except Exception:
+                pass
+        return False
+
     target_resources = []
     if resource_id:
         res = ledger.get_resource(resource_id)
@@ -401,27 +469,13 @@ def close_application(
             target_resources.append(res)
     elif task_id:
         for res in ledger.list_resources_for_task(task_id):
-            if clean_app in res.launching_capability.lower() or (res.document_path and clean_app in res.document_path.lower()) or clean_app in str(res.metadata).lower():
+            if _matches_resource(res):
                 target_resources.append(res)
-            elif res.pid:
-                try:
-                    pname = psutil.Process(res.pid).name().lower()
-                    if clean_app in pname:
-                        target_resources.append(res)
-                except Exception:
-                    pass
-    else:
-        # Match active Astra-owned resources
+
+    # If no resources found for specific task_id, check across all active Astra-owned resources
+    if not target_resources:
         for res in ledger.list_active_astra_resources():
-            if res.pid:
-                try:
-                    pname = psutil.Process(res.pid).name().lower()
-                    if clean_app in pname:
-                        target_resources.append(res)
-                        continue
-                except Exception:
-                    pass
-            if res.document_path and clean_app in res.document_path.lower():
+            if _matches_resource(res):
                 target_resources.append(res)
 
     latency = (time.perf_counter() - t0) * 1000

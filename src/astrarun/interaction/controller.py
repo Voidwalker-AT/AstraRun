@@ -152,6 +152,21 @@ def invoke_element(element: UIElementRef, force: bool = False) -> Tuple[bool, st
         BM_CLICK = 0x00F5
         user32 = ctypes.windll.user32
         res = user32.SendMessageW(element.hwnd, BM_CLICK, 0, 0)
+        if res == 0 and element.bounds and len(element.bounds) == 4:
+            bx, by, bw, bh = element.bounds
+            if bw > 0 and bh > 0:
+                cx = bx + (bw // 2)
+                cy = by + (bh // 2)
+                try:
+                    from astrarun.perception.input import PhysicalInputController
+                    pic = PhysicalInputController.get_instance()
+                    ok, _ = pic.click_at(cx, cy, button="left")
+                    if ok:
+                        logger.info("Clicked element '%s' at center coordinates (%d, %d)", element.name, cx, cy)
+                        return True, f"Successfully clicked '{element.name or element.automation_id}' at ({cx}, {cy}).", None
+                except Exception as ex:
+                    logger.debug("Coordinate click failed on '%s': %s", element.name, ex)
+
         logger.info("Dispatched BM_CLICK to HWND %d (result: %s)", element.hwnd, res)
         return True, f"Successfully clicked '{element.name}' via Win32 message.", None
 

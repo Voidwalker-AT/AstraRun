@@ -955,13 +955,9 @@ class TaskRuntime:
             reopened = False
             try:
                 from astrarun.applications.service import open_application
-                if invariant.target.lower() in ("notepad", "notepad.exe"):
-                    res = open_application("notepad")
-                    reopened = res.success
-                elif invariant.target.lower() in ("calc", "calculator", "calc.exe"):
-                    res = open_application("calc")
-                    reopened = res.success
-                elif self.app and hasattr(self.app, "execution_broker") and self.app.execution_broker:
+                clean_target = invariant.target.lower().replace(".exe", "")
+                res = open_application(clean_target)
+                if not reopened and self.app and hasattr(self.app, "execution_broker") and self.app.execution_broker:
                     from astrarun.security.execution_broker import ActionProposal
                     prop = ActionProposal(
                         capability_id="open_application",
@@ -971,8 +967,6 @@ class TaskRuntime:
                     )
                     broker_res = self.app.execution_broker.execute(prop)
                     reopened = broker_res.success
-                else:
-                    reopened = False
             except Exception as e:
                 logger.error("Error reopening %s: %s", invariant.target, e)
                 reopened = False

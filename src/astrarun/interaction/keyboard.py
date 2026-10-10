@@ -165,19 +165,26 @@ def parse_shortcut(shortcut_str: str) -> Optional[KeyboardShortcut]:
 
 def dispatch_shortcut(shortcut: KeyboardShortcut, target_hwnd: Optional[int] = None) -> Tuple[bool, str, Optional[CapabilityErrorCode]]:
     """
-    Dispatch a validated keyboard shortcut via Win32 SendInput.
+    Dispatch a validated keyboard shortcut via Win32 SendInput with keybd_event fallback.
     Optionally activates the target window before dispatching.
     """
     if sys.platform != "win32" or is_simulated_interaction_validation():
         logger.info("Simulated dispatch of shortcut '%s' to HWND %s", shortcut.canonical_string, target_hwnd)
         return True, f"Pressed '{shortcut.canonical_string}' (simulated).", None
 
+    try:
+        from astrarun.computer_use.hooks.desktop_attach import ensure_desktop_attached
+        ensure_desktop_attached()
+    except Exception:
+        pass
+
     user32 = ctypes.windll.user32
 
     if target_hwnd:
         try:
-            user32.SetForegroundWindow(target_hwnd)
-            time.sleep(0.05)
+            from astrarun.ui.presentation import force_foreground_activation
+            force_foreground_activation(target_hwnd)
+            time.sleep(0.1)
         except Exception as e:
             logger.debug("Failed setting foreground before shortcut dispatch: %s", e)
 
@@ -225,12 +232,29 @@ def dispatch_shortcut(shortcut: KeyboardShortcut, target_hwnd: Optional[int] = N
     if count == len(inputs):
         return True, f"Pressed '{shortcut.canonical_string}'.", None
 
+    # Fallback to keybd_event if SendInput was blocked
+    try:
+        for mod in shortcut.modifiers:
+            vk = MODIFIER_VK.get(mod)
+            if vk:
+                user32.keybd_event(vk, 0, 0, 0)
+        user32.keybd_event(primary_vk, 0, 0, 0)
+        time.sleep(0.02)
+        user32.keybd_event(primary_vk, 0, KEYEVENTF_KEYUP, 0)
+        for mod in reversed(shortcut.modifiers):
+            vk = MODIFIER_VK.get(mod)
+            if vk:
+                user32.keybd_event(vk, 0, KEYEVENTF_KEYUP, 0)
+        return True, f"Pressed '{shortcut.canonical_string}' via keybd_event fallback.", None
+    except Exception as ex:
+        logger.error("keybd_event fallback failed for shortcut '%s': %s", shortcut.canonical_string, ex)
+
     return False, f"SendInput failed: sent {count}/{len(inputs)} events.", CapabilityErrorCode.OS_ERROR
 
 
 def type_text_into_active(text: str) -> Tuple[bool, str, Optional[CapabilityErrorCode]]:
     """
-    Type literal text into the active/focused control using Unicode SendInput events.
+    Type literal text into the active/focused control using Unicode SendInput events with keybd_event fallback.
     Does NOT evaluate text as a command or shell script.
     """
     if not text:
@@ -238,6 +262,12 @@ def type_text_into_active(text: str) -> Tuple[bool, str, Optional[CapabilityErro
 
     if sys.platform != "win32" or is_simulated_interaction_validation():
         return True, f"Typed {len(text)} characters (simulated).", None
+
+    try:
+        from astrarun.computer_use.hooks.desktop_attach import ensure_desktop_attached
+        ensure_desktop_attached()
+    except Exception:
+        pass
 
     user32 = ctypes.windll.user32
     inputs: list[INPUT] = []
@@ -257,5 +287,16 @@ def type_text_into_active(text: str) -> Tuple[bool, str, Optional[CapabilityErro
     count = user32.SendInput(len(inputs), c_inputs, ctypes.sizeof(INPUT))
     if count == len(inputs):
         return True, f"Typed {len(text)} characters.", None
+
+    # Fallback to character-by-character keybd_event Unicode
+    try:
+        for char in text:
+            code = ord(char)
+            user32.keybd_event(0, code, KEYEVENTF_UNICODE, 0)
+            time.sleep(0.001)
+            user32.keybd_event(0, code, KEYEVENTF_UNICODE | KEYEVENTF_KEYUP, 0)
+        return True, f"Typed {len(text)} characters via keybd_event fallback.", None
+    except Exception as ex:
+        logger.error("keybd_event typing fallback failed: %s", ex)
 
     return False, f"SendInput unicode typing failed: {count}/{len(inputs)} events sent.", CapabilityErrorCode.OS_ERROR

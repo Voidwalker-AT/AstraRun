@@ -12,14 +12,22 @@ from astrarun.agent.indexer import CapabilitySemanticIndex
 from astrarun.agent.models import (
     ArgumentBinding,
     ArgumentSourceType,
+    ConstraintStatus,
+    ConstraintType,
     Goal,
+    GoalContract,
+    GoalPredicate,
+    InteractionRequirement,
     OutputReference,
     Plan,
     PlanningLevel,
     PlanRevision,
     PlanStatus,
     PlanStep,
+    PredicateStatus,
+    PredicateType,
     ProgressMode,
+    SemanticConstraint,
     StepDependency,
     StepState,
 )
@@ -119,6 +127,215 @@ class GoalPlanner:
             "working_memory": working_mem,
         }
 
+    def extract_goal_contract(self, raw_prompt: str) -> GoalContract:
+        """
+        Synthesize a durable, typed GoalContract representing all user entities,
+        constraints, and acceptance predicates from the natural language prompt.
+        """
+        clean = raw_prompt.strip()
+        entities: dict[str, Any] = {}
+        constraints: list[SemanticConstraint] = []
+        acceptance_predicates: list[GoalPredicate] = []
+        forbidden_outcomes: list[str] = []
+        objective = "GENERAL_TASK"
+
+        # 1. Target artifact & location extraction
+        fmatch = re.search(r'\b([a-zA-Z0-9_\-]+\.(?:txt|html|json|csv|md|py|xml|log|pdf|png|sha|toml|docx))\b', clean, re.I)
+        target_artifact = fmatch.group(1) if fmatch else None
+
+        locmatch = re.search(r'\b(?:on|in|to)\s+(?:the\s+|my\s+)?(Desktop|Downloads|Documents|Temp)\b', clean, re.I)
+        target_location = locmatch.group(1).capitalize() if locmatch else None
+
+        full_path = None
+        if target_artifact:
+            if ":" in target_artifact:
+                full_path = target_artifact
+            elif target_location == "Desktop":
+                full_path = str(Path.home() / "Desktop" / target_artifact)
+            elif target_location == "Downloads":
+                full_path = str(Path.home() / "Downloads" / target_artifact)
+            elif target_location == "Documents":
+                full_path = str(Path.home() / "Documents" / target_artifact)
+            elif target_location == "Temp":
+                from astrarun.core.paths import AstraPaths
+                full_path = str(AstraPaths.temp_dir() / target_artifact)
+            else:
+                full_path = str(Path.home() / "Desktop" / target_artifact) if "desktop" in clean.lower() else target_artifact
+
+        # 2. Content / payload extraction
+        qmatch = re.search(r'["\']([^"\']+)["\']', clean)
+        required_content = None
+        if qmatch:
+            required_content = qmatch.group(1)
+        else:
+            cmatch = re.search(r'\b(?:containing|contains|content(?:s)?\s+(?:should\s+be|is|are)?|with\s+(?:the\s+)?content(?:s)?|with\s+text)\s+([^,\r\n;]+?)(?=\s+(?:and|save|on|in|to|named|called|with\s+name|\.|$)|$)', clean, re.I)
+            if cmatch:
+                required_content = cmatch.group(1).strip()
+            else:
+                wmatch = re.search(r'\b(?:type|write)\s+([^;\r\n]+?)(?=\s*,\s*(?:then|and|save)|\s+(?:and|save|then|to|in|into|on|as|\.|$)|,|;|$)', clean, re.I)
+                if wmatch:
+                    required_content = wmatch.group(1).strip()
+                else:
+                    pmatch = re.search(r'\bput\s+([^,\r\n;]+?)\s+(?:in|into)\b', clean, re.I)
+                    if pmatch:
+                        required_content = pmatch.group(1).strip()
+                    else:
+                        rmatch = re.search(r'\b(?:reverse\s+(?:text\s+)?|hash\s+of\s+|hash\s+for\s+)(.+?)$', clean, re.I)
+                        if rmatch:
+                            required_content = rmatch.group(1).strip()
+
+        # 3. Application extraction
+        appmatch = re.search(r'\b(?:open|launch|start|run|close|use|execute)\s+(?:a\s+suitable\s+)?(?:text\s+)?([a-zA-Z0-9_\-\s]+?)(?=\s+(?:and|then|with|to|type|write|save|as|on|in|into|for|,|;|\.|$)|,|;|\.|$)', clean, re.I)
+        target_application = None
+        if appmatch:
+            candidate_app = appmatch.group(1).strip()
+            candidate_app = re.sub(r'^(?:the\s+|an?\s+|up\s+)', '', candidate_app, flags=re.I).strip()
+            candidate_app = re.sub(r'\s+(?:application|app|tool|window|console|utility|editor)$', '', candidate_app, flags=re.I).strip()
+            if candidate_app and candidate_app.lower() not in ('a', 'the', 'an', 'file', 'document', 'url', 'wifi', 'it', 'battery report', 'battery'):
+                target_application = candidate_app
+
+        # 4. Wi-Fi extraction
+        wifimatch = re.search(r'\b(?:connect\s+(?:to\s+)?(?:wifi\s+)?|wifi\s+connect\s+|connect\s+wifi\s+|switch\s+wifi\s+to\s+|join\s+(?:wifi\s+|network\s+)?)([a-zA-Z0-9_\-\*]+)\b', clean, re.I)
+        ssid = None
+        if wifimatch and wifimatch.group(1).lower() not in ('to', 'a', 'the', 'wifi', 'network'):
+            ssid = wifimatch.group(1)
+
+        # 5. Objective classification & predicate construction
+        clean_lower = clean.lower()
+        has_doc_intent = target_artifact or bool(re.search(r'\b(?:save|document|write|create\s+file|save\s+file|put)\b', clean_lower))
+        if has_doc_intent:
+            objective = "PRODUCE_DOCUMENT"
+            if target_artifact:
+                entities["artifact"] = target_artifact
+                constraints.append(SemanticConstraint(
+                    constraint_type=ConstraintType.TARGET_ARTIFACT,
+                    description=f"Artifact named {target_artifact}",
+                    target_key="artifact",
+                    expected_value=target_artifact,
+                    is_mandatory=True,
+                ))
+            if target_location:
+                entities["location"] = target_location
+                constraints.append(SemanticConstraint(
+                    constraint_type=ConstraintType.OUTPUT_LOCATION,
+                    description=f"Output location {target_location}",
+                    target_key="location",
+                    expected_value=target_location,
+                    is_mandatory=True,
+                ))
+            if required_content:
+                entities["content"] = required_content
+                constraints.append(SemanticConstraint(
+                    constraint_type=ConstraintType.REQUIRED_CONTENT,
+                    description=f"Required content '{required_content}'",
+                    target_key="content",
+                    expected_value=required_content,
+                    is_mandatory=True,
+                ))
+            if target_application:
+                entities["application"] = target_application
+                constraints.append(SemanticConstraint(
+                    constraint_type=ConstraintType.TARGET_APPLICATION,
+                    description=f"Target application {target_application}",
+                    target_key="app",
+                    expected_value=target_application,
+                    is_mandatory=False,
+                ))
+
+            if full_path:
+                acceptance_predicates.append(GoalPredicate(
+                    predicate_type=PredicateType.FILE_EXISTS,
+                    description=f"File exists at {full_path}",
+                    parameters={"path": full_path},
+                    is_mandatory=True,
+                ))
+                acceptance_predicates.append(GoalPredicate(
+                    predicate_type=PredicateType.FILE_NON_EMPTY,
+                    description=f"File is non-empty at {full_path}",
+                    parameters={"path": full_path},
+                    is_mandatory=True,
+                ))
+                if required_content:
+                    acceptance_predicates.append(GoalPredicate(
+                        predicate_type=PredicateType.FILE_CONTENT_CONTAINS,
+                        description=f"File contains '{required_content}'",
+                        parameters={"path": full_path, "contains": required_content},
+                        is_mandatory=True,
+                    ))
+
+        elif ssid or "wifi" in clean_lower:
+            objective = "NETWORK_MANAGEMENT"
+            if ssid:
+                entities["ssid"] = ssid
+                constraints.append(SemanticConstraint(
+                    constraint_type=ConstraintType.NETWORK_STATE,
+                    description=f"Connected to Wi-Fi SSID '{ssid}'",
+                    target_key="ssid",
+                    expected_value=ssid,
+                    is_mandatory=True,
+                ))
+                acceptance_predicates.append(GoalPredicate(
+                    predicate_type=PredicateType.NETWORK_CONNECTED,
+                    description=f"Connected to Wi-Fi SSID '{ssid}'",
+                    parameters={"ssid": ssid},
+                    is_mandatory=True,
+                ))
+
+        elif target_application:
+            objective = "APPLICATION_CONTROL"
+            entities["application"] = target_application
+            constraints.append(SemanticConstraint(
+                constraint_type=ConstraintType.TARGET_APPLICATION,
+                description=f"Application {target_application} running",
+                target_key="app",
+                expected_value=target_application,
+                is_mandatory=True,
+            ))
+            acceptance_predicates.append(GoalPredicate(
+                predicate_type=PredicateType.APPLICATION_RUNNING,
+                description=f"Application {target_application} is running",
+                parameters={"app": target_application},
+                is_mandatory=True,
+            ))
+
+        elif required_content and any(w in clean_lower for w in ("reverse", "hash", "count words", "format")):
+            objective = "DYNAMIC_COMPUTATION"
+            entities["payload"] = required_content
+            constraints.append(SemanticConstraint(
+                constraint_type=ConstraintType.REQUIRED_CONTENT,
+                description="Input payload provided",
+                target_key="payload",
+                expected_value=required_content,
+                is_mandatory=True,
+            ))
+            acceptance_predicates.append(GoalPredicate(
+                predicate_type=PredicateType.DATA_COMPUTED,
+                description="Result computation completed",
+                parameters={"payload": required_content},
+                is_mandatory=True,
+            ))
+
+        # Determine interaction modality requirement
+        interaction_requirement = InteractionRequirement.DIRECT_RESULT_ALLOWED
+        if target_application or bool(re.search(r'\b(?:open|launch|start|run|in|using|with)\s+(?:notepad|editor|wordpad|calc|calculator|paint|word|excel|chrome|edge|firefox|browser|terminal|powershell|cmd)\b', clean_lower)) or bool(re.search(r'\btype\s+(?:into|in)\b', clean_lower)):
+            interaction_requirement = InteractionRequirement.APPLICATION_UI_REQUIRED
+        elif bool(re.search(r'\b(?:browser|url|website|web\s+page|browse|navigate\s+to|search\s+for)\b', clean_lower)):
+            interaction_requirement = InteractionRequirement.BROWSER_UI_REQUIRED
+
+        return GoalContract(
+            original_utterance=clean,
+            objective=objective,
+            target_application=target_application,
+            target_artifact=target_artifact,
+            target_location=target_location,
+            entities=entities,
+            constraints=constraints,
+            acceptance_predicates=acceptance_predicates,
+            interaction_requirement=interaction_requirement,
+            forbidden_outcomes=forbidden_outcomes,
+            provenance={"parser": "GoalPlanner.extract_goal_contract"},
+        )
+
     def parse_goal(self, raw_prompt: str) -> Goal:
         """Parse raw user utterance into a normalized Goal representation using semantic retrieval."""
         clean = raw_prompt.strip()
@@ -126,6 +343,25 @@ class GoalPlanner:
             goal_id=f"goal_{uuid.uuid4().hex[:8]}",
             raw_prompt=clean,
         )
+        goal.contract = self.extract_goal_contract(clean)
+
+        # Sync parameters and criteria from GoalContract
+        if goal.contract.target_artifact:
+            goal.parameters["filename"] = goal.contract.target_artifact
+            if goal.contract.target_location:
+                goal.parameters["folder"] = goal.contract.target_location
+            for p in goal.contract.acceptance_predicates:
+                if p.predicate_type == PredicateType.FILE_EXISTS:
+                    cpath = p.parameters.get("path")
+                    if cpath:
+                        goal.parameters["path"] = cpath
+                        goal.parameters["output_path"] = cpath
+                    break
+
+        req_cont = goal.contract.get_constraint("content") or goal.contract.get_constraint("payload")
+        if req_cont and req_cont.expected_value:
+            goal.parameters["text"] = str(req_cont.expected_value)
+            goal.parameters["content"] = str(req_cont.expected_value)
 
         # 1. Detect Negation Guards ("... but don't open it", "do not kill ...")
         negated_clauses = []
@@ -158,11 +394,21 @@ class GoalPlanner:
 
             if candidates:
                 best = candidates[0]
-                for cand in candidates[1:3]:
-                    if cand.score >= best.score - 0.05 and any(len(tok) > 3 and tok in cand.capability_id.lower() for tok in clause_clean.lower().split()):
-                        best = cand
-                        break
-                extracted_args = self._extract_arguments_for_capability(clause_clean, best.capability_id)
+                best_args = self._extract_arguments_for_capability(clause_clean, best.capability_id)
+                for cand in candidates[1:5]:
+                    if cand.score >= best.score - 0.05:
+                        cand_args = self._extract_arguments_for_capability(clause_clean, cand.capability_id)
+                        if not best_args and cand_args:
+                            best = cand
+                            best_args = cand_args
+                            break
+                        best_matches = any(len(tok) > 3 and tok in best.capability_id.lower() for tok in clause_clean.lower().split())
+                        cand_matches = any(len(tok) > 3 and tok in cand.capability_id.lower() for tok in clause_clean.lower().split())
+                        if not best_matches and cand_matches:
+                            best = cand
+                            best_args = cand_args
+                            break
+                extracted_args = best_args
                 sub_goals.append({
                     "clause": clause_clean,
                     "capability_id": best.capability_id,
@@ -177,6 +423,85 @@ class GoalPlanner:
                     "score": 0.0,
                     "arguments": {},
                 })
+
+        # Enforce InteractionRequirement modality invariant
+        valid_cands = [sg for sg in sub_goals if sg.get("capability_id")]
+        unresolved_cands = [sg for sg in sub_goals if not sg.get("capability_id")]
+        if goal.contract.objective == "PRODUCE_DOCUMENT":
+            is_app_ui = goal.contract.interaction_requirement in (
+                InteractionRequirement.APPLICATION_UI_REQUIRED,
+                InteractionRequirement.APPLICATION_UI,
+            )
+            if is_app_ui:
+                app_target = goal.contract.target_application or "notepad"
+                synth_sub_goals: list[dict[str, Any]] = [
+                    {
+                        "clause": f"open {app_target}",
+                        "capability_id": "open_application",
+                        "score": 1.0,
+                        "arguments": {"app": app_target},
+                    }
+                ]
+                if req_cont and req_cont.expected_value:
+                    synth_sub_goals.append({
+                        "clause": f"type {req_cont.expected_value}",
+                        "capability_id": "type_into_window",
+                        "score": 1.0,
+                        "arguments": {"text": str(req_cont.expected_value), "app_name": app_target},
+                    })
+                save_args: dict[str, Any] = {
+                    "app_name": app_target,
+                    "filename": goal.contract.target_artifact or "untitled.txt",
+                }
+                if goal.parameters.get("path"):
+                    save_args["path"] = goal.parameters["path"]
+                if goal.contract.target_location:
+                    save_args["folder"] = goal.contract.target_location
+                synth_sub_goals.append({
+                    "clause": f"save {goal.contract.target_artifact or 'document'} via application UI",
+                    "capability_id": "save_document_via_ui",
+                    "score": 1.0,
+                    "arguments": save_args,
+                })
+                sub_goals = synth_sub_goals
+            elif not valid_cands or unresolved_cands:
+                has_compute = any(re.search(r'\b(?:calculate|work\s+out|solve|roots|compute|math|equation|formula)\b', sg.get("clause", ""), re.I) for sg in sub_goals)
+                if has_compute:
+                    resolved_chain: list[dict[str, Any]] = []
+                    for sg in sub_goals:
+                        if re.search(r'\b(?:calculate|work\s+out|solve|roots|compute|math|equation|formula)\b', sg.get("clause", ""), re.I):
+                            resolved_chain.append({
+                                "clause": sg.get("clause", ""),
+                                "capability_id": "execute_dynamic_tool",
+                                "score": 0.90,
+                                "arguments": {"code": sg.get("clause", "")},
+                            })
+                        elif sg.get("capability_id"):
+                            resolved_chain.append(sg)
+                        elif "save" in sg.get("clause", "").lower():
+                            resolved_chain.append({
+                                "clause": sg.get("clause", ""),
+                                "capability_id": "save_text_file",
+                                "score": 1.0,
+                                "arguments": {"path": goal.parameters.get("path") or "output.txt"},
+                            })
+                    if resolved_chain:
+                        sub_goals = resolved_chain
+                else:
+                    save_args: dict[str, Any] = {}
+                    if goal.parameters.get("path"):
+                        save_args["path"] = goal.parameters["path"]
+                    if goal.contract.target_artifact:
+                        save_args["filename"] = goal.contract.target_artifact
+                    if req_cont and req_cont.expected_value:
+                        save_args["text"] = str(req_cont.expected_value)
+                        save_args["content"] = str(req_cont.expected_value)
+                    sub_goals = [{
+                        "clause": f"save {goal.contract.target_artifact or 'file'}",
+                        "capability_id": "save_text_file",
+                        "score": 1.0,
+                        "arguments": save_args,
+                    }]
 
         goal.parameters["sub_goals"] = sub_goals
 
@@ -232,7 +557,7 @@ class GoalPlanner:
             elif "mock" in clean_lower:
                 goal.parameters["provider_name"] = "mock"
             goal.parameters["require_approval"] = any(w in clean_lower for w in ("approve", "approval", "review"))
-            goal.parameters["reveal_result"] = any(w in clean_lower for w in ("show", "reveal", "open", "display"))
+            goal.parameters["reveal_result"] = any(w in clean_lower for w in ("reveal the file", "show in explorer", "reveal in explorer", "show file", "open folder", "open in explorer"))
             goal.parameters["reveal_type"] = "reveal_file" if any(w in clean_lower for w in ("reveal", "explorer", "folder")) else "open_file"
             self._infer_success_criteria(goal)
             return goal
@@ -245,7 +570,7 @@ class GoalPlanner:
             "script", "python", "code", "csv", "json", "plot", "graph",
             "histogram", "calculate", "simulation", "monte carlo", "visualiz",
             "table", "dataset", "organize", "turn this", "convert this", "chart",
-            "bar", "parse", "log", "heatmap"
+            "bar", "parse", "log", "heatmap", "equation", "roots", "work out", "solve"
         )
         is_explicit_code = any(w in clean_lower for w in explicit_code_words)
 
@@ -268,6 +593,30 @@ class GoalPlanner:
 
         # Composite multi-step workflow via existing discrete capabilities
         if not is_inquiry and not is_explicit_code and len(valid_sub_goals) > 1 and not unresolved_sub_goals:
+            # If the primary action produces the target report file directly (e.g. generate_battery_report),
+            # prefer the dedicated capability only when battery is explicitly requested
+            if any(sg.get("capability_id") == "generate_battery_report" for sg in valid_sub_goals) and "battery" in clean_lower:
+                bat_sg = next(sg for sg in valid_sub_goals if sg.get("capability_id") == "generate_battery_report")
+                goal.intent = "generate_battery_report"
+                goal.parameters.update(bat_sg["arguments"])
+                for sg in valid_sub_goals:
+                    for k in ("path", "output_path", "filename", "folder"):
+                        if k in sg.get("arguments", {}) and k not in goal.parameters:
+                            goal.parameters[k] = sg["arguments"][k]
+                self._infer_success_criteria(goal)
+                return goal
+
+            # If all sub-goals resolve to the exact same capability, consolidate to that single capability
+            unique_caps = {sg.get("capability_id") for sg in valid_sub_goals}
+            if len(unique_caps) == 1:
+                single_cap = next(iter(unique_caps))
+                goal.intent = single_cap
+                goal.parameters.update(valid_sub_goals[0].get("arguments", {}))
+                goal.parameters["routing_tier"] = "SEMANTIC_RETRIEVAL"
+                goal.parameters["routing_source"] = "SEMANTIC"
+                self._infer_success_criteria(goal)
+                return goal
+
             goal.intent = "composite_dag_workflow"
             goal.parameters["routing_tier"] = "SEMANTIC_RETRIEVAL"
             goal.parameters["routing_source"] = "SEMANTIC"
@@ -320,7 +669,7 @@ class GoalPlanner:
             elif "mock" in clean_lower:
                 goal.parameters["provider_name"] = "mock"
             goal.parameters["require_approval"] = any(w in clean_lower for w in ("approve", "approval", "review"))
-            goal.parameters["reveal_result"] = any(w in clean_lower for w in ("show", "reveal", "open", "display"))
+            goal.parameters["reveal_result"] = any(w in clean_lower for w in ("reveal the file", "show in explorer", "reveal in explorer", "show file", "open folder", "open in explorer"))
             goal.parameters["reveal_type"] = "reveal_file" if any(w in clean_lower for w in ("reveal", "explorer", "folder")) else "open_file"
             self._infer_success_criteria(goal)
             return goal
@@ -367,7 +716,7 @@ class GoalPlanner:
             goal.intent = "execute_dynamic_tool"
             goal.parameters["goal"] = clean
             goal.parameters["routing_tier"] = "LOCAL_MODEL"
-            goal.parameters["reveal_result"] = any(w in clean_lower for w in ("show", "reveal", "open", "display"))
+            goal.parameters["reveal_result"] = any(w in clean_lower for w in ("reveal the file", "show in explorer", "reveal in explorer", "show file", "open folder", "open in explorer"))
             goal.parameters["reveal_type"] = "reveal_file" if any(w in clean_lower for w in ("reveal", "explorer", "folder")) else "open_file"
             self._infer_success_criteria(goal)
             return goal
@@ -490,6 +839,24 @@ class GoalPlanner:
             plan.planning_level = PlanningLevel.LEVEL_3_DYNAMIC_DAG if len(plan.steps) > 1 else PlanningLevel.LEVEL_1_SINGLE_ACTION
             return plan
 
+        if goal.intent == "generate_battery_report":
+            step = PlanStep(
+                step_id="step_1",
+                capability_id="generate_battery_report",
+                arguments={
+                    k: v for k, v in goal.parameters.items()
+                    if k in ("folder", "filename", "output_path")
+                },
+                description="Generate comprehensive Windows battery health report via powercfg.exe",
+                human_label="Generate battery report into Downloads",
+                interaction_tier=InteractionTier.TIER_B_STRUCTURED_CLI,
+                verifier_strategy=VerifierStrategy.FILE_NON_EMPTY,
+            )
+            plan.steps.append(step)
+            plan.status = PlanStatus.ACTIVE
+            plan.planning_level = PlanningLevel.LEVEL_1_SINGLE_ACTION
+            return plan
+
         sub_goals = goal.parameters.get("sub_goals", [])
         negated = goal.parameters.get("negated_actions", [])
 
@@ -536,8 +903,9 @@ class GoalPlanner:
             built_steps.append(step)
 
         # Wire OutputReference and dependencies between steps
-        self._wire_dataflow_dependencies(built_steps)
+        self._wire_dataflow_dependencies(built_steps, contract=goal.contract)
         plan.steps = built_steps
+        plan.contract = goal.contract
         plan.status = PlanStatus.ACTIVE
         if len(plan.steps) == 1:
             plan.planning_level = PlanningLevel.LEVEL_1_SINGLE_ACTION
@@ -556,35 +924,100 @@ class GoalPlanner:
         alternative_capability_id: Optional[str] = None,
     ) -> Optional[PlanRevision]:
         """
-        Dynamically revise execution graph when an action fails or environment deviates from assumptions.
-        Inserts fallback capability or dynamically resolves alternative matching goal criteria.
+        Dynamically revise execution graph when an action fails.
+        Goal-directed replanning:
+        1. Identify unsatisfied goal predicates.
+        2. Filter alternative capabilities whose declared effects advance at least one unsatisfied predicate.
+        3. Strictly reject capabilities that do not advance the goal (e.g. open_folder / reveal_file for missing file content).
+        4. If no capability can advance the goal, fail gracefully (return None) to prevent false completion.
         """
         logger.info("Replanning task %s triggered by failed step %s", task.task_id, failed_step.step_id)
 
+        contract = getattr(task, "contract", None) or getattr(task.goal, "contract", None)
+
+        # 1. Determine unsatisfied predicates that failed_step was meant to advance
+        unsatisfied_predicates: list[str] = list(failed_step.satisfies_predicates)
+        if contract:
+            for pred in contract.acceptance_predicates:
+                if pred.is_mandatory and pred.status != PredicateStatus.SATISFIED:
+                    if pred.predicate_type.value not in unsatisfied_predicates:
+                        unsatisfied_predicates.append(pred.predicate_type.value)
+
+        # 2. Determine required effects based on unsatisfied predicates
+        requires_file_production = any(p in ("FILE_EXISTS", "FILE_NON_EMPTY", "FILE_CONTENT_CONTAINS", "FILE_CONTENT_EQUALS") for p in unsatisfied_predicates)
+        requires_app_launch = any(p in ("APPLICATION_RUNNING", "WINDOW_ACTIVE") for p in unsatisfied_predicates)
+        requires_network = "NETWORK_CONNECTED" in unsatisfied_predicates
+
         target_alt = alternative_capability_id
         if not target_alt:
-            # Query indexer for alternative capability in same domain excluding failed one
             entry = self.indexer.get_entry(failed_step.capability_id)
             domains = " ".join(entry.domains) if entry else failed_step.capability_id
-            candidates = self.indexer.retrieve(domains, top_k=5)
+            candidates = self.indexer.retrieve(domains, top_k=10)
+
             for c in candidates:
-                if c.capability_id != failed_step.capability_id:
-                    target_alt = c.capability_id
-                    break
+                if c.capability_id == failed_step.capability_id:
+                    continue
+
+                cand_schema = self.registry.get_capability_schema(c.capability_id)
+                cand_effects = getattr(cand_schema, "side_effects", []) if cand_schema else []
+                effect_names = [e.value if hasattr(e, "value") else str(e) for e in cand_effects]
+
+                # Goal-directed filter:
+                if requires_file_production:
+                    # Replacement MUST create or modify files; READ_ONLY capabilities (open_folder, reveal_file) are REJECTED!
+                    if not any(e in ("CREATES_FILE", "MODIFIES_FILE") for e in effect_names):
+                        logger.debug("Replanner rejecting '%s': cannot satisfy file production predicates", c.capability_id)
+                        continue
+
+                if requires_app_launch:
+                    if not any(e in ("SPAWNS_PROCESS", "MODIFIES_WINDOW", "SYSTEM_STATE") for e in effect_names):
+                        continue
+
+                if requires_network:
+                    if "NETWORK_STATE" not in effect_names:
+                        continue
+
+                target_alt = c.capability_id
+                break
+
+        # Check if requested alternative satisfies the predicate requirement
+        if target_alt:
+            alt_schema = self.registry.get_capability_schema(target_alt)
+            alt_effects = [e.value if hasattr(e, "value") else str(e) for e in getattr(alt_schema, "side_effects", [])] if alt_schema else []
+            if requires_file_production and not any(e in ("CREATES_FILE", "MODIFIES_FILE") for e in alt_effects):
+                logger.warning("Replanner rejecting alternative '%s': does not advance unsatisfied file predicates", target_alt)
+                target_alt = None
 
         if not target_alt:
-            logger.warning("No alternative capability found for replan of %s", failed_step.step_id)
+            logger.warning(
+                "No viable goal-advancing alternative capability found for replan of %s (unsatisfied: %s)",
+                failed_step.step_id,
+                unsatisfied_predicates,
+            )
             return None
 
         # Build replacement step
         new_step_id = f"step_replan_{uuid.uuid4().hex[:6]}"
+        replan_args = dict(failed_step.arguments)
+        # Ensure contract values (text, content, path, filename) are preserved in replan args!
+        if contract:
+            req_content = contract.get_constraint("content") or contract.get_constraint("text")
+            if req_content and req_content.expected_value:
+                replan_args["text"] = str(req_content.expected_value)
+                replan_args["content"] = str(req_content.expected_value)
+            if contract.target_artifact:
+                replan_args["filename"] = contract.target_artifact
+            if contract.target_location and not replan_args.get("path"):
+                replan_args["path"] = str(Path.home() / contract.target_location / (contract.target_artifact or "file.txt"))
+
         new_step = self._build_step_from_capability(
             target_alt,
-            arguments=failed_step.arguments,
+            arguments=replan_args,
             step_id=new_step_id,
             clause=f"Replan alternative for {failed_step.capability_id}",
         )
         new_step.dependencies = list(failed_step.dependencies)
+        new_step.satisfies_predicates = list(failed_step.satisfies_predicates)
 
         # Mark failed step as SKIPPED to preserve audit trail
         failed_step.state = StepState.SKIPPED
@@ -595,7 +1028,7 @@ class GoalPlanner:
             task_id=task.task_id,
             previous_plan_version=task.plan.version - 1,
             new_plan_version=task.plan.version,
-            reason=f"Step '{failed_step.step_id}' ({failed_step.capability_id}) failed; dynamically substituted with '{target_alt}'.",
+            reason=f"Step '{failed_step.step_id}' ({failed_step.capability_id}) failed; dynamically substituted with '{target_alt}' advancing unsatisfied predicates: {unsatisfied_predicates}.",
             observation_ids=[observation.observation_id] if observation else [],
             added_steps=[new_step_id],
             removed_steps=[failed_step.step_id],
@@ -606,7 +1039,7 @@ class GoalPlanner:
     def _split_clauses(self, text: str) -> list[str]:
         """Split compound multi-step instructions on conjunctions, merging pronoun modifiers."""
         raw_clauses = re.split(
-            r"(?:,\s*(?=(?:type|save|open|show|find|close|reveal|and|then)\b)|\s+(?:and\s+(?:then\s+)?|then\s+|\&\s+|;\s*))",
+            r"(?:,\s*(?=(?:type|write|save|open|launch|start|run|execute|show|find|close|reveal|and|then)\b)|\s+(?:and\s+(?:then\s+)?|then\s+|\&\s+|;\s*)|(?<=\w)\s+(?=(?:type|write|save|open|launch|start|close|show|find|reveal|run|execute)\b))",
             text,
             flags=re.IGNORECASE,
         )
@@ -627,6 +1060,8 @@ class GoalPlanner:
                     clauses[-1] = f"{clauses[-1]} and {c}"
                 else:
                     clauses.append(c)
+            elif clauses and re.match(r"^(?:(?:name|call|named|as)\s+(?:it\s+)?|with\s+name\s+)[a-zA-Z0-9_\-\.]+\.[a-zA-Z0-9]+\b", c, re.IGNORECASE):
+                clauses[-1] = f"{clauses[-1]} and {c}"
             else:
                 clauses.append(c)
         return clauses
@@ -663,8 +1098,8 @@ class GoalPlanner:
         folder_match = re.search(r"\b(?:in|to)\s+(Downloads|Documents|Desktop|Temp)\b", clause, re.IGNORECASE)
         folder = folder_match.group(1) if folder_match else "Downloads"
 
-        path_match = re.search(r"(?:to|into|as|in)\s+([^\r\n,;\"']+\.(?:html|xml|txt|json|pdf|csv|xlsx|toml|py|docx|zip|png|log|md|sha))\b", clause, re.IGNORECASE)
-        file_match = path_match or re.search(r"\bas\s+([^\r\n,;\"']+\.(?:html|xml|txt|json|pdf))\b", clause, re.IGNORECASE)
+        path_match = re.search(r"(?:to|into|as|in|name\s+it|call\s+it|named|with\s+name)\s+([^\r\n,;\"'\s]+\.(?:html|xml|txt|json|pdf|csv|xlsx|toml|py|docx|zip|png|log|md|sha))\b", clause, re.IGNORECASE)
+        file_match = path_match or re.search(r"\bas\s+([^\r\n,;\"'\s]+\.(?:html|xml|txt|json|pdf))\b", clause, re.IGNORECASE)
         if not file_match:
             file_match = re.search(r"\b([^\r\n,;\"'\s]+\.(?:html|xml|txt|json|pdf|csv|xlsx|toml|py|docx|zip|png|log|md|sha))\b", clause, re.IGNORECASE)
 
@@ -719,11 +1154,18 @@ class GoalPlanner:
             if quote_match:
                 val = quote_match.group(1)
             else:
-                verb_match = re.search(r"^(?:reverse|type|write|save|count\s+words\s+in|calculate\s+hash\s+of|compute\s+sha256\s+hash\s+for|compute\s+hash\s+for|format\s+json\s+string|format\s+json\s+payload|beautify\s+json|format\s+json\s+data|beautify\s+json\s+string)\s+(.+?)(?:\s+to\s+|\s+in\s+|$)", clause, re.IGNORECASE)
+                verb_match = re.search(r"^(?:reverse|type|write|save|count\s+words\s+in|calculate\s+hash\s+of|compute\s+sha256\s+hash\s+for|compute\s+hash\s+for|format\s+json\s+string|format\s+json\s+payload|beautify\s+json|format\s+json\s+data|beautify\s+json\s+string)\s+(.+?)(?:\s+to\s+|\s+in\s+|\s+on\s+|$)", clause, re.IGNORECASE)
                 val = verb_match.group(1).strip() if verb_match else clause
 
-            if val.lower().startswith(("it as", "it to", "it in", "it into")) or val.lower() == "it":
+            if val.lower().startswith(("it ", "to ", "in ", "on ", "as ", "into ")) or val.lower() in ("it", "file", "document", "them", "this"):
                 val = ""
+
+            if cap_id in ("save_text_file", "save_document_via_ui") and not quote_match:
+                content_m = re.search(r"(?:with\s+)?(?:text|content)\s+['\"]?([^'\"\r\n]+)['\"]?", clause, re.IGNORECASE)
+                if content_m:
+                    val = content_m.group(1).strip()
+                else:
+                    val = ""
 
             if val:
                 for k in ("text", "content", "data", "input", "payload"):
@@ -741,10 +1183,11 @@ class GoalPlanner:
 
         # 4. SSID extraction for Wi-Fi
         if "ssid" in args_schema or cap_id == "wifi_connect":
-            wifi_match = re.search(r"\b(?:connect(?:\s+to)?(?:\s+wifi)?|wifi)\s+([a-zA-Z0-9_\-\*\s]+?)(?:\s+wifi)?$", clause, re.IGNORECASE)
+            wifi_match = re.search(r"\b(?:connect\s+(?:to\s+)?(?:wifi\s+)?|wifi\s+(?:connect\s+|to\s+)?|switch\s+wifi\s+to\s+|join\s+(?:wifi\s+|network\s+)?)([a-zA-Z0-9_\-\*\s]+?)(?:\s+wifi)?$", clause, re.IGNORECASE)
             if wifi_match:
                 ssid = wifi_match.group(1).strip()
                 ssid = re.sub(r"\s+wifi$", "", ssid, flags=re.IGNORECASE).strip()
+                ssid = re.sub(r"^(?:to|network)\s+", "", ssid, flags=re.IGNORECASE).strip()
                 if ssid and ssid.lower() not in ("to", "a", "the", "network", "status"):
                     args["ssid"] = ssid
 
@@ -804,6 +1247,9 @@ class GoalPlanner:
             verifier = VerifierStrategy.FILE_NON_EMPTY
         elif cap_id == "wifi_connect":
             verifier = VerifierStrategy.NETWORK_SSID
+        elif cap_id in ("type_text", "type_into_window"):
+            tier = InteractionTier.TIER_C_UI_AUTOMATION
+            verifier = VerifierStrategy.UI_ELEMENT_STATE
         desc = getattr(cap, "description", f"Execute {cap_id}")
 
         # Human label derivation for user HUD
@@ -830,6 +1276,35 @@ class GoalPlanner:
                 source_reference=clause or None,
             )
 
+        satisfies_preds: list[str] = []
+        requires_preds: list[str] = []
+        effects: list[str] = []
+
+        if cap_id in ("open_application", "open_app"):
+            satisfies_preds = [PredicateType.APPLICATION_RUNNING.value, PredicateType.WINDOW_ACTIVE.value]
+            effects = ["SPAWNS_PROCESS", "MODIFIES_WINDOW"]
+        elif cap_id in ("type_text", "type_into_window"):
+            satisfies_preds = ["DOCUMENT_CONTENT_WRITTEN"]
+            requires_preds = [PredicateType.WINDOW_ACTIVE.value]
+            effects = ["WRITES_CONTENT", "MODIFIES_WINDOW"]
+        elif cap_id in ("save_text_file", "save_document_via_ui"):
+            satisfies_preds = [PredicateType.FILE_EXISTS.value, PredicateType.FILE_NON_EMPTY.value, PredicateType.FILE_CONTENT_CONTAINS.value]
+            effects = ["CREATES_FILE", "MODIFIES_FILE", "WRITES_CONTENT"]
+        elif cap_id == "wifi_connect":
+            satisfies_preds = [PredicateType.NETWORK_CONNECTED.value]
+            effects = ["NETWORK_STATE"]
+        elif cap_id == "generate_battery_report":
+            satisfies_preds = [PredicateType.FILE_EXISTS.value, PredicateType.FILE_NON_EMPTY.value]
+            effects = ["CREATES_FILE"]
+        elif cap_id in ("reverse_text", "calculate_hash", "count_words"):
+            satisfies_preds = [PredicateType.DATA_COMPUTED.value]
+            effects = ["DATA_COMPUTED", "READ_ONLY"]
+        else:
+            if schema and hasattr(schema, "side_effects"):
+                effects = [s.value if hasattr(s, "value") else str(s) for s in schema.side_effects]
+            else:
+                effects = ["READ_ONLY"]
+
         return PlanStep(
             step_id=step_id,
             capability_id=cap_id,
@@ -840,18 +1315,22 @@ class GoalPlanner:
             interaction_tier=tier,
             verifier_strategy=verifier,
             verifier_params=arguments,
+            satisfies_predicates=satisfies_preds,
+            requires_predicates=requires_preds,
+            declared_effects=effects,
             weight=1.0,
         )
 
-    def _wire_dataflow_dependencies(self, steps: list[PlanStep]) -> None:
+    def _wire_dataflow_dependencies(self, steps: list[PlanStep], contract: Optional[GoalContract] = None) -> None:
         """
         Dynamically detect and wire dataflow dependencies:
         If Step i produces an output (e.g. 'reversed', 'file_path', 'metrics') and Step j requires an argument
         of compatible name that is not yet bound to a literal, wire an OutputReference from i to j.
-        Also wires logical sequencing for app launch -> interaction.
+        Also wires logical sequencing for app launch -> interaction and binds GoalContract constraints.
         """
         # Contextual propagation: If open_application precedes typing, bind app_name and use type_into_window
         app_name = None
+        has_editor_workflow = False
         for step in steps:
             if step.capability_id in ("open_application", "open_app"):
                 app_name = step.arguments.get("app_name") or step.arguments.get("app") or step.arguments.get("name")
@@ -859,6 +1338,17 @@ class GoalPlanner:
                 if app_name:
                     step.capability_id = "type_into_window"
                     step.arguments["app_name"] = app_name
+                    step.interaction_tier = InteractionTier.TIER_C_UI_AUTOMATION
+                    step.interaction_requirement = InteractionRequirement.APPLICATION_UI
+                    has_editor_workflow = True
+            elif step.capability_id in ("save_text_file", "save_document_via_ui"):
+                if app_name and "app_name" not in step.arguments:
+                    step.arguments["app_name"] = app_name
+                if step.capability_id == "save_document_via_ui":
+                    step.interaction_tier = InteractionTier.TIER_C_UI_AUTOMATION
+                    step.interaction_requirement = InteractionRequirement.APPLICATION_UI
+                    step.description = f"Save active document in {app_name or 'application'} via native UI dialogs"
+                    step.human_label = f"Save document in {app_name or 'application'} as {step.arguments.get('filename', 'document')}"
 
         # Propagate text payload and saved file path across sequential chain
         text_payload = None
@@ -866,13 +1356,43 @@ class GoalPlanner:
         for step in steps:
             if step.capability_id in ("type_text", "type_into_window", "reverse_text"):
                 text_payload = step.arguments.get("text")
-            elif step.capability_id == "save_text_file":
+            elif step.capability_id in ("save_text_file", "save_document_via_ui"):
                 if not step.arguments.get("text") and not step.arguments.get("content") and text_payload:
                     step.arguments["text"] = text_payload
+                    step.arguments["content"] = text_payload
                 saved_file_path = step.arguments.get("path")
             elif step.capability_id == "reveal_file":
                 if not step.arguments.get("path") and saved_file_path:
                     step.arguments["path"] = saved_file_path
+
+        # Bind required constraints from GoalContract to steps
+        if contract:
+            req_content = contract.get_constraint("content") or contract.get_constraint("text") or contract.get_constraint("required_content")
+            if req_content and req_content.expected_value:
+                content_val = str(req_content.expected_value)
+                for step in steps:
+                    if step.capability_id in ("type_text", "type_into_window"):
+                        if not step.arguments.get("text"):
+                            step.arguments["text"] = content_val
+                    elif step.capability_id in ("save_text_file", "save_document_via_ui"):
+                        if not step.arguments.get("text") and not step.arguments.get("content"):
+                            step.arguments["text"] = content_val
+                            step.arguments["content"] = content_val
+
+            req_artifact = contract.get_constraint("artifact") or contract.get_constraint("filename") or contract.get_constraint("target_artifact")
+            if req_artifact and req_artifact.expected_value:
+                art_val = str(req_artifact.expected_value)
+                for step in steps:
+                    if step.capability_id in ("save_text_file", "save_document_via_ui"):
+                        if not step.arguments.get("filename"):
+                            step.arguments["filename"] = art_val
+                        if not step.arguments.get("path") and contract.target_location:
+                            loc = contract.target_location
+                            if loc == "Desktop":
+                                step.arguments["path"] = str(Path.home() / "Desktop" / art_val)
+                            elif loc == "Downloads":
+                                step.arguments["path"] = str(Path.home() / "Downloads" / art_val)
+
 
         for i in range(len(steps)):
             step_i = steps[i]
@@ -895,13 +1415,13 @@ class GoalPlanner:
                 step_j = steps[j]
 
                 # Logical sequencing
-                if step_i.capability_id in ("open_application", "open_app") and step_j.capability_id in ("type_text", "type_into_window", "click_ui_element"):
+                if step_i.capability_id in ("open_application", "open_app") and step_j.capability_id in ("type_text", "type_into_window", "click_ui_element", "save_document_via_ui"):
                     if not any(d.step_id == step_i.step_id for d in step_j.dependencies):
                         step_j.dependencies.append(StepDependency(step_id=step_i.step_id))
-                if step_i.capability_id in ("type_text", "type_into_window", "reverse_text") and step_j.capability_id == "save_text_file":
+                if step_i.capability_id in ("type_text", "type_into_window", "reverse_text") and step_j.capability_id in ("save_text_file", "save_document_via_ui"):
                     if not any(d.step_id == step_i.step_id for d in step_j.dependencies):
                         step_j.dependencies.append(StepDependency(step_id=step_i.step_id))
-                if step_i.capability_id == "save_text_file" and step_j.capability_id == "reveal_file":
+                if step_i.capability_id in ("save_text_file", "save_document_via_ui") and step_j.capability_id == "reveal_file":
                     if not any(d.step_id == step_i.step_id for d in step_j.dependencies):
                         step_j.dependencies.append(StepDependency(step_id=step_i.step_id))
 
@@ -915,6 +1435,9 @@ class GoalPlanner:
                     current_val = step_j.arguments.get(arg_name)
                     should_bind = False
 
+                    if arg_name in ("content", "text", "hwnd", "target_hwnd", "window", "task_id", "target") and step_i.capability_id in ("open_application", "open_app", "close_app", "close_application", "open_folder", "open_url", "type_into_window", "type_text"):
+                        continue
+
                     if current_val is None or current_val == "" or (isinstance(current_val, str) and "result" in current_val.lower()):
                         should_bind = True
 
@@ -926,7 +1449,7 @@ class GoalPlanner:
                             matched_output = "reversed" if "reversed" in output_names else "result"
                         elif arg_name in ("path", "target_path") and ("output_file" in output_names or "path" in output_names):
                             matched_output = "output_file" if "output_file" in output_names else "path"
-                        elif output_names:
+                        elif output_names and arg_name not in ("path", "target_path", "output_path", "hwnd", "target_hwnd", "window", "task_id", "target"):
                             matched_output = output_names[0]
 
                         if matched_output:

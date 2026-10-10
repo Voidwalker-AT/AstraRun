@@ -76,7 +76,25 @@ class NeuralStructureEngine:
                 import spacy
                 logger.info("Loading spaCy model '%s' for NeuralStructureEngine...", self.model_name)
                 t0 = time.perf_counter()
-                self._nlp = spacy.load(self.model_name)
+                try:
+                    self._nlp = spacy.load(self.model_name)
+                except Exception:
+                    # In frozen environments, fallback to direct module load or bundled path
+                    try:
+                        import en_core_web_sm
+                        self._nlp = en_core_web_sm.load()
+                    except Exception:
+                        from astrarun.core.paths import get_install_root
+                        candidates = [
+                            get_install_root() / "_internal" / self.model_name,
+                            get_install_root() / self.model_name,
+                        ]
+                        for c in candidates:
+                            if c.exists():
+                                self._nlp = spacy.load(str(c))
+                                break
+                        else:
+                            raise
                 logger.info("spaCy model loaded in %.2fs", time.perf_counter() - t0)
                 return self._nlp
             except Exception as err:
@@ -162,11 +180,8 @@ class NeuralStructureEngine:
                     break
 
             # Strip politeness/assistant prefixes from clause text
-            cleaned_clause = clause_text
-            for prefix in ("hey astra ", "astra ", "please ", "could you ", "can you "):
-                if cleaned_clause.lower().startswith(prefix):
-                    cleaned_clause = cleaned_clause[len(prefix):].strip()
-                    break
+            from astrarun.nlp.clause_decomposer import strip_politeness
+            cleaned_clause = strip_politeness(clause_text)
 
             clause_lower = cleaned_clause.lower()
 
@@ -371,7 +386,16 @@ class NeuralStructureEngine:
                 else:
                     intent = "focus_window"
                     action_verb = "focus"
-            elif re.search(r'\b(?:close|quit)\s+(?:the\s+)?(paint|notepad|word|chrome|edge|cmd|terminal|code|vscode|snippingtool|excel|calc|slack|discord|spotify|explorer|firefox|taskmgr)\b', clause_lower):
+            elif re.search(r'\b(?:is\s+(?:the\s+)?([a-zA-Z0-9_\-\.]+)\s+installed|check\s+if\s+(?:the\s+)?([a-zA-Z0-9_\-\.]+)\s+is\s+installed|do\s+i\s+have\s+([a-zA-Z0-9_\-\.]+)(?:\s+installed)?)\b', clause_lower):
+                intent = "find_application"
+                action_verb = "find"
+            elif re.search(r'\b(?:is\s+(?:the\s+)?([a-zA-Z0-9_\-\.]+)\s+(?:currently\s+)?running|check\s+if\s+(?:the\s+)?([a-zA-Z0-9_\-\.]+)\s+is\s+(?:currently\s+)?running)\b', clause_lower):
+                intent = "is_application_running"
+                action_verb = "check"
+            elif re.search(r'\b(?:count\s+to\s+\d+|calculate\s+|compute\s+)\b', clause_lower):
+                intent = "computational_task"
+                action_verb = "compute"
+            elif re.search(r'\b(?:close|quit|exit)\s+(?:the\s+)?([a-zA-Z0-9_\-\.]+)\b', clause_lower) and not re.search(r'\b(?:window|this|that|tab)\b', clause_lower):
                 intent = "close_application"
                 action_verb = "close"
             elif re.search(r'\b(?:close\s+(?:that|this|the)?\s*window|then\s+close)\b', clause_lower) or clause_lower == "close window" or (clause_lower == "close" and seq_idx > 0):
@@ -380,7 +404,7 @@ class NeuralStructureEngine:
             elif clause_lower in ("restart it", "close", "restart", "next", "undo it"):
                 intent = "clarify"
                 action_verb = "clarify"
-            elif clause_lower.startswith("find ") and any(app in clause_lower for app in ("word", "chrome", "edge", "notepad", "explorer", "vscode", "snippingtool", "excel", "taskmgr", "calc", "terminal", "slack", "discord", "spotify")):
+            elif clause_lower.startswith("find ") and not clause_lower.startswith("find file"):
                 intent = "open_app"
                 action_verb = "open"
             elif re.search(r'\b(?:press|click)\s+(?:cancel|ok|submit|apply|save|yes|no|button)\b', clause_lower):
@@ -427,15 +451,31 @@ class NeuralStructureEngine:
                             confidence=0.95
                         ))
 
-            # System actions (CPU, RAM, Battery, Volume, Summary)
-            if any(k in clause_lower for k in ("system", "health", "summary", "overview", "workstation status")):
-                intent = "system_summary"
+            if intent in ("open_app", "open_application") and not any(e.entity_type == "app_name" for e in entities):
+                m = re.search(r'\b(?:open|launch|start|run|bring\s+up)\s+(?:the\s+|an?\s+)?([a-zA-Z0-9_\-\.]+)', clause_text, re.I)
+                if m:
+                    app_val = m.group(1).lower()
+                    if app_val not in ("project", "repo", "workspace", "folder", "window", "url", "file", "tab", "the", "a", "an"):
+                        t_idx = clause_text.lower().find(app_val)
+                        if t_idx != -1:
+                            s = clause_start + t_idx
+                            e = s + len(app_val)
+                            entities.append(ParsedEntity(
+                                entity_type="app_name",
+                                value=app_val,
+                                source_span=TextSpan(start=s, end=e, raw=raw_query[s:e]),
+                                confidence=0.9
+                            ))
+
+            # Specific subsystem queries take precedence over broad "system" keywords
+            if re.search(r'\b(?:ram|memory)\b', clause_lower):
+                intent = "memory_status"
                 action_verb = "status"
             elif re.search(r'\b(?:cpu|processor)\b', clause_lower):
                 intent = "cpu_status"
                 action_verb = "status"
-            elif re.search(r'\b(?:ram|memory)\b', clause_lower):
-                intent = "memory_status"
+            elif re.search(r'\b(?:disk|storage|drive\s+space)\b', clause_lower):
+                intent = "disk_status"
                 action_verb = "status"
             elif re.search(r'\b(?:gpu|graphics|vram)\b', clause_lower):
                 intent = "gpu_status"
@@ -446,6 +486,9 @@ class NeuralStructureEngine:
             elif re.search(r'\b(?:volume|mute)\b', clause_lower):
                 intent = "system_volume"
                 action_verb = "mute" if "mute" in clause_lower else "volume"
+            elif any(k in clause_lower for k in ("system", "health", "summary", "overview", "workstation status")):
+                intent = "system_summary"
+                action_verb = "status"
 
             clause_obj = ParsedClause(
                 clause_id=f"c{seq_idx}",
@@ -511,6 +554,20 @@ class NeuralStructureEngine:
                     source_span=TextSpan(start=ent.start, end=ent.end, raw=ent.text),
                     confidence=ent.confidence
                 ))
+
+            if (raw_c.action in ("open_app", "open_application") or raw_c.intent in ("open_app", "open_application")) and not any(e.entity_type == "app_name" for e in ents):
+                m = re.search(r'\b(?:open|launch|start|run|bring\s+up)\s+(?:the\s+|an?\s+)?([a-zA-Z0-9_\-\.]+)', c_text, re.I)
+                if m:
+                    app_val = m.group(1).lower()
+                    if app_val not in ("project", "repo", "workspace", "folder", "window", "url", "file", "tab", "the", "a", "an"):
+                        app_s = query.lower().find(app_val, s_idx)
+                        app_e = app_s + len(app_val) if app_s != -1 else e_idx
+                        ents.append(ParsedEntity(
+                            entity_type="app_name",
+                            value=app_val,
+                            source_span=TextSpan(start=app_s if app_s != -1 else s_idx, end=app_e, raw=query[app_s:app_e] if app_s != -1 else app_val),
+                            confidence=0.9
+                        ))
 
             parsed_clauses.append(ParsedClause(
                 clause_id=f"c{seq_idx}",

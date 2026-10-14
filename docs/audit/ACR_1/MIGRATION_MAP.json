@@ -3,6 +3,112 @@
   "title": "AstraRun Central Intelligence Spine Migration Map",
   "target_orchestrator": "src/astrarun/agent/coordinator.py::AgentCoordinator",
   "status": "OPERATIONAL",
+  "components": [
+    {
+      "old_component": "app.py legacy branches",
+      "old_responsibility": "Ad-hoc regex dispatch and parallel legacy orchestrator branches",
+      "new_component": "AgentCoordinator.handle_turn & SingleStepFastTrack",
+      "migration_status": "MIGRATED_PARTIAL",
+      "production_callers_remaining": 3,
+      "deletion_ready": false
+    },
+    {
+      "old_component": "LayaSandwichRouter",
+      "old_responsibility": "Multi-layer heuristic and sandwich routing between conversational, deterministic, and workflow paths",
+      "new_component": "AgentCoordinator & TurnReasoner",
+      "migration_status": "MIGRATED_PARTIAL",
+      "production_callers_remaining": 3,
+      "deletion_ready": false
+    },
+    {
+      "old_component": "WorkflowCompiler",
+      "old_responsibility": "Compiles static multi-step workflow DAGs from queries",
+      "new_component": "AgentCoordinator & CapabilitySemanticIndex",
+      "migration_status": "LEGACY_RETAINED",
+      "production_callers_remaining": 8,
+      "deletion_ready": false
+    },
+    {
+      "old_component": "TaskManager",
+      "old_responsibility": "Task lifecycle management and async background task status tracking",
+      "new_component": "ConversationSession & SessionStore",
+      "migration_status": "LEGACY_RETAINED",
+      "production_callers_remaining": 6,
+      "deletion_ready": false
+    },
+    {
+      "old_component": "LearnedSemanticRouter",
+      "old_responsibility": "Embedding/ML classifier for operational routing",
+      "new_component": "CapabilitySemanticIndex & TurnReasoner",
+      "migration_status": "LEGACY_RETAINED",
+      "production_callers_remaining": 2,
+      "deletion_ready": false
+    },
+    {
+      "old_component": "ContextSufficiencyEngine",
+      "old_responsibility": "Classifying conversational vs operational context sufficiency",
+      "new_component": "TurnReasoner & ConversationSession reference resolution",
+      "migration_status": "LEGACY_RETAINED",
+      "production_callers_remaining": 2,
+      "deletion_ready": false
+    },
+    {
+      "old_component": "Brain",
+      "old_responsibility": "Legacy agent memory and cognitive state store",
+      "new_component": "ConversationSession & SessionStore",
+      "migration_status": "LEGACY_RETAINED",
+      "production_callers_remaining": 20,
+      "deletion_ready": false
+    },
+    {
+      "old_component": "WorkflowEngine",
+      "old_responsibility": "Execution engine for compiled workflow DAGs",
+      "new_component": "AgentCoordinator & ExecutionBroker",
+      "migration_status": "LEGACY_RETAINED",
+      "production_callers_remaining": 4,
+      "deletion_ready": false
+    },
+    {
+      "old_component": "CognitiveRouter",
+      "old_responsibility": "Early cognitive intent routing dispatcher",
+      "new_component": "TurnReasoner",
+      "migration_status": "LEGACY_RETAINED",
+      "production_callers_remaining": 2,
+      "deletion_ready": false
+    },
+    {
+      "old_component": "JEV",
+      "old_responsibility": "Joint Embedding Vector router prototype",
+      "new_component": "CapabilitySemanticIndex",
+      "migration_status": "DEPRECATED",
+      "production_callers_remaining": 0,
+      "deletion_ready": true
+    },
+    {
+      "old_component": "KEV",
+      "old_responsibility": "Knowledge Extraction Vector router prototype",
+      "new_component": "CapabilitySemanticIndex",
+      "migration_status": "DEPRECATED",
+      "production_callers_remaining": 0,
+      "deletion_ready": true
+    },
+    {
+      "old_component": "FusionRouter",
+      "old_responsibility": "Hybrid heuristic-embedding fusion classifier",
+      "new_component": "TurnReasoner & SingleStepFastTrack",
+      "migration_status": "DEPRECATED",
+      "production_callers_remaining": 0,
+      "deletion_ready": true
+    },
+    {
+      "old_component": "ComputerUse facade/controller",
+      "old_responsibility": "OS automation controller and high-level facade for desktop interaction",
+      "new_component": "DesktopObserver & ExecutionBroker capabilities",
+      "migration_status": "LEGACY_RETAINED",
+      "production_callers_remaining": 36,
+      "deletion_ready": false
+    }
+  ],
   "migrated_paths": [
     {
       "category": "CONVERSATIONAL_INQUIRY",

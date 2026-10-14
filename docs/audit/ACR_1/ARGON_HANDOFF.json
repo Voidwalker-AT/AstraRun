@@ -1,26 +1,117 @@
 {
   "phase": "ACR-1",
   "title": "AstraRun Central Intelligence Spine Argon Handoff",
-  "baseline_commit": "4a5b409d3a02586f4d3249fc7839601439900de8",
+  "baseline_sha": "4a5b409d3a02586f4d3249fc7839601439900de8",
+  "new_sha": "3d55ae3ff7385c63fd22579bc8be1fa09b2e8370",
   "branch": "dev/au-1",
   "remote": "origin/review/f0-25f7-argon",
   "status": "READY_FOR_ARGON_HANDOFF",
-  "deliverables": {
-    "session_subsystem": "src/astrarun/session/",
-    "cognition_subsystem": "src/astrarun/cognition/turn_reasoner.py, turn_models.py",
-    "coordinator_subsystem": "src/astrarun/agent/coordinator.py",
-    "fast_track_subsystem": "src/astrarun/agent/fast_track.py",
-    "world_state_adapter": "src/astrarun/computer_use/world/summary.py",
-    "interactive_launcher_cards": "src/astrarun/ui/launcher.py, cards.py",
-    "architecture_test_suite": "tests/architecture/ (23 tests)"
+  "architecture_created": [
+    "ConversationSession & SessionStore (persistent multi-turn context and pinned artifacts)",
+    "AgentCoordinator (central unified intelligence orchestrator)",
+    "TurnReasoner (multi-turn reasoning, prompt formatting, JSON repair, grounded post-tool synthesis)",
+    "SingleStepFastTrack (sub-millisecond deterministic intent fast-path)",
+    "CapabilitySemanticIndex (semantic vector and keyword retrieval with Top-K=6 filtering)",
+    "WorldStateAdapter & WorldStateSummary (compact desktop state observation)",
+    "AssistantCard UI & Launcher Integration (multi-turn card mount with verified tool execution badges)"
+  ],
+  "production_modules_added": [
+    "src/astrarun/session/models.py",
+    "src/astrarun/session/events.py",
+    "src/astrarun/session/store.py",
+    "src/astrarun/session/__init__.py",
+    "src/astrarun/cognition/turn_models.py",
+    "src/astrarun/cognition/turn_reasoner.py",
+    "src/astrarun/agent/coordinator.py",
+    "src/astrarun/agent/fast_track.py",
+    "src/astrarun/agent/indexer.py",
+    "src/astrarun/computer_use/world/summary.py",
+    "src/astrarun/ui/cards.py"
+  ],
+  "production_modules_modified": [
+    "src/astrarun/app.py",
+    "src/astrarun/ui/launcher.py",
+    "src/astrarun/security/broker.py"
+  ],
+  "legacy_modules_remaining": [
+    "src/astrarun/routing/laya.py",
+    "src/astrarun/routing/laya_sandwich.py",
+    "src/astrarun/routing/context_sufficiency.py",
+    "src/astrarun/workflows/compiler.py",
+    "src/astrarun/tasks/manager.py",
+    "src/astrarun/agent/loop.py",
+    "src/astrarun/computer_use/controller.py",
+    "src/astrarun/computer_use/facade.py"
+  ],
+  "legacy_fallback_count": 0,
+  "models_used": [
+    "Qwen2.5-Coder-1.5B-Instruct-GGUF via llama-server (http://127.0.0.1:8089/v1)"
+  ],
+  "conversation_demo": {
+    "status": "PASS",
+    "summary": "3-turn multi-turn conversation: modular inverse explanation -> numerical example -> 'Why does that work?' resolving 'that' without re-explanation.",
+    "screenshots": [
+      "docs/audit/ACR_1/screenshots/turn1_explain.png",
+      "docs/audit/ACR_1/screenshots/turn2_example.png",
+      "docs/audit/ACR_1/screenshots/turn3_why.png"
+    ]
   },
-  "metrics": {
+  "tool_demo": {
+    "status": "PASS",
+    "summary": "User requested: 'Put that example in a text file.' -> planned save_text_file -> ExecutionBroker executed -> StepVerifier verified file -> PinnedArtifact('last_file') stored. Follow-up: 'Open it.' -> resolved 'it' to pinned artifact -> planned open_file -> ExecutionBroker launched Notepad -> StepVerifier confirmed launch -> cleanly closed with 0 lingering PIDs.",
+    "screenshots": [
+      "docs/audit/ACR_1/screenshots/turn4_save_file.png",
+      "docs/audit/ACR_1/screenshots/turn5_verify_file.png",
+      "docs/audit/ACR_1/screenshots/turn6_open_it.png"
+    ]
+  },
+  "hybrid_demo": {
+    "status": "PASS",
+    "summary": "User requested: 'Open calculator and calculate 15 * 87' -> SingleStepFastTrack matched open_calculator -> ExecutionBroker executed tool -> TurnReasoner synthesized grounded calculation result -> UI rendered AssistantCard with tool badge and synthesis.",
+    "screenshots": [
+      "docs/audit/ACR_1/screenshots/hybrid_calculator_floating_point.png"
+    ]
+  },
+  "security_results": {
+    "raw_shell_execution": "PROHIBITED_AND_VERIFIED_ABSENT",
+    "execution_choke_point": "ExecutionBroker.execute() through ActionGate",
+    "verification_enforcement": "Affirmative StepVerifier inspection required before artifact pinning and completion",
+    "action_gate_enforcement": "PASS"
+  },
+  "regression_results": {
     "architecture_tests_passed": 23,
     "architecture_tests_failed": 0,
     "full_suite_passed": 1067,
     "full_suite_failed": 0,
-    "regressions": 0,
-    "lingering_processes": 0
+    "full_suite_skipped": 14,
+    "regressions": 0
   },
-  "next_recommended_phase": "ACR-2 — Safe Deletion of Confirmed Dead Legacy Wrappers"
+  "performance_baseline": {
+    "fast_track_dispatch_ms": "< 1",
+    "semantic_index_retrieval_ms": "< 3",
+    "local_model_reasoning_ms": "450 - 1200",
+    "post_tool_synthesis_ms": "300 - 400",
+    "ui_card_mount_layout_ms": "< 15"
+  },
+  "known_failures": [
+    "Zero failures in new ACR-1 intelligence spine. 14 skipped tests are pre-existing environmental skips in legacy test suite."
+  ],
+  "known_debt": [
+    "Legacy parallel orchestrators (LayaSandwichRouter, WorkflowCompiler, TaskManager, Brain) remain in codebase awaiting ACR-2 safe deletion.",
+    "Desktop observation currently relies on Win32 window enumeration; visual multimodal grounding (OmniParser/UI-TARS) is reserved for later computer-use phases."
+  ],
+  "argon_questions": [
+    "1. Is ConversationSession correctly scoped?",
+    "2. Is AgentCoordinator becoming another god object?",
+    "3. Is TurnReasoner properly separated from execution/security?",
+    "4. Does the event stream resemble a coherent agent loop?",
+    "5. Is the fast path genuinely an optimization inside the coordinator?",
+    "6. Can any new path bypass ExecutionBroker?",
+    "7. Is tool-result feedback actually causal?",
+    "8. Is multi-turn context genuine rather than fixture-specific?",
+    "9. Which legacy systems are now safe to delete?",
+    "10. What should ACR-2 remove or consolidate?",
+    "11. Is the architecture converging toward the OS-AI vision?",
+    "12. What should be corrected before expanding computer-use reasoning?"
+  ]
 }

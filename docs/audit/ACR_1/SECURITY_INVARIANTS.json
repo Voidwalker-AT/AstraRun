@@ -1,0 +1,48 @@
+{
+  "phase": "ACR-1",
+  "title": "AstraRun Security Invariants & Governance Evidence",
+  "invariants": [
+    {
+      "id": "INV-1",
+      "name": "NO_RAW_SHELL_EXECUTION",
+      "statement": "Raw natural language user input is never executed via shell=True, os.system(), eval(), or Invoke-Expression.",
+      "enforcement_mechanism": "ExecutionBroker proposal boundary + ActionGate parsing",
+      "status": "VERIFIED"
+    },
+    {
+      "id": "INV-2",
+      "name": "SOLE_EXECUTION_CHOKEPOINT",
+      "statement": "All consequential actions on the workstation pass strictly through ExecutionBroker.execute().",
+      "enforcement_mechanism": "ExecutionBroker.is_broker_dispatch_active() and audit trail logging",
+      "status": "VERIFIED"
+    },
+    {
+      "id": "INV-3",
+      "name": "MODEL_NEVER_EXECUTION_AUTHORITY",
+      "statement": "The LLM produces only TurnDecision proposals. Execution is authorized exclusively by ActionGate.",
+      "enforcement_mechanism": "ActionGate rule evaluation and RiskLevel enforcement",
+      "status": "VERIFIED"
+    },
+    {
+      "id": "INV-4",
+      "name": "FAIL_CLOSED_ON_UNREGISTERED_OR_BLOCKED",
+      "statement": "Proposals requesting unregistered capabilities or blocked actions fail closed immediately.",
+      "enforcement_mechanism": "ExecutionBroker returns ExecutionBrokerResult(success=False, verdict='BLOCK')",
+      "status": "VERIFIED"
+    },
+    {
+      "id": "INV-5",
+      "name": "AFFIRMATIVE_VERIFICATION_REQUIREMENT",
+      "statement": "An artifact cannot be pinned or resolved across turns unless affirmatively verified by StepVerifier.",
+      "enforcement_mechanism": "PinnedArtifact(verified=True, verified_identity=...) checked before pin",
+      "status": "VERIFIED"
+    },
+    {
+      "id": "INV-6",
+      "name": "ZERO_PROCESS_ORPHAN_LEAKS",
+      "statement": "Processes launched during operation or testing are tracked by PID in ResourceLedger and cleaned up.",
+      "enforcement_mechanism": "ProcessTracker + Win32JobObject termination + explicit teardown guards",
+      "status": "VERIFIED"
+    }
+  ]
+}

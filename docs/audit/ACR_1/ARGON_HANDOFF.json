@@ -1,0 +1,26 @@
+{
+  "phase": "ACR-1",
+  "title": "AstraRun Central Intelligence Spine Argon Handoff",
+  "baseline_commit": "4a5b409d3a02586f4d3249fc7839601439900de8",
+  "branch": "dev/au-1",
+  "remote": "origin/review/f0-25f7-argon",
+  "status": "READY_FOR_ARGON_HANDOFF",
+  "deliverables": {
+    "session_subsystem": "src/astrarun/session/",
+    "cognition_subsystem": "src/astrarun/cognition/turn_reasoner.py, turn_models.py",
+    "coordinator_subsystem": "src/astrarun/agent/coordinator.py",
+    "fast_track_subsystem": "src/astrarun/agent/fast_track.py",
+    "world_state_adapter": "src/astrarun/computer_use/world/summary.py",
+    "interactive_launcher_cards": "src/astrarun/ui/launcher.py, cards.py",
+    "architecture_test_suite": "tests/architecture/ (23 tests)"
+  },
+  "metrics": {
+    "architecture_tests_passed": 23,
+    "architecture_tests_failed": 0,
+    "full_suite_passed": 1067,
+    "full_suite_failed": 0,
+    "regressions": 0,
+    "lingering_processes": 0
+  },
+  "next_recommended_phase": "ACR-2 — Safe Deletion of Confirmed Dead Legacy Wrappers"
+}

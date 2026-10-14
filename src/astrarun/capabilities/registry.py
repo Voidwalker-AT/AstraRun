@@ -477,7 +477,7 @@ class CapabilityRegistry:
             description="Open a non-executable user file with its default program",
             args_schema={"path": str},
             risk=ToolRisk.LOW,
-            read_only=True,
+            read_only=False,
             handler=open_file,
             permission=CapabilityPermission.AUTO,
             context_effects=["file_opened"],

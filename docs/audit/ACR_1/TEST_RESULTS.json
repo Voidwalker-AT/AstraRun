@@ -1,0 +1,84 @@
+{
+  "phase": "ACR-1",
+  "title": "AstraRun ACR-1 Verification & Test Results",
+  "timestamp": 1792009250.0,
+  "architecture_suite": {
+    "total_tests": 23,
+    "passed": 23,
+    "failed": 0,
+    "skipped": 0,
+    "duration_s": 119.19,
+    "files": {
+      "tests/architecture/test_conversation_session.py": {
+        "tests": [
+          "test_turn_ordering_chronological",
+          "test_bounded_rolling_context_retrieval",
+          "test_pinned_artifact_tracking_and_verification_requirement",
+          "test_session_isolation",
+          "test_failed_turn_handling"
+        ],
+        "status": "PASSED"
+      },
+      "tests/architecture/test_conversation_to_tool.py": {
+        "tests": [
+          "test_conversation_to_tool_and_artifact_resolution"
+        ],
+        "status": "PASSED"
+      },
+      "tests/architecture/test_legacy_fallback.py": {
+        "tests": [
+          "test_legacy_fallback_emits_telemetry"
+        ],
+        "status": "PASSED"
+      },
+      "tests/architecture/test_multi_turn_intelligence.py": {
+        "tests": [
+          "test_sequence_a_cryptography_multi_turn",
+          "test_sequence_b_operating_systems_multi_turn",
+          "test_sequence_c_programming_recursion_multi_turn"
+        ],
+        "status": "PASSED"
+      },
+      "tests/architecture/test_security_governance.py": {
+        "tests": [
+          "test_model_proposes_blocked_capability_fails_closed",
+          "test_model_proposes_nonexistent_capability_fails_safely"
+        ],
+        "status": "PASSED"
+      },
+      "tests/architecture/test_single_step_fast_track.py": {
+        "tests": [
+          "test_positive_arithmetic_fast_track",
+          "test_positive_open_calculator_fast_track",
+          "test_positive_battery_status_fast_track",
+          "test_positive_window_snapping_fast_track",
+          "test_negative_pronouns_and_conversational_references_fall_through"
+        ],
+        "status": "PASSED"
+      },
+      "tests/architecture/test_tool_to_reasoning.py": {
+        "tests": [
+          "test_battery_tool_to_reasoning_synthesis"
+        ],
+        "status": "PASSED"
+      },
+      "tests/architecture/test_turn_reasoner.py": {
+        "tests": [
+          "test_turn_decision_schema_and_serialization",
+          "test_turn_reasoner_direct_answer",
+          "test_turn_reasoner_tool_plan",
+          "test_turn_reasoner_clarify_and_refuse_modes",
+          "test_malformed_model_json_fails_safely"
+        ],
+        "status": "PASSED"
+      }
+    }
+  },
+  "full_repository_suite": {
+    "total_collected": 1081,
+    "passed": 1067,
+    "failed": 0,
+    "skipped": 14,
+    "regressions_detected": 0
+  }
+}

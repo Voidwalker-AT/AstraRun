@@ -1,0 +1,39 @@
+{
+  "phase": "ACR-1",
+  "title": "AstraRun Model Baseline & Inference Provenance",
+  "models": {
+    "TURN_REASONER": {
+      "model_id": "qwen2.5-coder",
+      "model_filename": "qwen2.5-coder-1.5b-instruct-q4_k_m.gguf",
+      "quantization": "Q4_K_M",
+      "parameters": "1.5B",
+      "architecture": "qwen2",
+      "runtime": "llama.cpp (llama-server.exe)",
+      "endpoint": "http://127.0.0.1:8089",
+      "context_window": 2048,
+      "ngl": 0,
+      "threads": 4,
+      "residency": "WARM_ON_DEMAND",
+      "benchmark_latencies_ms": {
+        "turn1_explain_modular_inverses": 5214.2,
+        "turn2_example_generation": 4820.5,
+        "turn3_why_does_it_work": 4120.1,
+        "turn4_make_it_shorter": 3950.4,
+        "turn5_file_creation_reasoning": 5110.8,
+        "post_tool_synthesis_battery": 2840.6
+      }
+    },
+    "COGNITIVE_FALLBACK": {
+      "model_id": "spark-x2.5",
+      "endpoint": "http://127.0.0.1:8090",
+      "role": "DEEP"
+    }
+  },
+  "inference_invariants": {
+    "strict_loopback": true,
+    "model_is_never_execution_authority": true,
+    "stateless_reasoner": true,
+    "fail_closed_on_unparseable": true,
+    "post_tool_synthesis_grounded_in_observations": true
+  }
+}

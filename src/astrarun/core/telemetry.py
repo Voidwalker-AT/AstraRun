@@ -44,10 +44,12 @@ class CausalEventType(str, Enum):
     GOAL_COMPLETED = "GOAL_COMPLETED"
     RUN_TERMINATED = "RUN_TERMINATED"
     TASK_FAILED = "TASK_FAILED"
+    LEGACY_FALLBACK_USED = "LEGACY_FALLBACK_USED"
 
 
 class DownstreamPipeline(str, Enum):
     """Authoritative downstream pipeline handling an operational goal."""
+    AGENT_COORDINATOR = "AGENT_COORDINATOR"
     META_HANDLER = "META_HANDLER"
     PURE_QUERY = "PURE_QUERY"
     AGENT_EXECUTION_ENGINE = "AGENT_EXECUTION_ENGINE"
@@ -529,6 +531,30 @@ class CausalTelemetry:
             data.update(details)
         return self.emit(
             event_type=CausalEventType.REQUEST_DOWNSTREAM_SELECTED.value,
+            component="AstraApplication.Dispatcher",
+            data=data,
+            task_id=task_id,
+        )
+
+    def emit_legacy_fallback(
+        self,
+        request_id: str,
+        reason: str,
+        legacy_pipeline: str | DownstreamPipeline,
+        task_id: Optional[str] = None,
+        details: Optional[Dict[str, Any]] = None,
+    ) -> Optional[CausalEvent]:
+        """Emit structured LEGACY_FALLBACK_USED causal telemetry event."""
+        pipe_val = legacy_pipeline.value if hasattr(legacy_pipeline, "value") else str(legacy_pipeline)
+        data: Dict[str, Any] = {
+            "request_id": request_id,
+            "reason": reason,
+            "legacy_pipeline": pipe_val,
+        }
+        if details:
+            data.update(details)
+        return self.emit(
+            event_type=CausalEventType.LEGACY_FALLBACK_USED.value,
             component="AstraApplication.Dispatcher",
             data=data,
             task_id=task_id,

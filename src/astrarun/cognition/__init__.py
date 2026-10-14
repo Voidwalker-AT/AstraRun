@@ -16,7 +16,7 @@ from astrarun.cognition.models import (
     SkillSelection,
 )
 from astrarun.cognition.residency import ModelRecord, ModelResidencyManager
-from astrarun.cognition.router import CognitiveRouter
+from astrarun.cognition.turn_models import TurnDecision, TurnMode
 from astrarun.cognition.supervisor import CREATE_NO_WINDOW, ModelSupervisor
 
 __all__ = [
@@ -39,4 +39,6 @@ __all__ = [
     "ResidencyPreference",
     "SkillSelection",
     "TokenBudget",
+    "TurnDecision",
+    "TurnMode",
 ]

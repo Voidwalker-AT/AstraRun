@@ -86,6 +86,14 @@ class ExecutionBrokerResult(BaseModel):
 class ExecutionBroker:
     """The authoritative execution choke-point for all Astra operations."""
 
+    _instance: Optional[ExecutionBroker] = None
+
+    @classmethod
+    def get_instance(cls) -> ExecutionBroker:
+        if cls._instance is None:
+            cls._instance = cls()
+        return cls._instance
+
     def __init__(
         self,
         action_gate: Optional[ActionGate] = None,

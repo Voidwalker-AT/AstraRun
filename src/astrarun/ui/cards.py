@@ -522,3 +522,74 @@ class ListResultCard(QFrame):
             event.accept()
         else:
             super().keyPressEvent(event)
+
+
+class AssistantCard(QFrame):
+    """
+    Interactive response card displaying Astra's conversational output, explanations, and tool status.
+    """
+
+    dismissed = Signal()
+
+    def __init__(
+        self,
+        text: str,
+        title: str = "Astra",
+        status: str = "READY",
+        tool_status: Optional[str] = None,
+        parent: Optional[QWidget] = None,
+    ) -> None:
+        super().__init__(parent)
+        self.setObjectName("assistant_card")
+        self.setStyleSheet(f"""
+            QFrame#assistant_card {{
+                background-color: {SURFACE};
+                border: 1px solid {BORDER};
+                border-radius: {RADIUS_MD}px;
+            }}
+        """)
+
+        layout = QVBoxLayout(self)
+        layout.setContentsMargins(16, 12, 16, 12)
+        layout.setSpacing(8)
+
+        # Header
+        header = QHBoxLayout()
+        icon_lbl = IconRenderer.create_label("spark", size=16, color=ACCENT, parent=self)
+        header.addWidget(icon_lbl)
+
+        self.title_label = QLabel(title, self)
+        self.title_label.setStyleSheet(f"""
+            color: {TEXT_PRIMARY};
+            font-size: {FONT_SIZE_BODY};
+            font-weight: 700;
+            font-family: {FONT_FAMILY};
+        """)
+        header.addWidget(self.title_label)
+        header.addStretch(1)
+
+        if tool_status:
+            tool_lbl = QLabel(tool_status, self)
+            tool_lbl.setStyleSheet(get_badge_style("success"))
+            header.addWidget(tool_lbl)
+
+        layout.addLayout(header)
+
+        # Body text
+        self.body_label = QLabel(text, self)
+        self.body_label.setWordWrap(True)
+        self.body_label.setTextInteractionFlags(Qt.TextInteractionFlag.TextSelectableByMouse)
+        self.body_label.setStyleSheet(f"""
+            color: {TEXT_SECONDARY};
+            font-size: {FONT_SIZE_BODY};
+            font-family: {FONT_FAMILY};
+        """)
+        layout.addWidget(self.body_label)
+
+    def keyPressEvent(self, event: QKeyEvent) -> None:
+        if event.key() == Qt.Key_Escape:
+            self.dismissed.emit()
+            event.accept()
+        else:
+            super().keyPressEvent(event)
+

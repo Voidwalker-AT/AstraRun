@@ -195,6 +195,8 @@ class LauncherWindow(QDialog):
         self.active_card: Optional[QWidget] = None
         self._memory_view_ref: Optional[QWidget] = None
         self._user_navigated_suggestions: bool = False
+        import uuid
+        self.session_id: str = f"launcher-sess-{uuid.uuid4().hex[:12]}"
 
         self._init_window()
         self._init_ui()
@@ -764,8 +766,11 @@ class LauncherWindow(QDialog):
                 raw_query=query,
                 origin=RequestOrigin.LAUNCHER,
                 origin_hwnd=getattr(self.app, "origin_window", None).hwnd if getattr(self.app, "origin_window", None) else None,
+                session_id=self.session_id,
             )
             exec_res = self.app.handle_request(envelope)
+            if hasattr(exec_res, "data") and isinstance(exec_res.data, dict) and "session_id" in exec_res.data:
+                self.session_id = exec_res.data["session_id"]
             self._handle_execution_result(exec_res, query)
             return
 
@@ -795,8 +800,19 @@ class LauncherWindow(QDialog):
             else:
                 self.show_feedback(res.message, is_error=True)
 
-        elif res.type == "conversational":
-            self.show_feedback(res.message, is_error=False)
+        elif res.type in ("conversational", "conversational_response"):
+            from astrarun.ui.cards import AssistantCard
+            tool_status = None
+            if res.data and isinstance(res.data, dict) and res.data.get("tool_observations"):
+                tool_status = "Action Verified"
+            card = AssistantCard(
+                text=res.message,
+                title="Astra",
+                tool_status=tool_status,
+                parent=self,
+            )
+            card.dismissed.connect(self.clear_card)
+            self.mount_card(card, target_height=min(280, max(140, len(res.message) // 3)))
             self.input_field.selectAll()
 
         elif res.type == "command":

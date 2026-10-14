@@ -1,0 +1,30 @@
+{
+  "phase": "ACR-1",
+  "title": "AstraRun Legacy Fallbacks & Telemetry Audit",
+  "telemetry_event": "LEGACY_FALLBACK_USED",
+  "description": "Structured causal telemetry emitted when an operational goal is routed to pre-existing legacy pipelines during the ACR-1 migration period.",
+  "fallbacks": [
+    {
+      "pipeline": "INLINE_LEGACY",
+      "trigger_pattern": "Non-ACR1 operational goals, legacy task workflows, computational math, diagnostics",
+      "emitted_by": "src/astrarun/app.py::handle_request",
+      "payload_fields": [
+        "request_id",
+        "reason",
+        "legacy_pipeline"
+      ],
+      "rationale": "Enforces safe incremental migration. Legacy architectures are NOT deleted until ACR-2."
+    }
+  ],
+  "verification": {
+    "test_file": "tests/architecture/test_legacy_fallback.py",
+    "status": "PASSED",
+    "events_captured": [
+      {
+        "event_type": "LEGACY_FALLBACK_USED",
+        "component": "AstraApplication",
+        "reason": "Operational goal routed to legacy pipeline"
+      }
+    ]
+  }
+}

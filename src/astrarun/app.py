@@ -253,6 +253,13 @@ class AstraApplication:
         )
         self.task_manager.execution_broker = self.execution_broker
 
+        # 8B. Central Intelligence Spine (ACR-1)
+        from astrarun.agent.coordinator import AgentCoordinator
+        self.agent_coordinator = AgentCoordinator(
+            registry=self.capability_registry,
+            broker=self.execution_broker,
+        )
+
         # 9. Deterministic Router & Routing Context
         self.deterministic_router = DeterministicRouter()
         self.routing_context = RoutingContext(
@@ -615,12 +622,27 @@ class AstraApplication:
                 )
             else:
                 effective_dry_run = dry_run or envelope.dry_run
-                res = self._handle_request_internal(
-                    clean,
-                    origin_window=origin_window,
-                    dry_run=effective_dry_run,
-                    envelope=envelope,
-                )
+                # Check if this operational goal should be routed to AgentCoordinator (ACR-1)
+                if self._should_route_to_agent_coordinator(clean, envelope):
+                    telem.emit_downstream_selected(
+                        request_id=envelope.request_id,
+                        downstream_pipeline=DownstreamPipeline.AGENT_COORDINATOR,
+                        details={"query": clean},
+                    )
+                    turn_res = self.agent_coordinator.handle_turn(envelope)
+                    res = self._convert_turn_result_to_execution_result(turn_res, envelope)
+                else:
+                    telem.emit_legacy_fallback(
+                        request_id=envelope.request_id,
+                        reason="Operational goal routed to legacy pipeline",
+                        legacy_pipeline=DownstreamPipeline.INLINE_LEGACY,
+                    )
+                    res = self._handle_request_internal(
+                        clean,
+                        origin_window=origin_window,
+                        dry_run=effective_dry_run,
+                        envelope=envelope,
+                    )
 
             if hasattr(res, "request_id") and not getattr(res, "request_id", None):
                 res.request_id = envelope.request_id
@@ -703,6 +725,134 @@ class AstraApplication:
             )
 
         return ExecutionResult(type="error", success=False, message=f"Unknown meta command: {decision.reason_code}")
+
+    def _should_route_to_agent_coordinator(self, query: str, envelope: RequestEnvelope) -> bool:
+        """
+        Determine if an operational goal belongs to an ACR-1 supported turn class.
+        
+        ACR-1 turn classes:
+        - General conversation, questions, and explanations
+        - Multi-turn contextual follow-ups and pronoun references
+        - Conversation -> file creation
+        - Verified artifact binding -> open
+        - Hybrid actions (action + explanation)
+        - Fast track operations (arithmetic, calculator, battery, window snapping)
+        """
+        from astrarun.agent.fast_track import SingleStepFastTrack
+        from astrarun.session.store import SessionStore
+
+        # 1. SingleStepFastTrack exact match
+        if SingleStepFastTrack.match(query) is not None:
+            return True
+
+        # 2. Pronoun / contextual follow-up references
+        q_lower = query.lower().strip()
+        tokens = set(re.findall(r"\b[a-zA-Z0-9_]+\b", q_lower))
+
+        pronoun_indicators = {"it", "that", "this", "them", "those"}
+        action_indicators = {"open", "create", "put", "make", "explain", "why", "save", "write"}
+        if (pronoun_indicators & tokens) and (action_indicators & tokens):
+            return True
+
+        # 3. Conversational topics / questions / explanations
+        conversational_starts = (
+            "explain", "why", "what is", "what are", "how does", "tell me",
+            "give me", "show me", "summarize", "make it", "what were we",
+            "hello", "hi", "who are you", "i'm studying", "i am studying",
+            "i'm revising", "i am revising",
+        )
+        if any(q_lower.startswith(prefix) for prefix in conversational_starts):
+            # Exclude legacy UI inspection commands like "what can you do?"
+            if q_lower in ("what can you do?", "what can you do", "what can astra do"):
+                return False
+            # Exclude pure computational math like "what is 25 * 4"
+            if re.match(r"^what\s+is\s+[\d\s\+\-\*\/\(\)\.\^]+$", q_lower):
+                return False
+            # Exclude legacy diagnostic reasoning escalation
+            if q_lower in ("why is the system slow?", "why is the system slow", "why is my pc slow"):
+                return False
+            return True
+
+        if "cryptography" in tokens or "deadlock" in tokens or "recursion" in tokens or "modular" in tokens:
+            return True
+
+        # 4. Hybrid queries: action + explanation
+        if ("explain" in tokens or "why" in tokens) and any(w in tokens for w in ("open", "launch", "calc", "calculator")):
+            return True
+
+        # 5. File creation from conversational context
+        if "file" in tokens and any(w in tokens for w in ("put", "write", "save", "create")) and any(p in tokens for p in ("that", "example", "it", "explanation")):
+            return True
+
+        # 6. Active session with prior turns where user continues conversation
+        session_id = envelope.session_id
+        if session_id:
+            store = SessionStore.get_instance()
+            sess = store.get_session(session_id)
+            if sess and len(sess.turns) > 0:
+                # If there is prior dialog in this session, route through coordinator unless it's a known legacy navigation command
+                legacy_direct = {"history", "memory", "skills", "settings", "diagnostics", "undo"}
+                if q_lower not in legacy_direct:
+                    return True
+
+        return False
+
+    def _convert_turn_result_to_execution_result(
+        self,
+        turn_res: Any,
+        envelope: RequestEnvelope,
+    ) -> ExecutionResult:
+        """Convert a TurnResult from AgentCoordinator into standard ExecutionResult for callers and UI."""
+        from astrarun.agent.coordinator import TurnStatus
+        from astrarun.cognition.turn_models import TurnMode
+
+        is_conversational = (
+            turn_res.decision is not None
+            and turn_res.decision.mode == TurnMode.DIRECT_ANSWER
+        )
+        if turn_res.decision and turn_res.decision.model_role == "FAST_TRACK":
+            if turn_res.decision.mode == TurnMode.TOOL_PLAN:
+                res_type = "fast_path"
+            elif "expression" in turn_res.decision.metadata:
+                res_type = "computational"
+            else:
+                res_type = "capability_result"
+        elif is_conversational:
+            res_type = "conversational"
+        else:
+            res_type = "capability_result"
+
+        if turn_res.status == TurnStatus.BLOCKED:
+            res_type = "blocked"
+        elif turn_res.status == TurnStatus.PAUSED_CONFIRMATION:
+            res_type = "confirm"
+        elif turn_res.status == TurnStatus.CLARIFICATION_REQUIRED:
+            res_type = "clarify"
+
+        data = {
+            "turn_id": turn_res.turn_id,
+            "session_id": turn_res.session_id,
+            "status": turn_res.status.value,
+            "decision": turn_res.decision.to_dict() if turn_res.decision else None,
+            "tool_observations": turn_res.tool_observations,
+            "artifacts": [a.to_dict() for a in turn_res.artifacts_pinned],
+            **turn_res.metadata,
+        }
+
+        success = turn_res.status in (
+            TurnStatus.SUCCESS,
+            TurnStatus.PAUSED_CONFIRMATION,
+            TurnStatus.CLARIFICATION_REQUIRED,
+        )
+
+        return ExecutionResult(
+            type=res_type,
+            success=success,
+            message=turn_res.response_text,
+            data=data,
+            confirmation_token=turn_res.metadata.get("confirmation_token"),
+            request_id=envelope.request_id,
+        )
 
     def _handle_request_internal(
         self,

@@ -322,6 +322,12 @@ class CapabilitySemanticIndex:
                 if not any(w in all_tokens for w in ("snap", "tile", "dock", "window", "half")):
                     score = 0.0
 
+            # If dynamic tool execution or delegation, require explicit execution/compilation intent, not conversational code request
+            if "dynamic" in cap_id.lower() or "delegate" in cap_id.lower():
+                if any(w in all_tokens for w in ("example", "analogy", "explain", "explanation", "why", "how", "what", "show", "tell", "teach")):
+                    if not any(w in all_tokens for w in ("run", "execute", "build", "compile", "eval", "launch")):
+                        score = 0.0
+
             # 7. Hardware Subsystem Specificity & Domain Conflict Rules
             hw_domains = {"battery", "memory", "ram", "cpu", "gpu", "vram", "disk", "storage"}
             query_hw = hw_domains.intersection(all_tokens)

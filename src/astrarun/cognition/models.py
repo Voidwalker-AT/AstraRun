@@ -29,6 +29,7 @@ class ModelRole(str, Enum):
     """Functional role of a model within AstraRun's cognitive architecture."""
     FAST = "FAST"          # Low-latency interactive model (Spark-X2.5)
     DEEP = "DEEP"          # Reasoning and code DAG planner (Qwen2.5-Coder)
+    TURN_REASONER = "TURN_REASONER"  # Unified turn reasoner and conversational synthesis
     SPECIALIST = "SPECIALIST"  # Future vision/audio/domain specialist
 
 

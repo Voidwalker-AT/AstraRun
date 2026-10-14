@@ -1,0 +1,75 @@
+{
+  "phase": "ACR-1",
+  "title": "AstraRun Central Intelligence Spine Migration Map",
+  "target_orchestrator": "src/astrarun/agent/coordinator.py::AgentCoordinator",
+  "status": "OPERATIONAL",
+  "migrated_paths": [
+    {
+      "category": "CONVERSATIONAL_INQUIRY",
+      "entry_route": "OPERATIONAL_GOAL -> _should_route_to_agent_coordinator",
+      "target_component": "TurnReasoner -> TurnMode.DIRECT_ANSWER",
+      "evidence_test": "tests/architecture/test_multi_turn_intelligence.py"
+    },
+    {
+      "category": "MULTI_TURN_CONTEXT_AND_PRONOUNS",
+      "entry_route": "OPERATIONAL_GOAL -> AgentCoordinator.handle_turn",
+      "target_component": "ConversationSession -> _resolve_conversational_references",
+      "evidence_test": "tests/architecture/test_conversation_session.py"
+    },
+    {
+      "category": "CONVERSATION_TO_FILE_CREATION",
+      "entry_route": "OPERATIONAL_GOAL -> AgentCoordinator.handle_turn",
+      "target_component": "ExecutionBroker -> save_text_file -> StepVerifier -> PinnedArtifact",
+      "evidence_test": "tests/architecture/test_conversation_to_tool.py"
+    },
+    {
+      "category": "ARTIFACT_BINDING_TO_OPEN",
+      "entry_route": "OPERATIONAL_GOAL -> AgentCoordinator.handle_turn",
+      "target_component": "PinnedArtifact('last_file') -> open_file -> ExecutionBroker",
+      "evidence_test": "tests/architecture/test_conversation_to_tool.py"
+    },
+    {
+      "category": "HYBRID_ACT_AND_ANSWER",
+      "entry_route": "OPERATIONAL_GOAL -> AgentCoordinator.handle_turn",
+      "target_component": "ExecutionBroker + TurnReasoner.synthesize_post_tool",
+      "evidence_test": "tests/architecture/test_tool_to_reasoning.py"
+    },
+    {
+      "category": "FAST_TRACK_OPERATIONS",
+      "entry_route": "OPERATIONAL_GOAL -> SingleStepFastTrack",
+      "target_component": "SingleStepFastTrack.match -> TurnDecision -> ExecutionBroker",
+      "evidence_test": "tests/architecture/test_single_step_fast_track.py"
+    }
+  ],
+  "preserved_legacy_paths": [
+    {
+      "name": "COMPUTATIONAL_MATH_LEGACY",
+      "trigger": "what is <math expression>",
+      "telemetry_event": "LEGACY_FALLBACK_USED",
+      "reason": "AU-1.1A regression preservation for benchmark test_intent_computational_math"
+    },
+    {
+      "name": "DIAGNOSTIC_REASONING_ESCALATION",
+      "trigger": "why is the system slow?",
+      "telemetry_event": "LEGACY_FALLBACK_USED",
+      "reason": "AU-1.1A regression preservation for daily driver escalation tests"
+    },
+    {
+      "name": "WORKFLOW_COMPILATION",
+      "trigger": "Complex structured multi-step YAML/JSON workflows",
+      "telemetry_event": "LEGACY_FALLBACK_USED",
+      "reason": "ACR-2 migration target"
+    },
+    {
+      "name": "DYNAMIC_BUILDER_SANDBOX",
+      "trigger": "Explicit python code synthesis / build requests",
+      "telemetry_event": "LEGACY_FALLBACK_USED",
+      "reason": "ACR-2 migration target"
+    }
+  ],
+  "future_acr2_cleanups": [
+    "src/astrarun/workflows/compiler.py",
+    "src/astrarun/tasks/runtime.py legacy wrappers",
+    "src/astrarun/agent/loop.py legacy orchestrator"
+  ]
+}

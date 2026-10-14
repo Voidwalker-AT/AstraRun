@@ -6,10 +6,16 @@ from astrarun.computer_use.world.desktop_state import (
     ProcessObservation,
     WindowObservation,
 )
+from astrarun.computer_use.world.summary import (
+    WorldStateAdapter,
+    WorldStateSummary,
+)
 
 __all__ = [
     "DesktopWorldState",
     "DialogObservation",
     "ProcessObservation",
     "WindowObservation",
+    "WorldStateAdapter",
+    "WorldStateSummary",
 ]

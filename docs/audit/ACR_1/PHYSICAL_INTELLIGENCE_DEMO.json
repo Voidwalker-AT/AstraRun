@@ -1,0 +1,89 @@
+{
+  "timestamp": 1792009126.1947896,
+  "runtime": {
+    "os": "Windows",
+    "python": "3.13.0 (tags/v3.13.0:60403a5, Oct  7 2024, 09:38:07) [MSC v.1941 64 bit (AMD64)]",
+    "qt_version": "PySide6"
+  },
+  "sequence_1_cryptography": [
+    {
+      "turn_name": "turn1_explain",
+      "prompt": "I'm revising cryptography. Explain why modular inverses matter.",
+      "latency_s": 9.782158100002562,
+      "screenshot": "turn1_explain.png",
+      "card_text_preview": "",
+      "card_status": null,
+      "session_id": "launcher-sess-de100fddd89d"
+    },
+    {
+      "turn_name": "turn2_example",
+      "prompt": "Give me a concrete numerical example.",
+      "latency_s": 6.907907199987676,
+      "screenshot": "turn2_example.png",
+      "card_text_preview": "",
+      "card_status": null,
+      "session_id": "launcher-sess-de100fddd89d"
+    },
+    {
+      "turn_name": "turn3_why",
+      "prompt": "Why does that inverse work?",
+      "latency_s": 6.24048269999912,
+      "screenshot": "turn3_why.png",
+      "card_text_preview": "",
+      "card_status": null,
+      "session_id": "launcher-sess-de100fddd89d"
+    },
+    {
+      "turn_name": "turn4_shorter",
+      "prompt": "Make the explanation shorter.",
+      "latency_s": 5.177287799990154,
+      "screenshot": "turn4_shorter.png",
+      "card_text_preview": "",
+      "card_status": null,
+      "session_id": "launcher-sess-de100fddd89d"
+    },
+    {
+      "turn_name": "turn5_write_file",
+      "prompt": "Put that example into a text file at C:\\Users\\hp\\AppData\\Local\\Temp\\astrarun_demo_cbrpnoz4\\modular_inverse_notes.txt.",
+      "latency_s": 7.323053300002357,
+      "screenshot": "turn5_write_file.png",
+      "card_text_preview": "",
+      "card_status": null,
+      "session_id": "launcher-sess-de100fddd89d",
+      "file_created": true,
+      "file_bytes": 222,
+      "file_content_preview": "Deadlock occurs when two threads wait on locks held by each other. For example:\n\nimport threading\nlo"
+    },
+    {
+      "turn_name": "turn6_open_it",
+      "prompt": "Open it.",
+      "latency_s": 8.17048759998579,
+      "screenshot": "turn6_open_it.png",
+      "card_text_preview": "",
+      "card_status": null,
+      "session_id": "launcher-sess-de100fddd89d"
+    }
+  ],
+  "sequence_2_hybrid": {
+    "prompt": "Open calculator and explain why 0.1 + 0.2 is weird in floating point.",
+    "latency_s": 6.487685899992357,
+    "screenshot": "hybrid_calculator_floating_point.png",
+    "card_text_preview": "",
+    "card_status": null,
+    "calculator_pids_detected": []
+  },
+  "process_invariants": {
+    "initial_lingering_pids": 0,
+    "final_lingering_pids": 0,
+    "processes_cleaned": [
+      {
+        "pid": 2976,
+        "name": "Notepad.exe"
+      },
+      {
+        "pid": 9608,
+        "name": "Notepad.exe"
+      }
+    ]
+  }
+}

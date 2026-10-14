@@ -1,0 +1,24 @@
+{
+  "auditor": "MiMo",
+  "specimen": "4a5b409d3a02586f4d3249fc7839601439900de8",
+  "findings": [
+    {"id": "F1", "topic": "split-brain pipelines", "argon": "two architectures; agent only for narrow gate", "mimo": "CONFIRMED", "severity": "CRITICAL", "action": "unify in AU-1"},
+    {"id": "F2", "topic": "learned router + ModelRole crash", "argon": "regex not learned; latent NameError", "mimo": "CONFIRMED", "severity": "HIGH", "action": "fix import; rebrand/realize router"},
+    {"id": "F3", "topic": "F0-25F.7 blind contamination", "argon": "300/1000 dups; hash cosmetic", "mimo": "CONFIRMED", "severity": "CRITICAL", "action": "new holdout; enforce hash"},
+    {"id": "F4", "topic": "Hermes production influence", "argon": "no plan influence; gates unwired", "mimo": "CONFIRMED", "severity": "HIGH", "action": "wire or remove"},
+    {"id": "F5", "topic": "Hermes fake verification", "argon": "literal hashes; broker=verified; FP confidence", "mimo": "CONFIRMED", "severity": "CRITICAL", "action": "real state observation"},
+    {"id": "F6", "topic": "Notepad++ learning causality", "argon": "harness-scripted", "mimo": "CONFIRMED", "severity": "CRITICAL", "action": "stop overstating autonomy"},
+    {"id": "F7", "topic": "close ~1.5s kill unsaved", "argon": "1.5s no dialog resolve", "mimo": "PARTIALLY_CONFIRMED", "severity": "HIGH", "action": "timings wrong (~3.2-6.2s) but Don't Save + kill-with-dialog CONFIRMED"},
+    {"id": "F8", "topic": "PID discard / window claim", "argon": "ambiguity claims any window", "mimo": "CONFIRMED", "severity": "CRITICAL", "action": "preserve PID; constrain window match"},
+    {"id": "F9", "topic": "confirmation UI action/{}", "argon": "hardcoded fallback", "mimo": "CONFIRMED", "severity": "CRITICAL", "action": "pass real payload"},
+    {"id": "F10", "topic": "CONFIRM→REPLAN", "argon": "confirm treated as failure", "mimo": "CONFIRMED", "severity": "CRITICAL", "action": "pause on CONFIRM; pass flag to fallback"},
+    {"id": "F11", "topic": "executor_override", "argon": "unregistered exec LOW risk skip gate", "mimo": "PARTIALLY_CONFIRMED", "severity": "MEDIUM", "action": "registry bypass yes; risk HIGH not LOW; unknown still blocked; no prod callers"},
+    {"id": "F12", "topic": "completion split", "argon": "success True vs gate reject", "mimo": "CONFIRMED", "severity": "CRITICAL", "action": "bind UI success to gate"},
+    {"id": "F13", "topic": "dead architecture", "argon": "many unwired modules", "mimo": "CONFIRMED", "severity": "HIGH", "action": "purge or wire"},
+    {"id": "F14", "topic": "test/mock contamination", "argon": "mock default etc", "mimo": "PARTIALLY_CONFIRMED", "severity": "MEDIUM", "action": "seams OK; mock default/hardcoded pytest/planner mock UNSAFE"},
+    {"id": "F15", "topic": "model fallback theater", "argon": "dead context key; no gpt-4o/claude", "mimo": "CONFIRMED", "severity": "HIGH", "action": "implement or remove"},
+    {"id": "F16", "topic": "perception stacks", "argon": "overlap; not decision-driving", "mimo": "PARTIALLY_CONFIRMED", "severity": "MEDIUM", "action": "MIXED; PerceptionService orphaned; no ComputerUseObserver class"}
+  ],
+  "tally": {"CONFIRMED": 12, "PARTIALLY_CONFIRMED": 4, "CONTRADICTED": 0, "UNVERIFIED": 0},
+  "overall": "ARGON CRITICAL FINDINGS SUBSTANTIALLY CONFIRMED"
+}

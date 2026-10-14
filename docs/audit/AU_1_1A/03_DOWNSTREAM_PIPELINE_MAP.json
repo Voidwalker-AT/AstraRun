@@ -1,0 +1,72 @@
+{
+  "phase": "AU-1.1A",
+  "artifact": "03_DOWNSTREAM_PIPELINE_MAP.json",
+  "generated_at": "2026-10-14T11:40:00Z",
+  "description": "Authoritative mapping of operational downstream execution pipelines reachable via RequestEnvelope and RequestBoundaryRouter.",
+  "pipelines": {
+    "META_HANDLER": {
+      "enum": "DownstreamPipeline.META_HANDLER",
+      "ingress_route": "META_COMMAND",
+      "description": "Internal static AstraRun UI/meta commands strictly isolated from workstation execution, mutation, and ExecutionBroker.",
+      "triggers": ["help", "capabilities", "commands", "history", "memory", "skills", "settings", "diagnostics", "hotkey status", "greetings", "acknowledgements"],
+      "mutation_allowed": false,
+      "execution_broker_accessible": false
+    },
+    "PURE_QUERY": {
+      "enum": "DownstreamPipeline.PURE_QUERY",
+      "ingress_route": "OPERATIONAL_GOAL",
+      "description": "Deterministic, sandboxed in-memory computations (basic arithmetic AST evaluation, capped count sequences).",
+      "triggers": ["calculate <expr>", "what is <expr>", "count to <n>"],
+      "mutation_allowed": false,
+      "execution_broker_accessible": false
+    },
+    "AGENT_EXECUTION_ENGINE": {
+      "enum": "DownstreamPipeline.AGENT_EXECUTION_ENGINE",
+      "ingress_route": "OPERATIONAL_GOAL",
+      "description": "Full autonomous multi-step agent execution engine with GoalPlanner, GoalVerifier, ActionGate safety arbiter, and resource lifecycle management.",
+      "triggers": ["battery report", "wifi scan/connect/disconnect", "dynamic plug-in goals"],
+      "mutation_allowed": true,
+      "execution_broker_accessible": true
+    },
+    "UI_INTERACTION_FAST_PATH": {
+      "enum": "DownstreamPipeline.UI_INTERACTION_FAST_PATH",
+      "ingress_route": "OPERATIONAL_GOAL",
+      "description": "Direct UI automation and control element interactions routed through ExecutionBroker.",
+      "triggers": ["press <shortcut>", "copy", "paste", "select all", "inspect ui", "click <element>", "type <text>", "toggle <element>", "focus <element>", "select tab <name>"],
+      "mutation_allowed": true,
+      "execution_broker_accessible": true
+    },
+    "DETERMINISTIC_ROUTER": {
+      "enum": "DownstreamPipeline.DETERMINISTIC_ROUTER",
+      "ingress_route": "OPERATIONAL_GOAL",
+      "description": "High-confidence single-token or simple-verb app launches routed via DeterministicRouter and executed via ExecutionBroker.",
+      "triggers": ["open <app>", "launch <app>", "start <app>", "close <app>", "quit <app>"],
+      "mutation_allowed": true,
+      "execution_broker_accessible": true
+    },
+    "MACHINE_QUERY_ENGINE": {
+      "enum": "DownstreamPipeline.MACHINE_QUERY_ENGINE",
+      "ingress_route": "OPERATIONAL_GOAL",
+      "description": "Fast-path authoritative workstation facts lookup.",
+      "triggers": ["queries matching machine model topics"],
+      "mutation_allowed": false,
+      "execution_broker_accessible": false
+    },
+    "LEGACY_LAYA_WORKFLOW": {
+      "enum": "DownstreamPipeline.LEGACY_LAYA_WORKFLOW",
+      "ingress_route": "OPERATIONAL_GOAL",
+      "description": "Multi-stage rich interactive NLP sandwich: Laya A pre-gate -> Neural Structure Engine -> Laya B verifier -> Decision Fusion -> WorkflowCompiler -> ActionGate.",
+      "triggers": ["compound requests", "complex multi-clause operational requests", "window layout instructions"],
+      "mutation_allowed": true,
+      "execution_broker_accessible": true
+    },
+    "INLINE_LEGACY": {
+      "enum": "DownstreamPipeline.INLINE_LEGACY",
+      "ingress_route": "OPERATIONAL_GOAL",
+      "description": "Legacy inline observation and workstation status handlers.",
+      "triggers": ["is <app> running", "is <app> installed", "cpu status", "memory status", "undo window", "result presentation"],
+      "mutation_allowed": true,
+      "execution_broker_accessible": true
+    }
+  }
+}

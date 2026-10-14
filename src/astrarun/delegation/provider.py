@@ -103,6 +103,11 @@ class DelegateProvider(ABC):
         return f"Delegated session {session.session_id} with {self.provider_name} ({len(session.turns)} turns)."
 
 
+class ProviderUnavailableError(RuntimeError, ValueError):
+    """Raised when a requested or default delegate provider is unavailable or unconfigured."""
+    pass
+
+
 class DelegateRegistry:
     """Global registry of available delegate providers."""
 
@@ -110,16 +115,18 @@ class DelegateRegistry:
 
     def __init__(self) -> None:
         self._providers: Dict[str, DelegateProvider] = {}
-        self._default_provider: str = "mock"
+        self._default_provider: Optional[str] = None
 
     @classmethod
     def get_instance(cls) -> DelegateRegistry:
         if cls._instance is None:
             reg = cls()
-            from astrarun.delegation.mock import MockDelegateProvider
+            # Production registry starts with configured real providers only.
+            # MockDelegateProvider is NOT auto-registered in production.
             from astrarun.delegation.chatgpt_web import ChatGPTWebDelegate
-            reg.register(MockDelegateProvider(name="mock"), set_default=True)
-            reg.register(ChatGPTWebDelegate())
+            chatgpt = ChatGPTWebDelegate()
+            if chatgpt.is_available():
+                reg.register(chatgpt, set_default=True)
             cls._instance = reg
         return cls._instance
 
@@ -141,7 +148,10 @@ class DelegateRegistry:
         return list(self._providers.keys())
 
     def resolve_provider(self, requested_name: Optional[str] = None) -> DelegateProvider:
-        """Resolve a requested provider or fallback safely to available provider."""
+        """Resolve a requested provider or fail honestly if unavailable."""
+        if not self._providers:
+            raise ProviderUnavailableError("PROVIDER_UNAVAILABLE: No delegate providers registered in DelegateRegistry.")
+
         if requested_name:
             norm = requested_name.lower().strip()
             prov = self._providers.get(norm)
@@ -153,19 +163,21 @@ class DelegateRegistry:
                         break
             if prov and prov.is_available():
                 return prov
-            if prov and not prov.is_available():
-                fallback = self._providers.get("mock") or self._providers.get(self._default_provider)
-                if fallback and fallback.is_available():
-                    logger.info("Requested provider '%s' is unavailable; falling back to '%s'", requested_name, fallback.provider_name)
-                    return fallback
-                return prov
-            if prov:
-                return prov
-            raise ValueError(f"Requested delegate provider '{requested_name}' is not registered. Available: {list(self._providers.keys())}")
+            # If requested provider is not found or unavailable, check if an explicit default is configured
+            if self._default_provider and self._default_provider in self._providers:
+                def_prov = self._providers[self._default_provider]
+                if def_prov.is_available() and def_prov is not prov:
+                    logger.info("Requested provider '%s' not available; using configured default '%s'", requested_name, def_prov.provider_name)
+                    return def_prov
 
-        default_prov = self._providers.get(self._default_provider)
-        if default_prov:
+            if prov and not prov.is_available():
+                raise ProviderUnavailableError(f"PROVIDER_UNAVAILABLE: Requested provider '{requested_name}' is currently unavailable.")
+            raise ProviderUnavailableError(f"PROVIDER_UNAVAILABLE: Requested delegate provider '{requested_name}' is not registered. Available: {list(self._providers.keys())}")
+
+        default_prov = self._providers.get(self._default_provider) if self._default_provider else None
+        if default_prov and default_prov.is_available():
             return default_prov
-        if self._providers:
-            return next(iter(self._providers.values()))
-        raise RuntimeError("No delegate providers registered in DelegateRegistry.")
+        for prov in self._providers.values():
+            if prov.is_available():
+                return prov
+        raise ProviderUnavailableError("PROVIDER_UNAVAILABLE: No available delegate providers registered in DelegateRegistry.")

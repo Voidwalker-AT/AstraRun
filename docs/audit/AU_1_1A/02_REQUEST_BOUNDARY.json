@@ -1,0 +1,47 @@
+{
+  "timestamp": "2026-10-14T16:09:10Z",
+  "slice": "AU-1.1A",
+  "module": "src/astrarun/ingress/request_boundary.py",
+  "class_name": "RequestBoundaryRouter",
+  "methods": [
+    {
+      "name": "classify_ingress",
+      "signature": "classify_ingress(envelope: RequestEnvelope) -> IngressDecision",
+      "return_type": "IngressDecision"
+    }
+  ],
+  "routes": [
+    "META_COMMAND",
+    "OPERATIONAL_GOAL"
+  ],
+  "meta_command_invariants": {
+    "A": "Targets AstraRun itself or static product metadata",
+    "B": "Does not inspect dynamic external workstation/application state",
+    "C": "Does not mutate filesystem, windows, processes, clipboard, network, applications, etc.",
+    "D": "Does not invoke external capabilities",
+    "E": "Cannot hide an operational second clause"
+  },
+  "allowed_meta_families": [
+    "EMPTY_INPUT",
+    "HELP",
+    "CAPABILITIES",
+    "COMMANDS",
+    "HISTORY_PANEL",
+    "MEMORY_PANEL",
+    "SKILLS_PANEL",
+    "SETTINGS_PANEL",
+    "DIAGNOSTICS_PANEL",
+    "HOTKEY_STATUS",
+    "EXACT_GREETING",
+    "EXACT_ACKNOWLEDGEMENT"
+  ],
+  "fail_closed_policy": {
+    "default_route": "OPERATIONAL_GOAL",
+    "reason_code": "OPERATIONAL_DEFAULT",
+    "rationale": "Misclassifying an operational request as META creates an unverified security and execution bypass. Misclassifying a meta request as OPERATIONAL merely forwards it safely into deeper governed agent handling."
+  },
+  "composite_handling": {
+    "policy": "Any compound indicators ('and', 'then', ';', '&', etc.) or comma-separated action clauses force classification to OPERATIONAL_GOAL.",
+    "reason_code": "COMPOSITE_OPERATIONAL"
+  }
+}

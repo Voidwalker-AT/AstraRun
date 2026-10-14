@@ -1,0 +1,211 @@
+{
+  "timestamp": "2026-10-14T16:07:00Z",
+  "slice": "AU-1.1A",
+  "baseline_commit": "4a5b409d3a02586f4d3249fc7839601439900de8",
+  "ingress_sources": {
+    "launcher": {
+      "file": "src/astrarun/ui/launcher.py",
+      "methods": [
+        {
+          "name": "execute_command",
+          "lines": "721-801",
+          "branches": [
+            {
+              "condition": "classify_launcher_input(query) == InputIntent.NATURAL_LANGUAGE",
+              "action": "bypasses app.handle_request; directly displays get_conversational_response(query)",
+              "type": "CONVERSATIONAL_BYPASS"
+            },
+            {
+              "condition": "_is_compound_or_nlp_query or intent in (QUESTION, GOAL)",
+              "action": "invokes self.app.handle_request(query)",
+              "type": "APP_HANDLE_REQUEST"
+            },
+            {
+              "condition": "suggestions_list.isVisible() and current_row >= 0 and match",
+              "action": "invokes _execute_result(res) -> self.app.handle_request(res.matched_alias or res.name)",
+              "type": "APP_HANDLE_REQUEST"
+            },
+            {
+              "condition": "fallback typed command",
+              "action": "invokes self.app.handle_request(query) if self.app is not None, else self.router.route(query)",
+              "type": "APP_HANDLE_REQUEST"
+            }
+          ]
+        }
+      ]
+    },
+    "cli": {
+      "file": "src/astrarun/main.py",
+      "methods": [
+        {
+          "name": "main (run_command handler)",
+          "lines": "217-253",
+          "action": "invokes astra_app.handle_request(args.run_command)"
+        }
+      ]
+    },
+    "task_runtime": {
+      "file": "src/astrarun/tasks/runtime.py",
+      "methods": [
+        {
+          "name": "_run_task_pipeline",
+          "lines": "210-300",
+          "action": "if self.app is not None, invokes self.app.handle_request(task.request_text, origin_hwnd=...)"
+        },
+        {
+          "name": "execute_adaptive_plan",
+          "lines": "700-890",
+          "action": "direct step capability execution bypassing app.handle_request"
+        }
+      ]
+    }
+  },
+  "canonical_pipeline_entry": {
+    "file": "src/astrarun/app.py",
+    "method": "AstraApplication.handle_request",
+    "lines": "549-577",
+    "behavior": "Initializes CausalTelemetry run, calls _handle_request_internal, logs run completion, catches and logs unhandled exceptions."
+  },
+  "downstream_branches": [
+    {
+      "branch_index": 0,
+      "name": "empty_query",
+      "lines": "584-586",
+      "matcher": "if not clean",
+      "executor": "immediate ExecutionResult(type='error')"
+    },
+    {
+      "branch_index": 1,
+      "name": "result_presentation",
+      "lines": "614-656",
+      "matcher": "re.match(r'^(?:show(?:\\s+me)?|open|view|display)\\s+(?:the\\s+)?(?:result|results|output|deliverable)\\??$')",
+      "executor": "astrarun.ui.result_presentation.present_result"
+    },
+    {
+      "branch_index": 2,
+      "name": "negation_block",
+      "lines": "658-660",
+      "matcher": "re.search(r'\\b(?:don\\'t|dont|do\\s+not|never)\\s+(?:open|launch|start|run|close|delete|format|kill|remove)\\b')",
+      "executor": "immediate ExecutionResult(type='blocked')"
+    },
+    {
+      "branch_index": 3,
+      "name": "capabilities_help_primary",
+      "lines": "662-675",
+      "matcher": "lower_clean in ('what can you do', 'help', 'capabilities', 'commands')",
+      "executor": "self.capability_registry.list_capabilities()"
+    },
+    {
+      "branch_index": 4,
+      "name": "conversational_greetings",
+      "lines": "677-680",
+      "matcher": "lower_clean in CONVERSATIONAL_EXACT",
+      "executor": "get_conversational_response(clean)"
+    },
+    {
+      "branch_index": 5,
+      "name": "computational_count",
+      "lines": "682-694",
+      "matcher": "re.match(r'^count\\s+to\\s+(\\d+)$')",
+      "executor": "inline counting + task_manager.create_task"
+    },
+    {
+      "branch_index": 6,
+      "name": "computational_math",
+      "lines": "696-729",
+      "matcher": "re.match(r'^(?:what\\s+is|calculate|compute)\\s+(\\d+(?:\\.\\d+)?\\s*[\\+\\-\\*\\/]\\s*\\d+(?:\\.\\d+)?)\\??$')",
+      "executor": "ast.parse arithmetic evaluation + task_manager.create_task"
+    },
+    {
+      "branch_index": 7,
+      "name": "observation_app_installed",
+      "lines": "731-743",
+      "matcher": "re.match(r'^(?:is\\s+(?:the\\s+)?([a-zA-Z0-9_\\-\\.]+)\\s+installed|check\\s+if...)",
+      "executor": "SemanticEntityResolver.is_app_installed"
+    },
+    {
+      "branch_index": 8,
+      "name": "observation_app_running",
+      "lines": "745-758",
+      "matcher": "re.match(r'^(?:is\\s+(?:the\\s+)?([a-zA-Z0-9_\\-\\.]+)\\s+(?:currently\\s+)?running...')",
+      "executor": "SemanticEntityResolver.is_app_running"
+    },
+    {
+      "branch_index": 9,
+      "name": "application_close",
+      "lines": "760-774",
+      "matcher": "re.match(r'^(?:close|quit|exit)\\s+(?:the\\s+)?([a-zA-Z0-9_\\-\\.]+)\\??$')",
+      "executor": "self._execute_through_broker('close_application', ...)"
+    },
+    {
+      "branch_index": 10,
+      "name": "ui_meta_panels",
+      "lines": "775-789",
+      "matcher": "lower_q in ('history', 'open history', 'show history', 'memory', 'skills', 'settings', 'diagnostics')",
+      "executor": "ExecutionResult(type='command', message='open_...')"
+    },
+    {
+      "branch_index": 11,
+      "name": "hotkey_diagnostics",
+      "lines": "790-802",
+      "matcher": "lower_q in ('hotkey', 'hotkey status', 'hotkey diagnostics', 'diagnostics hotkey', 'check hotkey')",
+      "executor": "self.hotkey_manager.get_diagnostics()"
+    },
+    {
+      "branch_index": 12,
+      "name": "system_resource_status",
+      "lines": "803-818",
+      "matcher": "lower_q in ('cpu status', 'cpu usage', 'memory status', 'memory usage', ...)",
+      "executor": "astrarun.system.service.cpu_status / memory_status"
+    },
+    {
+      "branch_index": 13,
+      "name": "window_undo",
+      "lines": "819-826",
+      "matcher": "lower_q in ('undo', 'undo window', 'undo last window move', 'undo layout')",
+      "executor": "undo_last_window_move()"
+    },
+    {
+      "branch_index": 14,
+      "name": "capabilities_help_duplicate",
+      "lines": "828-839",
+      "matcher": "lower_q in ('help', 'what can you do?', 'capabilities', 'commands')",
+      "executor": "DUPLICATE: self.capability_registry.list_capabilities()"
+    },
+    {
+      "branch_index": 15,
+      "name": "autonomous_agent_goals",
+      "lines": "841-879",
+      "matcher": "battery report, wifi keywords, or agent_engine.planner.indexer non-builtin capability match",
+      "executor": "self.agent_engine.execute_goal(clean)"
+    },
+    {
+      "branch_index": 16,
+      "name": "ui_interaction_control_fast_path",
+      "lines": "881-1040",
+      "matcher": "press shortcut, copy, paste, select all, inspect ui, click, type, toggle, focus, select tab",
+      "executor": "self._execute_through_broker with UI capabilities"
+    },
+    {
+      "branch_index": 17,
+      "name": "deterministic_router_fast_path",
+      "lines": "1043-1168",
+      "matcher": "is_simple_verb or is_single_term matching deterministic router",
+      "executor": "self.deterministic_router.route -> execution_broker / dry_run"
+    },
+    {
+      "branch_index": 18,
+      "name": "machine_query_engine_fast_path",
+      "lines": "1169-1191",
+      "matcher": "self.machine_query_engine.is_machine_query(clean)",
+      "executor": "self.machine_query_engine.answer_query(clean)"
+    },
+    {
+      "branch_index": 19,
+      "name": "rich_nlp_laya_workflow_path",
+      "lines": "1192-1600",
+      "matcher": "Default fallthrough for all remaining requests",
+      "executor": "LayaSandwich -> NeuralStructureEngine -> LayaVerifier -> DecisionFusion -> NLPEngine -> WindowResolver -> WorkflowCompiler -> ActionGate -> TaskManager capability execution loop"
+    }
+  ]
+}

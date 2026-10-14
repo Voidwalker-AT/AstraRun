@@ -1,0 +1,14 @@
+{
+  "auditor": "MiMo",
+  "claim": "Hermes pre/post hashes are literal pre_/post_ strings; broker success promotes to verified; false positives raise confidence",
+  "mimo_verdict": "CONFIRMED",
+  "source_evidence": {
+    "literal_hashes": "exploration.py:370-373 hash_text(f'pre_{entity}')/hash_text(f'post_{entity}') — no observation",
+    "transition_verified": "exploration.py:381 transition_verified=is_success (broker flag); loop.py:752 uses RETURN_CODE_ONLY result.success",
+    "expected_vs_actual_compare": "expected_observation_if_true never compared",
+    "confidence_fp": "store.py:414-418 C_new=min(1,C+0.35*(1-C)); 4 successes from 0.20 reach 0.861>=0.85 VERIFIED on fictitious transitions",
+    "TrainingQualityGate_wired": false
+  },
+  "severity": "CRITICAL",
+  "recommended_action": "AU-1: require real state observation for transition_verified; wire quality gate"
+}

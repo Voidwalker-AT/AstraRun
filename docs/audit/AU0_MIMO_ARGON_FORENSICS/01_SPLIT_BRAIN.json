@@ -1,0 +1,19 @@
+{
+  "auditor": "MiMo",
+  "claim": "Two material execution architectures; real launcher reaches AgentExecutionEngine only for battery/wifi/dynamic gate; most production bypasses agent",
+  "mimo_verdict": "CONFIRMED",
+  "source_evidence": {
+    "entry_points": "CLI main.py:219, launcher.py:706/751/781, hud.py:947, runtime.py:232 all → AstraApplication.handle_request → _handle_request_internal",
+    "only_agent_gate": "app.py:846-856: is_agent_goal only for battery report regex, wifi regex, or non-builtin indexer hit min_score>=0.7; then agent_engine.execute_goal",
+    "open_app": "DeterministicRouter fast path L1054-1121 NO agent",
+    "close_app": "early special case L761-773 broker NO agent",
+    "file_window_multistep": "WorkflowCompiler + TaskManager L1299/1487-1540 NO agent",
+    "basic_math": "local ast path L697-729 NO agent",
+    "wifi_battery": "forced agent L847-848",
+    "novel_dynamic": "conditional via non-builtin indexer gate"
+  },
+  "bypass_quantification": "Bypass classes: DeterministicRouter, TaskManager, WorkflowCompiler, LayaSandwich+Neural+DecisionFusion rich path, early math/obs/close special cases. Only production consumer of AgentExecutionEngine is the single is_agent_goal gate.",
+  "runtime_test_evidence": "F0 acceptance scripts calling AgentExecutionEngine/GoalPlanner directly are not production reachability (evidence-rule compliant exclusion)",
+  "severity": "CRITICAL",
+  "recommended_action": "AU-1 unification: single execution spine from handle_request through planner/verifier/gate"
+}

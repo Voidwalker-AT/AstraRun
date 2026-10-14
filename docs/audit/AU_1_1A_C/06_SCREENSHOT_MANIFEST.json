@@ -1,0 +1,231 @@
+{
+  "timestamp": 1791988559.8762932,
+  "slice": "AU-1.1A-C",
+  "total_screenshots": 14,
+  "manifest": [
+    {
+      "step": "INITIAL_LAUNCHER",
+      "filename": "00_launcher_initial.png",
+      "timestamp": 1791988536.4100728,
+      "foreground_hwnd": 2687970,
+      "foreground_pid": 28324,
+      "foreground_title": "AstraRun",
+      "expected_visible_object": "AstraRun Command Bar",
+      "pixel_analysis": {
+        "width": 1920,
+        "height": 1080,
+        "unique_colors_sample": 17374,
+        "is_blank": false,
+        "is_visually_proven": true
+      }
+    },
+    {
+      "step": "SCENARIO_A_ENTERED",
+      "filename": "A_1_entered_help.png",
+      "timestamp": 1791988536.9027164,
+      "foreground_hwnd": 2687970,
+      "foreground_pid": 28324,
+      "foreground_title": "AstraRun",
+      "expected_visible_object": "Launcher with typed text 'help'",
+      "pixel_analysis": {
+        "width": 1920,
+        "height": 1080,
+        "unique_colors_sample": 18223,
+        "is_blank": false,
+        "is_visually_proven": true
+      }
+    },
+    {
+      "step": "SCENARIO_A_RESULT",
+      "filename": "A_2_result_help.png",
+      "timestamp": 1791988539.2521377,
+      "foreground_hwnd": 2687970,
+      "foreground_pid": 28324,
+      "foreground_title": "AstraRun",
+      "expected_visible_object": "Execution Result / Target Application",
+      "pixel_analysis": {
+        "width": 1920,
+        "height": 1080,
+        "unique_colors_sample": 14882,
+        "is_blank": false,
+        "is_visually_proven": true
+      }
+    },
+    {
+      "step": "SCENARIO_B_ENTERED",
+      "filename": "B_1_entered_hello.png",
+      "timestamp": 1791988539.688246,
+      "foreground_hwnd": 2687970,
+      "foreground_pid": 28324,
+      "foreground_title": "AstraRun",
+      "expected_visible_object": "Launcher with typed text 'hello'",
+      "pixel_analysis": {
+        "width": 1920,
+        "height": 1080,
+        "unique_colors_sample": 15280,
+        "is_blank": false,
+        "is_visually_proven": true
+      }
+    },
+    {
+      "step": "SCENARIO_B_RESULT",
+      "filename": "B_2_result_hello.png",
+      "timestamp": 1791988541.9228292,
+      "foreground_hwnd": 2687970,
+      "foreground_pid": 28324,
+      "foreground_title": "AstraRun",
+      "expected_visible_object": "Execution Result / Target Application",
+      "pixel_analysis": {
+        "width": 1920,
+        "height": 1080,
+        "unique_colors_sample": 18269,
+        "is_blank": false,
+        "is_visually_proven": true
+      }
+    },
+    {
+      "step": "SCENARIO_C_ENTERED",
+      "filename": "C_1_entered_hello_open_calculato.png",
+      "timestamp": 1791988542.3650467,
+      "foreground_hwnd": 2687970,
+      "foreground_pid": 28324,
+      "foreground_title": "AstraRun",
+      "expected_visible_object": "Launcher with typed text 'hello, open calculator'",
+      "pixel_analysis": {
+        "width": 1920,
+        "height": 1080,
+        "unique_colors_sample": 18231,
+        "is_blank": false,
+        "is_visually_proven": true
+      }
+    },
+    {
+      "step": "SCENARIO_C_RESULT",
+      "filename": "C_2_result_hello_open_calculato.png",
+      "timestamp": 1791988546.162307,
+      "foreground_hwnd": 2366830,
+      "foreground_pid": 6216,
+      "foreground_title": "Calculator",
+      "expected_visible_object": "Execution Result / Target Application",
+      "pixel_analysis": {
+        "width": 1920,
+        "height": 1080,
+        "unique_colors_sample": 15383,
+        "is_blank": false,
+        "is_visually_proven": true
+      }
+    },
+    {
+      "step": "SCENARIO_D_ENTERED",
+      "filename": "D_1_entered_calculate_2_+_2.png",
+      "timestamp": 1791988547.169198,
+      "foreground_hwnd": 2687970,
+      "foreground_pid": 28324,
+      "foreground_title": "AstraRun",
+      "expected_visible_object": "Launcher with typed text 'calculate 2 + 2'",
+      "pixel_analysis": {
+        "width": 1920,
+        "height": 1080,
+        "unique_colors_sample": 14704,
+        "is_blank": false,
+        "is_visually_proven": true
+      }
+    },
+    {
+      "step": "SCENARIO_D_RESULT",
+      "filename": "D_2_result_calculate_2_+_2.png",
+      "timestamp": 1791988549.4435031,
+      "foreground_hwnd": 2687970,
+      "foreground_pid": 28324,
+      "foreground_title": "AstraRun",
+      "expected_visible_object": "Execution Result / Target Application",
+      "pixel_analysis": {
+        "width": 1920,
+        "height": 1080,
+        "unique_colors_sample": 14728,
+        "is_blank": false,
+        "is_visually_proven": true
+      }
+    },
+    {
+      "step": "SCENARIO_E_ENTERED",
+      "filename": "E_1_entered_battery_report.png",
+      "timestamp": 1791988549.9025307,
+      "foreground_hwnd": 2687970,
+      "foreground_pid": 28324,
+      "foreground_title": "AstraRun",
+      "expected_visible_object": "Launcher with typed text 'battery report'",
+      "pixel_analysis": {
+        "width": 1920,
+        "height": 1080,
+        "unique_colors_sample": 18230,
+        "is_blank": false,
+        "is_visually_proven": true
+      }
+    },
+    {
+      "step": "SCENARIO_E_RESULT",
+      "filename": "E_2_result_battery_report.png",
+      "timestamp": 1791988555.497154,
+      "foreground_hwnd": 2687970,
+      "foreground_pid": 28324,
+      "foreground_title": "AstraRun",
+      "expected_visible_object": "Execution Result / Target Application",
+      "pixel_analysis": {
+        "width": 1920,
+        "height": 1080,
+        "unique_colors_sample": 14584,
+        "is_blank": false,
+        "is_visually_proven": true
+      }
+    },
+    {
+      "step": "SCENARIO_F_ENTERED",
+      "filename": "F_1_entered_open_calculator.png",
+      "timestamp": 1791988555.984481,
+      "foreground_hwnd": 2687970,
+      "foreground_pid": 28324,
+      "foreground_title": "AstraRun",
+      "expected_visible_object": "Launcher with typed text 'open calculator'",
+      "pixel_analysis": {
+        "width": 1920,
+        "height": 1080,
+        "unique_colors_sample": 15068,
+        "is_blank": false,
+        "is_visually_proven": true
+      }
+    },
+    {
+      "step": "SCENARIO_F_RESULT",
+      "filename": "F_2_result_open_calculator.png",
+      "timestamp": 1791988558.559815,
+      "foreground_hwnd": 6426622,
+      "foreground_pid": 6216,
+      "foreground_title": "Calculator",
+      "expected_visible_object": "Execution Result / Target Application",
+      "pixel_analysis": {
+        "width": 1920,
+        "height": 1080,
+        "unique_colors_sample": 17694,
+        "is_blank": false,
+        "is_visually_proven": true
+      }
+    },
+    {
+      "step": "FINAL_CLEANED_DESKTOP",
+      "filename": "99_final_cleaned_desktop.png",
+      "timestamp": 1791988559.8524728,
+      "foreground_hwnd": 4592262,
+      "foreground_pid": 1992,
+      "foreground_title": "Untitled - Notepad",
+      "expected_visible_object": "Clean Interactive Desktop (Zero Astra Test Leaks)",
+      "pixel_analysis": {
+        "width": 1920,
+        "height": 1080,
+        "unique_colors_sample": 17224,
+        "is_blank": false,
+        "is_visually_proven": true
+      }
+    }
+  ]
+}

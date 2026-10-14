@@ -1,0 +1,23 @@
+{
+  "auditor": "MiMo",
+  "claim": "Astra-owned windows terminated after ~1.5s without resolving unsaved-work dialogs",
+  "mimo_verdict": "PARTIALLY_CONFIRMED",
+  "source_evidence": {
+    "user_windows_protected": "astra_created guard L791; NOT_FOUND preserves user windows L492-498",
+    "timer_ladder": "WM_CLOSE wait 2.0s L906-912; SC_CLOSE+0.3s; save-dialog handler twice+0.3s; wait 0.6s; terminate; force_timeout 3.0s; kill",
+    "one_point_five_seconds_constant": "NOT FOUND — Argon timing wrong; actual ~3.2s to terminate, ~6.2s to kill",
+    "prefers_dont_save": "_handle_unexpected_save_dialog L1031+ clicks Don't Save for non-TASK_ARTIFACT",
+    "unsaved_user_content_unused": "ContentClassification.UNSAVED_USER_CONTENT defined L129 never referenced",
+    "dialog_unresolved_kill": "if dialog not on same HWND via inspect_window_ui, handler returns; terminate/kill proceeds — CONFIRMED"
+  },
+  "cases": {
+    "A_user_opened": "preserved if not astra_created",
+    "B_astra_opened": "closed via ladder",
+    "C_unsaved_document": "Don't Save preferred; UNSAVED_USER_CONTENT unused",
+    "D_modal_dialog": "may not find #32770 on resource.hwnd; kill proceeds",
+    "E_hung": "kill after ladder",
+    "F_force_close": "explicit force uses same ladder"
+  },
+  "severity": "HIGH",
+  "recommended_action": "AU-1: fix dialog discovery to child #32770; honor UNSAVED_USER_CONTENT; user-confirm before discard"
+}

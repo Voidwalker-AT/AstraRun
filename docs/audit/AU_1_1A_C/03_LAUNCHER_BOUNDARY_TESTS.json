@@ -1,0 +1,44 @@
+{
+  "timestamp": "2026-10-14T14:37:00Z",
+  "slice": "AU-1.1A-C",
+  "test_file": "tests/au1/test_au1_1a_c_launcher_ingress.py",
+  "summary": {
+    "total_tests": 6,
+    "passed": 6,
+    "failed": 0,
+    "skipped": 0,
+    "status": "PASS"
+  },
+  "tests": [
+    {
+      "name": "test_launcher_all_user_text_enters_request_boundary",
+      "verifies": "All text typed into LauncherWindow enters AstraApplication.handle_request as RequestEnvelope with origin=LAUNCHER",
+      "status": "PASS"
+    },
+    {
+      "name": "test_launcher_natural_language_cannot_bypass_boundary",
+      "verifies": "Natural language greetings ('hello', 'hi', 'thanks') cannot bypass the ingress boundary; route through META_COMMAND",
+      "status": "PASS"
+    },
+    {
+      "name": "test_launcher_suggestion_selection_enters_boundary",
+      "verifies": "Selecting a suggestion SearchResult constructs RequestEnvelope(origin=LAUNCHER) before calling handle_request",
+      "status": "PASS"
+    },
+    {
+      "name": "test_launcher_compound_greeting_and_operation_becomes_operational",
+      "verifies": "Compound greeting+operation prompts fail-closed to OPERATIONAL_GOAL and execute downstream without being swallowed as conversational",
+      "status": "PASS"
+    },
+    {
+      "name": "test_launcher_request_id_correlated_end_to_end",
+      "verifies": "A single request_id correlates from RequestEnvelope through REQUEST_INGRESS_CLASSIFIED and REQUEST_DOWNSTREAM_SELECTED",
+      "status": "PASS"
+    },
+    {
+      "name": "test_semantic_neighbors_routing_matrix",
+      "verifies": "20 varied semantic neighbors across conversational, computational, composite, and operational classes route accurately",
+      "status": "PASS"
+    }
+  ]
+}

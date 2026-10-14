@@ -1,0 +1,55 @@
+{
+  "timestamp": "2026-10-14T14:08:00Z",
+  "phase": "AU-1.1A",
+  "summary": {
+    "total_collected": 1055,
+    "passed": 1041,
+    "failed": 0,
+    "skipped": 14,
+    "pass_rate_percentage": 100.0,
+    "regression_count": 0
+  },
+  "verified_subsuites": [
+    {
+      "name": "AU-1.1A Ingress & Seam Suite",
+      "path": "tests/au1/",
+      "tests_run": 27,
+      "passed": 27,
+      "failed": 0,
+      "status": "PASS"
+    },
+    {
+      "name": "Delegation Suite",
+      "path": "tests/delegation/",
+      "tests_run": 9,
+      "passed": 9,
+      "failed": 0,
+      "status": "PASS"
+    },
+    {
+      "name": "Computer Use Generalization Suite",
+      "path": "tests/test_f0_18_computer_use_generalization.py",
+      "tests_run": 18,
+      "passed": 18,
+      "failed": 0,
+      "status": "PASS"
+    },
+    {
+      "name": "Compound Pipeline & Launcher Suite",
+      "path": "tests/test_v0102_compound_pipeline.py",
+      "tests_run": 10,
+      "passed": 10,
+      "failed": 0,
+      "status": "PASS"
+    },
+    {
+      "name": "Live Models Cognitive Router Suite",
+      "path": "tests/test_milestone2_live_models.py",
+      "tests_run": 6,
+      "passed": 6,
+      "failed": 0,
+      "status": "PASS"
+    }
+  ],
+  "overall_verdict": "PASS"
+}

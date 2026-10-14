@@ -1,0 +1,14 @@
+{
+  "auditor": "MiMo",
+  "claim": "LearnedSemanticRouter is deterministic rules with fixed confidences; latent ModelRole NameError",
+  "mimo_verdict": "CONFIRMED",
+  "source_evidence": {
+    "learned_router": "routing/learned_router.py imports only regex+registry; re.search keyword sets; confidence=0.98/0.70 literals L151-158,311-318; no embeddings/model/stats",
+    "capability_grounder": "exact phrase map + regex fixed 0.99/0.97/0.96",
+    "reachability": "ContextSufficiencyEngine only via GoalPlanner.parse_goal L630-632; only agent-gated requests reach it (see 01_SPLIT_BRAIN)",
+    "local_model_tier": "Tier 2 LOCAL INTENT REASONER planner.py:826-851 when prior tiers unresolved",
+    "modelrole_nameerror": "planner.py:835-836 uses ModelRole; ModelRole NOT imported in planner.py (imports L5-36); NameError when model_service.supervisor exists and Tier 2 reached; execute_goal does not wrap parse_goal in try/except"
+  },
+  "severity": "HIGH",
+  "recommended_action": "AU-1: fix ModelRole import; rename or actually implement learned routing"
+}

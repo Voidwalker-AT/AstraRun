@@ -1,0 +1,17 @@
+{
+  "auditor": "MiMo",
+  "claim": "Hermes does not drive planning; TrainingQualityGate and TaskResourceReconciler unwired",
+  "mimo_verdict": "CONFIRMED",
+  "source_evidence": {
+    "HermesExplorationEngine": "only production ctor agent/loop.py:110-111; used L230,282-292",
+    "HermesKnowledgeStore": "memory/service.py:209-210; only production consumer loop.py:723 write-only ingestion",
+    "GoalPlanner_queries_Hermes": false,
+    "plan_before_Hermes": "loop.py:151 create_plan THEN L212+ Hermes assess",
+    "exploration_alters_plan": false,
+    "hermes_exploration_outcome_readers": 0,
+    "TrainingQualityGate_production_callers": 0,
+    "TaskResourceReconciler_production_callers": 0
+  },
+  "severity": "HIGH",
+  "recommended_action": "AU-1: wire quality gate or remove dead keys; reconcile architecture claims"
+}

@@ -1,0 +1,26 @@
+{
+  "phase": "AU-1.1A",
+  "artifact": "10_SECURITY_RESULTS.json",
+  "generated_at": "2026-10-14T11:47:00Z",
+  "security_invariants_tested": [
+    {
+      "invariant": "META_ISOLATION_INVARIANT",
+      "statement": "Pure meta commands (help, settings, history, diagnostics, etc.) execute strictly inside AstraRun internal UI layer with zero calls to ExecutionBroker or ActionGate.",
+      "evidence": "tests/au1/test_au1_1a_meta_security.py::test_meta_command_structural_isolation verified mock_broker_exec.call_count == 0 across all meta commands.",
+      "status": "PASS"
+    },
+    {
+      "invariant": "FAIL_CLOSED_COMPOSITE_SECURITY",
+      "statement": "Composite commands containing meta keywords (e.g. 'help and open notepad', 'show diagnostics then delete file') never bypass workstation safety policies and must classify as OPERATIONAL_GOAL.",
+      "evidence": "tests/au1/test_au1_1a_meta_security.py::test_composite_meta_not_handled_by_meta_handler verified composite queries route to OPERATIONAL_GOAL with COMPOSITE_CONTAINS_OPERATIONAL_CLAUSE.",
+      "status": "PASS"
+    },
+    {
+      "invariant": "UNAUTHENTICATED_DELEGATE_CONTAINMENT",
+      "statement": "Production delegation has no default mock fallback and fails honestly with PROVIDER_UNAVAILABLE instead of silently executing unauthenticated advisory output.",
+      "evidence": "tests/au1/test_au1_1a_delegate_provider.py verified clean DelegateRegistry raises ProviderUnavailableError.",
+      "status": "PASS"
+    }
+  ],
+  "verdict": "PASS"
+}

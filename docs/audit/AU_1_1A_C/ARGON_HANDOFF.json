@@ -1,0 +1,97 @@
+{
+  "handoff_metadata": {
+    "slice": "AU-1.1A-C",
+    "title": "AstraRun Request Ingress Seam, Production Purity, and Real Launcher Closure",
+    "timestamp": "2026-10-14T20:10:30+05:30",
+    "status": "READY_FOR_ARGON_REVIEW"
+  },
+  "git_references": {
+    "baseline_review_sha": "4a5b409d3a02586f4d3249fc7839601439900de8",
+    "new_review_sha": "bf92829d916f7a7858d784598d9e4c1018fdc111",
+    "github_repository": "https://github.com/Voidwalker-AT/AstraRun.git",
+    "github_branch": "review/f0-25f7-argon",
+    "local_branch": "dev/au-1"
+  },
+  "implementation_slice": "AU-1.1A + AU-1.1A-C (Ingress Seam & Interactive Launcher Closure)",
+  "production_files_changed": [
+    "src/astrarun/app.py",
+    "src/astrarun/ingress/models.py",
+    "src/astrarun/ingress/request_boundary.py",
+    "src/astrarun/ingress/__init__.py",
+    "src/astrarun/ui/launcher.py",
+    "src/astrarun/main.py",
+    "src/astrarun/tasks/runtime.py",
+    "src/astrarun/core/telemetry.py",
+    "src/astrarun/delegation/provider.py",
+    "src/astrarun/agent/planner.py",
+    "src/astrarun/capabilities/registry.py",
+    "src/astrarun/tools/projects.py"
+  ],
+  "tests_added_or_changed": [
+    "tests/au1/test_au1_1a_c_launcher_ingress.py",
+    "tests/au1/test_au1_1a_request_boundary.py",
+    "tests/au1/test_au1_1a_downstream_parity.py",
+    "tests/au1/test_au1_1a_delegate_provider.py",
+    "tests/au1/test_au1_1a_ingress_telemetry.py",
+    "tests/au1/test_au1_1a_meta_security.py",
+    "tests/au1/test_au1_1a_modelrole.py",
+    "tests/au1/test_au1_1a_project_command.py",
+    "tests/delegation/test_dogfood_chatgpt_workflow.py"
+  ],
+  "audit_directories": [
+    "docs/audit/AU_1_1A",
+    "docs/audit/AU_1_1A_C"
+  ],
+  "regression_summary": {
+    "status": "PASS",
+    "target": "Full AstraRun Test Suite",
+    "command": ".venv\\Scripts\\pytest tests/",
+    "total_collected": 1061,
+    "passed": 1047,
+    "failed": 0,
+    "skipped": 14,
+    "errors": 0,
+    "duration_seconds": 670.67
+  },
+  "physical_test_summary": {
+    "test_script": "scripts/physical_launcher_test.py",
+    "platform": "Windows 11 (WinSta0\\Default)",
+    "cases_tested": 6,
+    "cases_passed": 6,
+    "cases_failed": 0,
+    "screenshots_captured": 13,
+    "pixel_verified": true,
+    "spawned_processes": ["CalculatorApp.exe (PID 23140)", "CalculatorApp.exe (PID 4436)"],
+    "leaked_processes": 0
+  },
+  "known_remaining_legacy_paths": [
+    "PURE_QUERY computational execution in app.py",
+    "AGENT_EXECUTION_ENGINE goal execution in app.py",
+    "DETERMINISTIC_ROUTER fast-path execution in app.py",
+    "LEGACY_LAYA_WORKFLOW composite pipeline in app.py",
+    "GoalPlanner multi-tier planning in planner.py",
+    "TaskManager background execution in tasks/manager.py",
+    "WorkflowCompiler in workflows/compiler.py",
+    "MachineQueryEngine in machine/query.py"
+  ],
+  "known_unresolved_issues": [],
+  "systems_deliberately_untouched": [
+    "AU-1.1B dead wrappers: not deleted, preserved for AU-1.1B review",
+    "AU-1.2 downstream routing unification: preserved current downstream selection logic",
+    "ExecutionBroker and ActionGate: preserved existing security and governance gates",
+    "LearnedSemanticRouter: preserved existing models and boundaries",
+    "PerceptionService, DesktopObserver, MachineObserver: preserved existing perception system",
+    "Fallback and completion architecture: preserved fail-closed semantics"
+  ],
+  "next_proposed_slice": "AU-1.1B — Dead Architecture and Wrapper Removal",
+  "argon_review_questions": [
+    "1. Does the new RequestBoundaryRouter now genuinely sit on every human Launcher request path?",
+    "2. Did AU-1.1A accidentally create another routing authority?",
+    "3. Is META isolation structurally sound?",
+    "4. Did production mock/test contamination actually disappear?",
+    "5. Did the Launcher closure alter operational semantics?",
+    "6. Is the current seam sufficient to begin AU-1.1B dead-wrapper removal?",
+    "7. Which modules from the AU-1.1B dead inventory are genuinely safe to delete now?",
+    "8. Has any new architectural duplication been introduced?"
+  ]
+}

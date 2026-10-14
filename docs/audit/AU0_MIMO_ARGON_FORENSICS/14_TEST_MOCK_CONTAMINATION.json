@@ -1,0 +1,14 @@
+{
+  "auditor": "MiMo",
+  "items": [
+    {"item": "pytest in sys.modules prewarm skip", "verdict": "LEGITIMATE_SEAM", "evidence": "app.py:429-432 skips spaCy prewarm only"},
+    {"item": "simulated window/interaction flags", "verdict": "LEGITIMATE_SEAM", "evidence": "default False; verifier refuses physical claims under simulation verifier.py:275-284"},
+    {"item": "hardcoded project test invocation", "verdict": "UNSAFE_PRODUCTION", "evidence": "tools/projects.py:113-115 always runs milestone5 pytest path"},
+    {"item": "MockDelegateProvider default + mock fallback", "verdict": "UNSAFE_PRODUCTION", "evidence": "delegation/provider.py:113-160 default mock; unavailable falls back to mock"},
+    {"item": "production parsing of mock", "verdict": "CONTAMINATION_SURFACE", "evidence": "planner.py:668-671 chatgpt/mock string → provider_name"}
+  ],
+  "argon_accuracy": "unsafe items correctly identified; seams correctly identified as legitimate by MIMO",
+  "mimo_verdict": "PARTIALLY_CONFIRMED",
+  "severity": "MEDIUM",
+  "recommended_action": "AU-1: remove mock default from production; remove hardcoded pytest; gate 'mock' routing to tests"
+}

@@ -1,0 +1,115 @@
+{
+  "timestamp": 1791988559.8750927,
+  "slice": "AU-1.1A-C",
+  "verdict": "PASS",
+  "scenarios_tested": [
+    {
+      "scenario": "A",
+      "prompt": "help",
+      "status": "PASS",
+      "request_id": "req-fc30c812ec70",
+      "origin": "LAUNCHER",
+      "ingress_route": "META_COMMAND",
+      "reason_code": "META_HELP",
+      "downstream_pipeline": "META_HANDLER",
+      "foreground_window": {
+        "hwnd": 2687970,
+        "pid": 28324,
+        "title": "AstraRun"
+      },
+      "calc_spawned": false,
+      "cleaned_up": true,
+      "screenshot": "A_2_result_help.png"
+    },
+    {
+      "scenario": "B",
+      "prompt": "hello",
+      "status": "PASS",
+      "request_id": "req-b26456284d61",
+      "origin": "LAUNCHER",
+      "ingress_route": "META_COMMAND",
+      "reason_code": "META_GREETING",
+      "downstream_pipeline": "META_HANDLER",
+      "foreground_window": {
+        "hwnd": 2687970,
+        "pid": 28324,
+        "title": "AstraRun"
+      },
+      "calc_spawned": false,
+      "cleaned_up": true,
+      "screenshot": "B_2_result_hello.png"
+    },
+    {
+      "scenario": "C",
+      "prompt": "hello, open calculator",
+      "status": "PASS",
+      "request_id": "req-f39cbe465c4b",
+      "origin": "LAUNCHER",
+      "ingress_route": "OPERATIONAL_GOAL",
+      "reason_code": "COMPOSITE_CONTAINS_OPERATIONAL_CLAUSE",
+      "downstream_pipeline": "LEGACY_LAYA_WORKFLOW",
+      "foreground_window": {
+        "hwnd": 2366830,
+        "pid": 6216,
+        "title": "Calculator"
+      },
+      "calc_spawned": true,
+      "cleaned_up": true,
+      "screenshot": "C_2_result_hello_open_calculato.png"
+    },
+    {
+      "scenario": "D",
+      "prompt": "calculate 2 + 2",
+      "status": "PASS",
+      "request_id": "req-8080d1c2a2d8",
+      "origin": "LAUNCHER",
+      "ingress_route": "OPERATIONAL_GOAL",
+      "reason_code": "OPERATIONAL_DEFAULT",
+      "downstream_pipeline": "PURE_QUERY",
+      "foreground_window": {
+        "hwnd": 2687970,
+        "pid": 28324,
+        "title": "AstraRun"
+      },
+      "calc_spawned": false,
+      "cleaned_up": true,
+      "screenshot": "D_2_result_calculate_2_+_2.png"
+    },
+    {
+      "scenario": "E",
+      "prompt": "battery report",
+      "status": "PASS",
+      "request_id": "req-d4214c044c3c",
+      "origin": "LAUNCHER",
+      "ingress_route": "OPERATIONAL_GOAL",
+      "reason_code": "OPERATIONAL_DEFAULT",
+      "downstream_pipeline": "AGENT_EXECUTION_ENGINE",
+      "foreground_window": {
+        "hwnd": 2687970,
+        "pid": 28324,
+        "title": "AstraRun"
+      },
+      "calc_spawned": false,
+      "cleaned_up": true,
+      "screenshot": "E_2_result_battery_report.png"
+    },
+    {
+      "scenario": "F",
+      "prompt": "open calculator",
+      "status": "PASS",
+      "request_id": "req-26c6ba5d198c",
+      "origin": "LAUNCHER",
+      "ingress_route": "OPERATIONAL_GOAL",
+      "reason_code": "OPERATIONAL_DEFAULT",
+      "downstream_pipeline": "DETERMINISTIC_ROUTER",
+      "foreground_window": {
+        "hwnd": 6426622,
+        "pid": 6216,
+        "title": "Calculator"
+      },
+      "calc_spawned": true,
+      "cleaned_up": true,
+      "screenshot": "F_2_result_open_calculator.png"
+    }
+  ]
+}

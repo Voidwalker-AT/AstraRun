@@ -21,6 +21,8 @@ from typing import Any, Dict, List, Optional
 
 class CausalEventType(str, Enum):
     REQUEST_RECEIVED = "REQUEST_RECEIVED"
+    REQUEST_INGRESS_CLASSIFIED = "REQUEST_INGRESS_CLASSIFIED"
+    REQUEST_DOWNSTREAM_SELECTED = "REQUEST_DOWNSTREAM_SELECTED"
     GOAL_INTERPRETED = "GOAL_INTERPRETED"
     PLAN_CREATED = "PLAN_CREATED"
     MODEL_REQUEST = "MODEL_REQUEST"
@@ -42,6 +44,19 @@ class CausalEventType(str, Enum):
     GOAL_COMPLETED = "GOAL_COMPLETED"
     RUN_TERMINATED = "RUN_TERMINATED"
     TASK_FAILED = "TASK_FAILED"
+
+
+class DownstreamPipeline(str, Enum):
+    """Authoritative downstream pipeline handling an operational goal."""
+    META_HANDLER = "META_HANDLER"
+    PURE_QUERY = "PURE_QUERY"
+    AGENT_EXECUTION_ENGINE = "AGENT_EXECUTION_ENGINE"
+    UI_INTERACTION_FAST_PATH = "UI_INTERACTION_FAST_PATH"
+    DETERMINISTIC_ROUTER = "DETERMINISTIC_ROUTER"
+    MACHINE_QUERY_ENGINE = "MACHINE_QUERY_ENGINE"
+    LEGACY_LAYA_WORKFLOW = "LEGACY_LAYA_WORKFLOW"
+    INLINE_LEGACY = "INLINE_LEGACY"
+    UNKNOWN = "UNKNOWN"
 
 
 def compute_hash(data: Any) -> str:
@@ -462,6 +477,62 @@ class CausalTelemetry:
                     pass
             # Fallback to memory
             return [ev.to_dict() for ev in self._events_by_run.get(run_id, [])]
+
+    @property
+    def events(self) -> List[CausalEvent]:
+        """Return all in-memory causal events across all runs."""
+        with self._lock:
+            all_evs = []
+            for ev_list in self._events_by_run.values():
+                all_evs.extend(ev_list)
+            return all_evs
+
+    def emit_ingress_classified(
+        self,
+        request_id: str,
+        origin: str,
+        ingress_route: str,
+        reason_code: str,
+        task_id: Optional[str] = None,
+    ) -> Optional[CausalEvent]:
+        """Emit structured REQUEST_INGRESS_CLASSIFIED causal telemetry event."""
+        return self.emit(
+            event_type=CausalEventType.REQUEST_INGRESS_CLASSIFIED.value,
+            component="RequestBoundaryRouter",
+            data={
+                "request_id": request_id,
+                "origin": origin,
+                "ingress_route": ingress_route,
+                "reason_code": reason_code,
+            },
+            task_id=task_id,
+        )
+
+    def emit_downstream_selected(
+        self,
+        request_id: str,
+        downstream_pipeline: str | DownstreamPipeline,
+        task_id: Optional[str] = None,
+        details: Optional[Dict[str, Any]] = None,
+    ) -> Optional[CausalEvent]:
+        """Emit structured REQUEST_DOWNSTREAM_SELECTED causal telemetry event."""
+        pipeline_val = (
+            downstream_pipeline.value
+            if hasattr(downstream_pipeline, "value")
+            else str(downstream_pipeline)
+        )
+        data: Dict[str, Any] = {
+            "request_id": request_id,
+            "downstream_pipeline": pipeline_val,
+        }
+        if details:
+            data.update(details)
+        return self.emit(
+            event_type=CausalEventType.REQUEST_DOWNSTREAM_SELECTED.value,
+            component="AstraApplication.Dispatcher",
+            data=data,
+            task_id=task_id,
+        )
 
     @property
     def active_run_id(self) -> Optional[str]:

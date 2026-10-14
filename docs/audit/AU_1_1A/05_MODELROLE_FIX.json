@@ -1,0 +1,20 @@
+{
+  "phase": "AU-1.1A",
+  "artifact": "05_MODELROLE_FIX.json",
+  "generated_at": "2026-10-14T11:42:00Z",
+  "defect_summary": "GoalPlanner crashed with NameError: name 'ModelRole' is not defined whenever Tier 2 Local Intent Reasoner checked supervisor model residency.",
+  "root_cause": "src/astrarun/agent/planner.py lines 834-835 referenced ModelRole.FAST and ModelRole.DEEP without importing ModelRole from astrarun.cognition.models.",
+  "fix": {
+    "file": "src/astrarun/agent/planner.py",
+    "change": "Added 'from astrarun.cognition.models import ModelRole' to imports.",
+    "affected_lines": "Line 25 (import), Lines 834-835 (supervisor query)"
+  },
+  "verification": {
+    "test_suite": "tests/au1/test_au1_1a_modelrole.py",
+    "tests_passing": [
+      "test_modelrole_enum_values",
+      "test_planner_tier2_modelrole_access"
+    ],
+    "status": "PASS"
+  }
+}

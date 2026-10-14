@@ -1,0 +1,69 @@
+{
+  "timestamp": "2026-10-14T14:38:00Z",
+  "slice": "AU-1.1A-C",
+  "baseline_commit": "4a5b409d3a02586f4d3249fc7839601439900de8",
+  "baseline_branch": "review/f0-25f7-argon",
+  "current_branch": "dev/au-1",
+  "modified_production_files": [
+    {
+      "path": "src/astrarun/ui/launcher.py",
+      "changes": "Eradicated natural-language bypass in execute_command(); routed all user-entered text through RequestEnvelope(origin=RequestOrigin.LAUNCHER); wrapped suggestion selection in RequestEnvelope(origin=RequestOrigin.LAUNCHER); added res.type == 'conversational' handler; fixed SettingsDialog initialization"
+    },
+    {
+      "path": "src/astrarun/app.py",
+      "changes": "Added canonical ingress boundary seam in handle_request(); added request_id to ExecutionResult; supported polite prefix matching in basic math regex; instrumented ingress and downstream selection telemetry"
+    },
+    {
+      "path": "src/astrarun/ingress/models.py",
+      "changes": "Defined RequestEnvelope (immutable dataclass), RequestOrigin enum, IngressRoute enum, IngressDecision dataclass with backwards-compatible __eq__, __hash__, and __str__"
+    },
+    {
+      "path": "src/astrarun/ingress/request_boundary.py",
+      "changes": "Implemented RequestBoundaryRouter classifying requests into META_COMMAND vs OPERATIONAL_GOAL; enforced fail-closed composite handling; added natural conversational greeting allowlists"
+    },
+    {
+      "path": "src/astrarun/agent/planner.py",
+      "changes": "Canonical import of ModelRole from astrarun.cognition.models; removed query hijacking ('mock' keyword check)"
+    },
+    {
+      "path": "src/astrarun/capabilities/registry.py",
+      "changes": "Removed automatic MockDelegateProvider fallback injection; return ProviderUnavailableError fail result"
+    },
+    {
+      "path": "src/astrarun/core/telemetry.py",
+      "changes": "Added REQUEST_INGRESS_CLASSIFIED and REQUEST_DOWNSTREAM_SELECTED causal events, DownstreamPipeline enum, and telemetry helper methods"
+    },
+    {
+      "path": "src/astrarun/delegation/provider.py",
+      "changes": "Removed MockDelegateProvider from production DelegateRegistry.get_instance(); fail closed with ProviderUnavailableError"
+    },
+    {
+      "path": "src/astrarun/main.py",
+      "changes": "Wrapped headless CLI execution in RequestEnvelope(origin=RequestOrigin.CLI)"
+    },
+    {
+      "path": "src/astrarun/tasks/runtime.py",
+      "changes": "Wrapped Runtime background task execution in RequestEnvelope(origin=RequestOrigin.RUNTIME)"
+    },
+    {
+      "path": "src/astrarun/tools/projects.py",
+      "changes": "Removed hardcoded milestone5 pytest command in test_project; return honest PROJECT_COMMAND_UNRESOLVED failure"
+    }
+  ],
+  "added_packages_and_files": [
+    "src/astrarun/ingress/__init__.py",
+    "src/astrarun/ingress/models.py",
+    "src/astrarun/ingress/request_boundary.py",
+    "tests/au1/__init__.py",
+    "tests/au1/test_au1_1a_request_boundary.py",
+    "tests/au1/test_au1_1a_meta_security.py",
+    "tests/au1/test_au1_1a_downstream_parity.py",
+    "tests/au1/test_au1_1a_modelrole.py",
+    "tests/au1/test_au1_1a_delegate_provider.py",
+    "tests/au1/test_au1_1a_project_command.py",
+    "tests/au1/test_au1_1a_ingress_telemetry.py",
+    "tests/au1/test_au1_1a_c_launcher_ingress.py",
+    "scripts/physical_launcher_test.py",
+    "docs/audit/AU_1_1A_C/*"
+  ]
+}

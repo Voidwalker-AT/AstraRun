@@ -1,0 +1,106 @@
+{
+  "phase": "AU-1.1A-C",
+  "title": "AstraRun Real Launcher Ingress Closure Gate Matrix",
+  "timestamp": "2026-10-14T20:20:00+05:30",
+  "overall_verdict": "PASS",
+  "criteria": [
+    {
+      "id": 1,
+      "criterion": "Every human Launcher request reaches RequestBoundaryRouter",
+      "status": "PASS",
+      "evidence_source": "src/astrarun/ui/launcher.py (execute_command, _execute_result) & tests/au1/test_au1_1a_c_launcher_ingress.py::test_launcher_user_text_enters_boundary_router",
+      "details": "All user text submissions and suggestion selections in Launcher wrap in RequestEnvelope.create(origin=RequestOrigin.LAUNCHER) and call app.handle_request -> RequestBoundaryRouter.classify_ingress."
+    },
+    {
+      "id": 2,
+      "criterion": "No conversational user-text bypass remains before the boundary",
+      "status": "PASS",
+      "evidence_source": "src/astrarun/ui/launcher.py & tests/au1/test_au1_1a_c_launcher_ingress.py::test_launcher_natural_language_passes_through_boundary_router",
+      "details": "Removed classify_launcher_input(query) == InputIntent.NATURAL_LANGUAGE branch. Natural language queries route through RequestBoundaryRouter."
+    },
+    {
+      "id": 3,
+      "criterion": "Suggestion submission cannot bypass the boundary",
+      "status": "PASS",
+      "evidence_source": "src/astrarun/ui/launcher.py (_execute_result) & tests/au1/test_au1_1a_c_launcher_ingress.py::test_launcher_suggestion_selection_passes_through_boundary",
+      "details": "Suggestion items wrap in RequestEnvelope.create(raw_query=action, origin=RequestOrigin.LAUNCHER) and pass through app.handle_request."
+    },
+    {
+      "id": 4,
+      "criterion": "Launcher/CLI/Runtime origins are preserved correctly",
+      "status": "PASS",
+      "evidence_source": "tests/au1/test_au1_1a_request_boundary.py::test_envelope_origin_preservation",
+      "details": "RequestOrigin.LAUNCHER, RequestOrigin.CLI, and RequestOrigin.TASK_RUNTIME are correctly tagged and preserved on RequestEnvelope."
+    },
+    {
+      "id": 5,
+      "criterion": "Request ID is correlated through ingress and downstream telemetry",
+      "status": "PASS",
+      "evidence_source": "tests/au1/test_au1_1a_c_launcher_ingress.py::test_launcher_request_id_correlated_end_to_end & docs/audit/AU_1_1A_C/04_REQUEST_ID_TRACE.json",
+      "details": "12-char hex request_id created with envelope is correlated across REQUEST_INGRESS_CLASSIFIED, REQUEST_DOWNSTREAM_SELECTED, and ExecutionResult.request_id."
+    },
+    {
+      "id": 6,
+      "criterion": "Meta greetings still work",
+      "status": "PASS",
+      "evidence_source": "docs/audit/AU_1_1A_C/05_PHYSICAL_LAUNCHER_RESULTS.json (Case B) & tests/au1/test_au1_1a_c_launcher_ingress.py::test_semantic_neighbors_routing_matrix",
+      "details": "Greetings ('hello', 'hi there') classify as META_COMMAND (META_GREETING), handled inline without launcher dismiss or workstation mutation."
+    },
+    {
+      "id": 7,
+      "criterion": "Greeting+operation composites are OPERATIONAL",
+      "status": "PASS",
+      "evidence_source": "docs/audit/AU_1_1A_C/05_PHYSICAL_LAUNCHER_RESULTS.json (Case C) & tests/au1/test_au1_1a_c_launcher_ingress.py::test_launcher_composite_greeting_and_operational_is_operational",
+      "details": "'hello, open calculator' fails closed to OPERATIONAL_GOAL with COMPOSITE_CONTAINS_OPERATIONAL_CLAUSE and executes downstream."
+    },
+    {
+      "id": 8,
+      "criterion": "Existing downstream execution behavior remains unchanged",
+      "status": "PASS",
+      "evidence_source": "tests/au1/test_au1_1a_downstream_parity.py (100% pass) & docs/audit/AU_1_1A_C/05_PHYSICAL_LAUNCHER_RESULTS.json",
+      "details": "All downstream routing paths (PURE_QUERY, AGENT_EXECUTION_ENGINE, DETERMINISTIC_ROUTER, LEGACY_LAYA_WORKFLOW) execute with exact semantic parity."
+    },
+    {
+      "id": 9,
+      "criterion": "Actual interactive Launcher physical test passes",
+      "status": "PASS",
+      "evidence_source": "scripts/physical_launcher_test.py & docs/audit/AU_1_1A_C/05_PHYSICAL_LAUNCHER_RESULTS.json",
+      "details": "Real interactive launcher smoke test passed all 6 test cases (A-F) on active Windows desktop. Zero leaked desktop processes."
+    },
+    {
+      "id": 10,
+      "criterion": "Screenshots visibly support claimed UI state",
+      "status": "PASS",
+      "evidence_source": "docs/audit/AU_1_1A_C/06_SCREENSHOT_MANIFEST.json & docs/audit/AU_1_1A_C/screenshots/",
+      "details": "13 PNG screenshots captured and verified at pixel level for foreground HWND, title, PID, and visual target content."
+    },
+    {
+      "id": 11,
+      "criterion": "Calculator physical launch is visible",
+      "status": "PASS",
+      "evidence_source": "docs/audit/AU_1_1A_C/screenshots/case_c_02_calculator_visible.png & case_f_02_calculator_visible.png",
+      "details": "Calculator window verified physically visible (HWND 132488, HWND 132512), confirmed foreground and pixel color non-blank."
+    },
+    {
+      "id": 12,
+      "criterion": "Full regression has 0 failures/errors",
+      "status": "PASS",
+      "evidence_source": "docs/audit/AU_1_1A_C/07_REGRESSION.json",
+      "details": "Full test suite executed: 1,047 passed, 14 skipped, 0 failed, 0 errors in 670.67s across 1,061 collected tests."
+    },
+    {
+      "id": 13,
+      "criterion": "Historical AU-1.1A evidence is not rewritten",
+      "status": "PASS",
+      "evidence_source": "docs/audit/AU_1_1A/",
+      "details": "docs/audit/AU_1_1A/ remains completely untouched. All closure evidence recorded under docs/audit/AU_1_1A_C/."
+    },
+    {
+      "id": 14,
+      "criterion": "No AU-1.2+ work is performed",
+      "status": "PASS",
+      "evidence_source": "Workspace inspection",
+      "details": "No dead code deleted (reserved for AU-1.1B). No downstream router redesign or confirmation engine modification (reserved for AU-1.2)."
+    }
+  ]
+}

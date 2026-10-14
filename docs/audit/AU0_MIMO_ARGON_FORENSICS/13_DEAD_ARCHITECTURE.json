@@ -1,0 +1,19 @@
+{
+  "auditor": "MiMo",
+  "classifications": [
+    {"component": "Brain", "verdict": "INSTANTIATED_BUT_UNUSED", "evidence": "app.py:397-401 construct; no self.brain.* in production; tests only"},
+    {"component": "ComputerUse facade", "verdict": "INSTANTIATED_BUT_UNUSED", "evidence": "app.py:402-408; agent uses DesktopObserver not facade"},
+    {"component": "ComputerUseController", "verdict": "INSTANTIATED_BUT_UNUSED", "evidence": "app.py:409 only"},
+    {"component": "WorkflowEngine", "verdict": "INSTANTIATED_BUT_UNUSED", "evidence": "app.py:246; zero later self.workflow_engine refs; multi-step uses WorkflowCompiler"},
+    {"component": "CognitiveRouter", "verdict": "TEST_ONLY", "evidence": "no production instantiation"},
+    {"component": "JevRouter", "verdict": "TEST_ONLY", "evidence": "tests/benchmarks only; shadow design"},
+    {"component": "KevRouter", "verdict": "TEST_ONLY", "evidence": "tests/benchmarks; never executes tools"},
+    {"component": "routing.fusion.DecisionFusionEngine ensemble", "verdict": "TEST_ONLY", "evidence": "ZERO PRODUCTION EXECUTION AUTHORITY docstring; production uses decision_fusion.py DecisionFusionEngine"},
+    {"component": "routing.decision_fusion.DecisionFusionEngine", "verdict": "PRODUCTION_REACHABLE", "evidence": "app.py:271,1209-1215 rich path only"},
+    {"component": "IntentRouter", "verdict": "DEAD", "evidence": "class non-existent; documented obsolete"},
+    {"component": "TaskRuntime.execute_adaptive_plan", "verdict": "TEST_ONLY", "evidence": "definition runtime.py:700; callers tests only; TaskRuntime itself used via handle_request resume"}
+  ],
+  "mimo_verdict": "CONFIRMED",
+  "severity": "HIGH",
+  "recommended_action": "AU-1: inventory and remove or wire dead composition-root instances"
+}

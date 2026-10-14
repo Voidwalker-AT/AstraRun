@@ -1,0 +1,15 @@
+{
+  "auditor": "MiMo",
+  "claim": "Launcher confirmation card falls back to capability_id='action' arguments={}",
+  "mimo_verdict": "CONFIRMED",
+  "source_evidence": {
+    "rich_path_drops_tool_args": "app.py:1387-1397 ExecutionResult type=confirm sets confirmation_token/risk/prompt but NOT data; gate_decision.tool/arguments discarded",
+    "fast_path_drops_token": "app.py:1121-1130 omits confirmation_token",
+    "click_path": "app.py:935-943 no token no data",
+    "ui_fallback": "launcher.py:825-826 tool_name='action'; args={} if res.data None",
+    "resubmission_deadend": "launcher.py:916-933 ActionProposal(capability_id=tool); broker L142-146 SECURITY_DENY unregistered 'action'; no capability named action exists",
+    "hud_path": "runtime CONFIRMATION_REQUESTED lacks tool/args; hud empty tool SECURITY_DENY"
+  },
+  "severity": "CRITICAL",
+  "recommended_action": "AU-1: pass real capability_id/args/token through ExecutionResult and UI"
+}

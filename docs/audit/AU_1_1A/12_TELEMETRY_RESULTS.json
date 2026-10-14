@@ -1,0 +1,33 @@
+{
+  "phase": "AU-1.1A",
+  "artifact": "12_TELEMETRY_RESULTS.json",
+  "generated_at": "2026-10-14T11:49:00Z",
+  "test_suite": "tests/au1/test_au1_1a_ingress_telemetry.py",
+  "tests_executed": 3,
+  "tests_passed": 3,
+  "tests_failed": 0,
+  "telemetry_events_verified": [
+    {
+      "event_type": "REQUEST_INGRESS_CLASSIFIED",
+      "component": "RequestBoundaryRouter",
+      "required_fields": ["request_id", "origin", "ingress_route", "reason_code"],
+      "verified_payloads": [
+        {"origin": "CLI", "ingress_route": "META_COMMAND", "reason_code": "META_HELP"},
+        {"origin": "CLI", "ingress_route": "OPERATIONAL_GOAL", "reason_code": "OPERATIONAL_DEFAULT"}
+      ],
+      "status": "PASS"
+    },
+    {
+      "event_type": "REQUEST_DOWNSTREAM_SELECTED",
+      "component": "AstraApplication.Dispatcher",
+      "required_fields": ["request_id", "downstream_pipeline"],
+      "verified_pipelines": [
+        "DownstreamPipeline.META_HANDLER",
+        "DownstreamPipeline.PURE_QUERY",
+        "DownstreamPipeline.DETERMINISTIC_ROUTER"
+      ],
+      "status": "PASS"
+    }
+  ],
+  "verdict": "PASS"
+}

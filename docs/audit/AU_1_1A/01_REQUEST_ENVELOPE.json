@@ -1,0 +1,54 @@
+{
+  "timestamp": "2026-10-14T16:09:00Z",
+  "slice": "AU-1.1A",
+  "module": "src/astrarun/ingress/models.py",
+  "class_name": "RequestEnvelope",
+  "immutability": "frozen_dataclass",
+  "invariants": [
+    "Represents ingress request facts only.",
+    "Contains zero model, routing, or execution decisions.",
+    "Safe for propagation across threads and process boundaries.",
+    "Normalized query pre-computed at ingress."
+  ],
+  "fields": {
+    "raw_query": {
+      "type": "str",
+      "description": "Original raw query text as entered by the user or client."
+    },
+    "normalized_query": {
+      "type": "str",
+      "description": "Whitespace-normalized query string."
+    },
+    "origin": {
+      "type": "RequestOrigin",
+      "enum_values": [
+        "LAUNCHER",
+        "CLI",
+        "RUNTIME",
+        "CONFIRMATION_RESUME",
+        "INTERNAL"
+      ],
+      "description": "Originating entry point for the request."
+    },
+    "request_id": {
+      "type": "str",
+      "description": "Unique deterministic or random request identifier prefixed with req-."
+    },
+    "origin_hwnd": {
+      "type": "Optional[int]",
+      "description": "HWND of the foreground/origin window at the moment of request capture."
+    },
+    "session_id": {
+      "type": "Optional[str]",
+      "description": "Optional conversational or task session identifier."
+    },
+    "timestamp": {
+      "type": "float",
+      "description": "Epoch timestamp of request ingress."
+    },
+    "dry_run": {
+      "type": "bool",
+      "description": "Whether the request is executing under simulated/dry-run mode."
+    }
+  }
+}

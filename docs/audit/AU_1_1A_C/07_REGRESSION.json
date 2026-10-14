@@ -1,0 +1,14 @@
+{
+  "timestamp": "2026-10-14T20:20:00+05:30",
+  "command": ".venv\\Scripts\\pytest tests/",
+  "total_collected": 1061,
+  "passed": 1047,
+  "failed": 0,
+  "skipped": 14,
+  "errors": 0,
+  "xfailed": 0,
+  "xpassed": 0,
+  "duration_seconds": 670.67,
+  "verdict": "PASS",
+  "summary": "Full authoritative regression suite executed cleanly with 0 failures and 0 errors across 1,061 collected tests."
+}

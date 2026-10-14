@@ -1,0 +1,106 @@
+{
+  "timestamp": "2026-10-14T14:27:00Z",
+  "slice": "AU-1.1A-C",
+  "source_file": "src/astrarun/ui/launcher.py",
+  "inventory": [
+    {
+      "entry_method": "execute_command",
+      "condition": "classify_launcher_input(query) == InputIntent.NATURAL_LANGUAGE",
+      "request_envelope_created": false,
+      "app_handle_request_called": false,
+      "request_boundary_router_reached": false,
+      "semantic_handling_before_boundary": true,
+      "workstation_mutation_possible": false,
+      "description": "Historical bypass calling get_conversational_response(query) directly from UI layer, completely skipping ingress boundary and telemetry",
+      "disposition": "REPAIR_REQUIRED: Eliminate branch; route all human text through RequestEnvelope(origin=LAUNCHER) -> astra_app.handle_request -> RequestBoundaryRouter"
+    },
+    {
+      "entry_method": "_execute_result",
+      "condition": "User clicks or presses Enter on a suggestion SearchResult",
+      "request_envelope_created": false,
+      "app_handle_request_called": true,
+      "request_boundary_router_reached": true,
+      "semantic_handling_before_boundary": false,
+      "workstation_mutation_possible": true,
+      "description": "Called app.handle_request(res.matched_alias or res.name) with raw string, relying on fallback string wrap with origin=INTERNAL rather than origin=LAUNCHER",
+      "disposition": "REPAIR_REQUIRED: Wrap suggestion in RequestEnvelope(origin=LAUNCHER) before calling app.handle_request"
+    },
+    {
+      "entry_method": "_execute_result",
+      "condition": "res.id == 'cmd:refresh_apps' or res.command == 'refresh apps'",
+      "request_envelope_created": false,
+      "app_handle_request_called": false,
+      "request_boundary_router_reached": false,
+      "semantic_handling_before_boundary": false,
+      "workstation_mutation_possible": false,
+      "description": "Internal non-user product control explicitly refreshing application cache via callback",
+      "disposition": "LEGITIMATE_INTERNAL_CONTROL: Retain as internal UI event"
+    },
+    {
+      "entry_method": "execute_command",
+      "condition": "_is_compound_or_nlp_query(query) or intent in (QUESTION, GOAL)",
+      "request_envelope_created": true,
+      "app_handle_request_called": true,
+      "request_boundary_router_reached": true,
+      "semantic_handling_before_boundary": false,
+      "workstation_mutation_possible": true,
+      "description": "Constructed RequestEnvelope(origin=LAUNCHER) and forwarded to app.handle_request",
+      "disposition": "CONSOLIDATE: Merge with unified text submission path"
+    },
+    {
+      "entry_method": "execute_command",
+      "condition": "Fallback typed-command handling (no suggestions active)",
+      "request_envelope_created": true,
+      "app_handle_request_called": true,
+      "request_boundary_router_reached": true,
+      "semantic_handling_before_boundary": false,
+      "workstation_mutation_possible": true,
+      "description": "Constructed RequestEnvelope(origin=LAUNCHER) and forwarded to app.handle_request",
+      "disposition": "CANONICAL_PATH: Retain as the universal typed submission path"
+    },
+    {
+      "entry_method": "_on_candidate_chosen",
+      "condition": "User selects candidate from DisambiguationCard",
+      "request_envelope_created": true,
+      "app_handle_request_called": true,
+      "request_boundary_router_reached": true,
+      "semantic_handling_before_boundary": false,
+      "workstation_mutation_possible": true,
+      "description": "Sets input_field text and invokes execute_command(), which enters canonical ingress path",
+      "disposition": "CANONICAL_COMPLIANT: Re-routes through execute_command"
+    },
+    {
+      "entry_method": "_on_confirmation_accepted",
+      "condition": "User clicks confirm on ConfirmationCard",
+      "request_envelope_created": false,
+      "app_handle_request_called": false,
+      "request_boundary_router_reached": false,
+      "semantic_handling_before_boundary": false,
+      "workstation_mutation_possible": true,
+      "description": "Direct invocation of execution_broker.execute with confirmation_token",
+      "disposition": "DEFERRED_TO_AU1_2: Confirmation resume redesign is explicitly scoped to AU-1.2; documented as known debt"
+    },
+    {
+      "entry_method": "open_history",
+      "condition": "User triggers history view modal",
+      "request_envelope_created": false,
+      "app_handle_request_called": false,
+      "request_boundary_router_reached": false,
+      "semantic_handling_before_boundary": false,
+      "workstation_mutation_possible": false,
+      "description": "Read-only UI inspection dialog displaying task ledger records",
+      "disposition": "LEGITIMATE_READONLY_VIEW: Non-request UI inspection modal"
+    },
+    {
+      "entry_method": "voice_or_speech_input",
+      "condition": "N/A",
+      "request_envelope_created": false,
+      "app_handle_request_called": false,
+      "request_boundary_router_reached": false,
+      "semantic_handling_before_boundary": false,
+      "workstation_mutation_possible": false,
+      "description": "No voice or speech input pathways exist in AstraRun v0.9-v0.11",
+      "disposition": "NOT_PRESENT"
+    }
+  ]
+}

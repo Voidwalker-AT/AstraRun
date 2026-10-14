@@ -216,7 +216,13 @@ def main() -> int:
     # 2. Headless CLI command execution mode
     if args.run_command:
         logger.info("Headless command execution mode: '%s'", args.run_command)
-        res = astra_app.handle_request(args.run_command)
+        from astrarun.ingress import RequestEnvelope, RequestOrigin
+        envelope = RequestEnvelope.create(
+            raw_query=args.run_command,
+            origin=RequestOrigin.CLI,
+            dry_run=getattr(args, "dry_run", False),
+        )
+        res = astra_app.handle_request(envelope)
         status_tag = "SUCCESS" if res.success else "FAILURE"
         logger.info("Result: %s -> %s", status_tag, res.message)
 

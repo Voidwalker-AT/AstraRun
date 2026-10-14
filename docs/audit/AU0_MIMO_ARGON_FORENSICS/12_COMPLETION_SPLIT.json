@@ -1,0 +1,13 @@
+{
+  "auditor": "MiMo",
+  "claim": "Legacy path can return ExecutionResult.success=True while AuthoritativeCompletionGate rejects GOAL_COMPLETED",
+  "mimo_verdict": "CONFIRMED",
+  "source_evidence": {
+    "handle_request": "app.py:563-573 end_run(status=SUCCESS if res.success) return value ignored; res returned unchanged",
+    "gate_reject": "telemetry.py:384-414 rejects → RUN_TERMINATED completed=False while UI got success=True",
+    "no_contract": "fast-path typically no GoalContract → FAILED_NO_CONTRACT",
+    "independent_writers": "_complete_task L490-504; fast/rich path success L1152-1158/1575-1586; agent GoalVerifier L345-348 different oracle than CompletionGate (sole gate callers telemetry.py:313,384)"
+  },
+  "severity": "CRITICAL",
+  "recommended_action": "AU-1: bind UI success to gate outcome; single completion authority"
+}

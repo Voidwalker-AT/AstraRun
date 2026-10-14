@@ -1,0 +1,71 @@
+{
+  "timestamp": "2026-10-14T11:16:00Z",
+  "phase": "AU-1.1A",
+  "baseline_branch": "review/f0-25f7-argon",
+  "baseline_commit": "4a5b409d3a02586f4d3249fc7839601439900de8",
+  "current_branch": "dev/au-1",
+  "summary": {
+    "files_changed": 20,
+    "insertions": 528,
+    "deletions": 139
+  },
+  "modified_production_files": [
+    {
+      "path": "src/astrarun/agent/planner.py",
+      "purpose": "Import canonical ModelRole from astrarun.cognition.models; remove query hijacking ('mock' keyword routing)"
+    },
+    {
+      "path": "src/astrarun/app.py",
+      "purpose": "Implement RequestBoundaryRouter ingress seam in handle_request; route META_COMMAND to _handle_meta_command; emit downstream selection telemetry across all branches"
+    },
+    {
+      "path": "src/astrarun/capabilities/registry.py",
+      "purpose": "Remove automatic MockDelegateProvider fallback injection; return ProviderUnavailableError fail result"
+    },
+    {
+      "path": "src/astrarun/core/telemetry.py",
+      "purpose": "Add REQUEST_INGRESS_CLASSIFIED, REQUEST_DOWNSTREAM_SELECTED causal events, DownstreamPipeline enum, and telemetry helper methods"
+    },
+    {
+      "path": "src/astrarun/delegation/provider.py",
+      "purpose": "Remove MockDelegateProvider from production DelegateRegistry.get_instance(); fail closed with ProviderUnavailableError"
+    },
+    {
+      "path": "src/astrarun/main.py",
+      "purpose": "Wrap CLI request in RequestEnvelope(origin=RequestOrigin.CLI)"
+    },
+    {
+      "path": "src/astrarun/tasks/runtime.py",
+      "purpose": "Wrap Runtime background task request in RequestEnvelope(origin=RequestOrigin.RUNTIME)"
+    },
+    {
+      "path": "src/astrarun/tools/projects.py",
+      "purpose": "Remove hardcoded milestone5 pytest command in test_project; return honest PROJECT_COMMAND_UNRESOLVED failure"
+    },
+    {
+      "path": "src/astrarun/ui/launcher.py",
+      "purpose": "Wrap Launcher UI submission in RequestEnvelope(origin=RequestOrigin.LAUNCHER)"
+    }
+  ],
+  "added_packages_and_files": [
+    "src/astrarun/ingress/__init__.py",
+    "src/astrarun/ingress/models.py",
+    "src/astrarun/ingress/request_boundary.py",
+    "tests/au1/__init__.py",
+    "tests/au1/test_request_boundary.py",
+    "tests/au1/test_meta_security.py",
+    "tests/au1/test_downstream_parity.py",
+    "tests/au1/test_modelrole_fix.py",
+    "tests/au1/test_delegate_provider.py",
+    "tests/au1/test_project_command.py",
+    "tests/au1/test_telemetry.py",
+    "docs/audit/AU_1_1A/*"
+  ],
+  "invariants_maintained": {
+    "no_dead_modules_deleted_in_1_1A": true,
+    "no_universal_agent_execution_engine_routing_yet": true,
+    "no_confirmation_redesign_yet": true,
+    "no_git_commit_made": true,
+    "no_git_push_made": true
+  }
+}

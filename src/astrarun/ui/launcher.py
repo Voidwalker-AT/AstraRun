@@ -703,7 +703,13 @@ class LauncherWindow(QDialog):
 
         # Fast execution via app or tool registry
         if self.app is not None:
-            exec_res = self.app.handle_request(res.matched_alias or res.name)
+            from astrarun.ingress import RequestEnvelope, RequestOrigin
+            envelope = RequestEnvelope.create(
+                raw_query=res.matched_alias or res.name,
+                origin=RequestOrigin.LAUNCHER,
+                origin_hwnd=getattr(self.app, "origin_window", None).hwnd if getattr(self.app, "origin_window", None) else None,
+            )
+            exec_res = self.app.handle_request(envelope)
             if exec_res.success:
                 self.dismiss(reason="suggestion_fast_path")
             else:
@@ -719,40 +725,14 @@ class LauncherWindow(QDialog):
             self.show_feedback(msg, is_error=True)
 
     def execute_command(self) -> None:
-        """Execute selected suggestion if present, or route typed input."""
+        """Execute selected suggestion if present, or route typed input through canonical ingress."""
         query = self.input_field.text().strip()
         if not query:
             return
 
-        from astrarun.routing.input_router import (
-            classify_launcher_input,
-            get_conversational_response,
-            InputIntent,
-        )
-        intent = classify_launcher_input(query)
+        from astrarun.ingress import RequestEnvelope, RequestOrigin
 
-        # 1. Natural Language / Conversational input: Immediate friendly response without closing
-        if intent == InputIntent.NATURAL_LANGUAGE:
-            self.suggestions_list.hide()
-            self._adjust_height(expanded=False)
-            resp = get_conversational_response(query)
-            logger.info("Conversational prompt response: '%s' -> '%s'", query, resp)
-            self.show_feedback(resp, is_error=False)
-            self.input_field.selectAll()
-            return
-
-        # 2. If query is compound or NLP command / question / goal, bypass suggestions list completely
-        if self._is_compound_or_nlp_query(query) or intent in (InputIntent.QUESTION, InputIntent.GOAL):
-            self.suggestions_list.hide()
-            self._adjust_height(expanded=False)
-            self.show_feedback("Planning task...", is_error=False)
-            QGuiApplication.processEvents()
-            if self.app is not None:
-                exec_res = self.app.handle_request(query)
-                self._handle_execution_result(exec_res, query)
-                return
-
-        # 3. If suggestions list is visible and user navigated to an item, or input closely matches
+        # 1. If suggestions list is visible and user navigated to an item, or input closely matches
         current_row = self.suggestions_list.currentRow()
         if self.suggestions_list.isVisible() and current_row >= 0:
             item = self.suggestions_list.item(current_row)
@@ -769,16 +749,23 @@ class LauncherWindow(QDialog):
                         or alias_lower.startswith(q_lower)
                         or any(tok.startswith(q_lower) for tok in name_lower.split())
                     )
-                    if user_nav or prefix_match:
+                    if not self._is_compound_or_nlp_query(query) and (user_nav or prefix_match):
                         self._execute_result(res)
                         return
 
-        # 4. Otherwise route raw typed command
+        # 2. Canonical execution: ALL human typed text enters RequestBoundaryRouter via RequestEnvelope
+        self.suggestions_list.hide()
+        self._adjust_height(expanded=False)
         logger.info("Processing command: '%s'", query)
 
         # Canonical execution through AstraApplication composition root
         if self.app is not None:
-            exec_res = self.app.handle_request(query)
+            envelope = RequestEnvelope.create(
+                raw_query=query,
+                origin=RequestOrigin.LAUNCHER,
+                origin_hwnd=getattr(self.app, "origin_window", None).hwnd if getattr(self.app, "origin_window", None) else None,
+            )
+            exec_res = self.app.handle_request(envelope)
             self._handle_execution_result(exec_res, query)
             return
 
@@ -807,6 +794,10 @@ class LauncherWindow(QDialog):
                 self.dismiss(reason="fast_path_executed")
             else:
                 self.show_feedback(res.message, is_error=True)
+
+        elif res.type == "conversational":
+            self.show_feedback(res.message, is_error=False)
+            self.input_field.selectAll()
 
         elif res.type == "command":
             if res.message == "open_history":
@@ -991,9 +982,8 @@ class LauncherWindow(QDialog):
 
     def open_settings(self) -> None:
         """Open SettingsDialog."""
-        from astrarun.core.paths import AstraPaths
         from astrarun.ui.settings import SettingsDialog
-        dlg = SettingsDialog(settings_path=str(AstraPaths.config_dir() / "settings.json"), parent=self)
+        dlg = SettingsDialog(app_instance=self.app, parent=self)
         dlg.exec()
 
     def open_diagnostics(self) -> None:

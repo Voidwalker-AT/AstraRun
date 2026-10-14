@@ -1,0 +1,16 @@
+{
+  "auditor": "MiMo",
+  "claim": "Agent path treats CONFIRM as ordinary failure and REPLANs; confirmation state not preserved; CONFIRM_REMAINS_CONFIRM invariant unreachable",
+  "mimo_verdict": "CONFIRMED",
+  "source_evidence": {
+    "agent_no_confirmation_awareness": "zero requires_confirmation/confirmation matches in agent/",
+    "broker_confirm_returns": "success=False blocked=False requires_confirmation=True",
+    "loop_treats_as_failure": "loop.py:595-611 success=broker_res.success False; token never read",
+    "evidence_to_fallback": "loop.py:832-842 FailureEvidence without requires_confirmation; category defaults ACTION_FAILED",
+    "engine_confirm_invariant": "recovery/engine.py:84-101 REQUEST_CONFIRMATION exists but never triggered from agent path",
+    "replan": "loop.py:887-906 tier degradation; max 3 replans then FAILED"
+  },
+  "security_implication": "CONFIRM becomes recoverable failure that may pick alternate capability paths without user confirm — governance semantic broken on agent path (though ActionGate still protects individual actions)",
+  "severity": "CRITICAL",
+  "recommended_action": "AU-1: agent must pause on CONFIRM; pass requires_confirmation into evaluate_failure; preserve token"
+}

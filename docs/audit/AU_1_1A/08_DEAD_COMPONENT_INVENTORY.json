@@ -1,0 +1,44 @@
+{
+  "phase": "AU-1.1A",
+  "artifact": "08_DEAD_COMPONENT_INVENTORY.json",
+  "generated_at": "2026-10-14T11:45:00Z",
+  "contract_compliance": "STRICT_PRESERVATION_DURING_AU_1_1A",
+  "description": "Inventory of redundant and dead execution wrappers identified by Argon AU-1 architecture and MiMo AU-0 forensics. Preserved during AU-1.1A to maintain an isolated rollback boundary; scheduled for clean extraction in AU-1.1B.",
+  "inventory": [
+    {
+      "module": "src/astrarun/routing/laya_sandwich.py",
+      "class": "LayaSandwichRouter",
+      "status": "PRESERVED_IN_AU_1_1A",
+      "scheduled_disposition": "RETIRE_IN_AU_1_1B",
+      "forensic_evidence": "Subsumed by ContextSufficiencyEngine, learned router, and GoalPlanner."
+    },
+    {
+      "module": "src/astrarun/nlp/neural_engine.py",
+      "class": "NeuralStructureEngine",
+      "status": "PRESERVED_IN_AU_1_1A",
+      "scheduled_disposition": "RETIRE_IN_AU_1_1B",
+      "forensic_evidence": "Secondary NLP pipeline duplicating GoalContract extraction and clause decomposition."
+    },
+    {
+      "module": "src/astrarun/nlp/engine.py",
+      "class": "NLPEngine",
+      "status": "PRESERVED_IN_AU_1_1A",
+      "scheduled_disposition": "RETIRE_IN_AU_1_1B",
+      "forensic_evidence": "Fallback NLP parser redundant with GoalPlanner.extract_goal_contract."
+    },
+    {
+      "module": "src/astrarun/workflows/compiler.py",
+      "class": "WorkflowCompiler",
+      "status": "PRESERVED_IN_AU_1_1A",
+      "scheduled_disposition": "RETIRE_IN_AU_1_1B",
+      "forensic_evidence": "Old procedural workflow compiler superseded by GoalPlanner DAG compilation."
+    },
+    {
+      "module": "src/astrarun/decision/fusion.py",
+      "class": "DecisionFusionEngine",
+      "status": "PRESERVED_IN_AU_1_1A",
+      "scheduled_disposition": "RETIRE_IN_AU_1_1B",
+      "forensic_evidence": "Intermediate stage in sandwich pipeline; superseded by 2-route ingress seam."
+    }
+  ]
+}

@@ -1,0 +1,42 @@
+{
+  "phase": "AU-1.1A",
+  "artifact": "09_BOUNDARY_TEST_RESULTS.json",
+  "generated_at": "2026-10-14T11:46:00Z",
+  "test_suite": "tests/au1/test_au1_1a_request_boundary.py",
+  "tests_executed": 6,
+  "tests_passed": 6,
+  "tests_failed": 0,
+  "test_results": [
+    {
+      "name": "test_empty_and_whitespace_classification",
+      "verifies": "Empty string and whitespace-only queries classify as META_COMMAND with family and reason_code EMPTY_INPUT.",
+      "status": "PASS"
+    },
+    {
+      "name": "test_meta_command_families",
+      "verifies": "All 23 exact meta expressions route to META_COMMAND with correct families (HELP, HISTORY_PANEL, MEMORY_PANEL, SKILLS_PANEL, SETTINGS_PANEL, DIAGNOSTICS_PANEL, HOTKEY_STATUS, EXACT_GREETING, EXACT_ACKNOWLEDGEMENT).",
+      "status": "PASS"
+    },
+    {
+      "name": "test_meta_command_case_and_punctuation_insensitivity",
+      "verifies": "Case variations and trailing punctuation ('Help?', 'HELP!', 'capabilities...', 'hello!') preserve META_COMMAND routing.",
+      "status": "PASS"
+    },
+    {
+      "name": "test_composite_queries_fail_closed_to_operational_goal",
+      "verifies": "Compound indicators ('and', 'then', ';', '&', comma-separated verbs) fail closed to OPERATIONAL_GOAL with reason COMPOSITE_CONTAINS_OPERATIONAL_CLAUSE.",
+      "status": "PASS"
+    },
+    {
+      "name": "test_operational_goals_classification",
+      "verifies": "Workstation actions, computations, queries, observations, and unknown expressions classify as OPERATIONAL_GOAL.",
+      "status": "PASS"
+    },
+    {
+      "name": "test_envelope_origin_preservation",
+      "verifies": "RequestEnvelope origin (CLI, LAUNCHER, RUNTIME), request_id, and dry_run flags are preserved through ingress classification.",
+      "status": "PASS"
+    }
+  ],
+  "verdict": "PASS"
+}

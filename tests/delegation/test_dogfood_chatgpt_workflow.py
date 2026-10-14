@@ -38,6 +38,11 @@ def test_dogfood_chatgpt_delegated_workflow():
     evidence_dir = Path("tests/delegation/dogfood_evidence")
     evidence_dir.mkdir(parents=True, exist_ok=True)
 
+    from astrarun.delegation.provider import DelegateRegistry
+    from astrarun.delegation.mock import MockDelegateProvider
+    reg = DelegateRegistry.get_instance()
+    reg.register(MockDelegateProvider(name="mock"), set_default=True)
+
     engine = AgentExecutionEngine()
     t_start = time.perf_counter()
 

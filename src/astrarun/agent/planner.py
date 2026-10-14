@@ -33,6 +33,7 @@ from astrarun.agent.models import (
 )
 from astrarun.capabilities.registry import CapabilityRegistry
 from astrarun.capabilities.schema import InteractionTier, VerifierStrategy
+from astrarun.cognition.models import ModelRole
 from astrarun.core.logging import get_logger
 
 logger = get_logger("astrarun.agent.planner")
@@ -667,8 +668,6 @@ class GoalPlanner:
             goal.parameters["routing_source"] = "LOCAL_MODEL"
             if "chatgpt" in clean_lower:
                 goal.parameters["provider_name"] = "chatgpt_web"
-            elif "mock" in clean_lower:
-                goal.parameters["provider_name"] = "mock"
             goal.parameters["require_approval"] = any(w in clean_lower for w in ("approve", "approval", "review"))
             goal.parameters["reveal_result"] = any(w in clean_lower for w in ("reveal the file", "show in explorer", "reveal in explorer", "show file", "open folder", "open in explorer"))
             goal.parameters["reveal_type"] = "reveal_file" if any(w in clean_lower for w in ("reveal", "explorer", "folder")) else "open_file"

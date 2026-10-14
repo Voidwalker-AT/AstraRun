@@ -1,0 +1,16 @@
+{
+  "auditor": "MiMo",
+  "claim": "executor_override can run unregistered capability; risk defaults LOW; ActionGate skipped",
+  "mimo_verdict": "PARTIALLY_CONFIRMED",
+  "source_evidence": {
+    "registry_bypass": "L144 if not cap and not executor_override — override skips unregistered DENY",
+    "risk_default": "L176-181 defaults UNKNOWN_CONSEQUENTIAL HIGH requires_confirmation=True — Argon LOW claim CONTRADICTED",
+    "unknown_still_blocked": "L207-229 UNKNOWN_CONSEQUENTIAL deny — fully unknown ids cannot execute even with override",
+    "manifest_known_readonly": "OBSERVE path L232-251 dispatches without ActionGate; override callable runs",
+    "gate_for_mutations": "ACT path still ActionGate L254-366",
+    "dispatch": "L401-402 executor_override(**parameters) replaces registry.execute",
+    "production_callers": "none — only tests; BrokerDispatchScope cosmetic governance shell"
+  },
+  "severity": "MEDIUM (as test seam with residual risk)",
+  "recommended_action": "AU-1: restrict executor_override to test builds or remove from production execute signature"
+}

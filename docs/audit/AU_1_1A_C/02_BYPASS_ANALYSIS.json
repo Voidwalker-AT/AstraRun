@@ -1,0 +1,18 @@
+{
+  "timestamp": "2026-10-14T14:28:00Z",
+  "slice": "AU-1.1A-C",
+  "bypass_identification": {
+    "module": "src/astrarun/ui/launcher.py",
+    "method": "execute_command",
+    "exact_lines": "734-742",
+    "offending_code": "if intent == InputIntent.NATURAL_LANGUAGE:\n    self.suggestions_list.hide()\n    self._adjust_height(expanded=False)\n    resp = get_conversational_response(query)\n    logger.info(\"Conversational prompt response: '%s' -> '%s'\", query, resp)\n    self.show_feedback(resp, is_error=False)\n    self.input_field.selectAll()\n    return",
+    "root_cause": "The launcher UI performed natural-language classification and immediate string generation before constructing RequestEnvelope and before reaching AstraApplication.handle_request.",
+    "architectural_hazard": "Bypassed RequestBoundaryRouter classification, circumvented REQUEST_INGRESS_CLASSIFIED and REQUEST_DOWNSTREAM_SELECTED telemetry, and created an unobservable UI-level semantic decision authority."
+  },
+  "remediation_plan": {
+    "action": "Eradicate the NATURAL_LANGUAGE short-circuit in execute_command. Route all typed text into RequestEnvelope(origin=RequestOrigin.LAUNCHER) -> astra_app.handle_request -> RequestBoundaryRouter.",
+    "meta_preservation": "Pure greetings ('hello', 'hi', 'thanks') are classified by RequestBoundaryRouter as META_COMMAND -> _handle_meta_command -> type='conversational', which Launcher renders cleanly in show_feedback.",
+    "composite_protection": "Compound greetings ('hello, open calculator') fail-closed at RequestBoundaryRouter to OPERATIONAL_GOAL and execute downstream, preventing conversational swallowing of operational verbs.",
+    "suggestion_remediation": "In _execute_result, wrap selected suggestion in RequestEnvelope(origin=RequestOrigin.LAUNCHER) before calling app.handle_request."
+  }
+}

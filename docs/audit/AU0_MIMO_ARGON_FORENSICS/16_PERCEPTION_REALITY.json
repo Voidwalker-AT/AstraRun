@@ -1,0 +1,12 @@
+{
+  "auditor": "MiMo",
+  "claim": "Overlapping observation stacks; rich perception not decision-driving for planning",
+  "mimo_verdict": "PARTIALLY_CONFIRMED",
+  "source_evidence": {
+    "classes": "MachineObserver (agent/observer.py); DesktopObserver (computer_use/observation/observer.py); PerceptionService/Router (perception/). NO ComputerUseObserver class exists.",
+    "agent_uses": "DesktopObserver pre/post world state (DECISION-DRIVING); MachineObserver step Observation (VERIFICATION-ONLY); PerceptionService constructed app.py:374 but NEVER called by AgentLoop",
+    "classification": "MIXED — DesktopObserver decision-driving for restore/cleanup; PerceptionRouter escalation ladder orphaned on agent path"
+  },
+  "severity": "MEDIUM",
+  "recommended_action": "AU-1: single observation architecture; wire or remove PerceptionService from agent path claims"
+}

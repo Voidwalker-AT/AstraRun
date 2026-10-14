@@ -85,6 +85,7 @@ class ExecutionResult:
     confirmation_token: Optional[str] = None
     risk: ToolRisk = ToolRisk.LOW
     prompt: str = ""
+    request_id: Optional[str] = None
 
 
 class SingleInstanceLock:
@@ -269,6 +270,10 @@ class AstraApplication:
         self.laya_sandwich = LayaSandwichRouter(laya_router=self.laya_router)
         self.neural_structure_engine = NeuralStructureEngine()
         self.decision_fusion = DecisionFusionEngine()
+
+        # 10b. Ingress Boundary Router (AU-1.1A)
+        from astrarun.ingress import RequestBoundaryRouter
+        self.request_boundary_router = RequestBoundaryRouter()
 
         # 11. Autonomous Agent Execution Engine (v0.11)
         from astrarun.agent.loop import AgentExecutionEngine, AgentExecutionListener
@@ -548,20 +553,66 @@ class AstraApplication:
 
     def handle_request(
         self,
-        query: str,
+        query: str | RequestEnvelope,
         origin_window: Optional[int | WindowEntity] = None,
         dry_run: bool = False,
+        origin: Optional[RequestOrigin] = None,
     ) -> ExecutionResult:
         """
         Canonical entry point for all natural language and launcher commands.
-        Enforces: Fast Path -> Direct Navigation -> Rich NLP & Capabilities.
+        Enforces ingress seam: RequestEnvelope -> RequestBoundaryRouter -> Meta / Operational Dispatch.
         """
-        from astrarun.core.telemetry import CausalTelemetry
+        from astrarun.core.telemetry import CausalTelemetry, DownstreamPipeline
+        from astrarun.ingress import IngressRoute, RequestEnvelope, RequestOrigin
+
+        if isinstance(query, RequestEnvelope):
+            envelope = query
+        else:
+            eff_origin = origin or RequestOrigin.INTERNAL
+            eff_hwnd = (
+                origin_window
+                if isinstance(origin_window, int)
+                else (origin_window.hwnd if hasattr(origin_window, "hwnd") else None)
+            )
+            envelope = RequestEnvelope.create(
+                raw_query=query or "",
+                origin=eff_origin,
+                origin_hwnd=eff_hwnd,
+                dry_run=dry_run,
+            )
+
         telem = CausalTelemetry.get_instance()
-        clean = (query or "").strip()
+        clean = envelope.raw_query.strip()
         telem.start_run(query=clean, component="AstraApplication")
+
+        # Ingress classification
+        ingress_decision = self.request_boundary_router.classify_ingress(envelope)
+        telem.emit_ingress_classified(
+            request_id=envelope.request_id,
+            origin=envelope.origin.value,
+            ingress_route=ingress_decision.route.value,
+            reason_code=ingress_decision.reason_code,
+        )
+
         try:
-            res = self._handle_request_internal(clean, origin_window=origin_window, dry_run=dry_run)
+            if ingress_decision.route == IngressRoute.META_COMMAND:
+                res = self._handle_meta_command(envelope, ingress_decision)
+                telem.emit_downstream_selected(
+                    request_id=envelope.request_id,
+                    downstream_pipeline=DownstreamPipeline.META_HANDLER,
+                    details={"meta_family": ingress_decision.meta_family, "reason_code": ingress_decision.reason_code},
+                )
+            else:
+                res = self._handle_request_internal(
+                    clean,
+                    origin_window=origin_window,
+                    dry_run=dry_run,
+                    envelope=envelope,
+                )
+
+            if hasattr(res, "request_id") and not getattr(res, "request_id", None):
+                res.request_id = envelope.request_id
+
             contract = None
             if hasattr(res, "task") and res.task:
                 contract = getattr(res.task, "contract", None) or getattr(getattr(res.task, "goal", None), "contract", None)
@@ -575,14 +626,97 @@ class AstraApplication:
             telem.end_run(status="FAILED", message=str(exc))
             raise
 
+    def _handle_meta_command(
+        self,
+        envelope: RequestEnvelope,
+        decision: IngressDecision,
+    ) -> ExecutionResult:
+        """
+        Execute product meta command strictly within AstraRun's internal UI/meta layer.
+        Structurally isolated from workstation mutation and capability execution.
+        """
+        family = decision.meta_family
+
+        if family == "EMPTY_INPUT":
+            return ExecutionResult(type="error", success=False, message="Empty query.")
+
+        if family in ("HELP", "CAPABILITIES", "COMMANDS"):
+            caps = self.capability_registry.list_capabilities()
+            grouped: dict[str, list[str]] = {}
+            for c in caps:
+                cat = c.category.value
+                grouped.setdefault(cat, []).append(f"• {c.id}: {c.description}")
+            return ExecutionResult(
+                type="list_result",
+                success=True,
+                message="AstraRun Workstation Capabilities",
+                data={"grouped_capabilities": grouped, "count": len(caps)},
+            )
+
+        if family in ("EXACT_GREETING", "EXACT_ACKNOWLEDGEMENT"):
+            from astrarun.routing.input_router import get_conversational_response
+            return ExecutionResult(
+                type="conversational",
+                success=True,
+                message=get_conversational_response(envelope.raw_query),
+            )
+
+        if family == "HISTORY_PANEL":
+            return ExecutionResult(type="command", success=True, message="open_history")
+
+        if family == "MEMORY_PANEL":
+            return ExecutionResult(type="command", success=True, message="open_memory")
+
+        if family == "SKILLS_PANEL":
+            return ExecutionResult(type="command", success=True, message="open_skills")
+
+        if family == "SETTINGS_PANEL":
+            return ExecutionResult(type="command", success=True, message="open_settings")
+
+        if family == "DIAGNOSTICS_PANEL":
+            return ExecutionResult(type="command", success=True, message="open_diagnostics")
+
+        if family == "HOTKEY_STATUS":
+            hk_diag = self.hotkey_manager.get_diagnostics() if hasattr(self, "hotkey_manager") and self.hotkey_manager else {
+                "is_registered": True,
+                "modifiers": ["Alt"],
+                "key": "Space",
+                "trigger_count": 0,
+            }
+            return ExecutionResult(
+                type="capability_result",
+                success=True,
+                message=f"Hotkey Status: {'Registered' if hk_diag.get('is_registered') else 'Unregistered'} ({'+'.join(hk_diag.get('modifiers', []))}+{hk_diag.get('key', '')})",
+                data=hk_diag,
+            )
+
+        return ExecutionResult(type="error", success=False, message=f"Unknown meta command: {decision.reason_code}")
+
     def _handle_request_internal(
         self,
         query: str,
         origin_window: Optional[int | WindowEntity] = None,
         dry_run: bool = False,
+        envelope: Optional[RequestEnvelope] = None,
     ) -> ExecutionResult:
+        from astrarun.core.telemetry import CausalTelemetry, CausalEventType, DownstreamPipeline, compute_hash
+        from astrarun.ingress import RequestEnvelope, RequestOrigin
+        telem = CausalTelemetry.get_instance()
+        if envelope is None:
+            envelope = RequestEnvelope.create(
+                raw_query=query,
+                origin=RequestOrigin.INTERNAL,
+                origin_hwnd=origin_window if isinstance(origin_window, int) else None,
+                dry_run=dry_run,
+            )
+
         clean = query.strip()
         if not clean:
+            telem.emit_downstream_selected(
+                request_id=envelope.request_id,
+                downstream_pipeline=DownstreamPipeline.META_HANDLER,
+                details={"branch": "empty_query"},
+            )
             return ExecutionResult(type="error", success=False, message="Empty query.")
 
         words = clean.split()
@@ -613,8 +747,11 @@ class AstraApplication:
         # Result Presentation: "show me the result", "open output", etc.
         res_m = re.match(r"^(?:show(?:\s+me)?|open|view|display)\s+(?:the\s+)?(?:result|results|output|deliverable)\??$", lower_q.strip())
         if res_m:
-            from astrarun.core.telemetry import CausalTelemetry, CausalEventType, compute_hash
-            telem = CausalTelemetry.get_instance()
+            telem.emit_downstream_selected(
+                request_id=envelope.request_id,
+                downstream_pipeline=DownstreamPipeline.INLINE_LEGACY,
+                details={"branch": "result_presentation"},
+            )
             telem.emit(
                 event_type=CausalEventType.GOAL_INTERPRETED.value,
                 component="AstraApplication.Presentation",
@@ -657,11 +794,21 @@ class AstraApplication:
 
         # Negation boundary safety invariant
         if re.search(r'\b(?:don\'t|dont|do\s+not|never)\s+(?:open|launch|start|run|close|delete|format|kill|remove)\b', lower_q):
+            telem.emit_downstream_selected(
+                request_id=envelope.request_id,
+                downstream_pipeline=DownstreamPipeline.INLINE_LEGACY,
+                details={"branch": "negation_block"},
+            )
             return ExecutionResult(type="blocked", success=False, message=f"Action blocked: Request contains negation for '{clean}'.")
 
         # Capabilities list / Help
         lower_clean = re.sub(r"[!.,?]+$", "", lower_q).strip()
         if lower_clean in ("what can you do", "help", "capabilities", "commands"):
+            telem.emit_downstream_selected(
+                request_id=envelope.request_id,
+                downstream_pipeline=DownstreamPipeline.META_HANDLER,
+                details={"branch": "capabilities_help"},
+            )
             caps = self.capability_registry.list_capabilities()
             grouped: dict[str, list[str]] = {}
             for c in caps:
@@ -677,11 +824,21 @@ class AstraApplication:
         # Conversational / Greetings
         from astrarun.routing.input_router import CONVERSATIONAL_EXACT, get_conversational_response
         if lower_clean in CONVERSATIONAL_EXACT:
+            telem.emit_downstream_selected(
+                request_id=envelope.request_id,
+                downstream_pipeline=DownstreamPipeline.META_HANDLER,
+                details={"branch": "conversational_greeting"},
+            )
             return ExecutionResult(type="conversational", success=True, message=get_conversational_response(clean))
 
         # Computational: Count to N
         count_m = re.match(r"^count\s+to\s+(\d+)$", lower_q.strip())
         if count_m:
+            telem.emit_downstream_selected(
+                request_id=envelope.request_id,
+                downstream_pipeline=DownstreamPipeline.PURE_QUERY,
+                details={"branch": "computational_count"},
+            )
             n = int(count_m.group(1))
             capped_n = min(n, 100)
             count_str = ", ".join(str(i) for i in range(1, capped_n + 1))
@@ -694,7 +851,7 @@ class AstraApplication:
             return ExecutionResult(type="computational", success=True, message=f"Counted to {n}: {count_str}", task=task, capability_result=cap_res, data={"n": n})
 
         # Computational: Basic Math
-        math_m = re.match(r"^(?:what\s+is|calculate|compute)\s+(\d+(?:\.\d+)?\s*[\+\-\*\/]\s*\d+(?:\.\d+)?)\??$", lower_q.strip())
+        math_m = re.match(r"^(?:(?:hey|hi|hello|please)\s*[,:]?\s*)?(?:what\s+is|calculate|compute)\s+(\d+(?:\.\d+)?\s*[\+\-\*\/]\s*\d+(?:\.\d+)?)\??$", lower_q.strip())
         if math_m:
             expr = math_m.group(1).strip()
             try:
@@ -702,6 +859,11 @@ class AstraApplication:
                 ops = {ast.Add: operator.add, ast.Sub: operator.sub, ast.Mult: operator.mul, ast.Div: operator.truediv}
                 node = ast.parse(expr, mode='eval').body
                 if isinstance(node, ast.BinOp) and type(node.op) in ops and isinstance(node.left, ast.Constant) and isinstance(node.right, ast.Constant):
+                    telem.emit_downstream_selected(
+                        request_id=envelope.request_id,
+                        downstream_pipeline=DownstreamPipeline.PURE_QUERY,
+                        details={"branch": "computational_math"},
+                    )
                     calc_res = ops[type(node.op)](node.left.value, node.right.value)
                     task = self.task_manager.create_task(request_text=clean, source="user_computation")
                     self.task_manager.transition_status(task.id, TaskStatus.RUNNING)
@@ -731,6 +893,11 @@ class AstraApplication:
         # Read-Only Observation: Is App Installed?
         inst_m = re.match(r"^(?:is\s+(?:the\s+)?([a-zA-Z0-9_\-\.]+)\s+installed|check\s+if\s+(?:the\s+)?([a-zA-Z0-9_\-\.]+)\s+is\s+installed|do\s+i\s+have\s+([a-zA-Z0-9_\-\.]+)(?:\s+installed)?)\??$", lower_q.strip())
         if inst_m:
+            telem.emit_downstream_selected(
+                request_id=envelope.request_id,
+                downstream_pipeline=DownstreamPipeline.INLINE_LEGACY,
+                details={"branch": "is_app_installed"},
+            )
             target_app = (inst_m.group(1) or inst_m.group(2) or inst_m.group(3)).strip()
             from astrarun.discovery.entity_resolver import SemanticEntityResolver
             resolver = SemanticEntityResolver(app_cache=self.app_cache, search_index=self.search_index)
@@ -745,6 +912,11 @@ class AstraApplication:
         # Read-Only Observation: Is App Running?
         run_m = re.match(r"^(?:is\s+(?:the\s+)?([a-zA-Z0-9_\-\.]+)\s+(?:currently\s+)?running|check\s+if\s+(?:the\s+)?([a-zA-Z0-9_\-\.]+)\s+is\s+(?:currently\s+)?running)\??$", lower_q.strip())
         if run_m:
+            telem.emit_downstream_selected(
+                request_id=envelope.request_id,
+                downstream_pipeline=DownstreamPipeline.INLINE_LEGACY,
+                details={"branch": "is_app_running"},
+            )
             target_app = (run_m.group(1) or run_m.group(2)).strip()
             from astrarun.discovery.entity_resolver import SemanticEntityResolver
             resolver = SemanticEntityResolver(app_cache=self.app_cache, search_index=self.search_index)
@@ -762,6 +934,11 @@ class AstraApplication:
         if close_m:
             target_app = close_m.group(1).strip()
             if target_app not in ("window", "this", "that", "it", "tab"):
+                telem.emit_downstream_selected(
+                    request_id=envelope.request_id,
+                    downstream_pipeline=DownstreamPipeline.INLINE_LEGACY,
+                    details={"branch": "close_application"},
+                )
                 task = self.task_manager.create_task(request_text=clean, source="user_close_app")
                 self.task_manager.transition_status(task.id, TaskStatus.RUNNING)
                 cap_res = self._execute_through_broker("close_application", {"app": target_app}, task_id=task.id)
@@ -773,21 +950,51 @@ class AstraApplication:
                     return ExecutionResult(type="error", success=False, message=cap_res.message, task=task, capability_result=cap_res)
 
         if lower_q in ("history", "open history", "show history"):
+            telem.emit_downstream_selected(
+                request_id=envelope.request_id,
+                downstream_pipeline=DownstreamPipeline.META_HANDLER,
+                details={"branch": "open_history"},
+            )
             return ExecutionResult(type="command", success=True, message="open_history")
 
         if lower_q in ("memory", "show memory", "what have you learned?", "learned aliases", "open memory"):
+            telem.emit_downstream_selected(
+                request_id=envelope.request_id,
+                downstream_pipeline=DownstreamPipeline.META_HANDLER,
+                details={"branch": "open_memory"},
+            )
             return ExecutionResult(type="command", success=True, message="open_memory")
 
         if lower_q in ("skills", "show skills", "learned skills", "open skills"):
+            telem.emit_downstream_selected(
+                request_id=envelope.request_id,
+                downstream_pipeline=DownstreamPipeline.META_HANDLER,
+                details={"branch": "open_skills"},
+            )
             return ExecutionResult(type="command", success=True, message="open_skills")
 
         if lower_q in ("settings", "preferences", "config", "open settings"):
+            telem.emit_downstream_selected(
+                request_id=envelope.request_id,
+                downstream_pipeline=DownstreamPipeline.META_HANDLER,
+                details={"branch": "open_settings"},
+            )
             return ExecutionResult(type="command", success=True, message="open_settings")
 
         if lower_q in ("diagnostics", "system diagnostics", "show diagnostics", "open diagnostics"):
+            telem.emit_downstream_selected(
+                request_id=envelope.request_id,
+                downstream_pipeline=DownstreamPipeline.META_HANDLER,
+                details={"branch": "open_diagnostics"},
+            )
             return ExecutionResult(type="command", success=True, message="open_diagnostics")
 
         if lower_q in ("hotkey", "hotkey status", "hotkey diagnostics", "diagnostics hotkey", "check hotkey"):
+            telem.emit_downstream_selected(
+                request_id=envelope.request_id,
+                downstream_pipeline=DownstreamPipeline.META_HANDLER,
+                details={"branch": "hotkey_diagnostics"},
+            )
             hk_diag = self.hotkey_manager.get_diagnostics() if hasattr(self, "hotkey_manager") and self.hotkey_manager else {
                 "is_registered": True,
                 "modifiers": ["Alt"],
@@ -801,6 +1008,11 @@ class AstraApplication:
                 data=hk_diag,
             )
         if lower_q in ("cpu status", "cpu usage", "cpu utilization", "inspect cpu"):
+            telem.emit_downstream_selected(
+                request_id=envelope.request_id,
+                downstream_pipeline=DownstreamPipeline.INLINE_LEGACY,
+                details={"branch": "cpu_status"},
+            )
             from astrarun.system.service import cpu_status
             cap_res = cpu_status()
             task = self.task_manager.create_task(request_text=clean, source="user_system_status")
@@ -809,6 +1021,11 @@ class AstraApplication:
             return ExecutionResult(type="capability_result", success=True, message=cap_res.message, task=task, capability_result=cap_res, data=cap_res.data)
 
         if lower_q in ("memory status", "memory usage", "ram status", "ram usage", "inspect memory"):
+            telem.emit_downstream_selected(
+                request_id=envelope.request_id,
+                downstream_pipeline=DownstreamPipeline.INLINE_LEGACY,
+                details={"branch": "memory_status"},
+            )
             from astrarun.system.service import memory_status
             cap_res = memory_status()
             task = self.task_manager.create_task(request_text=clean, source="user_system_status")
@@ -817,25 +1034,17 @@ class AstraApplication:
             return ExecutionResult(type="capability_result", success=True, message=cap_res.message, task=task, capability_result=cap_res, data=cap_res.data)
 
         if lower_q in ("undo", "undo window", "undo last window move", "undo layout"):
+            telem.emit_downstream_selected(
+                request_id=envelope.request_id,
+                downstream_pipeline=DownstreamPipeline.INLINE_LEGACY,
+                details={"branch": "window_undo"},
+            )
             undo_res = undo_last_window_move()
             return ExecutionResult(
                 type="capability_result",
                 success=undo_res.success,
                 message=undo_res.message,
                 capability_result=undo_res,
-            )
-
-        if lower_q in ("help", "what can you do?", "capabilities", "commands"):
-            caps = self.capability_registry.list_capabilities()
-            grouped: dict[str, list[str]] = {}
-            for c in caps:
-                cat = c.category.value
-                grouped.setdefault(cat, []).append(f"• {c.id}: {c.description}")
-            return ExecutionResult(
-                type="list_result",
-                success=True,
-                message="AstraRun Workstation Capabilities",
-                data={"grouped_capabilities": grouped, "count": len(caps)},
             )
 
         # -------------------------------------------------------------
@@ -853,6 +1062,11 @@ class AstraApplication:
                 is_agent_goal = True
 
         if is_agent_goal:
+            telem.emit_downstream_selected(
+                request_id=envelope.request_id,
+                downstream_pipeline=DownstreamPipeline.AGENT_EXECUTION_ENGINE,
+                details={"branch": "agent_goal"},
+            )
             agent_task = self.agent_engine.execute_goal(clean)
             if agent_task.status == AgentTaskStatus.COMPLETED:
                 last_step = agent_task.plan.steps[-1] if agent_task.plan.steps else None
@@ -888,6 +1102,11 @@ class AstraApplication:
             shortcut_obj = parse_shortcut(lower_q)
 
         if shortcut_obj:
+            telem.emit_downstream_selected(
+                request_id=envelope.request_id,
+                downstream_pipeline=DownstreamPipeline.UI_INTERACTION_FAST_PATH,
+                details={"branch": "press_keyboard_shortcut"},
+            )
             target_hwnd = active_origin.hwnd if active_origin else None
             task = self.task_manager.create_task(request_text=clean, source="user_shortcut")
             self.task_manager.transition_status(task.id, TaskStatus.RUNNING)
@@ -904,24 +1123,49 @@ class AstraApplication:
                 return ExecutionResult(type="error", success=False, message=cap_res.message, task=task, capability_result=cap_res)
 
         if not has_compound and lower_q in ("copy", "copy this", "copy selection"):
+            telem.emit_downstream_selected(
+                request_id=envelope.request_id,
+                downstream_pipeline=DownstreamPipeline.UI_INTERACTION_FAST_PATH,
+                details={"branch": "copy"},
+            )
             target_hwnd = active_origin.hwnd if active_origin else None
             cap_res = self._execute_through_broker("press_keyboard_shortcut", {"shortcut": "Ctrl+C", "hwnd": target_hwnd})
             return ExecutionResult(type="capability_result", success=cap_res.success, message=cap_res.message, capability_result=cap_res)
         if not has_compound and lower_q in ("paste", "paste here", "paste text"):
+            telem.emit_downstream_selected(
+                request_id=envelope.request_id,
+                downstream_pipeline=DownstreamPipeline.UI_INTERACTION_FAST_PATH,
+                details={"branch": "paste"},
+            )
             target_hwnd = active_origin.hwnd if active_origin else None
             cap_res = self._execute_through_broker("press_keyboard_shortcut", {"shortcut": "Ctrl+V", "hwnd": target_hwnd})
             return ExecutionResult(type="capability_result", success=cap_res.success, message=cap_res.message, capability_result=cap_res)
         if not has_compound and lower_q in ("select all", "select all text"):
+            telem.emit_downstream_selected(
+                request_id=envelope.request_id,
+                downstream_pipeline=DownstreamPipeline.UI_INTERACTION_FAST_PATH,
+                details={"branch": "select_all"},
+            )
             target_hwnd = active_origin.hwnd if active_origin else None
             cap_res = self._execute_through_broker("press_keyboard_shortcut", {"shortcut": "Ctrl+A", "hwnd": target_hwnd})
             return ExecutionResult(type="capability_result", success=cap_res.success, message=cap_res.message, capability_result=cap_res)
 
         if not has_compound and lower_q in ("inspect ui", "inspect window ui", "what buttons are in this window?", "what controls are in this window?", "show controls", "list buttons"):
+            telem.emit_downstream_selected(
+                request_id=envelope.request_id,
+                downstream_pipeline=DownstreamPipeline.UI_INTERACTION_FAST_PATH,
+                details={"branch": "inspect_ui"},
+            )
             target_hwnd = active_origin.hwnd if active_origin else None
             cap_res = self._execute_through_broker("inspect_window_ui", {"hwnd": target_hwnd}, is_observe=True)
             return ExecutionResult(type="capability_result", success=cap_res.success, message=cap_res.message, capability_result=cap_res, data=cap_res.data)
 
         if not has_compound and lower_q.startswith("click "):
+            telem.emit_downstream_selected(
+                request_id=envelope.request_id,
+                downstream_pipeline=DownstreamPipeline.UI_INTERACTION_FAST_PATH,
+                details={"branch": "click_ui_element"},
+            )
             target = clean[6:].strip()
             target_hwnd = active_origin.hwnd if active_origin else None
             task = self.task_manager.create_task(request_text=clean, source="user_interaction")
@@ -959,6 +1203,11 @@ class AstraApplication:
                 return ExecutionResult(type="error", success=False, message=cap_res.message, task=task, capability_result=cap_res)
 
         if not has_compound and lower_q.startswith("type "):
+            telem.emit_downstream_selected(
+                request_id=envelope.request_id,
+                downstream_pipeline=DownstreamPipeline.UI_INTERACTION_FAST_PATH,
+                details={"branch": "type_text"},
+            )
             type_args = clean[5:].strip()
             target_hwnd = active_origin.hwnd if active_origin else None
             task = self.task_manager.create_task(request_text=clean, source="user_interaction")
@@ -988,6 +1237,11 @@ class AstraApplication:
                 return ExecutionResult(type="error", success=False, message=cap_res.message, task=task, capability_result=cap_res)
 
         if not has_compound and lower_q.startswith("toggle "):
+            telem.emit_downstream_selected(
+                request_id=envelope.request_id,
+                downstream_pipeline=DownstreamPipeline.UI_INTERACTION_FAST_PATH,
+                details={"branch": "toggle_ui_element"},
+            )
             target = clean[7:].strip()
             target_hwnd = active_origin.hwnd if active_origin else None
             task = self.task_manager.create_task(request_text=clean, source="user_interaction")
@@ -1005,6 +1259,11 @@ class AstraApplication:
                 return ExecutionResult(type="error", success=False, message=cap_res.message, task=task, capability_result=cap_res)
 
         if not has_compound and lower_q.startswith("focus ") and not any(w in lower_q for w in ("window", "code", "notepad", "vivaldi", "terminal", "calc")):
+            telem.emit_downstream_selected(
+                request_id=envelope.request_id,
+                downstream_pipeline=DownstreamPipeline.UI_INTERACTION_FAST_PATH,
+                details={"branch": "focus_ui_element"},
+            )
             target = clean[6:].strip()
             target_hwnd = active_origin.hwnd if active_origin else None
             task = self.task_manager.create_task(request_text=clean, source="user_interaction")
@@ -1022,6 +1281,11 @@ class AstraApplication:
                 return ExecutionResult(type="error", success=False, message=cap_res.message, task=task, capability_result=cap_res)
 
         if not has_compound and (lower_q.startswith("select tab ") or (lower_q.startswith("select ") and "tab" in lower_q)):
+            telem.emit_downstream_selected(
+                request_id=envelope.request_id,
+                downstream_pipeline=DownstreamPipeline.UI_INTERACTION_FAST_PATH,
+                details={"branch": "select_ui_element"},
+            )
             target = clean[11:].strip() if lower_q.startswith("select tab ") else clean[7:].replace("tab", "").strip()
             target_hwnd = active_origin.hwnd if active_origin else None
             task = self.task_manager.create_task(request_text=clean, source="user_interaction")
@@ -1055,6 +1319,11 @@ class AstraApplication:
             decision = self.deterministic_router.route(action_clean, self.routing_context)
             if decision.is_resolved and decision.tool != "unknown":
                 logger.info("Fast path triggered: '%s' (orig: '%s') -> %s", action_clean, clean, decision.tool)
+                telem.emit_downstream_selected(
+                    request_id=envelope.request_id,
+                    downstream_pipeline=DownstreamPipeline.DETERMINISTIC_ROUTER,
+                    details={"tool": decision.tool, "confidence": decision.confidence},
+                )
                 from astrarun.core.telemetry import CausalTelemetry, CausalEventType, compute_hash
                 telem = CausalTelemetry.get_instance()
                 telem.emit(
@@ -1173,6 +1442,11 @@ class AstraApplication:
             mq_answer = self.machine_query_engine.answer_query(clean)
             if mq_answer.get("answer"):
                 logger.info("Machine query path triggered: '%s' -> %s", clean, mq_answer.get("matched_topic"))
+                telem.emit_downstream_selected(
+                    request_id=envelope.request_id,
+                    downstream_pipeline=DownstreamPipeline.MACHINE_QUERY_ENGINE,
+                    details={"matched_topic": mq_answer.get("matched_topic")},
+                )
                 task = self.task_manager.create_task(request_text=clean, source="user_machine_query")
                 self.task_manager.transition_status(task.id, TaskStatus.RUNNING)
                 cap_res = CapabilityResult.ok(
@@ -1192,6 +1466,11 @@ class AstraApplication:
         # -------------------------------------------------------------
         # 3. RICH PATH: Neural NLP Sandwich, Task Creation, Safety Gating
         # -------------------------------------------------------------
+        telem.emit_downstream_selected(
+            request_id=envelope.request_id,
+            downstream_pipeline=DownstreamPipeline.LEGACY_LAYA_WORKFLOW,
+            details={"branch": "rich_laya_workflow"},
+        )
         task = self.task_manager.create_task(request_text=clean, source="user_launcher")
         self.task_manager.transition_status(task.id, TaskStatus.PARSING)
 

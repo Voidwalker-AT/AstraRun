@@ -1,0 +1,16 @@
+{
+  "phase": "AU-1.1A",
+  "artifact": "07_PROJECT_COMMAND_FIX.json",
+  "generated_at": "2026-10-14T11:44:00Z",
+  "contamination_summary": "src/astrarun/tools/projects.py had a hardcoded test command fallback running 'pytest tests/test_milestone5_resident_app.py -k test_user_sid_extraction' when a project had no defined 'test' command.",
+  "root_cause": "Historical milestone test scaffolding left in production capability code.",
+  "remediation": {
+    "file": "src/astrarun/tools/projects.py",
+    "action": "Removed hardcoded milestone5 pytest fallback. When a project has no configured command, run_project_command returns an honest failure CapabilityResult with error_code=NOT_FOUND, reason_code='PROJECT_COMMAND_UNRESOLVED', and message explaining that the command is not defined."
+  },
+  "verification": {
+    "test_suite": "tests/au1/test_au1_1a_project_command.py",
+    "tests_passing": ["test_unconfigured_project_command_fails_honestly"],
+    "status": "PASS"
+  }
+}

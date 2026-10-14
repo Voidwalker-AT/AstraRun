@@ -1,0 +1,15 @@
+{
+  "auditor": "MiMo",
+  "phase": "AU-0",
+  "specimen": {
+    "remote": "https://github.com/Voidwalker-AT/AstraRun",
+    "branch": "review/f0-25f7-argon",
+    "commit": "4a5b409d3a02586f4d3249fc7839601439900de8",
+    "commit_subject": "feat: consolidate AstraRun through F0-25F.7 for independent review",
+    "commit_date": "2026-10-14 14:29:35 +0530",
+    "local_head_equals_specimen": true,
+    "worktree_dirty_entries": 2,
+    "inspection_method": "read-only on current checkout which IS the specimen commit; no branch switch required"
+  },
+  "commitment": "No production/test/benchmark/evidence modifications. Read-only forensics only."
+}

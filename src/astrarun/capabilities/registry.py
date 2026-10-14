@@ -1457,15 +1457,9 @@ class CapabilityRegistry:
         # DELEGATED AGENT ORCHESTRATION CAPABILITIES
         # ---------------------------------------------------------
         from astrarun.delegation.loop import DelegatedOrchestrationLoop
-        from astrarun.delegation.provider import DelegateRegistry
-        from astrarun.delegation.mock import MockDelegateProvider
-        from astrarun.delegation.chatgpt_web import ChatGPTWebDelegate
+        from astrarun.delegation.provider import DelegateRegistry, ProviderUnavailableError
 
         del_reg = DelegateRegistry.get_instance()
-        if not del_reg.list_providers():
-            del_reg.register(MockDelegateProvider(name="mock"), set_default=True)
-            del_reg.register(ChatGPTWebDelegate())
-
         delegation_loop = DelegatedOrchestrationLoop(registry=del_reg)
 
         def _execute_delegated_agent(
@@ -1474,11 +1468,19 @@ class CapabilityRegistry:
             require_approval: bool = True,
             **kwargs: Any,
         ) -> CapabilityResult:
-            res = delegation_loop.execute_goal(
-                goal=goal,
-                provider_name=provider_name,
-                require_delegate_approval=require_approval,
-            )
+            try:
+                res = delegation_loop.execute_goal(
+                    goal=goal,
+                    provider_name=provider_name,
+                    require_delegate_approval=require_approval,
+                )
+            except Exception as e:
+                return CapabilityResult.fail(
+                    "consult_delegate",
+                    f"Delegated orchestration failed: PROVIDER_UNAVAILABLE ({e})",
+                    data={"error": str(e), "reason_code": "PROVIDER_UNAVAILABLE"},
+                    error_code=CapabilityErrorCode.EXECUTION_FAILED,
+                )
             art_strs = [a["path"] for a in res.artifacts]
             primary_art = art_strs[0] if art_strs else ""
             if res.status == "COMPLETED":

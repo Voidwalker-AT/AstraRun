@@ -1,0 +1,15 @@
+{
+  "auditor": "MiMo",
+  "claim": "Notepad++ learning is largely harness-scripted; model not causally controlling warm actions",
+  "mimo_verdict": "CONFIRMED",
+  "classification": {
+    "MODEL_DECIDED": "partial — real HTTP inference in cold phase; optional rationale only",
+    "HARNESS_DECIDED": "schedule planned_experiments L471-522; expected outcomes; WM_COMMAND 41001/41004/42023/43001 hardcoded; invalid JSON replaced L567-591; warm dispatch ignores model L886-896",
+    "MEMORY_RETRIEVED": "store.list_affordances after cold",
+    "MEMORY_CAUSED_ACTION": "NOT DEMONSTRATED — memory is prompt context only",
+    "PHYSICALLY_VERIFIED": "live HWND/UIA/dialogs real"
+  },
+  "contamination_flags_mislabeled": "trajectory claims harness_selected_action:false despite harness fallbacks",
+  "severity": "CRITICAL",
+  "recommended_action": "AU-1: stop counting harness-scripted probes as autonomous learning; fix trajectory flags"
+}

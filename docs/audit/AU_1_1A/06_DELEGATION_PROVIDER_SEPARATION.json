@@ -1,0 +1,33 @@
+{
+  "phase": "AU-1.1A",
+  "artifact": "06_DELEGATION_PROVIDER_SEPARATION.json",
+  "generated_at": "2026-10-14T11:43:00Z",
+  "contamination_summary": "Production DelegateRegistry automatically instantiated and registered MockDelegateProvider as default provider, and GoalPlanner hijacked queries containing the word 'mock' into provider_name='mock'.",
+  "remediation": [
+    {
+      "component": "astrarun.delegation.provider.DelegateRegistry",
+      "action": "Removed automatic MockDelegateProvider registration from get_instance(). Production registry now only registers real external providers (e.g. ChatGPTWebDelegate).",
+      "fail_closed_behavior": "If no external provider is registered or available, resolve_provider() raises typed ProviderUnavailableError."
+    },
+    {
+      "component": "astrarun.capabilities.registry",
+      "action": "Removed automatic MockDelegateProvider injection. execute_delegated_agent catches missing/unavailable provider and returns CapabilityResult.fail with reason_code='PROVIDER_UNAVAILABLE'."
+    },
+    {
+      "component": "astrarun.agent.planner.GoalPlanner",
+      "action": "Removed query parsing hijacking clause (elif 'mock' in clean_lower: goal.parameters['provider_name'] = 'mock')."
+    },
+    {
+      "component": "Test Scaffolding Preservation",
+      "action": "MockDelegateProvider retained in astrarun.delegation.mock for explicit test suite injection."
+    }
+  ],
+  "verification": {
+    "test_suites": [
+      "tests/au1/test_au1_1a_delegate_provider.py",
+      "tests/delegation/test_delegated_orchestration.py",
+      "tests/delegation/test_dogfood_chatgpt_workflow.py"
+    ],
+    "status": "PASS"
+  }
+}

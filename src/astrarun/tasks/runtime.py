@@ -229,7 +229,13 @@ class TaskRuntime:
             # Check if app is provided for resolution
             if self.app is not None:
                 # Execute canonical request handler through AstraApplication
-                exec_result = self.app.handle_request(task.request_text, origin_hwnd=task.metadata.get("origin_hwnd"))
+                from astrarun.ingress import RequestEnvelope, RequestOrigin
+                envelope = RequestEnvelope.create(
+                    raw_query=task.request_text,
+                    origin=RequestOrigin.RUNTIME,
+                    origin_hwnd=task.metadata.get("origin_hwnd"),
+                )
+                exec_result = self.app.handle_request(envelope, origin_window=task.metadata.get("origin_hwnd"))
 
                 if exec_result.type == "confirm":
                     task.transition_to(TaskStatus.WAITING_CONFIRMATION)

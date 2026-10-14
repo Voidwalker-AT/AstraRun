@@ -1,0 +1,62 @@
+{
+  "phase": "AU-1.1A",
+  "artifact": "13_PHYSICAL_SMOKE.json",
+  "generated_at": "2026-10-14T11:50:00Z",
+  "execution_mode": "Physical Headless CLI (python src/astrarun/main.py --run <cmd>)",
+  "workstation_os": "Windows 11 (build 26100)",
+  "smoke_runs": [
+    {
+      "command": "python src/astrarun/main.py --run \"help\"",
+      "ingress_route": "META_COMMAND",
+      "downstream_pipeline": "DownstreamPipeline.META_HANDLER",
+      "exit_code": 0,
+      "status": "SUCCESS",
+      "task_id": "no_task_id",
+      "message": "AstraRun Workstation Capabilities",
+      "verified": true
+    },
+    {
+      "command": "python src/astrarun/main.py --run \"calculate 2 + 2\"",
+      "ingress_route": "OPERATIONAL_GOAL",
+      "downstream_pipeline": "DownstreamPipeline.PURE_QUERY",
+      "exit_code": 0,
+      "status": "SUCCESS",
+      "task_id": "d1c6dba6-e215-4480-8592-fcf070ce21dd",
+      "message": "2 + 2 = 4",
+      "verified": true
+    },
+    {
+      "command": "python src/astrarun/main.py --run \"launch calculator\"",
+      "ingress_route": "OPERATIONAL_GOAL",
+      "downstream_pipeline": "DownstreamPipeline.DETERMINISTIC_ROUTER",
+      "exit_code": 0,
+      "status": "SUCCESS",
+      "task_id": "8f12ed40-0ca9-4a7a-b18f-f417a2948b24",
+      "message": "Application 'calc' launched successfully (PID=6216, HWND=269492).",
+      "verified": true
+    },
+    {
+      "command": "python src/astrarun/main.py --run \"close calc\"",
+      "ingress_route": "OPERATIONAL_GOAL",
+      "downstream_pipeline": "DownstreamPipeline.INLINE_LEGACY",
+      "exit_code": 0,
+      "status": "SUCCESS",
+      "task_id": "e3257f19-5d93-4097-9ce5-5acf8c9c3ab2",
+      "message": "Closed 2 Astra-owned instance(s) of 'calc'.",
+      "verified": true
+    },
+    {
+      "command": "python src/astrarun/main.py --run \"battery report\"",
+      "ingress_route": "OPERATIONAL_GOAL",
+      "downstream_pipeline": "DownstreamPipeline.AGENT_EXECUTION_ENGINE",
+      "exit_code": 0,
+      "status": "SUCCESS",
+      "task_id": "task_66886efc",
+      "message": "Battery report generated successfully at C:\\Users\\hp\\Downloads\\battery-report.html",
+      "verified": true
+    }
+  ],
+  "cleanup_verified": true,
+  "debris_remaining": 0,
+  "verdict": "PASS"
+}

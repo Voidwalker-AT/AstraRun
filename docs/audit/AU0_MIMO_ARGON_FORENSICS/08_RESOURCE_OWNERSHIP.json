@@ -1,0 +1,13 @@
+{
+  "auditor": "MiMo",
+  "claim": "CreateProcessW PID discarded; ledger may claim unrelated new window; TaskResourceReconciler unwired",
+  "mimo_verdict": "CONFIRMED",
+  "source_evidence": {
+    "pid_discarded": "tools/apps.py:42-72 CreateProcessW fills pi.dwProcessId then CloseHandle+return True without reading PID; Popen.pid also discarded L137-145",
+    "identification": "resource_ledger.identify_and_register_launched_resource poll-diff 4.0s L351-559",
+    "concurrent_ambiguity": "fallback L482-496: ANY new titled top-level window not in pre_snapshot wins with no alias/PID constraint; astra_created=bool(new_pid or new_hwnd) L513-514",
+    "TaskResourceReconciler_wired": false
+  },
+  "severity": "CRITICAL",
+  "recommended_action": "AU-1: preserve CreateProcess PID; eliminate unconstrained window claim; wire reconciler or drop claim"
+}

@@ -110,19 +110,16 @@ def run_project_command(project_id: str, command_name: str = "test") -> Capabili
         )
 
     # Safe bounded command execution
-    # For test commands, use python -m pytest on a fast bounded test to avoid long suite runtime
-    if command_name.lower() in ("test", "safe_test", "approved_test"):
-        cmd = [sys.executable, "-m", "pytest", "tests/test_milestone5_resident_app.py", "-k", "test_user_sid_extraction", "-q"]
-    else:
-        raw_cmd = proj.commands.get(command_name)
-        if not raw_cmd:
-            return CapabilityResult.fail(
-                capability="run_project_command",
-                message=f"Command '{command_name}' not defined for project '{proj.id}'",
-                error_code=CapabilityErrorCode.NOT_FOUND,
-            )
-        import shlex
-        cmd = shlex.split(raw_cmd)
+    raw_cmd = proj.commands.get(command_name)
+    if not raw_cmd:
+        return CapabilityResult.fail(
+            capability="run_project_command",
+            message=f"PROJECT_COMMAND_UNRESOLVED: Command '{command_name}' not defined for project '{proj.id}'",
+            error_code=CapabilityErrorCode.NOT_FOUND,
+            data={"reason_code": "PROJECT_COMMAND_UNRESOLVED", "project_id": proj.id, "command": command_name},
+        )
+    import shlex
+    cmd = shlex.split(raw_cmd)
 
     logger.info("Executing safe project command in %s: %s", proj_dir, cmd)
     flags = 0x08000000 if os.name == "nt" else 0

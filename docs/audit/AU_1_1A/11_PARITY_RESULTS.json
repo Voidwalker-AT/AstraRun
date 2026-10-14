@@ -1,0 +1,21 @@
+{
+  "phase": "AU-1.1A",
+  "artifact": "11_PARITY_RESULTS.json",
+  "generated_at": "2026-10-14T11:48:00Z",
+  "test_suite": "tests/au1/test_au1_1a_downstream_parity.py",
+  "tests_executed": 9,
+  "tests_passed": 9,
+  "tests_failed": 0,
+  "results": [
+    {"name": "test_computational_math_parity", "expected_type": "computational", "message_match": "2 + 2 = 4", "status": "PASS"},
+    {"name": "test_computational_count_parity", "expected_type": "computational", "message_match": "Counted to 5: 1, 2, 3, 4, 5", "status": "PASS"},
+    {"name": "test_fast_path_open_app_parity", "expected_type": "fast_path", "target": "notepad", "status": "PASS"},
+    {"name": "test_fast_path_launch_app_parity", "expected_type": "fast_path", "target": "calc", "status": "PASS"},
+    {"name": "test_agent_goal_battery_report_parity", "expected_type": "capability_result", "target": "battery report", "status": "PASS"},
+    {"name": "test_read_only_observation_is_app_running_parity", "expected_type": "observation", "target": "notepad running", "status": "PASS"},
+    {"name": "test_ui_interaction_inspect_ui_parity", "expected_type": "capability_result", "target": "inspect ui", "status": "PASS"},
+    {"name": "test_system_status_cpu_parity", "expected_type": "capability_result", "target": "cpu status", "status": "PASS"},
+    {"name": "test_system_status_memory_parity", "expected_type": "capability_result", "target": "memory status", "status": "PASS"}
+  ],
+  "verdict": "PASS"
+}

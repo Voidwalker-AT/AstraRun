@@ -1,0 +1,14 @@
+{
+  "auditor": "MiMo",
+  "claim": "SELECT_ALTERNATIVE_MODEL writing active_model_role does not change model selection; gpt-4o/claude failover absent from production",
+  "mimo_verdict": "CONFIRMED",
+  "source_evidence": {
+    "write_site": "loop.py:849-854 only write of active_model_role",
+    "readers": "only self-read in same block; zero other readers in src",
+    "actual_model_selection": "ModelService.ensure_backend(ModelRole.FAST|DEEP); never reads task.context",
+    "gpt4o_claude_in_src": "0 matches",
+    "claim_in_reports": "F0_25F7_FINAL_REPORT.md:82 claims multi-provider failover — not implemented"
+  },
+  "severity": "HIGH",
+  "recommended_action": "AU-1: implement real model role consumption or remove SELECT_ALTERNATIVE_MODEL theater"
+}

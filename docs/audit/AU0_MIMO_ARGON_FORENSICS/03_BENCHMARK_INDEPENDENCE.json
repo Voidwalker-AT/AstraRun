@@ -1,0 +1,22 @@
+{
+  "auditor": "MiMo",
+  "claim": "300/1000 Blind prompts exact-dup from Dev; hash validation cosmetic; 998/1000 inflated",
+  "mimo_verdict": "CONFIRMED",
+  "recomputed": {
+    "dev_n": 1500,
+    "blind_n": 1000,
+    "exact_dup_blind_in_dev": 300,
+    "dup_pct_of_blind": 30.0,
+    "dup_by_route": {"DYNAMIC_COMPUTATION": 82, "SECURITY_REJECTION": 65, "KNOWN_CAPABILITY": 53, "CONVERSATIONAL": 50, "CLARIFICATION_REQUIRED": 26, "COMPOSITE": 24},
+    "template6_overlap": 405,
+    "blind_results_claim": "99.8% accuracy, macro_f1 0.998, verdict PASS"
+  },
+  "hash_validation": {
+    "function": "run_f0_25f7_blind_eval.py verify_manifest_hash L89-98",
+    "behavior": "computes computed_sha then only prints 'PASS: Manifest hash recorded' — NEVER compares computed vs claimed; no assert",
+    "source_freeze_check": "different — asserts mismatches L85"
+  },
+  "what_998_1000_proves": "GoalPlanner maps 998/1000 labeled strings (30% of which were already in Dev) to expected_route offline; does NOT prove independence, non-burned holdout, or generalization",
+  "severity": "CRITICAL",
+  "recommended_action": "AU-1: rebuild truly independent holdout; enforce manifest hash compare; treat 998/1000 as contaminated"
+}

@@ -494,10 +494,11 @@ class AstraApplication:
 
     def _complete_task(self, task: Task, cap_res: CapabilityResult) -> None:
         """Helper to build TaskResult and invoke task_manager.complete_task."""
+        status = TaskStatus.COMPLETED if cap_res.success else TaskStatus.FAILED
         result = TaskResult(
             task_id=task.id,
             success=cap_res.success,
-            status=TaskStatus.COMPLETED if cap_res.success else TaskStatus.FAILED,
+            status=status,
             message=cap_res.message,
             summary=cap_res.message,
             data=cap_res.data if isinstance(cap_res.data, dict) else {},
@@ -505,6 +506,11 @@ class AstraApplication:
             duration_ms=cap_res.latency_ms,
         )
         self.task_manager.complete_task(task.id, result)
+        if hasattr(self, "resource_ledger") and self.resource_ledger:
+            try:
+                self.resource_ledger.cleanup_task_resources(task.id, status)
+            except Exception as ex:
+                logger.warning("Error cleaning up task resources for task %s: %s", task.id, ex)
         if hasattr(self, "learning_engine") and self.learning_engine:
             self.learning_engine.ingest_task_async(task)
 
@@ -512,6 +518,11 @@ class AstraApplication:
         """Helper to build TaskError and invoke task_manager.fail_task."""
         err = TaskError(code="EXECUTION_ERROR", message=message, capability=capability)
         self.task_manager.fail_task(task.id, err)
+        if hasattr(self, "resource_ledger") and self.resource_ledger:
+            try:
+                self.resource_ledger.cleanup_task_resources(task.id, TaskStatus.FAILED)
+            except Exception as ex:
+                logger.warning("Error cleaning up task resources on failure for task %s: %s", task.id, ex)
         if hasattr(self, "learning_engine") and self.learning_engine:
             self.learning_engine.ingest_task_async(task)
 
@@ -603,10 +614,11 @@ class AstraApplication:
                     details={"meta_family": ingress_decision.meta_family, "reason_code": ingress_decision.reason_code},
                 )
             else:
+                effective_dry_run = dry_run or envelope.dry_run
                 res = self._handle_request_internal(
                     clean,
                     origin_window=origin_window,
-                    dry_run=dry_run,
+                    dry_run=effective_dry_run,
                     envelope=envelope,
                 )
 
@@ -1890,6 +1902,14 @@ class AstraApplication:
         """Gracefully terminate background workers, flush databases, and release locks."""
         logger.info("Initiating graceful shutdown of AstraApplication...")
         try:
+            if hasattr(self, "resource_ledger") and self.resource_ledger:
+                try:
+                    from astrarun.tasks.resource_ledger import CleanupPolicy
+                    for res in self.resource_ledger.list_active_astra_resources():
+                        if res.cleanup_policy == CleanupPolicy.AUTO_CLOSE_ON_COMPLETION:
+                            self.resource_ledger.close_owned_resource(res)
+                except Exception as ex:
+                    logger.warning("Error cleaning up active resources during shutdown: %s", ex)
             if hasattr(self, "laya_router") and self.laya_router:
                 if hasattr(self.laya_router, "shutdown"):
                     self.laya_router.shutdown()

@@ -510,6 +510,20 @@ class AstraResourceLedger:
             except Exception:
                 pass
 
+        # If new_pid is missing or already dead (e.g. calc.exe launched CalculatorApp.exe), resolve newly spawned matching process
+        if (not new_pid or not psutil.pid_exists(new_pid)) and aliases:
+            for p in psutil.process_iter(["name", "create_time"]):
+                try:
+                    c_time = p.info["create_time"] or 0.0
+                    p_name = (p.info["name"] or "").lower()
+                    is_new = (p.pid not in pre_snapshot.pids) or (c_time >= pre_snapshot.timestamp - 0.25)
+                    if is_new and any(a in p_name for a in aliases):
+                        new_pid = p.pid
+                        proc_create_time = c_time
+                        break
+                except (psutil.NoSuchProcess, psutil.AccessDenied):
+                    pass
+
         # If a new process or window was identified, create registered OwnedResource
         astra_created = bool(new_pid or new_hwnd)
         meta = dict(metadata or {})
@@ -958,15 +972,30 @@ class AstraResourceLedger:
                         except (psutil.TimeoutExpired, psutil.NoSuchProcess):
                             pass
 
-                        # If still alive, terminate the task-created process
+                        # If still alive, terminate the task-created process and its children
                         if psutil.pid_exists(resource.pid):
                             logger.info("[TERMINATING_OWNED_PROCESS] PID %d (%s)", resource.pid, proc_name)
-                            proc.terminate()
+                            children = []
                             try:
-                                proc.wait(timeout=force_timeout)
-                            except psutil.TimeoutExpired:
-                                proc.kill()
-                                proc.wait(timeout=1.0)
+                                children = proc.children(recursive=True)
+                            except (psutil.NoSuchProcess, psutil.AccessDenied):
+                                pass
+
+                            for child in children:
+                                try:
+                                    child.terminate()
+                                except (psutil.NoSuchProcess, psutil.AccessDenied):
+                                    pass
+
+                            proc.terminate()
+                            procs_to_wait = children + [proc]
+                            gone, alive = psutil.wait_procs(procs_to_wait, timeout=force_timeout)
+                            for p in alive:
+                                try:
+                                    p.kill()
+                                    p.wait(timeout=1.0)
+                                except (psutil.NoSuchProcess, psutil.AccessDenied):
+                                    pass
                     else:
                         logger.info(
                             "[PRESERVING_PROCESS] PID %d (%s) was not uniquely created by Astra or is a shell host.",
@@ -1275,13 +1304,16 @@ class AstraResourceLedger:
                     continue
 
                 # Process identity is verified!
-                # If resource was temporary test content, clean it up
-                if res.content_classification == ContentClassification.TEMPORARY_TEST_CONTENT:
+                should_cleanup = (
+                    res.content_classification == ContentClassification.TEMPORARY_TEST_CONTENT
+                    or res.cleanup_policy == CleanupPolicy.AUTO_CLOSE_ON_COMPLETION
+                )
+                if should_cleanup:
                     self.close_owned_resource(res)
                     self.update_lifecycle_state(res.resource_id, ResourceLifecycleState.ORPHANED_CLEANED)
                     recovery_results.append({"resource_id": res.resource_id, "action": "ORPHANED_CLEANED"})
                 else:
-                    logger.info("[ORPHAN_RETAINED] Retaining resource %s (content=%s)", res.resource_id, res.content_classification.value)
+                    logger.info("[ORPHAN_RETAINED] Retaining resource %s (content=%s, policy=%s)", res.resource_id, res.content_classification.value, res.cleanup_policy.value)
                     recovery_results.append({"resource_id": res.resource_id, "action": "RETAINED"})
             except (psutil.NoSuchProcess, psutil.AccessDenied):
                 self.update_lifecycle_state(res.resource_id, ResourceLifecycleState.CLOSED)

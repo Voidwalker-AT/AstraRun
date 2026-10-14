@@ -259,10 +259,23 @@ def run_physical_test():
             for c_pid in created_pids:
                 try:
                     proc = psutil.Process(c_pid)
+                    children = proc.children(recursive=True)
+                    for child in children:
+                        try:
+                            child.terminate()
+                        except Exception:
+                            pass
                     proc.terminate()
-                    proc.wait(timeout=2.0)
+                    gone, alive = psutil.wait_procs(children + [proc], timeout=2.0)
+                    for p in alive:
+                        try:
+                            p.kill()
+                        except Exception:
+                            pass
                 except Exception as e:
                     print(f"  Cleanup note: {e}")
+            from astrarun.applications.service import close_application
+            close_application("calc")
             time.sleep(0.5)
 
         test_results.append({

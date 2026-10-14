@@ -580,7 +580,8 @@ class ModelService:
             "11. Word tokenization: If counting word frequencies, properly tokenize words by converting text to lowercase and extracting words without punctuation (e.g. re.findall(r'\\b[A-Za-z0-9_]+\\b', text.lower())).\n"
             "12. Print the requested result to stdout.\n"
             "13. NEVER output conversational preamble or explanations. Start directly with the ```python code fence.\n"
-            "14. Unconditional execution: The script MUST unconditionally execute the goal and create all requested output files immediately when run. NEVER gate execution on command-line flags or checking if os.environ.get('goal') matches a keyword."
+            "14. Unconditional execution: The script MUST unconditionally execute the goal and create all requested output files immediately when run. NEVER gate execution on command-line flags or checking if os.environ.get('goal') matches a keyword.\n"
+            "15. Keep the code concise, bounded, and under 50 lines. Do NOT generate endless repetitive print statements or huge repetitive lists; compute key values cleanly and exit."
         )
 
         user_content = f"Goal: {goal}\nLanguage: {language}\nContext: {context or {}}\nRequirements: {requirements or []}"
@@ -688,7 +689,8 @@ class ModelService:
             "7. Preserve the original goal and intent. Do NOT change the task or invent files like sample_input.txt unless the original goal requested it.\n"
             "8. If a NameError occurs (e.g. name 'math' or 'Path' is not defined), ensure all imports are at the top: import os, sys, math, struct, zlib, json, re; from pathlib import Path.\n"
             "9. If a struct.error occurs ('B' format requires 0 <= number <= 255), clamp numbers to [0..255]: val = max(0, min(255, int(val))) before packing into 'B'.\n"
-            "10. Always execute the logic at top level or in if __name__ == '__main__' and print computed results (e.g. print('pi =', math.pi)) so stdout captures output."
+            "10. Always execute the logic at top level or in if __name__ == '__main__' and print computed results (e.g. print('pi =', math.pi)) so stdout captures output.\n"
+            "11. Keep the corrected code concise, bounded, and under 50 lines. Do NOT generate endless repetitive statements."
         )
 
         exc_type = getattr(repair_context, "exception_type", None)

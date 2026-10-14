@@ -126,7 +126,7 @@ class CapabilityRegistry:
         elif any(k in cap.id for k in ("type", "click", "toggle", "select", "focus_ui", "scroll", "set_ui")):
             verifier_strat = VerifierStrategy.UI_ELEMENT_STATE
         elif "close" in cap.id:
-            verifier_strat = VerifierStrategy.PROCESS_EXIT
+            verifier_strat = VerifierStrategy.PROCESS_EXITED
         elif "window" in cap.id or "application" in cap.id:
             verifier_strat = VerifierStrategy.WINDOW_READY
         elif "wifi" in cap.id and "connect" in cap.id:
@@ -141,7 +141,9 @@ class CapabilityRegistry:
             params.append(ParameterSchema(name=name, type_name=type_str, description=f"Parameter {name}", required=is_req))
 
         effects = [SideEffect.READ_ONLY] if cap.read_only else [SideEffect.SYSTEM_STATE]
-        if "file" in cap.id or "report" in cap.id or "save" in cap.id or "document" in cap.id:
+        if cap.id == "open_file":
+            effects = [SideEffect.SPAWNS_PROCESS, SideEffect.MODIFIES_WINDOW]
+        elif "file" in cap.id or "report" in cap.id or "save" in cap.id or "document" in cap.id:
             effects = [SideEffect.CREATES_FILE, SideEffect.MODIFIES_FILE] if not cap.read_only else [SideEffect.READ_ONLY]
         elif cap.id in ("execute_dynamic_tool", "consult_delegate"):
             effects = [SideEffect.CREATES_FILE, SideEffect.MODIFIES_FILE, SideEffect.SPAWNS_PROCESS, SideEffect.SYSTEM_STATE]
@@ -475,7 +477,7 @@ class CapabilityRegistry:
             description="Open a non-executable user file with its default program",
             args_schema={"path": str},
             risk=ToolRisk.LOW,
-            read_only=False,
+            read_only=True,
             handler=open_file,
             permission=CapabilityPermission.AUTO,
             context_effects=["file_opened"],

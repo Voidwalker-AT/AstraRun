@@ -392,7 +392,7 @@ def list_recent_files(
     )
 
 
-def open_file(path: str) -> CapabilityResult:
+def open_file(path: str, task_id: Optional[str] = None) -> CapabilityResult:
     """
     Open a verified local document or media file using its default Windows association.
     SECURITY: Prohibits execution of binary/script formats (.exe, .bat, .ps1, etc.).
@@ -425,8 +425,36 @@ def open_file(path: str) -> CapabilityResult:
             data={"path": str(norm_path), "extension": ext, "suggested_action": "reveal_file"},
         )
 
+    ledger = None
+    pre_snap = None
+    try:
+        from astrarun.tasks.resource_ledger import (
+            AstraResourceLedger,
+            CleanupPolicy,
+            ContentClassification,
+            ResourceType,
+        )
+        ledger = AstraResourceLedger.get_instance()
+        pre_snap = ledger.capture_pre_launch_snapshot()
+    except Exception:
+        pass
+
     try:
         os.startfile(str(norm_path))
+        if ledger and pre_snap:
+            try:
+                ledger.identify_and_register_launched_resource(
+                    task_id=task_id or "default_task",
+                    capability="open_file",
+                    pre_snapshot=pre_snap,
+                    expected_name_or_class=norm_path.name,
+                    cleanup_policy=CleanupPolicy.AUTO_CLOSE_ON_COMPLETION,
+                    content_classification=ContentClassification.NONE,
+                    document_path=str(norm_path),
+                    resource_type=ResourceType.APPLICATION,
+                )
+            except Exception:
+                pass
         latency = (time.perf_counter() - t0) * 1000
         return CapabilityResult.ok(
             capability="open_file",

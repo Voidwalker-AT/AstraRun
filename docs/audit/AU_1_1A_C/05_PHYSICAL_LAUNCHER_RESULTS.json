@@ -1,5 +1,5 @@
 {
-  "timestamp": 1791988559.8750927,
+  "timestamp": 1791992619.7897444,
   "slice": "AU-1.1A-C",
   "verdict": "PASS",
   "scenarios_tested": [
@@ -7,14 +7,14 @@
       "scenario": "A",
       "prompt": "help",
       "status": "PASS",
-      "request_id": "req-fc30c812ec70",
+      "request_id": "req-085e6b04935a",
       "origin": "LAUNCHER",
       "ingress_route": "META_COMMAND",
       "reason_code": "META_HELP",
       "downstream_pipeline": "META_HANDLER",
       "foreground_window": {
-        "hwnd": 2687970,
-        "pid": 28324,
+        "hwnd": 6097774,
+        "pid": 28720,
         "title": "AstraRun"
       },
       "calc_spawned": false,
@@ -25,14 +25,14 @@
       "scenario": "B",
       "prompt": "hello",
       "status": "PASS",
-      "request_id": "req-b26456284d61",
+      "request_id": "req-e1f91a5b2847",
       "origin": "LAUNCHER",
       "ingress_route": "META_COMMAND",
       "reason_code": "META_GREETING",
       "downstream_pipeline": "META_HANDLER",
       "foreground_window": {
-        "hwnd": 2687970,
-        "pid": 28324,
+        "hwnd": 6097774,
+        "pid": 28720,
         "title": "AstraRun"
       },
       "calc_spawned": false,
@@ -43,33 +43,33 @@
       "scenario": "C",
       "prompt": "hello, open calculator",
       "status": "PASS",
-      "request_id": "req-f39cbe465c4b",
+      "request_id": "req-b7e1d38057f8",
       "origin": "LAUNCHER",
       "ingress_route": "OPERATIONAL_GOAL",
       "reason_code": "COMPOSITE_CONTAINS_OPERATIONAL_CLAUSE",
       "downstream_pipeline": "LEGACY_LAYA_WORKFLOW",
       "foreground_window": {
-        "hwnd": 2366830,
-        "pid": 6216,
-        "title": "Calculator"
+        "hwnd": 266940,
+        "pid": 436,
+        "title": "RM Worksheet Unit III - Final Solved - Vivaldi"
       },
-      "calc_spawned": true,
-      "cleaned_up": true,
+      "calc_spawned": false,
+      "cleaned_up": false,
       "screenshot": "C_2_result_hello_open_calculato.png"
     },
     {
       "scenario": "D",
       "prompt": "calculate 2 + 2",
       "status": "PASS",
-      "request_id": "req-8080d1c2a2d8",
+      "request_id": "req-97adf715dbe3",
       "origin": "LAUNCHER",
       "ingress_route": "OPERATIONAL_GOAL",
       "reason_code": "OPERATIONAL_DEFAULT",
       "downstream_pipeline": "PURE_QUERY",
       "foreground_window": {
-        "hwnd": 2687970,
-        "pid": 28324,
-        "title": "AstraRun"
+        "hwnd": 266940,
+        "pid": 436,
+        "title": "RM Worksheet Unit III - Final Solved - Vivaldi"
       },
       "calc_spawned": false,
       "cleaned_up": true,
@@ -79,15 +79,15 @@
       "scenario": "E",
       "prompt": "battery report",
       "status": "PASS",
-      "request_id": "req-d4214c044c3c",
+      "request_id": "req-dfcab3ae785c",
       "origin": "LAUNCHER",
       "ingress_route": "OPERATIONAL_GOAL",
       "reason_code": "OPERATIONAL_DEFAULT",
       "downstream_pipeline": "AGENT_EXECUTION_ENGINE",
       "foreground_window": {
-        "hwnd": 2687970,
-        "pid": 28324,
-        "title": "AstraRun"
+        "hwnd": 266940,
+        "pid": 436,
+        "title": "RM Worksheet Unit III - Final Solved - Vivaldi"
       },
       "calc_spawned": false,
       "cleaned_up": true,
@@ -97,18 +97,18 @@
       "scenario": "F",
       "prompt": "open calculator",
       "status": "PASS",
-      "request_id": "req-26c6ba5d198c",
+      "request_id": "req-ee3b76dcbaaf",
       "origin": "LAUNCHER",
       "ingress_route": "OPERATIONAL_GOAL",
       "reason_code": "OPERATIONAL_DEFAULT",
       "downstream_pipeline": "DETERMINISTIC_ROUTER",
       "foreground_window": {
-        "hwnd": 6426622,
-        "pid": 6216,
-        "title": "Calculator"
+        "hwnd": 266940,
+        "pid": 436,
+        "title": "RM Worksheet Unit III - Final Solved - Vivaldi"
       },
-      "calc_spawned": true,
-      "cleaned_up": true,
+      "calc_spawned": false,
+      "cleaned_up": false,
       "screenshot": "F_2_result_open_calculator.png"
     }
   ]

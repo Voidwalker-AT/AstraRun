@@ -104,6 +104,7 @@ class UIElementRef:
     has_keyboard_focus: bool = False
     supported_patterns: list[str] = field(default_factory=list)
     depth: int = 0
+    value: str = ""
 
     def to_dict(self) -> dict[str, Any]:
         """Convert to JSON-serializable dictionary."""
@@ -121,6 +122,7 @@ class UIElementRef:
             "has_keyboard_focus": self.has_keyboard_focus,
             "supported_patterns": self.supported_patterns,
             "depth": self.depth,
+            "value": self.value,
         }
 
     @classmethod
@@ -148,6 +150,7 @@ class UIElementRef:
             has_keyboard_focus=data.get("has_keyboard_focus", False),
             supported_patterns=data.get("supported_patterns", []),
             depth=data.get("depth", 0),
+            value=data.get("value", ""),
         )
 
 

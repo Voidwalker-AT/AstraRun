@@ -1,0 +1,20 @@
+{
+  "auditor": "MiMo",
+  "artifact": "F0_25F6_INTELLIGENCE_BENCHMARK.json",
+  "json": {"evaluated": 38, "passed": 38, "score": "100%"},
+  "report": "12/12 cognitive capabilities",
+  "families_exercised": {
+    "planning": "multi_intent_composition 4/4",
+    "replanning": "via fallback matrix (separate artifact) — not in this JSON",
+    "computation": "dynamic_tool_need_detection 4/4",
+    "tool_synthesis": "not directly measured here",
+    "verification": "mutation suite separately",
+    "repair": "generic repair separately",
+    "context_use": "referent_grounding 2/2 + missing_parameter 5/5",
+    "uncertainty": "distinguishing_conversation_from_execution category present",
+    "recovery": "fallback adversarial 20/20 separate",
+    "stopping": "loop prevention tests separate"
+  },
+  "artifact_existence_as_success": "JSON records correct/total per category — appears classification-correctness not mere existence",
+  "verdict": "INTELLIGENCE BENCHMARK = PARTIAL (100% on curated 38-item set is real but narrow; report/JSON framing differs; not blind)"
+}

@@ -1,0 +1,33 @@
+{
+  "auditor": "MiMo",
+  "gate": "src/astrarun/agent/completion_gate.py AuthoritativeCompletionGate.can_complete",
+  "production_callers": ["telemetry.py:268 (emit SUCCESS)", "telemetry.py:330 (end_run SUCCESS)"],
+  "contract_injection": {"set_active_contract_callers": 0, "set_evidence_state_callers": 0, "consequence": "gate can never APPROVE in production — always FAILED_NO_CONTRACT; fail-closed STUB-positive path", "evidence": "grep repo-wide: only definitions exist"},
+  "attacks": [
+    {"id": "C1", "attack": "zero predicates", "result": "REJECTED", "evidence": "L99-106 FAILED_NO_POSTCONDITIONS; test C1", "grade": "BLOCKED"},
+    {"id": "C2", "attack": "required PENDING", "result": "REJECTED", "evidence": "L117-119", "grade": "BLOCKED"},
+    {"id": "C3", "attack": "required UNKNOWN", "result": "REJECTED", "evidence": "L120-122", "grade": "BLOCKED"},
+    {"id": "C4", "attack": "required VIOLATED", "result": "REJECTED", "evidence": "L123-125", "grade": "BLOCKED"},
+    {"id": "C5", "attack": "action success but artifact wrong", "result": "REJECTED", "evidence": "FILE_CONTENT re-verify L155-182; test C7", "grade": "BLOCKED"},
+    {"id": "C6", "attack": "presentation REQUESTED only", "result": "REJECTED", "evidence": "gate C5 L186-214; test C5", "grade": "BLOCKED"},
+    {"id": "C7", "attack": "cleanup FAILED_CLEANUP", "result": "REJECTED", "evidence": "L216-232; test C6", "grade": "BLOCKED"},
+    {"id": "C8", "attack": "stale evidence flag", "result": "REJECTED", "evidence": "L143-146; test C12", "grade": "BLOCKED"},
+    {"id": "C9", "attack": "wrong task_id", "result": "REJECTED if id present", "evidence": "L139-141; BUT setdefault fallback attributes empty evidence to current task", "grade": "PARTIAL_BYPASS"},
+    {"id": "C10", "attack": "wrong run_id", "result": "REJECTED if id present", "evidence": "L135-137; same setdefault fallback", "grade": "PARTIAL_BYPASS"},
+    {"id": "C11", "attack": "direct telemetry.emit(GOAL_COMPLETED) status=SUCCESS", "result": "REJECTED returns None", "evidence": "L268-281; test C11", "grade": "BLOCKED"},
+    {"id": "C12", "attack": "telemetry.end_run(SUCCESS)", "result": "DOWNGRADED completed=False FAILED_NO_CONTRACT", "evidence": "L330-344", "grade": "BLOCKED_AS_SUCCESS"},
+    {"id": "C13", "attack": "TaskManager direct COMPLETED", "result": "task-layer only, no GOAL_COMPLETED emitted", "evidence": "manager.py:195; no TASK_COMPLETED->GOAL_COMPLETED bridge", "grade": "ISOLATED"},
+    {"id": "C14", "attack": "task runtime direct transition", "result": "task-layer; runtime.py:289 standalone STUB sleep->COMPLETED without verification", "evidence": "runtime.py:289-298", "grade": "STUB_EXISTS_TASK_LAYER"},
+    {"id": "C15", "attack": "exception/finally path", "result": "no completion; FAILED/CANCELLED only", "evidence": "app/runtime/loop sweep", "grade": "BLOCKED"},
+    {"id": "C16", "attack": "cancellation path", "result": "CANCELLED", "evidence": "runtime.py:543-563", "grade": "BLOCKED"},
+    {"id": "C17", "attack": "deterministic task relevant predicates satisfied", "result": "APPROVED in tests (C8/C9)", "evidence": "positive path reachable only with injected contract", "grade": "TEST_ONLY"},
+    {"id": "C18", "attack": "optional predicate absent", "result": "APPROVED (C10)", "evidence": "intended; but all-optional contract approves with 0 verified", "grade": "EDGE"},
+    {"id": "C19", "attack": "old evidence reused without ids", "result": "CAN_PASS via setdefault attribution", "evidence": "telemetry.py:265-266/327-328", "grade": "BYPASS_RISK"},
+    {"id": "C20", "attack": "forged POSTCONDITION_VERIFIED telemetry", "result": "gate trusts predicate status from events; forged SATISFIED event + contract could pass if contract injected", "evidence": "unsigned events; no producer authentication", "grade": "BYPASS_RISK"},
+    {"id": "C_EXTRA1", "attack": "emit GOAL_COMPLETED with data.status='SUCCESSFUL'", "result": "GATE SKIPPED — ungated emission completed=False but event written", "evidence": "telemetry.py:259-260 exact-string match", "grade": "UNGATED"},
+    {"id": "C_EXTRA2", "attack": "end_run(status='SUCCESSFUL')", "result": "GATE SKIPPED — ungated GOAL_COMPLETED", "evidence": "telemetry.py:322 if status==SUCCESS else ungated L346", "grade": "UNGATED"}
+  ],
+  "externally_observable_success_despite_gate": "FAILURE-TYPE GOAL_COMPLETED events (completed=False, arbitrary status) are externally observable without the gate. SUCCESS-type completion cannot be obtained without the gate — but in production SUCCESS is unreachable (no contract injection). TaskStatus.COMPLETED remains independently obtainable without gate (by design, no telemetry bridge).",
+  "verdict": "COMPLETION_AUTHORITY = PARTIAL / COMPLETION_BYPASS_RESISTANCE = PARTIAL",
+  "verdict_rationale": "SUCCESS GOAL_COMPLETED is properly fail-closed and physical run correctly withholds completion (FACT). However: (1) gate positive path dead in production (no contract callers); (2) exact-string status match allows ungated GOAL_COMPLETED emissions; (3) end_run non-SUCCESS branch ungated; (4) empty-evidence setdefault weakens C9/C10; (5) acceptance scripts treat mere presence of GOAL_COMPLETED as verified (cannot distinguish downgrade). Not a full FAIL on authority for SUCCESS (blocked), but bypass surface + stub-positive prevent PASS."
+}

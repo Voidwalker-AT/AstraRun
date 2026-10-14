@@ -1,0 +1,16 @@
+{
+  "auditor": "MiMo",
+  "claimed": "12/12 killed 100%",
+  "mutants": [
+    {"id": "MUT-01A/B/C", "class": "GENUINE_SEMANTIC_KILL", "note": "empty file -> verifier/gate/fallback"},
+    {"id": "MUT-02A/B/C", "class": "GENUINE_SEMANTIC_KILL", "note": "phantom HWND/window query"},
+    {"id": "MUT-03A/B/C", "class": "GENUINE_SEMANTIC_KILL", "note": "dead PID / process predicates"},
+    {"id": "MUT-04A/B/C", "class": "GENUINE_SEMANTIC_KILL", "note": "malformed JSON -> decoder/gate/content"}
+  ],
+  "genuine": 12,
+  "wrong_reason": 0,
+  "invalid": 0,
+  "survived": 0,
+  "self_certified": true,
+  "verdict": "MUTATION HONESTY = PASS (12/12 genuine; improvement over prior phases; still self-certified by same suite)"
+}

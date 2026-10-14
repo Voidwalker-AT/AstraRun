@@ -1,0 +1,10 @@
+{
+  "benchmark": "POST_FREEZE_INTEGRITY_VERIFICATION",
+  "phase": "F0-25F.3",
+  "total_frozen_files": 691,
+  "matched_files": 691,
+  "mismatches": [],
+  "missing_files": [],
+  "integrity_verified": true,
+  "integrity_rate_pct": 100.0
+}

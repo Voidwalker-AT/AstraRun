@@ -1,48 +1,50 @@
 import os
 import sys
+import math
+import struct
+import zlib
+import json
+import re
 from pathlib import Path
-import numpy as np
-import matplotlib
-matplotlib.use('Agg')
-import matplotlib.pyplot as plt
 
-def generate_3d_plot(func, x_range, y_range, resolution=100):
-    """
-    Generates a 3D plot of a given function over a specified range.
-    
-    Parameters:
-    func (callable): The function to plot. It should take two arguments (x, y) and return a scalar value.
-    x_range (tuple): The range of x values to plot.
-    y_range (tuple): The range of y values to plot.
-    resolution (int): The number of points to use for each dimension.
-    
-    Returns:
-    None
-    """
-    x = np.linspace(x_range[0], x_range[1], resolution)
-    y = np.linspace(y_range[0], y_range[1], resolution)
-    X, Y = np.meshgrid(x, y)
-    Z = func(X, Y)
-    
-    fig = plt.figure()
-    ax = fig.add_subplot(111, projection='3d')
-    ax.plot_surface(X, Y, Z, cmap='viridis')
-    ax.set_xlabel('X')
-    ax.set_ylabel('Y')
-    ax.set_zlabel('Z')
-    plt.title('3D Visualization of the Function')
-    plt.show()
+def save_png(filename, width, height, rgb_bytes):
+    import zlib, struct
+    raw = bytearray()
+    for y in range(height):
+        raw.append(0)
+        raw.extend(rgb_bytes[y * width * 3 : (y + 1) * width * 3])
+    def chunk(tag, data):
+        return struct.pack(">I", len(data)) + tag + data + struct.pack(">I", zlib.crc32(tag + data) & 0xffffffff)
+    ihdr = struct.pack(">IIBBBBB", width, height, 8, 2, 0, 0, 0)
+    with open(filename, "wb") as f:
+        f.write(b"\x89PNG\r\n\x1a\n" + chunk(b"IHDR", ihdr) + chunk(b"IDAT", zlib.compress(bytes(raw))) + chunk(b"IEND", b""))
 
-def main():
-    # Choose a function to plot
-    func = lambda x, y: np.sin(np.sqrt(x**2 + y**2)) / (np.sqrt(x**2 + y**2) + 1e-6)
-    
-    # Define the range of x and y
-    x_range = (-5, 5)
-    y_range = (-5, 5)
-    
-    # Generate the 3D plot
-    generate_3d_plot(func, x_range, y_range)
+def generate_3d_visualization():
+    # Choose a function to visualize
+    def f(x, y):
+        return math.sin(math.hypot(x, y))
 
-if __name__ == "__main__":
-    main()
+    # Define the domain
+    x_min, x_max = -10, 10
+    y_min, y_max = -10, 10
+    width = 400
+    height = 400
+
+    # Generate the 3D surface
+    rgb_bytes = bytearray()
+    for y in range(height):
+        for x in range(width):
+            z = f(x / width * (x_max - x_min) + x_min, y / height * (y_max - y_min) + y_min)
+            val = max(0, min(255, int(127.5 * (z + 1.0))))
+            rgb_bytes.extend(struct.pack('>BBB', val, val, 255))
+
+    # Save the 3D visualization
+    output_dir = os.environ.get('ASTRARUN_OUTPUT_DIR', '.')
+    output_path = Path(output_dir) / '3d_visualization.png'
+    save_png(output_path, width, height, rgb_bytes)
+
+    # Print the result to stdout
+    print(f'3D visualization saved to {output_path}')
+
+if __name__ == '__main__':
+    generate_3d_visualization()

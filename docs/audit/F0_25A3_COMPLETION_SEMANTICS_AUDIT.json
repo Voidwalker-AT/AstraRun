@@ -1,0 +1,48 @@
+{
+  "phase": "F0-25A.3",
+  "title": "Completion Semantics Audit: Authoritative Completion Truth",
+  "contradiction_analyzed": {
+    "artifact": "docs/audit/F0_25A1_CAUSAL_INTELLIGENCE_REGRESSION.json",
+    "conflicting_values": {
+      "completed": true,
+      "postcondition_satisfied": true,
+      "final_verified": false,
+      "multi_cycle_revision": false
+    }
+  },
+  "field_provenance_and_definitions": {
+    "completed": {
+      "computed_in": "src/astrarun/hermes/causal_loop.py:682-728",
+      "meaning": "Indicates whether the task loop concluded with both postconditions satisfied and task-owned resource cleanup succeeding (lifecycle_ok=True).",
+      "value_rationale": "True because token was verified in the target window during the action cycle and task-owned processes were terminated cleanly without residue."
+    },
+    "postcondition_satisfied": {
+      "computed_in": "src/astrarun/hermes/causal_loop.py:692",
+      "meaning": "Indicates whether the goal-required observable state transition occurred while the target application was active.",
+      "value_rationale": "True because postcondition_fn(post_obs) affirmatively confirmed token presence on the active edit surface."
+    },
+    "final_verified": {
+      "computed_in": "scripts/run_f0_25a_full_chain.py:292-293 via verify_token(final_obs, token)",
+      "meaning": "Post-cleanup inspection of the desktop looking for the token.",
+      "contradiction_cause": "Because verify_token was called AFTER task cleanup had already closed the task-owned application window, final_obs captured the desktop without the application window. The token was naturally absent, causing verify_token to return False. Reporting this as 'final_verified=false' alongside 'completed=true' created a false appearance that goal completion verification had failed.",
+      "flaw": "Conflating post-cleanup desktop scan with pre-cleanup goal verification."
+    },
+    "multi_cycle_revision": {
+      "computed_in": "scripts/run_f0_25a_full_chain.py:305-323",
+      "meaning": "Indicates whether the model executed an alternative capability or argument following a failed earlier cycle.",
+      "value_rationale": "False because the scenario succeeded on its very first attempt (cycles=1), requiring zero recovery cycles."
+    }
+  },
+  "authoritative_completion_contract": {
+    "invariant": "There is exactly ONE authoritative completion truth: completed MUST NEVER be true if goal postcondition verification is false.",
+    "formal_definition": "completed = (pre_teardown_postcondition_verified == True) AND (lifecycle_cleanup_verified == True) AND (residual_debris_detected == False)",
+    "restructured_schema": {
+      "goal_postcondition_verified": "bool: True iff target state verified while target application surface was active",
+      "lifecycle_cleanup_verified": "bool: True iff all task-created resources were confirmed destroyed",
+      "residual_debris_detected": "bool: False iff zero unrequested side effects or orphaned resources remain",
+      "post_cleanup_target_dismissed": "bool: True iff target window is confirmed closed (replaces misleading 'final_verified')",
+      "authoritative_completed": "bool: True iff goal_postcondition_verified AND lifecycle_cleanup_verified AND NOT residual_debris_detected"
+    },
+    "enforcement_rule": "If goal_postcondition_verified is False, authoritative_completed MUST be False. If lifecycle_cleanup_verified is False, authoritative_completed MUST be False."
+  }
+}

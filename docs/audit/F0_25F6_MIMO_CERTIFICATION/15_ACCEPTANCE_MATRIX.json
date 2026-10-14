@@ -1,0 +1,33 @@
+{
+  "auditor": "MiMo",
+  "dimensions": {
+    "routing_benchmark_credibility": {"verdict": "PASS", "evidence": "453/500, F1 0.902 recomputed; freeze chronology good; burned"},
+    "routing_release_quality": {"verdict": "FAIL", "evidence": "90.6% < 96%; dynamic recall 0.588", "note": "already known"},
+    "fallback_production_reachability": {"verdict": "PARTIAL", "evidence": "engine wired in agent/loop; not all actions on all paths"},
+    "fallback_security": {"verdict": "PASS", "evidence": "no governance bypass in source/adversarial suite"},
+    "loop_control": {"verdict": "PASS", "evidence": "fingerprint budgets + oscillation detect production"},
+    "physical_recovery_truth": {"verdict": "FAIL", "evidence": "screenshots show no Notepad/windows; visual attestation false"},
+    "resource_restoration": {"verdict": "PARTIAL", "evidence": "zero-leak claim unproven by pixels/PIDs archive"},
+    "security_manifest": {"verdict": "PASS", "evidence": "89/45/44/3/2/0 recomputed"},
+    "tool_intelligence": {"verdict": "PARTIAL", "evidence": "39/40 JSON vs 38/40 report; fixture-shaped"},
+    "intelligence_benchmark": {"verdict": "PARTIAL", "evidence": "38/38 curated; narrow"},
+    "regression_truth": {"verdict": "PARTIAL", "evidence": "JUnit honest 999/2/14; report misnames failures"},
+    "generic_repair": {"verdict": "PASS", "evidence": "honest 7/8 REPAIR-02 fail"},
+    "mutation_honesty": {"verdict": "PASS", "evidence": "12/12 genuine"},
+    "production_purity": {"verdict": "PASS", "evidence": "0 src hits"},
+    "evidence_honesty": {"verdict": "PARTIAL", "evidence": "physical screenshots false; report contradictions"},
+    "binary_identity": {"verdict": "PASS", "evidence": "2f422df7... dist==installed"}
+  },
+  "overall_foundational_trust": "NOT FULLY TRUSTWORTHY but architecture cores (fallback engine, security invariance, loop bounds, purity, freeze, repair semantics, mutations) are PRESERVABLE",
+  "decision": "B — F0-25F.7 MUST ALSO REPAIR SPECIFIC FOUNDATION DEFECTS",
+  "defects_to_carry_into_F0_25F_7": [
+    "Physical recovery screenshots must actually show target windows (or stop claiming physical attestation)",
+    "FINAL_REPORT must name the real failing tests (3d_vis, f0_21 holdout)",
+    "Reconcile security prose (22 vs 89) and blocked capability name sets",
+    "Reconcile tool-intelligence 38 vs 39",
+    "Document blind manifest hash method or store whole-file hash",
+    "Dynamic computation recall 0.588 — under-routing of advanced computational prompts (routing intelligence closure remains primary)",
+    "Wire fallback model-selection path fully; consider recovery on non-agent-loop paths",
+    "Archive PID create-times/HWND ownership for physical recovery claims"
+  ]
+}

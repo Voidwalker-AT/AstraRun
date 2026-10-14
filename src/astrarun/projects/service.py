@@ -36,7 +36,8 @@ def _get_proj_path(proj: Any) -> Path:
         return Path(proj.absolute_path).resolve()
     elif hasattr(proj, "path") and proj.path:
         return Path(proj.path).resolve()
-    return Path(r"E:\Workspace")
+    from astrarun.core.paths import AstraPaths
+    return AstraPaths.workspace_root()
 
 
 def project_git_status(project_id: str) -> CapabilityResult:

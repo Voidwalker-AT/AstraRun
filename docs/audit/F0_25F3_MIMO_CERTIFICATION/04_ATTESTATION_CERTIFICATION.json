@@ -1,0 +1,25 @@
+{
+  "auditor": "MiMo",
+  "contradiction": "F0_25F3_ATTESTATION_AUDIT.json: result_presentation.fabricated_hwnd_constants=true alongside status=PASS",
+  "source_truth": {
+    "generator": "scripts/verify_attestation_audit.py computes fabricated_hwnd_constants = (len(fabricated_constants)==0) where fabricated_constants = re.findall(r'verified_hwnd\\s*=\\s*\\d{3,}', pres_code)",
+    "meaning": "true means NO numeric hwnd literals found — field name is INVERTED relative to English reading",
+    "is_runtime_hwnd_fabricated": false,
+    "is_badly_named_audit_field": true,
+    "is_pass_contradictory": "NO — PASS is consistent with true=no-fabrication, but the field name invites misreading; audit is poorly named not dishonest"
+  },
+  "literal_runtime_claims_scan": [
+    {"location": "result_presentation.py:272", "hit": "verified_title = t_buf.value or \"AstraRun\"", "class": "FALLBACK_LITERAL — presented as runtime attestation when Win32 returns empty title", "severity": "MEDIUM"},
+    {"location": "result_presentation.py:275", "hit": "verified_class = len_c.value or \"QtLauncher\"", "class": "FALLBACK_LITERAL", "severity": "MEDIUM"},
+    {"location": "app.py:465", "hit": "visible=True unconditional WindowInfo construction", "class": "STATIC_DEFAULT", "severity": "LOW"},
+    {"location": "numeric verified_hwnd=<digits>", "hit": "NONE in src/", "class": "CLEAN", "severity": "none"},
+    {"location": "orphan_count=0 / clean=True literals in evaluator", "hit": "check resource delta paths — prior F0-25F.2 residuals", "severity": "see prior reviews"}
+  ],
+  "static_defaults_vs_runtime_observations": {
+    "runtime_measured": ["IsWindowVisible", "DWM cloaked", "monitor intersection", "GetWindowText (with fallback literal)", "physical path exists"],
+    "static_defaults": ["title fallback 'AstraRun'", "class fallback 'QtLauncher'", "app.py visible=True WindowInfo"]
+  },
+  "no_benefit_of_doubt": "The PASS with inverted field name is a naming defect, not fabricated runtime HWND. However presenting fallback literals as verified_title/verified_class in RESULT_PRESENTED events means a positive runtime fact CAN originate from a literal constant when Win32 title is empty.",
+  "verdict": "ATTESTATION_HONESTY = PARTIAL",
+  "verdict_rationale": "No numeric HWND fabrication (PROVEN). Field name inverted (misleading). Summary-mode title/class fallback literals can enter RESULT_PRESENTED as if measured (CONTRADICTED for the claim that all attestation fields are physically measured)."
+}

@@ -1,0 +1,122 @@
+{
+  "phase": "F0-25F.3",
+  "gate": "AuthoritativeCompletionGate",
+  "total_adversarial_cases": 14,
+  "passed_cases": 14,
+  "failed_cases": 0,
+  "all_cases_passed": true,
+  "cases": {
+    "C1_no_postconditions": {
+      "description": "GoalContract has zero acceptance predicates",
+      "expected": "REJECTED",
+      "actual": "REJECTED",
+      "can_complete": false,
+      "passed": true,
+      "reason": "GoalContract contains zero acceptance predicates (C1 no postconditions)."
+    },
+    "C2_one_required_predicate_missing": {
+      "description": "One required predicate is PENDING (missing/not evaluated)",
+      "expected": "REJECTED",
+      "actual": "REJECTED",
+      "can_complete": false,
+      "passed": true,
+      "reason": "Missing/unverified: pred_a4ea79: predicate is PENDING (not evaluated)"
+    },
+    "C3_one_required_predicate_unknown": {
+      "description": "One required predicate is UNKNOWN",
+      "expected": "REJECTED",
+      "actual": "REJECTED",
+      "can_complete": false,
+      "passed": true,
+      "reason": "Missing/unverified: pred_3827ac: predicate status is UNKNOWN (C3)"
+    },
+    "C4_action_success_but_postcondition_false": {
+      "description": "Action succeeded, but postcondition predicate is VIOLATED",
+      "expected": "REJECTED",
+      "actual": "REJECTED",
+      "can_complete": false,
+      "passed": true,
+      "reason": "Failed predicates: pred_bda5fd: predicate is VIOLATED (C4): File does not exist on disk"
+    },
+    "C5_presentation_requested_but_not_presented": {
+      "description": "Presentation was requested, but RESULT_PRESENTED not verified (REQUESTED only)",
+      "expected": "REJECTED",
+      "actual": "REJECTED",
+      "can_complete": false,
+      "passed": true,
+      "reason": "Failed predicates: Presentation was requested but RESULT_PRESENTED was not verified (C5)"
+    },
+    "C6_cleanup_attempted_but_failed": {
+      "description": "Resource is in FAILED_CLEANUP",
+      "expected": "REJECTED",
+      "actual": "REJECTED",
+      "can_complete": false,
+      "passed": true,
+      "reason": "Failed predicates: Resource 7076d7c5-4658-4b3d-9269-e581f3690be0 (ResourceType.SANDBOX_DIR) is in FAILED_CLEANUP (C6)"
+    },
+    "C7_artifact_exists_but_wrong_content": {
+      "description": "Target artifact exists on disk, but does not match required content",
+      "expected": "REJECTED",
+      "actual": "REJECTED",
+      "can_complete": false,
+      "passed": true,
+      "reason": "Failed predicates: pred_1d2141: artifact content does not contain expected substring (C7)"
+    },
+    "C8_all_required_predicates_true": {
+      "description": "All required predicates true with matching run/task provenance",
+      "expected": "APPROVED",
+      "actual": "APPROVED",
+      "can_complete": true,
+      "passed": true,
+      "reason": "All 1 required goal postconditions affirmatively verified."
+    },
+    "C9_deterministic_goal_with_only_its_relevant_predicates": {
+      "description": "Deterministic calculation needs only computation predicate, not presentation/cleanup",
+      "expected": "APPROVED",
+      "actual": "APPROVED",
+      "can_complete": true,
+      "passed": true,
+      "reason": "All 1 required goal postconditions affirmatively verified."
+    },
+    "C10_optional_predicate_missing": {
+      "description": "Optional predicate missing/PENDING does NOT block completion",
+      "expected": "APPROVED",
+      "actual": "APPROVED",
+      "can_complete": true,
+      "passed": true,
+      "reason": "All 1 required goal postconditions affirmatively verified."
+    },
+    "C11_goal_completed_manually_emitted_early": {
+      "description": "Direct manual emission of GOAL_COMPLETED before postconditions are verified returns None and end_run fails closed",
+      "expected": "REJECTED (emission None, end_run uncompleted)",
+      "actual": "REJECTED",
+      "can_complete": false,
+      "passed": true,
+      "reason": "Direct emission returned None; end_run emitted completed=False"
+    },
+    "C12_stale_evidence_from_another_run": {
+      "description": "Evidence marked stale from prior run",
+      "expected": "REJECTED",
+      "actual": "REJECTED",
+      "can_complete": false,
+      "passed": true,
+      "reason": "Failed predicates: pred_6339ec: evidence is marked stale from prior run (C12)"
+    },
+    "C13_correct_evidence_with_wrong_task_id": {
+      "description": "Evidence has mismatched task_id",
+      "expected": "REJECTED",
+      "actual": "REJECTED",
+      "can_complete": false,
+      "passed": true,
+      "reason": "Failed predicates: pred_a30455: evidence task_id mismatch (expected task_c13_active, got task_FOREIGN_123) (C13)"
+    },
+    "C14_correct_evidence_with_wrong_run_id": {
+      "description": "Evidence has mismatched run_id",
+      "expected": "REJECTED",
+      "actual": "REJECTED",
+      "can_complete": false,
+      "passed": true,
+      "reason": "Failed predicates: pred_3fda3b: evidence run_id mismatch (expected run_c14_active, got run_FOREIGN_456) (C14)"
+    }
+  }
+}

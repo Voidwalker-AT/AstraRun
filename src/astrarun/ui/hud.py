@@ -222,6 +222,7 @@ class FloatingTaskHUD(QWidget):
 
     def _init_window_flags(self) -> None:
         """Apply non-activating, frameless, topmost tool-window flags."""
+        self.setWindowTitle("AstraRun Task HUD")
         self.setWindowFlags(
             Qt.WindowType.FramelessWindowHint
             | Qt.WindowType.WindowStaysOnTopHint
@@ -417,13 +418,12 @@ class FloatingTaskHUD(QWidget):
 
         self._is_animating = True
         start_pos = QPoint(self._target_point.x() + 25, self._target_point.y())
-        self.move(start_pos)
-        self.opacity_effect.setOpacity(0.0)
+        self.opacity_effect.setOpacity(1.0)
         self.show()
 
         self.pos_anim.setStartValue(start_pos)
         self.pos_anim.setEndValue(self._target_point)
-        self.opacity_anim.setStartValue(0.0)
+        self.opacity_anim.setStartValue(1.0)
         self.opacity_anim.setEndValue(1.0)
         self.anim_group.start()
 

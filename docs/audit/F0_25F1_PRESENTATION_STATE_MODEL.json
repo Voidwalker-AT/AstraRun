@@ -1,0 +1,78 @@
+{
+  "model_name": "AstraRun Result Presentation State Model",
+  "version": "1.0.0",
+  "phase": "F0-25F.1",
+  "states": [
+    {
+      "state": "PRESENTATION_REQUESTED",
+      "description": "User or agent requests presentation of a task result, deliverable, or summary.",
+      "invariants": ["Target and mode are parsed.", "No viewer is assumed to exist."]
+    },
+    {
+      "state": "PRESENTATION_DISPATCHED",
+      "description": "Appropriate presentation mechanism is selected (explorer, viewer/editor, or HUD/launcher) and launch command is issued.",
+      "invariants": ["Pre-launch desktop windows are snapshotted.", "Command is dispatched via secure process launcher."]
+    },
+    {
+      "state": "PRESENTATION_PROCESS_STARTED",
+      "description": "Process handle or launch signal is confirmed.",
+      "invariants": ["Process PID is recorded if available.", "Process start does NOT imply window visibility or target observation."]
+    },
+    {
+      "state": "PRESENTATION_TARGET_DISCOVERED",
+      "description": "A window associated with the launched process or mechanism is discovered via Win32 EnumWindows on the interactive desktop.",
+      "invariants": ["Window HWND is non-null.", "Window was not part of the pre-launch snapshot (or is positively identified)."]
+    },
+    {
+      "state": "PRESENTATION_TARGET_IDENTITY_VERIFIED",
+      "description": "The discovered window is verified to correspond to the requested target.",
+      "invariants": [
+        "Process ID matches spawned process or mechanism (e.g., explorer.exe, notepad.exe, AstraRun.exe).",
+        "Window title or UI surface matches target file name, folder name, or result summary.",
+        "Unrelated pre-existing windows are rejected."
+      ]
+    },
+    {
+      "state": "PRESENTATION_TARGET_VISIBLE",
+      "description": "The target window is physically rendered and visible to the user.",
+      "invariants": [
+        "IsWindow(hwnd) is True.",
+        "IsWindowVisible(hwnd) is True.",
+        "DwmGetWindowAttribute(DWMWA_CLOAKED) is 0 (not cloaked).",
+        "Window rect intersects the physical primary monitor.",
+        "Width and height are non-zero."
+      ]
+    },
+    {
+      "state": "PRESENTATION_CONTENT_VERIFIED",
+      "description": "For document/text viewers, file title/path is bound. For HUD cards, summary text is bound.",
+      "invariants": ["Content corresponds to task deliverable."]
+    },
+    {
+      "state": "RESULT_PRESENTED",
+      "description": "Affirmative terminal state: the intended result was successfully and visibly presented to the user.",
+      "invariants": [
+        "Cannot be reached from REQUESTED alone.",
+        "Cannot be reached from Popen success alone.",
+        "Cannot be reached from file existence on disk alone.",
+        "Requires verified_hwnd != null, target_observed == True, and positive identity match."
+      ]
+    },
+    {
+      "state": "PRESENTATION_UNVERIFIED",
+      "description": "Fail-closed terminal state: presentation was requested/attempted, but target window was not physically observed or verified.",
+      "invariants": [
+        "RESULT_PRESENTED event is strictly forbidden.",
+        "CapabilityResult returns success=False.",
+        "Error diagnostics explain the exact failure reason."
+      ]
+    }
+  ],
+  "fail_closed_rules": [
+    "REQUESTED != PRESENTED",
+    "PROCESS_SPAWNED != PRESENTED",
+    "FILE_EXISTS_ON_DISK != PRESENTED",
+    "HOLLOW_PRESENTED_FORBIDDEN: verified_hwnd=null forbids RESULT_PRESENTED",
+    "WRONG_WINDOW_REJECTION: Window must belong to correct target process and title"
+  ]
+}

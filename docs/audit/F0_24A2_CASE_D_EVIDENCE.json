@@ -1,0 +1,92 @@
+{
+  "case_id": "CASE_D",
+  "application": "calculator",
+  "application_type": "NON_DOCUMENT_INTERACTIVE",
+  "prompt": "open calculator and type 7*8=",
+  "task_id": "task_632a08c1",
+  "task_status": "COMPLETED",
+  "duration_seconds": 73.15,
+  "before_state": {
+    "foreground_window": {
+      "hwnd": 12126852,
+      "title": "",
+      "pid": 14964,
+      "app_id": "googledrivefs",
+      "monitor": "",
+      "bounds": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "state": "normal",
+      "visible": true
+    },
+    "calculator_pids_running": [],
+    "initial_calc_running": false
+  },
+  "action": {
+    "steps": [
+      {
+        "step_id": "step_1",
+        "capability": "open_application",
+        "arguments": {
+          "app": "calculator"
+        },
+        "success": true,
+        "message": "Application 'calculator' launched successfully (PID=16568, HWND=18679130)."
+      },
+      {
+        "step_id": "step_2",
+        "capability": "type_into_window",
+        "arguments": {
+          "text": "7*8=",
+          "hwnd": 0,
+          "app_name": "calculator"
+        },
+        "success": true,
+        "message": "Entered 4 characters."
+      }
+    ]
+  },
+  "after_state": {
+    "state_transition_verified": true,
+    "verification_evidence": {
+      "hwnd": 18679130,
+      "window_title": "Calculator",
+      "matched_element": {
+        "hwnd": 18679130,
+        "pid": 16568,
+        "control_type": "unknown",
+        "automation_id": "CalculatorResults",
+        "name": "Display is 56",
+        "class_name": "",
+        "bounds": [
+          47,
+          104,
+          320,
+          75
+        ],
+        "is_enabled": true,
+        "is_offscreen": false,
+        "is_password": false,
+        "has_keyboard_focus": true,
+        "supported_patterns": [
+          "invoke"
+        ],
+        "depth": 3,
+        "value": ""
+      },
+      "keystroke_dispatched_chars": 4,
+      "matched_via": "UI control 'Display is 56' (unknown) matched '56'"
+    },
+    "verification_message": "UI text state verified: UI control 'Display is 56' (unknown) matched '56'"
+  },
+  "postcondition": {
+    "requested_state_transition_achieved": true,
+    "task_owned_resources_cleaned": true,
+    "os_residue_zero": true,
+    "remaining_calc_pids": []
+  },
+  "overall_success": true
+}

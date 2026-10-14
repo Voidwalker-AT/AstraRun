@@ -1,0 +1,104 @@
+{
+  "benchmark": "STAGE_11_ADVERSARIAL_MUTATION_QUALITY_AUDIT",
+  "phase": "F0-25F.4",
+  "total_mutants": 10,
+  "killed_mutants": 10,
+  "survived_mutants": 0,
+  "genuine_semantic_kills": 10,
+  "trivial_kills": 0,
+  "kill_rate_pct": 100.0,
+  "semantic_strength_pct": 100.0,
+  "all_killed_for_intended_reason": true,
+  "mutants": [
+    {
+      "id": "M21",
+      "name": "bypass gate via direct emit FAILED",
+      "killed": true,
+      "semantic_invariant": "GOAL_COMPLETED emission requires status == 'SUCCESS' and AuthoritativeCompletionGate approval",
+      "kill_reason": "telemetry.emit returned None and dropped unapproved event",
+      "kill_validity": "GENUINE_SEMANTIC_KILL",
+      "died_for_intended_reason": true
+    },
+    {
+      "id": "M22",
+      "name": "complete without GoalContract",
+      "killed": true,
+      "semantic_invariant": "No completion allowed without explicit GoalContract and postconditions",
+      "kill_reason": "AuthoritativeCompletionGate returned FAILED_NO_CONTRACT",
+      "kill_validity": "GENUINE_SEMANTIC_KILL",
+      "died_for_intended_reason": true
+    },
+    {
+      "id": "M23",
+      "name": "complete with PENDING predicates",
+      "killed": true,
+      "semantic_invariant": "Pending or unobserved predicates fail closed",
+      "kill_reason": "AuthoritativeCompletionGate rejected PENDING status",
+      "kill_validity": "GENUINE_SEMANTIC_KILL",
+      "died_for_intended_reason": true
+    },
+    {
+      "id": "M24",
+      "name": "complete with missing artifact file",
+      "killed": true,
+      "semantic_invariant": "Target artifact must physically exist on disk",
+      "kill_reason": "AuthoritativeCompletionGate rejected non-existent disk path",
+      "kill_validity": "GENUINE_SEMANTIC_KILL",
+      "died_for_intended_reason": true
+    },
+    {
+      "id": "M25",
+      "name": "complete with zero-byte file",
+      "killed": true,
+      "semantic_invariant": "FILE_NON_EMPTY requires physical disk size > 0 bytes",
+      "kill_reason": "AuthoritativeCompletionGate rejected empty file (0 bytes)",
+      "kill_validity": "GENUINE_SEMANTIC_KILL",
+      "died_for_intended_reason": true
+    },
+    {
+      "id": "M26",
+      "name": "complete with wrong file content",
+      "killed": true,
+      "semantic_invariant": "FILE_CONTENT_CONTAINS requires exact substring match in disk file",
+      "kill_reason": "AuthoritativeCompletionGate rejected missing content substring",
+      "kill_validity": "GENUINE_SEMANTIC_KILL",
+      "died_for_intended_reason": true
+    },
+    {
+      "id": "M27",
+      "name": "complete with stale evidence",
+      "killed": true,
+      "semantic_invariant": "Evidence marked stale from prior run fails closed",
+      "kill_reason": "AuthoritativeCompletionGate rejected stale evidence marker",
+      "kill_validity": "GENUINE_SEMANTIC_KILL",
+      "died_for_intended_reason": true
+    },
+    {
+      "id": "M28",
+      "name": "complete with mismatched run_id",
+      "killed": true,
+      "semantic_invariant": "Predicate evidence must match active run_id and task_id",
+      "kill_reason": "AuthoritativeCompletionGate rejected foreign run_id",
+      "kill_validity": "GENUINE_SEMANTIC_KILL",
+      "died_for_intended_reason": true
+    },
+    {
+      "id": "M29",
+      "name": "presentation requested only",
+      "killed": true,
+      "semantic_invariant": "RESULT_PRESENTATION_REQUESTED can never substitute for RESULT_PRESENTED",
+      "kill_reason": "AuthoritativeCompletionGate rejected unverified presentation",
+      "kill_validity": "GENUINE_SEMANTIC_KILL",
+      "died_for_intended_reason": true
+    },
+    {
+      "id": "M30",
+      "name": "failed cleanup resource blocks completion",
+      "killed": true,
+      "semantic_invariant": "Resources in FAILED_CLEANUP state block positive completion",
+      "kill_reason": "AuthoritativeCompletionGate rejected task with FAILED_CLEANUP resource",
+      "kill_validity": "GENUINE_SEMANTIC_KILL",
+      "died_for_intended_reason": true
+    }
+  ]
+}

@@ -1,0 +1,114 @@
+{
+  "phase": "F0-25B.1",
+  "audit_target": "Hypothesis and Predicate Polarity Consistency",
+  "timestamp": "2026-10-11T16:25:00Z",
+  "issue_analysis": {
+    "flawed_cycle_5": {
+      "natural_language_hypothesis": "Clicking an invalid unmapped button target will result in no state transition",
+      "old_expected_outcome": {
+        "state_transition": true
+      },
+      "old_actual_outcome": {
+        "verified": false
+      },
+      "logical_contradiction": "The hypothesis stated that no state transition would occur (state_transition == false). However, expected_true was configured as {'state_transition': True}. When no transition occurred (reality was false), the experiment marked verified=False and refutation occurred, whereas the hypothesis predicting no change was actually SUPPORTED by reality."
+    }
+  },
+  "machine_checkable_contract_specification": {
+    "schema": {
+      "hypothesis": "str",
+      "predicate_type": "PredicateType",
+      "supported_predicates": "Dict[str, Any]",
+      "refuted_predicates": "Dict[str, Any]",
+      "observation_extractor": "str",
+      "predicate_evaluator": "str"
+    },
+    "contract_truth_rules": [
+      "If observed matches supported_predicates -> hypothesis SUPPORTED (CONFIRMED)",
+      "If observed matches refuted_predicates -> hypothesis REFUTED",
+      "If observed matches neither or is unobservable -> INCONCLUSIVE"
+    ]
+  },
+  "corrected_experiments": [
+    {
+      "cycle_id": 1,
+      "affordance_name": "EDIT_TEXT",
+      "hypothesis": "Typing alphanumeric text into the focused window will insert content and update buffer length",
+      "predicate_type": "TEXT_BUFFER_DELTA",
+      "supported_predicates": {
+        "length_increased": true,
+        "dirty_indicated": true,
+        "min_char_delta": 1
+      },
+      "refuted_predicates": {
+        "length_increased": false,
+        "dirty_indicated": false
+      },
+      "observation_extractor": "extract_buffer_length_and_dirty",
+      "predicate_evaluator": "evaluate_text_buffer_delta"
+    },
+    {
+      "cycle_id": 2,
+      "affordance_name": "SELECT_ALL",
+      "hypothesis": "Executing selection command spans the entire observable document buffer",
+      "predicate_type": "SELECTION_RANGE_SPAN",
+      "supported_predicates": {
+        "selection_active": true,
+        "selected_length_equals_document_length": true
+      },
+      "refuted_predicates": {
+        "selection_active": false,
+        "selected_length": 0
+      },
+      "observation_extractor": "observe_surface_selection",
+      "predicate_evaluator": "verify_select_all_predicate"
+    },
+    {
+      "cycle_id": 3,
+      "affordance_name": "NEW_DOCUMENT_TAB",
+      "hypothesis": "Sending tab creation command instantiates an additional document tab buffer",
+      "predicate_type": "DOCUMENT_TAB_COUNT",
+      "supported_predicates": {
+        "tabs_count_increased": true,
+        "min_tab_delta": 1
+      },
+      "refuted_predicates": {
+        "tabs_count_increased": false,
+        "tab_delta": 0
+      },
+      "observation_extractor": "extract_tab_count_and_names",
+      "predicate_evaluator": "evaluate_tab_count_increase"
+    },
+    {
+      "cycle_id": 4,
+      "affordance_name": "SEARCH_FIND_SURFACE",
+      "hypothesis": "Sending search command creates and displays an active Find dialog window",
+      "predicate_type": "DIALOG_SURFACE_PRESENCE",
+      "supported_predicates": {
+        "find_dialog_opened": true,
+        "dialog_class": "#32770"
+      },
+      "refuted_predicates": {
+        "find_dialog_opened": false
+      },
+      "observation_extractor": "capture_world_frame_find_dialog",
+      "predicate_evaluator": "evaluate_dialog_surface_presence"
+    },
+    {
+      "cycle_id": 5,
+      "affordance_name": "UNMAPPED_BUTTON_CLICK",
+      "hypothesis": "Clicking an invalid unmapped button target produces no state transition",
+      "predicate_type": "STATE_INVARIANCE",
+      "supported_predicates": {
+        "state_transition": false
+      },
+      "refuted_predicates": {
+        "state_transition": true
+      },
+      "observation_extractor": "compare_pre_post_state_hash",
+      "predicate_evaluator": "evaluate_state_invariance",
+      "resolution": "When pre_state_hash == post_state_hash (state_transition == False), the hypothesis predicting invariance is logically SUPPORTED."
+    }
+  ],
+  "verdict": "CONSISTENCY_RESOLVED"
+}

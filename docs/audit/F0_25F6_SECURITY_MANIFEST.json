@@ -1,0 +1,25 @@
+{
+  "phase": "F0-25F.6",
+  "audit_name": "SECURITY_CLASSIFICATION_RECOMPUTATION",
+  "timestamp": "2026-10-14T01:10:00+05:30",
+  "status": "PASS",
+  "invariants_satisfied": {
+    "total_capabilities": 89,
+    "read_only": 45,
+    "mutating": 44,
+    "confirmation_required": 3,
+    "blocked": 2,
+    "unknown_consequential": 0
+  },
+  "blocked_capabilities": [
+    "execute_powershell_script",
+    "modify_system_registry"
+  ],
+  "confirmation_required_capabilities": [
+    "terminate_process",
+    "kill_process_by_pid",
+    "force_close_window"
+  ],
+  "evidence_source": "tests/unit/test_capability_manifest_consistency.py",
+  "source_manifest": "docs/audit/CAPABILITY_SECURITY_MANIFEST.json"
+}

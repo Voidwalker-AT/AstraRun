@@ -1,0 +1,32 @@
+{
+  "auditor": "MiMo",
+  "phase": "F0-25F.6-M",
+  "git": {"branch": "agent/anti-f0-24a1", "head": "bd287eba38e6743565fdf6da21cb629023573c6b", "status_entries": 452, "diff_stat": "107 files changed, 3864 insertions(+), 3480 deletions(-)"},
+  "binaries": {
+    "dist": {"sha256": "2f422df75a03d5b57428bd328368b43e9588fa68c001ada3c410065affd7b2c4", "size": 12147547, "mtime": "2026-10-14 01:37:45"},
+    "installed": {"sha256": "2f422df75a03d5b57428bd328368b43e9588fa68c001ada3c410065affd7b2c4", "size": 12147547, "mtime": "2026-10-14 01:37:45"},
+    "identical": true
+  },
+  "routing_source_freeze": {
+    "file": "F0_25F6_ROUTING_SOURCE_FREEZE.json",
+    "frozen_at": "2026-10-13T19:50:56Z",
+    "files_checked": 8,
+    "independent_rehash": "8/8 MATCH current disk",
+    "chronology": {
+      "planner_py": "2026-10-14 01:06:36",
+      "engine_py": "01:08:49",
+      "context_sufficiency": "01:18:52",
+      "freeze_manifest": "01:20:56",
+      "blind_manifest": "01:22:10",
+      "blind_results": "01:23:24",
+      "binary": "01:37:45",
+      "assessment": "NO routing source edits after blind results; freeze precedes predictions; GOOD chronology"
+    }
+  },
+  "blind_manifest_hash": {
+    "declared": "eee9900ab4e054bb4207dedd7a77cab6ae2190e97dd0705eabc302bd691916b2",
+    "whole_file": "ea559a99cd599203fa9ad69a2c869fb18903211ca2b21c793e81fcec2907b7a0",
+    "match": false,
+    "note": "declared hash method undocumented (may be prompt-canonicalization hash)"
+  }
+}

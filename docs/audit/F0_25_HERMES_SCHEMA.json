@@ -1,0 +1,117 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "HermesExperientialKnowledgeSchema",
+  "version": "1.0.0",
+  "description": "Relational and graph schema for AstraRun Hermes Experiential Memory Subsystem",
+  "database": {
+    "engine": "SQLite3",
+    "journal_mode": "WAL",
+    "tables": [
+      {
+        "table_name": "hermes_entities",
+        "description": "Represents discovered Windows entities (applications, top-level windows, child controls)",
+        "columns": {
+          "entity_id": "TEXT PRIMARY KEY",
+          "entity_type": "TEXT CHECK(entity_type IN ('APPLICATION', 'WINDOW', 'CONTROL'))",
+          "parent_entity_id": "TEXT REFERENCES hermes_entities(entity_id)",
+          "name": "TEXT NOT NULL",
+          "class_name": "TEXT",
+          "binary_hash": "TEXT",
+          "version": "TEXT",
+          "env_hash": "TEXT NOT NULL",
+          "metadata_json": "TEXT",
+          "created_at": "REAL NOT NULL",
+          "updated_at": "REAL NOT NULL"
+        },
+        "indexes": [
+          "CREATE INDEX idx_hermes_entities_type ON hermes_entities(entity_type)",
+          "CREATE INDEX idx_hermes_entities_parent ON hermes_entities(parent_entity_id)",
+          "CREATE INDEX idx_hermes_entities_name ON hermes_entities(name)"
+        ]
+      },
+      {
+        "table_name": "hermes_affordances",
+        "description": "Represents known or hypothesized actions possible on an entity",
+        "columns": {
+          "affordance_id": "TEXT PRIMARY KEY",
+          "entity_id": "TEXT NOT NULL REFERENCES hermes_entities(entity_id)",
+          "action_name": "TEXT NOT NULL",
+          "capability_id": "TEXT NOT NULL",
+          "parameter_schema_json": "TEXT NOT NULL",
+          "risk_level": "TEXT CHECK(risk_level IN ('READ_ONLY', 'BENIGN_MUTATION', 'HIGH_RISK'))",
+          "is_reversible": "INTEGER DEFAULT 1",
+          "confidence": "REAL DEFAULT 0.2",
+          "status": "TEXT CHECK(status IN ('HYPOTHESIS', 'OBSERVED', 'VERIFIED', 'CONTRADICTED'))",
+          "verification_count": "INTEGER DEFAULT 0",
+          "contradiction_count": "INTEGER DEFAULT 0",
+          "last_verified_at": "REAL",
+          "created_at": "REAL NOT NULL"
+        },
+        "indexes": [
+          "CREATE INDEX idx_hermes_affordances_entity ON hermes_affordances(entity_id)",
+          "CREATE INDEX idx_hermes_affordances_action ON hermes_affordances(action_name)",
+          "CREATE INDEX idx_hermes_affordances_status ON hermes_affordances(status)"
+        ]
+      },
+      {
+        "table_name": "hermes_transitions",
+        "description": "Represents empirical state transitions produced by governed actions",
+        "columns": {
+          "transition_id": "TEXT PRIMARY KEY",
+          "affordance_id": "TEXT NOT NULL REFERENCES hermes_affordances(affordance_id)",
+          "pre_state_hash": "TEXT NOT NULL",
+          "action_payload_json": "TEXT NOT NULL",
+          "post_state_hash": "TEXT NOT NULL",
+          "expected_delta_json": "TEXT NOT NULL",
+          "observed_delta_json": "TEXT NOT NULL",
+          "transition_verified": "INTEGER NOT NULL",
+          "latency_ms": "REAL NOT NULL",
+          "trace_id": "TEXT NOT NULL",
+          "pre_frame_id": "TEXT NOT NULL",
+          "post_frame_id": "TEXT NOT NULL",
+          "timestamp": "REAL NOT NULL"
+        },
+        "indexes": [
+          "CREATE INDEX idx_hermes_transitions_affordance ON hermes_transitions(affordance_id)",
+          "CREATE INDEX idx_hermes_transitions_trace ON hermes_transitions(trace_id)"
+        ]
+      },
+      {
+        "table_name": "hermes_experiments",
+        "description": "Diagnostic exploration experiments formulated to resolve epistemic uncertainty",
+        "columns": {
+          "experiment_id": "TEXT PRIMARY KEY",
+          "target_entity_id": "TEXT NOT NULL REFERENCES hermes_entities(entity_id)",
+          "hypothesis": "TEXT NOT NULL",
+          "probe_action_name": "TEXT NOT NULL",
+          "probe_payload_json": "TEXT NOT NULL",
+          "expected_outcome": "TEXT NOT NULL",
+          "actual_outcome": "TEXT",
+          "status": "TEXT CHECK(status IN ('PENDING', 'CONFIRMED', 'REFUTED', 'INCONCLUSIVE'))",
+          "task_id": "TEXT NOT NULL",
+          "trace_id": "TEXT NOT NULL",
+          "prompt_hash": "TEXT NOT NULL",
+          "response_hash": "TEXT NOT NULL",
+          "timestamp": "REAL NOT NULL"
+        },
+        "indexes": [
+          "CREATE INDEX idx_hermes_experiments_entity ON hermes_experiments(target_entity_id)",
+          "CREATE INDEX idx_hermes_experiments_status ON hermes_experiments(status)"
+        ]
+      },
+      {
+        "table_name": "hermes_knowledge_fts",
+        "description": "FTS5 virtual table for lexical indexing and natural language retrieval across Hermes knowledge",
+        "virtual_table_type": "fts5",
+        "columns": ["entity_name", "class_name", "action_name", "hypothesis", "metadata"]
+      }
+    ]
+  },
+  "confidence_thresholds": {
+    "KNOWN": 0.85,
+    "LIKELY": 0.60,
+    "UNCERTAIN": 0.30,
+    "UNKNOWN": 0.0,
+    "CONTRADICTED": 0.15
+  }
+}

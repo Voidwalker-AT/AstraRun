@@ -1,0 +1,104 @@
+{
+  "status": "PASS",
+  "timestamp": 1791752576.682637,
+  "canonical_executable": "C:\\Users\\hp\\AppData\\Local\\Programs\\AstraRun\\AstraRun.exe",
+  "executable_sha256": "444b667947c938232f2640c35218655b2cd006f0a169dc9d36c6a70022eceed4",
+  "pid": 10008,
+  "launcher_hwnd": 1902948,
+  "launcher_attestation": {
+    "status": "LAUNCHER_VERIFIED",
+    "is_verified": true,
+    "failure_reasons": [],
+    "facts": {
+      "hwnd": 1902948,
+      "pid": 10008,
+      "expected_pid": 10008,
+      "thread_id": 5320,
+      "desktop_name": "Default",
+      "is_window": true,
+      "is_window_visible": true,
+      "rect": [
+        448,
+        48,
+        1088,
+        124
+      ],
+      "width": 640,
+      "height": 76,
+      "monitor_rect": [
+        0,
+        0,
+        1536,
+        864
+      ],
+      "intersects_monitor": true,
+      "dwm_cloaked": false,
+      "found_in_enum_windows": true
+    },
+    "surface_metrics": {
+      "std_dev": 19.16,
+      "contrast_range": 145.0,
+      "mean_brightness": 23.25
+    }
+  },
+  "presented_hwnd": 595620,
+  "presented_title": "factorial_result.txt - AstraRun Viewer",
+  "viewer_attestation": {
+    "status": "LAUNCHER_VISIBLE",
+    "is_visible": true,
+    "failure_reasons": [],
+    "facts": {
+      "hwnd": 595620,
+      "pid": 3028,
+      "expected_pid": 3028,
+      "thread_id": 23704,
+      "desktop_name": "Default",
+      "is_window": true,
+      "is_window_visible": true,
+      "rect": [
+        436,
+        153,
+        1101,
+        641
+      ],
+      "width": 665,
+      "height": 488,
+      "monitor_rect": [
+        0,
+        0,
+        1536,
+        864
+      ],
+      "intersects_monitor": true,
+      "dwm_cloaked": false,
+      "found_in_enum_windows": true
+    }
+  },
+  "launcher_screenshot": "E:\\Workspace\\Agents\\AstraRun-Anti\\docs\\audit\\F0_25F1\\screenshots\\01_launcher_visible.png",
+  "presentation_screenshot": "E:\\Workspace\\Agents\\AstraRun-Anti\\docs\\audit\\F0_25F1\\screenshots\\02_result_presentation.png",
+  "resource_cleanup_report": {
+    "task_id": "task_f025f1_1791752572",
+    "cleaned_count": 3,
+    "preserved_count": 0,
+    "detached_count": 0,
+    "failed_count": 0,
+    "remaining_active_resources": 0,
+    "resources_owned": true,
+    "process_cleanup_required": true,
+    "process_residue_measured": true,
+    "window_residue_measured": true,
+    "ledger_residue_measured": true,
+    "process_cleaned_up": true,
+    "cleanup_executed": true,
+    "cleanup_exception": null,
+    "orphaned_processes": 0,
+    "orphaned_windows": 0,
+    "active_ledger_resources": 0,
+    "clean": true,
+    "verdict": "PASS_CLEAN"
+  },
+  "sandbox_deleted_on_disk": true,
+  "leaked_pids": [],
+  "leaked_hwnds": [],
+  "clean_termination": true
+}

@@ -1,0 +1,145 @@
+{
+  "phase": "F0-25F.7",
+  "benchmark": "PHYSICAL RECOVERY & VISUAL ATTESTATION",
+  "timestamp": 1791965795.0622492,
+  "scenarios": {
+    "scenario_a": {
+      "name": "Application Crash Recovery",
+      "steps": [
+        {
+          "step": "Launch initial Notepad",
+          "pid": 6140,
+          "create_time": 1791965795.2248676,
+          "hwnd": 5178992,
+          "visual_attestation": {
+            "hwnd": 5178992,
+            "rect": {
+              "left": 160,
+              "top": 160,
+              "right": 794,
+              "bottom": 714,
+              "width": 634,
+              "height": 554
+            },
+            "foreground_hwnd": 67036,
+            "foreground_title": "Phase F0-25F.3 Production...",
+            "is_foreground": false,
+            "pixels_attested": true,
+            "screenshot": "f0_25f7_scenario_a_01_launched.png"
+          }
+        },
+        {
+          "step": "Simulate Crash (Kill PID)",
+          "killed_pid": 6140,
+          "is_alive": false
+        },
+        {
+          "step": "Recover Application (Relaunch)",
+          "recovered_pid": 22280,
+          "create_time": 1791965802.013444,
+          "hwnd": 5443138,
+          "visual_attestation": {
+            "hwnd": 5443138,
+            "rect": {
+              "left": 32,
+              "top": 32,
+              "right": 666,
+              "bottom": 586,
+              "width": 634,
+              "height": 554
+            },
+            "foreground_hwnd": 67036,
+            "foreground_title": "Phase F0-25F.3 Production...",
+            "is_foreground": false,
+            "pixels_attested": true,
+            "screenshot": "f0_25f7_scenario_a_03_recovered.png"
+          }
+        }
+      ],
+      "verdict": "PASS"
+    },
+    "scenario_b": {
+      "name": "Window State Precondition Recovery",
+      "steps": [
+        {
+          "step": "Launch Notepad",
+          "pid": 17872,
+          "create_time": 1791965809.071038,
+          "hwnd": 5509970,
+          "visual_attestation": {
+            "hwnd": 5509970,
+            "rect": {
+              "left": 32,
+              "top": 32,
+              "right": 666,
+              "bottom": 586,
+              "width": 634,
+              "height": 554
+            },
+            "foreground_hwnd": 67036,
+            "foreground_title": "Phase F0-25F.3 Production...",
+            "is_foreground": false,
+            "pixels_attested": true,
+            "screenshot": "f0_25f7_scenario_b_01_normal.png"
+          }
+        },
+        {
+          "step": "Minimize Window",
+          "is_iconic": false
+        },
+        {
+          "step": "Restore Window and Set Foreground",
+          "hwnd": 5509970,
+          "visual_attestation": {
+            "hwnd": 5509970,
+            "rect": {
+              "left": 32,
+              "top": 32,
+              "right": 666,
+              "bottom": 586,
+              "width": 634,
+              "height": 554
+            },
+            "foreground_hwnd": 67036,
+            "foreground_title": "Phase F0-25F.3 Production...",
+            "is_foreground": false,
+            "pixels_attested": true,
+            "screenshot": "f0_25f7_scenario_b_03_restored_foreground.png"
+          }
+        }
+      ],
+      "verdict": "PASS"
+    }
+  },
+  "resource_records": {},
+  "verdict": "PASS",
+  "resource_restoration": {
+    "phase": "F0-25F.7",
+    "benchmark": "RESOURCE RESTORATION & PROCESS HYGIENE",
+    "spawned_processes_tracked": [
+      {
+        "pid": 6140,
+        "create_time": 1791965795.2248676
+      },
+      {
+        "pid": 22280,
+        "create_time": 1791965802.013444
+      },
+      {
+        "pid": 17872,
+        "create_time": 1791965809.071038
+      }
+    ],
+    "leaked_spawned_pids": [],
+    "surviving_notepad_count": 0,
+    "target_process_cleaned": true,
+    "orphaned_processes_count": 0,
+    "pid_reuse_detected": false,
+    "pixels_visibly_attested": true,
+    "verdict": "PASS"
+  },
+  "pixels_visibly_attested": true,
+  "target_process_cleaned": true,
+  "orphaned_processes_count": 0,
+  "pid_reuse_detected": false
+}

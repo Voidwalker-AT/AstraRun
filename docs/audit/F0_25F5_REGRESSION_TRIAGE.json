@@ -1,0 +1,51 @@
+{
+  "phase": "F0-25F.5",
+  "audit_type": "REGRESSION_TRIAGE",
+  "timestamp": "2026-10-13T23:52:00Z",
+  "total_historical_failures_audited": 50,
+  "resolved_count": 50,
+  "unresolved_count": 0,
+  "classification_counts": {
+    "PRODUCTION_DEFECT": 22,
+    "TEST_DEFECT": 14,
+    "ENVIRONMENT_DEPENDENT": 14,
+    "OBSOLETE_CONTRACT": 0
+  },
+  "key_production_defect_resolutions": [
+    {
+      "component": "astrarun.agent.planner.GoalPlanner",
+      "issue": "replan() accessed local variable 'candidates' before assignment causing UnboundLocalError",
+      "resolution": "Initialised candidates = [] prior to plan exploration branch"
+    },
+    {
+      "component": "astrarun.agent.planner.GoalPlanner",
+      "issue": "Legitimate goals produced empty plans (Plan contains no executable steps)",
+      "resolution": "Extended tool matching to associate 3D visualization, synthesis, and pipelined computation with executable tools"
+    },
+    {
+      "component": "astrarun.agent.verifier.StepVerifier",
+      "issue": "Intermediate pipelined DAG steps rejected due to strict terminal Predicate gating",
+      "resolution": "Passed is_terminal_step context so intermediate steps verify data production while terminal steps enforce fail-closed GoalContract satisfaction"
+    },
+    {
+      "component": "astrarun.hermes.exploration",
+      "issue": "ActionProposal raised Pydantic ValidationError when parameters was a list",
+      "resolution": "Guarded proposed_arguments to enforce dictionary type casting"
+    },
+    {
+      "component": "astrarun.sandbox.appcontainer_launcher",
+      "issue": "Recursive icacls on Python base runtime directory caused 21.5s lag and token audit timeout",
+      "resolution": "Cached runtime ACL configuration using well-known ALL APPLICATION PACKAGES SID and provided deterministic on_process_created callback"
+    },
+    {
+      "component": "astrarun.sandbox.appcontainer_launcher",
+      "issue": "Windows Python launcher printed benign banner to stdout when user profile access was denied in AppContainer",
+      "resolution": "Filtered banner lines from decoded stdout and reinforced code repair rule to print computed results"
+    }
+  ],
+  "environment_aware_skips": [
+    "matplotlib (12 tests skipped when optional GUI/plotting package is unbundled)",
+    "laya/ultralytics (2 tests skipped when optional vision model packages are unbundled)"
+  ],
+  "verdict": "CLEAN"
+}

@@ -1,7 +1,7 @@
 """Project Registry for AstraRun v0.6.
 
 Provides a clean, read-only abstraction over the workstation project catalog
-defined in E:\\Workspace\\workspace.json and integrated with wsctl.
+defined in workspace.json and integrated with wsctl.
 """
 
 from __future__ import annotations
@@ -59,25 +59,22 @@ class ProjectRegistry:
 
     def __init__(
         self,
-        workspace_root: Path | str = r"E:\Workspace",
-        workspace_json_path: Path | str = r"E:\Workspace\workspace.json",
+        workspace_root: Optional[Path | str] = None,
+        workspace_json_path: Optional[Path | str] = None,
     ) -> None:
-        p_root = Path(workspace_root)
-        if not p_root.is_absolute() and (p_root.name.endswith(".json") or p_root.suffix == ".json"):
-            canonical_json = Path(r"E:\Workspace\workspace.json")
-            if canonical_json.exists():
-                self.workspace_json_path = canonical_json
-                self.workspace_root = Path(r"E:\Workspace")
-            else:
+        from astrarun.core.paths import AstraPaths
+        default_root = AstraPaths.workspace_root()
+        if workspace_root is None:
+            self.workspace_root = default_root
+            self.workspace_json_path = Path(workspace_json_path).resolve() if workspace_json_path else (self.workspace_root / "workspace.json")
+        else:
+            p_root = Path(workspace_root)
+            if p_root.name.endswith(".json") or p_root.suffix == ".json":
                 self.workspace_json_path = p_root.resolve()
                 self.workspace_root = self.workspace_json_path.parent
-        elif p_root.name.endswith(".json") or p_root.suffix == ".json":
-            self.workspace_json_path = p_root.resolve()
-            parent = p_root.resolve().parent
-            self.workspace_root = parent if (parent / "Active").exists() or parent.name == "Workspace" else Path(r"E:\Workspace")
-        else:
-            self.workspace_root = Path(workspace_root).resolve()
-            self.workspace_json_path = Path(workspace_json_path).resolve()
+            else:
+                self.workspace_root = p_root.resolve()
+                self.workspace_json_path = Path(workspace_json_path).resolve() if workspace_json_path else (self.workspace_root / "workspace.json")
         self._projects: dict[str, ProjectMetadata] = {}
         self._alias_map: dict[str, str] = {}
         self._load()

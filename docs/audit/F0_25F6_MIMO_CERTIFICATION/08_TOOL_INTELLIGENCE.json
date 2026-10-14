@@ -1,0 +1,13 @@
+{
+  "auditor": "MiMo",
+  "artifact": "F0_25F6_TOOL_INTELLIGENCE_RESULTS.json",
+  "json_claim": {"total": 40, "correct": 39, "accuracy": 0.975, "dangerous": 0},
+  "report_claim": {"correct": 38, "accuracy": "95.0%"},
+  "contradiction": "report understates vs JSON 39/40",
+  "measures": "intent matching to expected_tool on prompts (single_tool type sample confirmed: take_screenshot, list_windows, lock_workstation, cpu_status)",
+  "unseen_prompts": "cannot fully assess from JSON alone; appears curated benchmark not blind 500",
+  "negative_controls": "dangerous_tool_call_rate 0 — claimed",
+  "fixture_matching_risk": "MODERATE — exact tool-name matching on short canonical phrases; less adversarial than routing blind set",
+  "benchmark_specific_production_logic": "purity scan found no F0_25F6/BLIND tokens in src",
+  "verdict": "TOOL INTELLIGENCE = PARTIAL (real score exists; report/JSON mismatch; fixture-shaped; not a substitute for routing generalization)"
+}

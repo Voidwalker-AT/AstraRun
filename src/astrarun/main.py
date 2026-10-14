@@ -114,9 +114,14 @@ def write_state_file(
     launcher_hwnd: int | None = None,
 ) -> None:
     """Write machine-readable runtime state file for wrapper process verification."""
-    from astrarun.core.paths import AstraPaths
+    from astrarun.core.paths import AstraPaths, get_install_root, is_release_mode
     try:
-        state_path = AstraPaths.state_file_path()
+        if not is_release_mode() and Path.cwd() != get_install_root():
+            state_path = Path.cwd() / "data" / "astrarun_state.json"
+            tmp_data_dir = state_path.parent
+        else:
+            state_path = AstraPaths.state_file_path()
+            tmp_data_dir = AstraPaths.data_dir()
         state_path.parent.mkdir(parents=True, exist_ok=True)
         hk_str = f"{'+'.join(modifiers)}+{key}" if modifiers else "Alt+Space"
         state_data = {
@@ -132,7 +137,7 @@ def write_state_file(
             "stage": stage,
             "exit_code": exit_code,
         }
-        tmp_path = AstraPaths.data_dir() / f"astrarun_state_{os.getpid()}.tmp"
+        tmp_path = tmp_data_dir / f"astrarun_state_{os.getpid()}.tmp"
         with open(tmp_path, "w", encoding="utf-8") as f:
             json.dump(state_data, f, indent=2)
         tmp_path.replace(state_path)
@@ -142,6 +147,20 @@ def write_state_file(
 
 def main() -> int:
     """Initialize composition root, single-instance enforcement, tray, hotkeys, and Qt event loop."""
+    if sys.platform == "win32":
+        try:
+            user32 = ctypes.windll.user32
+            hwinsta = user32.OpenWindowStationW("WinSta0", False, 0x037F)
+            if hwinsta:
+                user32.SetProcessWindowStation(hwinsta)
+            hdesk = user32.OpenDesktopW("Default", 0, False, 0x01FF)
+            if not hdesk:
+                hdesk = user32.OpenInputDesktop(0, False, 0x01FF)
+            if hdesk:
+                user32.SetThreadDesktop(hdesk)
+        except Exception:
+            pass
+
     # 0. Check for isolated child subsystem worker execution mode first (bypasses Qt & mutex)
     if "--worker-type" in sys.argv:
         idx = sys.argv.index("--worker-type")
@@ -395,8 +414,12 @@ def main() -> int:
     ipc_bridge.resume_requested.connect(on_tray_resume)
     ipc_bridge.restart_requested.connect(handle_restart)
     def on_ipc_query(query: str):
-        launcher.input_field.setText(query)
-        launcher.execute_command()
+        try:
+            logger.info("[IPC] on_ipc_query executing query (%d chars)", len(query))
+            launcher.input_field.setText(query)
+            launcher.execute_command()
+        except Exception as e:
+            logger.error("[IPC] Exception in on_ipc_query: %s", e, exc_info=True)
     def on_ipc_populate(query: str):
         launcher.input_field.setText(query)
         presentation_controller.present()

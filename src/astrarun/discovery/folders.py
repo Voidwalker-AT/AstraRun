@@ -19,16 +19,8 @@ class FolderResolver:
         if workspace_root:
             self.workspace_root = Path(workspace_root).resolve()
         else:
-            # Dynamically determine workspace root (AstraRun is in Workspace/Active/AstraRun)
-            current = Path(__file__).resolve()
-            # Try walking up to find workspace.json or drive root
-            ws_candidate = current.parents[3] if len(current.parents) > 3 else Path("E:/Workspace")
-            if (ws_candidate / "workspace.json").exists():
-                self.workspace_root = ws_candidate
-            elif Path("E:/Workspace").exists():
-                self.workspace_root = Path("E:/Workspace")
-            else:
-                self.workspace_root = current.parent
+            from astrarun.core.paths import AstraPaths
+            self.workspace_root = AstraPaths.workspace_root()
 
         self._folders: dict[str, FolderInfo] = {}
         self.refresh()

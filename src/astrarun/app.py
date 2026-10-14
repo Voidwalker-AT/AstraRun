@@ -271,10 +271,92 @@ class AstraApplication:
         self.decision_fusion = DecisionFusionEngine()
 
         # 11. Autonomous Agent Execution Engine (v0.11)
-        from astrarun.agent.loop import AgentExecutionEngine
+        from astrarun.agent.loop import AgentExecutionEngine, AgentExecutionListener
+        from astrarun.tasks.models import TaskEventType
+        from PySide6.QtGui import QGuiApplication
+
+        class _AppAgentExecutionBridge(AgentExecutionListener):
+            def __init__(self, task_manager):
+                self.tm = task_manager
+
+            def _pump(self):
+                app_inst = QGuiApplication.instance()
+                if app_inst:
+                    app_inst.processEvents()
+
+            def on_task_started(self, task):
+                if not self.tm.get_task(task.task_id):
+                    from astrarun.tasks.models import Task, TaskStatus
+                    prompt = getattr(getattr(task, "goal", None), "raw_prompt", "Autonomous Agent Goal")
+                    try:
+                        conv = self.tm.ledger.create_conversation(title="Autonomous Goal")
+                        t = Task(
+                            id=task.task_id,
+                            conversation_id=conv.id,
+                            request_text=prompt,
+                            status=TaskStatus.RUNNING,
+                            created_at=time.time(),
+                            source="agent_engine",
+                        )
+                        with self.tm._lock:
+                            self.tm._active_tasks[task.task_id] = t
+                        self.tm.ledger.save_task(t)
+                    except Exception:
+                        pass
+                self.tm.emit_event(
+                    task.task_id,
+                    TaskEventType.TASK_CREATED,
+                    title="Analyzing Objective",
+                    summary=getattr(getattr(task, "goal", None), "raw_prompt", "Autonomous Agent Goal"),
+                    data={"raw_query": getattr(getattr(task, "goal", None), "raw_prompt", "")},
+                )
+                self._pump()
+
+            def on_step_started(self, task, step):
+                label = getattr(step, "human_label", None) or getattr(step, "description", None) or step.capability_id
+                self.tm.emit_event(
+                    task.task_id,
+                    TaskEventType.WORKFLOW_STEP_STARTED,
+                    title=label,
+                    summary=step.description or label,
+                    capability_id=step.capability_id,
+                )
+                self._pump()
+
+            def on_step_completed(self, task, step, verification):
+                label = getattr(step, "human_label", None) or getattr(step, "description", None) or step.capability_id
+                self.tm.emit_event(
+                    task.task_id,
+                    TaskEventType.WORKFLOW_STEP_COMPLETED,
+                    title=f"Verified: {label}",
+                    summary="Step empirical verification succeeded.",
+                    capability_id=step.capability_id,
+                )
+                self._pump()
+
+            def on_task_completed(self, task):
+                self.tm.emit_event(
+                    task.task_id,
+                    TaskEventType.TASK_COMPLETED,
+                    title="Task Completed",
+                    summary="All goal conditions verified successfully.",
+                )
+                self._pump()
+
+            def on_task_failed(self, task, error):
+                self.tm.emit_event(
+                    task.task_id,
+                    TaskEventType.TASK_FAILED,
+                    title="Task Failed",
+                    summary=error or "Agent goal execution failed.",
+                )
+                self._pump()
+
+        self._agent_bridge_listener = _AppAgentExecutionBridge(self.task_manager)
         self.agent_engine = AgentExecutionEngine(
             registry=self.capability_registry,
             execution_broker=self.execution_broker,
+            listener=self._agent_bridge_listener,
         )
 
         # 12. Machine Model & Authoritative Workstation Query Engine (v1.0)
@@ -452,6 +534,8 @@ class AstraApplication:
             err_code = CapabilityErrorCode.PERMISSION_DENIED
         elif broker_res.blocked:
             err_code = CapabilityErrorCode.BLOCKED
+        elif hasattr(broker_res, "raw_result") and getattr(broker_res.raw_result, "error_code", None):
+            err_code = broker_res.raw_result.error_code
 
         return CapabilityResult(
             capability=capability_id,
@@ -472,6 +556,31 @@ class AstraApplication:
         Canonical entry point for all natural language and launcher commands.
         Enforces: Fast Path -> Direct Navigation -> Rich NLP & Capabilities.
         """
+        from astrarun.core.telemetry import CausalTelemetry
+        telem = CausalTelemetry.get_instance()
+        clean = (query or "").strip()
+        telem.start_run(query=clean, component="AstraApplication")
+        try:
+            res = self._handle_request_internal(clean, origin_window=origin_window, dry_run=dry_run)
+            contract = None
+            if hasattr(res, "task") and res.task:
+                contract = getattr(res.task, "contract", None) or getattr(getattr(res.task, "goal", None), "contract", None)
+            telem.end_run(
+                status="SUCCESS" if res.success else "FAILED",
+                message=res.message,
+                goal_contract=contract,
+            )
+            return res
+        except Exception as exc:
+            telem.end_run(status="FAILED", message=str(exc))
+            raise
+
+    def _handle_request_internal(
+        self,
+        query: str,
+        origin_window: Optional[int | WindowEntity] = None,
+        dry_run: bool = False,
+    ) -> ExecutionResult:
         clean = query.strip()
         if not clean:
             return ExecutionResult(type="error", success=False, message="Empty query.")
@@ -501,13 +610,72 @@ class AstraApplication:
         # -------------------------------------------------------------
         lower_q = clean.lower()
 
+        # Result Presentation: "show me the result", "open output", etc.
+        res_m = re.match(r"^(?:show(?:\s+me)?|open|view|display)\s+(?:the\s+)?(?:result|results|output|deliverable)\??$", lower_q.strip())
+        if res_m:
+            from astrarun.core.telemetry import CausalTelemetry, CausalEventType, compute_hash
+            telem = CausalTelemetry.get_instance()
+            telem.emit(
+                event_type=CausalEventType.GOAL_INTERPRETED.value,
+                component="AstraApplication.Presentation",
+                data={"intent": "present_result"},
+                input_hash=compute_hash(clean),
+                output_hash=compute_hash("present_result"),
+            )
+            telem.emit(
+                event_type=CausalEventType.PLAN_CREATED.value,
+                component="AstraApplication.Presentation",
+                data={"step_count": 1, "capabilities": ["present_result"]},
+                output_hash=compute_hash(["present_result"]),
+            )
+            from astrarun.ui.result_presentation import present_result
+            target_path = None
+            if hasattr(self, "task_ledger") and self.task_ledger:
+                try:
+                    recent_tasks = self.task_ledger.get_recent_tasks(limit=5)
+                    for t in recent_tasks:
+                        if t.data:
+                            cand = t.data.get("output_file") or t.data.get("path") or t.data.get("destination") or t.data.get("output_dir")
+                            if cand and Path(cand).exists():
+                                target_path = str(cand)
+                                break
+                except Exception:
+                    pass
+            if not target_path:
+                from astrarun.core.paths import AstraPaths
+                default_out = AstraPaths.data_dir() / "output"
+                if default_out.exists():
+                    target_path = str(default_out)
+            cap_res = present_result(target=target_path, mode="auto")
+            return ExecutionResult(
+                type="capability_result",
+                success=cap_res.success,
+                message=cap_res.message,
+                data=cap_res.data,
+                capability_result=cap_res,
+            )
+
         # Negation boundary safety invariant
         if re.search(r'\b(?:don\'t|dont|do\s+not|never)\s+(?:open|launch|start|run|close|delete|format|kill|remove)\b', lower_q):
             return ExecutionResult(type="blocked", success=False, message=f"Action blocked: Request contains negation for '{clean}'.")
 
+        # Capabilities list / Help
+        lower_clean = re.sub(r"[!.,?]+$", "", lower_q).strip()
+        if lower_clean in ("what can you do", "help", "capabilities", "commands"):
+            caps = self.capability_registry.list_capabilities()
+            grouped: dict[str, list[str]] = {}
+            for c in caps:
+                cat = c.category.value
+                grouped.setdefault(cat, []).append(f"• {c.id}: {c.description}")
+            return ExecutionResult(
+                type="list_result",
+                success=True,
+                message="AstraRun Workstation Capabilities",
+                data={"grouped_capabilities": grouped, "count": len(caps)},
+            )
+
         # Conversational / Greetings
         from astrarun.routing.input_router import CONVERSATIONAL_EXACT, get_conversational_response
-        lower_clean = re.sub(r"[!.,?]+$", "", lower_q).strip()
         if lower_clean in CONVERSATIONAL_EXACT:
             return ExecutionResult(type="conversational", success=True, message=get_conversational_response(clean))
 
@@ -537,6 +705,23 @@ class AstraApplication:
                     calc_res = ops[type(node.op)](node.left.value, node.right.value)
                     task = self.task_manager.create_task(request_text=clean, source="user_computation")
                     self.task_manager.transition_status(task.id, TaskStatus.RUNNING)
+                    from astrarun.core.telemetry import CausalTelemetry, CausalEventType, compute_hash
+                    telem = CausalTelemetry.get_instance()
+                    telem.emit(
+                        event_type=CausalEventType.GOAL_INTERPRETED.value,
+                        component="AstraApplication.Computation",
+                        task_id=task.id,
+                        data={"expression": expr},
+                        input_hash=compute_hash(clean),
+                        output_hash=compute_hash(expr),
+                    )
+                    telem.emit(
+                        event_type=CausalEventType.PLAN_CREATED.value,
+                        component="AstraApplication.Computation",
+                        task_id=task.id,
+                        data={"step_count": 1, "plan": "evaluate_expression"},
+                        output_hash=compute_hash("evaluate_expression"),
+                    )
                     cap_res = CapabilityResult.ok(capability="computational_task", message=f"{expr} = {calc_res}", data={"result": calc_res})
                     self._complete_task(task, cap_res)
                     return ExecutionResult(type="computational", success=True, message=f"{expr} = {calc_res}", task=task, capability_result=cap_res)
@@ -615,6 +800,21 @@ class AstraApplication:
                 message=f"Hotkey Status: {'Registered' if hk_diag.get('is_registered') else 'Unregistered'} ({'+'.join(hk_diag.get('modifiers', []))}+{hk_diag.get('key', '')})",
                 data=hk_diag,
             )
+        if lower_q in ("cpu status", "cpu usage", "cpu utilization", "inspect cpu"):
+            from astrarun.system.service import cpu_status
+            cap_res = cpu_status()
+            task = self.task_manager.create_task(request_text=clean, source="user_system_status")
+            self.task_manager.transition_status(task.id, TaskStatus.RUNNING)
+            self._complete_task(task, cap_res)
+            return ExecutionResult(type="capability_result", success=True, message=cap_res.message, task=task, capability_result=cap_res, data=cap_res.data)
+
+        if lower_q in ("memory status", "memory usage", "ram status", "ram usage", "inspect memory"):
+            from astrarun.system.service import memory_status
+            cap_res = memory_status()
+            task = self.task_manager.create_task(request_text=clean, source="user_system_status")
+            self.task_manager.transition_status(task.id, TaskStatus.RUNNING)
+            self._complete_task(task, cap_res)
+            return ExecutionResult(type="capability_result", success=True, message=cap_res.message, task=task, capability_result=cap_res, data=cap_res.data)
 
         if lower_q in ("undo", "undo window", "undo last window move", "undo layout"):
             undo_res = undo_last_window_move()
@@ -645,8 +845,6 @@ class AstraApplication:
 
         is_agent_goal = False
         if re.search(r"\bbattery\s+report\b", clean, re.IGNORECASE) or re.search(r"\b(?:scan|check|show|connect|disconnect).*wifi\b|\bwifi\b", clean, re.IGNORECASE):
-            is_agent_goal = True
-        elif has_compound:
             is_agent_goal = True
         elif hasattr(self, "agent_engine") and self.agent_engine and hasattr(self, "_builtin_capability_ids"):
             # Check if indexer has a high-confidence match for dynamic / plug-in capabilities (e.g. reverse_text)
@@ -857,6 +1055,21 @@ class AstraApplication:
             decision = self.deterministic_router.route(action_clean, self.routing_context)
             if decision.is_resolved and decision.tool != "unknown":
                 logger.info("Fast path triggered: '%s' (orig: '%s') -> %s", action_clean, clean, decision.tool)
+                from astrarun.core.telemetry import CausalTelemetry, CausalEventType, compute_hash
+                telem = CausalTelemetry.get_instance()
+                telem.emit(
+                    event_type=CausalEventType.GOAL_INTERPRETED.value,
+                    component="DeterministicRouter",
+                    data={"tool": decision.tool, "confidence": decision.confidence},
+                    input_hash=compute_hash(action_clean),
+                    output_hash=compute_hash(decision.tool),
+                )
+                telem.emit(
+                    event_type=CausalEventType.PLAN_CREATED.value,
+                    component="DeterministicRouter",
+                    data={"step_count": 1, "capabilities": [decision.tool]},
+                    output_hash=compute_hash([decision.tool]),
+                )
                 task = self.task_manager.create_task(request_text=clean, source="user_fast_path")
                 self.task_manager.transition_status(task.id, TaskStatus.RUNNING)
 
@@ -868,6 +1081,27 @@ class AstraApplication:
                             capability="open_application",
                             message=f"Application '{decision.args.get('app', '')}' launched successfully (dry run).",
                             data=decision.args,
+                        )
+                    elif tool_name in ("snap_window_left", "snap_window_right"):
+                        from astrarun.windows.undo import restore_stack
+                        from astrarun.windows.models import WindowLayoutSnapshot
+                        hwnd_val = decision.args.get("hwnd") or (active_origin.hwnd if active_origin else 1001)
+                        pid_val = decision.args.get("pid") or (active_origin.pid if active_origin else 1000)
+                        title_val = (active_origin.title if active_origin else "Simulated Window")
+                        bounds_val = (active_origin.bounds if active_origin else (100, 100, 800, 600))
+                        restore_stack.push(WindowLayoutSnapshot(
+                            hwnd=hwnd_val,
+                            pid=pid_val,
+                            title=title_val,
+                            bounds=bounds_val,
+                            state="normal",
+                            monitor_id=1,
+                        ))
+                        lt = "left_half" if "left" in tool_name else "right_half"
+                        cap_res = CapabilityResult.ok(
+                            capability=tool_name,
+                            message=f"Simulated execution of '{tool_name}' to {lt} (dry run).",
+                            data={"dry_run": True, "layout": lt, **decision.args},
                         )
                     else:
                         cap_res = CapabilityResult.ok(
@@ -1063,6 +1297,22 @@ class AstraApplication:
 
             # Compile into WorkflowProposal
             proposal: WorkflowProposal = self.workflow_compiler.compile(utterance)
+            from astrarun.core.telemetry import CausalTelemetry, CausalEventType, compute_hash
+            telem = CausalTelemetry.get_instance()
+            telem.emit(
+                event_type=CausalEventType.GOAL_INTERPRETED.value,
+                component="NLPEngine",
+                data={"clauses": [c.action for c in utterance.clauses]},
+                input_hash=compute_hash(clean),
+                output_hash=compute_hash([c.action for c in utterance.clauses]),
+            )
+            step_tools = [s.tool for s in proposal.steps] if proposal.steps else []
+            telem.emit(
+                event_type=CausalEventType.PLAN_CREATED.value,
+                component="WorkflowCompiler",
+                data={"step_count": len(step_tools), "capabilities": step_tools},
+                output_hash=compute_hash(step_tools),
+            )
 
             # Inject resolved window HWND/PID into step arguments if present
             if resolved_window:
@@ -1193,6 +1443,27 @@ class AstraApplication:
                             capability="type_text",
                             message=f"Entered {t_len} characters.",
                             data={"characters_typed": t_len},
+                        )
+                    elif step.tool in ("snap_window_left", "snap_window_right"):
+                        from astrarun.windows.undo import restore_stack
+                        from astrarun.windows.models import WindowLayoutSnapshot
+                        hwnd_val = step.arguments.get("hwnd") or (active_origin.hwnd if active_origin else 1001)
+                        pid_val = step.arguments.get("pid") or (active_origin.pid if active_origin else 1000)
+                        title_val = (active_origin.title if active_origin else "Simulated Window")
+                        bounds_val = (active_origin.bounds if active_origin else (100, 100, 800, 600))
+                        restore_stack.push(WindowLayoutSnapshot(
+                            hwnd=hwnd_val,
+                            pid=pid_val,
+                            title=title_val,
+                            bounds=bounds_val,
+                            state="normal",
+                            monitor_id=1,
+                        ))
+                        lt = "left_half" if "left" in step.tool else "right_half"
+                        cap_res = CapabilityResult.ok(
+                            capability=step.tool,
+                            message=f"Simulated execution of '{step.tool}' to {lt} (dry run).",
+                            data={"dry_run": True, "layout": lt, **step.arguments},
                         )
                     else:
                         cap_res = CapabilityResult.ok(

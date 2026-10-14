@@ -1,0 +1,57 @@
+{
+  "auditor": "MiMo",
+  "method": "Independent spawn of installed binary 444b6679...; unique token artifact created by evaluator BEFORE presentation; IPC SUBMIT_QUERY 'show me the result'; independent EnumWindows + screenshot + visual inspection; telemetry harvest of new run file",
+  "token": "MIMO_F025F2_PRESENT_23E140876266",
+  "token_file": "E:\\AstraDogfood\\word_frequency\\mimo_f025f2_token.txt",
+  "token_sha256": "6de393fbd395d4064dac82e341115715feb9842cdfa86e6297076d57eca98338",
+  "spawned_pid": 28340,
+  "run_file": "run_1791817324291_326bab32.jsonl",
+  "run_sha256": "5a608219990ea5d5049edc4776b9d5e890ee98eb742a2da7aa94342b72b0ae61",
+  "temporal_ordering": [
+    {"event": "REQUEST_RECEIVED", "ts": 1791817324.292, "event_id": "cev_1791817324292_264c59"},
+    {"event": "GOAL_INTERPRETED", "ts": 1791817324.296},
+    {"event": "PLAN_CREATED", "ts": 1791817324.298},
+    {"event": "RESULT_PRESENTATION_REQUESTED", "ts": 1791817324.299, "target": "E:\\AstraDogfood\\word_frequency"},
+    {"event": "STATE_OBSERVED", "ts": 1791817324.928, "hwnd": 202566, "pid": 6008, "title": "File Explorer", "mechanism": "explorer"},
+    {"event": "POSTCONDITION_VERIFIED", "ts": 1791817324.933, "postcondition": "RESULT_VISIBLE_TO_USER"},
+    {"event": "RESULT_PRESENTED", "ts": 1791817324.942, "verified_hwnd": 202566, "verified_pid": 6008, "verified_title": "File Explorer", "verified_class": "CabinetWClass", "target_observed": true},
+    {"event": "RESOURCE_REGISTERED", "ts": 1791817324.954, "type": "EXPLORER_WINDOW"},
+    {"event": "GOAL_COMPLETED", "ts": 1791817324.961, "status": "SUCCESS"}
+  ],
+  "ordering_ok": true,
+  "ordering_note": "REQUESTED before dispatch before STATE_OBSERVED before POSTCONDITION before PRESENTED before GOAL_COMPLETED — correct chain for this run",
+  "RESULT_PRESENTED_non_null_hwnd": true,
+  "RESULT_PRESENTED_hollow": false,
+  "OS_ATTESTATION": {
+    "hwnd": 202566,
+    "pid": 6008,
+    "process": "explorer.exe",
+    "title_observed": "word_frequency - File Explorer",
+    "is_window": true,
+    "is_window_visible": true,
+    "dwm_cloaked": 0,
+    "new_window_after_submit": true
+  },
+  "PIXEL_ATTESTATION": {
+    "full_screenshot": "screenshots/mimo_presentation_full.png",
+    "sha256": "076846bffb07742f2b040368fb65da35cdea748688defb2d1c2fca1362cb8b97",
+    "viewer_crop": "screenshots/mimo_presentation_viewer.png",
+    "crop_sha256": "29e95462f2ab4a41632255aec16779affcc0acc0c4af91472a1906ff58a3153e"
+  },
+  "VISUAL_ATTESTATION": {
+    "inspector": "MiMo",
+    "pixels_show": "File Explorer maximized; address bar path This PC > New Volume (E:) > AstraDogfood > word_frequency; file list contains main.py, mimo_f025f2_token.txt, sample_input.txt, word_frequencies.json; token filename clearly visible",
+    "token_binding": "STRUCTURAL: correct directory path + token filename visible in listing. Content of token not displayed (not selected/previewed).",
+    "launcher_visible_in_shot": false,
+    "confidence": "HIGH",
+    "classification": "FACT"
+  },
+  "caveats": [
+    "Mechanism was directory Explorer, not a custom file viewer showing token content",
+    "Token file not selected/highlighted (main.py was selected)",
+    "verified_title in telemetry is 'File Explorer' while window title is 'word_frequency - File Explorer' — loose identity",
+    "Presentation is of the fallback directory, not a ledger-selected recent task artifact"
+  ],
+  "verdict": "PHYSICAL PRESENTATION CERTIFICATION = PASS (with caveats)",
+  "verdict_rationale": "Non-hollow RESULT_PRESENTED with real new HWND; correct temporal ordering; independent visual confirmation of Explorer showing the target directory containing the unique token file. Not a full content-verified file presentation, but affirmative physical postcondition of result reveal is established."
+}

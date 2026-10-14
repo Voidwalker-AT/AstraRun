@@ -1,0 +1,56 @@
+[
+  {
+    "task_id": "task_1_token_matrix",
+    "decision_label": "BUILD_SELECTION",
+    "toolchain_selected": "venv_python",
+    "command": [
+      "E:\\Workspace\\Agents\\AstraRun-Anti\\.venv\\Scripts\\python.exe",
+      "E:\\Workspace\\Agents\\AstraRun-Anti\\projects\\task1_token_matrix\\lru_token_matrix.py"
+    ],
+    "working_directory": "E:\\Workspace\\Agents\\AstraRun-Anti\\projects\\task1_token_matrix",
+    "exit_code": 0,
+    "stdout": "TASK 1 VERIFICATION PASSED\n{\n  \"status\": \"VERIFIED\",\n  \"total_tokens\": 10,\n  \"unique_terms\": 8,\n  \"top_terms\": [\n    [\n      \"astrarun\",\n      2\n    ],\n    [\n      \"agent\",\n      2\n    ]\n  ],\n  \"cooccurrence_sample\": {\n    \"astrarun\": {\n      \"agent\": 2,\n      \"explores\": 1,\n      \"windows\": 1,\n      \"desktop\": 1,\n      \"verifies\": 1\n    },\n    \"agent\": {\n      \"astrarun\": 2,\n      \"explores\": 1,\n",
+    "stderr": "",
+    "verified": true
+  },
+  {
+    "task_id": "task_2_memory_status",
+    "decision_label": "BUILD_SELECTION",
+    "toolchain_selected": "venv_python",
+    "command": [
+      "E:\\Workspace\\Agents\\AstraRun-Anti\\.venv\\Scripts\\python.exe",
+      "E:\\Workspace\\Agents\\AstraRun-Anti\\projects\\task2_memory_status\\win_memory_status.py"
+    ],
+    "working_directory": "E:\\Workspace\\Agents\\AstraRun-Anti\\projects\\task2_memory_status",
+    "exit_code": 0,
+    "stdout": "TASK 2 VERIFICATION PASSED\n{\n  \"status\": \"SUCCESS\",\n  \"memory_load_percent\": 79,\n  \"total_physical_gb\": 15.65,\n  \"available_physical_gb\": 3.16,\n  \"total_physical_bytes\": 16802910208,\n  \"available_physical_bytes\": 3390242816\n}\n",
+    "stderr": "",
+    "verified": true
+  },
+  {
+    "task_id": "task_3_debugger",
+    "phase": "INITIAL_UNREPAIRED_RUN",
+    "decision_label": "BUILD_SELECTION",
+    "command": [
+      "E:\\Workspace\\Agents\\AstraRun-Anti\\.venv\\Scripts\\python.exe",
+      "E:\\Workspace\\Agents\\AstraRun-Anti\\projects\\task3_debugger\\graph_pathfinder.py"
+    ],
+    "exit_code": 1,
+    "stdout": "",
+    "stderr": "Traceback (most recent call last):\n  File \"E:\\Workspace\\Agents\\AstraRun-Anti\\projects\\task3_debugger\\graph_pathfinder.py\", line 43, in <module>\n    assert path == [\"A\", \"C\", \"B\"], f\"Test 1 Failed: Expected ['A', 'C', 'B'], got {path}\"\n           ^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: Test 1 Failed: Expected ['A', 'C', 'B'], got ['A', 'B']\n",
+    "failure_captured": true
+  },
+  {
+    "task_id": "task_3_debugger",
+    "phase": "REPAIRED_RUN",
+    "decision_label": "BUILD_SELECTION",
+    "command": [
+      "E:\\Workspace\\Agents\\AstraRun-Anti\\.venv\\Scripts\\python.exe",
+      "E:\\Workspace\\Agents\\AstraRun-Anti\\projects\\task3_debugger\\graph_pathfinder.py"
+    ],
+    "exit_code": 0,
+    "stdout": "ALL TESTS PASSED SUCCESSFULLY!\n",
+    "stderr": "",
+    "verified": true
+  }
+]

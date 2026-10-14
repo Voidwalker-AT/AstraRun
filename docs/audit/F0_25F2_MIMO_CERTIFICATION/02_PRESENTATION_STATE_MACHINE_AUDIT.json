@@ -1,0 +1,33 @@
+{
+  "auditor": "MiMo",
+  "source_file": "src/astrarun/ui/result_presentation.py (464 lines) + f0_25e_evaluator.py + verify scripts",
+  "sole_emitter": "result_presentation.py:391 RESULT_PRESENTED, gated by L366: if target_observed and verified_hwnd is not None",
+  "success_return": "single CapabilityResult.ok at L426-437 same guard; all other paths fail-closed",
+  "old_except_success_removed": true,
+  "attacks": [
+    {"id": "P1", "attack": "REQUESTED only", "result": "FAIL_CLOSED", "basis": "evaluator L424-430 requires RESULT_PRESENTED; M1 killed", "grade": "PASS"},
+    {"id": "P2", "attack": "process spawn success only", "result": "FAIL_CLOSED", "basis": "dispatch exceptions return fail L188-196,L234-242; no Popen-only success", "grade": "PASS"},
+    {"id": "P3", "attack": "file exists but viewer absent", "result": "FAIL_CLOSED for listed extensions/modes", "basis": "L131-143; BUT B1: missing .csv/.xlsx/no-ext with mode=auto falls to summary and can succeed", "grade": "PARTIAL"},
+    {"id": "P4", "attack": "unrelated pre-existing viewer", "result": "CAN_PASS", "basis": "L326 new explorer without title; L345 pre-existing notepad with title; B5 empty match", "grade": "FAIL"},
+    {"id": "P5", "attack": "correct process wrong file", "result": "CAN_PASS", "basis": "explorer accepts new window without verifying document_path matches target title", "grade": "FAIL"},
+    {"id": "P6", "attack": "correct file hidden window", "result": "FAIL_CLOSED", "basis": "_is_window_visible_and_on_monitor at discovery L291/L265", "grade": "PASS"},
+    {"id": "P7", "attack": "stale HWND", "result": "FAIL_CLOSED", "basis": "IsWindow check; M7; but recycled valid hwnd in summary mode untested (B2)", "grade": "PARTIAL"},
+    {"id": "P8", "attack": "HWND from wrong PID", "result": "PARTIAL", "basis": "explorer/editor compare process name not necessarily owned pid from launch; summary fabricates identity L269-270", "grade": "PARTIAL"},
+    {"id": "P9", "attack": "visible wrong-title window", "result": "CAN_PASS for new explorer", "basis": "L326 is_new_window bypasses title", "grade": "FAIL"},
+    {"id": "P10", "attack": "null verified_hwnd", "result": "FAIL_CLOSED", "basis": "L366 + evaluator L428-429", "grade": "PASS"},
+    {"id": "P11", "attack": "target_observed=false", "result": "FAIL_CLOSED", "basis": "L366 else L453-464 fail", "grade": "PASS"},
+    {"id": "P12", "attack": "viewer closes before verification", "result": "FAIL_CLOSED", "basis": "IsWindowVisible false at poll → no acceptance", "grade": "PASS"},
+    {"id": "P13", "attack": "Explorer exists before task", "result": "CAN_PASS", "basis": "pre-existing explorer with matching title accepted L326 title_matches path", "grade": "FAIL"},
+    {"id": "P14", "attack": "multiple candidate viewers", "result": "ACCEPTS_FIRST_MATCH", "basis": "loop accepts first matching candidate; no uniqueness requirement", "grade": "PARTIAL"},
+    {"id": "P15", "attack": "forged RESULT_PRESENTED without physical postcondition", "result": "EVALUATOR_CAN_PASS", "basis": "events unsigned; evaluator checks hwnd appears in world_frames not in baseline; no title/pid/mechanism check", "grade": "FAIL"}
+  ],
+  "summary_gates": {"pass": 7, "partial": 5, "fail": 5},
+  "residual_defects": [
+    "verify_f0_25f_complete_physical.py:153 still ORs REQUESTED with PRESENTED (B9)",
+    "summary mode fabricates verified_title/class from state file without reading window L269-270",
+    "missing-target summary fallback for non-listed extensions L131",
+    "verified_title not required non-empty at emission",
+    "source freeze does not match result_presentation.py (edited after freeze)"
+  ],
+  "verdict": "PRESENTATION STATE MACHINE = PARTIAL (core gate real; identity/wholeness incomplete; residual REQUESTED-OR in legacy script)"
+}

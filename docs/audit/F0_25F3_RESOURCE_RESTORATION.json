@@ -1,0 +1,18 @@
+{
+  "benchmark": "PHYSICAL_RESOURCE_RESTORATION",
+  "phase": "F0-25F.3",
+  "baseline_pids_count": 318,
+  "post_pids_count": 321,
+  "leaked_pids": [
+    29304,
+    28324,
+    2572,
+    26568
+  ],
+  "clean_pid_restoration": false,
+  "baseline_hwnds_count": 11,
+  "post_hwnds_count": 11,
+  "leaked_hwnds": [],
+  "clean_hwnd_restoration": true,
+  "timestamp": 1791826276.390527
+}

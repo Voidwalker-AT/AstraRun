@@ -1,0 +1,46 @@
+{
+  "milestone": "F0_25E",
+  "title": "MIMO Independent Broker Provenance Audit — raw/broker_events.jsonl",
+  "auditor": "MiMo",
+  "claimed_count_by_anti": 32,
+  "actual_line_count": 32,
+  "count_claim_holds": true,
+  "structure_analysis": {
+    "actual_record_shape": "{timestamp: <harvest epoch ~1791731770.69>, source: \"astrarun.security.broker\", raw_log: \"<verbatim production log line>\"}",
+    "what_they_actually_are": "Post-hoc grep of astrarun.log on substrings ('[BROKER]', 'ActionProposal', 'ExecutionBroker', 'execute_dynamic_tool') per observer L394-424. They are capability-registry execution logs and dynamic_builder delivery logs - NOT structured broker authorization verdicts.",
+    "authorization_records_present": "NONE. No ALLOW/BLOCK/audit_id exec_* verdict lines appear in the frozen file. The words 'Executing capability' and 'Artifact delivered via ExecutionBroker' indicate dispatch and delivery, not the ActionGate decision itself.",
+    "timestamp_semantics": "Outer timestamps all = harvest instant; event time only inside raw_log text."
+  },
+  "run_window": "20:45:45.9 .. 20:46:10.8 (submit .. freeze)",
+  "in_window_events": [
+    {"line": 28, "log_time": "20:45:51", "type": "capability_execution", "task_id": "task_99dc59e6", "content": "Executing capability 'execute_dynamic_tool' with exact dogfood goal", "significance": "PRIMARY dispatch record for this run"},
+    {"line": 29, "log_time": "20:46:04", "type": "artifact_delivery", "sandbox_task": "task_30b5a40d", "content": "word_frequencies.json sandbox -> E:\\AstraDogfood\\word_frequency", "significance": "delivery with path; source_sha256 in production log = 2affa9f877e7... = frozen hash"},
+    {"line": 30, "log_time": "20:46:04", "type": "artifact_delivery", "sandbox_task": "task_30b5a40d", "content": "sample_input.txt delivery", "significance": "source_sha256 19dcbda5e602... = frozen hash"},
+    {"line": 31, "log_time": "20:46:04", "type": "artifact_delivery", "sandbox_task": "task_30b5a40d", "content": "main.py delivery", "significance": "source_sha256 31b559a4d149... = frozen hash = model synth hash"},
+    {"line": 32, "log_time": "20:46:04", "type": "capability_execution_retry", "task_id": "task_99dc59e6", "content": "Executing capability 'execute_dynamic_tool' (retry after step_1 verification failure)", "significance": "retry dispatch; no subsequent synthesis/delivery lines harvested - retry outcome undocumented in frozen evidence"}
+  ],
+  "out_of_window_events_summary": {
+    "count": 27,
+    "time_span": "18:09:43 .. 20:19:42",
+    "distinct_task_ids": ["task_4c56cd7c", "task_c6a53743", "task_67f1a3d2", "task_15cf88c2", "task_5efe29b9", "task_38561e0d", "(plus deliveries under sandbox task_ae9f8d05, task_fd7df28e, task_14df70e7, task_b78446bc)"],
+    "notable": [
+      "Lines 1-7: prior attempts of the SAME dogfood goal at 18:09-18:21 including 2x ERROR MODEL_UNAVAILABLE ('Qwen2.5-Coder backend is unavailable') and agent-loop retry warnings - failures of earlier sessions",
+      "Lines 8-27: successful prior executions/deliveries at 18:21, 18:40, 18:53, 19:10, 20:19 - i.e., this dogfood task had already been run at least 6 times before F0-25E's captured run",
+      "All carry the identical goal text, which is why substring harvesting cannot distinguish runs"
+    ]
+  },
+  "bypass_search": {
+    "file_creation": "All observed file creation into the target dir flows through 'Artifact delivered via ExecutionBroker' (dynamic_builder deliver_artifact_via_broker -> ExecutionBroker.execute). Delivery lines present for all 3 files.",
+    "dynamic_execution": "execute_dynamic_tool recorded at dispatch (lines 28, 32). Sandbox execution itself (846.72ms success line) was NOT harvested into broker_events.",
+    "artifact_delivery": "Covered (lines 29-31).",
+    "process_launch": "AstraRun.exe launch is performed by the OBSERVER (harness), not by Astra - outside broker scope. No evidence of Astra launching host processes for this task.",
+    "UI_operations": "IPC SHOW_MAIN_UI/POPULATE/SUBMIT are harness->Astra control messages; Astra's internal UI presentation is not broker-mediated (UI ops are not ACT capabilities). No bypass claim derivable.",
+    "uncovered_by_frozen_evidence": "The ActionGate ALLOW/BLOCK verdicts, confirmation tokens, and audit_ids are not in the frozen file - governance DECISION records are absent even though dispatch records exist."
+  },
+  "is_every_consequential_action_brokered": {
+    "answer": "SUPPORTED at dispatch/delivery level for this run, UNVERIFIED at authorization level",
+    "analysis": "Frozen lines show execute + all 3 deliveries passing through registry/broker paths in-window; production log corroborates deliver_artifact capability entries with source_sha256. But no ALLOW/BLOCK decision record is frozen, and the 32-event claim as 'broker authorization events' mischaracterizes log excerpts as governance decisions.",
+    "classification": "SUPPORTED (imperfect) / claim wording CONTRADICTED"
+  },
+  "overall": "Count claim (32) TRUE; as this-run provenance: 5/32. The file mixes >=7 task attempts across ~2.5 hours including MODEL_UNAVAILABLE failures. Anti's CAUSAL_PROVENANCE PASS rests on 'broker_events > 0', which prior runs alone would satisfy. In-window evidence nonetheless DOES establish dispatch and hash-matched delivery for this run - stronger than Anti's predicate, weaker than Anti's narrative."
+}

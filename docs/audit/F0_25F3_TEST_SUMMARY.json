@@ -1,0 +1,64 @@
+{
+  "phase": "F0-25F.3",
+  "audit_name": "FULL_REGRESSION_TEST_SUMMARY",
+  "timestamp": "2026-10-12T22:33:00+05:30",
+  "total_collected": 957,
+  "passed": 909,
+  "failed": 48,
+  "errors": 0,
+  "duration_seconds": 409.17,
+  "raw_output_path": "docs/audit/F0_25F3_TEST_OUTPUT.txt",
+  "key_suite_results": {
+    "completion_gate": {
+      "path": "tests/unit/test_f0_25f3_completion_gate.py",
+      "status": "PASS",
+      "passed": 14,
+      "failed": 0
+    },
+    "adversarial_mutations": {
+      "path": "tests/unit/test_f0_25f3_mutations.py",
+      "status": "PASS",
+      "passed": 21,
+      "failed": 0,
+      "genuine_semantic_kills": 20
+    },
+    "generic_repair_holdout": {
+      "path": "tests/unit/test_generic_repair_holdout.py",
+      "status": "PASS",
+      "passed": 1,
+      "failed": 0,
+      "honest_score": "7/8",
+      "repair_02_fail_closed": true
+    },
+    "post_freeze_routing_holdout": {
+      "path": "tests/unit/test_post_freeze_routing_holdout.py",
+      "status": "PASS",
+      "passed": 1,
+      "failed": 0
+    },
+    "unseen_intent_routing_35": {
+      "path": "tests/unit/test_unseen_intent_routing.py",
+      "status": "PASS",
+      "passed": 1,
+      "failed": 0
+    },
+    "frozen_blind_manifest_220": {
+      "path": "docs/audit/F0_25F3_ROUTING_BLIND_MANIFEST.json",
+      "manifest_sha256": "b402565c83908bd4dda2467d22f421ad05b1189cbc47567223d4e7fc760cf023",
+      "status": "PASS",
+      "accuracy_pct": 91.82,
+      "dynamic_precision": 1.0,
+      "dynamic_over_routes": 0
+    },
+    "capability_security_manifest": {
+      "path": "tests/unit/test_capability_manifest_consistency.py",
+      "status": "PASS",
+      "total_capabilities": 86,
+      "read_only": 43,
+      "mutating": 43,
+      "confirmation_required": 3,
+      "blocked": 2,
+      "unknown_consequential": 0
+    }
+  }
+}

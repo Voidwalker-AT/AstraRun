@@ -1,0 +1,42 @@
+{
+  "phase": "F0-25F.3",
+  "timestamp": "2026-10-12T21:28:50",
+  "git": {
+    "branch": "agent/anti-f0-24a1",
+    "head": "bd287eba38e6743565fdf6da21cb629023573c6b",
+    "status_short_entries": 243,
+    "diff_stat": "docs/audit/C1_8_GENERIC_REPAIR_EVIDENCE.json      |   72 +-\n docs/audit/C1_8_POST_FREEZE_ROUTING_EVIDENCE.json |   43 +-\n docs/audit/CAPABILITY_SECURITY_MANIFEST.json      |   18 +-\n docs/audit/F0_24A1_PRE_FIX_REPRODUCTION.json      |    5 +-\n docs/audit/F0_24A_BUILD_INSTALL.json              |   18 +-\n docs/audit/F0_24A_EVIDENCE_CLOSURE.json           |   72 +-\n docs/audit/F0_24A_FROZEN_PRODUCT_RESULTS.json     |   32 +-\n docs/audit/F0_24A_HARNESS_FREEZE.json             | 2343 ++-------------------\n docs/audit/F0_24A_HOLDOUT_MANIFEST.json           |    2 +-\n docs/audit/F0_24A_PARITY_VERIFICATION.json        |    8 +-\n docs/audit/F0_24A_RESOURCE_RESIDUE.json           |   20 +-\n docs/audit/F0_24A_SOURCE_FREEZE.json              |  627 +++---\n packaging/AstraRun.spec                           |    9 +\n scripts/generate_f0_24a_freezes.py                |    2 +-\n scripts/run_f0_24a_frozen_holdout.py              |    2 +-\n scripts/verify_f0_24a_evidence_closure.py         |   43 +-\n scripts/verify_f0_24a_parity.py                   |    2 +-\n src/astrarun/agent/indexer.py                     |    6 +-\n src/astrarun/agent/loop.py                        |  246 +++\n src/astrarun/agent/planner.py                     |  137 +-\n src/astrarun/agent/verifier.py                    |   71 +-\n src/astrarun/app.py                               |  194 +-\n src/astrarun/applications/service.py              |   10 +\n src/astrarun/capabilities/manifest.py             |   25 +-\n src/astrarun/capabilities/models.py               |    3 +\n src/astrarun/capabilities/registry.py             |   64 +-\n src/astrarun/cognition/client.py                  |   53 +\n src/astrarun/cognition/service.py                 |   24 +-\n src/astrarun/cognition/supervisor.py              |    2 +\n src/astrarun/computer_use/observation/__init__.py |   18 +-\n src/astrarun/computer_use/observation/observer.py |   17 +\n src/astrarun/computer_use/ui/__init__.py          |   17 +-\n src/astrarun/core/paths.py                        |   52 +-\n src/astrarun/interaction/controller.py            |   38 +-\n src/astrarun/interaction/discovery.py             |   74 +-\n src/astrarun/interaction/document.py              |   73 +-\n src/astrarun/interaction/models.py                |    3 +\n src/astrarun/interaction/policy.py                |   10 +\n src/astrarun/interaction/service.py               |  170 +-\n src/astrarun/main.py                              |   22 +-\n src/astrarun/memory/service.py                    |    2 +\n src/astrarun/perception/input.py                  |   10 +\n src/astrarun/sandbox/appcontainer_launcher.py     |    7 +-\n src/astrarun/sandbox/manager.py                   |   55 +-\n src/astrarun/sandbox/restricted_launcher.py       |    5 +-\n src/astrarun/security/execution_broker.py         |  118 ++\n src/astrarun/tasks/resource_ledger.py             |  274 ++-\n src/astrarun/tools/dynamic_builder.py             |   60 +-\n src/astrarun/ui/hud.py                            |    6 +-\n src/astrarun/ui/launcher.py                       |   19 +-\n src/astrarun/ui/presentation.py                   |   13 +-\n src/astrarun/visualization/renderer.py            |   11 +-\n src/astrarun/windows/discovery.py                 |   10 +\n tests/test_f0_19_brain_computer_use.py            |    2 +-\n tests/unit/test_execution_broker.py               |    7 +-\n tests/unit/test_generic_repair_holdout.py         |   64 +-\n 56 files changed, 2336 insertions(+), 2974 deletions(-)",
+    "diff_check": "src/astrarun/computer_use/ui/__init__.py:22: new blank line at EOF.\nwarning: in the working copy of 'docs/audit/F0_24A_BUILD_INSTALL.json', LF will be replaced by CRLF the next time Git touches it"
+  },
+  "binaries": {
+    "dist": {
+      "path": "E:\\Workspace\\Agents\\AstraRun-Anti\\dist\\AstraRun\\AstraRun.exe",
+      "sha256": "444b667947c938232f2640c35218655b2cd006f0a169dc9d36c6a70022eceed4",
+      "size": 12090828
+    },
+    "installed": {
+      "path": "C:\\Users\\hp\\AppData\\Local\\Programs\\AstraRun\\AstraRun.exe",
+      "sha256": "444b667947c938232f2640c35218655b2cd006f0a169dc9d36c6a70022eceed4",
+      "size": 12090828
+    },
+    "identical": true
+  },
+  "mimo_f0_25f2_findings_addressed": [
+    "GOAL_COMPLETED can still be emitted unconditionally by end_run (C10, C22)",
+    "legacy Stage-6 still ORs REQUESTED with PRESENTED (verify_f0_25f_complete_physical.py:153) (C02)",
+    "RESULT_PRESENTED does not require sufficiently strong identity/title evidence (C03, C04)",
+    "resource disposal has an empty-path/vacuous-success edge in resource_ledger.py (C07)",
+    "Stage-13 causal chain was harness-stubbed (verify_f0_25f1_complete_physical.py emits product events, stubs broker) (C18)",
+    "historical 70/70 routing evaluation was contaminated by iterate-until-pass (C11)",
+    "MiMo unseen routing set produced 26 over-routes on 105 prompts into execute_dynamic_tool (C12)",
+    "F0-25F.1 routing fix location/claim did not match reality (routing/ unchanged, planner.py modified)",
+    "mutation 20/20 headline overstates semantic mutation strength (~11 genuine kills) (C15)",
+    "source freeze became stale because files were edited after freeze (C16)",
+    "production contains REPAIR-02 fixture/prompt contamination in cognition/service.py (C13)",
+    "production contains workspace-specific paths in paths.py (core/paths.py)",
+    "summary-mode contains fabricated attestation literals in result_presentation.py (C03)",
+    "full 106-test regression remained unverified (35/35 subset run)",
+    "fresh independent MODEL->BROKER->ACTION causal execution remained unverified",
+    "Python emitted a real but non-fatal restricted-token getpath warning"
+  ]
+}

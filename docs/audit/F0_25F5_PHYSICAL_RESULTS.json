@@ -1,0 +1,19 @@
+{
+  "phase": "F0-25F.5",
+  "task_prompt": "open notepad type hello and save it to desktop with name test1.txt",
+  "binary_path": "C:\\Users\\hp\\AppData\\Local\\Programs\\AstraRun\\AstraRun.exe",
+  "binary_sha256": "4eaeeb0b5f77adfd93d5fd6244ffffa7b92f67ca0b3c242c45c738f943d22aa2",
+  "binary_size": 12135827,
+  "launcher_verified": true,
+  "launcher_hwnd": 461428,
+  "agent_task_id": "task_fc6d9e39",
+  "agent_task_status": "COMPLETED",
+  "agent_task_steps": 3,
+  "artifact_verified": true,
+  "artifact_path": "C:\\Users\\hp\\Desktop\\test1.txt",
+  "artifact_sha256": "2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824",
+  "artifact_size_bytes": 5,
+  "artifact_content": "hello",
+  "clean_resource_restoration": true,
+  "verdict": "PASS"
+}

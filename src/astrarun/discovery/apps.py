@@ -155,7 +155,6 @@ class AppDiscoveryCache:
                 Path(program_files) / "Microsoft VS Code" / "Code.exe",
             ],
             "vivaldi": [
-                Path("E:/vivaldi/Application/vivaldi.exe"),
                 Path(local_app_data) / "Vivaldi" / "Application" / "vivaldi.exe",
                 Path(program_files) / "Vivaldi" / "Application" / "vivaldi.exe",
             ],

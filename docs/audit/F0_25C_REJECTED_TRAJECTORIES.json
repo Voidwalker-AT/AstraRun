@@ -1,0 +1,9 @@
+[
+  {
+    "trajectory_id": "traj_rejected_task2_unconsulted_unverified",
+    "task_id": "task_2_memory_status",
+    "rejection_reason": "Execution without dwLength initialization caused Windows kernel ERROR_INVALID_PARAMETER (error 87). Unverified candidate rejected from training set.",
+    "policy_violation": "EMPIRICAL_VERIFICATION_FAILED",
+    "evidence_class": "FAILED_POSTCONDITION_ORACLE"
+  }
+]

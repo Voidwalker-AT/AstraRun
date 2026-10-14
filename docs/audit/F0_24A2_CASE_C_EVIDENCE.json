@@ -1,0 +1,74 @@
+{
+  "case_id": "CASE_C",
+  "application": "notepad++",
+  "prompt": "open notepad++ type AstraRunUnrelatedEditorTest and save it to desktop with name test3.txt",
+  "task_id": "task_90c33567",
+  "task_status": "COMPLETED",
+  "duration_seconds": 14.71,
+  "steps": [
+    {
+      "capability": "open_application",
+      "arguments": {
+        "app": "notepad++"
+      },
+      "success": true,
+      "message": "Application 'notepad++' launched successfully (PID=23296, HWND=15599440)."
+    },
+    {
+      "capability": "type_into_window",
+      "arguments": {
+        "text": "AstraRunUnrelatedEditorTest",
+        "app_name": "notepad++"
+      },
+      "success": true,
+      "message": "Entered 27 characters."
+    },
+    {
+      "capability": "save_document_via_ui",
+      "arguments": {
+        "app_name": "notepad++",
+        "filename": "test3.txt",
+        "path": "C:\\Users\\hp\\Desktop\\test3.txt",
+        "folder": "Desktop",
+        "text": "AstraRunUnrelatedEditorTest",
+        "content": "AstraRunUnrelatedEditorTest"
+      },
+      "success": true,
+      "message": "Document successfully saved via application UI to 'C:\\Users\\hp\\Desktop\\test3.txt'."
+    }
+  ],
+  "artifact": {
+    "path": "C:\\Users\\hp\\Desktop\\test3.txt",
+    "exists": true,
+    "size_bytes": 27,
+    "content": "AstraRunUnrelatedEditorTest",
+    "sha256": "28e270216ef15d41d73998010106f0d58a4e50a8655262d8beddf6812825a779",
+    "semantic_match": true
+  },
+  "cleanup": {
+    "task_id": "task_90c33567",
+    "cleaned_count": 1,
+    "preserved_count": 0,
+    "detached_count": 0,
+    "failed_count": 0,
+    "remaining_active_resources": 0,
+    "resources_owned": true,
+    "process_cleanup_required": true,
+    "process_residue_measured": true,
+    "window_residue_measured": true,
+    "ledger_residue_measured": true,
+    "process_cleaned_up": true,
+    "cleanup_executed": true,
+    "cleanup_exception": null,
+    "orphaned_processes": 0,
+    "orphaned_windows": 0,
+    "active_ledger_resources": 0,
+    "clean": true,
+    "verdict": "PASS_CLEAN"
+  },
+  "os_residue": {
+    "remaining_npp_pids": [],
+    "zero_leak": true
+  },
+  "overall_success": true
+}

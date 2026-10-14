@@ -1,0 +1,29 @@
+{
+  "timestamp": "2026-10-11T09:38:00Z",
+  "manifest_version": "1.0.0",
+  "phase": "F0-25",
+  "target_application": {
+    "name": "Notepad++",
+    "executable_path": "C:\\Program Files\\Notepad++\\notepad++.exe",
+    "sha256": "a44e2bca325e482a65abc82ee1c8d164ca4e15e0792746876c302d0881335c76",
+    "size_bytes": 8383104
+  },
+  "environment": {
+    "env_hash": "6d9fd205f5156c1f",
+    "running_target_pids_before": []
+  },
+  "hermes_store_state": {
+    "db_path": "C:\\Users\\hp\\AppData\\Local\\AstraRun\\data\\hermes\\knowledge.db",
+    "entity_count": 0,
+    "affordance_count": 0,
+    "transition_count": 0,
+    "experiment_count": 0,
+    "is_cold_start_verified": true
+  },
+  "rules_in_force": [
+    "Zero hardcoded Notepad++ procedures or shortcuts in production code",
+    "Zero initial knowledge in Hermes store",
+    "Fail-closed ActionGate and ExecutionBroker governance",
+    "Task-scoped resource ownership and affirmative cleanup"
+  ]
+}

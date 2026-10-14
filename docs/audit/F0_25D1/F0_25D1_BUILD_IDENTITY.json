@@ -1,0 +1,37 @@
+{
+  "milestone": "F0_25D1",
+  "stage": "CANONICAL_BUILD_VERIFICATION",
+  "title": "Fresh Canonical Frozen Binary Build & Installation Parity",
+  "timestamp": "2026-10-11T19:10:10.000000+05:30",
+  "compiler": "Inno Setup 6 (ISCC.exe)",
+  "packager": "PyInstaller 6.22.3",
+  "installer": {
+    "path": "E:\\Workspace\\Agents\\AstraRun-Anti\\dist\\installer\\AstraRun-Setup-1.0.0-rc.6-dogfood.exe",
+    "sha256": "cd473858db16d270f86688bf5062c5688d533be33b603ea84da3c8a2a203c921",
+    "size_bytes": 84882301
+  },
+  "built_binary": {
+    "path": "E:\\Workspace\\Agents\\AstraRun-Anti\\dist\\AstraRun\\AstraRun.exe",
+    "sha256": "9b1b5add133e87e757ab53fbbddded0bf61931c37207bb2968a133aa4d1a344f",
+    "size_bytes": 12054911
+  },
+  "installed_binary": {
+    "path": "C:\\Users\\hp\\AppData\\Local\\Programs\\AstraRun\\AstraRun.exe",
+    "sha256": "9b1b5add133e87e757ab53fbbddded0bf61931c37207bb2968a133aa4d1a344f",
+    "size_bytes": 12054911
+  },
+  "hash_parity_match": true,
+  "architecture_components": [
+    "Hermes Experiential Knowledge Store (SQLite + Provenance)",
+    "SelectionObserver (Scintilla + UIA TextPattern Selection Range)",
+    "DynamicToolBuilder (AST Inspection, Sandbox Dry-Run, Qwen2.5-Coder Repair, Semantic Deliverables Gate)",
+    "ExecutionBroker + ActionGate (Handle-Sealed Artifact Delivery)",
+    "Permissive Delegation Routing (Independent Local Synthesis Fallback)",
+    "Local llama-server Workstation Auto-Resolution (E:\\AI_Runtimes\\llama.cpp-spark)",
+    "Local GGUF Models Workstation Auto-Resolution (E:\\AI_Models\\GGUF)",
+    "AppContainer Python Executable Resolution (python.exe instead of AstraRun.exe GUI)",
+    "Self-Contained Sample Input and JSON Deliverable Synthesis Enforcement"
+  ],
+  "evidence_class": "FROZEN_PRODUCT_OBSERVED",
+  "verdict": "PASS"
+}

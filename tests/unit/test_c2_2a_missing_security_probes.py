@@ -67,7 +67,7 @@ def sandbox_manager():
 def test_process_authority_terminate_denial(sandbox_manager):
     """Untrusted AppContainer worker must be denied ability to terminate host processes."""
     # Launch a sacrificial host process
-    helper = subprocess.Popen([sys.executable, "-c", "import time; time.sleep(30)"])
+    helper = subprocess.Popen([sys.executable, "-c", "import time; time.sleep(120)"])
     try:
         assert helper.poll() is None, "Helper process failed to start"
         code = f"""

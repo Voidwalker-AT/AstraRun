@@ -1,0 +1,7 @@
+{
+  "auditor": "MiMo",
+  "tokens_searched": ["F0_25F6", "F0-25F6", "eee9900ab4e054bb", "BLIND-", "AstraRun-Anti", "E:\\Workspace"],
+  "src_hits": 0,
+  "semantic": "no benchmark-conditioned branches found in src/",
+  "verdict": "PRODUCTION PURITY = PASS"
+}

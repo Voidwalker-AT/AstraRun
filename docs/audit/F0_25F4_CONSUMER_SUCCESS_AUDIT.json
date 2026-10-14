@@ -1,0 +1,49 @@
+{
+  "phase": "F0-25F.4",
+  "component": "ConsumerSuccessAudit",
+  "timestamp": 1791834460.0,
+  "summary": {
+    "flaw": "Consumers previously treated the mere presence of a GOAL_COMPLETED event record as sufficient proof of success without checking terminal status or gate approval.",
+    "remedy": "Enforced strict semantic checks across all evaluators and telemetry consumers.",
+    "total_consumers_audited": 6,
+    "vulnerable_consumers_repaired": 6
+  },
+  "audited_consumers": [
+    {
+      "consumer": "scripts/verify_f0_25f3_physical_acceptance.py",
+      "legacy_check": "verdict = 'PASS' if (launcher_attestation['is_verified'] and completed_event and presented_event) else 'FAIL'",
+      "repaired_check": "Requires completed_event['data']['status'] == 'SUCCESS' AND completed_event['data']['completed'] is True AND gate approval verdict APPROVED",
+      "status": "REPAIRED"
+    },
+    {
+      "consumer": "scripts/verify_causal_provenance.py",
+      "legacy_check": "event_type in ('GOAL_COMPLETED', 'RUN_TERMINATED')",
+      "repaired_check": "Distinguishes terminal success (GOAL_COMPLETED with completed=True) from failure (RUN_TERMINATED)",
+      "status": "REPAIRED"
+    },
+    {
+      "consumer": "src/astrarun/app.py",
+      "legacy_check": "telem.end_run(status='SUCCESS' if res.success else 'FAILED')",
+      "repaired_check": "Passes res.task.contract and validates AuthoritativeCompletionGate before emitting GOAL_COMPLETED",
+      "status": "REPAIRED"
+    },
+    {
+      "consumer": "src/astrarun/core/telemetry.py:emit",
+      "legacy_check": "Emitted GOAL_COMPLETED unconditionally for any status",
+      "repaired_check": "Drops emission if status != 'SUCCESS' or gate rejects; delegates to RUN_TERMINATED",
+      "status": "REPAIRED"
+    },
+    {
+      "consumer": "src/astrarun/core/telemetry.py:end_run",
+      "legacy_check": "Emitted GOAL_COMPLETED for failed tasks if status was passed as string",
+      "repaired_check": "Strictly gates status=='SUCCESS' and emits RUN_TERMINATED on rejection",
+      "status": "REPAIRED"
+    },
+    {
+      "consumer": "tests/acceptance/",
+      "legacy_check": "Counted count(GOAL_COMPLETED) > 0",
+      "repaired_check": "Requires data.status == 'SUCCESS' and data.completed == True",
+      "status": "REPAIRED"
+    }
+  ]
+}

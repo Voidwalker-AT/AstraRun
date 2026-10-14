@@ -1,0 +1,47 @@
+{
+  "phase": "F0-25B",
+  "title": "Pre-Flight Freeze & Verification",
+  "timestamp": 1791707684.0856605,
+  "git": {
+    "branch": "agent/anti-f0-24a1",
+    "head": "bd287eba38e6743565fdf6da21cb629023573c6b",
+    "status_entry_count": 98,
+    "status_summary": [
+      "M docs/audit/C1_8_GENERIC_REPAIR_EVIDENCE.json",
+      "M docs/audit/C1_8_POST_FREEZE_ROUTING_EVIDENCE.json",
+      "M docs/audit/F0_24A1_PRE_FIX_REPRODUCTION.json",
+      "M docs/audit/F0_24A_BUILD_INSTALL.json",
+      "M docs/audit/F0_24A_EVIDENCE_CLOSURE.json",
+      "M docs/audit/F0_24A_FROZEN_PRODUCT_RESULTS.json",
+      "M docs/audit/F0_24A_HARNESS_FREEZE.json",
+      "M docs/audit/F0_24A_HOLDOUT_MANIFEST.json",
+      "M docs/audit/F0_24A_PARITY_VERIFICATION.json",
+      "M docs/audit/F0_24A_RESOURCE_RESIDUE.json",
+      "M docs/audit/F0_24A_SOURCE_FREEZE.json",
+      "M scripts/generate_f0_24a_freezes.py",
+      "M scripts/run_f0_24a_frozen_holdout.py",
+      "M scripts/verify_f0_24a_evidence_closure.py",
+      "M scripts/verify_f0_24a_parity.py"
+    ]
+  },
+  "hashes": {
+    "production_tree_sha256": "0f6dd98a503fdb99a768fa6d3b5ecf88385b475cff48d6e2151dd4bf502f74f1",
+    "model_path": "E:\\AI_Models\\GGUF\\qwen2.5-coder-1.5b-instruct-q4_k_m.gguf",
+    "model_id": "qwen2.5-coder-1.5b-instruct-q4_k_m",
+    "model_sha256": "cc324af070c2ecbfd324a30884d2f951a7ff756aba85cb811a6ec436933bb046",
+    "model_size_bytes": 1117320768
+  },
+  "schemas": {
+    "hermes_schema_version": "1.0.0-f025",
+    "computer_use_architecture": "F0-25A.3R",
+    "causal_resource_model": "CausalProvenance + Ownership-Relative Restoration"
+  },
+  "regression_results": {
+    "command": "E:\\Workspace\\Agents\\AstraRun-Anti\\.venv\\Scripts\\pytest tests/hermes/test_f0_25a3_causal_mutations.py tests/hermes/test_hermes_experiential_memory.py tests/eval_v1/test_f0_24a1_adversarial_oracle.py tests/eval_v1/test_f0_24a1_oracle_mutations.py -q",
+    "exit_code": 0,
+    "passed": true,
+    "duration_seconds": 2.68,
+    "output": "============================= test session starts =============================\nplatform win32 -- Python 3.13.0, pytest-9.1.1, pluggy-1.6.0\nrootdir: E:\\Workspace\\Agents\\AstraRun-Anti\nconfigfile: pyproject.toml\nplugins: anyio-4.15.1\ncollected 59 items\n\ntests\\hermes\\test_f0_25a3_causal_mutations.py .........                  [ 15%]\ntests\\hermes\\test_hermes_experiential_memory.py .......                  [ 27%]\ntests\\eval_v1\\test_f0_24a1_adversarial_oracle.py ....................... [ 66%]\n.............                                                            [ 88%]\ntests\\eval_v1\\test_f0_24a1_oracle_mutations.py .......                   [100%]\n\n============================= 59 passed in 2.01s =============================="
+  },
+  "preflight_status": "PASS"
+}

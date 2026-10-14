@@ -60,7 +60,6 @@ def force_foreground_activation(hwnd: int) -> bool:
             user32.ShowWindow(hwnd, SW_SHOW)
 
         user32.SetWindowPos(hwnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE | SWP_SHOWWINDOW)
-        user32.SetWindowPos(hwnd, HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE | SWP_SHOWWINDOW)
 
         cur_thread = kernel32.GetCurrentThreadId()
         fg_hwnd = user32.GetForegroundWindow()
@@ -228,6 +227,18 @@ class LauncherPresentationController(QObject):
             logger.debug(msg)
             if getattr(self.launcher, "launcher_debug", False):
                 print(msg, flush=True)
+
+            if delay_ms >= 400:
+                try:
+                    import os
+                    from astrarun.ui.attestation import attest_window_visibility
+                    attestation = attest_window_visibility(win_id, expected_pid=os.getpid())
+                    if attestation["is_visible"]:
+                        logger.info("[LAUNCHER_VISIBLE] hwnd=%d facts=%s", win_id, attestation["facts"])
+                    else:
+                        logger.warning("[LAUNCHER_VISIBILITY_FAILED] hwnd=%d reasons=%s", win_id, attestation["failure_reasons"])
+                except Exception as att_err:
+                    logger.debug("Attestation error: %s", att_err)
         except Exception as e:
             logger.debug("Probe error at +%dms: %s", delay_ms, e)
 

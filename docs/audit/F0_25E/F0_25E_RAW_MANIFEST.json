@@ -1,0 +1,109 @@
+{
+  "milestone": "F0_25E",
+  "title": "AstraRun F0-25E Frozen Raw Evidence Manifest",
+  "frozen_at": 1791731770.762412,
+  "total_raw_artifacts": 20,
+  "artifacts": {
+    "raw/broker_events.jsonl": {
+      "sha256": "e4a218bd319d9e5590158485c042edf3703a2b68feb28e350c5995483b21d750",
+      "size_bytes": 16462,
+      "filename": "broker_events.jsonl"
+    },
+    "raw/events.jsonl": {
+      "sha256": "675d902aef57847b03dbbed8963c7c1a9cdcf0eaf4d3e2526eba6519f068156a",
+      "size_bytes": 627,
+      "filename": "events.jsonl"
+    },
+    "raw/filesystem_events.jsonl": {
+      "sha256": "2fc3ac6c791d686a2b8aaa6cb80019a217b4c4cf8c40090c752e49393e8627a2",
+      "size_bytes": 2898,
+      "filename": "filesystem_events.jsonl"
+    },
+    "raw/model_events.jsonl": {
+      "sha256": "39160735e6b4644d3a7201f0aba1c39127b03c89eb0a4b3e58adc2693eb60a6b",
+      "size_bytes": 2594,
+      "filename": "model_events.jsonl"
+    },
+    "raw/world_frames.jsonl": {
+      "sha256": "15bb1804062c5f5859b348eae69af4421b22505d5073d76d898c1f25851a1db1",
+      "size_bytes": 4345,
+      "filename": "world_frames.jsonl"
+    },
+    "raw/screenshots/frame_0000.png": {
+      "sha256": "e45d4f289469c2cff600616f926e411a5e63f54787d924bace19ae46019cbab0",
+      "size_bytes": 234795,
+      "filename": "frame_0000.png"
+    },
+    "raw/screenshots/frame_0001.png": {
+      "sha256": "c8ada41507f4c86abcfcc376000f9b9682ac3922c3d7ac7227b408a6c2c21672",
+      "size_bytes": 235623,
+      "filename": "frame_0001.png"
+    },
+    "raw/screenshots/frame_0002.png": {
+      "sha256": "d8e6f27c72d6c6e8fb2ca76b4f78c69e425e85cbd5a33a126d6dac60a04d9d0d",
+      "size_bytes": 239189,
+      "filename": "frame_0002.png"
+    },
+    "raw/screenshots/frame_0003.png": {
+      "sha256": "5d6106cc067018c856f62bd22f2ba91f2ec7797aea6d518cedde0ea1e16b03dc",
+      "size_bytes": 239210,
+      "filename": "frame_0003.png"
+    },
+    "raw/screenshots/frame_0004.png": {
+      "sha256": "964875468fa6481346737b185ca903fa5aeac13aefe102fa87f37d654c48462c",
+      "size_bytes": 238754,
+      "filename": "frame_0004.png"
+    },
+    "raw/screenshots/frame_0005.png": {
+      "sha256": "ebc605da42e910571a14af1117eb3d9e2a55d6673066c1e413e7f5478624dd2c",
+      "size_bytes": 238676,
+      "filename": "frame_0005.png"
+    },
+    "raw/screenshots/frame_0006.png": {
+      "sha256": "3827001dde97a9d5ca5938ca94ea5ec40d8f4375cdc91fcfedf0bd3beefebd5e",
+      "size_bytes": 238708,
+      "filename": "frame_0006.png"
+    },
+    "raw/screenshots/frame_0007.png": {
+      "sha256": "2f44b0298920b1f0aba446d79c3d64d1bdca97cc98bf17517fe0531c506b348f",
+      "size_bytes": 238713,
+      "filename": "frame_0007.png"
+    },
+    "raw/screenshots/frame_0008.png": {
+      "sha256": "d247e8d3305ba72ccab40d0688ac05e8cf1b86c612bbe31c481cedf53255a4b7",
+      "size_bytes": 238645,
+      "filename": "frame_0008.png"
+    },
+    "raw/screenshots/frame_0009.png": {
+      "sha256": "dde93da8e7055a70a4968df52abb864412a5c0a5e3ffbac67b30bc1b8810a2be",
+      "size_bytes": 238758,
+      "filename": "frame_0009.png"
+    },
+    "raw/screenshots/frame_0010.png": {
+      "sha256": "9cd74854bfdc0f14a23fce1734cb7c26a9f194f6fb1fd2b0fee559f85b013e87",
+      "size_bytes": 238879,
+      "filename": "frame_0010.png"
+    },
+    "raw/screenshots/frame_0011.png": {
+      "sha256": "d6b372ad4e17beb2b4adbb9f6e3d6bdc850c4731c948adad9416656f2208ba96",
+      "size_bytes": 238775,
+      "filename": "frame_0011.png"
+    },
+    "raw/screenshots/frame_0012.png": {
+      "sha256": "fc6fb3beac1b68b0074d09561f8797b65e8422aa5445208d61dcbaf6a7b81878",
+      "size_bytes": 241585,
+      "filename": "frame_0012.png"
+    },
+    "raw/screenshots/frame_0013.png": {
+      "sha256": "a1f24a92de49aa598531a9a86864c5bf88b8583c63cac19b3addbbeddb3ac3c2",
+      "size_bytes": 240782,
+      "filename": "frame_0013.png"
+    },
+    "raw/screenshots/frame_0014.png": {
+      "sha256": "9b19e7b8765d66ad4cc7976a9732793ec91d797a87fc2f44425c5ed5420a8e03",
+      "size_bytes": 240320,
+      "filename": "frame_0014.png"
+    }
+  },
+  "status": "CRYPTOGRAPHICALLY_FROZEN"
+}

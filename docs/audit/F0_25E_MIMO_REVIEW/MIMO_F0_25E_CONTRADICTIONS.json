@@ -1,0 +1,130 @@
+{
+  "milestone": "F0_25E",
+  "title": "MIMO Master Contradiction Register — F0-25E",
+  "auditor": "MiMo",
+  "contradictions": [
+    {
+      "id": "C1",
+      "severity": "CRITICAL",
+      "title": "Report claims launcher visibly rendered while its own matrix says 0/15",
+      "claim": "F0_25E_FINAL_REPORT.md section 1 item 6 (also evaluator L589 static string): '[DERIVED_FROM_FROZEN_EVIDENCE] UI presentation stacking was fixed: AstraRun launcher is HWND_TOPMOST, rendering visibly on the desktop.'",
+      "contradicted_by": "Same report section 5 table: all 15 frames Astra Launcher Visible=False; ASTRA_LAUNCHER_UI=FAIL; USER_OBSERVABILITY=FAIL. MIMO pixel inspection of all 15 PNGs: no Astra window anywhere. world_frames astra_windows=[] 15/15; window_count=14 unchanged from baseline.",
+      "classification": "CONTRADICTED",
+      "note": "The claim is a canned string stamped [DERIVED_FROM_FROZEN_EVIDENCE] though nothing derives from evidence; source DOES implement WindowStaysOnTopHint (launcher.py:216-218) and SetWindowPos HWND_TOPMOST (presentation.py:62) - implementation exists, observable effect does not."
+    },
+    {
+      "id": "C2",
+      "severity": "CRITICAL",
+      "title": "Astra self-log says launcher visible; screen and enumeration say absent",
+      "claim": "Production log (corroborating evidence): launcher presented at (448,48) 20:45:43, state=INTERACTIVE vis=True act=True focus=True through 20:45:45; IPC SHOW_MAIN_UI/POPULATE/SUBMIT all received.",
+      "contradicted_by": "frame_0001 (20:45:44.8) and frame_0002 (20:45:45.9) pixels show zero Astra UI including at (448,48); IsWindowVisible-gated enumeration never lists an Astra window; window_count stays 14.",
+      "classification": "CONTRADICTED (self-report vs two independent channels)",
+      "root_cause": "UNKNOWN - candidate mechanisms (Qt window never mapped to a visible Win32 HWND despite Qt-level state; immediate unmapping not logged; capture/enumeration desktop mismatch) cannot be distinguished post-hoc. Not minimized/transparent/off-screen evidence either way."
+    },
+    {
+      "id": "C3",
+      "severity": "CRITICAL",
+      "title": "Hardcoded PASS survives in the 'zero hardcoded PASS' engine",
+      "claim": "f0_25e_evaluator.py docstring/positioning: acceptance engine is pure evidence predicates; report stamps every row DERIVED_FROM_FROZEN_EVIDENCE (L602).",
+      "contradicted_by": "PERSONALLY VERIFIED: L430-437 emits literal RESOURCE_RESTORATION PASS with literal orphaned_processes:0 / target_dir_clean_state:true; L506-517 generate_resource_delta_report returns literal zeros + PASS; L367-373 hardcoded NOT_APPLICABLE rationales; observer L502 hardcoded capability-audit verdict; observer L554 literal windows_spawned_by_observer:0.",
+      "classification": "CONTRADICTED (same defect class F0-25E claimed to eliminate, relocated)"
+    },
+    {
+      "id": "C4",
+      "severity": "MAJOR",
+      "title": "PROGRESS_UI = PARTIAL on exactly zero evidence",
+      "claim": "Matrix: PROGRESS_UI PARTIAL, predicate 'hud_frames > 0 or progressive_launcher_frames > 1'.",
+      "contradicted_by": "Its own evidence block: hud_frames_count 0, launcher_frames_count 0. Code path: 'PASS if cond else PARTIAL' (L345-346) - the PARTIAL is an else-default, not a graded observation. Pixels: 0/15 frames show any Astra progress UI.",
+      "classification": "CONTRADICTED (should be FAIL per directive 14)"
+    },
+    {
+      "id": "C5",
+      "severity": "MAJOR",
+      "title": "OUTPUT_PRESENTATION = PASS without any presentation",
+      "claim": "Matrix: OUTPUT_PRESENTATION PASS, 'deliverables present and accessible'.",
+      "contradicted_by": "The dimension is about showing the user the result ('show me the useful result'). Evaluator comment admits explorer/viewer check never implemented (L393); no reveal/explorer/viewer/summary activity in production log; 0/15 frames show result UI; Anti's own causal stage 7 relabels presentation as oracle verification.",
+      "classification": "CONTRADICTED (file existence masquerading as presentation)"
+    },
+    {
+      "id": "C6",
+      "severity": "MAJOR",
+      "title": "'32 broker authorization events / 11 model events' imply this run; they span hours of prior runs",
+      "claim": "CAUSAL_PROVENANCE PASS evidence {model_events_count: 11, broker_events_count: 32}; causal report stage 3/4 'Harvested 11/32 ... events'.",
+      "contradicted_by": "Inner log timestamps: model 18:21-20:46 (1/11 in window); broker 18:09-20:46 (5/32 in window) across >=7 task IDs incl. MODEL_UNAVAILABLE failures. Outer timestamps all = harvest instant. Files are grep excerpts, not per-event captures; no request/response hashes.",
+      "classification": "CONTRADICTED as run-provenance; counts are technically accurate as file line counts"
+    },
+    {
+      "id": "C7",
+      "severity": "MAJOR",
+      "title": "'Pure function over immutable frozen evidence' is false",
+      "claim": "Report section 1 item 4 and evaluator docstring L8.",
+      "contradicted_by": "GOAL_CORRECTNESS/HOST_COMPUTATION/OUTPUT_PRESENTATION/RESULT_CORRECTNESS/SEMANTIC_QUALITY (and resource path) read the LIVE E:\\AstraDogfood\\word_frequency directory (evaluator L249-251 etc.), which is not in F0_25E_RAW_MANIFEST.json; F0_25E_NEGATIVE_CONTROL.json and F0_25E_OBSERVER_CAPABILITY_AUDIT.json are outside raw/ and unfrozen; manifest does not detect extra files added to raw/ after freeze (only listed files re-hashed); manifest itself unhashed.",
+      "classification": "CONTRADICTED"
+    },
+    {
+      "id": "C8",
+      "severity": "MAJOR",
+      "title": "Stage hints describe events that did not appear in the frames",
+      "claim": "world_frames stage_hint: frame_0001=LAUNCHER_OPEN, frame_0002=REQUEST_POPULATED, frame_0013=DELIVERABLES_PRODUCED.",
+      "contradicted_by": "Pixel content: no launcher, no query UI, no deliverable presentation in those frames. Hints are harness-scheduled expectations, not observations.",
+      "classification": "CONTRADICTED (residual mislabeling of the F0-25D.1 family, mitigated because UI_AUDIT fields themselves are honest)"
+    },
+    {
+      "id": "C9",
+      "severity": "MAJOR",
+      "title": "Suggested-verdict aggregation ignores PARTIALs",
+      "claim": "Suggested verdict PARTIAL presented as computed from the matrix.",
+      "contradicted_by": "L563: 'PASS if FAIL==0 and UNVERIFIED==0 else PARTIAL' - any number of PARTIAL dimensions still yields PASS. This run has FAILs so it landed on PARTIAL, but the rule is vacuous for PARTIAL-heavy runs. PERSONALLY VERIFIED.",
+      "classification": "DEFECT (latent; did not change this run's suggested verdict)"
+    },
+    {
+      "id": "C10",
+      "severity": "MODERATE",
+      "title": "Predicate text disagrees with predicate code",
+      "claim": "Matrix predicates: D6 'frames_with_astra_launcher > 0 and launcher_topmost'; D8 'len(screenshots) >= 3 and world_frames correlate'.",
+      "contradicted_by": "Code never checks topmost (L331); code never computes correlation (L358). PERSONALLY VERIFIED.",
+      "classification": "CONTRADICTED (advertised rigor not implemented; D6 outcome unaffected, D8 outcome overstated)"
+    },
+    {
+      "id": "C11",
+      "severity": "MODERATE",
+      "title": "Negative control evidence not frozen and partly literal",
+      "claim": "F0_25E_NEGATIVE_CONTROL.json verdict PASS; observer_incapacity_proven true; capability audit FAIL_CLOSED_STRUCTURALLY_ENFORCED.",
+      "contradicted_by": "NC JSON outside manifest; NC raw frames/events destroyed by dogfood raw-wipe; windows_spawned_by_observer literal; capability audit is a hand-written dict (L502); NC never submits an equivalent request and never challenges the guard.",
+      "classification": "UNVERIFIED (assertions presented as proof)"
+    },
+    {
+      "id": "C12",
+      "severity": "MODERATE",
+      "title": "Report narrative marks canned prose as DERIVED_FROM_FROZEN_EVIDENCE",
+      "claim": "L602 stamps EVERY matrix row (including hardcoded RESOURCE_RESTORATION and hardcoded N/A rows) with evidence class DERIVED_FROM_FROZEN_EVIDENCE; L583-589 marks static redress claims similarly.",
+      "contradicted_by": "Source inspection of the literal/canned generators.",
+      "classification": "CONTRADICTED (evidence-class laundering)"
+    },
+    {
+      "id": "C13",
+      "severity": "MODERATE",
+      "title": "Report claims task completed while retry outcome is undocumented and task IDs never reconcile",
+      "claim": "Causal chain stage 6/7 imply completion; suggested verdict assumes finished run.",
+      "contradicted_by": "Production log: step_1 verification FAILED at 20:46:04 -> retry dispatch -> no further synthesis/delivery lines before freeze; task_f0_25e vs task_99dc59e6 vs task_30b5a40d never co-linked in frozen evidence. Deliverables exist regardless (produced by first attempt).",
+      "classification": "PARTIAL: artifacts proven; completion narrative and ID linkage UNVERIFIED in frozen package"
+    },
+    {
+      "id": "C14",
+      "severity": "NOTE",
+      "title": "Frozen manifest integrity itself verified",
+      "claim": "CRYPTOGRAPHICALLY_FROZEN status.",
+      "mimo_check": "All 20 SHA-256 hashes and sizes independently recomputed: 20/20 match. No post-freeze tampering.",
+      "classification": "CONFIRMED (no contradiction - recorded for completeness)"
+    },
+    {
+      "id": "C15",
+      "severity": "NOTE",
+      "title": "No build identity recorded in the F0-25E package",
+      "claim": "Report does not state which binary was tested.",
+      "mimo_check": "Independent hashing: dist/build/installed AstraRun.exe all identical SHA-256 245a205ea0222ec2f9f761d9376baf635af32a3997f49c8eeb7ab7b213e2c563, 12,057,208 B, 2026-10-11 20:44:53 (rebuilt ~1 min before run; differs from F0-25D.1's 9b1b5add...). Observer source launches CANONICAL_EXE = installed path. Correct binary used, but the PACKAGE omitted identity evidence.",
+      "classification": "GAP (externally closed by MIMO)"
+    }
+  ],
+  "summary": {"critical": 3, "major": 6, "moderate": 4, "note": 2, "total": 15}
+}

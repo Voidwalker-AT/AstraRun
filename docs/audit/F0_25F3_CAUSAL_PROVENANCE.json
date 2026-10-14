@@ -1,0 +1,34 @@
+{
+  "phase": "F0-25F.3",
+  "stage": "STAGE 4 \u2014 PRODUCTION-ONLY CAUSAL PROVENANCE",
+  "verdict": "PASS",
+  "all_checks_passed": true,
+  "tests": {
+    "T1_harness_generated_rejected": {
+      "description": "Evaluator must return FAIL when events are harness-generated",
+      "verdict": "FAIL",
+      "passed": true
+    },
+    "T2_broker_stub_rejected": {
+      "description": "Evaluator must return FAIL when broker was stubbed via executor_override",
+      "verdict": "FAIL",
+      "passed": true
+    },
+    "T3_genuine_production_accepted": {
+      "description": "Evaluator must return PASS when real production components emit genuine events",
+      "verdict": "PASS",
+      "passed": true
+    }
+  },
+  "authorized_producers": [
+    "AstraApplication",
+    "GoalPlanner",
+    "ModelService",
+    "QwenCognitionService",
+    "ExecutionBroker",
+    "SandboxManager",
+    "ResultPresentation",
+    "GoalVerifier",
+    "AuthoritativeCompletionGate"
+  ]
+}

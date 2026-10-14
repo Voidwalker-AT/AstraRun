@@ -1,0 +1,91 @@
+{
+  "phase": "F0-25C",
+  "timestamp": 1791717710.6405292,
+  "workstation_os": "win32",
+  "editors": {
+    "VS_CODE": {
+      "name": "Visual Studio Code",
+      "type": "FULL_IDE",
+      "path": "C:\\Users\\hp\\AppData\\Local\\Programs\\Microsoft VS Code\\bin\\code.CMD",
+      "available": true,
+      "profiles_supported": true
+    },
+    "NOTEPAD_PLUS_PLUS": {
+      "name": "Notepad++",
+      "type": "ADVANCED_EDITOR",
+      "path": "C:\\Program Files\\Notepad++\\notepad++.exe",
+      "available": true,
+      "scintilla_host": true
+    },
+    "NOTEPAD": {
+      "name": "Windows Notepad",
+      "type": "MINIMAL_EDITOR",
+      "path": "C:\\windows\\system32\\notepad.EXE",
+      "available": true,
+      "scintilla_host": false
+    },
+    "DIRECT_FILESYSTEM": {
+      "name": "Direct File I/O Capability",
+      "type": "DIRECT_IO",
+      "path": "builtin",
+      "available": true,
+      "zero_gui_overhead": true
+    }
+  },
+  "toolchains": {
+    "gcc": {
+      "path": "C:\\msys64\\ucrt64\\bin\\gcc.EXE",
+      "version": "gcc.EXE (Rev3, Built by MSYS2 project) 14.2.0"
+    },
+    "g++": {
+      "path": "C:\\msys64\\ucrt64\\bin\\g++.EXE",
+      "version": "g++.EXE (Rev3, Built by MSYS2 project) 14.2.0"
+    },
+    "python": {
+      "path": "C:\\Users\\hp\\AppData\\Local\\Programs\\Python\\Python313\\python.EXE",
+      "version": "Python 3.13.0"
+    },
+    "node": {
+      "path": "C:\\Program Files\\nodejs\\node.EXE",
+      "version": "v24.15.0"
+    },
+    "javac": {
+      "path": "C:\\Program Files\\Eclipse Adoptium\\jdk-21.0.4.7-hotspot\\bin\\javac.EXE",
+      "version": "javac 21.0.4"
+    },
+    "java": {
+      "path": "C:\\Program Files\\Eclipse Adoptium\\jdk-21.0.4.7-hotspot\\bin\\java.EXE",
+      "version": "openjdk version \"21.0.4\" 2024-07-16 LTS"
+    },
+    "venv_python": {
+      "path": "E:\\Workspace\\Agents\\AstraRun-Anti\\.venv\\Scripts\\python.exe",
+      "version": "3.13.0 (tags/v3.13.0:60403a5, Oct  7 2024, 09:38:07) [MSC v.1941 64 bit (AMD64)]",
+      "is_active_runtime": true
+    }
+  },
+  "terminals": {
+    "POWERSHELL": {
+      "path": "C:\\Users\\hp\\scoop\\apps\\pwsh\\current\\pwsh.EXE",
+      "available": true
+    },
+    "CMD": {
+      "path": "C:\\windows\\system32\\cmd.EXE",
+      "available": true
+    }
+  },
+  "browsers": {
+    "MICROSOFT_EDGE": {
+      "path": "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe",
+      "available": true
+    },
+    "GOOGLE_CHROME": {
+      "path": "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
+      "available": true
+    }
+  },
+  "local_reasoning_server": {
+    "endpoint": "http://127.0.0.1:8089",
+    "online": true,
+    "model": "E:\\AI_Models\\GGUF\\qwen2.5-coder-1.5b-instruct-q4_k_m.gguf"
+  }
+}

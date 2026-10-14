@@ -172,21 +172,20 @@ def test_task_watch_set(tmp_path):
     p.write_text("watched content")
 
     inv_file = TaskInvariant(type=InvariantType.FILE_EXISTS, target=str(p))
-    inv_proc = TaskInvariant(type=InvariantType.PROCESS_RUNNING, target="notepad.exe")
+    inv_proc = TaskInvariant(type=InvariantType.PROCESS_RUNNING, target="nonexistent_proc_test_watch_9999.exe")
 
     watch_set.add_invariant(inv_file)
     watch_set.add_invariant(inv_proc)
 
     assert p in watch_set.watched_files
-    assert "notepad.exe" in watch_set.watched_processes
+    assert "nonexistent_proc_test_watch_9999.exe" in watch_set.watched_processes
 
     all_checks = watch_set.check_all()
     assert len(all_checks) == 2
 
     # Broken invariants filter
     broken = watch_set.get_broken_invariants()
-    # At least notepad is likely not running or broken
-    assert any(b[0].target == "notepad.exe" for b in broken)
+    assert any(b[0].target == "nonexistent_proc_test_watch_9999.exe" for b in broken)
 
 
 # =============================================================================

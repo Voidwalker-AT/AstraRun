@@ -1,0 +1,12 @@
+{
+  "phase": "F0-25B",
+  "title": "Contradiction Detection & Adaptive Recovery Results",
+  "task_id": "f025b_adapt_1791711843761",
+  "initial_contradiction": "Modal Find dialog active instead of editor surface",
+  "contradiction_detected_by_model": true,
+  "recovery_action_executed": "close_dialog_and_refocus_editor",
+  "post_recovery_verified": true,
+  "recovery_success": true,
+  "task_resource_cleaned": true,
+  "status": "PASS"
+}

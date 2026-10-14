@@ -1,0 +1,359 @@
+{
+  "phase": "F0-25F.6",
+  "burned_holdout_source": "E:\\Workspace\\Agents\\AstraRun-Anti\\docs\\audit\\F0_25F5_ROUTING_BLIND_RESULTS.json",
+  "burned_manifest_sha256": "35108d3f7e17cbd0a16222f98548e99d1c4831472fa81cbcb0bfcd09e304910a",
+  "total_prompts": 500,
+  "correct_predictions": 457,
+  "total_failures": 43,
+  "accuracy": 0.914,
+  "macro_f1": 0.9134658034387074,
+  "failure_transitions": [
+    {
+      "from": "KNOWN_CAPABILITY",
+      "to": "CLARIFICATION_REQUIRED",
+      "count": 21
+    },
+    {
+      "from": "COMPOSITE",
+      "to": "KNOWN_CAPABILITY",
+      "count": 8
+    },
+    {
+      "from": "CONVERSATIONAL",
+      "to": "CLARIFICATION_REQUIRED",
+      "count": 6
+    },
+    {
+      "from": "KNOWN_CAPABILITY",
+      "to": "CONVERSATIONAL",
+      "count": 5
+    },
+    {
+      "from": "DYNAMIC_COMPUTATION",
+      "to": "COMPOSITE",
+      "count": 3
+    }
+  ],
+  "category_summary": {
+    "KNOWN_CAPABILITY_GENERIC_UNDER_ROUTED": 11,
+    "COMPOSITE_TO_KNOWN_CAPABILITY": 8,
+    "CONVERSATIONAL_FALLBACK_TO_CLARIFICATION": 6,
+    "KNOWN_CAPABILITY_TO_CONVERSATIONAL": 5,
+    "DYNAMIC_COMPUTATION_TO_COMPOSITE": 3,
+    "KNOWN_CAPABILITY_SCREEN_CAPTURE_UNDER_ROUTED": 3,
+    "KNOWN_CAPABILITY_WINDOW_LISTING_UNDER_ROUTED": 2,
+    "KNOWN_CAPABILITY_WIFI_STATUS_UNDER_ROUTED": 2,
+    "KNOWN_CAPABILITY_SYSTEM_INFO_UNDER_ROUTED": 1,
+    "KNOWN_CAPABILITY_BATTERY_STATUS_UNDER_ROUTED": 1,
+    "KNOWN_CAPABILITY_VOLUME_AUDIO_UNDER_ROUTED": 1
+  },
+  "root_cause_diagnosis": {
+    "primary_defect": "Excessive conservatism in ContextSufficiencyEngine routing fully-specified known capabilities to CLARIFICATION_REQUIRED when lacking explicit file/window targets (e.g., 'show open windows', 'capture screenshot', 'battery report'). The engine required explicit targets for commands that are zero-argument or system-wide observations.",
+    "secondary_defect": "Composite workflows with natural connective structures (e.g., 'open X and check Y') were sometimes treated as ungrounded or ambiguous, dropping composite recall to 92.0%.",
+    "safety_profile": "Safety remained immaculate: 0 destructive false executions, 0 ungrounded executions. All errors were safe-side fallbacks (false clarification), not dangerous false action.",
+    "remedy_architecture": "Stage 1 must ground ContextSufficiency against the authoritative CapabilityRegistry: if a capability requires 0 arguments (or all arguments have valid defaults/system context), it must be recognized as SUFFICIENTLY_SPECIFIED without guessing."
+  },
+  "categorized_failures": [
+    {
+      "prompt": "parse postgresql slow query log and aggregate mean execution duration by query pattern into pg_slow_summary.json",
+      "ground_truth": "DYNAMIC_COMPUTATION",
+      "predicted": "COMPOSITE",
+      "assigned_category": "DYNAMIC_COMPUTATION_TO_COMPOSITE",
+      "engine_reason": "composite_dag_workflow"
+    },
+    {
+      "prompt": "parse payment processor settlement batch logs and aggregate failure codes into settlement_breakdown.json",
+      "ground_truth": "DYNAMIC_COMPUTATION",
+      "predicted": "COMPOSITE",
+      "assigned_category": "DYNAMIC_COMPUTATION_TO_COMPOSITE",
+      "engine_reason": "composite_dag_workflow"
+    },
+    {
+      "prompt": "extract DNS query logs and aggregate query count by top-level domain into tld_counts.csv",
+      "ground_truth": "DYNAMIC_COMPUTATION",
+      "predicted": "COMPOSITE",
+      "assigned_category": "DYNAMIC_COMPUTATION_TO_COMPOSITE",
+      "engine_reason": "composite_dag_workflow"
+    },
+    {
+      "prompt": "capture a screenshot right now",
+      "ground_truth": "KNOWN_CAPABILITY",
+      "predicted": "CLARIFICATION_REQUIRED",
+      "assigned_category": "KNOWN_CAPABILITY_SCREEN_CAPTURE_UNDER_ROUTED",
+      "engine_reason": "needs_clarification"
+    },
+    {
+      "prompt": "take a screenshot",
+      "ground_truth": "KNOWN_CAPABILITY",
+      "predicted": "CLARIFICATION_REQUIRED",
+      "assigned_category": "KNOWN_CAPABILITY_SCREEN_CAPTURE_UNDER_ROUTED",
+      "engine_reason": "needs_clarification"
+    },
+    {
+      "prompt": "capture the screen",
+      "ground_truth": "KNOWN_CAPABILITY",
+      "predicted": "CLARIFICATION_REQUIRED",
+      "assigned_category": "KNOWN_CAPABILITY_SCREEN_CAPTURE_UNDER_ROUTED",
+      "engine_reason": "needs_clarification"
+    },
+    {
+      "prompt": "show computer hostname and OS version",
+      "ground_truth": "KNOWN_CAPABILITY",
+      "predicted": "CLARIFICATION_REQUIRED",
+      "assigned_category": "KNOWN_CAPABILITY_SYSTEM_INFO_UNDER_ROUTED",
+      "engine_reason": "needs_clarification"
+    },
+    {
+      "prompt": "display system hardware summary",
+      "ground_truth": "KNOWN_CAPABILITY",
+      "predicted": "CLARIFICATION_REQUIRED",
+      "assigned_category": "KNOWN_CAPABILITY_GENERIC_UNDER_ROUTED",
+      "engine_reason": "needs_clarification"
+    },
+    {
+      "prompt": "what processes are currently running?",
+      "ground_truth": "KNOWN_CAPABILITY",
+      "predicted": "CONVERSATIONAL",
+      "assigned_category": "KNOWN_CAPABILITY_TO_CONVERSATIONAL",
+      "engine_reason": "conversational_dialogue"
+    },
+    {
+      "prompt": "show open windows",
+      "ground_truth": "KNOWN_CAPABILITY",
+      "predicted": "CLARIFICATION_REQUIRED",
+      "assigned_category": "KNOWN_CAPABILITY_WINDOW_LISTING_UNDER_ROUTED",
+      "engine_reason": "needs_clarification"
+    },
+    {
+      "prompt": "is notepad currently running?",
+      "ground_truth": "KNOWN_CAPABILITY",
+      "predicted": "CONVERSATIONAL",
+      "assigned_category": "KNOWN_CAPABILITY_TO_CONVERSATIONAL",
+      "engine_reason": "conversational_dialogue"
+    },
+    {
+      "prompt": "check if calculator is open",
+      "ground_truth": "KNOWN_CAPABILITY",
+      "predicted": "CLARIFICATION_REQUIRED",
+      "assigned_category": "KNOWN_CAPABILITY_GENERIC_UNDER_ROUTED",
+      "engine_reason": "needs_clarification"
+    },
+    {
+      "prompt": "is visual studio code running?",
+      "ground_truth": "KNOWN_CAPABILITY",
+      "predicted": "CONVERSATIONAL",
+      "assigned_category": "KNOWN_CAPABILITY_TO_CONVERSATIONAL",
+      "engine_reason": "conversational_dialogue"
+    },
+    {
+      "prompt": "do i have notepad installed?",
+      "ground_truth": "KNOWN_CAPABILITY",
+      "predicted": "CONVERSATIONAL",
+      "assigned_category": "KNOWN_CAPABILITY_TO_CONVERSATIONAL",
+      "engine_reason": "conversational_dialogue"
+    },
+    {
+      "prompt": "check if vivaldi is installed",
+      "ground_truth": "KNOWN_CAPABILITY",
+      "predicted": "CLARIFICATION_REQUIRED",
+      "assigned_category": "KNOWN_CAPABILITY_GENERIC_UNDER_ROUTED",
+      "engine_reason": "needs_clarification"
+    },
+    {
+      "prompt": "is edge browser installed?",
+      "ground_truth": "KNOWN_CAPABILITY",
+      "predicted": "CONVERSATIONAL",
+      "assigned_category": "KNOWN_CAPABILITY_TO_CONVERSATIONAL",
+      "engine_reason": "conversational_dialogue"
+    },
+    {
+      "prompt": "maximize this window",
+      "ground_truth": "KNOWN_CAPABILITY",
+      "predicted": "CLARIFICATION_REQUIRED",
+      "assigned_category": "KNOWN_CAPABILITY_WINDOW_LISTING_UNDER_ROUTED",
+      "engine_reason": "needs_clarification"
+    },
+    {
+      "prompt": "find file report.pdf in Documents",
+      "ground_truth": "KNOWN_CAPABILITY",
+      "predicted": "CLARIFICATION_REQUIRED",
+      "assigned_category": "KNOWN_CAPABILITY_GENERIC_UNDER_ROUTED",
+      "engine_reason": "needs_clarification"
+    },
+    {
+      "prompt": "search for config.json in user folder",
+      "ground_truth": "KNOWN_CAPABILITY",
+      "predicted": "CLARIFICATION_REQUIRED",
+      "assigned_category": "KNOWN_CAPABILITY_GENERIC_UNDER_ROUTED",
+      "engine_reason": "needs_clarification"
+    },
+    {
+      "prompt": "show desktop directory",
+      "ground_truth": "KNOWN_CAPABILITY",
+      "predicted": "CLARIFICATION_REQUIRED",
+      "assigned_category": "KNOWN_CAPABILITY_GENERIC_UNDER_ROUTED",
+      "engine_reason": "needs_clarification"
+    },
+    {
+      "prompt": "show battery report",
+      "ground_truth": "KNOWN_CAPABILITY",
+      "predicted": "CLARIFICATION_REQUIRED",
+      "assigned_category": "KNOWN_CAPABILITY_BATTERY_STATUS_UNDER_ROUTED",
+      "engine_reason": "needs_clarification"
+    },
+    {
+      "prompt": "open summary of running tasks",
+      "ground_truth": "KNOWN_CAPABILITY",
+      "predicted": "CLARIFICATION_REQUIRED",
+      "assigned_category": "KNOWN_CAPABILITY_GENERIC_UNDER_ROUTED",
+      "engine_reason": "needs_clarification"
+    },
+    {
+      "prompt": "open ascii character table",
+      "ground_truth": "KNOWN_CAPABILITY",
+      "predicted": "CLARIFICATION_REQUIRED",
+      "assigned_category": "KNOWN_CAPABILITY_GENERIC_UNDER_ROUTED",
+      "engine_reason": "needs_clarification"
+    },
+    {
+      "prompt": "inspect routing table in network connections",
+      "ground_truth": "KNOWN_CAPABILITY",
+      "predicted": "CLARIFICATION_REQUIRED",
+      "assigned_category": "KNOWN_CAPABILITY_WIFI_STATUS_UNDER_ROUTED",
+      "engine_reason": "needs_clarification"
+    },
+    {
+      "prompt": "view network adapter connections table",
+      "ground_truth": "KNOWN_CAPABILITY",
+      "predicted": "CLARIFICATION_REQUIRED",
+      "assigned_category": "KNOWN_CAPABILITY_WIFI_STATUS_UNDER_ROUTED",
+      "engine_reason": "needs_clarification"
+    },
+    {
+      "prompt": "show installed apps table in settings",
+      "ground_truth": "KNOWN_CAPABILITY",
+      "predicted": "CLARIFICATION_REQUIRED",
+      "assigned_category": "KNOWN_CAPABILITY_GENERIC_UNDER_ROUTED",
+      "engine_reason": "needs_clarification"
+    },
+    {
+      "prompt": "open bluetooth settings",
+      "ground_truth": "KNOWN_CAPABILITY",
+      "predicted": "CLARIFICATION_REQUIRED",
+      "assigned_category": "KNOWN_CAPABILITY_GENERIC_UNDER_ROUTED",
+      "engine_reason": "needs_clarification"
+    },
+    {
+      "prompt": "open display settings",
+      "ground_truth": "KNOWN_CAPABILITY",
+      "predicted": "CLARIFICATION_REQUIRED",
+      "assigned_category": "KNOWN_CAPABILITY_GENERIC_UNDER_ROUTED",
+      "engine_reason": "needs_clarification"
+    },
+    {
+      "prompt": "open sound settings",
+      "ground_truth": "KNOWN_CAPABILITY",
+      "predicted": "CLARIFICATION_REQUIRED",
+      "assigned_category": "KNOWN_CAPABILITY_VOLUME_AUDIO_UNDER_ROUTED",
+      "engine_reason": "needs_clarification"
+    },
+    {
+      "prompt": "how does a quantum computer differ from a classical Von Neumann computer?",
+      "ground_truth": "CONVERSATIONAL",
+      "predicted": "CLARIFICATION_REQUIRED",
+      "assigned_category": "CONVERSATIONAL_FALLBACK_TO_CLARIFICATION",
+      "engine_reason": "needs_clarification"
+    },
+    {
+      "prompt": "can you explain the difference between monads and functors in computer science?",
+      "ground_truth": "CONVERSATIONAL",
+      "predicted": "CLARIFICATION_REQUIRED",
+      "assigned_category": "CONVERSATIONAL_FALLBACK_TO_CLARIFICATION",
+      "engine_reason": "needs_clarification"
+    },
+    {
+      "prompt": "have a wonderful and productive afternoon!",
+      "ground_truth": "CONVERSATIONAL",
+      "predicted": "CLARIFICATION_REQUIRED",
+      "assigned_category": "CONVERSATIONAL_FALLBACK_TO_CLARIFICATION",
+      "engine_reason": "needs_clarification"
+    },
+    {
+      "prompt": "help me choose an effective database schema migration strategy with zero downtime",
+      "ground_truth": "CONVERSATIONAL",
+      "predicted": "CLARIFICATION_REQUIRED",
+      "assigned_category": "CONVERSATIONAL_FALLBACK_TO_CLARIFICATION",
+      "engine_reason": "needs_clarification"
+    },
+    {
+      "prompt": "my mouse cursor seems to lag and stutter every few minutes",
+      "ground_truth": "CONVERSATIONAL",
+      "predicted": "CLARIFICATION_REQUIRED",
+      "assigned_category": "CONVERSATIONAL_FALLBACK_TO_CLARIFICATION",
+      "engine_reason": "needs_clarification"
+    },
+    {
+      "prompt": "my bluetooth headphones keep disconnecting every time I step away",
+      "ground_truth": "CONVERSATIONAL",
+      "predicted": "CLARIFICATION_REQUIRED",
+      "assigned_category": "CONVERSATIONAL_FALLBACK_TO_CLARIFICATION",
+      "engine_reason": "needs_clarification"
+    },
+    {
+      "prompt": "open notepad and check system summary",
+      "ground_truth": "COMPOSITE",
+      "predicted": "KNOWN_CAPABILITY",
+      "assigned_category": "COMPOSITE_TO_KNOWN_CAPABILITY",
+      "engine_reason": "open_application"
+    },
+    {
+      "prompt": "open calculator then minimize window",
+      "ground_truth": "COMPOSITE",
+      "predicted": "KNOWN_CAPABILITY",
+      "assigned_category": "COMPOSITE_TO_KNOWN_CAPABILITY",
+      "engine_reason": "open_application"
+    },
+    {
+      "prompt": "open downloads folder and check disk space",
+      "ground_truth": "COMPOSITE",
+      "predicted": "KNOWN_CAPABILITY",
+      "assigned_category": "COMPOSITE_TO_KNOWN_CAPABILITY",
+      "engine_reason": "open_application"
+    },
+    {
+      "prompt": "open windows terminal and check cpu status",
+      "ground_truth": "COMPOSITE",
+      "predicted": "KNOWN_CAPABILITY",
+      "assigned_category": "COMPOSITE_TO_KNOWN_CAPABILITY",
+      "engine_reason": "open_application"
+    },
+    {
+      "prompt": "open downloads folder then minimize window",
+      "ground_truth": "COMPOSITE",
+      "predicted": "KNOWN_CAPABILITY",
+      "assigned_category": "COMPOSITE_TO_KNOWN_CAPABILITY",
+      "engine_reason": "open_application"
+    },
+    {
+      "prompt": "open calculator and list running applications",
+      "ground_truth": "COMPOSITE",
+      "predicted": "KNOWN_CAPABILITY",
+      "assigned_category": "COMPOSITE_TO_KNOWN_CAPABILITY",
+      "engine_reason": "open_application"
+    },
+    {
+      "prompt": "open notepad then maximize active window",
+      "ground_truth": "COMPOSITE",
+      "predicted": "KNOWN_CAPABILITY",
+      "assigned_category": "COMPOSITE_TO_KNOWN_CAPABILITY",
+      "engine_reason": "open_application"
+    },
+    {
+      "prompt": "open file explorer and check disk space",
+      "ground_truth": "COMPOSITE",
+      "predicted": "KNOWN_CAPABILITY",
+      "assigned_category": "COMPOSITE_TO_KNOWN_CAPABILITY",
+      "engine_reason": "open_application"
+    }
+  ]
+}

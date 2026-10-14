@@ -1,0 +1,30 @@
+{
+  "phase": "F0-25B",
+  "title": "Final Ownership-Relative World Restoration Verification",
+  "timestamp": 1791711854.239948,
+  "oracle_semantics": {
+    "definition": "world_restored = (task_owned_remaining == 0) AND (harness_owned_remaining == 0) AND (protected_baseline_resources_missing == 0) AND (external_concurrent_resources_modified_by_astra == 0) AND (unknown_modified_by_astra == 0)"
+  },
+  "world_counts": {
+    "final_processes_count": 270,
+    "final_windows_count": 0
+  },
+  "task_owned_accounting": {
+    "task_owned_identities_expected_disposed": 4,
+    "task_owned_identities_remaining": 0
+  },
+  "harness_owned_accounting": {
+    "harness_owned_identities_remaining": 0
+  },
+  "protected_baseline_accounting": {
+    "pre_existing_user_identities_unexpectedly_missing": 0
+  },
+  "external_concurrent_accounting": {
+    "external_concurrent_identities_modified_or_disposed_by_astra": 0
+  },
+  "unknown_accounting": {
+    "unknown_identities_modified_or_disposed_by_astra": 0
+  },
+  "world_restored": true,
+  "oracle_verdict": "PASS"
+}

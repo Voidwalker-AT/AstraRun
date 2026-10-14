@@ -1,0 +1,23 @@
+{
+  "auditor": "MiMo",
+  "phase": "F0-25F.M",
+  "dimensions": {
+    "BACKEND_EXECUTION": {"verdict": "PASS", "evidence": "Stage6 computation run 4-event chain for 'calculate 40+2' with GOAL_COMPLETED SUCCESS; binary identity FACT", "critical": true},
+    "LAUNCHER_VISIBILITY": {"verdict": "PASS", "evidence": "MiMo independent OS+pixel+visual attestation: HWND 17304052 visible+foreground on Default; F0-25F stage1/stage6 PNGs visually contain launcher", "critical": true},
+    "PLANNING": {"verdict": "PARTIAL", "evidence": "PLAN_CREATED present in both Stage6 runs; no deeper plan artifacts; Stage6 computation has no MODEL/ACTION stages", "critical": false},
+    "MODEL_PROVENANCE": {"verdict": "UNVERIFIED", "evidence": "Stage6 runs contain no MODEL_REQUEST/MODEL_RESPONSE; model provenance for F0-25F physical runs not established in package", "critical": true},
+    "BROKER_PROVENANCE": {"verdict": "UNVERIFIED", "evidence": "No ACTION_* broker events in Stage6 runs; broker pipeline call sites exist in source but not exercised in cited evidence", "critical": true},
+    "POSTCONDITION_VERIFICATION": {"verdict": "UNVERIFIED", "evidence": "POSTCONDITION_VERIFIED event type has call sites (verifier.py) but zero occurrences in Stage6 run files", "critical": true},
+    "OUTPUT_PRESENTATION": {"verdict": "FAIL", "evidence": "06_RESULT_PRESENTATION_CAUSAL_AUDIT.json — screenshot shows no viewer; PRESENTED hollow (verified_hwnd null); PASS cited REQUESTED", "critical": true},
+    "RESOURCE_RESTORATION": {"verdict": "UNVERIFIED", "evidence": "08_RESOURCE_RESTORATION_AUDIT.json — synthetic Stage6 check; no PID delta; ledger disposal unverified vs disk", "critical": true},
+    "SCREENSHOT_TRUTH": {"verdict": "PARTIAL", "evidence": "07_SCREENSHOT_PIXEL_AUDIT.json — launcher PNGs honest (launcher visible); presentation PNG misleading role; no mislabeled launcher-absent frames claimed as present", "critical": true},
+    "EVALUATOR_INTEGRITY": {"verdict": "FAIL", "evidence": "02_EVALUATOR_PROVENANCE.json + 04 — REQUESTED≡PRESENTED in evaluator; hardcoded clean_termination/target_dir_clean_state; dark oracle adversarially unsound; mutation suite incomplete", "critical": true},
+    "ROUTING_GENERALIZATION": {"verdict": "FAIL", "evidence": "10_ROUTING_RECHECK.json — both families STILL_FAILING; 68/70 debt preserved", "critical": true},
+    "SECURITY_BOUNDARY": {"verdict": "PASS", "evidence": "12_SECURITY_MANIFEST_RECOMPUTATION.json — 86/43/43/3/2/0 confirmed; 2 phantom manifest entries noted", "critical": true}
+  },
+  "critical_fail_count": 3,
+  "critical_unverified_count": 3,
+  "overall_verdict": "FAIL",
+  "overall_rationale": "Three critical FAILs (OUTPUT_PRESENTATION, EVALUATOR_INTEGRITY, ROUTING_GENERALIZATION) plus three critical UNVERIFIEDs (MODEL/BROKER provenance, POSTCONDITION, RESOURCE_RESTORATION). Directive 13: any critical FAIL => overall FAIL. Launcher visibility and security boundary genuinely improved; presentation and evaluator honesty did not.",
+  "dogfood_readiness": "NOT READY FOR F0-25G BLIND DOGFOOD"
+}

@@ -1,0 +1,101 @@
+{
+  "labels": [
+    "CLARIFICATION_REQUIRED",
+    "COMPOSITE",
+    "CONVERSATIONAL",
+    "DYNAMIC_COMPUTATION",
+    "KNOWN_CAPABILITY",
+    "SECURITY_REJECTION"
+  ],
+  "confusion_matrix": [
+    [
+      123,
+      0,
+      0,
+      2,
+      0,
+      0
+    ],
+    [
+      0,
+      150,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      150,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      250,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      250,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0,
+      75
+    ]
+  ],
+  "report": {
+    "CLARIFICATION_REQUIRED": {
+      "precision": 1.0,
+      "recall": 0.984,
+      "f1-score": 0.9919,
+      "support": 125
+    },
+    "COMPOSITE": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1-score": 1.0,
+      "support": 150
+    },
+    "CONVERSATIONAL": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1-score": 1.0,
+      "support": 150
+    },
+    "DYNAMIC_COMPUTATION": {
+      "precision": 0.9921,
+      "recall": 1.0,
+      "f1-score": 0.996,
+      "support": 250
+    },
+    "KNOWN_CAPABILITY": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1-score": 1.0,
+      "support": 250
+    },
+    "SECURITY_REJECTION": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1-score": 1.0,
+      "support": 75
+    },
+    "macro avg": {
+      "f1-score": 0.998
+    }
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "phase": "F0-25B.1",
+  "audit_target": "Corrected Scientific Comparison: Warm Hermes Reuse vs Hermes-Disabled Control",
+  "timestamp": "2026-10-11T16:28:15Z",
+  "scientific_verdict": {
+    "behavioral_change_established": true,
+    "probe_reduction_established": true,
+    "latency_advantage_established": false
+  },
+  "metrics_comparison": {
+    "retrieved_affordances": {
+      "warm_run": 4,
+      "control_run": 0,
+      "interpretation": "Memory retrieval successfully surfaced all 4 verified affordances in warm mode, altering model belief context."
+    },
+    "decision_mode": {
+      "warm_run": "ACT (Direct Execution)",
+      "control_run": "EXPLORE (Uncertainty)",
+      "interpretation": "Warm run switched from epistemic exploration to deterministic goal fulfillment."
+    },
+    "exploratory_probes_dispatched": {
+      "warm_run": 0,
+      "control_run": 1,
+      "delta": -1,
+      "interpretation": "Warm run reduced exploratory probe dispatch by 100% (behavioral improvement)."
+    },
+    "end_to_end_duration_seconds": {
+      "warm_run": 7.53,
+      "control_run": 2.75,
+      "delta": "+4.78s (Warm was slower)",
+      "interpretation": "Warm mode required larger prompt tokens (incorporating memory graph context) and deeper inference deliberation (7.53s vs 2.75s). Lower wall-clock latency is NOT claimed."
+    }
+  },
+  "corrected_claim_statement": "The empirical data strictly establishes that Hermes experiential memory successfully induced behavioral adaptation and eliminated exploratory probes (from 1 probe down to 0). It does NOT establish lower wall-clock latency, as prompt expansion and local model inference overhead resulted in a 7.53s execution time compared to 2.75s for the ungrounded control.",
+  "status": "SCIENTIFIC_CLAIM_RECTIFIED"
+}

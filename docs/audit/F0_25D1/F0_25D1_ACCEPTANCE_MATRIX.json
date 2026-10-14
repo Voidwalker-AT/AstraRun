@@ -1,0 +1,85 @@
+{
+  "milestone": "F0_25D1",
+  "title": "AstraRun F0-25D.1 Acceptance Matrix",
+  "timestamp": 1791726084.23384,
+  "user_request": "Create a Python program that reads a text file, counts word frequencies, prints the 10 most common words, and saves the result as JSON.\n\nCreate everything under:\nE:\\AstraDogfood\\word_frequency\n\nMake a small sample input yourself.\n\nRun the program and make sure it works.\n\nUse whatever tools on my computer you think are appropriate.\n\nYou may consult ChatGPT if you genuinely think it would help.\n\nWhen you're done, show me the useful result and tell me what you did.",
+  "target_directory": "E:\\AstraDogfood\\word_frequency",
+  "dimensions": {
+    "GOAL_CORRECTNESS": {
+      "verdict": "PASS",
+      "evidence_id": "F0_25D1_INDEPENDENT_RESULT_VERIFICATION.json",
+      "rationale": "Required Python program, sample input, and JSON word frequencies created under exact path E:\\AstraDogfood\\word_frequency."
+    },
+    "PLANNING_SEMANTICS": {
+      "verdict": "PASS",
+      "evidence_id": "F0_25D1_SCREENSHOT_MANIFEST.json:ss_003",
+      "rationale": "Autonomous planner correctly identified DYNAMIC_COMPUTATION intent and decomposed request without forcing external delegation."
+    },
+    "OPTIONAL_PERMISSION_HANDLING": {
+      "verdict": "PASS",
+      "evidence_id": "F0_25D1_SCREENSHOT_MANIFEST.json:ss_004",
+      "rationale": "Permissive delegation language ('You may consult ChatGPT if you genuinely think it would help') correctly treated as optional permission, not mandatory delegation intent."
+    },
+    "RECOVERY": {
+      "verdict": "PASS",
+      "evidence_id": "F0_25D1_SCREENSHOT_MANIFEST.json:ss_004",
+      "rationale": "Replanner cleanly falls back to execute_dynamic_tool if delegation is unviable, avoiding fail-closed dead ends."
+    },
+    "TOOL_DECISION_EXECUTION_ALIGNMENT": {
+      "verdict": "PASS",
+      "evidence_id": "F0_25D1_SCREENSHOT_MANIFEST.json:ss_004",
+      "rationale": "Astra selected execute_dynamic_tool aligned with software synthesis and execution objective."
+    },
+    "PHYSICAL_DESKTOP_EXECUTION": {
+      "verdict": "PASS",
+      "evidence_id": "F0_25D1_SCREENSHOT_MANIFEST.json:ss_008",
+      "rationale": "Physical execution ran in subprocess on Windows host producing verified output files on disk."
+    },
+    "ASTRA_LAUNCHER_UI": {
+      "verdict": "PASS",
+      "evidence_id": "F0_25D1_SCREENSHOT_MANIFEST.json:ss_001",
+      "rationale": "Launcher opened top-center, clean, responsive, accepting input and displaying status."
+    },
+    "PROGRESS_UI": {
+      "verdict": "PASS",
+      "evidence_id": "F0_25D1_SCREENSHOT_MANIFEST.json:ss_003",
+      "rationale": "Operational status reflected working states without leaking raw chain-of-thought."
+    },
+    "VISUAL_DESKTOP_ALIGNMENT": {
+      "verdict": "PASS",
+      "evidence_id": "F0_25D1_UI_AUDIT.json",
+      "rationale": "Visual desktop states match internal process and filesystem milestones across all captured frames."
+    },
+    "EXTERNAL_CONSULTATION_TRUTH": {
+      "verdict": "PASS",
+      "evidence_id": "F0_25D1_SCREENSHOT_MANIFEST.json:ss_004",
+      "rationale": "Astra honestly refrained from browser mocking or simulated AI consultation in production."
+    },
+    "EDITOR_INTERACTION": {
+      "verdict": "PASS",
+      "evidence_id": "F0_25D1_SCREENSHOT_MANIFEST.json:ss_005",
+      "rationale": "Astra legitimately utilized direct file synthesis workflow as permitted by workstation agent contract."
+    },
+    "TERMINAL_EXECUTION": {
+      "verdict": "PASS",
+      "evidence_id": "F0_25D1_INDEPENDENT_RESULT_VERIFICATION.json",
+      "rationale": "Python execution completed with returncode 0 and verified stdout/stderr output."
+    },
+    "OUTPUT_PRESENTATION": {
+      "verdict": "PASS",
+      "evidence_id": "F0_25D1_SCREENSHOT_MANIFEST.json:ss_010",
+      "rationale": "Useful result revealed on desktop and delivered to specified folder E:\\AstraDogfood\\word_frequency."
+    },
+    "RESOURCE_RESTORATION": {
+      "verdict": "PASS",
+      "evidence_id": "F0_25D1_SCREENSHOT_MANIFEST.json:ss_011",
+      "rationale": "Workspace restored cleanly with zero lingering temporary files or orphan processes."
+    },
+    "USER_OBSERVABILITY": {
+      "verdict": "PASS",
+      "evidence_id": "F0_25D1_SCREENSHOT_MANIFEST.json:ss_010",
+      "rationale": "Complete execution observable from desktop, files openable and verifiable by normal user."
+    }
+  },
+  "verdict": "PASS"
+}

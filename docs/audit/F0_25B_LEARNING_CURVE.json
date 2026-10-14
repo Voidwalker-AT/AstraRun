@@ -1,0 +1,42 @@
+[
+  {
+    "cycle": 1,
+    "affordance_tested": "EDIT_TEXT",
+    "result": "VERIFIED",
+    "cumulative_verified_affordances": 1,
+    "cumulative_contradictions": 0,
+    "model_latency_seconds": 6.635
+  },
+  {
+    "cycle": 2,
+    "affordance_tested": "SELECT_ALL",
+    "result": "VERIFIED",
+    "cumulative_verified_affordances": 2,
+    "cumulative_contradictions": 0,
+    "model_latency_seconds": 6.074
+  },
+  {
+    "cycle": 3,
+    "affordance_tested": "NEW_DOCUMENT_TAB",
+    "result": "VERIFIED",
+    "cumulative_verified_affordances": 3,
+    "cumulative_contradictions": 0,
+    "model_latency_seconds": 7.197
+  },
+  {
+    "cycle": 4,
+    "affordance_tested": "SEARCH_FIND_SURFACE",
+    "result": "VERIFIED",
+    "cumulative_verified_affordances": 4,
+    "cumulative_contradictions": 0,
+    "model_latency_seconds": 5.928
+  },
+  {
+    "cycle": 5,
+    "affordance_tested": "UNMAPPED_BUTTON_CLICK",
+    "result": "FAILED",
+    "cumulative_verified_affordances": 4,
+    "cumulative_contradictions": 1,
+    "model_latency_seconds": 6.264
+  }
+]

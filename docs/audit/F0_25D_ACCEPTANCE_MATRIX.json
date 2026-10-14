@@ -1,0 +1,49 @@
+{
+  "milestone": "F0_25D",
+  "title": "AstraRun Dogfood Acceptance Matrix",
+  "timestamp": "2026-10-11T17:17:15.000000+05:30",
+  "dimensions": {
+    "GOAL_CORRECTNESS": {
+      "verdict": "FAIL",
+      "evidence_id": "F0_25D_INDEPENDENT_RESULT_VERIFICATION.json",
+      "rationale": "Required Python program, sample input, and JSON result were not created under E:\\AstraDogfood\\word_frequency."
+    },
+    "TOOL_DECISION_EXECUTION_ALIGNMENT": {
+      "verdict": "FAIL",
+      "evidence_id": "F0_25D_ACTION_EVENTS.jsonl:act_001",
+      "rationale": "Planner chose consult_delegate with provider chatgpt_web when no authenticated browser bridge was active; dynamic replan failed to route to local execution."
+    },
+    "PHYSICAL_DESKTOP_EXECUTION": {
+      "verdict": "FAIL",
+      "evidence_id": "F0_25D_PROCESS_WINDOW_EVENTS.jsonl",
+      "rationale": "No physical terminal, editor, or user script executed on desktop."
+    },
+    "EXTERNAL_CONSULTATION_TRUTH": {
+      "verdict": "PASS",
+      "evidence_id": "F0_25D_ACTION_EVENTS.jsonl:act_001",
+      "rationale": "Truth boundary held: Astra refused to execute fake simulation in production and strictly raised RuntimeError when real bridge was unavailable."
+    },
+    "ERROR_RECOVERY": {
+      "verdict": "FAIL",
+      "evidence_id": "F0_25D_MODEL_EVENTS.jsonl:mdl_003",
+      "rationale": "Dynamic replan failed to identify an alternative capability (reported 'unsatisfied: [APPLICATION_RUNNING]')."
+    },
+    "OUTPUT_PRESENTATION": {
+      "verdict": "FAIL",
+      "evidence_id": "F0_25D_INDEPENDENT_RESULT_VERIFICATION.json",
+      "rationale": "No useful output was presented to the user other than terminal failure notice."
+    },
+    "RESOURCE_RESTORATION": {
+      "verdict": "PASS",
+      "evidence_id": "F0_25D_FINAL_WORLD.json",
+      "rationale": "Fail-closed cleanup verified: 0 orphaned processes, 0 orphaned windows, 0 lingering temp files."
+    },
+    "USER_OBSERVABILITY": {
+      "verdict": "PASS",
+      "evidence_id": "acceptance_dogfood_result.json",
+      "rationale": "Failure was honestly and immediately reported with exact root cause rather than silent hanging or freezing."
+    }
+  },
+  "overall_dogfood_verdict": "FAIL",
+  "suggested_verdict": "SUGGESTED_FAIL"
+}

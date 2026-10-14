@@ -1,0 +1,45 @@
+{
+  "review_phase": "F0_25D1_MIMO",
+  "source": "docs/audit/C1_8_POST_FREEZE_ROUTING_EVIDENCE.json",
+  "known_result": {"passed": 68, "failed": 70, "accuracy_pct": 97.14},
+  "failed_prompts": [
+    {
+      "prompt": "work out the roots of this quadratic equation and save them",
+      "expected": "execute_dynamic_tool / LOCAL_MODEL",
+      "actual": "composite_dag_workflow / SEMANTIC_RETRIEVAL",
+      "root_cause_inference": "Math wording 'work out roots' overmatches composite DAG workflow path rather than dynamic tool synthesis"
+    },
+    {
+      "prompt": "generate a summary table of user login events in auth_summary.txt",
+      "expected": "execute_dynamic_tool / LOCAL_MODEL",
+      "actual": "system_summary / SEMANTIC_RETRIEVAL",
+      "root_cause_inference": "Keyword 'summary' overmatches system_summary capability; file-write deliverable intent under-weighted"
+    }
+  ],
+  "semantic_neighbors_generated": [
+    "solve x^2+5x+6=0 and write roots to out.txt",
+    "compute the solutions of 2x^2-8=0 and save the answers",
+    "derive roots of the polynomial x^2-4 and persist results",
+    "calculate quadratic roots and write them to disk",
+    "find zeros of f(x)=x^2+2x+1 and save",
+    "build a login audit table into auth_log_summary.txt",
+    "write a summary table of failed logins to login_summary.txt",
+    "generate auth_summary.csv from user login events",
+    "create a table of recent login events in log_table.txt",
+    "summarize authentication events into a text table file",
+    "make a Python program that counts word frequencies",
+    "write a C program that prints primes",
+    "create a Java application that sorts numbers",
+    "make a small Python tool for parsing CSV",
+    "open the calculator program",
+    "launch my Python program",
+    "modify the program currently open in VS Code",
+    "feel free to ask ChatGPT if useful",
+    "you can consult ChatGPT if necessary",
+    "do this yourself unless you get stuck, then ask ChatGPT"
+  ],
+  "execution_status": "STATIC_ONLY_NOT_EXECUTED_IN_THIS_REVIEW",
+  "execution_note": "Dynamic prompt execution would require starting llama-server and running production router; not run to avoid machine mutation risk during independent review. Failures remain as recorded 68/70.",
+  "inference_about_dogfood_dependency": "The dogfood prompt 'Create a Python program that counts word frequencies...' is in the family of dynamic_computation prompts that passed the 70-prompt holdout, so success is not solely from prompt-specific special cases. However production prompts in service.py mention sample_input.txt and word_frequencies.json as examples, which is mild contamination risk.",
+  "evidence_class": "MIXED_FACT_AND_INFERENCE"
+}

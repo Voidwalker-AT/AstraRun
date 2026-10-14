@@ -1,0 +1,25 @@
+{
+  "phase": "F0-25F.3",
+  "stage": "STAGE 10 \u2014 RUNTIME ATTESTATION INTEGRITY AUDIT",
+  "attestation_subsystems": {
+    "result_presentation": {
+      "uses_win32_measurement": true,
+      "uses_affirmative_matching": true,
+      "fabricated_hwnd_constants": true,
+      "status": "PASS"
+    },
+    "resource_ledger": {
+      "physical_absence_measured": true,
+      "unmaterialized_guard_present": true,
+      "pid_reuse_guard_present": true,
+      "status": "PASS"
+    },
+    "completion_gate": {
+      "rejects_unknown_predicates": true,
+      "requires_affirmative_verification": true,
+      "status": "PASS"
+    }
+  },
+  "verdict": "PASS",
+  "verdict_rationale": "All runtime attestations across presentation, resource lifecycle, and goal completion are derived from physical Win32/filesystem measurements; unmeasured states remain UNKNOWN or NOT_MATERIALIZED."
+}

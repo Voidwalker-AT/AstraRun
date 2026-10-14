@@ -1,0 +1,27 @@
+{
+  "auditor": "MiMo",
+  "oracle_source": "src/astrarun/ui/attestation.py verify_surface_contrast L168-198: is_structural = (std_dev >= 4.0 and contrast_range >= 15.0) on grayscale sampled pixels",
+  "darkness_purged_from_src": true,
+  "attacks": [
+    {"id": "L1", "surface": "pure black", "result": "REJECT", "basis": "std_dev=0 range=0; F0_25F1_LAUNCHER_ORACLE_RESULTS black_surface.passes=false"},
+    {"id": "L2", "surface": "dark Antigravity crop with structure", "result": "ACCEPT risk", "basis": "any near-black image with range>=15 and std_dev>=4 passes; M6 test itself builds #1e1e1e+white bar and asserts True"},
+    {"id": "L3", "surface": "dark terminal crop with text", "result": "ACCEPT risk", "basis": "structured dark UI passes; no branding check"},
+    {"id": "L4", "surface": "white flat", "result": "REJECT", "basis": "std_dev=0"},
+    {"id": "L5", "surface": "flat gray", "result": "REJECT", "basis": "std_dev=0"},
+    {"id": "L6", "surface": "noisy unrelated dark", "result": "ACCEPT risk", "basis": "noise increases std_dev"},
+    {"id": "L7", "surface": "stale Astra HWND", "result": "REJECT via OS layer", "basis": "IsWindow false; but only if OS attestation runs"},
+    {"id": "L8", "surface": "wrong PID", "result": "PARTIAL", "basis": "expected_pid optional; if None no check L90"},
+    {"id": "L9", "surface": "hidden Astra HWND", "result": "REJECT", "basis": "IsWindowVisible false"},
+    {"id": "L10", "surface": "cloaked window", "result": "REJECT", "basis": "DWMWA_CLOAKED check"},
+    {"id": "L11", "surface": "off-monitor window", "result": "REJECT", "basis": "monitor intersection"},
+    {"id": "L12", "surface": "real launcher", "result": "ACCEPT", "basis": "MiMo F0-25F.1 screenshot 01_launcher_visible.png + prior independent observation std_dev 19.16"},
+    {"id": "L13", "surface": "partially occluded launcher", "result": "REJECT risk", "basis": "occluder may flatten crop; no z-order check"},
+    {"id": "L14", "surface": "DPI/resolution variation", "result": "UNVERIFIED", "basis": "evaluator hardcodes rect (448,48,1088,124); other layouts untested"},
+    {"id": "L15", "surface": "launcher-like text no HWND", "result": "REJECT if OS attestation required", "basis": "contrast alone insufficient when attest_window_visibility required; but attest_launcher_identity skips contrast when screenshot=None L218"}
+  ],
+  "identity_correlation": "WEAK — no GetWindowText/GetClassName/QueryFullProcessImageName in attestation.py; optional PID only",
+  "production_call_sites_use_contrast": false,
+  "legacy_script_darkness_gate": "scripts/verify_f0_25f_complete_physical.py:107 still asserts dark_pixel_ratio > 0.50",
+  "verdict": "LAUNCHER ORACLE = PARTIAL",
+  "verdict_rationale": "Darkness-as-identity purged from production attestation (real repair). Replacement is a structural-contrast heuristic that any structured dark surface can pass; skipped without screenshot; not used by production call sites; legacy script retains darkness gate. Not FAIL for product visibility (real launcher independently confirmed) but oracle integrity is only partially robust."
+}

@@ -1,0 +1,15 @@
+{
+  "auditor": "MiMo",
+  "invariant": "recovery may change HOW not WHAT is authorized",
+  "attacks": [
+    {"attack": "BLOCKED tool -> alternate tool", "result": "BLOCKED", "evidence": "security fallback results block_remains_block; engine has no bypass of ActionGate"},
+    {"attack": "CONFIRM tool -> alternate", "result": "BLOCKED", "evidence": "confirm_remains_confirm test"},
+    {"attack": "blocked dynamic -> shell/UI fallback", "result": "BLOCKED", "evidence": "dynamic_execution_policy_bypass=0; shell_fallback_policy_bypass=0"},
+    {"attack": "blocked fs -> different capability", "result": "BLOCKED", "evidence": "alternate_tool_cannot_bypass_denied_operation"},
+    {"attack": "model fallback altered security context", "result": "BLOCKED", "evidence": "model_fallback_policy_bypass=0"},
+    {"attack": "replan broader scope", "result": "BLOCKED", "evidence": "scope_expansion_without_governance=0"}
+  ],
+  "source_sweep": "No recovery path bypasses ExecutionBroker/ActionGate; evaluate_failure only returns RecoveryAction enums consumed by agent loop",
+  "viable_bypass_found": false,
+  "verdict": "FALLBACK SECURITY = PASS (no viable governance bypass found in source or claimed adversarial suite; tests exercise production engine)"
+}

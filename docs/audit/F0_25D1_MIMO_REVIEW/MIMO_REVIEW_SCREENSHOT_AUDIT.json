@@ -1,0 +1,31 @@
+{
+  "review_phase": "F0_25D1_MIMO",
+  "method": "Independent pixel inspection of every PNG under docs/audit/F0_25D1/screenshots/",
+  "uniform_observation": {
+    "all_12_frames": "Foreground and dominant window is Antigravity.exe (title 'AstraRun Generic Computer...')",
+    "astrarun_launcher_visible": false,
+    "user_request_text_visible": false,
+    "explorer_visible": false,
+    "terminal_execution_visible": false,
+    "code_editor_with_main_py_visible": false,
+    "word_frequencies_json_visible": false,
+    "astra_progress_status_visible": false,
+    "taskbar_astra_icon": "blue A present on taskbar only (not proof of foreground launcher)"
+  },
+  "per_screenshot": [
+    {"file": "00_baseline.png", "anti_claim": "Clean baseline desktop", "actual": "Antigravity full-screen with text 'F0-25D IS AN HONEST FAILURE'", "contradiction": true},
+    {"file": "01_astra_launcher_open.png", "anti_claim": "Visible AstraRun launcher", "actual": "Same Antigravity IDE; no Astra launcher window", "contradiction": true},
+    {"file": "02_request_entered.png", "anti_claim": "User request in launcher field", "actual": "Antigravity; no dogfood prompt visible", "contradiction": true},
+    {"file": "03_initial_working_state.png", "anti_claim": "Request dispatched to planner", "actual": "Antigravity shows harness script 'run_f0_25d1_dogfood.py' as running task", "contradiction": true},
+    {"file": "04_tool_selected.png", "anti_claim": "Dynamic tool builder selected", "actual": "Antigravity unchanged; no tool selection UI", "contradiction": true},
+    {"file": "05_selected_application_open.png", "anti_claim": "Synthesis/execution prep", "actual": "Antigravity unchanged", "contradiction": true},
+    {"file": "06_code_or_artifact_visible.png", "anti_claim": "Files visible under target folder", "actual": "No Explorer; no folder contents on screen", "contradiction": true},
+    {"file": "07_execution_environment_open.png", "anti_claim": "Subprocess sandbox active", "actual": "Antigravity only; no terminal/container", "contradiction": true},
+    {"file": "08_program_execution.png", "anti_claim": "Script executing, printing top 10", "actual": "Antigravity only; no program output", "contradiction": true},
+    {"file": "09_verified_result.png", "anti_claim": "3 artifacts verified on disk", "actual": "No file listing on screen", "contradiction": true},
+    {"file": "10_astra_final_summary.png", "anti_claim": "Final result presented to user", "actual": "Antigravity; no Astra summary", "contradiction": true},
+    {"file": "11_post_cleanup_desktop.png", "anti_claim": "Desktop restored cleanly", "actual": "Antigravity still full-screen; not a clean restored desktop", "contradiction": true}
+  ],
+  "manifest_internal_contradiction": "F0_25D1_SCREENSHOT_MANIFEST.json records foreground_process=Antigravity.exe for early frames while descriptions claim Astra launcher/request visible",
+  "evidence_class": "FACT"
+}

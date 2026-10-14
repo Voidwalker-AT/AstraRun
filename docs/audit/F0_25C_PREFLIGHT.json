@@ -1,0 +1,18 @@
+{
+  "phase": "F0-25C",
+  "timestamp": 1791717710.6405292,
+  "status": "READY",
+  "worktree": "E:\\Workspace\\Agents\\AstraRun-Anti",
+  "python_runtime": "E:\\Workspace\\Agents\\AstraRun-Anti\\.venv\\Scripts\\python.exe",
+  "editors_count": 4,
+  "toolchains_count": 7,
+  "terminals_count": 2,
+  "browsers_count": 2,
+  "reasoning_server_online": true,
+  "governed_destinations": [
+    "E:\\Workspace\\Agents\\AstraRun-Anti\\projects\\task1_token_matrix",
+    "E:\\Workspace\\Agents\\AstraRun-Anti\\projects\\task2_memory_status",
+    "E:\\Workspace\\Agents\\AstraRun-Anti\\projects\\task3_debugger"
+  ],
+  "verdict": "PREFLIGHT_PASS"
+}

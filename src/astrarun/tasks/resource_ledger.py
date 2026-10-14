@@ -46,6 +46,16 @@ def _ensure_desktop_attached() -> None:
         return
     try:
         user32 = ctypes.windll.user32
+        hwinsta = user32.OpenWindowStationW("WinSta0", False, 0x037F)
+        if hwinsta:
+            user32.SetProcessWindowStation(hwinsta)
+
+        h_desk = user32.GetThreadDesktop(ctypes.windll.kernel32.GetCurrentThreadId())
+        if h_desk:
+            buf_desk = ctypes.create_unicode_buffer(256)
+            if user32.GetUserObjectInformationW(h_desk, 2, buf_desk, 256, None) and buf_desk.value.lower() == "default":
+                return
+
         user32.OpenInputDesktop.restype = ctypes.c_void_p
         user32.OpenDesktopW.restype = ctypes.c_void_p
         user32.SetThreadDesktop.argtypes = [ctypes.c_void_p]
@@ -100,6 +110,7 @@ class ResourceType(str, Enum):
     DOCUMENT = "DOCUMENT"
     EXPLORER_WINDOW = "EXPLORER_WINDOW"
     TEST_APP = "TEST_APP"
+    SANDBOX_DIR = "SANDBOX_DIR"
     OTHER = "OTHER"
 
 
@@ -131,6 +142,8 @@ class ResourceLifecycleState(str, Enum):
     ORPHANED_CLEANED = "ORPHANED_CLEANED"
     FAILED_CLEANUP = "FAILED_CLEANUP"
     STALE_REUSED = "STALE_REUSED"
+    NOT_MATERIALIZED = "NOT_MATERIALIZED"
+    INVALID_IDENTITY = "INVALID_IDENTITY"
 
 
 @dataclass
@@ -143,6 +156,10 @@ class OwnedResource:
     pid: Optional[int] = None
     hwnd: Optional[int] = None
     process_creation_time: Optional[float] = None
+    parent_pid: Optional[int] = None
+    creator_action: Optional[str] = None
+    ownership_class: str = "ASTRA_CREATED"
+    executable_path: Optional[str] = None
     document_path: Optional[str] = None
     astra_created: bool = True
     existed_before: bool = False
@@ -154,6 +171,14 @@ class OwnedResource:
     updated_at: float = field(default_factory=time.time)
     metadata: Dict[str, Any] = field(default_factory=dict)
 
+    @property
+    def create_time(self) -> Optional[float]:
+        return self.process_creation_time if self.process_creation_time is not None else self.created_at
+
+    @create_time.setter
+    def create_time(self, val: Optional[float]) -> None:
+        self.process_creation_time = val
+
     def to_dict(self) -> Dict[str, Any]:
         return {
             "resource_id": self.resource_id,
@@ -163,6 +188,11 @@ class OwnedResource:
             "pid": self.pid,
             "hwnd": self.hwnd,
             "process_creation_time": self.process_creation_time,
+            "create_time": self.create_time,
+            "parent_pid": self.parent_pid,
+            "creator_action": self.creator_action,
+            "ownership_class": self.ownership_class,
+            "executable_path": self.executable_path,
             "document_path": self.document_path,
             "astra_created": self.astra_created,
             "existed_before": self.existed_before,
@@ -184,7 +214,11 @@ class OwnedResource:
             launching_capability=d.get("launching_capability", "unknown"),
             pid=d.get("pid"),
             hwnd=d.get("hwnd"),
-            process_creation_time=d.get("process_creation_time"),
+            process_creation_time=d.get("process_creation_time", d.get("create_time")),
+            parent_pid=d.get("parent_pid"),
+            creator_action=d.get("creator_action"),
+            ownership_class=d.get("ownership_class", "ASTRA_CREATED"),
+            executable_path=d.get("executable_path"),
             document_path=d.get("document_path"),
             astra_created=bool(d.get("astra_created", True)),
             existed_before=bool(d.get("existed_before", False)),
@@ -394,23 +428,44 @@ class AstraResourceLedger:
                 WNDENUMPROC = ctypes.WINFUNCTYPE(wintypes.BOOL, wintypes.HWND, wintypes.LPARAM)
                 user32.EnumWindows(WNDENUMPROC(enum_cb), 0)
 
+                candidates_for_pid = []
                 for h, (w_pid, w_title, w_cls) in current_hwnds.items():
                     if h not in pre_snapshot.hwnds:
-                        # Window was not in snapshot
                         title_lower = w_title.lower()
                         cls_lower = w_cls.lower()
+                        # Exclude system overlays / tooltips / message helpers
+                        if any(x in cls_lower for x in ("uac_inputindicator", "touch tooltip", "tooltips_class32", "cicloaderwndclass")):
+                            continue
+                        owner = user32.GetWindow(h, 4) if sys.platform == "win32" else 0
                         if new_pid and w_pid == new_pid:
-                            new_hwnd = h
-                            break
-                        if aliases and any(a in title_lower or a in cls_lower for a in aliases):
-                            new_hwnd = h
-                            if not new_pid:
-                                new_pid = w_pid
-                                try:
-                                    proc_create_time = psutil.Process(w_pid).create_time()
-                                except Exception:
-                                    pass
-                            break
+                            candidates_for_pid.append((h, w_pid, w_title, w_cls, owner))
+                        elif aliases and any(a in title_lower or a in cls_lower for a in aliases):
+                            candidates_for_pid.append((h, w_pid, w_title, w_cls, owner))
+
+                if candidates_for_pid:
+                    # Score and rank candidates: prioritize unowned top-level windows with non-empty titles
+                    def _rank(cand):
+                        c_h, c_pid, c_t, c_cls, c_owner = cand
+                        score = 0
+                        if c_t.strip():
+                            score += 15
+                        if c_owner == 0:
+                            score += 10
+                        if aliases and any(a in c_t.lower() or a in c_cls.lower() for a in aliases):
+                            score += 25
+                        if new_pid and c_pid == new_pid:
+                            score += 20
+                        return score
+
+                    candidates_for_pid.sort(key=_rank, reverse=True)
+                    best_h, best_pid, _, _, _ = candidates_for_pid[0]
+                    new_hwnd = best_h
+                    if not new_pid:
+                        new_pid = best_pid
+                        try:
+                            proc_create_time = psutil.Process(best_pid).create_time()
+                        except Exception:
+                            pass
 
             # If both PID and HWND are identified, we are done
             if new_pid and new_hwnd:
@@ -425,15 +480,20 @@ class AstraResourceLedger:
                 break
 
         # Fallback check for new window if PID was found but HWND was still None
-        if not new_hwnd and sys.platform == "win32":
+        if not new_hwnd and sys.platform == "win32" and current_hwnds:
+            fallback_cands = []
             for h, (w_pid, w_title, w_cls) in current_hwnds.items():
                 if h not in pre_snapshot.hwnds:
-                    t_low = w_title.lower()
-                    if aliases and any(a in t_low for a in aliases):
-                        new_hwnd = h
-                        if not new_pid:
-                            new_pid = w_pid
-                        break
+                    cls_low = w_cls.lower()
+                    if any(x in cls_low for x in ("uac_inputindicator", "touch tooltip", "tooltips_class32", "cicloaderwndclass")):
+                        continue
+                    owner = user32.GetWindow(h, 4)
+                    fallback_cands.append((h, w_pid, w_title, w_cls, owner))
+            if fallback_cands:
+                fallback_cands.sort(key=lambda c: (bool(c[2].strip()), c[4] == 0), reverse=True)
+                new_hwnd = fallback_cands[0][0]
+                if not new_pid:
+                    new_pid = fallback_cands[0][1]
 
         # If window HWND was found on Windows, ensure new_pid is the actual window process PID
         if new_hwnd and sys.platform == "win32":
@@ -455,6 +515,8 @@ class AstraResourceLedger:
         meta = dict(metadata or {})
         if expected_name_or_class and "app" not in meta:
             meta["app"] = expected_name_or_class
+        pid_in_pre = bool(new_pid and (new_pid in pre_snapshot.pids))
+        existed_before = pid_in_pre or (not astra_created)
         resource = OwnedResource(
             task_id=task_id,
             resource_type=resource_type,
@@ -464,7 +526,7 @@ class AstraResourceLedger:
             process_creation_time=proc_create_time,
             document_path=document_path,
             astra_created=astra_created,
-            existed_before=not astra_created,
+            existed_before=existed_before,
             cleanup_policy=cleanup_policy,
             content_classification=content_classification,
             lifecycle_state=ResourceLifecycleState.ACTIVE if astra_created else ResourceLifecycleState.DISCOVERED,
@@ -472,9 +534,28 @@ class AstraResourceLedger:
         )
         self.register_resource(resource)
         logger.info(
-            "[RESOURCE_REGISTERED] task_id=%s, type=%s, pid=%s, hwnd=%s, astra_created=%s, policy=%s",
-            task_id, resource.resource_type.value, resource.pid, resource.hwnd, resource.astra_created, resource.cleanup_policy.value,
+            "[RESOURCE_REGISTERED] task_id=%s, type=%s, pid=%s, hwnd=%s, astra_created=%s, existed_before=%s, policy=%s",
+            task_id, resource.resource_type.value, resource.pid, resource.hwnd, resource.astra_created, resource.existed_before, resource.cleanup_policy.value,
         )
+        try:
+            from astrarun.core.telemetry import CausalTelemetry, CausalEventType
+            telem = CausalTelemetry.get_instance()
+            telem.emit(
+                event_type=CausalEventType.RESOURCE_REGISTERED.value,
+                component="AstraResourceLedger",
+                task_id=task_id,
+                data={
+                    "resource_id": resource.resource_id,
+                    "resource_type": resource.resource_type.value,
+                    "pid": resource.pid,
+                    "hwnd": resource.hwnd,
+                    "astra_created": resource.astra_created,
+                    "existed_before": resource.existed_before,
+                    "cleanup_policy": resource.cleanup_policy.value,
+                },
+            )
+        except Exception:
+            pass
         return resource
 
     # -------------------------------------------------------------------------
@@ -483,6 +564,30 @@ class AstraResourceLedger:
 
     def register_resource(self, resource: OwnedResource) -> None:
         """Insert or replace an OwnedResource in SQLite."""
+        if resource.pid and psutil.pid_exists(resource.pid):
+            try:
+                proc = psutil.Process(resource.pid)
+                if resource.process_creation_time is None:
+                    resource.process_creation_time = proc.create_time()
+                if resource.parent_pid is None:
+                    try:
+                        resource.parent_pid = proc.ppid()
+                    except Exception:
+                        pass
+                if resource.executable_path is None:
+                    try:
+                        resource.executable_path = proc.exe()
+                    except Exception:
+                        pass
+            except Exception:
+                pass
+
+        resource.metadata["parent_pid"] = resource.parent_pid
+        resource.metadata["creator_action"] = resource.creator_action
+        resource.metadata["ownership_class"] = resource.ownership_class
+        resource.metadata["executable_path"] = resource.executable_path
+        resource.metadata["create_time"] = resource.create_time
+
         with self._lock:
             conn = self._get_connection()
             conn.execute("""
@@ -513,6 +618,24 @@ class AstraResourceLedger:
                 json.dumps(resource.metadata),
             ))
             conn.commit()
+
+        try:
+            from astrarun.core.telemetry import CausalTelemetry, CausalEventType
+            telem = CausalTelemetry.get_instance()
+            telem.emit(
+                event_type=CausalEventType.RESOURCE_REGISTERED.value,
+                component="AstraResourceLedger",
+                task_id=resource.task_id,
+                data={
+                    "resource_id": resource.resource_id,
+                    "resource_type": resource.resource_type.value if isinstance(resource.resource_type, ResourceType) else str(resource.resource_type),
+                    "pid": resource.pid,
+                    "hwnd": resource.hwnd,
+                    "document_path": resource.document_path,
+                },
+            )
+        except Exception:
+            pass
 
     def get_resource(self, resource_id: str) -> Optional[OwnedResource]:
         with self._lock:
@@ -677,7 +800,70 @@ class AstraResourceLedger:
             logger.info("[CLEANUP_SKIPPED_POLICY] Resource %s has NEVER_CLOSE policy.", resource.resource_id)
             return False
 
+        # Concrete Identity Check: Empty, None, or whitespace-only paths/identities cannot pass vacuously
+        has_identity = bool(resource.pid or resource.hwnd or (resource.document_path and str(resource.document_path).strip()))
+        if not has_identity:
+            logger.warning("[RESOURCE_NOT_MATERIALIZED] Resource %s has no concrete PID, HWND, or path.", resource.resource_id)
+            self.update_lifecycle_state(resource.resource_id, ResourceLifecycleState.NOT_MATERIALIZED)
+            return False
+
+        if resource.resource_type in (ResourceType.SANDBOX_DIR, ResourceType.DOCUMENT):
+            if not resource.document_path or not str(resource.document_path).strip():
+                logger.warning("[RESOURCE_NOT_MATERIALIZED] Empty or None path for resource %s", resource.resource_id)
+                self.update_lifecycle_state(resource.resource_id, ResourceLifecycleState.NOT_MATERIALIZED)
+                return False
+            try:
+                sb_path = Path(resource.document_path)
+            except Exception:
+                self.update_lifecycle_state(resource.resource_id, ResourceLifecycleState.INVALID_IDENTITY)
+                return False
+
+            if not sb_path.exists():
+                logger.warning("[RESOURCE_NOT_MATERIALIZED] Path %s does not exist on disk prior to cleanup.", resource.document_path)
+                self.update_lifecycle_state(resource.resource_id, ResourceLifecycleState.NOT_MATERIALIZED)
+                return False
+
         self.update_lifecycle_state(resource.resource_id, ResourceLifecycleState.CLOSING)
+
+        # Handle SANDBOX_DIR explicitly
+        if resource.resource_type == ResourceType.SANDBOX_DIR:
+            if resource.cleanup_policy == CleanupPolicy.PRESERVE_ON_FAILURE:
+                logger.info("[CLEANUP_SKIPPED_PRESERVE] Sandbox directory %s preserved.", resource.document_path)
+                self.update_lifecycle_state(resource.resource_id, ResourceLifecycleState.SAVED)
+                return True
+            sb_path = Path(resource.document_path)
+            if sb_path.exists():
+                try:
+                    import shutil
+                    shutil.rmtree(sb_path, ignore_errors=True)
+                    logger.info("[SANDBOX_DIR_REMOVED] %s", resource.document_path)
+                except Exception as e:
+                    logger.warning("Error removing sandbox dir %s: %s", resource.document_path, e)
+
+            # Physical post-cleanup verification: require physical absence on disk
+            if sb_path.exists():
+                logger.error("[RESOURCE_DISPOSAL_FAILED] Path %s still exists on disk after deletion attempt.", resource.document_path)
+                self.update_lifecycle_state(resource.resource_id, ResourceLifecycleState.FAILED_CLEANUP)
+                return False
+
+            self.update_lifecycle_state(resource.resource_id, ResourceLifecycleState.CLOSED)
+            try:
+                from astrarun.core.telemetry import CausalTelemetry, CausalEventType
+                telem = CausalTelemetry.get_instance()
+                telem.emit(
+                    event_type=CausalEventType.RESOURCE_DISPOSED.value,
+                    component="AstraResourceLedger",
+                    task_id=resource.task_id,
+                    data={
+                        "resource_id": resource.resource_id,
+                        "resource_type": resource.resource_type.value,
+                        "path": resource.document_path,
+                        "state": "CLOSED",
+                    },
+                )
+            except Exception:
+                pass
+            return True
 
         # 2. SAVE BEFORE CLOSE Verification
         if resource.cleanup_policy in (CleanupPolicy.SAVE_BEFORE_CLOSE, CleanupPolicy.PERSIST_ARTIFACT_THEN_CLOSE) or \
@@ -762,31 +948,18 @@ class AstraResourceLedger:
                             self.update_lifecycle_state(resource.resource_id, ResourceLifecycleState.STALE_REUSED)
                             return False
 
-                    # Check if process has OTHER visible windows (shared multi-window host like modern Notepad)
-                    other_windows_exist = False
-                    if user32:
-                        _ensure_desktop_attached()
-                        from ctypes import wintypes
-                        def check_cb(h: int, l: int) -> bool:
-                            nonlocal other_windows_exist
-                            if h != resource.hwnd and user32.IsWindowVisible(h):
-                                p_buf = wintypes.DWORD()
-                                user32.GetWindowThreadProcessId(h, ctypes.byref(p_buf))
-                                if p_buf.value == resource.pid:
-                                    other_windows_exist = True
-                                    return False
-                            return True
-                        WNDENUMPROC = ctypes.WINFUNCTYPE(wintypes.BOOL, wintypes.HWND, wintypes.LPARAM)
-                        user32.EnumWindows(WNDENUMPROC(check_cb), 0)
+                    proc_name = (proc.name() or "").lower()
+                    proc_created_by_astra = resource.astra_created and (not resource.existed_before)
 
-                    if other_windows_exist:
-                        logger.info(
-                            "[PRESERVING_SHARED_PROCESS] PID %d has other active windows. Skipping process termination.",
-                            resource.pid
-                        )
-                    else:
-                        proc_name = (proc.name() or "").lower()
-                        if proc_name not in ("explorer.exe", "applicationframehost.exe"):
+                    if proc_created_by_astra and proc_name not in ("explorer.exe", "applicationframehost.exe"):
+                        # Grace period: check if process exited cleanly after window close
+                        try:
+                            proc.wait(timeout=0.6)
+                        except (psutil.TimeoutExpired, psutil.NoSuchProcess):
+                            pass
+
+                        # If still alive, terminate the task-created process
+                        if psutil.pid_exists(resource.pid):
                             logger.info("[TERMINATING_OWNED_PROCESS] PID %d (%s)", resource.pid, proc_name)
                             proc.terminate()
                             try:
@@ -794,15 +967,22 @@ class AstraResourceLedger:
                             except psutil.TimeoutExpired:
                                 proc.kill()
                                 proc.wait(timeout=1.0)
+                    else:
+                        logger.info(
+                            "[PRESERVING_PROCESS] PID %d (%s) was not uniquely created by Astra or is a shell host.",
+                            resource.pid, proc_name
+                        )
             except (psutil.NoSuchProcess, psutil.AccessDenied):
                 pass
 
-        # Clean Notepad TabState files if temporary test document to prevent modal orphans
-        if resource.document_path and resource.content_classification == ContentClassification.TEMPORARY_TEST_CONTENT:
+        # Clean Notepad TabState files if temporary/test document to prevent modal orphans
+        if resource.document_path:
             clean_notepad_tabstate_for_path(resource.document_path)
 
         # Post-close verification: do not claim CLOSED while process/window remains.
-        process_still_alive = bool(resource.pid and psutil.pid_exists(resource.pid))
+        # For system shells or pre-existing processes, process staying alive is expected.
+        proc_expected_terminated = resource.astra_created and (not resource.existed_before)
+        process_still_alive = bool(resource.pid and psutil.pid_exists(resource.pid)) if proc_expected_terminated else False
         window_still_alive = False
         if user32 and resource.hwnd:
             try:
@@ -810,16 +990,41 @@ class AstraResourceLedger:
             except Exception:
                 window_still_alive = False
 
-        if process_still_alive or window_still_alive:
-            self.update_lifecycle_state(resource.resource_id, ResourceLifecycleState.ACTIVE)
+        disk_resource_still_alive = False
+        if resource.document_path and (resource.resource_type == ResourceType.SANDBOX_DIR or resource.content_classification == ContentClassification.TEMPORARY_TEST_CONTENT):
+            try:
+                if Path(resource.document_path).exists():
+                    disk_resource_still_alive = True
+            except Exception:
+                pass
+
+        if process_still_alive or window_still_alive or disk_resource_still_alive:
+            self.update_lifecycle_state(resource.resource_id, ResourceLifecycleState.FAILED_CLEANUP)
             logger.warning(
-                "[RESOURCE_CLEAN_FAILED] Resource %s still live (process_alive=%s, window_alive=%s)",
-                resource.resource_id, process_still_alive, window_still_alive
+                "[RESOURCE_CLEAN_FAILED] Resource %s still live (process_alive=%s, window_alive=%s, disk_alive=%s)",
+                resource.resource_id, process_still_alive, window_still_alive, disk_resource_still_alive
             )
             return False
 
         self.update_lifecycle_state(resource.resource_id, ResourceLifecycleState.CLOSED)
         logger.info("[RESOURCE_CLEANED] Successfully cleaned up resource %s", resource.resource_id)
+        try:
+            from astrarun.core.telemetry import CausalTelemetry, CausalEventType
+            telem = CausalTelemetry.get_instance()
+            telem.emit(
+                event_type=CausalEventType.RESOURCE_DISPOSED.value,
+                component="AstraResourceLedger",
+                task_id=resource.task_id,
+                data={
+                    "resource_id": resource.resource_id,
+                    "resource_type": resource.resource_type.value,
+                    "pid": resource.pid,
+                    "hwnd": resource.hwnd,
+                    "state": "CLOSED",
+                },
+            )
+        except Exception:
+            pass
         return True
 
 
@@ -852,8 +1057,9 @@ class AstraResourceLedger:
             # Phase 2: If no dialog button found, click UI Close button on window caption
             for el in elements:
                 name_lower = el.name.lower()
+                auto_id_l = (getattr(el, "automation_id", "") or "").lower()
                 if el.control_type.name == "BUTTON":
-                    if name_lower == "close" or ("close" in name_lower and ("calculator" in name_lower or "window" in name_lower or "notepad" in name_lower)):
+                    if name_lower == "close" or auto_id_l == "close" or name_lower.startswith("close"):
                         logger.info("[DIALOG_HANDLED] Clicking UI close button '%s'.", el.name)
                         invoke_element(el)
                         return
@@ -921,7 +1127,7 @@ class AstraResourceLedger:
                 if ok:
                     cleaned_count += 1
                 else:
-                    preserved_count += 1
+                    failed_count += 1
                     if res.pid and psutil.pid_exists(res.pid):
                         process_cleaned_up = False
                     if res.hwnd:
@@ -967,6 +1173,31 @@ class AstraResourceLedger:
             task_id, cleaned_count, preserved_count, detached_count,
             failed_count, remaining_active, process_cleaned_up, cleanup_exception
         )
+        try:
+            if clean_ok:
+                from astrarun.core.telemetry import CausalTelemetry, CausalEventType
+                telem = CausalTelemetry.get_instance()
+                telem.emit(
+                    event_type=CausalEventType.RESOURCE_RESTORATION_VERIFIED.value,
+                    component="AstraResourceLedger",
+                    task_id=task_id,
+                    data={
+                        "cleaned_count": cleaned_count,
+                        "preserved_count": preserved_count,
+                        "detached_count": detached_count,
+                        "failed_count": failed_count,
+                        "clean_ok": True,
+                        "process_cleaned_up": process_cleaned_up,
+                        "remaining_active": remaining_active,
+                    },
+                )
+            else:
+                logger.warning(
+                    "[RESOURCE_RESTORATION_UNVERIFIED] task_id=%s restoration could not be verified (clean_ok=False)",
+                    task_id
+                )
+        except Exception:
+            pass
         return {
             "task_id": task_id,
             "cleaned_count": cleaned_count,

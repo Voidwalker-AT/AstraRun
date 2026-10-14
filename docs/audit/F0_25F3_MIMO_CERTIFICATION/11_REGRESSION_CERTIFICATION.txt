@@ -1,0 +1,37 @@
+MIMO F0-25F.3 INDEPENDENT REGRESSION CERTIFICATION (raw excerpt)
+================================================================
+Source: docs/audit/F0_25F3_TEST_OUTPUT.txt (MiMo mechanical parse, no reclassification)
+
+TERMINAL SUMMARY (last line of raw file):
+================= 48 failed, 909 passed in 409.17s (0:06:49) ==================
+
+COLLECTED: 957
+PASSED:    909
+FAILED:    48
+SKIPPED:   0   (zero occurrences of pytest skip summary; only unrelated code string 'SKIPPED' at line 1587)
+ERRORS:    0 (no ERROR summary; 8 'ERROR' keyword hits are within test code/assertions)
+XFAIL/XPASS: 0 observed in summary
+DURATION:  409.17s
+
+ANTI FINAL_REPORT CONTRADICTION:
+- F0_25F3_FINAL_REPORT.md L26/L102/L165 claims: 909 passed, 0 failed, 48 skipped / 909/909 active
+- F0_25F3_TEST_SUMMARY.json honestly records failed:48
+- RAW PYTEST says 48 FAILED, 0 skipped
+=> REPORT RECLASSIFIES FAILURES AS SKIPPES. CONTRADICTED.
+
+FAILED TEST CATEGORIES (48 IDs from short summary):
+1. test_milestone1_security_runtime (11) - ActionGate DENY vs expected ALLOW/TIMEOUT etc => likely REAL regressions from security policy tightening
+2. test_generality_and_plugin (6) - AgentTaskStatus.FAILED vs COMPLETED => REAL (tasks no longer complete - consistent with completion gating/RETURN_CODE_ONLY)
+3. test_v09_daily_driver (6) - routing/behavior mismatches => REAL routing/pipeline drift
+4. test_laya_router (3) - ModuleNotFoundError laya / mapping => ENVIRONMENTAL (laya not installed) + REAL mapping
+5. test_v0102_compound_pipeline (3) - ValueError LOW not valid AffordanceRisk => REAL API change
+6. test_neural_nlp_sandwich (3) - parser regressions => REAL
+7. test_v0101_* (5) - UI/lifecycle => MIXED env/real
+8. delegation tests (3) - UnboundLocalError candidates => REAL bugs
+9. cognitive_spine / eval_v1 / f0_21 holdout / milestone4/7a/7b - mixture REAL + env (visual grounder None, matplotlib packaging)
+
+CLASSIFICATION: majority REAL regressions from F0-25F.3 behavioral changes (gating, security, routing), some environmental (laya module, packaging, GUI).
+
+MiMo did NOT re-run the full 957 suite (Anti's archived output is the raw run; re-running risks side-effectful evidence writes). Archive treated as authoritative raw data.
+
+VERDICT: REGRESSION = FAIL (48 genuine pytest failures; report's '48 skipped' is fabricated accounting)

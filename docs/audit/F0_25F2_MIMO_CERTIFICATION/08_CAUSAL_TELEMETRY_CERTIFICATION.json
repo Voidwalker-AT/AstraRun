@@ -1,0 +1,25 @@
+{
+  "auditor": "MiMo",
+  "anti_stage13_trace": {
+    "claim": "24-event chain MODEL_REQUEST through GOAL_COMPLETED under run_1791752572839_47620c47",
+    "mimo_finding": "HARNESS-FABRICATED for many stages: scripts/verify_f0_25f1_complete_physical.py emits GOAL_INTERPRETED, MODEL_REQUEST/RESPONSE (with hardcoded model_id qwen2.5-coder-14b-instruct), PLAN_CREATED, STATE_OBSERVED, POSTCONDITION_VERIFIED, GOAL_COMPLETED itself; broker uses executor_override=lambda **_: True; 'model-synthesized' code is a hardcoded literal L193-204",
+    "verdict_on_anti_trace": "CONTRADICTED as production causal proof — physical facts real, provenance narrative harness-emitted"
+  },
+  "mimo_independent_presentation_run": {
+    "run_id": "run_1791817324291_326bab32",
+    "events": ["REQUEST_RECEIVED","GOAL_INTERPRETED","PLAN_CREATED","RESULT_PRESENTATION_REQUESTED","STATE_OBSERVED","POSTCONDITION_VERIFIED","RESULT_PRESENTED","RESOURCE_REGISTERED","GOAL_COMPLETED"],
+    "same_run_id": true,
+    "parent_chain_linear": true,
+    "timestamp_ordering_ok": true,
+    "RESULT_PRESENTED_non_null_hwnd": true,
+    "GOAL_COMPLETED_after_POSTCONDITION": true,
+    "production_origin": true,
+    "missing": ["MODEL_*", "ACTION_*", "RESOURCE_DISPOSED", "RESOURCE_RESTORATION_VERIFIED"],
+    "note": "Presentation-only path; model/broker stages correctly absent for present_result capability"
+  },
+  "fresh_model_broker_task": "UNVERIFIED this phase — MiMo did not execute a new dynamic-computation task through the installed binary (time/scope); F0-25F.1's model/broker stages for factorial are harness-stubbed per source audit",
+  "GOAL_COMPLETED_production_gate": "ABSENT — telemetry.end_run unconditional (L222-240); gating only in evaluation modules",
+  "write_failure_handling": "logs ERROR but emit() returns event as success; get_run_events falls back to memory",
+  "verdict": "TELEMETRY INTEGRITY = PARTIAL",
+  "verdict_rationale": "Production presentation telemetry chain is honest and correctly ordered (MiMo FACT). F0-25F.1's fuller factorial trace is not production-faithful. GOAL_COMPLETED ungated in production. Fresh MODEL+BROKER end-to-end not independently certified this phase."
+}

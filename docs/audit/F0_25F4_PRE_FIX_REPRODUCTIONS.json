@@ -1,0 +1,126 @@
+{
+  "phase": "F0-25F.4",
+  "benchmark": "PRE_FIX_REPRODUCTIONS",
+  "timestamp": 1791829037.7738051,
+  "reproductions": [
+    {
+      "defect_id": "REPRO_A_NO_CONTRACT_WIRED",
+      "description": "Production never registers active contract with telemetry or completion gate, causing all completion attempts to fail with FAILED_NO_CONTRACT.",
+      "emitted_event": {
+        "event_id": "cev_1791829037861_b6e218",
+        "run_id": "run_1791829037858_1ab26c56",
+        "task_id": "task_test_a",
+        "parent_event_id": "cev_1791829037858_e61758",
+        "timestamp_monotonic": 427424.9291639,
+        "timestamp_wall": 1791829037.861531,
+        "event_type": "GOAL_COMPLETED",
+        "component": "AstraApplication",
+        "input_hash": null,
+        "output_hash": null,
+        "model_id": null,
+        "capability": null,
+        "authorization_verdict": null,
+        "resulting_event_id": null,
+        "data": {
+          "status": "FAILED_NO_CONTRACT",
+          "message": "Missing GoalContract: cannot complete without explicit contract postconditions.",
+          "completed": false
+        }
+      },
+      "event_status": "FAILED_NO_CONTRACT",
+      "completed_flag": false,
+      "reproduced": true
+    },
+    {
+      "defect_id": "REPRO_B_UNGATED_COMPLETION_VARIANTS",
+      "description": "GOAL_COMPLETED event is emitted unconditionally when status != 'SUCCESS', bypassing AuthoritativeCompletionGate.",
+      "emitted_event": {
+        "event_id": "cev_1791829037865_67b823",
+        "run_id": "run_1791829037864_0ba2b641",
+        "task_id": "task_test_b",
+        "parent_event_id": "cev_1791829037864_cc1c4a",
+        "timestamp_monotonic": 427424.933239,
+        "timestamp_wall": 1791829037.8656063,
+        "event_type": "GOAL_COMPLETED",
+        "component": "DirectProducer",
+        "input_hash": null,
+        "output_hash": null,
+        "model_id": null,
+        "capability": null,
+        "authorization_verdict": null,
+        "resulting_event_id": null,
+        "data": {
+          "status": "FAILED",
+          "completed": false,
+          "message": "Failed execution"
+        }
+      },
+      "reproduced": true
+    },
+    {
+      "defect_id": "REPRO_C_RETURN_CODE_ONLY_SELECTION",
+      "description": "Planner assigns RETURN_CODE_ONLY to execute_dynamic_tool and reveal_file even though goal requires persistent file and presentation.",
+      "plan_steps": [
+        [
+          "step_1",
+          "execute_dynamic_tool",
+          "RETURN_CODE_ONLY"
+        ],
+        [
+          "step_2",
+          "reveal_file",
+          "RETURN_CODE_ONLY"
+        ]
+      ],
+      "reproduced": true
+    },
+    {
+      "defect_id": "REPRO_D_RETURN_CODE_ONLY_REJECTION",
+      "description": "StepVerifier fail-closed rejects RETURN_CODE_ONLY as dispatch-level only, making it impossible to complete file tasks.",
+      "verified": false,
+      "verifier_message": "RETURN_CODE_ONLY is insufficient for completion: success is dispatch-level only. Observed state or a postcondition strategy is required.",
+      "reproduced": true
+    },
+    {
+      "defect_id": "REPRO_E_CONSUMER_EVENT_PRESENCE_HEURISTIC",
+      "description": "Evaluators count event presence rather than validating terminal status == SUCCESS and gate approval.",
+      "legacy_pattern": "for ev in events:\n        if ev.get(\"event_type\") == \"GOAL_COMPLETED\":\n            completed_event = ev\n    verdict = \"PASS\" if completed_event is not None else \"FAIL\"",
+      "reproduced": true
+    },
+    {
+      "defect_id": "REPRO_F_DUPLICATE_CAUSAL_ARCHIVE",
+      "description": "F0-25F.3 physical causal archive contained 44 rows but only 22 unique event_ids due to duplicate event ingestion across run_id.jsonl and causal_stream.jsonl.",
+      "sample_rows": 44,
+      "sample_unique_ids": 22,
+      "reproduced": true
+    },
+    {
+      "defect_id": "REPRO_G_RESOURCE_PROVENANCE_ABSENCE",
+      "description": "OwnedResource lacks creation timestamp (create_time), parent PID, and ownership class to distinguish persistent infra from task leaks.",
+      "has_create_time": false,
+      "has_ownership_class": false,
+      "reproduced": true
+    },
+    {
+      "defect_id": "REPRO_H_ROUTING_UNDER_RECALL",
+      "description": "F0-25F.3 blind set produced 12 false negatives for DYNAMIC_COMPUTATION (recall=78.18%), mistakenly routing to direct capabilities or clarification.",
+      "false_negatives_count": 12,
+      "reproduced": true
+    },
+    {
+      "defect_id": "REPRO_I_PYTEST_PROSE_MISREPORTING",
+      "description": "F0-25F.3 test summary machine data had 48 failed, but final prose report falsely relabeled them as 48 skipped.",
+      "machine_failed": 48,
+      "machine_skipped": 0,
+      "reproduced": true
+    },
+    {
+      "defect_id": "REPRO_J_ATTESTATION_FALLBACK_LITERALS",
+      "description": "result_presentation.py contains hardcoded fallback literals 'AstraRun' and 'QtLauncher' when window text/class are empty.",
+      "has_fallback_title": true,
+      "has_fallback_class": true,
+      "reproduced": true
+    }
+  ],
+  "all_reproduced": true
+}

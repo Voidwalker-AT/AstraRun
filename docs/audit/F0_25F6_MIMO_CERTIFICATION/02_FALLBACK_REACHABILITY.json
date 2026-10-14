@@ -1,0 +1,16 @@
+{
+  "auditor": "MiMo",
+  "module": "src/astrarun/recovery/{engine.py,models.py}",
+  "mechanisms": [
+    {"mechanism": "failure_classification", "class": "PRODUCTION_REACHABLE", "evidence": "IntelligentFallbackEngine instantiated agent/loop.py:113; evaluate_failure called L842 with FailureCategory evidence"},
+    {"mechanism": "retry_replan", "class": "PRODUCTION_REACHABLE", "evidence": "engine actions RETRY_SAME/REPLAN returned to loop L846"},
+    {"mechanism": "alternative_capability", "class": "PRODUCTION_REACHABLE", "evidence": "SELECT_ALTERNATIVE_CAPABILITY action; loop consumes decision"},
+    {"mechanism": "alternative_model", "class": "PARTIAL", "evidence": "action defined in models; production model-switch wiring not fully traced in loop call site"},
+    {"mechanism": "verification_recovery", "class": "PARTIAL", "evidence": "POSTCONDITION_FAILED category exists; full verify-retry path partially in loop"},
+    {"mechanism": "bounded_retry_cycle_detection", "class": "PRODUCTION_REACHABLE", "evidence": "engine.py fingerprint counts L56-60; MAX_RETRIES L106-125; _detect_cycle L130-143,253-256"},
+    {"mechanism": "fail_closed_termination", "class": "PRODUCTION_REACHABLE", "evidence": "FAIL_CLOSED on budget exhaustion and oscillation L69,136,225"}
+  ],
+  "preserves_original_goal": "SUPPORTED — engine diagnostics include original_goal_valid flag; no evidence of goal mutation in decision path",
+  "weakens_postconditions": "NOT OBSERVED — recovery actions do not rewrite VerifierStrategy in the engine itself; however RETURN_CODE_ONLY weakness remains a planner/verifier issue outside recovery",
+  "verdict": "FALLBACK ARCHITECTURE = PRODUCTION-PARTIAL (core engine reachable via agent loop; not all 12 actions fully exercised on every production path; model-fallback wiring partial)"
+}

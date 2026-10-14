@@ -1,0 +1,18 @@
+{
+  "auditor": "MiMo",
+  "trace_file": "docs/audit/F0_25F3_CAUSAL_TRACE.json",
+  "event_count_declared": 44,
+  "unique_event_ids": 22,
+  "duplication_finding": "FACT — every event appears exactly twice in the archived file (44 = 22 x 2); either double-serialization or double-harvest; weakens archive integrity",
+  "run_scope": {"distinct_run_ids": ["run_1791826249112_f05f4fb7"], "single_coherent_run": true},
+  "producers": {"AstraApplication": 2, "GoalPlanner": 4, "ExecutionBroker": 14, "ModelClient": 8, "DynamicToolBuilder": 4, "DesktopObserver": 8, "AstraResourceLedger": 4, "EVALUATOR_OR_HARNESS": 0},
+  "no_evaluator_manufactured_events": "SUPPORTED — zero harness components in producer list; verify_f0_25f3_physical_acceptance.py is IPC client",
+  "no_broker_stub": "SUPPORTED — ExecutionBroker events present as production component (no executor_override in f0_25f3 path per explorer-9)",
+  "no_fake_model_response": "SUPPORTED — ModelClient producer; report cites live DEEP endpoint (INFERENCE without raw HTTP capture)",
+  "no_manual_postcondition_verified": "CONFIRMED ABSENT — zero POSTCONDITION_VERIFIED events in trace (consistent with RETURN_CODE_ONLY failure)",
+  "no_manual_goal_completed": "CONFIRMED ABSENT — zero GOAL_COMPLETED events",
+  "completion_before_evidence": "IMPOSSIBLE this run (no completion at all)",
+  "prior_run_contamination": "none inside trace (single run_id)",
+  "is_failed_task_valuable_evidence": "YES — a correct fail-closed refusal: model/broker/action/observation progressed, verifier failed, gate withheld GOAL_COMPLETED, presentation withheld. Evidence FOR completion-gate fail-closed behavior AND FOR verifier-strategy defect.",
+  "gaps": ["duplicate event archive", "contract injection during run unverified", "raw HTTP model capture absent"]
+}

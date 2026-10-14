@@ -46,13 +46,14 @@ def _get_com_element(element: UIElementRef):
 
     _ensure_desktop_attached()
 
-    import comtypes.client
-    from comtypes.gen import UIAutomationClient
+    from astrarun.computer_use.ui.uia_support import get_uia_module, get_uia_interface
+    UIAutomationClient = get_uia_module()
+    if not UIAutomationClient:
+        return None
 
-    uia = comtypes.client.CreateObject(
-        UIAutomationClient.CUIAutomation,
-        interface=UIAutomationClient.IUIAutomation,
-    )
+    uia = get_uia_interface()
+    if not uia:
+        return None
     root = uia.ElementFromHandle(element.hwnd)
     if not root:
         return None
@@ -120,7 +121,10 @@ def invoke_element(element: UIElementRef, force: bool = False) -> Tuple[bool, st
         return False, err_msg, err_code
 
     try:
-        from comtypes.gen import UIAutomationClient
+        from astrarun.computer_use.ui.uia_support import get_uia_module
+        UIAutomationClient = get_uia_module()
+        if not UIAutomationClient:
+            return False, "UIAutomation module not available.", CapabilityErrorCode.UNAVAILABLE
 
         com_elem = _get_com_element(element)
         if not com_elem:
@@ -192,7 +196,10 @@ def set_element_value(element: UIElementRef, text: str) -> Tuple[bool, str, Opti
         return False, err_msg, err_code
 
     try:
-        from comtypes.gen import UIAutomationClient
+        from astrarun.computer_use.ui.uia_support import get_uia_module
+        UIAutomationClient = get_uia_module()
+        if not UIAutomationClient:
+            return False, "UIAutomation module not available.", CapabilityErrorCode.UNAVAILABLE
 
         com_elem = _get_com_element(element)
         if not com_elem:
@@ -236,7 +243,10 @@ def toggle_element(element: UIElementRef) -> Tuple[bool, str, Optional[Capabilit
         return False, err_msg, err_code
 
     try:
-        from comtypes.gen import UIAutomationClient
+        from astrarun.computer_use.ui.uia_support import get_uia_module
+        UIAutomationClient = get_uia_module()
+        if not UIAutomationClient:
+            return False, "UIAutomation module not available.", CapabilityErrorCode.UNAVAILABLE
 
         com_elem = _get_com_element(element)
         if not com_elem:
@@ -264,7 +274,10 @@ def select_element(element: UIElementRef) -> Tuple[bool, str, Optional[Capabilit
         return False, err_msg, err_code
 
     try:
-        from comtypes.gen import UIAutomationClient
+        from astrarun.computer_use.ui.uia_support import get_uia_module
+        UIAutomationClient = get_uia_module()
+        if not UIAutomationClient:
+            return False, "UIAutomation module not available.", CapabilityErrorCode.UNAVAILABLE
 
         com_elem = _get_com_element(element)
         if not com_elem:
@@ -313,7 +326,10 @@ def scroll_element(element: UIElementRef, direction: str = "down") -> Tuple[bool
         return False, err_msg, err_code
 
     try:
-        from comtypes.gen import UIAutomationClient
+        from astrarun.computer_use.ui.uia_support import get_uia_module
+        UIAutomationClient = get_uia_module()
+        if not UIAutomationClient:
+            return False, "UIAutomation module not available.", CapabilityErrorCode.UNAVAILABLE
 
         com_elem = _get_com_element(element)
         if not com_elem:

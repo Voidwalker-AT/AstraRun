@@ -1,0 +1,1935 @@
+{
+  "phase": "F0-25F.4",
+  "benchmark": "ROUTING_BLIND_HOLDOUT_320",
+  "sha256": "eb8c72cea888292a7aee834c7fac90ffceb8a2538fae603162b1611b79d778e8",
+  "total_prompts": 320,
+  "class_distribution": {
+    "DYNAMIC_COMPUTATION": 80,
+    "KNOWN_CAPABILITY": 80,
+    "CONVERSATIONAL": 80,
+    "CLARIFICATION_REQUIRED": 80
+  },
+  "collision_cases_count": 85,
+  "prompts": [
+    {
+      "id": "BLIND-DYN-001",
+      "prompt": "compute the eigenvalues of this 4x4 covariance matrix and output to eigenvalues.json",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-DYN-002",
+      "prompt": "calculate the trajectories of a double pendulum over 20 seconds and save to pendulum.csv",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-DYN-003",
+      "prompt": "work out the real and complex roots of this quartic polynomial into roots.txt",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-DYN-004",
+      "prompt": "solve this system of five linear equations using LU decomposition and save to solution.json",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-DYN-005",
+      "prompt": "simulate a 3D random walk with 5000 steps and save the displacement history to walk_3d.csv",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-DYN-006",
+      "prompt": "calculate the perimeter and polygon area from these GPS vertices and export to geom_metrics.json",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-DYN-007",
+      "prompt": "compute the rolling standard deviation and variance of these stock ticks into volatility.json",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-DYN-008",
+      "prompt": "simulate a predator-prey Lotka-Volterra model across 100 timesteps and write to simulation.csv",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-DYN-009",
+      "prompt": "calculate the first 100 prime numbers and their successive gaps into prime_gaps.txt",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-DYN-010",
+      "prompt": "compute the fast fourier transform of this discrete audio signal and save magnitudes to fft.json",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-DYN-011",
+      "prompt": "simulate Brownian motion for 100 particles and record final positions in particles.json",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-DYN-012",
+      "prompt": "compute the convex hull of these 2D points using the Graham scan algorithm into hull.json",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-DYN-013",
+      "prompt": "calculate the Fibonacci sequence up to index 200 with arbitrary precision into fib.txt",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-DYN-014",
+      "prompt": "solve the one-dimensional heat diffusion equation across a rod into heat_profile.csv",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-DYN-015",
+      "prompt": "compute the singular value decomposition of this matrix and store singular values in svd.json",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-DYN-016",
+      "prompt": "calculate the shortest path distances in this weighted graph using Dijkstra into distances.json",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-DYN-017",
+      "prompt": "simulate the Collatz sequence for all integers up to 1000 and record max sequence lengths in collatz.csv",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-DYN-018",
+      "prompt": "compute the linear regression coefficients and R-squared for these paired readings into regression.json",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-DYN-019",
+      "prompt": "simulate a three-body gravitational orbital system and save step coordinates to orbits.csv",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-DYN-020",
+      "prompt": "calculate numerical integration of the error function from 0 to 5 using Simpson's rule into integral.txt",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-DYN-021",
+      "prompt": "work out the eigenvalues and condition number of this Hilbert matrix into hilbert_stats.json",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-DYN-022",
+      "prompt": "simulate a Markov chain with 4 states across 1000 transitions and write state frequencies to markov.json",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-DYN-023",
+      "prompt": "calculate the geodesic distance between pairs of coordinate points and save to distances.csv",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-DYN-024",
+      "prompt": "compute the autocorrelation of this sensor time-series data and write lags to autocorr.json",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-DYN-025",
+      "prompt": "solve the Poisson equation on a 20x20 grid with Dirichlet boundary conditions into grid.csv",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-DYN-026",
+      "prompt": "compute the Cholesky decomposition of this symmetric positive-definite matrix into cholesky.json",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-DYN-027",
+      "prompt": "solve a system of nonlinear differential equations using Runge-Kutta 4th order into rk4_output.csv",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-DYN-028",
+      "prompt": "calculate prime factorizations for all composite numbers up to 500 into factors.json",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-DYN-029",
+      "prompt": "simulate a two-dimensional cellular automaton for 250 steps and save grid history to ca_grid.csv",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-DYN-030",
+      "prompt": "calculate the determinant and matrix inverse of this 5x5 matrix into matrix_inv.json",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-DYN-031",
+      "prompt": "parse nginx access logs and aggregate request count per status code into http_codes.json",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-DYN-032",
+      "prompt": "compile a summary table of failed SSH login attempts from auth.log into ssh_failures.txt",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-DYN-033",
+      "prompt": "parse this apache error log and compute the top 10 most frequent client IPs into top_ips.json",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-DYN-034",
+      "prompt": "extract API response latencies from request.log and calculate 95th and 99th percentiles into latencies.json",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-DYN-035",
+      "prompt": "parse sys_metrics.csv and generate a summary report of CPU utilization spikes into cpu_spikes.txt",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-DYN-036",
+      "prompt": "transform this nested json of customer orders into a flattened sales summary table in sales.csv",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-DYN-037",
+      "prompt": "aggregate total network bandwidth used per port from netflow.log into net_usage.json",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-DYN-038",
+      "prompt": "parse git log output and compute total commits and lines changed per author into author_stats.txt",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-DYN-039",
+      "prompt": "extract SQL slow query durations from db_slow.log and aggregate average execution time per table into query_summary.json",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-DYN-040",
+      "prompt": "parse memory allocation logs and compute peak heap usage per thread into thread_memory.json",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-DYN-041",
+      "prompt": "compile a summary table of HTTP 500 exceptions from app.log grouped by endpoint into error_table.txt",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-DYN-042",
+      "prompt": "parse docker daemon logs and count container crash events per image into crash_metrics.json",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-DYN-043",
+      "prompt": "extract disk I/O metrics from iostat.log and group average write times by device into disk_io.json",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-DYN-044",
+      "prompt": "aggregate daily weather measurements from sensor_dump.csv and compute monthly temperature averages into monthly_weather.csv",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-DYN-045",
+      "prompt": "transform this json array of telemetry events into a frequency distribution table in event_freqs.json",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-DYN-046",
+      "prompt": "parse payment gateway webhook logs and aggregate settlement failure reasons into settlement_fails.csv",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-DYN-047",
+      "prompt": "compile a summary report of kernel panic stack traces into kernel_analysis.txt",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-DYN-048",
+      "prompt": "extract user login session durations from auth.csv and compute median session length into session_stats.json",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-DYN-049",
+      "prompt": "parse load balancer access logs and compute average response payload size by URI into uri_payloads.json",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-DYN-050",
+      "prompt": "transform raw JSON sensor telemetry into a pivot table of hourly averages in pivot_table.csv",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-DYN-051",
+      "prompt": "parse redis slowlog entries and compute command frequency breakdown into redis_stats.json",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-DYN-052",
+      "prompt": "extract microservice trace spans and compute latency bottlenecks per service into span_latencies.csv",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-DYN-053",
+      "prompt": "aggregate e-commerce cart abandonments by product category into cart_abandonment.json",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-DYN-054",
+      "prompt": "parse firewall drop logs and aggregate blocked traffic by destination port into firewall_blocks.csv",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-DYN-055",
+      "prompt": "extract memory leak candidates from heap profiler dump into heap_candidates.json",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-DYN-056",
+      "prompt": "aggregate temperature sensor anomalies exceeding 3 sigma into temperature_anomalies.csv",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-DYN-057",
+      "prompt": "parse build artifact timing logs and compute compilation bottlenecks per module into build_bottlenecks.json",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-DYN-058",
+      "prompt": "transform unstructured customer review text into word frequency counts in word_freqs.json",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-DYN-059",
+      "prompt": "extract database deadlock events from postgres.log into deadlocks_summary.txt",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-DYN-060",
+      "prompt": "compile a summary table of container resource throttle events into container_throttles.csv",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-DYN-061",
+      "prompt": "generate a 25x25 random maze using depth-first search and save ASCII layout to maze.txt",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-DYN-062",
+      "prompt": "generate synthetic time-series data for 10 simulated IoT temperature nodes into iot_nodes.csv",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-DYN-063",
+      "prompt": "generate a correlation matrix from multivariate sensor data and save heatmap data to correlation.json",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-DYN-064",
+      "prompt": "generate a frequency histogram bin table for these customer age values into age_histogram.csv",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-DYN-065",
+      "prompt": "generate a scatter plot coordinate dataset for k-means clustered data into clusters.json",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-DYN-066",
+      "prompt": "generate a synthetic test dataset of 500 mock user profiles with addresses into mock_users.json",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-DYN-067",
+      "prompt": "generate Mandelbrot set boundary coordinates at zoom level 4 into mandelbrot_coords.csv",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-DYN-068",
+      "prompt": "generate a 2D heightmap grid using Perlin noise algorithm and save to heightmap.csv",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-DYN-069",
+      "prompt": "generate a line chart coordinate dataset for exponential decay curves into decay_chart.json",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-DYN-070",
+      "prompt": "generate a Pareto front dataset for multi-objective optimization into pareto_front.csv",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-DYN-071",
+      "prompt": "generate a synthetic dataset of financial transactions with planted fraud anomalies into transactions.csv",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-DYN-072",
+      "prompt": "generate a Delaunay triangulation network from 50 random 2D vertices into triangulation.json",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-DYN-073",
+      "prompt": "generate a synthetic population demographic pyramid distribution into demographics.csv",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-DYN-074",
+      "prompt": "generate an adjacency matrix for a scale-free Barabasi-Albert network into network_matrix.csv",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-DYN-075",
+      "prompt": "generate a synthetic sales forecast with seasonal ARIMA noise into forecast.csv",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-DYN-076",
+      "prompt": "generate a Voronoi diagram cell partition dataset for 40 seeds into voronoi_cells.json",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-DYN-077",
+      "prompt": "generate a 2D Gaussian mixture distribution sample into gaussian_samples.csv",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-DYN-078",
+      "prompt": "generate synthetic server workload patterns for stress testing into stress_workload.csv",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-DYN-079",
+      "prompt": "generate a synthetic stock price order book simulation history into order_book.csv",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-DYN-080",
+      "prompt": "generate a decision tree split coordinate dataset into tree_splits.json",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CAP-001",
+      "prompt": "mute the system volume",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CAP-002",
+      "prompt": "unmute system audio",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CAP-003",
+      "prompt": "lock my workstation",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CAP-004",
+      "prompt": "lock this computer",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CAP-005",
+      "prompt": "check current system memory usage",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CAP-006",
+      "prompt": "show available disk space on drive C",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CAP-007",
+      "prompt": "take a screenshot of the entire desktop",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CAP-008",
+      "prompt": "capture a screenshot right now",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CAP-009",
+      "prompt": "generate battery report into Downloads",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CAP-010",
+      "prompt": "create a Windows battery report",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CAP-011",
+      "prompt": "scan available wifi networks",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CAP-012",
+      "prompt": "show nearby wifi networks",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CAP-013",
+      "prompt": "show current wifi status",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CAP-014",
+      "prompt": "check my wifi connection",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CAP-015",
+      "prompt": "get system information and uptime",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CAP-016",
+      "prompt": "show computer hostname and OS version",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CAP-017",
+      "prompt": "list running processes on this machine",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CAP-018",
+      "prompt": "what processes are currently running?",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CAP-019",
+      "prompt": "check cpu load on workstation",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CAP-020",
+      "prompt": "inspect open network ports",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CAP-021",
+      "prompt": "check if port 8080 is listening",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CAP-022",
+      "prompt": "check if port 443 is active",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CAP-023",
+      "prompt": "find file report.pdf in Documents",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CAP-024",
+      "prompt": "search for config.json in user folder",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CAP-025",
+      "prompt": "show downloads folder in explorer",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CAP-026",
+      "prompt": "open notepad",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CAP-027",
+      "prompt": "launch calculator",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CAP-028",
+      "prompt": "start windows terminal",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CAP-029",
+      "prompt": "open visual studio code",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CAP-030",
+      "prompt": "launch file explorer",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CAP-031",
+      "prompt": "open task manager",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CAP-032",
+      "prompt": "start edge browser",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CAP-033",
+      "prompt": "open settings",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CAP-034",
+      "prompt": "launch command prompt",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CAP-035",
+      "prompt": "open powershell",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CAP-036",
+      "prompt": "close notepad",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CAP-037",
+      "prompt": "close calculator",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CAP-038",
+      "prompt": "close windows terminal",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CAP-039",
+      "prompt": "exit file explorer",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CAP-040",
+      "prompt": "close edge browser",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CAP-041",
+      "prompt": "is notepad currently running?",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CAP-042",
+      "prompt": "check if calculator is open",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CAP-043",
+      "prompt": "is visual studio code running?",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CAP-044",
+      "prompt": "do i have notepad installed?",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CAP-045",
+      "prompt": "check if vivaldi is installed",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CAP-046",
+      "prompt": "is edge browser installed?",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CAP-047",
+      "prompt": "minimize the active window",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CAP-048",
+      "prompt": "maximize this window",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CAP-049",
+      "prompt": "bring notepad to foreground",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CAP-050",
+      "prompt": "switch to calculator window",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CAP-051",
+      "prompt": "generate battery report",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-CAP-052",
+      "prompt": "save battery report to downloads",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-CAP-053",
+      "prompt": "show battery report",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-CAP-054",
+      "prompt": "produce a battery health report",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-CAP-055",
+      "prompt": "check battery health report",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-CAP-056",
+      "prompt": "scan wifi networks in area",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-CAP-057",
+      "prompt": "scan for available wireless signals",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-CAP-058",
+      "prompt": "perform wifi scan",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-CAP-059",
+      "prompt": "show wifi scan list",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-CAP-060",
+      "prompt": "open git status in repository",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-CAP-061",
+      "prompt": "show git log of recent commits",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-CAP-062",
+      "prompt": "view repository git status",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-CAP-063",
+      "prompt": "check git branch status",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-CAP-064",
+      "prompt": "show system summary",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-CAP-065",
+      "prompt": "display system hardware summary",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-CAP-066",
+      "prompt": "open summary of running tasks",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-CAP-067",
+      "prompt": "inspect system event log viewer",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-CAP-068",
+      "prompt": "open event log settings",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-CAP-069",
+      "prompt": "open visual studio code editor",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-CAP-070",
+      "prompt": "start code editor",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-CAP-071",
+      "prompt": "launch code application",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-CAP-072",
+      "prompt": "open character map table",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-CAP-073",
+      "prompt": "open ascii character table",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-CAP-074",
+      "prompt": "inspect routing table in network connections",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-CAP-075",
+      "prompt": "view network adapter connections table",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-CAP-076",
+      "prompt": "show installed apps table in settings",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-CAP-077",
+      "prompt": "open bluetooth settings",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-CAP-078",
+      "prompt": "open display settings",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-CAP-079",
+      "prompt": "open sound settings",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-CAP-080",
+      "prompt": "take screenshot of active window",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-CONV-001",
+      "prompt": "why is the sky blue?",
+      "expected_intent_class": "CONVERSATIONAL",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CONV-002",
+      "prompt": "can you explain what a race condition is in multi-threaded programming?",
+      "expected_intent_class": "CONVERSATIONAL",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CONV-003",
+      "prompt": "how does public key cryptography work?",
+      "expected_intent_class": "CONVERSATIONAL",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CONV-004",
+      "prompt": "what is the difference between TCP and UDP?",
+      "expected_intent_class": "CONVERSATIONAL",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CONV-005",
+      "prompt": "could you explain how garbage collection works in Python?",
+      "expected_intent_class": "CONVERSATIONAL",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CONV-006",
+      "prompt": "what was the primary cause of the Bronze Age collapse?",
+      "expected_intent_class": "CONVERSATIONAL",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CONV-007",
+      "prompt": "how does a quantum computer differ from a classical computer?",
+      "expected_intent_class": "CONVERSATIONAL",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CONV-008",
+      "prompt": "explain the concept of event-driven architecture",
+      "expected_intent_class": "CONVERSATIONAL",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CONV-009",
+      "prompt": "what is the purpose of an index in a relational database?",
+      "expected_intent_class": "CONVERSATIONAL",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CONV-010",
+      "prompt": "how do convolutional neural networks process images?",
+      "expected_intent_class": "CONVERSATIONAL",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CONV-011",
+      "prompt": "what causes ocean tides on Earth?",
+      "expected_intent_class": "CONVERSATIONAL",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CONV-012",
+      "prompt": "why do leaves change color in the autumn?",
+      "expected_intent_class": "CONVERSATIONAL",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CONV-013",
+      "prompt": "what is the difference between processes and threads?",
+      "expected_intent_class": "CONVERSATIONAL",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CONV-014",
+      "prompt": "how does DNS resolution work across the internet?",
+      "expected_intent_class": "CONVERSATIONAL",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CONV-015",
+      "prompt": "can you explain the CAP theorem for distributed systems?",
+      "expected_intent_class": "CONVERSATIONAL",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CONV-016",
+      "prompt": "what is the significance of the Turing test?",
+      "expected_intent_class": "CONVERSATIONAL",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CONV-017",
+      "prompt": "how does virtual memory paging work in Windows?",
+      "expected_intent_class": "CONVERSATIONAL",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CONV-018",
+      "prompt": "what is the difference between symmetric and asymmetric encryption?",
+      "expected_intent_class": "CONVERSATIONAL",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CONV-019",
+      "prompt": "can you explain how gradient descent optimizes neural networks?",
+      "expected_intent_class": "CONVERSATIONAL",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CONV-020",
+      "prompt": "why does time dilation occur in special relativity?",
+      "expected_intent_class": "CONVERSATIONAL",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CONV-021",
+      "prompt": "what are the main principles of functional programming?",
+      "expected_intent_class": "CONVERSATIONAL",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CONV-022",
+      "prompt": "how does raft consensus maintain cluster state?",
+      "expected_intent_class": "CONVERSATIONAL",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CONV-023",
+      "prompt": "what is the difference between stack and heap memory?",
+      "expected_intent_class": "CONVERSATIONAL",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CONV-024",
+      "prompt": "why is cache coherence important in multi-core processors?",
+      "expected_intent_class": "CONVERSATIONAL",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CONV-025",
+      "prompt": "how does TLS handshake establish a secure connection?",
+      "expected_intent_class": "CONVERSATIONAL",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CONV-026",
+      "prompt": "good morning Astra, how are you today?",
+      "expected_intent_class": "CONVERSATIONAL",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CONV-027",
+      "prompt": "hello there, thanks for your help earlier",
+      "expected_intent_class": "CONVERSATIONAL",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CONV-028",
+      "prompt": "have a wonderful day!",
+      "expected_intent_class": "CONVERSATIONAL",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CONV-029",
+      "prompt": "thank you very much for assisting me",
+      "expected_intent_class": "CONVERSATIONAL",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CONV-030",
+      "prompt": "who are you and what are your main capabilities?",
+      "expected_intent_class": "CONVERSATIONAL",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CONV-031",
+      "prompt": "help me decide between learning Rust or Go this semester",
+      "expected_intent_class": "CONVERSATIONAL",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CONV-032",
+      "prompt": "should I use PostgreSQL or MongoDB for an e-commerce catalog?",
+      "expected_intent_class": "CONVERSATIONAL",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CONV-033",
+      "prompt": "help me choose between AWS and Azure for a small startup",
+      "expected_intent_class": "CONVERSATIONAL",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CONV-034",
+      "prompt": "what are some best practices for writing clean unit tests?",
+      "expected_intent_class": "CONVERSATIONAL",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CONV-035",
+      "prompt": "how should I structure my daily schedule to avoid burnout?",
+      "expected_intent_class": "CONVERSATIONAL",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CONV-036",
+      "prompt": "can you give me advice on conducting technical interviews?",
+      "expected_intent_class": "CONVERSATIONAL",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CONV-037",
+      "prompt": "what are good strategies for managing technical debt in legacy codebases?",
+      "expected_intent_class": "CONVERSATIONAL",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CONV-038",
+      "prompt": "help me choose a good database migration strategy for zero downtime",
+      "expected_intent_class": "CONVERSATIONAL",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CONV-039",
+      "prompt": "how should I organize microservices repositories: mono-repo or multi-repo?",
+      "expected_intent_class": "CONVERSATIONAL",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CONV-040",
+      "prompt": "what are some tips for improving deep work concentration?",
+      "expected_intent_class": "CONVERSATIONAL",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CONV-041",
+      "prompt": "can you recommend a good book on distributed systems design?",
+      "expected_intent_class": "CONVERSATIONAL",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CONV-042",
+      "prompt": "how do I give constructive code review feedback without offending peers?",
+      "expected_intent_class": "CONVERSATIONAL",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CONV-043",
+      "prompt": "what should I consider before switching from monolith to microservices?",
+      "expected_intent_class": "CONVERSATIONAL",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CONV-044",
+      "prompt": "how can our engineering team improve sprint velocity estimation?",
+      "expected_intent_class": "CONVERSATIONAL",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CONV-045",
+      "prompt": "what are the trade-offs between serverless and containerized deployments?",
+      "expected_intent_class": "CONVERSATIONAL",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CONV-046",
+      "prompt": "what is the best way to prepare for an architecture review meeting?",
+      "expected_intent_class": "CONVERSATIONAL",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CONV-047",
+      "prompt": "how should I approach learning a completely unfamiliar codebase?",
+      "expected_intent_class": "CONVERSATIONAL",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CONV-048",
+      "prompt": "can you suggest techniques for effective debugging under pressure?",
+      "expected_intent_class": "CONVERSATIONAL",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CONV-049",
+      "prompt": "what are good principles for designing developer-friendly REST APIs?",
+      "expected_intent_class": "CONVERSATIONAL",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CONV-050",
+      "prompt": "how can I build resilience into background job worker queues?",
+      "expected_intent_class": "CONVERSATIONAL",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CONV-051",
+      "prompt": "what does the phrase clean code mean to software engineers?",
+      "expected_intent_class": "CONVERSATIONAL",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-CONV-052",
+      "prompt": "can you summarize the main plot of Hamlet?",
+      "expected_intent_class": "CONVERSATIONAL",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-CONV-053",
+      "prompt": "who wrote the play Romeo and Juliet and what is its plot?",
+      "expected_intent_class": "CONVERSATIONAL",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-CONV-054",
+      "prompt": "what is the plot of the novel 1984 by George Orwell?",
+      "expected_intent_class": "CONVERSATIONAL",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-CONV-055",
+      "prompt": "how do I solve a personality conflict between two team members?",
+      "expected_intent_class": "CONVERSATIONAL",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-CONV-056",
+      "prompt": "help me solve a dispute over code formatting standards",
+      "expected_intent_class": "CONVERSATIONAL",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-CONV-057",
+      "prompt": "can you help me solve this lateral thinking puzzle about a lighthouse?",
+      "expected_intent_class": "CONVERSATIONAL",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-CONV-058",
+      "prompt": "who painted the periodic table mural at the university?",
+      "expected_intent_class": "CONVERSATIONAL",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-CONV-059",
+      "prompt": "what are the standard dimensions of a regulation ping pong table?",
+      "expected_intent_class": "CONVERSATIONAL",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-CONV-060",
+      "prompt": "can you write a congratulatory email to a colleague who got promoted?",
+      "expected_intent_class": "CONVERSATIONAL",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-CONV-061",
+      "prompt": "draft a polite decline letter for a conference speaking invitation",
+      "expected_intent_class": "CONVERSATIONAL",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-CONV-062",
+      "prompt": "what is the airport code for Tokyo Haneda airport?",
+      "expected_intent_class": "CONVERSATIONAL",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-CONV-063",
+      "prompt": "what is the postal code format used in London?",
+      "expected_intent_class": "CONVERSATIONAL",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-CONV-064",
+      "prompt": "can you summarize the key findings of the Warren Commission report?",
+      "expected_intent_class": "CONVERSATIONAL",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-CONV-065",
+      "prompt": "what was recorded in the historic Apollo 11 captain's log?",
+      "expected_intent_class": "CONVERSATIONAL",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-CONV-066",
+      "prompt": "what does black box flight recorder log during an aircraft incident?",
+      "expected_intent_class": "CONVERSATIONAL",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-CONV-067",
+      "prompt": "can you calculate how many days are between Halloween and Christmas in your head?",
+      "expected_intent_class": "CONVERSATIONAL",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-CONV-068",
+      "prompt": "how does a chef work out the right balance of spices in a curry?",
+      "expected_intent_class": "CONVERSATIONAL",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-CONV-069",
+      "prompt": "why does the idiom don't count your chickens before they hatch exist?",
+      "expected_intent_class": "CONVERSATIONAL",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-CONV-070",
+      "prompt": "explain why every citizen's vote should count equally in a democracy",
+      "expected_intent_class": "CONVERSATIONAL",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-CONV-071",
+      "prompt": "what did Monty Python have to do with the naming of Python programming language?",
+      "expected_intent_class": "CONVERSATIONAL",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-CONV-072",
+      "prompt": "tell me the story of how Python got its name from British comedy",
+      "expected_intent_class": "CONVERSATIONAL",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-CONV-073",
+      "prompt": "can you explain what a truth table is in formal propositional logic?",
+      "expected_intent_class": "CONVERSATIONAL",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-CONV-074",
+      "prompt": "what is the difference between a coffee table and an end table?",
+      "expected_intent_class": "CONVERSATIONAL",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-CONV-075",
+      "prompt": "who holds the world record for the highest table tennis rally count?",
+      "expected_intent_class": "CONVERSATIONAL",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-CONV-076",
+      "prompt": "can you summarize the history of the periodic table of elements?",
+      "expected_intent_class": "CONVERSATIONAL",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-CONV-077",
+      "prompt": "how do directors plot camera angles in a film storyboard?",
+      "expected_intent_class": "CONVERSATIONAL",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-CONV-078",
+      "prompt": "what does the word solve mean in the context of forensic crime investigations?",
+      "expected_intent_class": "CONVERSATIONAL",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-CONV-079",
+      "prompt": "can you summarize the plot of Christopher Nolan's film Inception?",
+      "expected_intent_class": "CONVERSATIONAL",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-CONV-080",
+      "prompt": "count me in for the team outing, sounds like a lot of fun!",
+      "expected_intent_class": "CONVERSATIONAL",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-CLAR-001",
+      "prompt": "do something",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CLAR-002",
+      "prompt": "help me with this",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CLAR-003",
+      "prompt": "fix the problem",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CLAR-004",
+      "prompt": "start the task",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CLAR-005",
+      "prompt": "run it now",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CLAR-006",
+      "prompt": "handle the situation",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CLAR-007",
+      "prompt": "open the file",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CLAR-008",
+      "prompt": "save it to disk",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CLAR-009",
+      "prompt": "delete that folder",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CLAR-010",
+      "prompt": "calculate the result",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CLAR-011",
+      "prompt": "solve the equation",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CLAR-012",
+      "prompt": "compute the numbers",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CLAR-013",
+      "prompt": "plot the chart",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CLAR-014",
+      "prompt": "parse the log",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CLAR-015",
+      "prompt": "generate the report",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CLAR-016",
+      "prompt": "process the data",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CLAR-017",
+      "prompt": "check the thing",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CLAR-018",
+      "prompt": "inspect the window",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CLAR-019",
+      "prompt": "show me that",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CLAR-020",
+      "prompt": "find the document",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CLAR-021",
+      "prompt": "run the process",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CLAR-022",
+      "prompt": "make it work",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CLAR-023",
+      "prompt": "update the system",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CLAR-024",
+      "prompt": "send the payload",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CLAR-025",
+      "prompt": "connect to it",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CLAR-026",
+      "prompt": "restart the application",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CLAR-027",
+      "prompt": "clean up the workspace",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CLAR-028",
+      "prompt": "convert the input",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CLAR-029",
+      "prompt": "transform the output",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CLAR-030",
+      "prompt": "organize the files",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CLAR-031",
+      "prompt": "can you please",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CLAR-032",
+      "prompt": "i would like to",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CLAR-033",
+      "prompt": "where is the",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CLAR-034",
+      "prompt": "how do i get to",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CLAR-035",
+      "prompt": "because of the issue",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CLAR-036",
+      "prompt": "if you can then",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CLAR-037",
+      "prompt": "continue what we were doing yesterday",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CLAR-038",
+      "prompt": "do the same thing you did last time",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CLAR-039",
+      "prompt": "pick up from where we stopped",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CLAR-040",
+      "prompt": "use that previous value from earlier",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CLAR-041",
+      "prompt": "apply the same changes to the other one",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CLAR-042",
+      "prompt": "what happened to that task?",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CLAR-043",
+      "prompt": "did it finish yet?",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CLAR-044",
+      "prompt": "try running it again with different parameters",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CLAR-045",
+      "prompt": "change the setting like we talked about",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CLAR-046",
+      "prompt": "make the adjustment you suggested",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CLAR-047",
+      "prompt": "proceed with option number two",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CLAR-048",
+      "prompt": "yes go ahead with that",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CLAR-049",
+      "prompt": "no not that one the other one",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CLAR-050",
+      "prompt": "can you check on it?",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CLAR-051",
+      "prompt": "what was the name of that thing again?",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CLAR-052",
+      "prompt": "is it supposed to look like that?",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CLAR-053",
+      "prompt": "why did that happen just now?",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CLAR-054",
+      "prompt": "could you fix that error for me?",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CLAR-055",
+      "prompt": "put it back the way it was before",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CLAR-056",
+      "prompt": "solve",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-CLAR-057",
+      "prompt": "calculate",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-CLAR-058",
+      "prompt": "compute",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-CLAR-059",
+      "prompt": "plot",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-CLAR-060",
+      "prompt": "code",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-CLAR-061",
+      "prompt": "script",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-CLAR-062",
+      "prompt": "generate",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-CLAR-063",
+      "prompt": "summary",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-CLAR-064",
+      "prompt": "table",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-CLAR-065",
+      "prompt": "report",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-CLAR-066",
+      "prompt": "count",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-CLAR-067",
+      "prompt": "log",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-CLAR-068",
+      "prompt": "python",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-CLAR-069",
+      "prompt": "wifi",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-CLAR-070",
+      "prompt": "battery",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-CLAR-071",
+      "prompt": "asdfghjkl",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-CLAR-072",
+      "prompt": "qwertyuiop",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-CLAR-073",
+      "prompt": "zxcvbnm",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-CLAR-074",
+      "prompt": "blablabla",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-CLAR-075",
+      "prompt": "??? !!! ???",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-CLAR-076",
+      "prompt": "............",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-CLAR-077",
+      "prompt": "undefined null nan void",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-CLAR-078",
+      "prompt": "--- === +++",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-CLAR-079",
+      "prompt": "run script",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-CLAR-080",
+      "prompt": "generate table",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "is_collision_case": true
+    }
+  ]
+}

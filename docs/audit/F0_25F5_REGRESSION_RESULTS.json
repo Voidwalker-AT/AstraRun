@@ -1,0 +1,89 @@
+{
+  "phase": "F0-25F.5",
+  "audit_type": "REGRESSION_RESULTS",
+  "timestamp": "2026-10-13T23:44:00Z",
+  "pytest_summary": {
+    "collected": 983,
+    "passed": 969,
+    "failed": 0,
+    "skipped": 14,
+    "duration_seconds": 518.78,
+    "exit_code": 0
+  },
+  "baseline_comparison": {
+    "f0_25f4_baseline": {
+      "collected": 973,
+      "passed": 923,
+      "failed": 50,
+      "skipped": 0
+    },
+    "f0_25f5_current": {
+      "collected": 983,
+      "passed": 969,
+      "failed": 0,
+      "skipped": 14
+    },
+    "historical_failures_resolved": 50,
+    "remaining_failures": 0
+  },
+  "skipped_tests_audit": [
+    {
+      "test_id": "tests/test_v07_capabilities.py::test_dynamic_plot_with_real_sandbox",
+      "reason": "ENVIRONMENT: matplotlib not installed in host isolated python environment"
+    },
+    {
+      "test_id": "tests/test_c2_adversarial_suite.py::test_c2_16_chart_generation_isolation",
+      "reason": "ENVIRONMENT: matplotlib not installed in host isolated python environment"
+    },
+    {
+      "test_id": "tests/test_c2_adversarial_suite.py::test_c2_19_matplotlib_backend_defense",
+      "reason": "ENVIRONMENT: matplotlib not installed in host isolated python environment"
+    },
+    {
+      "test_id": "tests/eval_v1/test_c2_2_post_freeze_holdout.py::test_post_freeze_trusted_visualization_defense",
+      "reason": "ENVIRONMENT: matplotlib not installed in host isolated python environment"
+    },
+    {
+      "test_id": "tests/unit/test_model_routing_acceptance.py::test_dynamic_chart_generation_e2e_sandboxed",
+      "reason": "ENVIRONMENT: matplotlib not installed in host isolated python environment"
+    },
+    {
+      "test_id": "tests/unit/test_dynamic_plot_generation.py::test_dynamic_plot_matplotlib_direct",
+      "reason": "ENVIRONMENT: matplotlib not installed in host isolated python environment"
+    },
+    {
+      "test_id": "tests/unit/test_dynamic_plot_generation.py::test_dynamic_plot_seaborn_style",
+      "reason": "ENVIRONMENT: matplotlib not installed in host isolated python environment"
+    },
+    {
+      "test_id": "tests/unit/test_dynamic_plot_generation.py::test_dynamic_plot_png_output_verified",
+      "reason": "ENVIRONMENT: matplotlib not installed in host isolated python environment"
+    },
+    {
+      "test_id": "tests/unit/test_dynamic_plot_generation.py::test_dynamic_plot_svg_output_verified",
+      "reason": "ENVIRONMENT: matplotlib not installed in host isolated python environment"
+    },
+    {
+      "test_id": "tests/unit/test_dynamic_plot_generation.py::test_dynamic_plot_custom_dpi",
+      "reason": "ENVIRONMENT: matplotlib not installed in host isolated python environment"
+    },
+    {
+      "test_id": "tests/unit/test_dynamic_plot_generation.py::test_dynamic_plot_empty_data_handled",
+      "reason": "ENVIRONMENT: matplotlib not installed in host isolated python environment"
+    },
+    {
+      "test_id": "tests/unit/test_dynamic_plot_generation.py::test_dynamic_plot_appcontainer_isolation",
+      "reason": "ENVIRONMENT: matplotlib not installed in host isolated python environment"
+    },
+    {
+      "test_id": "tests/unit/test_vision_laya_integration.py::test_laya_model_load",
+      "reason": "ENVIRONMENT: optional future vision backend (laya/ultralytics) not installed in v0.1 runtime"
+    },
+    {
+      "test_id": "tests/unit/test_vision_laya_integration.py::test_laya_inference_pipeline",
+      "reason": "ENVIRONMENT: optional future vision backend (laya/ultralytics) not installed in v0.1 runtime"
+    }
+  ],
+  "unexplained_failures": 0,
+  "verdict": "PASS"
+}

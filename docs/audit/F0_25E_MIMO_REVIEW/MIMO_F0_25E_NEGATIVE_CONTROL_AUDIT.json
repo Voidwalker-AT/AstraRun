@@ -1,0 +1,64 @@
+{
+  "milestone": "F0_25E",
+  "title": "MIMO Independent Negative Control Audit",
+  "auditor": "MiMo",
+  "control_artifact": "docs/audit/F0_25E/F0_25E_NEGATIVE_CONTROL.json",
+  "control_source": "scripts/f0_25e_observer.py run_negative_control() L509-565",
+  "control_artifact_contents": {
+    "timestamp": 1791731729.8844144,
+    "dispatch_enabled": false,
+    "files_created_by_observer": 0,
+    "files_list": [],
+    "windows_spawned_by_observer": 0,
+    "observer_incapacity_proven": true,
+    "verdict": "PASS"
+  },
+  "how_the_control_was_actually_performed": [
+    "1. Wipe target dir with _real_unlink/shutil.rmtree (L519-525) - the control STARTS from a dir it just destroyed.",
+    "2. Install write guard (L528).",
+    "3. Record NEGATIVE_CONTROL_START event + capture frame 0 (L530-534).",
+    "4. time.sleep(5.0) with NO dispatch to Astra of any kind (L537-538).",
+    "5. Capture frame 1 + filesystem snapshot (L541-544).",
+    "6. Emit JSON: verdict = PASS iff file_count == 0 (L546-557)."
+  ],
+  "audit_against_required_conditions": [
+    {
+      "condition": "Astra action dispatch was genuinely disabled",
+      "finding": "NOT TESTED. The control never attempts a dispatch - dispatch_enabled: false is a hardcoded literal (L551), not the outcome of disabling and challenging a dispatch path. No AstraRun instance was even required to be running for this control.",
+      "classification": "UNVERIFIED"
+    },
+    {
+      "condition": "Observer remained active",
+      "finding": "PARTIALLY. The observer process ran for 5 idle seconds and captured 2 frames - activity proven by code path, but the control's own frames/events were subsequently DESTROYED by the dogfood run's raw/ wipe (L587-591) minutes later, so no frozen evidence of that activity survives.",
+      "classification": "UNVERIFIED (evidence destroyed before freeze)"
+    },
+    {
+      "condition": "Equivalent request was submitted",
+      "finding": "FALSE. No request is submitted during the negative control (by design: 'zero dispatch'). The control therefore does not exercise the write guard, the observer loop, or Astra's absence under equivalent load - it only proves the observer creates no files while doing absolutely nothing.",
+      "classification": "CONDITION NOT MET"
+    },
+    {
+      "condition": "Target directory started clean",
+      "finding": "TRUE but vacuous: the control itself deleted everything seconds before snapshotting. A zero-file snapshot after self-wipe cannot distinguish 'observer created nothing' from 'wipe worked'.",
+      "classification": "SUPPORTED but weak"
+    },
+    {
+      "condition": "Observer created zero artifacts",
+      "finding": "MEASURED for files only: file_count == 0 after 5 idle seconds is a real measurement of the target dir. It does not cover docs/audit writes (observer writes there by design), screenshots, or any other path.",
+      "classification": "SUPPORTED (narrow)"
+    },
+    {
+      "condition": "Observer caused zero application launches",
+      "finding": "NOT MEASURED. windows_spawned_by_observer: 0 is a hardcoded literal (L554) - enumerate_desktop_windows() exists in the file but is never called in the control. No process snapshot is taken.",
+      "classification": "UNVERIFIED (literal, not a measurement)"
+    }
+  ],
+  "evidence_chain_defects": [
+    "The control's raw frames and NEGATIVE_CONTROL_START event were written into raw/ then DELETED by the immediately following dogfood run's raw-wipe (timeline: NC ~20:45:29 -> dogfood capability-audit overwrite 20:45:35 -> baseline frame 20:45:36 -> freeze 20:46:10 -> evaluation 20:46:21).",
+    "F0_25E_NEGATIVE_CONTROL.json lives OUTSIDE raw/ and is NOT covered by F0_25E_RAW_MANIFEST.json - it was never cryptographically frozen.",
+    "The control is not exercised by tests/acceptance/test_f0_25e_acceptance_engine.py (0 of 8 tests cover run_negative_control).",
+    "Keyboard/mouse incapacity and write-guard effectiveness are never challenged during the control (guard installed but never attempted against)."
+  ],
+  "verdict": "UNVERIFIED",
+  "verdict_rationale": "Per review directive 6: where the control merely asserts values, classification is UNVERIFIED. Only one narrow fact is genuinely measured (no files in target dir after 5 idle seconds post self-wipe). Dispatch-disabled equivalence, zero windows, observer activity evidence, and zero application launches are literals or destroyed evidence. The control does not support the report's claim that observer non-causality was proven by it - that claim rests on the separate source-level audit (which MIMO independently confirms)."
+}

@@ -1,0 +1,26 @@
+{
+  "auditor": "MiMo",
+  "historical_70": {
+    "last_evidence": "C1_8_POST_FREEZE_ROUTING_EVIDENCE.json now shows passed=70 failed=0 (file may have been rewritten by holdout test during MiMo's permitted test run)",
+    "prior_frozen_value": "68/70 (pre-F0-25F.1)",
+    "mimo_recheck_known_failures": "BOTH FIXED: quadratic -> execute_dynamic_tool/LOCAL_MODEL; login-summary -> execute_dynamic_tool/LOCAL_MODEL",
+    "contamination": "holdout script written 1:25:57, manifest 1:26:02, planner.py edited 1:26:53 BETWEEN manifest runs; all 60 Anti prompts expect dynamic — cannot detect over-routing; report misattributes fix to laya.py (routing/ unchanged; fix is in agent/planner.py)",
+    "score_if_trusted": "70/70",
+    "trust_level": "LOW for generalization; HIGH that the two named prompts now classify correctly (MiMo direct recheck)"
+  },
+  "anti_60_holdout": {
+    "manifest": "F0_25F1_ROUTING_HOLDOUT_MANIFEST.json (60 prompts, all expect execute_dynamic_tool/LOCAL_MODEL)",
+    "mimo_sample_recheck": "10/10 sample prompts correctly execute_dynamic_tool/LOCAL_MODEL",
+    "structural_weakness": "all-positive set; no negative neighbors; iterate-until-pass authorship",
+    "trust": "PARTIAL — sample passes; set cannot certify absence of overfit"
+  },
+  "mimo_unseen_105": {
+    "file": "09A_MIMO_UNSEEN_ROUTING_HOLDOUT.json",
+    "dynamic_families_computational_math": {"expected": 20, "correct": 18, "under": 2, "rate": "90%"},
+    "over_routing_into_execute_dynamic_tool": 26,
+    "over_routing_examples": ["summarize the plot of hamlet in one sentence", "solve this crossword puzzle clue", "solve: I feel stuck at work", "please solve nothing and do nothing", "open visual studio code with the current folder", "search the web for python documentation", "pin notepad to the taskbar", "what python version is installed"],
+    "verdict": "OVERFIT / STILL_FAILING for generalization",
+    "note": "Keyword expansion ('solve','summary','events','count') over-triggers on negative neighbors and non-compute intents"
+  },
+  "verdict": "ROUTING_HISTORICAL = PARTIAL (named failures fixed; evidence tainted); ROUTING_UNSEEN = FAIL (26 over-routes)"
+}

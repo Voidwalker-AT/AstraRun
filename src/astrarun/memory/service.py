@@ -206,6 +206,8 @@ class MemoryService:
         self.semantic = SemanticFaculty()
         self.workspace = WorkspaceFaculty()
         self.procedural = SkillService()
+        from astrarun.hermes.store import HermesKnowledgeStore
+        self.hermes = HermesKnowledgeStore()
 
     @classmethod
     def get_instance(cls) -> MemoryService:

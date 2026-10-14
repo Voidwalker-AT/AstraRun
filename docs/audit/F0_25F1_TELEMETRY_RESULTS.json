@@ -1,0 +1,29 @@
+{
+  "total_causal_event_types": 20,
+  "expected_count": 20,
+  "matches_expected_20": true,
+  "event_types": [
+    "REQUEST_RECEIVED",
+    "GOAL_INTERPRETED",
+    "PLAN_CREATED",
+    "MODEL_REQUEST",
+    "MODEL_RESPONSE",
+    "ACTION_PROPOSED",
+    "ACTION_AUTHORIZED",
+    "ACTION_BLOCKED",
+    "ACTION_DISPATCHED",
+    "ACTION_RESULT",
+    "STATE_OBSERVED",
+    "POSTCONDITION_VERIFIED",
+    "ARTIFACT_CREATED",
+    "ARTIFACT_DELIVERED",
+    "RESULT_PRESENTATION_REQUESTED",
+    "RESULT_PRESENTED",
+    "RESOURCE_REGISTERED",
+    "RESOURCE_DISPOSED",
+    "RESOURCE_RESTORATION_VERIFIED",
+    "GOAL_COMPLETED"
+  ],
+  "state_observed_wired": true,
+  "error_surfacing_wired": true
+}

@@ -1,0 +1,41 @@
+{
+  "auditor": "MiMo",
+  "telemetry_engine": {
+    "file": "src/astrarun/core/telemetry.py",
+    "enum_members": 20,
+    "claimed_in_report": 19,
+    "dead_type": "STATE_OBSERVED (zero emit call sites in src/)",
+    "run_scoped_files": "%LOCALAPPDATA%\\AstraRun\\data\\runs\\run_*.jsonl",
+    "schema_fields": ["event_id", "run_id", "task_id", "parent_event_id", "timestamp_monotonic", "timestamp_wall", "input_hash", "output_hash", "model_id", "capability", "authorization_verdict", "resulting_event_id", "data"]
+  },
+  "stage6_computation_run": {
+    "file": "run_1791739409208_19ae404c.jsonl",
+    "sha256_frozen": "61c4e1604904958f61bdbc3c1144e1c23a5471b75264615c32efe80fac6870d4",
+    "events": ["REQUEST_RECEIVED", "GOAL_INTERPRETED", "PLAN_CREATED", "GOAL_COMPLETED"],
+    "query": "calculate 40 + 2",
+    "missing_stages": ["MODEL_REQUEST", "MODEL_RESPONSE", "ACTION_PROPOSED", "ACTION_AUTHORIZED", "ACTION_DISPATCHED", "ACTION_RESULT", "POSTCONDITION_VERIFIED", "ARTIFACT_*", "RESOURCE_*"],
+    "note": "Math resolved at app layer with only 4 events — no broker/model/postcondition trail for this run"
+  },
+  "stage6_presentation_run": {
+    "file": "run_1791739411208_4dc3b5d6.jsonl",
+    "sha256_frozen": "91cbe8ebc78cd32809ba2e9d05f83fb6bbf519aa645b7b412d8b6af7910525e4",
+    "events_actual": ["REQUEST_RECEIVED", "GOAL_INTERPRETED", "PLAN_CREATED", "RESULT_PRESENTATION_REQUESTED", "RESULT_PRESENTED", "GOAL_COMPLETED"],
+    "events_as_snapshotted_in_stage6_json": ["REQUEST_RECEIVED", "GOAL_INTERPRETED", "PLAN_CREATED", "RESULT_PRESENTATION_REQUESTED"],
+    "snapshot_omits": ["RESULT_PRESENTED", "GOAL_COMPLETED"],
+    "snapshot_defect": "verifier slept 2.0s; RESULT_PRESENTED arrived at +3.10s — snapshot raced the event",
+    "parent_chain": "valid linear parent_event_id chain on same run_id/task_id (FACT from personal file read)",
+    "hashes": "input_hash/output_hash fields present on early events; later RESULT_* events have null hashes; NO hash-chain linkage verification in verifier"
+  },
+  "integrity_checks": {
+    "same_run_id": "FACT within each file",
+    "same_task_id": "FACT within each file",
+    "timestamps_in_window": "FACT (wall times 1791739409-1791739414 ~22:53:29-34)",
+    "prior_run_contamination": "none inside these two files; GLOBAL causal_stream.jsonl mixes many runs and ad-hoc events (131 lines)",
+    "production_generated": "SUPPORTED — emit call sites exist in app.py, broker, telemetry start_run/end_run",
+    "missing_stages_remain_missing": "YES in the files themselves; NO in the Stage-6 JSON which under-reports PRESENTED",
+    "ad_hoc_escape": "emit() outside a run silently uses run_ad_hoc_<ts> (telemetry.py:171) — 43 ad_hoc files exist from evaluator/product activity",
+    "silent_persistence_failure": "telemetry.py:213-214 except: pass"
+  },
+  "verdict": "TELEMETRY = PARTIAL",
+  "verdict_rationale": "Run-scoped causal streams are real production output with valid parent chains for the two Stage-6 runs (unlike F0-25E global-log harvesting). But: Stage-6 computation lacks model/action/postcondition stages; presentation run's RESULT_PRESENTED is hollow (verified_hwnd null — see 06); snapshot under-reported events; ad-hoc escape and silent write failures weaken isolation claims; report's '19 types' undercounts the actual 20 (one dead)."
+}

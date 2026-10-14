@@ -1,0 +1,38 @@
+{
+  "timestamp": "2026-10-11T09:40:00Z",
+  "stage": "STAGE_9_COLD_START_EXPLORATION",
+  "task_id": "task_stage9_cold_1791692056345",
+  "target_application": "Notepad++",
+  "initial_assessment": {
+    "mode": "EXPLORE",
+    "confidence": 0.0,
+    "band": "UNKNOWN"
+  },
+  "diagnostic_experiment": {
+    "id": "exp_4842f79bb1a5",
+    "hypothesis": "The primary window of 'Notepad++' contains a text editing surface that accepts direct alphanumeric input without modal popups.",
+    "action": "type_into_window",
+    "risk_level": "BENIGN_MUTATION",
+    "is_reversible": true,
+    "prompt_hash": "8d9a353bae7e8c554022d62aa9729b807769d0c140fba4eedae89fcd1e093654",
+    "response_hash": "32aa1d8de1041de1a800f1a71a4474f0dbe24d4590a7e509c3049b38bc893dfd"
+  },
+  "physical_verification": {
+    "surface_class": "Scintilla",
+    "probe_payload": "ASTRA_HERMES_COLD_PROBE_99",
+    "verified": true,
+    "verification_source": "Win32_WM_GETTEXT",
+    "latency_ms": 6300.978599989321
+  },
+  "post_learning_assessment": {
+    "mode": "EXPLORE",
+    "confidence": 0.48,
+    "band": "UNCERTAIN",
+    "status": "OBSERVED"
+  },
+  "cleanup_status": {
+    "success": true,
+    "process_cleaned_up": true,
+    "zero_residue_verified": true
+  }
+}

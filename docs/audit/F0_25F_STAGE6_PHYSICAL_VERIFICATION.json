@@ -1,0 +1,58 @@
+{
+  "status": "PASS",
+  "timestamp": 1791739414.9632375,
+  "canonical_executable": "C:\\Users\\hp\\AppData\\Local\\Programs\\AstraRun\\AstraRun.exe",
+  "executable_sha256": "2c59d0fe313488db8ee7e07e9a6721da609fc6ad15416430c24804ddfcd04c43",
+  "pid": 17792,
+  "launcher_hwnd": 21759736,
+  "attestation": {
+    "status": "LAUNCHER_VISIBLE",
+    "is_visible": true,
+    "failure_reasons": [],
+    "facts": {
+      "hwnd": 21759736,
+      "pid": 17792,
+      "expected_pid": 17792,
+      "thread_id": 18576,
+      "desktop_name": "Default",
+      "is_window": true,
+      "is_window_visible": true,
+      "rect": [
+        448,
+        48,
+        1088,
+        124
+      ],
+      "width": 640,
+      "height": 76,
+      "monitor_rect": [
+        0,
+        0,
+        1536,
+        864
+      ],
+      "intersects_monitor": true,
+      "dwm_cloaked": false,
+      "found_in_enum_windows": true
+    }
+  },
+  "dark_pixel_ratio": 0.9299753289473685,
+  "launcher_screenshot": "E:\\Workspace\\Agents\\AstraRun-Anti\\docs\\audit\\F0_25F_PHYSICAL_LAUNCHER.png",
+  "presentation_screenshot": "E:\\Workspace\\Agents\\AstraRun-Anti\\docs\\audit\\F0_25F_PHYSICAL_PRESENTATION.png",
+  "computation_run_file": "C:\\Users\\hp\\AppData\\Local\\AstraRun\\data\\runs\\run_1791739409208_19ae404c.jsonl",
+  "computation_events": [
+    "REQUEST_RECEIVED",
+    "GOAL_INTERPRETED",
+    "PLAN_CREATED",
+    "GOAL_COMPLETED"
+  ],
+  "presentation_run_file": "C:\\Users\\hp\\AppData\\Local\\AstraRun\\data\\runs\\run_1791739411208_4dc3b5d6.jsonl",
+  "presentation_events": [
+    "REQUEST_RECEIVED",
+    "GOAL_INTERPRETED",
+    "PLAN_CREATED",
+    "RESULT_PRESENTATION_REQUESTED"
+  ],
+  "resource_ledger_sandbox_verified": true,
+  "clean_termination": true
+}

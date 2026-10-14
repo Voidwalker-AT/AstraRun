@@ -1,0 +1,41 @@
+{
+  "auditor": "MiMo",
+  "images": [
+    {
+      "file": "F0_25F1/screenshots/01_launcher_visible.png",
+      "pixels": "Antigravity fullscreen; Astra launcher bar 'What do you want to do?' with blue plus icon clearly visible top-center; right pane image editor showing PHYSICAL_LAUNCHER.png; clock 2:32 AM 10/12/2026",
+      "astra_launcher_visible": true,
+      "result_viewer_visible": false,
+      "description_matches_pixels": true,
+      "confidence": "HIGH",
+      "verdict": "HONEST — launcher genuinely visible"
+    },
+    {
+      "file": "F0_25F1/screenshots/02_result_presentation.png",
+      "pixels": "Window titled 'factorial_result.txt - AstraRun Viewer' with body text 'Factorial of 10 = 3628800' and 'Status: MATHEMATICALLY_VERIFIED'; Antigravity behind; verify_f025f1_complete_physical.py task running",
+      "result_viewer_visible": true,
+      "correct_content_visible": true,
+      "content_strings": ["Factorial of 10 = 3628800", "Status: MATHEMATICALLY_VERIFIED"],
+      "viewer_identity": "AstraRun Viewer custom PySide6 window (title format matches result_presentation.py viewer)",
+      "description_matches_pixels": true,
+      "confidence": "HIGH",
+      "verdict": "HONEST — content matches claimed factorial result"
+    }
+  ],
+  "mimo_generated": [
+    {
+      "file": "F0_25F2_MIMO_CERTIFICATION/screenshots/mimo_presentation_full.png",
+      "pixels": "File Explorer maximized on E:\\AstraDogfood\\word_frequency; file list includes mimo_f025f2_token.txt; address bar correct path",
+      "token_visible": true,
+      "confidence": "HIGH",
+      "verdict": "HONEST — independent presentation evidence"
+    },
+    {
+      "file": "F0_25F2_MIMO_CERTIFICATION/screenshots/mimo_launcher_observation.png (prior F0-25F.M)",
+      "pixels": "launcher bar visible",
+      "verdict": "prior independent confirmation"
+    }
+  ],
+  "verdict": "SCREENSHOT TRUTH = PASS",
+  "verdict_rationale": "F0-25F.1 screenshots are honest: launcher visible; factorial viewer shows the exact claimed content. No mislabeling of Antigravity-only frames as Astra UI."
+}

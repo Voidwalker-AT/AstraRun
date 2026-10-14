@@ -1,0 +1,227 @@
+{
+  "phase": "F0-25B",
+  "title": "Notepad++ Procedural Contamination Audit",
+  "scanned_files_count": 1041,
+  "total_findings_count": 376,
+  "classification_summary": {
+    "GENERIC_PRIMITIVE": 21,
+    "UNRELATED": 83,
+    "TEST_ONLY": 49,
+    "HISTORICAL_EVIDENCE": 223
+  },
+  "procedural_contamination_count": 0,
+  "procedural_contamination_findings": [],
+  "audit_verdict": "CLEAN",
+  "sample_findings": [
+    {
+      "file": "src/astrarun/applications/service.py",
+      "line": 322,
+      "match": "Ctrl+N",
+      "classification": "GENERIC_PRIMITIVE",
+      "snippet": "logger.info(\"[SESSION_RESTORE_ISOLATION] Restored dirty buffer detected in %s; dispatching Ctrl+N for clean document.\", app)"
+    },
+    {
+      "file": "src/astrarun/applications/service.py",
+      "line": 324,
+      "match": "Ctrl+N",
+      "classification": "GENERIC_PRIMITIVE",
+      "snippet": "dispatch_shortcut(parse_shortcut(\"Ctrl+N\"), target_hwnd=owned_res.hwnd)"
+    },
+    {
+      "file": "src/astrarun/interaction/document.py",
+      "line": 32,
+      "match": "Ctrl+Shift+S",
+      "classification": "GENERIC_PRIMITIVE",
+      "snippet": "Dispatches Ctrl+S / Ctrl+Shift+S / Alt+F->A, discovers the native Save As dialog,"
+    },
+    {
+      "file": "src/astrarun/interaction/document.py",
+      "line": 144,
+      "match": "Save As",
+      "classification": "GENERIC_PRIMITIVE",
+      "snippet": "# 4. Trigger Save As dialog"
+    },
+    {
+      "file": "src/astrarun/interaction/document.py",
+      "line": 145,
+      "match": "Save as",
+      "classification": "GENERIC_PRIMITIVE",
+      "snippet": "# Attempt UIA File -> Save as menu item first, then keyboard shortcuts"
+    },
+    {
+      "file": "src/astrarun/interaction/document.py",
+      "line": 169,
+      "match": "Save as",
+      "classification": "GENERIC_PRIMITIVE",
+      "snippet": "uia.CreatePropertyCondition(UIAutomationClient.UIA_NamePropertyId, \"Save as\"),"
+    },
+    {
+      "file": "src/astrarun/interaction/document.py",
+      "line": 171,
+      "match": "Save As",
+      "classification": "GENERIC_PRIMITIVE",
+      "snippet": "uia.CreatePropertyCondition(UIAutomationClient.UIA_NamePropertyId, \"Save As\"),"
+    },
+    {
+      "file": "src/astrarun/interaction/document.py",
+      "line": 172,
+      "match": "Save As",
+      "classification": "GENERIC_PRIMITIVE",
+      "snippet": "uia.CreatePropertyCondition(UIAutomationClient.UIA_NamePropertyId, \"Save As...\"),"
+    },
+    {
+      "file": "src/astrarun/interaction/document.py",
+      "line": 183,
+      "match": "Save As",
+      "classification": "GENERIC_PRIMITIVE",
+      "snippet": "logger.info(\"Triggered Save As via UIA File -> Save as menu item\")"
+    },
+    {
+      "file": "src/astrarun/interaction/document.py",
+      "line": 185,
+      "match": "Save As",
+      "classification": "GENERIC_PRIMITIVE",
+      "snippet": "logger.debug(\"UIA menu Save As trigger attempt: %s\", ex)"
+    },
+    {
+      "file": "src/astrarun/interaction/document.py",
+      "line": 187,
+      "match": "Save As",
+      "classification": "GENERIC_PRIMITIVE",
+      "snippet": "# 5. Fast enum search helper for Save As dialog"
+    },
+    {
+      "file": "src/astrarun/interaction/document.py",
+      "line": 198,
+      "match": "save as",
+      "classification": "GENERIC_PRIMITIVE",
+      "snippet": "if \"save as\" in t or t == \"save\":"
+    },
+    {
+      "file": "src/astrarun/interaction/document.py",
+      "line": 209,
+      "match": "Ctrl+Shift+S",
+      "classification": "GENERIC_PRIMITIVE",
+      "snippet": "for sc in (\"Ctrl+Shift+S\", \"F12\", \"Ctrl+S\"):"
+    },
+    {
+      "file": "src/astrarun/interaction/document.py",
+      "line": 296,
+      "match": "Save As",
+      "classification": "GENERIC_PRIMITIVE",
+      "snippet": "logger.warning(\"Save As dialog was not detected for window HWND 0x%x within timeout\", target_hwnd)"
+    },
+    {
+      "file": "src/astrarun/computer_use/observation/frame.py",
+      "line": 588,
+      "match": "save as",
+      "classification": "GENERIC_PRIMITIVE",
+      "snippet": "if \"save as\" in d_title:"
+    },
+    {
+      "file": "src/astrarun/computer_use/ui/dialogs.py",
+      "line": 79,
+      "match": "Save As",
+      "classification": "GENERIC_PRIMITIVE",
+      "snippet": "# 3. Known title keywords (Save As, Open, Error, Warning, Confirm)"
+    },
+    {
+      "file": "src/astrarun/computer_use/ui/dialogs.py",
+      "line": 82,
+      "match": "save as",
+      "classification": "GENERIC_PRIMITIVE",
+      "snippet": "is_common_dialog = any(k in title.lower() for k in [\"save as\", \"open\", \"cannot find\", \"confirm save\", \"error\", \"warning\"])"
+    },
+    {
+      "file": "src/astrarun/computer_use/ui/dialogs.py",
+      "line": 87,
+      "match": "save as",
+      "classification": "GENERIC_PRIMITIVE",
+      "snippet": "if \"save as\" in t_lower or \"save\" in t_lower:"
+    },
+    {
+      "file": "src/astrarun/computer_use/ui/editable_surface.py",
+      "line": 5,
+      "match": "Scintilla",
+      "classification": "GENERIC_PRIMITIVE",
+      "snippet": "(classic Win32, UWP, modern XAML, Scintilla, RichEdit, browsers) without application brand hacks."
+    },
+    {
+      "file": "src/astrarun/computer_use/ui/editable_surface.py",
+      "line": 58,
+      "match": "Scintilla",
+      "classification": "GENERIC_PRIMITIVE",
+      "snippet": "3. Win32 child control hierarchy for standard and custom edit surfaces (Scintilla, RichEdit, Edit)"
+    },
+    {
+      "file": "src/astrarun/computer_use/ui/editable_surface.py",
+      "line": 350,
+      "match": "Scintilla",
+      "classification": "GENERIC_PRIMITIVE",
+      "snippet": "3. Win32 control text / Scintilla text"
+    },
+    {
+      "file": "tests/eval_v1/run_capability_evaluation.py",
+      "line": 633,
+      "match": "Save As",
+      "classification": "UNRELATED",
+      "snippet": "# B4: Native Dialogs (Open / Save As)"
+    },
+    {
+      "file": "scripts/audit_f0_22_suite.py",
+      "line": 127,
+      "match": "Ctrl+Shift+S",
+      "classification": "UNRELATED",
+      "snippet": "\"shortcut_dispatched\": \"Ctrl+Shift+S\","
+    },
+    {
+      "file": "scripts/audit_f0_22_suite.py",
+      "line": 128,
+      "match": "Save As",
+      "classification": "UNRELATED",
+      "snippet": "\"dialog_found\": \"Save As dialog (HWND 0x580c48)\","
+    },
+    {
+      "file": "scripts/audit_f0_22_suite.py",
+      "line": 291,
+      "match": "Save As",
+      "classification": "UNRELATED",
+      "snippet": "\"description\": \"Application UI interaction, text typing, native Save As dialog routing\","
+    },
+    {
+      "file": "scripts/audit_f0_24a2_hardcoding.py",
+      "line": 5,
+      "match": "Notepad++",
+      "classification": "TEST_ONLY",
+      "snippet": "or special-cased shortcuts for Notepad, Notepad++, Calculator, etc."
+    },
+    {
+      "file": "scripts/audit_f0_24a2_hardcoding.py",
+      "line": 29,
+      "match": "notepad++",
+      "classification": "TEST_ONLY",
+      "snippet": "SUSPICIOUS_APP_LITERALS = [\"notepad\", \"notepad++\", \"calc\", \"calculator\", \"wordpad\", \"mspaint\"]"
+    },
+    {
+      "file": "scripts/generate_f0_23_acceptance_model_spec.py",
+      "line": 117,
+      "match": "Save As",
+      "classification": "UNRELATED",
+      "snippet": "\"evidence_source\": \"Save As Dialog HWND + filename entry + commit\","
+    },
+    {
+      "file": "scripts/generate_f0_23_freezes.py",
+      "line": 105,
+      "match": "Save As",
+      "classification": "UNRELATED",
+      "snippet": "\"claim\": \"Executes full application-mediated Save As workflow through Notepad UI, verifying physical artifact > 0 bytes with 'hello'.\","
+    },
+    {
+      "file": "scripts/generate_f0_23_freezes.py",
+      "line": 110,
+      "match": "notepad++",
+      "classification": "UNRELATED",
+      "snippet": "\"prompt\": \"open notepad++\","
+    }
+  ]
+}

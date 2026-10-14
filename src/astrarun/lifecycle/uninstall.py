@@ -2,7 +2,7 @@
 
 Complies strictly with AstraRun 1.0 Product Specifications:
 1. Strict Component Ownership: Distinguishes Astra-managed artifacts from external user-owned models/runtimes.
-2. Zero-Loss Policy: External models (e.g. E:\\AI_Models\\GGUF\\...) are NEVER deleted under any circumstances.
+2. Zero-Loss Policy: External models outside Astra application data are NEVER deleted under any circumstances.
 3. Active Task Protection: Detects in-progress tasks before uninstallation and supports Pause/Checkpoint or Stop.
 4. Measured Sizes: Computes real filesystem byte sizes dynamically.
 5. IPC Graceful Shutdown: Requests clean resident termination before binary or state deletion.

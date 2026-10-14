@@ -1,0 +1,31 @@
+{
+  "timestamp": "2026-10-11T09:44:00Z",
+  "stage": "STAGE_11_CONTRADICTION_AND_ADAPTATION",
+  "target_application": "Notepad++",
+  "affordance_tested": "custom_invalid_shortcut",
+  "pre_contradiction_state": {
+    "confidence": 0.85,
+    "band": "KNOWN",
+    "status": "VERIFIED"
+  },
+  "contradiction_event": {
+    "expected": {
+      "custom_dialog_opened": true
+    },
+    "observed": {
+      "custom_dialog_opened": false
+    },
+    "transition_verified": false
+  },
+  "post_contradiction_state": {
+    "confidence": 0.17,
+    "band": "CONTRADICTED",
+    "status": "CONTRADICTED",
+    "edge_invalidated": true
+  },
+  "adaptation_response": {
+    "decision_mode_flipped": "EXPLORE",
+    "corrective_experiment_formulated": "The main application window for 'Notepad++' can be focused and enumerated for UI controls.",
+    "safe_risk_level": "READ_ONLY"
+  }
+}

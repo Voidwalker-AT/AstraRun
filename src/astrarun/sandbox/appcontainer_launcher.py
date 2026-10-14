@@ -20,7 +20,7 @@ import sys
 import time
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Callable, Dict, List, Optional, Tuple
 
 from astrarun.core.logging import get_logger
 from astrarun.execution.job_object import Win32JobObject
@@ -204,6 +204,8 @@ class AppContainerLauncher:
         env_str = "".join(env_chars)
         return ctypes.create_unicode_buffer(env_str)
 
+    _runtime_dirs_configured: set = set()
+
     @classmethod
     def launch(
         cls,
@@ -214,6 +216,7 @@ class AppContainerLauncher:
         memory_limit_bytes: int = 512 * 1024 * 1024,
         extra_env: Optional[Dict[str, str]] = None,
         python_executable: Optional[str] = None,
+        on_process_created: Optional[Callable[[int, wintypes.HANDLE], None]] = None,
     ) -> AppContainerWorkerResult:
         """
         Executes an entrypoint in an ephemeral AppContainer profile with suspended process creation,
@@ -244,8 +247,23 @@ class AppContainerLauncher:
         advapi32.ConvertSidToStringSidW(pSid, ctypes.byref(pStrSid))
         sid_str = pStrSid.value
 
+        from astrarun.core.paths import resolve_python_executable
+        exe = resolve_python_executable(python_executable)
+        py_dir = os.path.dirname(exe)
+        runtime_dirs = [py_dir]
+        if getattr(sys, "base_prefix", None) and sys.base_prefix not in runtime_dirs:
+            runtime_dirs.append(sys.base_prefix)
+        if getattr(sys, "prefix", None) and sys.prefix not in runtime_dirs:
+            runtime_dirs.append(sys.prefix)
+
         # Stage ACL: full control for this container on its ephemeral task workspace
         subprocess.run(["icacls", str(workspace), "/grant", f"*{sid_str}:(OI)(CI)(F)"], capture_output=True)
+        for r_dir in runtime_dirs:
+            r_path = Path(r_dir).resolve()
+            r_str = str(r_path)
+            if r_str not in cls._runtime_dirs_configured and r_path.exists():
+                subprocess.run(["icacls", r_str, "/grant", "*S-1-15-2-1:(OI)(CI)(RX)"], capture_output=True)
+                cls._runtime_dirs_configured.add(r_str)
 
         hReadPipe = wintypes.HANDLE()
         hWritePipe = wintypes.HANDLE()
@@ -308,8 +326,16 @@ class AppContainerLauncher:
             localappdata_dir.mkdir(parents=True, exist_ok=True)
 
             sys_root = os.environ.get("SystemRoot", r"C:\Windows")
-            py_dir = os.path.dirname(sys.executable)
-            clean_path = f"{py_dir};{sys_root}\\System32;{sys_root}"
+            from astrarun.core.paths import resolve_python_executable
+            exe = resolve_python_executable(python_executable)
+            py_dir = os.path.dirname(exe)
+            clean_path_parts = [py_dir]
+            if getattr(sys, "base_prefix", None) and sys.base_prefix not in clean_path_parts:
+                clean_path_parts.append(sys.base_prefix)
+            if getattr(sys, "prefix", None) and sys.prefix not in clean_path_parts:
+                clean_path_parts.append(sys.prefix)
+            clean_path_parts.extend([f"{sys_root}\\System32", sys_root])
+            clean_path = ";".join(clean_path_parts)
 
             # Strict Positive Allowlist Environment (No host secrets passed into worker memory)
             allowlist_env = {
@@ -339,9 +365,8 @@ class AppContainerLauncher:
             env_buf = ctypes.create_unicode_buffer(block_str)
             lp_env = ctypes.cast(env_buf, wintypes.LPVOID)
 
-            exe = python_executable or sys.executable
-            # Direct entrypoint execution in isolated mode (-I avoids user-site and host env pollution)
-            cmd = f'"{exe}" -I "{entrypoint_file}"'
+            # Direct entrypoint execution in isolated mode (-s avoids user-site pollution while allowing configured venv packages)
+            cmd = f'"{exe}" -s "{Path(entrypoint_file).resolve()}"'
             cmd_buf = ctypes.create_unicode_buffer(cmd)
 
             # Launch process SUSPENDED with explicit environment block
@@ -379,6 +404,12 @@ class AppContainerLauncher:
                 kernel32.CloseHandle(pi.hProcess)
                 kernel32.CloseHandle(pi.hThread)
                 raise RuntimeError(f"Failed to assign AppContainer process to Job Object: {e}")
+
+            if on_process_created:
+                try:
+                    on_process_created(pi.dwProcessId, pi.hProcess)
+                except Exception as e:
+                    logger.warning("on_process_created callback failed: %s", e)
 
             # Resume process execution
             kernel32.ResumeThread(pi.hThread)
@@ -420,6 +451,11 @@ class AppContainerLauncher:
 
             output_bytes = b"".join(read_chunks)
             stdout_text = output_bytes.decode("utf-8", errors="replace")
+            if "Failed to find real location of" in stdout_text:
+                stdout_text = "".join(
+                    line for line in stdout_text.splitlines(keepends=True)
+                    if not line.strip().startswith("Failed to find real location of")
+                )
 
             try:
                 peak_bytes = job.query_peak_memory()
@@ -460,6 +496,9 @@ class AppContainerLauncher:
             # Teardown temporary ACLs and AppContainer Profile
             try:
                 subprocess.run(["icacls", str(workspace), "/remove", sid_str], capture_output=True)
+                for r_dir in runtime_dirs:
+                    if Path(r_dir).exists():
+                        subprocess.run(["icacls", str(r_dir), "/remove", sid_str], capture_output=True)
                 userenv.DeleteAppContainerProfile(container_name)
             except Exception as e:
                 logger.warning("Error during AppContainer profile/ACL cleanup: %s", e)

@@ -1,0 +1,21 @@
+{
+  "phase": "F0-25F.3",
+  "stage": "STAGE 8 \u2014 REMOVE BENCHMARK CONTAMINATION FROM PRODUCTION",
+  "total_src_files_audited": 325,
+  "forbidden_tokens_audited": [
+    "REPAIR-02",
+    "factorial_result",
+    "MATHEMATICALLY_VERIFIED",
+    "3628800",
+    "F0_25",
+    "No timestamp available",
+    "E:\\Workspace",
+    "E:/Workspace",
+    "AstraRun-Anti",
+    "E:\\AstraDogfood"
+  ],
+  "contamination_hits_count": 0,
+  "hits_by_token": {},
+  "verdict": "PASS",
+  "verdict_rationale": "src/ is completely clean of benchmark fixtures, test tokens, and machine-specific workspace paths."
+}

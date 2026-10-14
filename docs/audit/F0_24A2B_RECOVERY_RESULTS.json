@@ -1,0 +1,11 @@
+{
+  "gate_id": "GATE_G",
+  "description": "Failure Injection & Adaptive Recovery",
+  "task_id": "lab_gate_g_1791690125",
+  "failure_injected": "WINDOW_MINIMIZED_MID_TASK",
+  "observed_failure_state": "target_window_minimized=True",
+  "recovery_mechanism": "Adaptive Check 2 (ShowWindow SW_RESTORE + force_foreground_activation)",
+  "recovered_successfully": true,
+  "post_recovery_action_verified": true,
+  "verdict": "PASS"
+}

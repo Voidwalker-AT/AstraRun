@@ -1,0 +1,134 @@
+{
+  "timestamp": "2026-10-11T09:30:00Z",
+  "audit_version": "1.0.0",
+  "phase": "F0-25",
+  "objective": "Audit existing memory and learning architecture prior to designing Hermes Experiential Memory & Autonomous Exploration",
+  "subsystems": [
+    {
+      "module": "astrarun.memory.service",
+      "responsibility": "Authoritative unified memory service facade providing single access point across working, episodic, semantic, workspace, and procedural faculties.",
+      "persistence_mechanism": "WorkingMemory (in-memory dict); EpisodicFaculty (SQLite at data/memory/episodic.db); SemanticFaculty (SQLite at data/astra_learning.db); WorkspaceFaculty (SQLite/FTS5 at data/memory/workspace.db); SkillService (in-memory catalog).",
+      "schema": "MemoryService, WorkingMemory, EpisodicFaculty, SemanticFaculty, WorkspaceFaculty, SkillService",
+      "read_callers": ["astrarun.app", "astrarun.agent.planner", "astrarun.brain.memory"],
+      "write_callers": ["astrarun.agent.planner", "astrarun.agent.loop", "astrarun.app"],
+      "test_coverage": "tests/unit/test_memory_service.py (3 tests PASS)",
+      "verdict": "EXTEND",
+      "rational": "Preserve canonical facade design. Add Hermes experiential memory faculty (experiential knowledge graph, affordances, verified transitions, exploration retrieval)."
+    },
+    {
+      "module": "astrarun.rag.store",
+      "responsibility": "Unified embedded SQLite store with FTS5 lexical index and optional VectorIndex for document chunks, trajectories, and provenance.",
+      "persistence_mechanism": "SQLite database file with WAL mode, foreign keys, and FTS5 virtual tables.",
+      "schema": "chunks, chunks_fts (FTS5), trajectories, provenance_records",
+      "read_callers": ["astrarun.rag.router", "astrarun.memory.service (EpisodicFaculty, WorkspaceFaculty)"],
+      "write_callers": ["astrarun.rag.indexer", "astrarun.memory.service"],
+      "test_coverage": "tests/test_milestone3_rag_subsystem.py (PASS)",
+      "verdict": "REUSE",
+      "rational": "Underlying SQLite + FTS5 indexing patterns are battle-tested and thread-safe."
+    },
+    {
+      "module": "astrarun.rag.skills",
+      "responsibility": "Hermes-style Progressive Skill Disclosure (Tier 1: catalog name/description, Tier 2: parameters & constraints, Tier 3: execution).",
+      "persistence_mechanism": "In-memory dictionary with markdown and metadata loaders.",
+      "schema": "SkillRegistry, SkillRetriever, SkillDefinition, SkillTier (CATALOG=1, SCHEMA=2, EXECUTABLE=3)",
+      "read_callers": ["astrarun.memory.skills", "astrarun.rag.context", "astrarun.agent.planner"],
+      "write_callers": ["astrarun.app", "astrarun.memory.skills"],
+      "test_coverage": "tests/test_milestone3_rag_subsystem.py (PASS)",
+      "verdict": "EXTEND",
+      "rational": "Hermes experiential memory can synthesize newly discovered application affordances into progressive skill candidates once verified."
+    },
+    {
+      "module": "astrarun.learning.persistence",
+      "responsibility": "SQLite persistence layer managing data/astra_learning.db with schema versioning, WAL mode, atomic transactions, and audit logging.",
+      "persistence_mechanism": "SQLite database file with CURRENT_SCHEMA_VERSION=1.",
+      "schema": "memories, evidence_references, corrections, skill_candidates, skill_steps, audit_events",
+      "read_callers": ["astrarun.learning.memory", "astrarun.learning.engine", "astrarun.memory.service"],
+      "write_callers": ["astrarun.learning.engine", "astrarun.learning.memory", "astrarun.learning.evidence"],
+      "test_coverage": "tests/test_v085_learning.py (18 tests PASS)",
+      "verdict": "CONSOLIDATE",
+      "rational": "Originally created for user preference and alias learning. For Hermes experiential memory, we need an entity-affordance-transition knowledge graph with causal provenance and hypothesis states. We will build a dedicated SQLite store for Hermes that follows this exact transaction/WAL robustness."
+    },
+    {
+      "module": "astrarun.learning.memory",
+      "responsibility": "Semantic memory store handling CRUD, evidence accumulation, confidence recalculation, conflict detection, and human confirmation.",
+      "persistence_mechanism": "Delegates to LearningPersistence.",
+      "schema": "MemoryStore, ConfidenceCalculator, EvidenceReference",
+      "read_callers": ["astrarun.learning.engine", "astrarun.memory.service"],
+      "write_callers": ["astrarun.learning.engine", "astrarun.memory.service"],
+      "test_coverage": "tests/test_v085_learning.py (PASS)",
+      "verdict": "REUSE",
+      "rational": "Keep for user preference / alias semantics while Hermes experiential memory handles physical UI affordances and state transitions."
+    },
+    {
+      "module": "astrarun.tasks.ledger",
+      "responsibility": "Persistent SQLite-backed Task Ledger maintaining task lifecycle, conversation turns, audit trails, and token telemetry.",
+      "persistence_mechanism": "SQLite database (data/astra_tasks.db) with WAL mode.",
+      "schema": "tasks, turns, audit_log, tokens",
+      "read_callers": ["astrarun.tasks.manager", "astrarun.tasks.runtime", "astrarun.ui.history", "astrarun.learning.evidence"],
+      "write_callers": ["astrarun.tasks.runtime", "astrarun.tasks.manager"],
+      "test_coverage": "tests/unit/test_f0_15_resource_lifecycle.py, tests/test_milestone1_security_runtime.py (PASS)",
+      "verdict": "REUSE",
+      "rational": "Task ID anchoring and conversation logging provide trace provenance for Hermes experiences."
+    },
+    {
+      "module": "astrarun.tasks.resource_ledger",
+      "responsibility": "Astra-Owned Resource Lifecycle Ledger and Window Cleanup Subsystem. Enforces task-scoped ownership and verified cleanup.",
+      "persistence_mechanism": "SQLite database (data/astra_resources.db) + in-memory active tracking.",
+      "schema": "owned_resources, resource_snapshots, PreLaunchSnapshot, AstraResourceLedger",
+      "read_callers": ["astrarun.agent.loop", "astrarun.computer_use.desktop.lifecycle", "astrarun.computer_use.observation.frame", "astrarun.interaction.service"],
+      "write_callers": ["astrarun.interaction.service", "astrarun.agent.loop", "astrarun.applications.service"],
+      "test_coverage": "tests/unit/test_f0_15_resource_lifecycle.py (7 tests PASS), tests/eval_v1/test_f0_24a1_adversarial_oracle.py (PASS)",
+      "verdict": "REUSE",
+      "rational": "Core invariant: autonomous exploration MUST track and clean up every spawned process and window with zero residue."
+    },
+    {
+      "module": "astrarun.computer_use.observation.frame",
+      "responsibility": "Frame-by-frame observation telemetry, raw vs derived state separation, transition recording (transitions.jsonl).",
+      "persistence_mechanism": "JSON lines file (transitions.jsonl) per run / trace.",
+      "schema": "ComputerUseObservationFrame, ComputerUseTraceRecorder, ActionTransitionRecord",
+      "read_callers": ["astrarun.agent.loop", "astrarun.agent.verifier"],
+      "write_callers": ["astrarun.agent.loop", "astrarun.computer_use.observation.observer"],
+      "test_coverage": "F0-24A.1 oracle tests (43 PASS), scripts/run_f0_24a2b_laboratory.py (PASS)",
+      "verdict": "REUSE",
+      "rational": "Crucial ground truth foundation: Hermes experience ingestion MUST derive solely from verified transitions recorded by this frame system."
+    },
+    {
+      "module": "astrarun.context.engine",
+      "responsibility": "Real-time workstation context engine tracking active window, running apps, recent projects, dev ports.",
+      "persistence_mechanism": "Atomic JSON snapshot (data/workstation_context.json).",
+      "schema": "WorkstationContext, ContextEvent, RecentAction",
+      "read_callers": ["astrarun.nlp.coreference", "astrarun.routing.entity_resolver"],
+      "write_callers": ["astrarun.context.engine"],
+      "test_coverage": "tests/test_milestone4_perception_control.py (PASS)",
+      "verdict": "REUSE",
+      "rational": "Supplies live environment context to anchor Hermes entity lookups."
+    },
+    {
+      "module": "astrarun.computer_use.world.desktop_state",
+      "responsibility": "Object model for desktop world state (windows, dialogs, processes).",
+      "persistence_mechanism": "Transient in-memory dataclass.",
+      "schema": "DesktopWorldState, WindowObservation, DialogObservation, ProcessObservation",
+      "read_callers": ["astrarun.computer_use.observation.frame", "astrarun.agent.loop"],
+      "write_callers": ["astrarun.computer_use.observation.observer"],
+      "test_coverage": "tests/test_f0_18_computer_use_generalization.py (PASS)",
+      "verdict": "REUSE",
+      "rational": "Clean domain models for world state."
+    },
+    {
+      "module": "astrarun.ui.memory",
+      "responsibility": "UI widgets for memory inspection and human review.",
+      "persistence_mechanism": "None (PyQt6 UI presentation).",
+      "schema": "MemoryDetailWidget, MemoryView, SkillReviewWidget",
+      "read_callers": ["astrarun.ui.main_window"],
+      "write_callers": ["astrarun.ui.main_window"],
+      "test_coverage": "UI integration tests",
+      "verdict": "EXTEND",
+      "rational": "Can be extended in later UI phases to display Hermes graph nodes."
+    }
+  ],
+  "consolidation_plan": {
+    "summary": "Existing memory comprises 3 distinct legacy layers: (1) RAG/document indexer in astrarun.rag, (2) User preference learning in astrarun.learning, and (3) Session tracking in astrarun.tasks. None of them model experiential UI knowledge (application entities, UI affordances, causal action transitions, diagnostic experiments, or fallibility states).",
+    "hermes_placement": "We will implement the Hermes Experiential Memory subsystem as `astrarun.hermes` and integrate it into `astrarun.memory.service.MemoryService` under `memory.hermes` or `memory.experiential`. It will leverage SQLite with WAL mode, FTS5 lexical matching, structured relational graph storage (entities, affordances, transitions, experiments), and explicit confidence decay.",
+    "boundary_invariants": "1. Hermes writes ONLY occur from verified transitions (derived from ComputerUseObservationFrame / ActionTransitionRecord).\n2. Hermes proposals pass through ActionGate and ExecutionBroker.\n3. Hermes memory is scoped by application identity, version, and machine environment to prevent poisoned knowledge transfer.\n4. Initial Hermes store starts completely empty (Cold Start) with zero hardcoded application procedures."
+  }
+}

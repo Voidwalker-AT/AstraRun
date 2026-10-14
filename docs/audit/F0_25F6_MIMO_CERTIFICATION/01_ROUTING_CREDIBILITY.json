@@ -1,0 +1,24 @@
+{
+  "auditor": "MiMo",
+  "claimed": {"total": 500, "correct": 453, "accuracy_pct": 90.60, "macro_f1": 0.9020, "blocked_false_executions": 0},
+  "recomputed_from_detailed_results": {
+    "rows": 500,
+    "is_correct_true": 453,
+    "accuracy_pct": 90.60,
+    "failures": 47,
+    "macro_f1_from_confusion_matrix": 0.902,
+    "internal_consistency": true
+  },
+  "confusion_matrix_diag_sum": 453,
+  "class_distribution_expected": {"CLARIFICATION_REQUIRED": 70, "COMPOSITE": 80, "CONVERSATIONAL": 80, "DYNAMIC_COMPUTATION": 80, "KNOWN_CAPABILITY": 130, "SECURITY_REJECTION": 60},
+  "prompt_ids": "index-based (0..499); no separate id field; 500 rows present; unique index count not separately verified as sequential",
+  "missing_predictions": 0,
+  "duplicate_ids": "index-based uniqueness assumed; 500 rows",
+  "no_hidden_exclusion": "all 500 rows present in detailed_results; 47 failures retained",
+  "dynamic_metrics": {"precision": 1.0, "recall": 0.5875, "fp_over_routes": 0, "fn_under_routes": 33},
+  "failure_profile": "33 DYNAMIC->CLARIFICATION (advanced math/simulations); 7 KNOWN->CLAR; 6 CONVERSATIONAL->CLAR; 2 SECURITY->CLAR (safe direction)",
+  "chronology": "GOOD — freeze 01:20 < manifest 01:22 < results 01:23; zero post-prediction routing edits; 8/8 frozen hashes match",
+  "repeated_execution_until_favorable": "NO EVIDENCE of rerun; single results artifact",
+  "holdout_burned": true,
+  "verdict": "BENCHMARK CREDIBLE as a one-shot frozen evaluation; numbers CONFIRMED; declared SHA mismatch remains a documentation defect; recall 0.588 is a severe under-routing hole (opposite of F0-25F.2 over-routing)"
+}

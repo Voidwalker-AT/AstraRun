@@ -1,0 +1,23 @@
+{
+  "auditor": "MiMo",
+  "search_tokens": ["factorial_result", "3628800", "MATHEMATICALLY_VERIFIED", "F0_25F1", "MIMO_F025F", "No timestamp available", "E:\\Workspace\\Agents\\AstraRun-Anti"],
+  "src_hits": {
+    "factorial_result": 0,
+    "3628800": 0,
+    "MATHEMATICALLY_VERIFIED": 0,
+    "F0_25F1": 0,
+    "MIMO_F025F": 0,
+    "classification": "PRODUCTION_CLEAN for acceptance-token literals"
+  },
+  "contamination_found": [
+    {"location": "src/astrarun/cognition/service.py repair-prompt rule 5", "hit": "hardcodes REPAIR-02 fixture: 'timestamp' missing but 'time' present; forbids 'No timestamp available' placeholder", "class": "PRODUCTION_PROMPT_FIXTURE_CONTAMINATION", "severity": "HIGH"},
+    {"location": "src/astrarun/core/paths.py resolve_python_executable", "hit": "hardcoded workspace venv path E:\\Workspace\\Agents\\AstraRun-Anti\\.venv\\Scripts\\python.exe and ungated E:\\AI_Models\\GGUF fallback", "class": "PRODUCTION_PATH_CONTAMINATION", "severity": "HIGH"},
+    {"location": "src/astrarun/ui/result_presentation.py L269-270", "hit": "verified_title='AstraRun' verified_class='QtLauncher' literals in summary mode", "class": "FABRICATED_ATTESTATION", "severity": "HIGH"},
+    {"location": "scripts/verify_f0_25f1_complete_physical.py", "hit": "hardcoded factorial code/model_id/broker stub/matrix PASS strings", "class": "HARNESS_FABRICATION (not production)", "severity": "CRITICAL for evidence honesty"},
+    {"location": "tests/unit/test_f0_25f1_mutations.py L463", "hit": "writes F0_25F1_MUTATION_RESULTS.json", "class": "test evidence side-effect", "severity": "LOW"},
+    {"location": "config/nlp_lexicon.json open_app", "hit": "legitimate intent lexicon", "class": "INTENTIONAL", "severity": "INFO"}
+  ],
+  "environment_detection_under_tests": "None found that branches behavior to force PASS",
+  "verdict": "ANTI_HARDCODING = FAIL",
+  "verdict_rationale": "Acceptance-token literals are clean in src/, but REPAIR-02 fixture strings live in the production repair prompt, production paths hardcode workspace locations, and summary-mode attestation fabricates window identity. These violate generic-production-logic requirements."
+}

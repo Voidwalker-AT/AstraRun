@@ -74,9 +74,10 @@ class LayaWorker:
         try:
             import laya
             t0 = time.perf_counter()
-            # Prioritize complete local snapshot path if available
-            local_snap = Path("E:/AI_Models/HF_CACHE/hub/models--convaiinnovations--laya/snapshots/55cf4c4ebb4ebe31b2550e8bdf3bd21b99753851")
-            target_path = str(local_snap) if local_snap.exists() else self.model_id
+            # Prioritize configured local snapshot path if available
+            snap_dir = os.environ.get("ASTRARUN_LAYA_SNAPSHOT")
+            local_snap = Path(snap_dir) if snap_dir else None
+            target_path = str(local_snap) if (local_snap and local_snap.exists()) else self.model_id
             self._agent = laya.load(model_id_or_path=target_path, device=self.device)
             load_ms = (time.perf_counter() - t0) * 1000
             _safe_stderr_write(f"[LayaWorker] Model '{target_path}' loaded on {self.device} in {load_ms:.1f}ms\n")

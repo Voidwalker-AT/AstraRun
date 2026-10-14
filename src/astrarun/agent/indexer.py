@@ -149,6 +149,8 @@ class CapabilitySemanticIndex:
                 nouns.add(w)
 
         # Verb expansions and synonyms
+        if "open" in verbs or "launch" in verbs or "start" in verbs or "open_application" in cap_id:
+            verbs.update(["open", "launch", "start", "run"])
         if "find" in verbs or "locate" in verbs or "search" in verbs:
             verbs.update(["find", "locate", "search"])
         if "arrange" in verbs or "ARRANGE" in cap_id.upper() or "DESKTOP" in cap_id.upper():
@@ -181,6 +183,8 @@ class CapabilitySemanticIndex:
             domains.update(["hash", "checksum", "sha256", "digest"])
         if "FORMAT" in cap_id.upper() or "JSON" in cap_id.upper():
             domains.update(["format", "json", "beautify", "indent"])
+        if "DYNAMIC" in cap_id.upper() or "DELEGATE" in cap_id.upper():
+            domains.update(["code", "python", "program", "script", "tool", "computation", "dynamic", "generate", "execute", "synthesize", "file", "artifact"])
 
         tier = getattr(cap, "interaction_tier", InteractionTier.TIER_A_NATIVE)
         risk = getattr(cap, "risk", ToolRisk.LOW)
@@ -269,7 +273,7 @@ class CapabilitySemanticIndex:
                     matched_terms.append("context:browser_url")
                 elif cap_id == "open_file":
                     score -= 1.20
-            if "open" in all_tokens:
+            if any(k in all_tokens for k in ("open", "launch", "start", "run")):
                 if any("app" in t or t in ("calc", "calculator", "notepad", "terminal", "browser", "editor") for t in all_tokens):
                     if cap_id == "open_application":
                         score += 0.80

@@ -16,7 +16,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Dict
 
-REPO_ROOT = Path("e:/Workspace/Active/AstraRun")
+REPO_ROOT = Path(__file__).resolve().parent.parent
 SRC_DIR = REPO_ROOT / "src" / "astrarun"
 TESTS_DIR = REPO_ROOT / "tests"
 SCRIPTS_DIR = REPO_ROOT / "scripts"

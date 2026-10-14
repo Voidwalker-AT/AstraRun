@@ -1,0 +1,29 @@
+{
+  "auditor": "MiMo",
+  "generated": "F0-25F.2 certification session",
+  "total_prompts": 105,
+  "created_now_not_in_production": true,
+  "note": "Full 105 prompts were classified live via GoalPlanner.parse_goal during certification; this artifact records family-level results and critical over-routes. Prompts were NOT added to production code.",
+  "families": {
+    "computational_10": {"expect": "execute_dynamic_tool/LOCAL_MODEL", "correct": 10, "wrong": 0},
+    "math_solve_10": {"expect": "execute_dynamic_tool/LOCAL_MODEL", "correct": 8, "under_routed": ["determine the mean of 4,8,15,16,23,42 and save the mean -> save_text_file/SEMANTIC_RETRIEVAL", "find all factors of 360 and save them to factors.txt -> composite_dag_workflow/SEMANTIC_RETRIEVAL"]},
+    "data_transform_10": {"dynamic_count": 8, "note": "Complex transforms often correctly dynamic; some file-only ops also dynamic"},
+    "system_summary_10": {"expect": "mostly NOT dynamic", "over_routed": ["what python version is installed -> execute_dynamic_tool/LOCAL_MODEL"]},
+    "composite_10": {"over_routed": ["pin notepad to the taskbar -> execute_dynamic_tool/LOCAL_MODEL"]},
+    "file_ops_10": {"over_routed": ["compress the folder logs into logs.zip -> execute_dynamic_tool/LOCAL_MODEL"]},
+    "app_interaction_5": {"over_routed": ["open visual studio code with the current folder -> execute_dynamic_tool/LOCAL_MODEL"]},
+    "browser_5": {"over_routed": ["search the web for python documentation -> execute_dynamic_tool/LOCAL_MODEL"]},
+    "ambiguous_5": {"mostly_needs_clarification": true},
+    "informational_5": {"mostly_dialogue_or_clarification": true},
+    "malformed_5": {"over_routed": ["!!!!! python fib generator !!!!", "0000 calculate 12*12 save 0000", "lorem ipsum dolor sit amet python"]},
+    "multi_clause_5": {"over_routed": ["read config.json, update the port to 9090, and save a backup", "launch the app, log in, and export the data"]},
+    "filename_variant_5": {"dynamic_appropriate": ["compute sha256 of secret.txt and write digest.txt", "read data.json and produce report.json", "from inventory.csv create low_stock.csv where qty<5"]},
+    "negative_10": {"expect": "NOT execute_dynamic_tool", "critical_over_routes": ["summarize the plot of hamlet in one sentence -> execute_dynamic_tool", "solve this crossword puzzle clue: four-letter word for cat -> execute_dynamic_tool", "solve: I feel stuck at work (emotional, not math) -> execute_dynamic_tool", "please solve nothing and do nothing -> execute_dynamic_tool", "solve this riddle verbally without creating files -> execute_dynamic_tool"]}
+  },
+  "totals": {
+    "dynamic_families_correct": "18/20",
+    "over_routing_count": 26,
+    "critical_negative_over_routes": 5
+  },
+  "verdict": "OVERFIT — repair keywords over-trigger on solve/summary negative neighbors and non-compute workstation intents"
+}

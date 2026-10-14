@@ -1,0 +1,55 @@
+{
+  "phase": "F0-25C",
+  "title": "Autonomous Software-Engineering Workstation Agent Task Manifest",
+  "timestamp": "2026-10-11T16:52:00Z",
+  "governance_rule": "The harness defines user objective, filesystem scope, and final required outcome. The harness MUST NOT define applications, editors, commands, source code, debugging procedures, or output presentation.",
+  "tasks": [
+    {
+      "task_id": "task_1_token_matrix",
+      "category": "FIRST_ACCEPTANCE_PROGRAMMING",
+      "objective": "Implement an LRU-cached text token and co-occurrence frequency matrix analyzer. The implementation must tokenize words from input text, compute frequency distributions, maintain a bounded LRU cache of co-occurrence vectors, verify cache eviction bounds, and report top-k affinity pairs with self-contained verification assertions.",
+      "destination_directory": "E:\\Workspace\\Agents\\AstraRun-Anti\\projects\\task1_token_matrix",
+      "allowed_filesystem_scope": "E:\\Workspace\\Agents\\AstraRun-Anti\\projects\\task1_token_matrix\\*",
+      "required_outcome": "Executable source artifact created in destination directory, executed via local toolchain, passing all unit assertions with exit code 0 and producing verifiable analysis output.",
+      "safety_constraints": "No raw shell execution, local project scope only, affirmative resource cleanup.",
+      "unspecified_by_harness": [
+        "editor_choice",
+        "programming_language",
+        "toolchain_commands",
+        "code_implementation",
+        "output_presentation_method"
+      ]
+    },
+    {
+      "task_id": "task_2_memory_status",
+      "category": "CONSULTATION_VALUE_UNFAMILIAR_API",
+      "objective": "Create a native Windows system memory diagnostic utility that queries physical and virtual RAM metrics via the Win32 GlobalMemoryStatusEx API. Must handle documentation-sensitive struct sizing (dwLength initialization) and output total RAM, available RAM, and memory load percentage.",
+      "destination_directory": "E:\\Workspace\\Agents\\AstraRun-Anti\\projects\\task2_memory_status",
+      "allowed_filesystem_scope": "E:\\Workspace\\Agents\\AstraRun-Anti\\projects\\task2_memory_status\\*",
+      "required_outcome": "Program created in destination directory that executes, successfully calls Win32 API without error code 87, and outputs memory metrics matching live system values.",
+      "safety_constraints": "External AI advice is untrusted until independently validated; browser consultation must be cleanly tracked.",
+      "unspecified_by_harness": [
+        "whether_to_consult_chatgpt",
+        "browser_choice",
+        "chatgpt_prompt_text",
+        "editor_choice",
+        "execution_commands"
+      ]
+    },
+    {
+      "task_id": "task_3_debugger",
+      "category": "AUTONOMOUS_DEBUGGING",
+      "objective": "Diagnose and repair a task-owned source file 'graph_pathfinder.py' containing a subtle algorithmic defect in graph traversal and path reconstruction. The harness provides the broken file without hints; Astra must execute tests, observe the failure traceback, diagnose the root cause, repair the code, and verify that all test assertions pass.",
+      "destination_directory": "E:\\Workspace\\Agents\\AstraRun-Anti\\projects\\task3_debugger",
+      "allowed_filesystem_scope": "E:\\Workspace\\Agents\\AstraRun-Anti\\projects\\task3_debugger\\*",
+      "required_outcome": "graph_pathfinder.py modified such that all test cases execute and pass with exit code 0.",
+      "safety_constraints": "Repair must preserve intended graph algorithms, no bypassing assertions or tautological substitutions.",
+      "unspecified_by_harness": [
+        "editor_choice",
+        "diagnostic_method",
+        "debugging_procedure",
+        "repair_patch"
+      ]
+    }
+  ]
+}

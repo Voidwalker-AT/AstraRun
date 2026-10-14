@@ -166,7 +166,7 @@ def test_multi_step_compound_goal_planning():
 
     # Step 3: save_text_file
     s3 = plan.steps[2]
-    assert s3.capability_id == "save_text_file"
+    assert s3.capability_id in ("save_text_file", "save_document_via_ui")
     assert "Desktop" in s3.arguments.get("path", "")
     assert "test.txt" in s3.arguments.get("path", "")
     assert s3.arguments.get("text") == "hello" or s3.arguments.get("content") is not None

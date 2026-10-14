@@ -1,0 +1,174 @@
+{
+  "architecture_version": "F0-24A.2",
+  "entry_points": {
+    "headless_cli": "src/astrarun/main.py:main() -> astra_app.handle_request()",
+    "gui_launcher": "src/astrarun/ui/launcher.py:LauncherWindow -> astra_app.handle_request()"
+  },
+  "call_chain": [
+    {
+      "stage": "USER_REQUEST_INGESTION",
+      "component": "AstraApplication",
+      "file": "src/astrarun/app.py",
+      "function": "handle_request",
+      "responsibilities": [
+        "Query normalization and compound clause detection",
+        "Fast-path routing for direct commands / conversational queries",
+        "Delegation to AgentExecutionEngine when compound indicators are present"
+      ]
+    },
+    {
+      "stage": "GOAL_INTERPRETATION_AND_PLANNING",
+      "component": "GoalPlanner",
+      "file": "src/astrarun/agent/planner.py",
+      "functions": [
+        "parse_goal",
+        "extract_goal_contract",
+        "create_plan"
+      ],
+      "responsibilities": [
+        "Natural language clause decomposition and entity extraction",
+        "Semantic capability index retrieval and argument binding",
+        "GoalContract synthesis with mandatory acceptance predicates",
+        "DAG dependency construction between plan steps",
+        "VerifierStrategy assignment per step"
+      ]
+    },
+    {
+      "stage": "EXECUTION_ORCHESTRATION",
+      "component": "AgentExecutionEngine",
+      "file": "src/astrarun/agent/loop.py",
+      "functions": [
+        "execute_goal",
+        "run_task",
+        "_execute_step_with_closed_loop"
+      ],
+      "responsibilities": [
+        "Plan quality validation gate",
+        "ExecutionGraph scheduling and dependency resolution",
+        "Closed-loop Observe -> Act -> Observe execution per step",
+        "Adaptive divergence checking (user takeover, minimized windows)",
+        "Step verification and dynamic replanning on failure",
+        "Final goal verification and task-owned resource cleanup"
+      ]
+    },
+    {
+      "stage": "SECURITY_GATEWAY",
+      "component": "ExecutionBroker",
+      "file": "src/astrarun/security/execution_broker.py",
+      "functions": [
+        "execute",
+        "_dispatch_execution"
+      ],
+      "responsibilities": [
+        "Authoritative capability category derivation (ACT vs OBSERVE)",
+        "ActionGate policy evaluation and risk assessment",
+        "Audit logging with SHA-256 provenance",
+        "Scoped execution dispatch under BrokerDispatchScope"
+      ]
+    },
+    {
+      "stage": "CAPABILITY_DISPATCH",
+      "component": "CapabilityRegistry",
+      "file": "src/astrarun/capabilities/registry.py",
+      "function": "execute",
+      "responsibilities": [
+        "Capability lookup by unique identifier",
+        "Argument schema filtering and OutputReference resolution",
+        "Handler invocation with execution timing",
+        "Standardization of results into CapabilityResult"
+      ]
+    },
+    {
+      "stage": "INTERACTION_SERVICES",
+      "subsystems": [
+        {
+          "name": "Application Lifecycle",
+          "file": "src/astrarun/applications/service.py",
+          "functions": [
+            "open_application",
+            "close_application"
+          ],
+          "responsibilities": [
+            "Pre-launch snapshotting",
+            "Process spawning",
+            "ResourceLedger registration"
+          ]
+        },
+        {
+          "name": "Window & Input Interaction",
+          "file": "src/astrarun/interaction/service.py",
+          "functions": [
+            "type_literal_text",
+            "click_element",
+            "focus_control"
+          ],
+          "responsibilities": [
+            "Focus verification",
+            "UIA editable surface discovery",
+            "ValuePattern / native input dispatch",
+            "Text state verification"
+          ]
+        },
+        {
+          "name": "Document Management",
+          "file": "src/astrarun/interaction/document.py",
+          "functions": [
+            "save_document_via_ui"
+          ],
+          "responsibilities": [
+            "Save dialog trigger (UIA / accelerators)",
+            "Save As dialog discovery",
+            "Path entry via Alt+N",
+            "Save commit & overwrite handling",
+            "Disk artifact empirical verification"
+          ]
+        }
+      ]
+    },
+    {
+      "stage": "PERCEPTION_AND_WORLD_STATE",
+      "component": "DesktopObserver",
+      "file": "src/astrarun/computer_use/observation/observer.py",
+      "function": "observe",
+      "responsibilities": [
+        "Live top-level and dialog window enumeration",
+        "Active foreground window detection",
+        "User physical takeover detection via GetLastInputInfo",
+        "Desktop state hashing for state transition tracking"
+      ]
+    },
+    {
+      "stage": "STEP_AND_GOAL_VERIFICATION",
+      "components": [
+        "StepVerifier",
+        "GoalVerifier"
+      ],
+      "file": "src/astrarun/agent/verifier.py",
+      "functions": [
+        "StepVerifier.verify",
+        "GoalVerifier.verify_goal"
+      ],
+      "responsibilities": [
+        "Empirical postcondition verification against live environment",
+        "Evaluation of acceptance predicates (FILE_EXISTS, FILE_NON_EMPTY, FILE_CONTENT_CONTAINS, UI_ELEMENT_STATE)",
+        "Strict rejection of RETURN_CODE_ONLY as postcondition proof"
+      ]
+    },
+    {
+      "stage": "RESOURCE_CLEANUP_AND_TRUTH_EVALUATION",
+      "components": [
+        "AstraResourceLedger",
+        "ExecutionTruthOracle"
+      ],
+      "files": [
+        "src/astrarun/tasks/resource_ledger.py",
+        "src/astrarun/evaluation/execution_truth.py"
+      ],
+      "responsibilities": [
+        "Task-owned process and window termination",
+        "Orphan detection and residual leak verification",
+        "Staged completion oracle gating (PLAN_VALID -> ACTION_DISPATCHED -> ACTION_SUCCEEDED -> STATE_OBSERVED -> POSTCONDITION_SATISFIED -> RESOURCE_CLEANUP_VERIFIED -> GOAL_COMPLETED)"
+      ]
+    }
+  ]
+}

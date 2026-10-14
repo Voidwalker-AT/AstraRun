@@ -1,0 +1,39 @@
+{
+  "phase": "F0-25F.1",
+  "task": "SECURITY_MANIFEST_RECOMPUTATION",
+  "timestamp": 1791749093.657489,
+  "status": "PASS",
+  "total_capabilities": 86,
+  "manifest_dict_entries": 86,
+  "runtime_capability_count": 86,
+  "mutates_state_false_read_only": 43,
+  "mutates_state_true_mutating": 43,
+  "requires_confirmation": 3,
+  "confirmation_ids": [
+    "restart_workstation",
+    "shutdown_workstation",
+    "terminate_process"
+  ],
+  "blocked_count": 2,
+  "blocked_ids": [
+    "restart_workstation",
+    "shutdown_workstation"
+  ],
+  "unknown_consequential": 0,
+  "only_in_manifest_not_runtime": [],
+  "only_in_runtime_not_manifest": [],
+  "docstring_updated_to": 86,
+  "discrepancies_resolved": [
+    "Removed phantom legacy entries inspect_process_list and open_app from AUTHORITATIVE_CAPABILITY_MANIFEST",
+    "Updated manifest.py docstring from 82 to 86 production capabilities",
+    "Achieved exact 1:1 parity (86 == 86) between runtime registry and manifest dict"
+  ],
+  "runtime_counts": {
+    "total": 86,
+    "passive_observation": 43,
+    "mutation": 43,
+    "destructive": 3,
+    "elevation": 2,
+    "unclassified": 0
+  }
+}

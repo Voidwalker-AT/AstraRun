@@ -1,0 +1,45 @@
+{
+  "phase": "F0-25F.4",
+  "component": "VerificationResults",
+  "timestamp": 1791834420.0,
+  "test_suite": "tests/unit/test_f0_25f4_verification.py",
+  "summary": {
+    "total": 6,
+    "passed": 6,
+    "failed": 0,
+    "skipped": 0,
+    "verdict": "PASS"
+  },
+  "results": {
+    "step_verifier_rejects_return_code_only": {
+      "status": "PASSED",
+      "verdict": "PASS",
+      "description": "StepVerifier fail-closed rejects RETURN_CODE_ONLY as dispatch-level only"
+    },
+    "step_verifier_file_exists": {
+      "status": "PASSED",
+      "verdict": "PASS",
+      "description": "StepVerifier correctly checks FILE_EXISTS on disk for existing and missing paths"
+    },
+    "step_verifier_file_non_empty": {
+      "status": "PASSED",
+      "verdict": "PASS",
+      "description": "StepVerifier checks FILE_NON_EMPTY: fails on 0-byte, passes on >0 bytes"
+    },
+    "step_verifier_file_contains": {
+      "status": "PASSED",
+      "verdict": "PASS",
+      "description": "StepVerifier checks FILE_CONTAINS: fails if token absent, passes if token present"
+    },
+    "goal_verifier_semantic_predicates": {
+      "status": "PASSED",
+      "verdict": "PASS",
+      "description": "GoalVerifier verifies typed file predicates and attaches active run_id and task_id"
+    },
+    "planner_derives_semantic_verifier_strategy": {
+      "status": "PASSED",
+      "verdict": "PASS",
+      "description": "GoalPlanner derives FILE_NON_EMPTY / FILE_CONTAINS from goal contract instead of RETURN_CODE_ONLY"
+    }
+  }
+}

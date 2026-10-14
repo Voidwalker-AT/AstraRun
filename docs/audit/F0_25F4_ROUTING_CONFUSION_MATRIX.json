@@ -1,0 +1,38 @@
+{
+  "phase": "F0-25F.4",
+  "manifest_sha256": "eb8c72cea888292a7aee834c7fac90ffceb8a2538fae603162b1611b79d778e8",
+  "classes": [
+    "DYNAMIC_COMPUTATION",
+    "KNOWN_CAPABILITY",
+    "CONVERSATIONAL",
+    "CLARIFICATION_REQUIRED"
+  ],
+  "matrix": {
+    "DYNAMIC_COMPUTATION": {
+      "DYNAMIC_COMPUTATION": 74,
+      "KNOWN_CAPABILITY": 1,
+      "CONVERSATIONAL": 0,
+      "CLARIFICATION_REQUIRED": 5
+    },
+    "KNOWN_CAPABILITY": {
+      "DYNAMIC_COMPUTATION": 0,
+      "KNOWN_CAPABILITY": 68,
+      "CONVERSATIONAL": 5,
+      "CLARIFICATION_REQUIRED": 7
+    },
+    "CONVERSATIONAL": {
+      "DYNAMIC_COMPUTATION": 0,
+      "KNOWN_CAPABILITY": 0,
+      "CONVERSATIONAL": 76,
+      "CLARIFICATION_REQUIRED": 4
+    },
+    "CLARIFICATION_REQUIRED": {
+      "DYNAMIC_COMPUTATION": 1,
+      "KNOWN_CAPABILITY": 17,
+      "CONVERSATIONAL": 7,
+      "CLARIFICATION_REQUIRED": 55
+    }
+  },
+  "row_labels": "True Class",
+  "col_labels": "Predicted Class"
+}

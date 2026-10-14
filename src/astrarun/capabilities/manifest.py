@@ -1,6 +1,6 @@
 """Authoritative Capability Security Manifest for AstraRun.
 
-Explicitly classifies all 82 production workstation capabilities into typed,
+Explicitly classifies all 86 production workstation capabilities into typed,
 immutable CapabilitySecurityMetadata specifications. Ensures zero mutating
 production capabilities rely on UNKNOWN_CONSEQUENTIAL fallbacks.
 """
@@ -115,12 +115,33 @@ AUTHORITATIVE_CAPABILITY_MANIFEST: Dict[str, CapabilitySecurityMetadata] = {
         requires_confirmation=False,
         resource_scope="file",
     ),
+    "write_file": CapabilitySecurityMetadata(
+        operation_kind=CapabilityOperationKind.FILE_CREATE,
+        risk=RiskLevel.LOW,
+        mutates_state=True,
+        requires_confirmation=False,
+        resource_scope="file",
+    ),
+    "verify_file": CapabilitySecurityMetadata(
+        operation_kind=CapabilityOperationKind.FILE_READ,
+        risk=RiskLevel.LOW,
+        mutates_state=False,
+        requires_confirmation=False,
+        resource_scope="file",
+    ),
     "deliver_artifact": CapabilitySecurityMetadata(
         operation_kind=CapabilityOperationKind.FILE_CREATE,
         risk=RiskLevel.LOW,
         mutates_state=True,
         requires_confirmation=False,
         resource_scope="file",
+    ),
+    "present_result": CapabilitySecurityMetadata(
+        operation_kind=CapabilityOperationKind.APPLICATION_LAUNCH,
+        risk=RiskLevel.LOW,
+        mutates_state=True,
+        requires_confirmation=False,
+        resource_scope="application",
     ),
     "render_visualization": CapabilitySecurityMetadata(
         operation_kind=CapabilityOperationKind.FILE_CREATE,
@@ -629,6 +650,13 @@ AUTHORITATIVE_CAPABILITY_MANIFEST: Dict[str, CapabilitySecurityMetadata] = {
         requires_confirmation=False,
         resource_scope="interaction",
     ),
+    "take_screenshot": CapabilitySecurityMetadata(
+        operation_kind=CapabilityOperationKind.OBSERVE_READ_ONLY,
+        risk=RiskLevel.LOW,
+        mutates_state=False,
+        requires_confirmation=False,
+        resource_scope="desktop",
+    ),
 
 
     # =========================================================================
@@ -647,22 +675,6 @@ AUTHORITATIVE_CAPABILITY_MANIFEST: Dict[str, CapabilitySecurityMetadata] = {
         mutates_state=True,
         requires_confirmation=False,
         resource_scope="delegation",
-    ),
-
-    # Legacy Aliases
-    "open_app": CapabilitySecurityMetadata(
-        operation_kind=CapabilityOperationKind.APPLICATION_LAUNCH,
-        risk=RiskLevel.LOW,
-        mutates_state=True,
-        requires_confirmation=False,
-        resource_scope="application",
-    ),
-    "inspect_process_list": CapabilitySecurityMetadata(
-        operation_kind=CapabilityOperationKind.OBSERVE_READ_ONLY,
-        risk=RiskLevel.LOW,
-        mutates_state=False,
-        requires_confirmation=False,
-        resource_scope="process",
     ),
 }
 

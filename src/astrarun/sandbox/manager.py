@@ -158,11 +158,32 @@ class SandboxManager:
         run_dir = cfg.working_dir or (self.base_dir / cfg.run_id)
         run_dir.mkdir(parents=True, exist_ok=True)
 
+        try:
+            from astrarun.tasks.resource_ledger import AstraResourceLedger, OwnedResource, ResourceType, CleanupPolicy
+            ledger = AstraResourceLedger.get_instance()
+            ledger.register_resource(
+                OwnedResource(
+                    task_id=cfg.run_id,
+                    resource_type=ResourceType.SANDBOX_DIR,
+                    launching_capability="execute_script",
+                    document_path=str(run_dir),
+                    astra_created=True,
+                    cleanup_policy=CleanupPolicy.NEVER_CLOSE if getattr(cfg, "preserve_on_exit", False) else CleanupPolicy.AUTO_CLOSE_ON_COMPLETION,
+                    metadata={"run_id": cfg.run_id, "sandbox_dir": str(run_dir)},
+                )
+            )
+        except Exception as e:
+            logger.debug("Failed to register sandbox dir in resource ledger: %s", e)
+
         script_file = run_dir / "candidate_script.py"
         script_file.write_bytes(script_code.encode("utf-8"))
 
-        exe = python_executable or sys.executable
+        from astrarun.core.paths import resolve_python_executable
+        exe = resolve_python_executable(python_executable)
         clean_env = self.sanitize_environment(cfg.extra_env)
+        venv_site = Path.cwd() / ".venv" / "Lib" / "site-packages"
+        if venv_site.exists():
+            clean_env["PYTHONPATH"] = str(venv_site)
 
         # Record pre-existing files in working_dir to detect created artifacts
         pre_files = set(run_dir.glob("**/*"))
@@ -199,7 +220,7 @@ class SandboxManager:
                             run_id=cfg.run_id,
                             timeout_sec=cfg.timeout_sec,
                             memory_limit_bytes=cfg.memory_limit_bytes,
-                            extra_env=cfg.extra_env,
+                            extra_env=clean_env,
                             python_executable=exe,
                         )
                         status = worker_res.status
@@ -227,7 +248,7 @@ class SandboxManager:
                             run_id=cfg.run_id,
                             timeout_sec=cfg.timeout_sec,
                             memory_limit_bytes=cfg.memory_limit_bytes,
-                            extra_env=cfg.extra_env,
+                            extra_env=clean_env,
                             python_executable=exe,
                         )
                         status = worker_res.status
@@ -366,6 +387,24 @@ class SandboxManager:
         run_dir = cfg.working_dir or (self.base_dir / getattr(candidate, "task_id", cfg.run_id))
         run_dir.mkdir(parents=True, exist_ok=True)
 
+        task_id = getattr(candidate, "task_id", cfg.run_id) or "default_task"
+        try:
+            from astrarun.tasks.resource_ledger import AstraResourceLedger, OwnedResource, ResourceType, CleanupPolicy
+            ledger = AstraResourceLedger.get_instance()
+            ledger.register_resource(
+                OwnedResource(
+                    task_id=task_id,
+                    resource_type=ResourceType.SANDBOX_DIR,
+                    launching_capability="execute_candidate",
+                    document_path=str(run_dir),
+                    astra_created=True,
+                    cleanup_policy=CleanupPolicy.NEVER_CLOSE if getattr(cfg, "preserve_on_exit", False) else CleanupPolicy.AUTO_CLOSE_ON_COMPLETION,
+                    metadata={"run_id": cfg.run_id, "sandbox_dir": str(run_dir)},
+                )
+            )
+        except Exception as e:
+            logger.debug("Failed to register sandbox dir in resource ledger: %s", e)
+
         # Governed Task Workspace contract: TASK_WORKSPACE/ (source, output, temp, evidence)
         source_dir = run_dir / "source"
         output_dir = cfg.output_dir or (run_dir / "output")
@@ -431,7 +470,8 @@ class SandboxManager:
                 duration_ms=0.0,
             )
 
-        exe = python_executable or sys.executable
+        from astrarun.core.paths import resolve_python_executable
+        exe = resolve_python_executable(python_executable)
         extra = dict(cfg.extra_env or {})
         extra["ASTRARUN_OUTPUT_DIR"] = str(output_dir)
         extra["ASTRARUN_WORKSPACE_DIR"] = str(run_dir)
@@ -439,6 +479,9 @@ class SandboxManager:
         extra["TEMP"] = str(temp_dir)
         extra["TMP"] = str(temp_dir)
         clean_env = self.sanitize_environment(extra)
+        venv_site = Path.cwd() / ".venv" / "Lib" / "site-packages"
+        if venv_site.exists():
+            clean_env["PYTHONPATH"] = str(venv_site)
 
         # Record pre-existing files and sizes to detect newly produced or populated artifacts
         pre_files = set(run_dir.glob("**/*"))
@@ -477,7 +520,7 @@ class SandboxManager:
                             run_id=cfg.run_id,
                             timeout_sec=cfg.timeout_sec,
                             memory_limit_bytes=cfg.memory_limit_bytes,
-                            extra_env=cfg.extra_env,
+                            extra_env=clean_env,
                             python_executable=exe,
                         )
                         status = worker_res.status
@@ -505,7 +548,7 @@ class SandboxManager:
                             run_id=cfg.run_id,
                             timeout_sec=cfg.timeout_sec,
                             memory_limit_bytes=cfg.memory_limit_bytes,
-                            extra_env=cfg.extra_env,
+                            extra_env=clean_env,
                             python_executable=exe,
                         )
                         status = worker_res.status
@@ -587,9 +630,10 @@ class SandboxManager:
             f for f in post_files - staged_set
             if f.is_file() and not any(p in excluded_dirs for p in f.parents)
             and (
-                f not in pre_files
+                f.parent == output_dir or output_dir in f.parents
+                or f not in pre_files
                 or (pre_sizes.get(f, 0) == 0 and f.stat().st_size > 0)
-                or (f.stat().st_mtime >= start_time and f.stat().st_size != pre_sizes.get(f, 0))
+                or (f.stat().st_mtime >= start_time - 1.0)
             )
         ]
 

@@ -1,0 +1,22 @@
+{
+  "auditor": "MiMo",
+  "reported_leaked_pids": [29304, 28324, 2572, 26568],
+  "measurement": {"baseline_pids": 318, "post_pids": 321, "leaked_hwnds": [], "clean_hwnd_restoration": true},
+  "current_state": {"pid_29304": "GONE", "pid_28324": "GONE", "pid_2572": "GONE", "pid_26568": "GONE", "checked": "MiMo Get-Process at certification time"},
+  "ownership_provenance": {
+    "note": "All four PIDs no longer exist; executable path/create time/parent cannot be recovered post-mortem from process APIs",
+    "timing": "leak measurement at 1791826276 (~22:51) immediately after physical run (trace 1791826249-1791826276)",
+    "candidates": ["model server / LayaWorker / cognition supervisor children", "sandbox AppContainer workers", "explorer/viewer (none - no presentation)", "AstraRun launcher (PID 12532 - separate)", "stale python from resolve_python_executable"]
+  },
+  "classification": {
+    "method": "INSUFFICIENT DATA for per-PID classification — processes gone; no psutil snapshot of path/ppid archived in F0-25F.3 evidence",
+    "29304_28324_2572_26568": "UNKNOWN",
+    "confirmed_task_created_disposable": 0,
+    "confirmed_pre_existing": 0,
+    "note": "3 net new PIDs (318->321) but 4 leaked listed — implies 1 baseline PID exited during run; delta math inconsistent by 1 (post-baseline != leaked list length: 321-318=3 vs 4 leaked)"
+  },
+  "independent_before_after": "NOT PERFORMED by MiMo for this run's task (would require re-running full agentic task; physical acceptance already exists as evidence). MiMo's prior F0-25F.2 presentation run used IPC teardown exit 0.",
+  "did_mimo_kill_user_processes": false,
+  "verdict": "PID_OWNERSHIP = UNVERIFIED",
+  "verdict_rationale": "Cannot confirm TASK_CREATED_DISPOSABLE vs expected persistent infrastructure without process path/ppid evidence. Not automatically leaks; not proven clean either. Count inconsistency (3 vs 4) unexplained."
+}

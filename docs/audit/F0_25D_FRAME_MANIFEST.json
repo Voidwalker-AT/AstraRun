@@ -1,0 +1,97 @@
+{
+  "milestone": "F0_25D",
+  "title": "Desktop World State Frame Manifest",
+  "timestamp": "2026-10-11T17:16:15.000000+05:30",
+  "frames": [
+    {
+      "frame_id": "FRAME_A_BEFORE_LAUNCH",
+      "timestamp": "2026-10-11T17:14:48.000Z",
+      "stage": "BEFORE_ASTRA_LAUNCH",
+      "state_hash": "afa6f0661b047aee04e32aed0f1e42a70c91011cc5627c57270c9f49ca1dd3b8",
+      "foreground_hwnd": 11011478,
+      "foreground_app": "Antigravity.exe",
+      "visible_windows": 14,
+      "description": "Baseline desktop prior to AstraRun launch; target directory absent."
+    },
+    {
+      "frame_id": "FRAME_B_LAUNCHER_VISIBLE",
+      "timestamp": "2026-10-11T17:14:49.100Z",
+      "stage": "LAUNCHER_VISIBLE",
+      "state_hash": "afa6f0661b047aee04e32aed0f1e42a70c91011cc5627c57270c9f49ca1dd3b8",
+      "foreground_hwnd": 11011478,
+      "foreground_app": "AstraRun.exe",
+      "visible_windows": 14,
+      "description": "AstraRun process spawned in headless execution mode."
+    },
+    {
+      "frame_id": "FRAME_C_REQUEST_SUBMITTED",
+      "timestamp": "2026-10-11T17:14:50.000Z",
+      "stage": "REQUEST_SUBMITTED",
+      "state_hash": "afa6f0661b047aee04e32aed0f1e42a70c91011cc5627c57270c9f49ca1dd3b8",
+      "foreground_hwnd": 11011478,
+      "foreground_app": "AstraRun.exe",
+      "visible_windows": 14,
+      "description": "User request received and parsed into GoalContract gc_ed6c8d96."
+    },
+    {
+      "frame_id": "FRAME_D_FIRST_EXTERNAL_TOOL_ACTION",
+      "timestamp": "2026-10-11T17:14:50.500Z",
+      "stage": "FIRST_EXTERNAL_TOOL_ACTION",
+      "state_hash": "afa6f0661b047aee04e32aed0f1e42a70c91011cc5627c57270c9f49ca1dd3b8",
+      "foreground_hwnd": 11011478,
+      "foreground_app": "AstraRun.exe",
+      "visible_windows": 14,
+      "description": "Dispatch of capability consult_delegate to provider chatgpt_web attempted."
+    },
+    {
+      "frame_id": "FRAME_E_SOURCE_CODE_PRESENT",
+      "timestamp": null,
+      "stage": "SOURCE_CODE_PRESENT",
+      "state_hash": null,
+      "foreground_hwnd": null,
+      "foreground_app": null,
+      "visible_windows": null,
+      "description": "NOT_OBSERVED: Execution halted at consult_delegate bridge failure before code synthesis."
+    },
+    {
+      "frame_id": "FRAME_F_TERMINAL_EXECUTION",
+      "timestamp": null,
+      "stage": "TERMINAL_EXECUTION",
+      "state_hash": null,
+      "foreground_hwnd": null,
+      "foreground_app": null,
+      "visible_windows": null,
+      "description": "NOT_OBSERVED: No terminal opened due to upstream delegation failure."
+    },
+    {
+      "frame_id": "FRAME_G_FINAL_OUTPUT",
+      "timestamp": "2026-10-11T17:14:52.900Z",
+      "stage": "FINAL_OUTPUT",
+      "state_hash": "afa6f0661b047aee04e32aed0f1e42a70c91011cc5627c57270c9f49ca1dd3b8",
+      "foreground_hwnd": 11011478,
+      "foreground_app": "AstraRun.exe",
+      "visible_windows": 14,
+      "description": "Terminal failure payload written to structured result file; status=FAILURE."
+    },
+    {
+      "frame_id": "FRAME_H_ASTRA_COMPLETION_UI",
+      "timestamp": "2026-10-11T17:14:53.000Z",
+      "stage": "ASTRA_COMPLETION_UI",
+      "state_hash": "afa6f0661b047aee04e32aed0f1e42a70c91011cc5627c57270c9f49ca1dd3b8",
+      "foreground_hwnd": 11011478,
+      "foreground_app": "AstraRun.exe",
+      "visible_windows": 14,
+      "description": "Astra process exits with return code 1 and error message."
+    },
+    {
+      "frame_id": "FRAME_I_AFTER_ASTRA_CLEANUP",
+      "timestamp": "2026-10-11T17:14:53.100Z",
+      "stage": "AFTER_ASTRA_CLEANUP",
+      "state_hash": "afa6f0661b047aee04e32aed0f1e42a70c91011cc5627c57270c9f49ca1dd3b8",
+      "foreground_hwnd": 11011478,
+      "foreground_app": "Antigravity.exe",
+      "visible_windows": 14,
+      "description": "Post-cleanup world verification: 0 orphaned processes, 0 orphaned windows, 0 temporary files."
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "gate_id": "GATE_H",
+  "description": "User Takeover Safety & Synthetic Action Halting",
+  "task_id": "lab_gate_h_1791690134",
+  "takeover_detected": true,
+  "synthetic_action_blocked": true,
+  "error_recorded": "Physical user input detected. Step paused.",
+  "yield_behavior_verified": true,
+  "verdict": "PASS"
+}

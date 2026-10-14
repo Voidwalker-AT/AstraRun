@@ -1,0 +1,1045 @@
+{
+  "frame_id": "frame_000002",
+  "timestamp_monotonic": 290444.6232185,
+  "timestamp_wall": 1791692062.8818092,
+  "task_id": "task_stage9_cold_1791692056345",
+  "goal_id": "task_stage9_cold_1791692056345",
+  "step_id": "step_post",
+  "observation_generation": 1791692062881,
+  "raw": {
+    "desktop_state": {
+      "foreground_hwnd": 14486380,
+      "foreground_pid": 23240,
+      "foreground_process_name": "notepad++.exe",
+      "foreground_title": "*new 2 - Notepad++",
+      "desktop_bounds": [
+        383,
+        344,
+        1024,
+        641
+      ],
+      "cursor_position": [
+        740,
+        943
+      ],
+      "modifiers_pressed": [],
+      "user_takeover_active": false
+    },
+    "window_state": [
+      {
+        "hwnd": 131560,
+        "pid": 10080,
+        "exe_name": "explorer.exe",
+        "title": "",
+        "class_name": "Shell_TrayWnd",
+        "bounds": [
+          0,
+          1020,
+          1920,
+          60
+        ],
+        "is_visible": true,
+        "is_minimized": false,
+        "is_maximized": false,
+        "is_modal": false,
+        "owner_hwnd": 0
+      },
+      {
+        "hwnd": 14486380,
+        "pid": 23240,
+        "exe_name": "notepad++.exe",
+        "title": "*new 2 - Notepad++",
+        "class_name": "Notepad++",
+        "bounds": [
+          383,
+          344,
+          1024,
+          641
+        ],
+        "is_visible": true,
+        "is_minimized": false,
+        "is_maximized": false,
+        "is_modal": true,
+        "owner_hwnd": 0
+      },
+      {
+        "hwnd": 11011478,
+        "pid": 1288,
+        "exe_name": "Antigravity.exe",
+        "title": "AstraRun Generic Computer...",
+        "class_name": "Chrome_WidgetWin_1",
+        "bounds": [
+          -9,
+          -9,
+          1938,
+          1038
+        ],
+        "is_visible": true,
+        "is_minimized": false,
+        "is_maximized": true,
+        "is_modal": false,
+        "owner_hwnd": 0
+      },
+      {
+        "hwnd": 525268,
+        "pid": 20440,
+        "exe_name": "vivaldi.exe",
+        "title": "Research Jev And Laya Repos - Vivaldi",
+        "class_name": "Chrome_WidgetWin_1",
+        "bounds": [
+          -9,
+          -9,
+          1938,
+          1038
+        ],
+        "is_visible": true,
+        "is_minimized": false,
+        "is_maximized": true,
+        "is_modal": true,
+        "owner_hwnd": 0
+      },
+      {
+        "hwnd": 395572,
+        "pid": 10080,
+        "exe_name": "explorer.exe",
+        "title": "audit and 2 more tabs - File Explorer",
+        "class_name": "CabinetWClass",
+        "bounds": [
+          -9,
+          -9,
+          1938,
+          1038
+        ],
+        "is_visible": true,
+        "is_minimized": false,
+        "is_maximized": true,
+        "is_modal": true,
+        "owner_hwnd": 0
+      },
+      {
+        "hwnd": 2624760,
+        "pid": 14620,
+        "exe_name": "WindowsTerminal.exe",
+        "title": "Windows PowerShell",
+        "class_name": "CASCADIA_HOSTING_WINDOW_CLASS",
+        "bounds": [
+          -32000,
+          -32000,
+          199,
+          34
+        ],
+        "is_visible": true,
+        "is_minimized": true,
+        "is_maximized": false,
+        "is_modal": true,
+        "owner_hwnd": 0
+      },
+      {
+        "hwnd": 4065526,
+        "pid": 15752,
+        "exe_name": "SystemSettings.exe",
+        "title": "Settings",
+        "class_name": "Windows.UI.Core.CoreWindow",
+        "bounds": [
+          0,
+          9,
+          1920,
+          1020
+        ],
+        "is_visible": true,
+        "is_minimized": false,
+        "is_maximized": false,
+        "is_modal": false,
+        "owner_hwnd": 0
+      },
+      {
+        "hwnd": 1902020,
+        "pid": 21204,
+        "exe_name": "ApplicationFrameHost.exe",
+        "title": "Settings",
+        "class_name": "ApplicationFrameWindow",
+        "bounds": [
+          -9,
+          -9,
+          1938,
+          1038
+        ],
+        "is_visible": true,
+        "is_minimized": false,
+        "is_maximized": true,
+        "is_modal": true,
+        "owner_hwnd": 0
+      },
+      {
+        "hwnd": 67802,
+        "pid": 10080,
+        "exe_name": "explorer.exe",
+        "title": "",
+        "class_name": "ApplicationFrameWindow",
+        "bounds": [
+          0,
+          0,
+          1920,
+          1020
+        ],
+        "is_visible": true,
+        "is_minimized": false,
+        "is_maximized": false,
+        "is_modal": true,
+        "owner_hwnd": 0
+      },
+      {
+        "hwnd": 328566,
+        "pid": 7092,
+        "exe_name": "TextInputHost.exe",
+        "title": "Windows Input Experience",
+        "class_name": "Windows.UI.Core.CoreWindow",
+        "bounds": [
+          0,
+          0,
+          1920,
+          1080
+        ],
+        "is_visible": true,
+        "is_minimized": false,
+        "is_maximized": false,
+        "is_modal": false,
+        "owner_hwnd": 0
+      },
+      {
+        "hwnd": 66060,
+        "pid": 10080,
+        "exe_name": "explorer.exe",
+        "title": "Program Manager",
+        "class_name": "Progman",
+        "bounds": [
+          0,
+          0,
+          1920,
+          1080
+        ],
+        "is_visible": true,
+        "is_minimized": false,
+        "is_maximized": false,
+        "is_modal": false,
+        "owner_hwnd": 0
+      }
+    ],
+    "target_app_state": {
+      "active_target_hwnd": 14486380,
+      "active_target_pid": 23240,
+      "foreground_matches_target": true
+    },
+    "structural_ui": [
+      {
+        "runtime_id": "uia_14486380_0",
+        "automation_id": "",
+        "control_type": "50033",
+        "class_name": "Scintilla",
+        "name": "UNSAVED_TEST_CONTENTRECOVERY_VERIFIEDASTRA_HERMES_COLD_PROBE_99",
+        "value": "",
+        "bounds": [
+          394,
+          468,
+          1002,
+          477
+        ],
+        "is_enabled": true,
+        "is_offscreen": false,
+        "is_focusable": true,
+        "is_focused": false,
+        "is_read_only": false
+      },
+      {
+        "runtime_id": "uia_14486380_1",
+        "automation_id": "",
+        "control_type": "50018",
+        "class_name": "SysTabControl32",
+        "name": "Tab",
+        "value": "",
+        "bounds": [
+          392,
+          436,
+          1006,
+          511
+        ],
+        "is_enabled": true,
+        "is_offscreen": false,
+        "is_focusable": true,
+        "is_focused": false,
+        "is_read_only": false
+      },
+      {
+        "runtime_id": "uia_14486380_2",
+        "automation_id": "",
+        "control_type": "50019",
+        "class_name": "",
+        "name": "new 1",
+        "value": "",
+        "bounds": [
+          394,
+          438,
+          119,
+          28
+        ],
+        "is_enabled": true,
+        "is_offscreen": false,
+        "is_focusable": true,
+        "is_focused": false,
+        "is_read_only": false
+      },
+      {
+        "runtime_id": "uia_14486380_3",
+        "automation_id": "",
+        "control_type": "50019",
+        "class_name": "",
+        "name": "new 2",
+        "value": "",
+        "bounds": [
+          513,
+          438,
+          119,
+          28
+        ],
+        "is_enabled": true,
+        "is_offscreen": false,
+        "is_focusable": true,
+        "is_focused": false,
+        "is_read_only": false
+      },
+      {
+        "runtime_id": "uia_14486380_4",
+        "automation_id": "",
+        "control_type": "50017",
+        "class_name": "msctls_statusbar32",
+        "name": "",
+        "value": "",
+        "bounds": [
+          392,
+          947,
+          1006,
+          29
+        ],
+        "is_enabled": true,
+        "is_offscreen": false,
+        "is_focusable": true,
+        "is_focused": false,
+        "is_read_only": false
+      },
+      {
+        "runtime_id": "uia_14486380_5",
+        "automation_id": "",
+        "control_type": "50020",
+        "class_name": "",
+        "name": "Normal text file",
+        "value": "",
+        "bounds": [
+          392,
+          949,
+          60,
+          27
+        ],
+        "is_enabled": true,
+        "is_offscreen": false,
+        "is_focusable": false,
+        "is_focused": false,
+        "is_read_only": false
+      },
+      {
+        "runtime_id": "uia_14486380_6",
+        "automation_id": "",
+        "control_type": "50020",
+        "class_name": "",
+        "name": "length: 63    lines: 1",
+        "value": "",
+        "bounds": [
+          454,
+          949,
+          273,
+          27
+        ],
+        "is_enabled": true,
+        "is_offscreen": false,
+        "is_focusable": false,
+        "is_focused": false,
+        "is_read_only": false
+      },
+      {
+        "runtime_id": "uia_14486380_7",
+        "automation_id": "",
+        "control_type": "50020",
+        "class_name": "",
+        "name": "Ln: 1    Col: 64    Pos: 64",
+        "value": "",
+        "bounds": [
+          729,
+          949,
+          323,
+          27
+        ],
+        "is_enabled": true,
+        "is_offscreen": false,
+        "is_focusable": false,
+        "is_focused": false,
+        "is_read_only": false
+      },
+      {
+        "runtime_id": "uia_14486380_8",
+        "automation_id": "",
+        "control_type": "50020",
+        "class_name": "",
+        "name": "Windows (CR LF)",
+        "value": "",
+        "bounds": [
+          1054,
+          949,
+          136,
+          27
+        ],
+        "is_enabled": true,
+        "is_offscreen": false,
+        "is_focusable": false,
+        "is_focused": false,
+        "is_read_only": false
+      },
+      {
+        "runtime_id": "uia_14486380_9",
+        "automation_id": "",
+        "control_type": "50020",
+        "class_name": "",
+        "name": "UTF-8",
+        "value": "",
+        "bounds": [
+          1192,
+          949,
+          148,
+          27
+        ],
+        "is_enabled": true,
+        "is_offscreen": false,
+        "is_focusable": false,
+        "is_focused": false,
+        "is_read_only": false
+      },
+      {
+        "runtime_id": "uia_14486380_10",
+        "automation_id": "",
+        "control_type": "50020",
+        "class_name": "",
+        "name": "INS",
+        "value": "",
+        "bounds": [
+          1342,
+          949,
+          36,
+          27
+        ],
+        "is_enabled": true,
+        "is_offscreen": false,
+        "is_focusable": false,
+        "is_focused": false,
+        "is_read_only": false
+      },
+      {
+        "runtime_id": "uia_14486380_11",
+        "automation_id": "",
+        "control_type": "50033",
+        "class_name": "ReBarWindow32",
+        "name": "",
+        "value": "",
+        "bounds": [
+          392,
+          407,
+          1006,
+          29
+        ],
+        "is_enabled": true,
+        "is_offscreen": false,
+        "is_focusable": true,
+        "is_focused": false,
+        "is_read_only": false
+      },
+      {
+        "runtime_id": "uia_14486380_12",
+        "automation_id": "",
+        "control_type": "50021",
+        "class_name": "ToolbarWindow32",
+        "name": "",
+        "value": "",
+        "bounds": [
+          394,
+          407,
+          1004,
+          29
+        ],
+        "is_enabled": true,
+        "is_offscreen": false,
+        "is_focusable": true,
+        "is_focused": false,
+        "is_read_only": false
+      },
+      {
+        "runtime_id": "uia_14486380_13",
+        "automation_id": "",
+        "control_type": "50000",
+        "class_name": "",
+        "name": "",
+        "value": "",
+        "bounds": [
+          394,
+          407,
+          27,
+          26
+        ],
+        "is_enabled": true,
+        "is_offscreen": false,
+        "is_focusable": false,
+        "is_focused": false,
+        "is_read_only": false
+      },
+      {
+        "runtime_id": "uia_14486380_14",
+        "automation_id": "",
+        "control_type": "50000",
+        "class_name": "",
+        "name": "",
+        "value": "",
+        "bounds": [
+          421,
+          407,
+          27,
+          26
+        ],
+        "is_enabled": true,
+        "is_offscreen": false,
+        "is_focusable": false,
+        "is_focused": false,
+        "is_read_only": false
+      },
+      {
+        "runtime_id": "uia_14486380_15",
+        "automation_id": "",
+        "control_type": "50000",
+        "class_name": "",
+        "name": "",
+        "value": "",
+        "bounds": [
+          448,
+          407,
+          27,
+          26
+        ],
+        "is_enabled": true,
+        "is_offscreen": false,
+        "is_focusable": false,
+        "is_focused": false,
+        "is_read_only": false
+      },
+      {
+        "runtime_id": "uia_14486380_16",
+        "automation_id": "",
+        "control_type": "50000",
+        "class_name": "",
+        "name": "",
+        "value": "",
+        "bounds": [
+          475,
+          407,
+          27,
+          26
+        ],
+        "is_enabled": true,
+        "is_offscreen": false,
+        "is_focusable": false,
+        "is_focused": false,
+        "is_read_only": false
+      },
+      {
+        "runtime_id": "uia_14486380_17",
+        "automation_id": "",
+        "control_type": "50000",
+        "class_name": "",
+        "name": "",
+        "value": "",
+        "bounds": [
+          502,
+          407,
+          27,
+          26
+        ],
+        "is_enabled": true,
+        "is_offscreen": false,
+        "is_focusable": false,
+        "is_focused": false,
+        "is_read_only": false
+      },
+      {
+        "runtime_id": "uia_14486380_18",
+        "automation_id": "",
+        "control_type": "50000",
+        "class_name": "",
+        "name": "",
+        "value": "",
+        "bounds": [
+          529,
+          407,
+          27,
+          26
+        ],
+        "is_enabled": true,
+        "is_offscreen": false,
+        "is_focusable": false,
+        "is_focused": false,
+        "is_read_only": false
+      },
+      {
+        "runtime_id": "uia_14486380_19",
+        "automation_id": "",
+        "control_type": "50000",
+        "class_name": "",
+        "name": "",
+        "value": "",
+        "bounds": [
+          556,
+          407,
+          27,
+          26
+        ],
+        "is_enabled": true,
+        "is_offscreen": false,
+        "is_focusable": false,
+        "is_focused": false,
+        "is_read_only": false
+      },
+      {
+        "runtime_id": "uia_14486380_20",
+        "automation_id": "",
+        "control_type": "50000",
+        "class_name": "",
+        "name": "",
+        "value": "",
+        "bounds": [
+          591,
+          407,
+          27,
+          26
+        ],
+        "is_enabled": true,
+        "is_offscreen": false,
+        "is_focusable": false,
+        "is_focused": false,
+        "is_read_only": false
+      },
+      {
+        "runtime_id": "uia_14486380_21",
+        "automation_id": "",
+        "control_type": "50000",
+        "class_name": "",
+        "name": "",
+        "value": "",
+        "bounds": [
+          618,
+          407,
+          27,
+          26
+        ],
+        "is_enabled": true,
+        "is_offscreen": false,
+        "is_focusable": false,
+        "is_focused": false,
+        "is_read_only": false
+      },
+      {
+        "runtime_id": "uia_14486380_22",
+        "automation_id": "",
+        "control_type": "50000",
+        "class_name": "",
+        "name": "",
+        "value": "",
+        "bounds": [
+          645,
+          407,
+          27,
+          26
+        ],
+        "is_enabled": true,
+        "is_offscreen": false,
+        "is_focusable": false,
+        "is_focused": false,
+        "is_read_only": false
+      },
+      {
+        "runtime_id": "uia_14486380_23",
+        "automation_id": "",
+        "control_type": "50000",
+        "class_name": "",
+        "name": "",
+        "value": "",
+        "bounds": [
+          680,
+          407,
+          27,
+          26
+        ],
+        "is_enabled": true,
+        "is_offscreen": false,
+        "is_focusable": false,
+        "is_focused": false,
+        "is_read_only": false
+      },
+      {
+        "runtime_id": "uia_14486380_24",
+        "automation_id": "",
+        "control_type": "50000",
+        "class_name": "",
+        "name": "",
+        "value": "",
+        "bounds": [
+          707,
+          407,
+          27,
+          26
+        ],
+        "is_enabled": false,
+        "is_offscreen": false,
+        "is_focusable": false,
+        "is_focused": false,
+        "is_read_only": false
+      },
+      {
+        "runtime_id": "uia_14486380_25",
+        "automation_id": "",
+        "control_type": "50000",
+        "class_name": "",
+        "name": "",
+        "value": "",
+        "bounds": [
+          742,
+          407,
+          27,
+          26
+        ],
+        "is_enabled": true,
+        "is_offscreen": false,
+        "is_focusable": false,
+        "is_focused": false,
+        "is_read_only": false
+      },
+      {
+        "runtime_id": "uia_14486380_26",
+        "automation_id": "",
+        "control_type": "50000",
+        "class_name": "",
+        "name": "",
+        "value": "",
+        "bounds": [
+          769,
+          407,
+          27,
+          26
+        ],
+        "is_enabled": true,
+        "is_offscreen": false,
+        "is_focusable": false,
+        "is_focused": false,
+        "is_read_only": false
+      },
+      {
+        "runtime_id": "uia_14486380_27",
+        "automation_id": "",
+        "control_type": "50000",
+        "class_name": "",
+        "name": "",
+        "value": "",
+        "bounds": [
+          804,
+          407,
+          27,
+          26
+        ],
+        "is_enabled": true,
+        "is_offscreen": false,
+        "is_focusable": false,
+        "is_focused": false,
+        "is_read_only": false
+      },
+      {
+        "runtime_id": "uia_14486380_28",
+        "automation_id": "",
+        "control_type": "50000",
+        "class_name": "",
+        "name": "",
+        "value": "",
+        "bounds": [
+          831,
+          407,
+          27,
+          26
+        ],
+        "is_enabled": true,
+        "is_offscreen": false,
+        "is_focusable": false,
+        "is_focused": false,
+        "is_read_only": false
+      },
+      {
+        "runtime_id": "uia_14486380_29",
+        "automation_id": "",
+        "control_type": "50000",
+        "class_name": "",
+        "name": "",
+        "value": "",
+        "bounds": [
+          866,
+          407,
+          27,
+          26
+        ],
+        "is_enabled": false,
+        "is_offscreen": false,
+        "is_focusable": false,
+        "is_focused": false,
+        "is_read_only": false
+      },
+      {
+        "runtime_id": "uia_14486380_30",
+        "automation_id": "",
+        "control_type": "50000",
+        "class_name": "",
+        "name": "",
+        "value": "",
+        "bounds": [
+          893,
+          407,
+          27,
+          26
+        ],
+        "is_enabled": false,
+        "is_offscreen": false,
+        "is_focusable": false,
+        "is_focused": false,
+        "is_read_only": false
+      },
+      {
+        "runtime_id": "uia_14486380_31",
+        "automation_id": "",
+        "control_type": "50000",
+        "class_name": "",
+        "name": "",
+        "value": "",
+        "bounds": [
+          928,
+          407,
+          27,
+          26
+        ],
+        "is_enabled": true,
+        "is_offscreen": false,
+        "is_focusable": false,
+        "is_focused": false,
+        "is_read_only": false
+      },
+      {
+        "runtime_id": "uia_14486380_32",
+        "automation_id": "",
+        "control_type": "50031",
+        "class_name": "",
+        "name": "",
+        "value": "",
+        "bounds": [
+          955,
+          407,
+          46,
+          26
+        ],
+        "is_enabled": true,
+        "is_offscreen": false,
+        "is_focusable": false,
+        "is_focused": false,
+        "is_read_only": false
+      },
+      {
+        "runtime_id": "uia_14486380_33",
+        "automation_id": "",
+        "control_type": "50000",
+        "class_name": "",
+        "name": "",
+        "value": "",
+        "bounds": [
+          1001,
+          407,
+          27,
+          26
+        ],
+        "is_enabled": true,
+        "is_offscreen": false,
+        "is_focusable": false,
+        "is_focused": false,
+        "is_read_only": false
+      },
+      {
+        "runtime_id": "uia_14486380_34",
+        "automation_id": "",
+        "control_type": "50000",
+        "class_name": "",
+        "name": "",
+        "value": "",
+        "bounds": [
+          1036,
+          407,
+          27,
+          26
+        ],
+        "is_enabled": true,
+        "is_offscreen": false,
+        "is_focusable": false,
+        "is_focused": false,
+        "is_read_only": false
+      },
+      {
+        "runtime_id": "uia_14486380_35",
+        "automation_id": "",
+        "control_type": "50000",
+        "class_name": "",
+        "name": "",
+        "value": "",
+        "bounds": [
+          1063,
+          407,
+          27,
+          26
+        ],
+        "is_enabled": true,
+        "is_offscreen": false,
+        "is_focusable": false,
+        "is_focused": false,
+        "is_read_only": false
+      },
+      {
+        "runtime_id": "uia_14486380_36",
+        "automation_id": "",
+        "control_type": "50000",
+        "class_name": "",
+        "name": "",
+        "value": "",
+        "bounds": [
+          1090,
+          407,
+          27,
+          26
+        ],
+        "is_enabled": true,
+        "is_offscreen": false,
+        "is_focusable": false,
+        "is_focused": false,
+        "is_read_only": false
+      },
+      {
+        "runtime_id": "uia_14486380_37",
+        "automation_id": "",
+        "control_type": "50000",
+        "class_name": "",
+        "name": "",
+        "value": "",
+        "bounds": [
+          1117,
+          407,
+          27,
+          26
+        ],
+        "is_enabled": true,
+        "is_offscreen": false,
+        "is_focusable": false,
+        "is_focused": false,
+        "is_read_only": false
+      },
+      {
+        "runtime_id": "uia_14486380_38",
+        "automation_id": "",
+        "control_type": "50000",
+        "class_name": "",
+        "name": "",
+        "value": "",
+        "bounds": [
+          1144,
+          407,
+          27,
+          26
+        ],
+        "is_enabled": true,
+        "is_offscreen": false,
+        "is_focusable": false,
+        "is_focused": false,
+        "is_read_only": false
+      },
+      {
+        "runtime_id": "uia_14486380_39",
+        "automation_id": "",
+        "control_type": "50000",
+        "class_name": "",
+        "name": "",
+        "value": "",
+        "bounds": [
+          1179,
+          407,
+          27,
+          26
+        ],
+        "is_enabled": false,
+        "is_offscreen": false,
+        "is_focusable": false,
+        "is_focused": false,
+        "is_read_only": false
+      }
+    ],
+    "visual_state": {
+      "screenshot_path": "E:\\Workspace\\Agents\\AstraRun-Anti\\docs\\audit\\traces\\task_stage9_cold_1791692056345\\frames\\frame_000002.png",
+      "screenshot_sha256": "86dbae597df44b25ff88461ab7379a290615562c4275af0df45335caac55b6cb",
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "region": null,
+      "model_invoked": false,
+      "detected_regions": []
+    },
+    "dialog_state": {
+      "modal_detected": true,
+      "dialog_hwnd": 14486380,
+      "dialog_title": "*new 2 - Notepad++",
+      "dialog_class": "Notepad++",
+      "control_count": 0
+    },
+    "artifact_state": {
+      "path": null,
+      "exists": false,
+      "size_bytes": 0,
+      "mtime": 0.0,
+      "sha256": ""
+    },
+    "resource_state": {
+      "task_owned_pids": [
+        23240
+      ],
+      "task_owned_hwnds": [
+        14486380
+      ],
+      "pre_existing_pids": [],
+      "ledger_active_count": 1
+    }
+  },
+  "derived": {
+    "semantic_role": "MODAL_DIALOG",
+    "target_ownership": "TASK_OWNED",
+    "dialog_classification": "UNKNOWN_MODAL",
+    "editable_surface_available": true,
+    "can_receive_input": true,
+    "confidence": 0.95,
+    "evidence_sources": [
+      "Win32_GetForegroundWindow",
+      "Win32_EnumWindows",
+      "UIA_FindAll",
+      "AstraResourceLedger"
+    ]
+  }
+}

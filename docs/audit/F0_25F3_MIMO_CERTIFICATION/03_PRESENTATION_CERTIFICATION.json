@@ -1,0 +1,29 @@
+{
+  "auditor": "MiMo",
+  "requested_or_presented_sweep": {
+    "src": "ZERO occurrences of requested-OR-presented acceptance",
+    "f0_25e_evaluator": "L436-456 requires RESULT_PRESENTED + target_observed + non-null hwnd + title/class + window match",
+    "verify_f0_25f_complete_physical.py:153": "legacy OR REMOVED — now requires RESULT_PRESENTED",
+    "verify_presentation_semantics.py": "actively scans for the OR pattern and fails if found",
+    "completion_gate": "C5 requires RESULT_PRESENTED only; REQUESTED explicitly forbidden",
+    "classification": "PROVEN FIXED (defect B closed)"
+  },
+  "attacks": [
+    {"id": "P1", "result": "REJECTED", "basis": "gate C5 + evaluator + M1"},
+    {"id": "P2", "result": "REJECTED", "basis": "Popen-success not sufficient; dispatch exceptions fail closed"},
+    {"id": "P3", "result": "REJECTED for listed modes", "basis": "file-exists != presented; residual summary fallback for non-listed extensions in prior audit — verify current: fail-closed at L131 for explorer/editor/viewer + common extensions"},
+    {"id": "P4", "result": "REJECTED", "basis": "null hwnd blocked at emission L372 + evaluator"},
+    {"id": "P5", "result": "PARTIAL", "basis": "IsWindow invalid rejected; recycled hwnd in summary path limited by visibility check"},
+    {"id": "P6", "result": "PARTIAL", "basis": "process comparison in explorer/viewer paths; summary path hwnd from state file"},
+    {"id": "P7", "result": "PARTIAL", "basis": "title_matches required for explorer now (L331-332)"},
+    {"id": "P8", "result": "PARTIAL", "basis": "pre-existing explorer requires title_matches; new explorer without title match — check current code: explorer requires title_matches only per explorer-9"},
+    {"id": "P9", "result": "PARTIAL", "basis": "title bound to target name/stem/parent"},
+    {"id": "P10", "result": "REJECTED", "basis": "target_observed=false => fail path"},
+    {"id": "P11", "result": "REJECTED", "basis": "visibility check at discovery"},
+    {"id": "P12", "result": "ACCEPT_RISK", "basis": "document/path identity is title-substring not content verification"},
+    {"id": "P13", "result": "REJECTED", "basis": "STATE_OBSERVED emitted before RESULT_PRESENTED in success path L367-411"}
+  ],
+  "mechanism_identity_contract": "explorer: title contains target name/stem/parent; viewer: title match + new or editor app; summary: launcher hwnd visibility + fallback literal title/class",
+  "verdict": "PRESENTATION_SEMANTICS = PASS (requested!=presented closed everywhere); PRESENTATION_IDENTITY = PARTIAL (summary fallback literals; title-substring only)",
+  "physical_run_note": "F0-25F.3 physical run: no RESULT_PRESENTED emitted at all (correct — completion blocked)"
+}

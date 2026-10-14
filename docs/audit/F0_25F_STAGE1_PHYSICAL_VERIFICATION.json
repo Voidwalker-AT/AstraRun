@@ -1,0 +1,62 @@
+{
+  "timestamp": 1791737561.4020004,
+  "canonical_executable": "C:\\Users\\hp\\AppData\\Local\\Programs\\AstraRun\\AstraRun.exe",
+  "executable_sha256": "b76e2521c46bd5d3d80361c7f0f0503bec9ccc4166111aa496ead2b9045ad9f5",
+  "pid": 14952,
+  "launcher_hwnd": 11471212,
+  "desktop_name": "Default",
+  "is_window": true,
+  "is_window_visible": true,
+  "bounds": [
+    448,
+    48,
+    1088,
+    124
+  ],
+  "width": 640,
+  "height": 76,
+  "enum_windows_found": true,
+  "attestation": {
+    "status": "LAUNCHER_VISIBLE",
+    "is_visible": true,
+    "failure_reasons": [],
+    "facts": {
+      "hwnd": 11471212,
+      "pid": 14952,
+      "expected_pid": 14952,
+      "thread_id": 16008,
+      "desktop_name": "Default",
+      "is_window": true,
+      "is_window_visible": true,
+      "rect": [
+        448,
+        48,
+        1088,
+        124
+      ],
+      "width": 640,
+      "height": 76,
+      "monitor_rect": [
+        0,
+        0,
+        1536,
+        864
+      ],
+      "intersects_monitor": true,
+      "dwm_cloaked": false,
+      "found_in_enum_windows": true
+    }
+  },
+  "screenshot": {
+    "path": "E:\\Workspace\\Agents\\AstraRun-Anti\\docs\\audit\\F0_25F_stage1_verified.png",
+    "sha256": "2e634e7014301767333771f560b5030180a8b3985135cc470a137cc33da30e9d",
+    "size_bytes": 158940
+  },
+  "pixel_verification": {
+    "total_pixels_in_rect": 48640,
+    "dark_pixels_count": 45256,
+    "dark_pixel_ratio": 0.9304276315789474,
+    "has_physical_pixels": true
+  },
+  "verdict": "PASS"
+}

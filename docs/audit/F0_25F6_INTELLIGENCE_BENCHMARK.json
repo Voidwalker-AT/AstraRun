@@ -1,0 +1,70 @@
+{
+  "phase": "F0-25F.6",
+  "benchmark": "STAGE 8 \u2014 COGNITIVE INTELLIGENCE BENCHMARK",
+  "total_evaluated": 38,
+  "total_passed": 38,
+  "overall_score_pct": 100.0,
+  "categories": {
+    "intent_recognition_under_phrasing": {
+      "total": 8,
+      "correct": 8,
+      "score_pct": 100.0
+    },
+    "referent_grounding": {
+      "total": 2,
+      "correct": 2,
+      "score_pct": 100.0
+    },
+    "missing_parameter_detection": {
+      "total": 5,
+      "correct": 5,
+      "score_pct": 100.0
+    },
+    "multi_intent_composition": {
+      "total": 4,
+      "correct": 4,
+      "score_pct": 100.0
+    },
+    "dynamic_tool_need_detection": {
+      "total": 4,
+      "correct": 4,
+      "score_pct": 100.0
+    },
+    "distinguishing_conversation_from_execution": {
+      "total": 5,
+      "correct": 5,
+      "score_pct": 100.0
+    },
+    "preserving_safety_across_paraphrasing": {
+      "total": 4,
+      "correct": 4,
+      "score_pct": 100.0
+    },
+    "recovery_action_selection": {
+      "total": 2,
+      "correct": 2,
+      "score_pct": 100.0
+    },
+    "self_repair_syntax_error": {
+      "total": 1,
+      "correct": 1,
+      "score_pct": 100.0
+    },
+    "self_repair_semantic_error": {
+      "total": 1,
+      "correct": 1,
+      "score_pct": 100.0
+    },
+    "evidence_evaluation": {
+      "total": 1,
+      "correct": 1,
+      "score_pct": 100.0
+    },
+    "truthful_completion_determination": {
+      "total": 1,
+      "correct": 1,
+      "score_pct": 100.0
+    }
+  },
+  "verdict": "PASS"
+}

@@ -1,0 +1,50 @@
+{
+  "phase": "F0-25F.3",
+  "stage": "STAGE 3 \u2014 RESOURCE DISPOSAL CANNOT PASS VACUOUSLY",
+  "verdict": "PASS",
+  "all_cases_passed": true,
+  "cases": {
+    "R1_empty_path": {
+      "description": "Resource with document_path='' must not vacuously become CLOSED",
+      "cleanup_returned": false,
+      "lifecycle_state": "NOT_MATERIALIZED",
+      "passed": true
+    },
+    "R2_none_path": {
+      "description": "Resource with document_path=None must not vacuously become CLOSED",
+      "cleanup_returned": false,
+      "lifecycle_state": "NOT_MATERIALIZED",
+      "passed": true
+    },
+    "R3_never_materialized": {
+      "description": "Path never existed on disk; must be NOT_MATERIALIZED",
+      "cleanup_returned": false,
+      "lifecycle_state": "NOT_MATERIALIZED",
+      "passed": true
+    },
+    "R4_materialized_disposal": {
+      "description": "Materialized directory physically deleted and verified absent -> CLOSED",
+      "cleanup_returned": true,
+      "lifecycle_state": "CLOSED",
+      "physical_absence_verified": true,
+      "passed": true
+    },
+    "R5_pre_existing_resource": {
+      "description": "Pre-existing resource (astra_created=False) must never be closed",
+      "cleanup_returned": false,
+      "passed": true
+    },
+    "R6_preserve_policy": {
+      "description": "PRESERVE_ON_FAILURE policy must mark SAVED, not CLOSED",
+      "cleanup_returned": true,
+      "lifecycle_state": "SAVED",
+      "passed": true
+    },
+    "R7_pid_reuse_protection": {
+      "description": "PID reuse detected via create_time mismatch -> abort and mark STALE_REUSED",
+      "cleanup_returned": false,
+      "lifecycle_state": "STALE_REUSED",
+      "passed": true
+    }
+  }
+}

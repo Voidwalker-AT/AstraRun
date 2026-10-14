@@ -1,0 +1,39 @@
+{
+  "incident_id": "INC_F025B1_001_HUNG_DIAGNOSTIC_PROBE",
+  "phase": "F0-25B.1",
+  "title": "Hung Physical Diagnostic Probe Postmortem",
+  "status": "TERMINATED_AND_CLEANED",
+  "exact_command": ".venv\\Scripts\\python -c \"import subprocess, time, ctypes, ctypes.wintypes as wintypes; NPP = r'C:\\Program Files\\Notepad++\\notepad++.exe'; p = subprocess.Popen([NPP, '-nosession', '-multiInst']); time.sleep(1.8); user32 = ctypes.windll.user32; hwnds = []; def _cb2(h, _): cls = ctypes.create_unicode_buffer(256); user32.GetClassNameW(h, cbuf:=cls, 256); wpid = wintypes.DWORD(); user32.GetWindowThreadProcessId(h, ctypes.byref(wpid)); if wpid.value == p.pid and cls.value == 'Notepad++': hwnds.append(h); return True; user32.EnumWindows(ctypes.WINFUNCTYPE(wintypes.BOOL, wintypes.HWND, wintypes.LPARAM)(_cb2), 0); main_hwnd = hwnds[0]; scis = []; def _cb3(ch, _): cls = ctypes.create_unicode_buffer(256); user32.GetClassNameW(ch, cls, 256); if 'scintilla' in cls.value.lower() and user32.IsWindowVisible(ch): scis.append(ch); return True; user32.EnumChildWindows(main_hwnd, ctypes.WINFUNCTYPE(wintypes.BOOL, wintypes.HWND, wintypes.LPARAM)(_cb3), 0); sci = scis[0]; for c in 'hello world': user32.SendMessageW(sci, 0x0102, ord(c), 0); time.sleep(0.2); for cid in [42020, 42021, 42022, 42023, 42024, 42025, 42031]: user32.SendMessageW(main_hwnd, 0x0111, cid, 0); s = user32.SendMessageW(sci, 2143, 0, 0); e = user32.SendMessageW(sci, 2145, 0, 0); if s == 0 and e == 11: print('SUCCESS with ID:', cid); break; p.kill()\"",
+  "start_timestamp": "2026-10-11T15:37:59+05:30",
+  "termination_timestamp": "2026-10-11T16:10:48+05:30",
+  "duration_seconds": 1969.0,
+  "last_successful_operation": "Dispatched text 'hello world' to child Scintilla control via SendMessageW(0x0102)",
+  "operation_at_which_progress_stopped": "Synchronous user32.SendMessageW(main_hwnd, 0x0111, 42020, 0) blocking indefinitely on Win32 window procedure message loop",
+  "root_cause_analysis": {
+    "primary_mechanism": "Synchronous SendMessageW dispatch of untested WM_COMMAND identifier caused Notepad++ window procedure to block (or open modal sub-loop), stalling caller indefinitely.",
+    "architectural_defect": "Absence of bounded timeout watchdog, lack of unbuffered I/O (flush=True), and executing unbounded multi-line inline python command ('python -c') without try/finally resource guard."
+  },
+  "child_process_tree": {
+    "probe_python_pids": [
+      {
+        "pid": 22716,
+        "name": "python.exe",
+        "exited": true,
+        "exit_method": "manage_task_kill"
+      }
+    ],
+    "task_owned_notepadpp_pids": [
+      {
+        "exited": true,
+        "remaining_instances": 0
+      }
+    ]
+  },
+  "remaining_resources_audit": {
+    "remaining_task_owned_hwnds": 0,
+    "remaining_task_owned_dialogs": 0,
+    "remaining_task_owned_temporary_files": 0,
+    "external_user_processes_disrupted": 0
+  },
+  "cleanup_result": "VERIFIED_CLEAN"
+}

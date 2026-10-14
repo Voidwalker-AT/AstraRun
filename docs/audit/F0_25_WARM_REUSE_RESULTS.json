@@ -1,0 +1,30 @@
+{
+  "timestamp": "2026-10-11T09:42:00Z",
+  "stage": "STAGE_10_WARM_MEMORY_REUSE",
+  "task_id": "task_stage10_warm_1791692064150",
+  "target_application": "Notepad++",
+  "retrieved_memory": {
+    "entity": "Notepad++",
+    "prior_confidence": 0.48,
+    "affordance_count": 1,
+    "decision_mode": "ACT",
+    "exploratory_probes_dispatched": 0
+  },
+  "unseen_goal_execution": {
+    "payload": "ASTRA_WARM_REUSE_VERIFIED_2026",
+    "verified": true,
+    "latency_ms": 5058.098700013943,
+    "cold_latency_ms": 6300.978599989321,
+    "speedup_ratio": 1.25
+  },
+  "reinforced_memory": {
+    "new_confidence": 0.6619999999999999,
+    "confidence_band": "LIKELY",
+    "status": "OBSERVED"
+  },
+  "cleanup_status": {
+    "success": true,
+    "process_cleaned_up": true,
+    "zero_residue_verified": true
+  }
+}

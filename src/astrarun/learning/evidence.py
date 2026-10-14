@@ -27,7 +27,7 @@ logger = get_logger("astrarun.learning.evidence")
 
 # Regex patterns for explicit user teaching statements
 TEACHING_PATTERNS = [
-    # "alias calc to calculator", "alias myproject to E:\Workspace\Active\MyProject"
+    # "alias calc to calculator", "alias myproject to C:\Projects\MyProject"
     re.compile(r"^(?:please\s+)?alias\s+([a-zA-Z0-9_\-\.]+)\s+(?:to|=|is)\s+([^\s]+)", re.IGNORECASE),
     # "my editor is vscode", "my default browser is vivaldi"
     re.compile(r"^(?:my\s+)?(?:default\s+)?(editor|browser|terminal|shell)\s+is\s+([^\s]+)", re.IGNORECASE),

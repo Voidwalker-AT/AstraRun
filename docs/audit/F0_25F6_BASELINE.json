@@ -1,0 +1,83 @@
+{
+  "phase": "F0-25F.6",
+  "stage": "STAGE 0 \u2014 BASELINE FREEZE",
+  "timestamp": 1791919623.3274066,
+  "git": {
+    "head": "bd287eba38e6743565fdf6da21cb629023573c6b",
+    "diff_check_clean": false,
+    "modified_tracked_files_count": 107,
+    "untracked_files_count": 310
+  },
+  "binaries": {
+    "canonical_dist": {
+      "path": "dist/AstraRun/AstraRun.exe",
+      "sha256": "4eaeeb0b5f77adfd93d5fd6244ffffa7b92f67ca0b3c242c45c738f943d22aa2",
+      "size_bytes": 12135827
+    },
+    "installed_binary": {
+      "path": "C:\\Users\\hp\\AppData\\Local\\Programs\\AstraRun\\AstraRun.exe",
+      "sha256": "4eaeeb0b5f77adfd93d5fd6244ffffa7b92f67ca0b3c242c45c738f943d22aa2",
+      "size_bytes": 12135827
+    },
+    "hash_parity": true,
+    "size_parity": true
+  },
+  "source_hashes": {
+    "src/astrarun/routing/context_sufficiency.py": "785f549f6d6d8af07fe017a6d8c27a47b8852c3575da5286a745f148cb78ddb5",
+    "src/astrarun/capabilities/registry.py": "322ddfcda94345cfec6c5565d568c5137985eaeea3fe0230bd531373934a07eb",
+    "src/astrarun/capabilities/manifest.py": "80eea549cbcf88196ffdfc31d7cbdb92143071c23654b0831bc556accf9b9eb7",
+    "src/astrarun/agent/planner.py": "73336344a246f520610858f9c9ea262565a045f0f357a7bb50f8789da36156f1",
+    "src/astrarun/agent/loop.py": "70045904e97ebeac135f80073b6dd991936f22283c908ce3ffc81ab2a159cadf",
+    "src/astrarun/agent/completion_gate.py": "cc382bec231e9f9c9b7f70ffc9f3836e5f1e9930510153b54b432178d898095c",
+    "src/astrarun/security/execution_broker.py": "5c87f1e380c4b7fd19de504fe0ad8be6b70bd54cac1db121c98d68f3a0fa6076",
+    "src/astrarun/security/action_gate.py": "4c773e74e116ca52a32688e7fd8abac701292e35a3e68d5aca2e0b570bacdd34"
+  },
+  "regression_baseline": {
+    "source": "docs/audit/F0_25F5_RELEASE_REPORT.json",
+    "total_collected": 983,
+    "passed": 969,
+    "failed": 0,
+    "skipped": 14,
+    "pass_rate_pct": 100.0
+  },
+  "security_manifest_baseline": {
+    "source": "docs/audit/F0_25F4_SECURITY_RECOMPUTATION.json",
+    "invariants_satisfied": {
+      "total_capabilities": 86,
+      "read_only": 43,
+      "mutating": 43,
+      "confirmation_required": 3,
+      "blocked": 2,
+      "unknown_consequential": 0
+    },
+    "blocked_capabilities": [
+      "execute_powershell_script",
+      "modify_system_registry"
+    ],
+    "confirmation_required_capabilities": [
+      "terminate_process",
+      "kill_process_by_pid",
+      "force_close_window"
+    ]
+  },
+  "burned_f0_25f5_routing_results": {
+    "source": "docs/audit/F0_25F6_BURNED_HOLDOUT_ANALYSIS.json",
+    "manifest_sha256": "35108d3f7e17cbd0a16222f98548e99d1c4831472fa81cbcb0bfcd09e304910a",
+    "total_prompts": 500,
+    "accuracy": 0.914,
+    "macro_f1": 0.9134658034387074,
+    "total_failures": 43,
+    "status": "BURNED_HOLD_OUT_CANNOT_BE_REUSED_FOR_CERTIFICATION"
+  },
+  "generic_repair_baseline": {
+    "source": "docs/audit/F0_25F3_GENERIC_REPAIR_RESULTS.json",
+    "total_programs": 8,
+    "repaired_successfully": 6,
+    "success_rate_pct": 75.0
+  },
+  "intelligence_benchmark_baseline": {
+    "source": "docs/audit/F0_19_INTELLIGENCE_PROVENANCE.json",
+    "production_intelligence_clean": true,
+    "mock_fallbacks_present": false
+  }
+}

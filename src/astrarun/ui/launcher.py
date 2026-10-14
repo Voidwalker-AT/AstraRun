@@ -212,6 +212,7 @@ class LauncherWindow(QDialog):
 
     def _init_window(self) -> None:
         """Set frameless, top-most, tool-window flags and translucent attributes."""
+        self.setWindowTitle("AstraRun")
         self.setWindowFlags(
             Qt.WindowType.FramelessWindowHint
             | Qt.WindowType.WindowStaysOnTopHint
@@ -421,6 +422,18 @@ class LauncherWindow(QDialog):
         self._transition_state(LauncherState.INTERACTIVE, reason="activation_grace_period_ended")
         self._log_lifecycle("INPUT_FOCUS_IN", extra="interactive_ready")
 
+        try:
+            from astrarun.ui.attestation import attest_window_visibility
+            import os
+            win_id = int(self.winId()) if self else 0
+            attestation = attest_window_visibility(win_id, expected_pid=os.getpid())
+            if attestation["is_visible"]:
+                self._log_lifecycle("LAUNCHER_VISIBLE", extra=f"facts={attestation['facts']}")
+            else:
+                self._log_lifecycle("LAUNCHER_VISIBILITY_FAILED", extra=f"reasons={attestation['failure_reasons']}")
+        except Exception as e:
+            self._log_lifecycle("LAUNCHER_VISIBILITY_FAILED", extra=f"attestation_exception={e}")
+
     def present_animated(self, target_geometry: QRect, target_screen: Any = None) -> None:
         """
         Show the command bar with gentle slide/drop from above (150ms, OutCubic).
@@ -453,7 +466,7 @@ class LauncherWindow(QDialog):
         self._transition_state(LauncherState.ENTERING, reason="present_animated_start")
         start_pos = QPoint(target_pos.x(), target_pos.y() - 25)
         self.move(start_pos)
-        self.setWindowOpacity(0.0)
+        self.setWindowOpacity(1.0)
 
         self._log_lifecycle("SHOW_CALLED")
         self.show()
@@ -469,7 +482,7 @@ class LauncherWindow(QDialog):
 
         self.opacity_anim.setDuration(enter_dur)
         self.opacity_anim.setEasingCurve(MotionTokens.EASING_ENTER)
-        self.opacity_anim.setStartValue(0.0)
+        self.opacity_anim.setStartValue(1.0)
         self.opacity_anim.setEndValue(1.0)
 
         self._log_lifecycle("ANIMATION_STARTED")
@@ -732,6 +745,8 @@ class LauncherWindow(QDialog):
         if self._is_compound_or_nlp_query(query) or intent in (InputIntent.QUESTION, InputIntent.GOAL):
             self.suggestions_list.hide()
             self._adjust_height(expanded=False)
+            self.show_feedback("Planning task...", is_error=False)
+            QGuiApplication.processEvents()
             if self.app is not None:
                 exec_res = self.app.handle_request(query)
                 self._handle_execution_result(exec_res, query)

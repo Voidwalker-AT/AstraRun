@@ -24,7 +24,7 @@ import psutil
 from pathlib import Path
 from datetime import datetime, timezone
 
-REPO_ROOT = Path("e:/Workspace/Active/AstraRun")
+REPO_ROOT = Path(__file__).resolve().parent.parent
 desktop_path = Path.home() / "Desktop"
 installed_exe = os.path.expandvars(r"%LOCALAPPDATA%\Programs\AstraRun\AstraRun.exe")
 python_exe = REPO_ROOT / ".venv" / "Scripts" / "python.exe"

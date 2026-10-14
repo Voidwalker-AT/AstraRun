@@ -1,0 +1,57 @@
+{
+  "phase": "F0-25B.1",
+  "task_id": "test_sel_obs_1791715905560",
+  "start_time": 1791715905.5609221,
+  "environment": "Notepad++ (Win32 Scintilla Host)",
+  "watchdog_timeout_sec": 20.0,
+  "stages": {},
+  "selection_pre": {
+    "observable": true,
+    "source": "SCINTILLA_ADAPTER",
+    "start": 75,
+    "end": 75,
+    "selected_length": 0,
+    "document_length": 75,
+    "evidence_reference": "scintilla_0xa40876_start_75_end_75_doclen_75",
+    "predicate_result": false
+  },
+  "selection_post": {
+    "observable": true,
+    "source": "SCINTILLA_ADAPTER",
+    "start": 0,
+    "end": 75,
+    "selected_length": 75,
+    "document_length": 75,
+    "evidence_reference": "scintilla_0xa40876_start_0_end_75_doclen_75",
+    "predicate_result": true
+  },
+  "selection_negative_control": {
+    "observable": true,
+    "source": "SCINTILLA_ADAPTER",
+    "start": 0,
+    "end": 0,
+    "selected_length": 0,
+    "document_length": 75,
+    "evidence_reference": "scintilla_0xa40876_start_0_end_0_doclen_75",
+    "predicate_result": false
+  },
+  "predicate_evaluation": {
+    "pre_action_verified": true,
+    "post_action_verified": true,
+    "negative_control_verified": true,
+    "semantic_closure_proven": true
+  },
+  "resource_cleanup": {
+    "target_pid": 11808,
+    "target_hwnd": "0x10903b8",
+    "target_pid_exited": true,
+    "remaining_npp_pids": [],
+    "cleanup_verified": true
+  },
+  "verdict": "PASSED",
+  "action_execution": {
+    "success": true,
+    "mechanism": "SCINTILLA_SCI_SELECTALL"
+  },
+  "duration_seconds": 4.723
+}

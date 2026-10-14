@@ -1,0 +1,73 @@
+{
+  "phase": "F0-25B.1",
+  "audit_target": "Training-Candidate Quality Gate Adversarial Mutation Suite",
+  "timestamp": "2026-10-11T16:26:45Z",
+  "test_file": "tests/hermes/test_training_gate_mutations.py",
+  "total_mutants": 10,
+  "mutants_killed": 10,
+  "mutants_survived": 0,
+  "kill_rate": "100.0%",
+  "mutations": [
+    {
+      "mutant_id": "M1_CTRL_A_SELECTION_ABSENT",
+      "description": "Ctrl+A dispatched but observable selection length is 0",
+      "expected_rejection": "TAUTOLOGICAL_SELECTION",
+      "gate_status": "KILLED"
+    },
+    {
+      "mutant_id": "M2_CTRL_N_TAB_COUNT_UNCHANGED",
+      "description": "Ctrl+N dispatched but pre/post tab counts remain identical (delta=0)",
+      "expected_rejection": "TAB_COUNT_UNCHANGED",
+      "gate_status": "KILLED"
+    },
+    {
+      "mutant_id": "M3_CTRL_F_NO_DIALOG_APPEARS",
+      "description": "Ctrl+F dispatched but dialog_found is false or empty",
+      "expected_rejection": "UNATTACHED_OR_WRONG_DIALOG / MISSING_EVIDENCE_REFERENCE",
+      "gate_status": "KILLED"
+    },
+    {
+      "mutant_id": "M4_UNRELATED_DIALOG_APPEARS",
+      "description": "Dialog detected from unrelated PID (99999) or non-dialog class",
+      "expected_rejection": "UNATTACHED_OR_WRONG_DIALOG",
+      "gate_status": "KILLED"
+    },
+    {
+      "mutant_id": "M5_UNRELATED_TAB_APPEARS",
+      "description": "Negative delta in tab count or closed tab misattributed",
+      "expected_rejection": "TAB_COUNT_UNCHANGED",
+      "gate_status": "KILLED"
+    },
+    {
+      "mutant_id": "M6_IRRELEVANT_HASH_MUTATION",
+      "description": "State hash changed for irrelevant reasons without typed tab count",
+      "expected_rejection": "PREDICATE_TYPE_MISMATCH",
+      "gate_status": "KILLED"
+    },
+    {
+      "mutant_id": "M7_HYPOTHESIS_POLARITY_CONTRADICTION",
+      "description": "Hypothesis predicts no transition but expected delta demands true",
+      "expected_rejection": "POLARITY_CONTRADICTION",
+      "gate_status": "KILLED"
+    },
+    {
+      "mutant_id": "M8_WRONG_OBSERVATION_FIELD",
+      "description": "Selection expected but observed delta populated with length_changed",
+      "expected_rejection": "PREDICATE_TYPE_MISMATCH",
+      "gate_status": "KILLED"
+    },
+    {
+      "mutant_id": "M9_FORCED_VERIFICATION",
+      "description": "transition_verified forced true while evaluation['passed'] is false",
+      "expected_rejection": "FORCED_VERIFICATION",
+      "gate_status": "KILLED"
+    },
+    {
+      "mutant_id": "M10_INVALID_HERMES_PROVENANCE",
+      "description": "Training candidate marked VERIFIED Hermes knowledge but missing evidence",
+      "expected_rejection": "INVALID_HERMES_PROVENANCE",
+      "gate_status": "KILLED"
+    }
+  ],
+  "verdict": "GATE_INTEGRITY_PROVEN"
+}

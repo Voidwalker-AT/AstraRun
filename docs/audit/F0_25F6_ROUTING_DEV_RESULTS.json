@@ -1,0 +1,109 @@
+{
+  "phase": "F0-25F.6",
+  "benchmark": "STAGE 9 \u2014 ROUTING DEVELOPMENT EVALUATION",
+  "total_evaluated": 120,
+  "total_correct": 120,
+  "accuracy_pct": 100.0,
+  "macro_f1": 1.0,
+  "blocked_false_executions": 0,
+  "labels": [
+    "CLARIFICATION_REQUIRED",
+    "COMPOSITE",
+    "CONVERSATIONAL",
+    "DYNAMIC_COMPUTATION",
+    "KNOWN_CAPABILITY",
+    "SECURITY_REJECTION"
+  ],
+  "confusion_matrix": [
+    [
+      20,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      15,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      20,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      20,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      30,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0,
+      15
+    ]
+  ],
+  "classification_report": {
+    "CLARIFICATION_REQUIRED": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1-score": 1.0,
+      "support": 20
+    },
+    "COMPOSITE": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1-score": 1.0,
+      "support": 15
+    },
+    "CONVERSATIONAL": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1-score": 1.0,
+      "support": 20
+    },
+    "DYNAMIC_COMPUTATION": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1-score": 1.0,
+      "support": 20
+    },
+    "KNOWN_CAPABILITY": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1-score": 1.0,
+      "support": 30
+    },
+    "SECURITY_REJECTION": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1-score": 1.0,
+      "support": 15
+    },
+    "macro avg": {
+      "f1-score": 1.0
+    }
+  },
+  "verdict": "PASS"
+}

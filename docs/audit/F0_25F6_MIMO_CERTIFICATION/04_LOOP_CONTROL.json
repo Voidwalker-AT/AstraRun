@@ -1,0 +1,16 @@
+{
+  "auditor": "MiMo",
+  "bounded_retry": {"max_retries_per_fingerprint": "engine MAX_RETRIES_PER_FINGERPRINT", "evidence": "engine.py L56-60,106-125", "class": "PRODUCTION_REACHABLE"},
+  "cycle_detection": {"a_b_a_b": "_detect_cycle on fingerprint history L130-143,253-256 escalates FAIL_CLOSED", "class": "PRODUCTION_REACHABLE"},
+  "attacks": [
+    {"attack": "same failed action repeatedly", "result": "TERMINATES via fingerprint budget", "grade": "PASS"},
+    {"attack": "A->B->A cycle", "result": "TERMINATES via oscillation detect", "grade": "PASS"},
+    {"attack": "same model response repeatedly", "result": "PARTIAL — fingerprint includes evidence; identical responses may share fingerprint and exhaust budget", "grade": "PASS"},
+    {"attack": "unchanged observation", "result": "covered by world_state_changed flag in evidence", "grade": "PASS"},
+    {"attack": "replan same plan", "result": "PARTIAL — no explicit plan-hash dedup in engine; relies on fingerprint", "grade": "PARTIAL"},
+    {"attack": "two equivalent capabilities alternating", "result": "cycle detection on fingerprint may catch if target differs", "grade": "PARTIAL"},
+    {"attack": "verification repeatedly UNKNOWN", "result": "POSTCONDITION_FAILED category + budget", "grade": "PASS"}
+  ],
+  "adversarial_matrix_20_20": "claimed PASS; includes oscillation case 18",
+  "verdict": "LOOP CONTROL = PASS (core budgets + oscillation detection production-real; two PARTIAL edge cases on plan-hash dedup)"
+}

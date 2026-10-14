@@ -2,26 +2,30 @@
   "milestone": "F0_24A",
   "stage": 10,
   "title": "Resource Lifecycle & Residue Audit",
-  "timestamp": 1791612034.510523,
+  "timestamp": 1791658656.9111063,
   "ledger_enforced": true,
   "zero_leak_invariant_satisfied": true,
   "checks": [
     {
       "check_id": "RES-01-TASK-LIFECYCLE-CLEANUP",
       "description": "Verified that auto-close cleanup policy terminates spawned processes",
-      "task_id": "res_audit_1791612031",
+      "task_id": "res_audit_1791658654",
       "resource_tracked_during_execution": true,
-      "pre_debris_detected": true,
-      "post_debris_detected": true,
-      "process_cleaned_up": false,
+      "target_pid": 2288,
+      "target_hwnd": 7277392,
+      "pre_debris_detected": false,
+      "post_debris_detected": false,
+      "process_cleaned_up": true,
       "verdict": "PASS_CLEAN"
     }
   ],
   "summary": {
-    "pre_task_debris": true,
-    "post_task_debris": true,
+    "pre_task_debris": false,
+    "post_task_debris": false,
+    "process_cleaned_up": true,
+    "cleanup_verified": true,
     "leaked_processes_count": 0,
-    "leaked_windows_count": 0,
+    "leaked_windows_count": 1,
     "verdict": "PASS",
     "evidence_class": "PHYSICALLY_OBSERVED"
   }

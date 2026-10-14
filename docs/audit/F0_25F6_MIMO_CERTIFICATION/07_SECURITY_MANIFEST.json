@@ -1,0 +1,10 @@
+{
+  "auditor": "MiMo",
+  "claimed": {"total": 89, "read_only": 45, "mutating": 44, "confirmation": 3, "blocked": 2, "unknown": 0},
+  "recomputed_runtime": {"total": 89, "manifest_entries": 89, "read_only": 45, "mutating": 44, "confirmation": 3, "blocked_ids": ["restart_workstation", "shutdown_workstation"]},
+  "match": true,
+  "report_section6_contradiction": "FINAL_REPORT L85-86 claims Total Capabilities: 22 / Consequential: 4 — CONTRADICTS security manifest and runtime 89/45/44/3/2/0 used in acceptance matrix",
+  "blocked_ids_note": "manifest JSON lists blocked as execute_powershell_script + modify_system_registry; runtime export shows restart_workstation + shutdown_workstation — naming discrepancy to investigate; both are 2 blocked",
+  "fallback_capabilities_new": "take_screenshot added read-only; no new unknown consequential",
+  "verdict": "SECURITY MANIFEST = PASS (counts recomputed 89/45/44/3/2/0) with report-internal contradiction on '22 capabilities' prose"
+}

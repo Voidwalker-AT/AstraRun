@@ -376,6 +376,7 @@ class HotkeyManager(QObject):
             "hwnd": self._hwnd,
             "trigger_count": self._trigger_count,
             "last_trigger_timestamp": self._last_trigger_timestamp,
+            "last_signal_delivered_timestamp": self._last_trigger_timestamp,
             "last_origin_hwnd": self._last_origin_hwnd,
             "last_error_code": self.last_error_code,
             "last_error_message": self.last_error_message,

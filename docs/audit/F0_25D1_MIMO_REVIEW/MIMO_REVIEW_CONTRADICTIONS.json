@@ -1,0 +1,62 @@
+{
+  "review_phase": "F0_25D1_MIMO",
+  "contradictions": [
+    {
+      "id": "C1",
+      "severity": "CRITICAL",
+      "anti_claim": "12 real desktop screenshots show launcher, request, tool selection, execution, result",
+      "independent_fact": "All 12 PNGs are Antigravity IDE captures; no Astra launcher/request/Explorer/terminal/result UI",
+      "evidence": "pixel inspection + manifest foreground_process=Antigravity.exe"
+    },
+    {
+      "id": "C2",
+      "severity": "CRITICAL",
+      "anti_claim": "ASTRA_LAUNCHER_UI=PASS, PROGRESS_UI=PASS, USER_OBSERVABILITY=PASS",
+      "independent_fact": "No Astra UI visible in any screenshot; harness hardcodes UI audit PASS",
+      "evidence": "run_f0_25d1_dogfood.py lines 588-603"
+    },
+    {
+      "id": "C3",
+      "severity": "CRITICAL",
+      "anti_claim": "EDITOR_INTERACTION=PASS",
+      "independent_fact": "No editor used for the dogfood task; synthesis is file-based dynamic tool path",
+      "evidence": "harness ACCEPTANCE_MATRIX line 699-703; screenshots show no editor"
+    },
+    {
+      "id": "C4",
+      "severity": "MAJOR",
+      "anti_claim": "TERMINAL_EXECUTION=PASS / PROGRAM_EXECUTION screenshot shows script executing",
+      "independent_fact": "No visible terminal; execution evidence is harness subprocess.run of main.py and/or hidden Astra sandbox",
+      "evidence": "08_program_execution.png; harness lines 546-552"
+    },
+    {
+      "id": "C5",
+      "severity": "MAJOR",
+      "anti_claim": "math_verified=true means ground-truth frequency match",
+      "independent_fact": "math_verified set if JSON is dict/list and txt exists — no value comparison; ground truth uses different tokenization than main.py",
+      "evidence": "harness lines 516-537; main.py uses split() without case/punctuation fold"
+    },
+    {
+      "id": "C6",
+      "severity": "MAJOR",
+      "anti_claim": "Screenshots 06-10 prove disk/execution/result milestones",
+      "independent_fact": "Screenshots fire on file-existence timers without bringing Explorer/result into view",
+      "evidence": "harness observation loop lines 330-407"
+    },
+    {
+      "id": "C7",
+      "severity": "MINOR",
+      "anti_claim": "BASELINE_DESKTOP is clean prior to launch",
+      "independent_fact": "Baseline shows Antigravity with 'F0-25D IS AN HONEST FAILURE' text, not empty desktop",
+      "evidence": "00_baseline.png"
+    },
+    {
+      "id": "C8",
+      "severity": "FACT_POSITIVE",
+      "anti_claim": "Build/installed hash parity",
+      "independent_fact": "SHA-256 match confirmed for built and installed binaries",
+      "evidence": "Get-FileHash both paths"
+    }
+  ],
+  "evidence_class": "FACT"
+}

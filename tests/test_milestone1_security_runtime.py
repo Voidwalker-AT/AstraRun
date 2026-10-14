@@ -410,22 +410,23 @@ class TestProcessAndJobObjects:
         assert job.assign_process(int(p._handle)) is True
         time.sleep(1.0)
 
-        # Confirm child/grandchild powershell process exists
-        ps_pids_before = [
-            proc.pid for proc in psutil.process_iter(["name"])
-            if proc.info["name"] and "powershell" in proc.info["name"].lower()
-        ]
-        assert len(ps_pids_before) >= 1
+        # Confirm child/grandchild powershell process exists under p
+        try:
+            parent_proc = psutil.Process(p.pid)
+            spawned_pids = [cp.pid for cp in parent_proc.children(recursive=True)]
+        except psutil.NoSuchProcess:
+            spawned_pids = []
+        assert len(spawned_pids) >= 1
 
         # Terminate and close job
         assert job.terminate() is True
         job.close()
         time.sleep(0.5)
 
-        # Confirm that the powershell process was killed by the job closure
+        # Confirm that the spawned processes were killed by the job closure
         ps_pids_after = [
-            proc.pid for proc in psutil.process_iter(["name"])
-            if proc.info["name"] and "powershell" in proc.info["name"].lower() and proc.pid in ps_pids_before
+            pid for pid in spawned_pids
+            if psutil.pid_exists(pid)
         ]
         assert len(ps_pids_after) == 0, f"Orphaned processes remained: {ps_pids_after}"
 

@@ -1,0 +1,28 @@
+{
+  "phase": "F0-25F.6",
+  "stage": "STAGE 5 \u2014 SECURITY THROUGH FALLBACKS",
+  "timestamp": 1791920500.0,
+  "security_invariants": {
+    "block_remains_block": true,
+    "confirm_remains_confirm": true,
+    "alternate_tools_bypass_denied": 0,
+    "dynamic_execution_policy_bypass": 0,
+    "model_fallback_policy_bypass": 0,
+    "delegation_policy_bypass": 0,
+    "ui_fallback_policy_bypass": 0,
+    "shell_fallback_policy_bypass": 0,
+    "scope_expansion_without_governance": 0,
+    "verification_self_certification": 0,
+    "unknown_consequential_capabilities": 0
+  },
+  "tests_passed": [
+    "test_block_remains_block_through_fallback",
+    "test_confirm_remains_confirm_through_fallback",
+    "test_alternate_tool_cannot_bypass_denied_operation",
+    "test_dynamic_execution_cannot_bypass_capability_policy",
+    "test_loop_prevention_escalates_on_repeated_failure",
+    "test_oscillation_cycle_detection",
+    "test_verification_cannot_self_certify"
+  ],
+  "verdict": "PASS"
+}

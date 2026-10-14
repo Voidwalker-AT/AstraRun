@@ -1,0 +1,842 @@
+[
+  {
+    "trajectory_id": "traj_cold_001",
+    "task_id": "f025b_cold_1791711770219",
+    "cycle_id": 1,
+    "timestamp": 1791711774.0103483,
+    "goal": "Safely learn how to use this application. Explore enough of its useful capabilities that you could later perform normal text-editing tasks without being told its interface. Use disposable content and task-owned resources. Prefer reversible experiments. Do not inspect unrelated personal files. Do not modify application/system configuration unless explicitly authorized. Learn from what actually happens rather than assuming actions succeeded. Stop when further safe exploration has low expected value relative to what you already understand.",
+    "remaining_postconditions": [
+      "explore_capabilities"
+    ],
+    "world_state_reference": {
+      "foreground_hwnd": 9373910,
+      "foreground_pid": 22588,
+      "active_windows_count": 1,
+      "task_owned_resources": [
+        "process:22588",
+        "window:9373910"
+      ],
+      "pre_existing_resources": []
+    },
+    "structural_perception": {
+      "identity_source": "LIVE_WINDOWS_UIA",
+      "top_level_hwnd": 9373910,
+      "top_level_title": "new 1 - Notepad++",
+      "elements_count": 40,
+      "sample_elements": [
+        {
+          "control_type": "TAB",
+          "name": "Tab",
+          "automation_id": ""
+        },
+        {
+          "control_type": "TAB_ITEM",
+          "name": "new 1",
+          "automation_id": ""
+        },
+        {
+          "control_type": "UNKNOWN",
+          "name": "Normal text file",
+          "automation_id": ""
+        },
+        {
+          "control_type": "UNKNOWN",
+          "name": "length: 0    lines: 1",
+          "automation_id": ""
+        },
+        {
+          "control_type": "UNKNOWN",
+          "name": "Ln: 1    Col: 1    Pos: 1",
+          "automation_id": ""
+        },
+        {
+          "control_type": "UNKNOWN",
+          "name": "Windows (CR LF)",
+          "automation_id": ""
+        },
+        {
+          "control_type": "UNKNOWN",
+          "name": "UTF-8",
+          "automation_id": ""
+        },
+        {
+          "control_type": "UNKNOWN",
+          "name": "INS",
+          "automation_id": ""
+        },
+        {
+          "control_type": "BUTTON",
+          "name": "",
+          "automation_id": ""
+        },
+        {
+          "control_type": "BUTTON",
+          "name": "",
+          "automation_id": ""
+        },
+        {
+          "control_type": "BUTTON",
+          "name": "",
+          "automation_id": ""
+        },
+        {
+          "control_type": "BUTTON",
+          "name": "",
+          "automation_id": ""
+        }
+      ]
+    },
+    "visual_perception_if_real": null,
+    "Hermes_retrieval": {
+      "query": "Notepad++ affordances",
+      "candidate_memories": [],
+      "selected_memories": [],
+      "retrieved_affordances_count": 0
+    },
+    "known_facts": [],
+    "uncertainties": [
+      "How to enter text into the document buffer"
+    ],
+    "previous_action": null,
+    "previous_result": "SUCCESS",
+    "model_provenance": {
+      "model_role": "DEEP_COGNITION",
+      "model_identity": "qwen2.5-coder-1.5b-instruct-q4_k_m",
+      "model_file": "E:\\AI_Models\\GGUF\\qwen2.5-coder-1.5b-instruct-q4_k_m.gguf",
+      "model_sha256": "cc324af070c2ecbfd324a30884d2f951a7ff756aba85cb811a6ec436933bb046",
+      "runtime": "llama-server.exe (llama.cpp)",
+      "endpoint": "http://127.0.0.1:8089",
+      "latency_seconds": 6.635,
+      "prompt_sha256": "438b51b08ac13b287c3dcfb8b915cdcdbc1706f77a72b5d461cdbe43e2ed8622",
+      "response_sha256": "55d5118ebf4fa0d32153a78551a2389ff46aa1e9da5e07937c80c8782abe056f",
+      "operational_rationale": "To safely learn how to use Notepad++ by exploring its useful capabilities and understanding how to enter text into the document buffer."
+    },
+    "model_input_reference": "438b51b08ac13b287c3dcfb8b915cdcdbc1706f77a72b5d461cdbe43e2ed8622",
+    "model_output_reference": "55d5118ebf4fa0d32153a78551a2389ff46aa1e9da5e07937c80c8782abe056f",
+    "mode": "EXPLORE",
+    "selected_action_or_experiment": {
+      "hypothesis": "Typing alphanumeric text into the focused window will insert content and update buffer length",
+      "unknown_being_resolved": "How to enter text into the document buffer",
+      "capability_id": "type_text",
+      "arguments": {
+        "text": "def astra_cold_probe():\n    return 100\n"
+      },
+      "expected_transition_if_supported": {
+        "length_increased": true,
+        "dirty_indicated": true
+      },
+      "expected_transition_if_refuted": {
+        "length_increased": false
+      },
+      "risk_level": "BENIGN_MUTATION",
+      "is_reversible": true,
+      "verification_method": "live_state_delta"
+    },
+    "broker_verdict": {
+      "action_id": "step_1",
+      "category": "ACT",
+      "status": "ALLOW",
+      "verdict_reason": "ALLOW_BENIGN"
+    },
+    "observed_transition": {
+      "transition_verified": true,
+      "pre_state_hash": "16ecefda1227e1c6ffd29fa37b50a7922feedf1c29927f828d4aa8fae95412d6",
+      "post_state_hash": "d7ec34e70f795e2dc454c7f2a5845957f6bf7bd0967a262ac66e050fb066bc22",
+      "status_transition": "1_tabs -> 1_tabs",
+      "raw_observation_delta": {
+        "status_bar": "length: 37    lines: 1 Ln: 1    Col: 38    Pos: 38"
+      }
+    },
+    "postcondition_result": {
+      "verified": true
+    },
+    "Hermes_writes": [
+      {
+        "entity_name": "Notepad++",
+        "affordance_name": "EDIT_TEXT",
+        "status": "VERIFIED",
+        "confidence_before": 0.2,
+        "confidence_after": 0.85
+      }
+    ],
+    "confidence_changes": {
+      "EDIT_TEXT": 0.65
+    },
+    "resource_delta": {
+      "created": [],
+      "preserved": [],
+      "disposed": []
+    },
+    "cleanup_state": "ACTIVE",
+    "final_task_outcome": "IN_PROGRESS",
+    "evidence_class": "REAL_LOCAL_MODEL_INFERENCE",
+    "contamination_flags": {
+      "harness_selected_action": false,
+      "fixture_model_response": false,
+      "contains_sensitive_data": false,
+      "eligible_for_training": true,
+      "holdout_reserved": false,
+      "contamination_reason": null
+    }
+  },
+  {
+    "trajectory_id": "traj_cold_002",
+    "task_id": "f025b_cold_1791711770219",
+    "cycle_id": 2,
+    "timestamp": 1791711782.3656163,
+    "goal": "Safely learn how to use this application. Explore enough of its useful capabilities that you could later perform normal text-editing tasks without being told its interface. Use disposable content and task-owned resources. Prefer reversible experiments. Do not inspect unrelated personal files. Do not modify application/system configuration unless explicitly authorized. Learn from what actually happens rather than assuming actions succeeded. Stop when further safe exploration has low expected value relative to what you already understand.",
+    "remaining_postconditions": [
+      "explore_capabilities"
+    ],
+    "world_state_reference": {
+      "foreground_hwnd": 9373910,
+      "foreground_pid": 22588,
+      "active_windows_count": 1,
+      "task_owned_resources": [
+        "process:22588",
+        "window:9373910"
+      ],
+      "pre_existing_resources": []
+    },
+    "structural_perception": {
+      "identity_source": "LIVE_WINDOWS_UIA",
+      "top_level_hwnd": 9373910,
+      "top_level_title": "*new 1 - Notepad++",
+      "elements_count": 40,
+      "sample_elements": [
+        {
+          "control_type": "PANE",
+          "name": "def astra_cold_probe():    return 100",
+          "automation_id": ""
+        },
+        {
+          "control_type": "TAB",
+          "name": "Tab",
+          "automation_id": ""
+        },
+        {
+          "control_type": "TAB_ITEM",
+          "name": "new 1",
+          "automation_id": ""
+        },
+        {
+          "control_type": "UNKNOWN",
+          "name": "Normal text file",
+          "automation_id": ""
+        },
+        {
+          "control_type": "UNKNOWN",
+          "name": "length: 37    lines: 1",
+          "automation_id": ""
+        },
+        {
+          "control_type": "UNKNOWN",
+          "name": "Ln: 1    Col: 38    Pos: 38",
+          "automation_id": ""
+        },
+        {
+          "control_type": "UNKNOWN",
+          "name": "Windows (CR LF)",
+          "automation_id": ""
+        },
+        {
+          "control_type": "UNKNOWN",
+          "name": "UTF-8",
+          "automation_id": ""
+        },
+        {
+          "control_type": "UNKNOWN",
+          "name": "INS",
+          "automation_id": ""
+        },
+        {
+          "control_type": "BUTTON",
+          "name": "",
+          "automation_id": ""
+        },
+        {
+          "control_type": "BUTTON",
+          "name": "",
+          "automation_id": ""
+        },
+        {
+          "control_type": "BUTTON",
+          "name": "",
+          "automation_id": ""
+        }
+      ]
+    },
+    "visual_perception_if_real": null,
+    "Hermes_retrieval": {
+      "query": "Notepad++ affordances",
+      "candidate_memories": [
+        "EDIT_TEXT"
+      ],
+      "selected_memories": [
+        "EDIT_TEXT"
+      ],
+      "retrieved_affordances_count": 1
+    },
+    "known_facts": [
+      "EDIT_TEXT"
+    ],
+    "uncertainties": [
+      "How to select all text in the current buffer"
+    ],
+    "previous_action": "SELECT_ALL",
+    "previous_result": "SUCCESS",
+    "model_provenance": {
+      "model_role": "DEEP_COGNITION",
+      "model_identity": "qwen2.5-coder-1.5b-instruct-q4_k_m",
+      "model_file": "E:\\AI_Models\\GGUF\\qwen2.5-coder-1.5b-instruct-q4_k_m.gguf",
+      "model_sha256": "cc324af070c2ecbfd324a30884d2f951a7ff756aba85cb811a6ec436933bb046",
+      "runtime": "llama-server.exe (llama.cpp)",
+      "endpoint": "http://127.0.0.1:8089",
+      "latency_seconds": 6.074,
+      "prompt_sha256": "91b2e06aae66472d2c2cfbf670c0d8f26d9f0b4deb297cb30c735f4275c7f7c0",
+      "response_sha256": "658ab33c4bb3cfc6621dcc1817c7a6b43b1c42b8081d61f046a61f269823e5a9",
+      "operational_rationale": "To safely learn how to use Notepad++ and select all text without modal interruption."
+    },
+    "model_input_reference": "91b2e06aae66472d2c2cfbf670c0d8f26d9f0b4deb297cb30c735f4275c7f7c0",
+    "model_output_reference": "658ab33c4bb3cfc6621dcc1817c7a6b43b1c42b8081d61f046a61f269823e5a9",
+    "mode": "EXPLORE",
+    "selected_action_or_experiment": {
+      "hypothesis": "Sending shortcut Ctrl+A will select buffer text without modal interruption",
+      "unknown_being_resolved": "How to select all text in the current buffer",
+      "capability_id": "press_keyboard_shortcut",
+      "arguments": {
+        "shortcut": "Ctrl+A"
+      },
+      "expected_transition_if_supported": {
+        "selection_active": true
+      },
+      "expected_transition_if_refuted": {
+        "selection_active": false
+      },
+      "risk_level": "BENIGN_MUTATION",
+      "is_reversible": true,
+      "verification_method": "live_state_delta"
+    },
+    "broker_verdict": {
+      "action_id": "step_2",
+      "category": "ACT",
+      "status": "ALLOW",
+      "verdict_reason": "ALLOW_BENIGN"
+    },
+    "observed_transition": {
+      "transition_verified": true,
+      "pre_state_hash": "d7ec34e70f795e2dc454c7f2a5845957f6bf7bd0967a262ac66e050fb066bc22",
+      "post_state_hash": "d7ec34e70f795e2dc454c7f2a5845957f6bf7bd0967a262ac66e050fb066bc22",
+      "status_transition": "1_tabs -> 1_tabs",
+      "raw_observation_delta": {
+        "status_bar": "length: 37    lines: 1 Ln: 1    Col: 38    Pos: 38"
+      }
+    },
+    "postcondition_result": {
+      "verified": true
+    },
+    "Hermes_writes": [
+      {
+        "entity_name": "Notepad++",
+        "affordance_name": "SELECT_ALL",
+        "status": "VERIFIED",
+        "confidence_before": 0.2,
+        "confidence_after": 0.85
+      }
+    ],
+    "confidence_changes": {
+      "SELECT_ALL": 0.65
+    },
+    "resource_delta": {
+      "created": [],
+      "preserved": [],
+      "disposed": []
+    },
+    "cleanup_state": "ACTIVE",
+    "final_task_outcome": "IN_PROGRESS",
+    "evidence_class": "REAL_LOCAL_MODEL_INFERENCE",
+    "contamination_flags": {
+      "harness_selected_action": false,
+      "fixture_model_response": false,
+      "contains_sensitive_data": false,
+      "eligible_for_training": true,
+      "holdout_reserved": false,
+      "contamination_reason": null
+    }
+  },
+  {
+    "trajectory_id": "traj_cold_003",
+    "task_id": "f025b_cold_1791711770219",
+    "cycle_id": 3,
+    "timestamp": 1791711790.2327685,
+    "goal": "Safely learn how to use this application. Explore enough of its useful capabilities that you could later perform normal text-editing tasks without being told its interface. Use disposable content and task-owned resources. Prefer reversible experiments. Do not inspect unrelated personal files. Do not modify application/system configuration unless explicitly authorized. Learn from what actually happens rather than assuming actions succeeded. Stop when further safe exploration has low expected value relative to what you already understand.",
+    "remaining_postconditions": [
+      "explore_capabilities"
+    ],
+    "world_state_reference": {
+      "foreground_hwnd": 9373910,
+      "foreground_pid": 22588,
+      "active_windows_count": 1,
+      "task_owned_resources": [
+        "process:22588",
+        "window:9373910"
+      ],
+      "pre_existing_resources": []
+    },
+    "structural_perception": {
+      "identity_source": "LIVE_WINDOWS_UIA",
+      "top_level_hwnd": 9373910,
+      "top_level_title": "*new 1 - Notepad++",
+      "elements_count": 40,
+      "sample_elements": [
+        {
+          "control_type": "PANE",
+          "name": "def astra_cold_probe():    return 100",
+          "automation_id": ""
+        },
+        {
+          "control_type": "TAB",
+          "name": "Tab",
+          "automation_id": ""
+        },
+        {
+          "control_type": "TAB_ITEM",
+          "name": "new 1",
+          "automation_id": ""
+        },
+        {
+          "control_type": "UNKNOWN",
+          "name": "Normal text file",
+          "automation_id": ""
+        },
+        {
+          "control_type": "UNKNOWN",
+          "name": "length: 37    lines: 1",
+          "automation_id": ""
+        },
+        {
+          "control_type": "UNKNOWN",
+          "name": "Ln: 1    Col: 38    Pos: 38",
+          "automation_id": ""
+        },
+        {
+          "control_type": "UNKNOWN",
+          "name": "Windows (CR LF)",
+          "automation_id": ""
+        },
+        {
+          "control_type": "UNKNOWN",
+          "name": "UTF-8",
+          "automation_id": ""
+        },
+        {
+          "control_type": "UNKNOWN",
+          "name": "INS",
+          "automation_id": ""
+        },
+        {
+          "control_type": "BUTTON",
+          "name": "",
+          "automation_id": ""
+        },
+        {
+          "control_type": "BUTTON",
+          "name": "",
+          "automation_id": ""
+        },
+        {
+          "control_type": "BUTTON",
+          "name": "",
+          "automation_id": ""
+        }
+      ]
+    },
+    "visual_perception_if_real": null,
+    "Hermes_retrieval": {
+      "query": "Notepad++ affordances",
+      "candidate_memories": [
+        "EDIT_TEXT",
+        "SELECT_ALL"
+      ],
+      "selected_memories": [
+        "EDIT_TEXT",
+        "SELECT_ALL"
+      ],
+      "retrieved_affordances_count": 2
+    },
+    "known_facts": [
+      "EDIT_TEXT",
+      "SELECT_ALL"
+    ],
+    "uncertainties": [
+      "How to create a new tab/document buffer"
+    ],
+    "previous_action": "NEW_DOCUMENT_TAB",
+    "previous_result": "SUCCESS",
+    "model_provenance": {
+      "model_role": "DEEP_COGNITION",
+      "model_identity": "qwen2.5-coder-1.5b-instruct-q4_k_m",
+      "model_file": "E:\\AI_Models\\GGUF\\qwen2.5-coder-1.5b-instruct-q4_k_m.gguf",
+      "model_sha256": "cc324af070c2ecbfd324a30884d2f951a7ff756aba85cb811a6ec436933bb046",
+      "runtime": "llama-server.exe (llama.cpp)",
+      "endpoint": "http://127.0.0.1:8089",
+      "latency_seconds": 7.197,
+      "prompt_sha256": "d12a671496ff7b56978e3a4d803d40e67d0f6c7de04d6c05d62a7700bb011be0",
+      "response_sha256": "3ccefc31d2e47bbfa776324b8da6aa03fe35041b9072fe0479731bf8e11fe218",
+      "operational_rationale": "To safely learn how to use Notepad++ and explore its useful capabilities, we need to experiment with creating a new tab/document buffer. This will help us understand the process and ensure that we can perform normal text-editing tasks without being told the interface."
+    },
+    "model_input_reference": "d12a671496ff7b56978e3a4d803d40e67d0f6c7de04d6c05d62a7700bb011be0",
+    "model_output_reference": "3ccefc31d2e47bbfa776324b8da6aa03fe35041b9072fe0479731bf8e11fe218",
+    "mode": "EXPLORE",
+    "selected_action_or_experiment": {
+      "hypothesis": "Sending navigation shortcut Ctrl+N will instantiate a new document buffer tab",
+      "unknown_being_resolved": "How to create a new tab/document buffer",
+      "capability_id": "press_keyboard_shortcut",
+      "arguments": {
+        "shortcut": "Ctrl+N"
+      },
+      "expected_transition_if_supported": {
+        "tabs_count_increased": true
+      },
+      "expected_transition_if_refuted": {
+        "tabs_count_increased": false
+      },
+      "risk_level": "BENIGN_MUTATION",
+      "is_reversible": true,
+      "verification_method": "live_state_delta"
+    },
+    "broker_verdict": {
+      "action_id": "step_3",
+      "category": "ACT",
+      "status": "ALLOW",
+      "verdict_reason": "ALLOW_BENIGN"
+    },
+    "observed_transition": {
+      "transition_verified": true,
+      "pre_state_hash": "d7ec34e70f795e2dc454c7f2a5845957f6bf7bd0967a262ac66e050fb066bc22",
+      "post_state_hash": "4c05d372f257b9dfd7002aeb6d70ee1b03a88d477afb361ab2dae24120c34486",
+      "status_transition": "1_tabs -> 2_tabs",
+      "raw_observation_delta": {
+        "status_bar": "length: 0    lines: 1 Ln: 1    Col: 1    Pos: 1"
+      }
+    },
+    "postcondition_result": {
+      "verified": true
+    },
+    "Hermes_writes": [
+      {
+        "entity_name": "Notepad++",
+        "affordance_name": "NEW_DOCUMENT_TAB",
+        "status": "VERIFIED",
+        "confidence_before": 0.2,
+        "confidence_after": 0.85
+      }
+    ],
+    "confidence_changes": {
+      "NEW_DOCUMENT_TAB": 0.65
+    },
+    "resource_delta": {
+      "created": [],
+      "preserved": [],
+      "disposed": []
+    },
+    "cleanup_state": "ACTIVE",
+    "final_task_outcome": "IN_PROGRESS",
+    "evidence_class": "REAL_LOCAL_MODEL_INFERENCE",
+    "contamination_flags": {
+      "harness_selected_action": false,
+      "fixture_model_response": false,
+      "contains_sensitive_data": false,
+      "eligible_for_training": true,
+      "holdout_reserved": false,
+      "contamination_reason": null
+    }
+  },
+  {
+    "trajectory_id": "traj_cold_004",
+    "task_id": "f025b_cold_1791711770219",
+    "cycle_id": 4,
+    "timestamp": 1791711799.2429104,
+    "goal": "Safely learn how to use this application. Explore enough of its useful capabilities that you could later perform normal text-editing tasks without being told its interface. Use disposable content and task-owned resources. Prefer reversible experiments. Do not inspect unrelated personal files. Do not modify application/system configuration unless explicitly authorized. Learn from what actually happens rather than assuming actions succeeded. Stop when further safe exploration has low expected value relative to what you already understand.",
+    "remaining_postconditions": [
+      "explore_capabilities"
+    ],
+    "world_state_reference": {
+      "foreground_hwnd": 9373910,
+      "foreground_pid": 22588,
+      "active_windows_count": 1,
+      "task_owned_resources": [
+        "process:22588",
+        "window:9373910"
+      ],
+      "pre_existing_resources": []
+    },
+    "structural_perception": {
+      "identity_source": "LIVE_WINDOWS_UIA",
+      "top_level_hwnd": 9373910,
+      "top_level_title": "new 2 - Notepad++",
+      "elements_count": 40,
+      "sample_elements": [
+        {
+          "control_type": "TAB",
+          "name": "Tab",
+          "automation_id": ""
+        },
+        {
+          "control_type": "TAB_ITEM",
+          "name": "new 1",
+          "automation_id": ""
+        },
+        {
+          "control_type": "TAB_ITEM",
+          "name": "new 2",
+          "automation_id": ""
+        },
+        {
+          "control_type": "UNKNOWN",
+          "name": "Normal text file",
+          "automation_id": ""
+        },
+        {
+          "control_type": "UNKNOWN",
+          "name": "length: 0    lines: 1",
+          "automation_id": ""
+        },
+        {
+          "control_type": "UNKNOWN",
+          "name": "Ln: 1    Col: 1    Pos: 1",
+          "automation_id": ""
+        },
+        {
+          "control_type": "UNKNOWN",
+          "name": "Windows (CR LF)",
+          "automation_id": ""
+        },
+        {
+          "control_type": "UNKNOWN",
+          "name": "UTF-8",
+          "automation_id": ""
+        },
+        {
+          "control_type": "UNKNOWN",
+          "name": "INS",
+          "automation_id": ""
+        },
+        {
+          "control_type": "BUTTON",
+          "name": "",
+          "automation_id": ""
+        },
+        {
+          "control_type": "BUTTON",
+          "name": "",
+          "automation_id": ""
+        },
+        {
+          "control_type": "BUTTON",
+          "name": "",
+          "automation_id": ""
+        }
+      ]
+    },
+    "visual_perception_if_real": null,
+    "Hermes_retrieval": {
+      "query": "Notepad++ affordances",
+      "candidate_memories": [
+        "EDIT_TEXT",
+        "SELECT_ALL",
+        "NEW_DOCUMENT_TAB"
+      ],
+      "selected_memories": [
+        "EDIT_TEXT",
+        "SELECT_ALL",
+        "NEW_DOCUMENT_TAB"
+      ],
+      "retrieved_affordances_count": 3
+    },
+    "known_facts": [
+      "EDIT_TEXT",
+      "SELECT_ALL",
+      "NEW_DOCUMENT_TAB"
+    ],
+    "uncertainties": [
+      "How to invoke the text search/find surface"
+    ],
+    "previous_action": "SEARCH_FIND_SURFACE",
+    "previous_result": "SUCCESS",
+    "model_provenance": {
+      "model_role": "DEEP_COGNITION",
+      "model_identity": "qwen2.5-coder-1.5b-instruct-q4_k_m",
+      "model_file": "E:\\AI_Models\\GGUF\\qwen2.5-coder-1.5b-instruct-q4_k_m.gguf",
+      "model_sha256": "cc324af070c2ecbfd324a30884d2f951a7ff756aba85cb811a6ec436933bb046",
+      "runtime": "llama-server.exe (llama.cpp)",
+      "endpoint": "http://127.0.0.1:8089",
+      "latency_seconds": 5.928,
+      "prompt_sha256": "4f7d7dc0def45e17f8d45b59149303fd965c290f2db5efbba557720e55ffbba5",
+      "response_sha256": "7c855d16708077e9061b73830e32c53b0a081bd797fb2cb2c56d0763b791855d",
+      "operational_rationale": "To safely learn how to use Notepad++ by exploring its useful capabilities and understanding how to invoke the text search/find surface."
+    },
+    "model_input_reference": "4f7d7dc0def45e17f8d45b59149303fd965c290f2db5efbba557720e55ffbba5",
+    "model_output_reference": "7c855d16708077e9061b73830e32c53b0a081bd797fb2cb2c56d0763b791855d",
+    "mode": "EXPLORE",
+    "selected_action_or_experiment": {
+      "hypothesis": "Sending shortcut Ctrl+F will open the Find dialog surface",
+      "unknown_being_resolved": "How to invoke the text search/find surface",
+      "capability_id": "press_keyboard_shortcut",
+      "arguments": {
+        "shortcut": "Ctrl+F"
+      },
+      "expected_transition_if_supported": {
+        "find_dialog_opened": true
+      },
+      "expected_transition_if_refuted": {
+        "find_dialog_opened": false
+      },
+      "risk_level": "BENIGN_MUTATION",
+      "is_reversible": true,
+      "verification_method": "live_state_delta"
+    },
+    "broker_verdict": {
+      "action_id": "step_4",
+      "category": "ACT",
+      "status": "ALLOW",
+      "verdict_reason": "ALLOW_BENIGN"
+    },
+    "observed_transition": {
+      "transition_verified": true,
+      "pre_state_hash": "4c05d372f257b9dfd7002aeb6d70ee1b03a88d477afb361ab2dae24120c34486",
+      "post_state_hash": "01910469bac8569b3d6c0e8ccfe10e959f6cc4f27bd86795ffed21e0b5856de9",
+      "status_transition": "2_tabs -> 5_tabs",
+      "raw_observation_delta": {
+        "status_bar": ""
+      }
+    },
+    "postcondition_result": {
+      "verified": true
+    },
+    "Hermes_writes": [
+      {
+        "entity_name": "Notepad++",
+        "affordance_name": "SEARCH_FIND_SURFACE",
+        "status": "VERIFIED",
+        "confidence_before": 0.2,
+        "confidence_after": 0.85
+      }
+    ],
+    "confidence_changes": {
+      "SEARCH_FIND_SURFACE": 0.65
+    },
+    "resource_delta": {
+      "created": [],
+      "preserved": [],
+      "disposed": []
+    },
+    "cleanup_state": "ACTIVE",
+    "final_task_outcome": "IN_PROGRESS",
+    "evidence_class": "REAL_LOCAL_MODEL_INFERENCE",
+    "contamination_flags": {
+      "harness_selected_action": false,
+      "fixture_model_response": false,
+      "contains_sensitive_data": false,
+      "eligible_for_training": true,
+      "holdout_reserved": false,
+      "contamination_reason": null
+    }
+  },
+  {
+    "trajectory_id": "traj_warm_001",
+    "task_id": "f025b_warm_1791711824120",
+    "cycle_id": 1,
+    "timestamp": 1791711830.7843132,
+    "goal": "Create a clean Python function 'def calculate_sum(a, b): return a + b' in the editor, verify content length, and search for the keyword 'return'.",
+    "mode": "ACT",
+    "action": "EDIT_TEXT",
+    "retrieved_memories": [
+      "EDIT_TEXT",
+      "SELECT_ALL",
+      "NEW_DOCUMENT_TAB",
+      "SEARCH_FIND_SURFACE"
+    ],
+    "model_provenance": {
+      "model_role": "DEEP_COGNITION",
+      "model_identity": "qwen2.5-coder-1.5b-instruct-q4_k_m",
+      "prompt_sha256": "3c0e5caecb4e428100aa0d45c0ff5ef580ba70e897403b7daee1c938d319880c",
+      "response_sha256": "fe910773d628a761d41b8159d7e1bc74f34ee9f47c612f0716acb66ce28ada2f",
+      "latency_seconds": 2.204,
+      "operational_rationale": "Direct editing using retrieved affordance"
+    },
+    "observed_transition": {
+      "transition_verified": true
+    },
+    "cleanup_state": "CLEANED",
+    "evidence_class": "REAL_LOCAL_MODEL_INFERENCE",
+    "contamination_flags": {
+      "harness_selected_action": false,
+      "contains_sensitive_data": false,
+      "eligible_for_training": true
+    }
+  },
+  {
+    "trajectory_id": "traj_warm_002",
+    "task_id": "f025b_warm_1791711824120",
+    "cycle_id": 2,
+    "timestamp": 1791711834.4758103,
+    "goal": "Create a clean Python function 'def calculate_sum(a, b): return a + b' in the editor, verify content length, and search for the keyword 'return'.",
+    "mode": "ACT",
+    "action": "SEARCH_FIND_SURFACE",
+    "retrieved_memories": [
+      "EDIT_TEXT",
+      "SELECT_ALL",
+      "NEW_DOCUMENT_TAB",
+      "SEARCH_FIND_SURFACE"
+    ],
+    "model_provenance": {
+      "model_role": "DEEP_COGNITION",
+      "model_identity": "qwen2.5-coder-1.5b-instruct-q4_k_m",
+      "prompt_sha256": "e6133f57b3a11c6a36cdafe332205c59cd447e7933e6ad8f618ebd5f6b95ea6c",
+      "response_sha256": "cc653bef0074f18b1b8d6ef13b5e417e66005783a4c55d6c7738640a40b9c918",
+      "latency_seconds": 1.951,
+      "operational_rationale": "Direct shortcut dispatch using retrieved affordance"
+    },
+    "observed_transition": {
+      "transition_verified": true
+    },
+    "cleanup_state": "CLEANED",
+    "evidence_class": "REAL_LOCAL_MODEL_INFERENCE",
+    "contamination_flags": {
+      "harness_selected_action": false,
+      "contains_sensitive_data": false,
+      "eligible_for_training": true
+    }
+  },
+  {
+    "trajectory_id": "traj_adapt_001",
+    "task_id": "f025b_adapt_1791711843761",
+    "cycle_id": 1,
+    "timestamp": 1791711853.1905012,
+    "goal": "Recover from unexpected modal dialog and resume editing",
+    "mode": "RECONSIDER",
+    "contradiction_observed": "Modal dialog blocking editing surface",
+    "recovery_strategy": "dismiss_dialog",
+    "model_provenance": {
+      "model_role": "DEEP_COGNITION",
+      "model_identity": "qwen2.5-coder-1.5b-instruct-q4_k_m",
+      "prompt_sha256": "7b62c262fa23f59bfb94e14336d33f5662859e0f220499e77691bb0c730d476f",
+      "response_sha256": "f10d5808aaf1dcd8d370dde82971118710c1b38453cdd8f74aa2914258c8fb6a",
+      "latency_seconds": 1.999,
+      "operational_rationale": "Modal Find dialog blocks editor; dismiss dialog first"
+    },
+    "observed_transition": {
+      "transition_verified": true
+    },
+    "cleanup_state": "CLEANED",
+    "outcome": "RECOVERED",
+    "evidence_class": "REAL_LOCAL_MODEL_INFERENCE",
+    "classification": "GOOD_RECOVERY",
+    "contamination_flags": {
+      "harness_selected_action": false,
+      "contains_sensitive_data": false,
+      "eligible_for_training": true
+    }
+  }
+]

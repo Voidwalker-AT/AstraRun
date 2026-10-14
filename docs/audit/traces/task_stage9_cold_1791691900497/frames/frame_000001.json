@@ -1,0 +1,1027 @@
+{
+  "frame_id": "frame_000001",
+  "timestamp_monotonic": 290283.2201895,
+  "timestamp_wall": 1791691901.4787798,
+  "task_id": "task_stage9_cold_1791691900497",
+  "goal_id": "task_stage9_cold_1791691900497",
+  "step_id": "step_pre",
+  "observation_generation": 1791691901478,
+  "raw": {
+    "desktop_state": {
+      "foreground_hwnd": 11011478,
+      "foreground_pid": 1288,
+      "foreground_process_name": "Antigravity.exe",
+      "foreground_title": "AstraRun Generic Computer...",
+      "desktop_bounds": [
+        -7,
+        -7,
+        1550,
+        830
+      ],
+      "cursor_position": [
+        592,
+        754
+      ],
+      "modifiers_pressed": [],
+      "user_takeover_active": false
+    },
+    "window_state": [
+      {
+        "hwnd": 131560,
+        "pid": 10080,
+        "exe_name": "explorer.exe",
+        "title": "",
+        "class_name": "Shell_TrayWnd",
+        "bounds": [
+          0,
+          1020,
+          1920,
+          60
+        ],
+        "is_visible": true,
+        "is_minimized": false,
+        "is_maximized": false,
+        "is_modal": false,
+        "owner_hwnd": 0
+      },
+      {
+        "hwnd": 11011478,
+        "pid": 1288,
+        "exe_name": "Antigravity.exe",
+        "title": "AstraRun Generic Computer...",
+        "class_name": "Chrome_WidgetWin_1",
+        "bounds": [
+          -9,
+          -9,
+          1938,
+          1038
+        ],
+        "is_visible": true,
+        "is_minimized": false,
+        "is_maximized": true,
+        "is_modal": false,
+        "owner_hwnd": 0
+      },
+      {
+        "hwnd": 525268,
+        "pid": 20440,
+        "exe_name": "vivaldi.exe",
+        "title": "Research Jev And Laya Repos - Vivaldi",
+        "class_name": "Chrome_WidgetWin_1",
+        "bounds": [
+          -9,
+          -9,
+          1938,
+          1038
+        ],
+        "is_visible": true,
+        "is_minimized": false,
+        "is_maximized": true,
+        "is_modal": true,
+        "owner_hwnd": 0
+      },
+      {
+        "hwnd": 395572,
+        "pid": 10080,
+        "exe_name": "explorer.exe",
+        "title": "audit and 2 more tabs - File Explorer",
+        "class_name": "CabinetWClass",
+        "bounds": [
+          -9,
+          -9,
+          1938,
+          1038
+        ],
+        "is_visible": true,
+        "is_minimized": false,
+        "is_maximized": true,
+        "is_modal": true,
+        "owner_hwnd": 0
+      },
+      {
+        "hwnd": 2624760,
+        "pid": 14620,
+        "exe_name": "WindowsTerminal.exe",
+        "title": "Windows PowerShell",
+        "class_name": "CASCADIA_HOSTING_WINDOW_CLASS",
+        "bounds": [
+          -32000,
+          -32000,
+          199,
+          34
+        ],
+        "is_visible": true,
+        "is_minimized": true,
+        "is_maximized": false,
+        "is_modal": true,
+        "owner_hwnd": 0
+      },
+      {
+        "hwnd": 4065526,
+        "pid": 15752,
+        "exe_name": "SystemSettings.exe",
+        "title": "Settings",
+        "class_name": "Windows.UI.Core.CoreWindow",
+        "bounds": [
+          0,
+          9,
+          1920,
+          1020
+        ],
+        "is_visible": true,
+        "is_minimized": false,
+        "is_maximized": false,
+        "is_modal": false,
+        "owner_hwnd": 0
+      },
+      {
+        "hwnd": 1902020,
+        "pid": 21204,
+        "exe_name": "ApplicationFrameHost.exe",
+        "title": "Settings",
+        "class_name": "ApplicationFrameWindow",
+        "bounds": [
+          -9,
+          -9,
+          1938,
+          1038
+        ],
+        "is_visible": true,
+        "is_minimized": false,
+        "is_maximized": true,
+        "is_modal": true,
+        "owner_hwnd": 0
+      },
+      {
+        "hwnd": 67802,
+        "pid": 10080,
+        "exe_name": "explorer.exe",
+        "title": "",
+        "class_name": "ApplicationFrameWindow",
+        "bounds": [
+          0,
+          0,
+          1920,
+          1020
+        ],
+        "is_visible": true,
+        "is_minimized": false,
+        "is_maximized": false,
+        "is_modal": true,
+        "owner_hwnd": 0
+      },
+      {
+        "hwnd": 328566,
+        "pid": 7092,
+        "exe_name": "TextInputHost.exe",
+        "title": "Windows Input Experience",
+        "class_name": "Windows.UI.Core.CoreWindow",
+        "bounds": [
+          0,
+          0,
+          1920,
+          1080
+        ],
+        "is_visible": true,
+        "is_minimized": false,
+        "is_maximized": false,
+        "is_modal": false,
+        "owner_hwnd": 0
+      },
+      {
+        "hwnd": 66060,
+        "pid": 10080,
+        "exe_name": "explorer.exe",
+        "title": "Program Manager",
+        "class_name": "Progman",
+        "bounds": [
+          0,
+          0,
+          1920,
+          1080
+        ],
+        "is_visible": true,
+        "is_minimized": false,
+        "is_maximized": false,
+        "is_modal": false,
+        "owner_hwnd": 0
+      }
+    ],
+    "target_app_state": {
+      "active_target_hwnd": 11011478,
+      "active_target_pid": 1288,
+      "foreground_matches_target": true
+    },
+    "structural_ui": [
+      {
+        "runtime_id": "uia_11011478_0",
+        "automation_id": "",
+        "control_type": "50033",
+        "class_name": "Intermediate D3D Window",
+        "name": "",
+        "value": "",
+        "bounds": [
+          0,
+          0,
+          1920,
+          1020
+        ],
+        "is_enabled": false,
+        "is_offscreen": false,
+        "is_focusable": true,
+        "is_focused": false,
+        "is_read_only": false
+      },
+      {
+        "runtime_id": "uia_11011478_1",
+        "automation_id": "",
+        "control_type": "50033",
+        "class_name": "RootView",
+        "name": "AstraRun Generic Computer...",
+        "value": "",
+        "bounds": [
+          0,
+          0,
+          1920,
+          1020
+        ],
+        "is_enabled": true,
+        "is_offscreen": false,
+        "is_focusable": false,
+        "is_focused": false,
+        "is_read_only": false
+      },
+      {
+        "runtime_id": "uia_11011478_2",
+        "automation_id": "",
+        "control_type": "50033",
+        "class_name": "NonClientView",
+        "name": "",
+        "value": "",
+        "bounds": [
+          0,
+          0,
+          1920,
+          1020
+        ],
+        "is_enabled": true,
+        "is_offscreen": false,
+        "is_focusable": false,
+        "is_focused": false,
+        "is_read_only": false
+      },
+      {
+        "runtime_id": "uia_11011478_3",
+        "automation_id": "",
+        "control_type": "50033",
+        "class_name": "WinFrameView",
+        "name": "",
+        "value": "",
+        "bounds": [
+          0,
+          0,
+          1920,
+          1020
+        ],
+        "is_enabled": true,
+        "is_offscreen": false,
+        "is_focusable": false,
+        "is_focused": false,
+        "is_read_only": false
+      },
+      {
+        "runtime_id": "uia_11011478_4",
+        "automation_id": "",
+        "control_type": "50033",
+        "class_name": "WinCaptionButtonContainer",
+        "name": "",
+        "value": "",
+        "bounds": [
+          1749,
+          0,
+          172,
+          38
+        ],
+        "is_enabled": true,
+        "is_offscreen": false,
+        "is_focusable": false,
+        "is_focused": false,
+        "is_read_only": false
+      },
+      {
+        "runtime_id": "uia_11011478_5",
+        "automation_id": "",
+        "control_type": "50000",
+        "class_name": "WinCaptionButton",
+        "name": "Minimize",
+        "value": "",
+        "bounds": [
+          1749,
+          0,
+          57,
+          38
+        ],
+        "is_enabled": true,
+        "is_offscreen": false,
+        "is_focusable": true,
+        "is_focused": false,
+        "is_read_only": false
+      },
+      {
+        "runtime_id": "uia_11011478_6",
+        "automation_id": "",
+        "control_type": "50000",
+        "class_name": "WinCaptionButton",
+        "name": "Restore",
+        "value": "",
+        "bounds": [
+          1805,
+          0,
+          58,
+          38
+        ],
+        "is_enabled": true,
+        "is_offscreen": false,
+        "is_focusable": true,
+        "is_focused": false,
+        "is_read_only": false
+      },
+      {
+        "runtime_id": "uia_11011478_7",
+        "automation_id": "",
+        "control_type": "50000",
+        "class_name": "WinCaptionButton",
+        "name": "Close",
+        "value": "",
+        "bounds": [
+          1863,
+          0,
+          58,
+          38
+        ],
+        "is_enabled": true,
+        "is_offscreen": false,
+        "is_focusable": true,
+        "is_focused": false,
+        "is_read_only": false
+      },
+      {
+        "runtime_id": "uia_11011478_8",
+        "automation_id": "",
+        "control_type": "50033",
+        "class_name": "ClientView",
+        "name": "",
+        "value": "",
+        "bounds": [
+          0,
+          0,
+          1920,
+          1020
+        ],
+        "is_enabled": true,
+        "is_offscreen": false,
+        "is_focusable": false,
+        "is_focused": false,
+        "is_read_only": false
+      },
+      {
+        "runtime_id": "uia_11011478_9",
+        "automation_id": "",
+        "control_type": "50033",
+        "class_name": "View",
+        "name": "",
+        "value": "",
+        "bounds": [
+          0,
+          0,
+          1920,
+          1020
+        ],
+        "is_enabled": true,
+        "is_offscreen": false,
+        "is_focusable": false,
+        "is_focused": false,
+        "is_read_only": false
+      },
+      {
+        "runtime_id": "uia_11011478_10",
+        "automation_id": "",
+        "control_type": "50033",
+        "class_name": "View",
+        "name": "",
+        "value": "",
+        "bounds": [
+          0,
+          0,
+          1920,
+          1020
+        ],
+        "is_enabled": true,
+        "is_offscreen": false,
+        "is_focusable": false,
+        "is_focused": false,
+        "is_read_only": false
+      },
+      {
+        "runtime_id": "uia_11011478_11",
+        "automation_id": "",
+        "control_type": "50033",
+        "class_name": "View",
+        "name": "",
+        "value": "",
+        "bounds": [
+          0,
+          0,
+          1920,
+          1020
+        ],
+        "is_enabled": true,
+        "is_offscreen": false,
+        "is_focusable": false,
+        "is_focused": false,
+        "is_read_only": false
+      },
+      {
+        "runtime_id": "uia_11011478_12",
+        "automation_id": "RootWebArea",
+        "control_type": "50030",
+        "class_name": "",
+        "name": "AstraRun Generic Computer Use Execution - AstraRun-Anti - Antigravity",
+        "value": "https://127.0.0.1:58095/c/c5dc9dac-2311-4ff7-bbd0-88a16d16a322?section=f57b6e90-a3f3-48e6-aad2-8213e",
+        "bounds": [
+          0,
+          0,
+          1920,
+          1020
+        ],
+        "is_enabled": true,
+        "is_offscreen": false,
+        "is_focusable": true,
+        "is_focused": false,
+        "is_read_only": true
+      },
+      {
+        "runtime_id": "uia_11011478_13",
+        "automation_id": "",
+        "control_type": "50026",
+        "class_name": "theme-standalone dark dark-theme theme-dark",
+        "name": "",
+        "value": "",
+        "bounds": [
+          0,
+          0,
+          1920,
+          1020
+        ],
+        "is_enabled": true,
+        "is_offscreen": false,
+        "is_focusable": false,
+        "is_focused": false,
+        "is_read_only": false
+      },
+      {
+        "runtime_id": "uia_11011478_14",
+        "automation_id": "root",
+        "control_type": "50026",
+        "class_name": "",
+        "name": "",
+        "value": "",
+        "bounds": [
+          0,
+          0,
+          1920,
+          1020
+        ],
+        "is_enabled": true,
+        "is_offscreen": false,
+        "is_focusable": false,
+        "is_focused": false,
+        "is_read_only": false
+      },
+      {
+        "runtime_id": "uia_11011478_15",
+        "automation_id": "",
+        "control_type": "50000",
+        "class_name": "inline-flex items-center font-medium transition-colors select-none outline-none cursor-pointer justify-center disabled:opacity-50 bg-transparent text-muted-foreground hover:text-foreground hover:bg-secondary focus-visible:text-foreground focus-visible:bg-secondary h-7 text-sm rounded-md gap-1.5 px-2.5 select-none",
+        "name": "Antigravity",
+        "value": "",
+        "bounds": [
+          10,
+          4,
+          113,
+          36
+        ],
+        "is_enabled": true,
+        "is_offscreen": false,
+        "is_focusable": true,
+        "is_focused": false,
+        "is_read_only": false
+      },
+      {
+        "runtime_id": "uia_11011478_16",
+        "automation_id": "",
+        "control_type": "50000",
+        "class_name": "inline-flex items-center font-medium transition-colors select-none outline-none cursor-pointer justify-center disabled:opacity-50 bg-transparent text-muted-foreground hover:text-foreground hover:bg-secondary focus-visible:text-foreground focus-visible:bg-secondary h-7 text-sm rounded-md gap-1.5 px-2.5 select-none",
+        "name": "File",
+        "value": "",
+        "bounds": [
+          127,
+          4,
+          53,
+          36
+        ],
+        "is_enabled": true,
+        "is_offscreen": false,
+        "is_focusable": true,
+        "is_focused": false,
+        "is_read_only": false
+      },
+      {
+        "runtime_id": "uia_11011478_17",
+        "automation_id": "",
+        "control_type": "50000",
+        "class_name": "inline-flex items-center font-medium transition-colors select-none outline-none cursor-pointer justify-center disabled:opacity-50 bg-transparent text-muted-foreground hover:text-foreground hover:bg-secondary focus-visible:text-foreground focus-visible:bg-secondary h-7 text-sm rounded-md gap-1.5 px-2.5 select-none",
+        "name": "View",
+        "value": "",
+        "bounds": [
+          184,
+          4,
+          65,
+          36
+        ],
+        "is_enabled": true,
+        "is_offscreen": false,
+        "is_focusable": true,
+        "is_focused": false,
+        "is_read_only": false
+      },
+      {
+        "runtime_id": "uia_11011478_18",
+        "automation_id": "",
+        "control_type": "50000",
+        "class_name": "inline-flex items-center font-medium transition-colors select-none outline-none cursor-pointer justify-center disabled:opacity-50 bg-transparent text-muted-foreground hover:text-foreground hover:bg-secondary focus-visible:text-foreground focus-visible:bg-secondary h-7 text-sm rounded-md gap-1.5 px-2.5 select-none",
+        "name": "Window",
+        "value": "",
+        "bounds": [
+          253,
+          4,
+          92,
+          36
+        ],
+        "is_enabled": true,
+        "is_offscreen": false,
+        "is_focusable": true,
+        "is_focused": false,
+        "is_read_only": false
+      },
+      {
+        "runtime_id": "uia_11011478_19",
+        "automation_id": "",
+        "control_type": "50026",
+        "class_name": "h-full w-full flex flex-col pb-2 bg-sidebar",
+        "name": "Sidebar",
+        "value": "",
+        "bounds": [
+          0,
+          43,
+          320,
+          977
+        ],
+        "is_enabled": true,
+        "is_offscreen": false,
+        "is_focusable": false,
+        "is_focused": false,
+        "is_read_only": false
+      },
+      {
+        "runtime_id": "uia_11011478_20",
+        "automation_id": "",
+        "control_type": "50005",
+        "class_name": "inline-flex items-center font-medium transition-colors select-none outline-none cursor-pointer disabled:opacity-50 flex-grow w-full justify-start select-none font-normal h-8 min-w-0 gap-1.5 px-2 py-1 rounded-lg border border-border text-foreground bg-sidebar-muted hover:bg-sidebar-secondary",
+        "name": "New Conversation",
+        "value": "https://127.0.0.1:58095/",
+        "bounds": [
+          10,
+          108,
+          300,
+          41
+        ],
+        "is_enabled": true,
+        "is_offscreen": false,
+        "is_focusable": true,
+        "is_focused": false,
+        "is_read_only": true
+      },
+      {
+        "runtime_id": "uia_11011478_21",
+        "automation_id": "",
+        "control_type": "50006",
+        "class_name": "",
+        "name": "",
+        "value": "",
+        "bounds": [
+          21,
+          118,
+          20,
+          21
+        ],
+        "is_enabled": true,
+        "is_offscreen": false,
+        "is_focusable": false,
+        "is_focused": false,
+        "is_read_only": false
+      },
+      {
+        "runtime_id": "uia_11011478_22",
+        "automation_id": "",
+        "control_type": "50005",
+        "class_name": "inline-flex items-center font-medium transition-colors select-none outline-none cursor-pointer disabled:opacity-50 flex-grow w-full justify-start select-none font-normal h-8 min-w-0 gap-1.5 px-2 py-1 rounded-lg bg-transparent text-secondary-foreground hover:bg-sidebar-muted hover:text-foreground",
+        "name": "Conversation History",
+        "value": "https://127.0.0.1:58095/history",
+        "bounds": [
+          10,
+          156,
+          300,
+          41
+        ],
+        "is_enabled": true,
+        "is_offscreen": false,
+        "is_focusable": true,
+        "is_focused": false,
+        "is_read_only": true
+      },
+      {
+        "runtime_id": "uia_11011478_23",
+        "automation_id": "",
+        "control_type": "50006",
+        "class_name": "",
+        "name": "",
+        "value": "",
+        "bounds": [
+          20,
+          166,
+          20,
+          21
+        ],
+        "is_enabled": true,
+        "is_offscreen": false,
+        "is_focusable": false,
+        "is_focused": false,
+        "is_read_only": false
+      },
+      {
+        "runtime_id": "uia_11011478_24",
+        "automation_id": "",
+        "control_type": "50000",
+        "class_name": "inline-flex items-center font-medium transition-colors select-none outline-none cursor-pointer disabled:opacity-50 flex-grow w-full justify-start select-none font-normal h-8 min-w-0 gap-1.5 px-2 py-1 rounded-lg bg-transparent text-secondary-foreground hover:bg-sidebar-muted hover:text-foreground",
+        "name": "Automations",
+        "value": "",
+        "bounds": [
+          10,
+          203,
+          300,
+          41
+        ],
+        "is_enabled": true,
+        "is_offscreen": false,
+        "is_focusable": true,
+        "is_focused": false,
+        "is_read_only": false
+      },
+      {
+        "runtime_id": "uia_11011478_25",
+        "automation_id": "",
+        "control_type": "50006",
+        "class_name": "",
+        "name": "",
+        "value": "",
+        "bounds": [
+          20,
+          213,
+          20,
+          21
+        ],
+        "is_enabled": true,
+        "is_offscreen": false,
+        "is_focusable": false,
+        "is_focused": false,
+        "is_read_only": false
+      },
+      {
+        "runtime_id": "uia_11011478_26",
+        "automation_id": "",
+        "control_type": "50005",
+        "class_name": "inline-flex items-center font-medium transition-colors select-none outline-none cursor-pointer disabled:opacity-50 flex-grow w-full justify-start select-none font-normal h-8 min-w-0 gap-1.5 px-2 py-1 rounded-lg bg-transparent text-secondary-foreground hover:bg-sidebar-muted hover:text-foreground",
+        "name": "Customizations",
+        "value": "https://127.0.0.1:58095/customizations",
+        "bounds": [
+          10,
+          251,
+          300,
+          41
+        ],
+        "is_enabled": true,
+        "is_offscreen": false,
+        "is_focusable": true,
+        "is_focused": false,
+        "is_read_only": true
+      },
+      {
+        "runtime_id": "uia_11011478_27",
+        "automation_id": "",
+        "control_type": "50006",
+        "class_name": "",
+        "name": "",
+        "value": "",
+        "bounds": [
+          20,
+          261,
+          20,
+          21
+        ],
+        "is_enabled": true,
+        "is_offscreen": false,
+        "is_focusable": false,
+        "is_focused": false,
+        "is_read_only": false
+      },
+      {
+        "runtime_id": "uia_11011478_28",
+        "automation_id": "",
+        "control_type": "50020",
+        "class_name": "text-xs opacity-50 font-medium select-none m-0 min-w-0 flex-1 flex items-center",
+        "name": "Projects",
+        "value": "",
+        "bounds": [
+          20,
+          327,
+          206,
+          21
+        ],
+        "is_enabled": true,
+        "is_offscreen": false,
+        "is_focusable": false,
+        "is_focused": false,
+        "is_read_only": false
+      },
+      {
+        "runtime_id": "uia_11011478_29",
+        "automation_id": "",
+        "control_type": "50000",
+        "class_name": "flex min-w-0 items-center gap-0.5 border-none bg-transparent p-0 text-left cursor-pointer font-inherit text-inherit rounded focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring",
+        "name": "Projects",
+        "value": "",
+        "bounds": [
+          20,
+          327,
+          74,
+          21
+        ],
+        "is_enabled": true,
+        "is_offscreen": false,
+        "is_focusable": true,
+        "is_focused": false,
+        "is_read_only": false
+      },
+      {
+        "runtime_id": "uia_11011478_30",
+        "automation_id": "",
+        "control_type": "50006",
+        "class_name": "shrink-0 transition-[opacity,transform] duration-150 rotate-90 opacity-0 group-hover/section-header:opacity-50 group-focus-within/section-header:opacity-50",
+        "name": "",
+        "value": "",
+        "bounds": [
+          76,
+          328,
+          18,
+          19
+        ],
+        "is_enabled": true,
+        "is_offscreen": false,
+        "is_focusable": false,
+        "is_focused": false,
+        "is_read_only": false
+      },
+      {
+        "runtime_id": "uia_11011478_31",
+        "automation_id": "",
+        "control_type": "50026",
+        "class_name": "flex items-center justify-end gap-1 shrink-0",
+        "name": "",
+        "value": "",
+        "bounds": [
+          226,
+          325,
+          55,
+          25
+        ],
+        "is_enabled": true,
+        "is_offscreen": false,
+        "is_focusable": false,
+        "is_focused": false,
+        "is_read_only": false
+      },
+      {
+        "runtime_id": "uia_11011478_32",
+        "automation_id": "base-ui-:rh:",
+        "control_type": "50000",
+        "class_name": "inline-flex items-center font-medium transition-colors select-none outline-none cursor-pointer justify-center disabled:opacity-50 bg-transparent text-muted-foreground hover:text-foreground hover:bg-secondary focus-visible:text-foreground focus-visible:bg-secondary h-5 w-5 shrink-0 flex items-center justify-center rounded-md hover:bg-sidebar-secondary",
+        "name": "Display Options",
+        "value": "",
+        "bounds": [
+          226,
+          325,
+          25,
+          25
+        ],
+        "is_enabled": true,
+        "is_offscreen": false,
+        "is_focusable": true,
+        "is_focused": false,
+        "is_read_only": false
+      },
+      {
+        "runtime_id": "uia_11011478_33",
+        "automation_id": "",
+        "control_type": "50006",
+        "class_name": "",
+        "name": "",
+        "value": "",
+        "bounds": [
+          228,
+          327,
+          21,
+          21
+        ],
+        "is_enabled": true,
+        "is_offscreen": false,
+        "is_focusable": false,
+        "is_focused": false,
+        "is_read_only": false
+      },
+      {
+        "runtime_id": "uia_11011478_34",
+        "automation_id": "base-ui-:rl:",
+        "control_type": "50000",
+        "class_name": "inline-flex items-center font-medium transition-colors select-none outline-none cursor-pointer justify-center disabled:opacity-50 bg-transparent text-muted-foreground hover:text-foreground hover:bg-secondary focus-visible:text-foreground focus-visible:bg-secondary h-5 w-5 shrink-0 flex items-center justify-center rounded-md hover:bg-sidebar-secondary popover-trigger-element",
+        "name": "Create New Project",
+        "value": "",
+        "bounds": [
+          256,
+          325,
+          25,
+          25
+        ],
+        "is_enabled": true,
+        "is_offscreen": false,
+        "is_focusable": true,
+        "is_focused": false,
+        "is_read_only": false
+      },
+      {
+        "runtime_id": "uia_11011478_35",
+        "automation_id": "",
+        "control_type": "50006",
+        "class_name": "",
+        "name": "",
+        "value": "",
+        "bounds": [
+          258,
+          327,
+          21,
+          21
+        ],
+        "is_enabled": true,
+        "is_offscreen": false,
+        "is_focusable": false,
+        "is_focused": false,
+        "is_read_only": false
+      },
+      {
+        "runtime_id": "uia_11011478_36",
+        "automation_id": "",
+        "control_type": "50000",
+        "class_name": "group/headerbtn flex items-center pl-1 pr-16 h-8 rounded-lg select-none cursor-pointer w-full border-none outline-none text-left text-muted-foreground hover:bg-muted hover:text-secondary-foreground bg-sidebar",
+        "name": "AstraRun-Anti",
+        "value": "",
+        "bounds": [
+          10,
+          357,
+          281,
+          41
+        ],
+        "is_enabled": true,
+        "is_offscreen": false,
+        "is_focusable": true,
+        "is_focused": false,
+        "is_read_only": false
+      },
+      {
+        "runtime_id": "uia_11011478_37",
+        "automation_id": "",
+        "control_type": "50006",
+        "class_name": "shrink-0 text-muted-foreground group-hover/headerbtn:text-secondary-foreground",
+        "name": "",
+        "value": "",
+        "bounds": [
+          20,
+          367,
+          20,
+          21
+        ],
+        "is_enabled": true,
+        "is_offscreen": false,
+        "is_focusable": false,
+        "is_focused": false,
+        "is_read_only": false
+      },
+      {
+        "runtime_id": "uia_11011478_38",
+        "automation_id": "base-ui-:rhc:",
+        "control_type": "50000",
+        "class_name": "inline-flex items-center font-medium transition-colors select-none outline-none cursor-pointer justify-center disabled:opacity-50 bg-transparent text-muted-foreground hover:text-foreground hover:bg-secondary focus-visible:text-foreground focus-visible:bg-secondary h-6 w-6 shrink-0 flex items-center justify-center rounded-md hover:bg-sidebar-secondary w-6 h-6",
+        "name": "Project options",
+        "value": "",
+        "bounds": [
+          221,
+          362,
+          30,
+          31
+        ],
+        "is_enabled": true,
+        "is_offscreen": false,
+        "is_focusable": true,
+        "is_focused": false,
+        "is_read_only": false
+      },
+      {
+        "runtime_id": "uia_11011478_39",
+        "automation_id": "",
+        "control_type": "50006",
+        "class_name": "",
+        "name": "",
+        "value": "",
+        "bounds": [
+          226,
+          367,
+          20,
+          21
+        ],
+        "is_enabled": true,
+        "is_offscreen": false,
+        "is_focusable": false,
+        "is_focused": false,
+        "is_read_only": false
+      }
+    ],
+    "visual_state": {
+      "screenshot_path": "E:\\Workspace\\Agents\\AstraRun-Anti\\docs\\audit\\traces\\task_stage9_cold_1791691900497\\frames\\frame_000001.png",
+      "screenshot_sha256": "0ef6da4366d9b65819927f31946974afdbcef2fbbe191823b4fd56ec68e2e4f5",
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "region": null,
+      "model_invoked": false,
+      "detected_regions": []
+    },
+    "dialog_state": {
+      "modal_detected": true,
+      "dialog_hwnd": 525268,
+      "dialog_title": "Research Jev And Laya Repos - Vivaldi",
+      "dialog_class": "Chrome_WidgetWin_1",
+      "control_count": 0
+    },
+    "artifact_state": {
+      "path": null,
+      "exists": false,
+      "size_bytes": 0,
+      "mtime": 0.0,
+      "sha256": ""
+    },
+    "resource_state": {
+      "task_owned_pids": [
+        13604
+      ],
+      "task_owned_hwnds": [
+        5508486
+      ],
+      "pre_existing_pids": [],
+      "ledger_active_count": 1
+    }
+  },
+  "derived": {
+    "semantic_role": "MODAL_DIALOG",
+    "target_ownership": "UNKNOWN",
+    "dialog_classification": "UNKNOWN_MODAL",
+    "editable_surface_available": true,
+    "can_receive_input": true,
+    "confidence": 0.95,
+    "evidence_sources": [
+      "Win32_GetForegroundWindow",
+      "Win32_EnumWindows",
+      "UIA_FindAll",
+      "AstraResourceLedger"
+    ]
+  }
+}

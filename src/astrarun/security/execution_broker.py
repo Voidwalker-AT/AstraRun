@@ -104,6 +104,19 @@ class ExecutionBroker:
             self.action_gate.capability_registry = self.capability_registry
         self._audit_trail: List[Dict[str, Any]] = []
 
+    def submit(
+        self,
+        proposal: ActionProposal,
+        confirmation_token: Optional[str] = None,
+        executor_override: Optional[Callable[..., Any]] = None,
+    ) -> ExecutionBrokerResult:
+        """Alias for execute to satisfy workflow, exploration, and compound callers."""
+        return self.execute(
+            proposal=proposal,
+            confirmation_token=confirmation_token,
+            executor_override=executor_override,
+        )
+
     def execute(
         self,
         proposal: ActionProposal,
@@ -114,6 +127,18 @@ class ExecutionBroker:
         t_start = time.perf_counter()
         audit_id = f"exec_{int(time.time() * 1000)}"
 
+        from astrarun.core.telemetry import CausalTelemetry, CausalEventType, compute_hash
+        telem = CausalTelemetry.get_instance()
+        input_h = compute_hash(proposal.parameters)
+        prop_ev = telem.emit(
+            event_type=CausalEventType.ACTION_PROPOSED.value,
+            component="ExecutionBroker",
+            capability=proposal.capability_id,
+            task_id=proposal.task_id,
+            input_hash=input_h,
+            data={"source": proposal.source, "category": proposal.category.value, "step_id": proposal.step_id, "dry_run": proposal.dry_run},
+        )
+
         # 0. Capability Registration Check (Requirement 3: Deny unknown by default)
         cap = self.capability_registry.get(proposal.capability_id) if self.capability_registry else None
         if not cap and not executor_override:
@@ -121,6 +146,15 @@ class ExecutionBroker:
             msg = f"SECURITY_DENY: Unknown or unregistered capability '{proposal.capability_id}'. Consequential execution denied."
             logger.warning("ExecutionBroker BLOCKED unregistered capability '%s'", proposal.capability_id)
             self._record_audit(audit_id, proposal, "BLOCK", msg, success=False, duration_ms=duration_ms)
+            telem.emit(
+                event_type=CausalEventType.ACTION_BLOCKED.value,
+                component="ExecutionBroker",
+                parent_event_id=prop_ev.event_id,
+                capability=proposal.capability_id,
+                task_id=proposal.task_id,
+                authorization_verdict="BLOCK",
+                data={"reason": msg},
+            )
             return ExecutionBrokerResult(
                 success=False,
                 verdict="BLOCK",
@@ -176,6 +210,15 @@ class ExecutionBroker:
             msg = f"SECURITY_DENY: Capability '{proposal.capability_id}' has unclassified consequential operations. Execution denied."
             logger.warning("ExecutionBroker BLOCKED UNKNOWN_CONSEQUENTIAL capability '%s'", proposal.capability_id)
             self._record_audit(audit_id, proposal, "BLOCK", msg, success=False, duration_ms=duration_ms)
+            telem.emit(
+                event_type=CausalEventType.ACTION_BLOCKED.value,
+                component="ExecutionBroker",
+                parent_event_id=prop_ev.event_id,
+                capability=proposal.capability_id,
+                task_id=proposal.task_id,
+                authorization_verdict="BLOCK",
+                data={"reason": msg},
+            )
             return ExecutionBrokerResult(
                 success=False,
                 verdict="BLOCK",
@@ -188,6 +231,23 @@ class ExecutionBroker:
         # 3. Passive Observations
         if effective_category == ActionCategory.OBSERVE:
             logger.debug("Passive observation permitted for %s", proposal.capability_id)
+            telem.emit(
+                event_type=CausalEventType.ACTION_AUTHORIZED.value,
+                component="ExecutionBroker",
+                parent_event_id=prop_ev.event_id,
+                capability=proposal.capability_id,
+                task_id=proposal.task_id,
+                authorization_verdict="ALLOW",
+                data={"category": "OBSERVE"},
+            )
+            telem.emit(
+                event_type=CausalEventType.ACTION_DISPATCHED.value,
+                component="ExecutionBroker",
+                parent_event_id=prop_ev.event_id,
+                capability=proposal.capability_id,
+                task_id=proposal.task_id,
+                data={"parameters": proposal.parameters},
+            )
             return self._dispatch_execution(proposal, audit_id, t_start, executor_override, verdict="ALLOW")
 
         # 4. Map proposal to ActionGate Request via authoritative metadata
@@ -206,6 +266,15 @@ class ExecutionBroker:
             )
             duration_ms = (time.perf_counter() - t_start) * 1000.0
             self._record_audit(audit_id, proposal, "BLOCK", evaluation.reason, success=False, duration_ms=duration_ms)
+            telem.emit(
+                event_type=CausalEventType.ACTION_BLOCKED.value,
+                component="ExecutionBroker",
+                parent_event_id=prop_ev.event_id,
+                capability=proposal.capability_id,
+                task_id=proposal.task_id,
+                authorization_verdict="BLOCK",
+                data={"reason": evaluation.reason, "risk": evaluation.risk.value},
+            )
             return ExecutionBrokerResult(
                 success=False,
                 verdict="BLOCK",
@@ -221,6 +290,15 @@ class ExecutionBroker:
             msg = f"SIMULATED: Dry-run execution of '{proposal.capability_id}' with zero host side-effects."
             logger.info(msg)
             self._record_audit(audit_id, proposal, "SIMULATE", msg, success=True, duration_ms=duration_ms)
+            telem.emit(
+                event_type=CausalEventType.ACTION_AUTHORIZED.value,
+                component="ExecutionBroker",
+                parent_event_id=prop_ev.event_id,
+                capability=proposal.capability_id,
+                task_id=proposal.task_id,
+                authorization_verdict="ALLOW",
+                data={"simulated": True},
+            )
             return ExecutionBrokerResult(
                 success=True,
                 verdict="ALLOW",
@@ -244,6 +322,15 @@ class ExecutionBroker:
                 if not valid:
                     logger.warning("ExecutionBroker invalid/expired confirmation token for '%s': %s", proposal.capability_id, msg)
                     duration_ms = (time.perf_counter() - t_start) * 1000.0
+                    telem.emit(
+                        event_type=CausalEventType.ACTION_BLOCKED.value,
+                        component="ExecutionBroker",
+                        parent_event_id=prop_ev.event_id,
+                        capability=proposal.capability_id,
+                        task_id=proposal.task_id,
+                        authorization_verdict="BLOCK",
+                        data={"reason": f"Confirmation token failed: {msg}"},
+                    )
                     return ExecutionBrokerResult(
                         success=False,
                         verdict="CONFIRM",
@@ -258,6 +345,15 @@ class ExecutionBroker:
                 token_str = evaluation.confirmation_token
                 logger.info("ExecutionBroker requesting confirmation for '%s' (Token: %s)", proposal.capability_id, token_str)
                 duration_ms = (time.perf_counter() - t_start) * 1000.0
+                telem.emit(
+                    event_type=CausalEventType.ACTION_BLOCKED.value,
+                    component="ExecutionBroker",
+                    parent_event_id=prop_ev.event_id,
+                    capability=proposal.capability_id,
+                    task_id=proposal.task_id,
+                    authorization_verdict="CONFIRM",
+                    data={"reason": evaluation.reason, "confirmation_token": token_str},
+                )
                 return ExecutionBrokerResult(
                     success=False,
                     verdict="CONFIRM",
@@ -270,6 +366,23 @@ class ExecutionBroker:
                 )
 
         # 6. ALLOW / Confirmed -> Dispatch under active broker authority scope
+        telem.emit(
+            event_type=CausalEventType.ACTION_AUTHORIZED.value,
+            component="ExecutionBroker",
+            parent_event_id=prop_ev.event_id,
+            capability=proposal.capability_id,
+            task_id=proposal.task_id,
+            authorization_verdict="ALLOW",
+            data={"category": "ACT"},
+        )
+        telem.emit(
+            event_type=CausalEventType.ACTION_DISPATCHED.value,
+            component="ExecutionBroker",
+            parent_event_id=prop_ev.event_id,
+            capability=proposal.capability_id,
+            task_id=proposal.task_id,
+            data={"parameters": proposal.parameters},
+        )
         return self._dispatch_execution(proposal, audit_id, t_start, executor_override, verdict="ALLOW")
 
     def _dispatch_execution(
@@ -281,6 +394,8 @@ class ExecutionBroker:
         verdict: str = "ALLOW",
     ) -> ExecutionBrokerResult:
         """Dispatch action to executor under BrokerDispatchScope and capture result."""
+        from astrarun.core.telemetry import CausalTelemetry, CausalEventType, compute_hash
+        telem = CausalTelemetry.get_instance()
         try:
             with BrokerDispatchScope():
                 if executor_override:
@@ -304,6 +419,14 @@ class ExecutionBroker:
                 data = {"raw_result": str(data)}
 
             self._record_audit(audit_id, proposal, verdict, msg, success=success, duration_ms=duration_ms)
+            telem.emit(
+                event_type=CausalEventType.ACTION_RESULT.value,
+                component="ExecutionBroker",
+                capability=proposal.capability_id,
+                task_id=proposal.task_id,
+                output_hash=compute_hash(data),
+                data={"success": success, "message": msg, "duration_ms": duration_ms},
+            )
 
             return ExecutionBrokerResult(
                 success=success,
@@ -319,6 +442,14 @@ class ExecutionBroker:
             duration_ms = (time.perf_counter() - t_start) * 1000.0
             logger.error("ExecutionBroker dispatch error for '%s': %s", proposal.capability_id, err)
             self._record_audit(audit_id, proposal, verdict, str(err), success=False, duration_ms=duration_ms)
+            telem.emit(
+                event_type=CausalEventType.ACTION_RESULT.value,
+                component="ExecutionBroker",
+                capability=proposal.capability_id,
+                task_id=proposal.task_id,
+                output_hash="",
+                data={"success": False, "error": str(err), "duration_ms": duration_ms},
+            )
             return ExecutionBrokerResult(
                 success=False,
                 verdict=verdict,

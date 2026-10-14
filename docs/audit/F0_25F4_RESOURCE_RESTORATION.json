@@ -1,0 +1,12 @@
+{
+  "phase": "F0-25F.4",
+  "baseline_pids_count": 318,
+  "post_pids_count": 319,
+  "leaked_pids": [],
+  "clean_pid_restoration": true,
+  "baseline_hwnds_count": 11,
+  "post_hwnds_count": 11,
+  "leaked_hwnds": [],
+  "clean_hwnd_restoration": true,
+  "timestamp": 1791832798.201093
+}

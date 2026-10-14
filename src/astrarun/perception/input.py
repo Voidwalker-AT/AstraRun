@@ -116,6 +116,13 @@ class NativeInputController:
     """
     Authoritative native Win32 SendInput execution controller.
     """
+    _instance: Optional[NativeInputController] = None
+
+    @classmethod
+    def get_instance(cls) -> NativeInputController:
+        if cls._instance is None:
+            cls._instance = cls()
+        return cls._instance
 
     def __init__(self, enable_simulated: bool = False):
         self.enable_simulated = enable_simulated or sys.platform != "win32"
@@ -312,3 +319,6 @@ class NativeInputController:
         inp.u.mi.dy = norm_y
         inp.u.mi.dwFlags = MOUSEEVENTF_MOVE | MOUSEEVENTF_ABSOLUTE
         ctypes.windll.user32.SendInput(1, ctypes.byref(inp), ctypes.sizeof(INPUT))
+
+
+PhysicalInputController = NativeInputController

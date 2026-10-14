@@ -1,15 +1,15 @@
 {
   "test_name": "dogfood_chatgpt_delegated_workflow",
-  "evidence_class": "REAL_INSTALLED_PRODUCT_EXECUTION",
+  "evidence_class": "SIMULATED_PROVIDER",
   "prompt": "Open ChatGPT and ask it to design a small Python program that simulates projectile motion and plots the trajectory. Implement what it gives you, run it, send the real execution/test result back to the same ChatGPT conversation, ask it to review the result, make any changes it requests, and finish only when the program works locally and ChatGPT approves it.",
-  "task_id": "task_be1245c9",
+  "task_id": "task_d3a74bc9",
   "status": "COMPLETED",
-  "duration_seconds": 1.62,
-  "advisor": "chatgpt_web",
+  "duration_seconds": 3.78,
+  "advisor": "mock",
   "executor": "AstraRun (Win32 Sandbox)",
   "verified_by": "AstraRun (GoalVerifier)",
-  "total_turns": 2,
-  "conversation_handle": "conv_a0cd1fd6",
+  "total_turns": 3,
+  "conversation_handle": "conv_f4e7d251",
   "artifacts_verified": {
     "trajectory.csv": {
       "path": "C:\\Users\\hp\\Desktop\\Astra Delegate Test\\trajectory.csv",
@@ -32,5 +32,5 @@
   },
   "verifier_intervention": "ZERO",
   "verification_passed": true,
-  "timestamp": 1791295338.5848882
+  "timestamp": 1791966012.3058789
 }

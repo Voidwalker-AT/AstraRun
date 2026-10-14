@@ -1,0 +1,22 @@
+{
+  "phase": "F0-25F.4",
+  "component": "CausalDedupAudit",
+  "timestamp": 1791834480.0,
+  "summary": {
+    "flaw": "F0-25F.3 causal trace artifact contained 44 rows with only 22 unique event_ids due to globbing both {run_id}.jsonl and causal_stream.jsonl into the same trace.",
+    "root_cause": "Ingestion loop read all *.jsonl files in runs_dir without filtering to target run_id or deduplicating by event_id.",
+    "remedy": "telemetry.get_run_events(run_id) strictly targets {run_id}.jsonl and maintains a seen_ids set to deduplicate in-stream entries. Ingestion scripts only query the canonical get_run_events API.",
+    "status": "REPAIRED"
+  },
+  "metrics": {
+    "historical_rows": 44,
+    "historical_unique_ids": 22,
+    "historical_duplicate_ratio": 2.0,
+    "current_duplicate_ratio": 1.0,
+    "duplicate_event_ids_permitted": false
+  },
+  "verification": {
+    "get_run_events_dedup_tested": true,
+    "canonical_run_view_isolated": true
+  }
+}

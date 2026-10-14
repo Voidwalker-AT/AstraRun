@@ -1,0 +1,29 @@
+{
+  "review_phase": "F0_25D1_MIMO",
+  "reviewer": "MiMo independent adversarial",
+  "repository": "E:\\Workspace\\Agents\\AstraRun-Anti",
+  "git_branch": "agent/anti-f0-24a1",
+  "git_head": "bd287eba38e6743565fdf6da21cb629023573c6b",
+  "git_status_modified_count": 44,
+  "claim": {
+    "built_exe_sha256": "9b1b5add133e87e757ab53fbbddded0bf61931c37207bb2968a133aa4d1a344f",
+    "installed_exe_sha256": "9b1b5add133e87e757ab53fbbddded0bf61931c37207bb2968a133aa4d1a344f",
+    "hash_parity_match": true
+  },
+  "independent_hash": {
+    "built": {
+      "path": "E:\\Workspace\\Agents\\AstraRun-Anti\\dist\\AstraRun\\AstraRun.exe",
+      "sha256": "9b1b5add133e87e757ab53fbbddded0bf61931c37207bb2968a133aa4d1a344f",
+      "size": 12054911,
+      "mtime": "2026-10-11T19:07:36.7318713+05:30"
+    },
+    "installed": {
+      "path": "C:\\Users\\hp\\AppData\\Local\\Programs\\AstraRun\\AstraRun.exe",
+      "sha256": "9b1b5add133e87e757ab53fbbddded0bf61931c37207bb2968a133aa4d1a344f",
+      "size": 12054911,
+      "mtime": "2026-10-11T19:07:36.7318713+05:30"
+    },
+    "parity_verified": true
+  },
+  "evidence_class": "FACT"
+}

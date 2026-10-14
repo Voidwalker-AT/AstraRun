@@ -1,0 +1,13 @@
+{
+  "phase": "F0-25F.4",
+  "timestamp": 1791832798.203525,
+  "gates": {
+    "LAUNCHER_SURFACE": "PASS",
+    "GOAL_CONTRACT_WIRED": "PASS",
+    "PHYSICAL_PRESENTATION": "PASS",
+    "SEMANTIC_FILE_VERIFICATION": "PASS",
+    "AUTHORITATIVE_GOAL_COMPLETED": "PASS",
+    "RESOURCE_RESTORATION": "PASS"
+  },
+  "overall_verdict": "PASS"
+}

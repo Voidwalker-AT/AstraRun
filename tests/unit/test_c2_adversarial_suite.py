@@ -131,6 +131,7 @@ print("NUMPY_DONE")
 
 
 def test_c2_05_matplotlib_png(sandbox_manager):
+    pytest.importorskip("matplotlib")
     code = """
 import matplotlib
 matplotlib.use("Agg")
@@ -458,8 +459,8 @@ print(f"GRANDCHILD_LAUNCHED:{p.pid}")
 def test_c2_20_memory_exhaustion(sandbox_manager):
     code = """
 chunks = []
-for _ in range(500):
-    chunks.append(b"A" * (50 * 1024 * 1024))
+for _ in range(50):
+    chunks.append(b"A" * (20 * 1024 * 1024))
 """
     cfg = SandboxConfig(timeout_sec=10.0, memory_limit_bytes=128 * 1024 * 1024)
     res = sandbox_manager.execute_script(code, config=cfg)

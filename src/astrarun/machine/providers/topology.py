@@ -26,9 +26,10 @@ class TopologyProvider(BaseMachineProvider):
     name = "topology"
 
     def __init__(self, authorized_roots: Optional[List[Path]] = None) -> None:
+        from astrarun.core.paths import AstraPaths
         self.authorized_roots = authorized_roots or [
-            Path(r"E:\Workspace"),
-            Path(r"E:\AI_Models"),
+            AstraPaths.workspace_root(),
+            AstraPaths.models_dir(),
         ]
 
     def discover(self) -> List[MachineFact]:
@@ -92,7 +93,8 @@ class TopologyProvider(BaseMachineProvider):
 
         # 3. Scoped Workspace Registry
         workspaces: List[Dict[str, Any]] = []
-        ws_root = Path(r"E:\Workspace")
+        from astrarun.core.paths import AstraPaths
+        ws_root = AstraPaths.workspace_root()
         if ws_root.exists() and ws_root.is_dir():
             # Check known subdirectories (Active, Tools, Academic)
             for sub in ["Active", "Tools"]:

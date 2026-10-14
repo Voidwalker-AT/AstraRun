@@ -60,85 +60,68 @@ def test_post_freeze_identity_and_token_boundaries():
     sb_dir = (AstraPaths.sandbox_dir() / f"test_id_{int(time.time() * 1000)}").resolve()
     sb_dir.mkdir(parents=True, exist_ok=True)
 
+    flag_file = (sb_dir / "done.flag").resolve()
     probe_script = (sb_dir / "probe_token.py").resolve()
     probe_script.write_text(
-        "import time, sys\nprint('IDENTITY_WORKER_ACTIVE')\ntime.sleep(1.5)\nsys.exit(0)\n",
+        "import time, sys\n"
+        "print('IDENTITY_WORKER_ACTIVE', flush=True)\n"
+        "sys.exit(0)\n",
         encoding="utf-8",
     )
 
-    import threading
-    import psutil
-
-    result_holder = {}
-
-    def run_worker():
-        res = AppContainerLauncher.launch(
-            entrypoint_file=probe_script,
-            workspace=sb_dir,
-            run_id="id_probe",
-            timeout_sec=10.0,
-        )
-        result_holder["result"] = res
-
-    t = threading.Thread(target=run_worker)
-    t.start()
-    time.sleep(0.5)
-
-    # Inspect live child process token from host
-    advapi32 = ctypes.WinDLL("advapi32", use_last_error=True)
-    kernel32 = ctypes.WinDLL("kernel32", use_last_error=True)
-    kernel32.OpenProcess.argtypes = [wintypes.DWORD, wintypes.BOOL, wintypes.DWORD]
-    kernel32.OpenProcess.restype = wintypes.HANDLE
-    advapi32.OpenProcessToken.argtypes = [wintypes.HANDLE, wintypes.DWORD, ctypes.POINTER(wintypes.HANDLE)]
-    advapi32.OpenProcessToken.restype = wintypes.BOOL
-    advapi32.GetTokenInformation.argtypes = [wintypes.HANDLE, wintypes.DWORD, wintypes.LPVOID, wintypes.DWORD, ctypes.POINTER(wintypes.DWORD)]
-    advapi32.GetTokenInformation.restype = wintypes.BOOL
-    advapi32.ConvertSidToStringSidW.argtypes = [ctypes.c_void_p, ctypes.POINTER(wintypes.LPWSTR)]
-    advapi32.ConvertSidToStringSidW.restype = wintypes.BOOL
-
-    cur = psutil.Process()
     token_verified = False
 
-    for child in cur.children(recursive=True):
-        if "python" in child.name().lower():
-            h_proc = kernel32.OpenProcess(0x1000, False, child.pid)
-            if h_proc:
-                h_token = wintypes.HANDLE()
-                if advapi32.OpenProcessToken(h_proc, 0x0008, ctypes.byref(h_token)):
-                    # 1. TokenIsAppContainer
-                    TokenIsAppContainer = 29
-                    is_ac = wintypes.DWORD()
-                    ret_len = wintypes.DWORD()
-                    if advapi32.GetTokenInformation(h_token, TokenIsAppContainer, ctypes.byref(is_ac), ctypes.sizeof(is_ac), ctypes.byref(ret_len)):
-                        assert is_ac.value != 0, "Child TokenIsAppContainer is False"
+    def audit_process(child_pid: int, h_child_proc: wintypes.HANDLE):
+        nonlocal token_verified
+        advapi32 = ctypes.WinDLL("advapi32", use_last_error=True)
+        kernel32 = ctypes.WinDLL("kernel32", use_last_error=True)
+        advapi32.OpenProcessToken.argtypes = [wintypes.HANDLE, wintypes.DWORD, ctypes.POINTER(wintypes.HANDLE)]
+        advapi32.OpenProcessToken.restype = wintypes.BOOL
+        advapi32.GetTokenInformation.argtypes = [wintypes.HANDLE, wintypes.DWORD, wintypes.LPVOID, wintypes.DWORD, ctypes.POINTER(wintypes.DWORD)]
+        advapi32.GetTokenInformation.restype = wintypes.BOOL
+        advapi32.ConvertSidToStringSidW.argtypes = [ctypes.c_void_p, ctypes.POINTER(wintypes.LPWSTR)]
+        advapi32.ConvertSidToStringSidW.restype = wintypes.BOOL
 
-                    # 2. TokenIntegrityLevel
-                    TokenIntegrityLevel = 25
-                    il_buf = (ctypes.c_byte * 256)()
-                    if advapi32.GetTokenInformation(h_token, TokenIntegrityLevel, il_buf, ctypes.sizeof(il_buf), ctypes.byref(ret_len)):
-                        sid_ptr = ctypes.cast(il_buf, ctypes.POINTER(ctypes.c_void_p)).contents
-                        str_sid = wintypes.LPWSTR()
-                        if advapi32.ConvertSidToStringSidW(sid_ptr, ctypes.byref(str_sid)):
-                            assert str_sid.value == "S-1-16-4096", f"Expected Low Integrity S-1-16-4096, got {str_sid.value}"
-                            kernel32.LocalFree(str_sid)
+        h_token = wintypes.HANDLE()
+        if advapi32.OpenProcessToken(h_child_proc, 0x0008, ctypes.byref(h_token)):
+            # 1. TokenIsAppContainer
+            TokenIsAppContainer = 29
+            is_ac = wintypes.DWORD()
+            ret_len = wintypes.DWORD()
+            if advapi32.GetTokenInformation(h_token, TokenIsAppContainer, ctypes.byref(is_ac), ctypes.sizeof(is_ac), ctypes.byref(ret_len)):
+                assert is_ac.value != 0, "Child TokenIsAppContainer is False"
 
-                    # 3. TokenCapabilities Count (Class 30)
-                    TokenCapabilities = 30
-                    cap_buf = (ctypes.c_byte * 16)()
-                    ret_l = wintypes.DWORD(16)
-                    if advapi32.GetTokenInformation(h_token, TokenCapabilities, cap_buf, 16, ctypes.byref(ret_l)):
-                        cap_count = ctypes.cast(cap_buf, ctypes.POINTER(wintypes.DWORD)).contents.value
-                        assert cap_count == 0, f"Expected 0 capabilities, got {cap_count}"
+            # 2. TokenIntegrityLevel
+            TokenIntegrityLevel = 25
+            il_buf = (ctypes.c_byte * 256)()
+            if advapi32.GetTokenInformation(h_token, TokenIntegrityLevel, il_buf, ctypes.sizeof(il_buf), ctypes.byref(ret_len)):
+                sid_ptr = ctypes.cast(il_buf, ctypes.POINTER(ctypes.c_void_p)).contents
+                str_sid = wintypes.LPWSTR()
+                if advapi32.ConvertSidToStringSidW(sid_ptr, ctypes.byref(str_sid)):
+                    assert str_sid.value == "S-1-16-4096", f"Expected Low Integrity S-1-16-4096, got {str_sid.value}"
+                    kernel32.LocalFree(str_sid)
 
-                    token_verified = True
-                    kernel32.CloseHandle(h_token)
-                kernel32.CloseHandle(h_proc)
+            # 3. TokenCapabilities Count (Class 30)
+            TokenCapabilities = 30
+            cap_buf = (ctypes.c_byte * 16)()
+            ret_l = wintypes.DWORD(16)
+            if advapi32.GetTokenInformation(h_token, TokenCapabilities, cap_buf, 16, ctypes.byref(ret_l)):
+                cap_count = ctypes.cast(cap_buf, ctypes.POINTER(wintypes.DWORD)).contents.value
+                assert cap_count == 0, f"Expected 0 capabilities, got {cap_count}"
 
-    t.join()
+            token_verified = True
+            kernel32.CloseHandle(h_token)
+
+    res = AppContainerLauncher.launch(
+        entrypoint_file=probe_script,
+        workspace=sb_dir,
+        run_id="id_probe",
+        timeout_sec=25.0,
+        on_process_created=audit_process,
+    )
+
     assert token_verified, "Failed to audit child process token while active"
-
-    res = result_holder["result"]
-    assert res.status == "SUCCESS", f"Launch failed: {res.stderr}"
+    assert res.status == "SUCCESS", f"Launch failed: {res.stderr}\nStdout: {res.stdout}"
     assert res.exit_code == 0
     assert "IDENTITY_WORKER_ACTIVE" in res.stdout
     assert res.is_appcontainer is True
@@ -370,6 +353,7 @@ def test_post_freeze_trusted_visualization_defense():
         )
 
     # 4. Valid 2D render
+    pytest.importorskip("matplotlib")
     with tempfile.TemporaryDirectory() as td:
         out_2d = Path(td) / "chart_2d.png"
         spec_dict = {

@@ -1,0 +1,32 @@
+{
+  "auditor": "MiMo",
+  "phase": "F0-25F.2",
+  "dimensions": {
+    "LAUNCHER_PRODUCT_VISIBILITY": {"verdict": "PASS", "critical": true, "evidence": "F0-25F.1 screenshot 01 + prior MiMo independent OS/visual attestation; HWND visible on Default"},
+    "LAUNCHER_ORACLE_INTEGRITY": {"verdict": "PARTIAL", "critical": true, "evidence": "darkness purged; contrast oracle weak (any structured dark surface); skipped without screenshot; legacy dark gate remains"},
+    "RESULT_PRESENTATION": {"verdict": "PASS", "critical": true, "evidence": "02_result_presentation.png shows factorial content; MiMo independent Explorer presentation with token file visible"},
+    "PRESENTATION_ORACLE_INTEGRITY": {"verdict": "PARTIAL", "critical": true, "evidence": "core L366 gate real; residual REQUESTED-OR in legacy script; pre-existing window acceptance; hollow title possible; summary fabricates identity"},
+    "MODEL_PROVENANCE": {"verdict": "UNVERIFIED", "critical": true, "evidence": "F0-25F.1 MODEL_* events harness-emitted with stubbed path; no independent fresh MODEL task certified"},
+    "BROKER_PROVENANCE": {"verdict": "UNVERIFIED", "critical": true, "evidence": "executor_override stub in acceptance harness; not independently re-run"},
+    "ACTION_PROVENANCE": {"verdict": "UNVERIFIED", "critical": true, "evidence": "same as broker"},
+    "STATE_OBSERVATION": {"verdict": "PARTIAL", "critical": true, "evidence": "STATE_OBSERVED emitted on presentation success; 8-state model not fully realized as events"},
+    "POSTCONDITION_VERIFICATION": {"verdict": "PARTIAL", "critical": true, "evidence": "emitted on presentation; not independently verified for factorial path"},
+    "GOAL_COMPLETION_ORDERING": {"verdict": "FAIL", "critical": true, "evidence": "telemetry.end_run emits GOAL_COMPLETED unconditionally — no production gate on POSTCONDITION"},
+    "RESOURCE_DISPOSAL": {"verdict": "PARTIAL", "critical": true, "evidence": "FAILED_CLEANUP gate real; vacuous CLOSED on empty path; type-scope limited"},
+    "RESOURCE_RESTORATION": {"verdict": "PARTIAL", "critical": true, "evidence": "physical deltas claimed with measurement flags; python warning in success stdout"},
+    "TELEMETRY_INTEGRITY": {"verdict": "PARTIAL", "critical": true, "evidence": "presentation chain honest (MiMo FACT); factorial chain harness-fabricated; write-fail non-raising"},
+    "ROUTING_HISTORICAL": {"verdict": "PARTIAL", "critical": false, "evidence": "known failures FIXED; 70/70 evidence tainted by iterate-until-pass"},
+    "ROUTING_UNSEEN_GENERALIZATION": {"verdict": "FAIL", "critical": true, "evidence": "26/105 over-routes including 5 critical negative neighbors"},
+    "GENERIC_REPAIR_SEMANTICS": {"verdict": "PARTIAL", "critical": false, "evidence": "REPAIR-02 fail-closed real; residual weak oracles; production prompt contamination"},
+    "MUTATION_RESISTANCE": {"verdict": "PARTIAL", "critical": true, "evidence": "20/20 executed; ~11 genuine; hollow-title/ungated-completion mutations survive"},
+    "SECURITY_BOUNDARY": {"verdict": "PASS", "critical": true, "evidence": "86/43/43/3/2/0 recomputed; phantoms gone"},
+    "REGRESSION": {"verdict": "PARTIAL", "critical": true, "evidence": "35/35 subset PASS; full 106 unverified; freeze stale for result_presentation.py/resource_ledger.py"},
+    "SCREENSHOT_TRUTH": {"verdict": "PASS", "critical": true, "evidence": "both F0-25F.1 screenshots honest; content bound"},
+    "ANTI_HARDCODING": {"verdict": "FAIL", "critical": true, "evidence": "REPAIR-02 prompt in production; workspace paths; fabricated summary attestation"},
+    "BINARY_IDENTITY": {"verdict": "PASS", "critical": true, "evidence": "444b6679... dist==installed double-hashed"}
+  },
+  "critical_fail": ["GOAL_COMPLETION_ORDERING", "ROUTING_UNSEEN_GENERALIZATION", "ANTI_HARDCODING"],
+  "critical_unverified": ["MODEL_PROVENANCE", "BROKER_PROVENANCE", "ACTION_PROVENANCE"],
+  "overall_verdict": "FAIL",
+  "overall_rationale": "Multiple critical FAILs and critical UNVERIFIEDs. Directive: any critical FAIL => NOT READY; any critical UNVERIFIED => NOT READY. Real repairs exist (presentation gate, disposal gate, known routing fixes, binary identity, screenshot honesty, security counts) but the certification objective — trustworthy enough for human blind dogfooding without infrastructure lying — is not met: production can still complete without postconditions, unseen routing overfits badly, production contains fixture contamination, and F0-25F.1's model/broker provenance is harness-fabricated."
+}

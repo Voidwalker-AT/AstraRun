@@ -54,6 +54,7 @@ class CapabilityErrorCode(str, Enum):
     VERIFICATION_FAILED = "VERIFICATION_FAILED"
     TARGET_NOT_FOUND = "TARGET_NOT_FOUND"
     NOT_SUPPORTED = "NOT_SUPPORTED"
+    EXECUTION_FAILED = "EXECUTION_FAILED"
 
 
 @dataclass
@@ -141,6 +142,8 @@ class Capability:
     health_reason: str = ""
     outputs: list[str] = field(default_factory=list)
     security_metadata: Optional[Any] = None
+    verifier_strategy: Optional[Any] = None
+    interaction_tier: Optional[Any] = None
 
     def get_security_metadata(self) -> Any:
         """Return authoritative CapabilitySecurityMetadata, creating a strict fallback if not set."""

@@ -1,0 +1,88 @@
+{
+  "milestone": "F0_25D1",
+  "timestamp": 1791726084.2336059,
+  "target_directory": "E:\\AstraDogfood\\word_frequency",
+  "py_verified": true,
+  "txt_verified": true,
+  "json_verified": true,
+  "execution_verified": true,
+  "math_verified": true,
+  "overall_pass": true,
+  "details": {
+    "python_file": {
+      "name": "main.py",
+      "size_bytes": 1486,
+      "snippet": "import os\nimport json\nfrom collections import Counter\n\ndef read_file(file_path):\n    with open(file_path, 'r', encoding='utf-8') as file:\n        return file.read()\n\ndef count_word_frequencies(text):\n    words = text.split()\n    return Counter(words)\n\ndef print_top_10_words(word_counts):\n    top_10 "
+    },
+    "input_file": {
+      "name": "sample_input.txt",
+      "size_bytes": 68,
+      "content": "Hello world! This is a sample text file for word frequency analysis."
+    },
+    "ground_truth_top_10": [
+      [
+        "hello",
+        1
+      ],
+      [
+        "world",
+        1
+      ],
+      [
+        "this",
+        1
+      ],
+      [
+        "is",
+        1
+      ],
+      [
+        "a",
+        1
+      ],
+      [
+        "sample",
+        1
+      ],
+      [
+        "text",
+        1
+      ],
+      [
+        "file",
+        1
+      ],
+      [
+        "for",
+        1
+      ],
+      [
+        "word",
+        1
+      ]
+    ],
+    "json_file": {
+      "name": "word_frequencies.json",
+      "size_bytes": 204,
+      "data": {
+        "Hello": 1,
+        "world!": 1,
+        "This": 1,
+        "is": 1,
+        "a": 1,
+        "sample": 1,
+        "text": 1,
+        "file": 1,
+        "for": 1,
+        "word": 1,
+        "frequency": 1,
+        "analysis.": 1
+      }
+    },
+    "independent_run": {
+      "exit_code": 0,
+      "stdout": "Hello: 1\nworld!: 1\nThis: 1\nis: 1\na: 1\nsample: 1\ntext: 1\nfile: 1\nfor: 1\nword: 1",
+      "stderr": ""
+    }
+  }
+}

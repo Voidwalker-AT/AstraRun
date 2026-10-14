@@ -1,0 +1,85 @@
+{
+  "audit_phase": "F0-25B.1",
+  "audit_target": "Semantic Verification Contradictions in F0-25B Autonomous Learning Evidence",
+  "audit_timestamp": "2026-10-11T16:15:00Z",
+  "reproduced_contradictions": {
+    "contradiction_A_select_all": {
+      "affordance_name": "SELECT_ALL",
+      "source_file": "scripts/run_f0_25b_autonomous_learning.py",
+      "line_numbers": "489-491, 664",
+      "verification_function_source": "lambda pre, post: post[\"hwnd\"] == pre[\"hwnd\"]",
+      "persisted_hermes_record": {
+        "file": "docs/audit/F0_25B_HERMES_GRAPH_AFTER_COLD.json",
+        "transition_id": "tr_9e9003e225f8",
+        "affordance_id": "aff_26c426f097f6",
+        "pre_state_hash": "d7ec34e70f795e2dc454c7f2a5845957f6bf7bd0967a262ac66e050fb066bc22",
+        "post_state_hash": "d7ec34e70f795e2dc454c7f2a5845957f6bf7bd0967a262ac66e050fb066bc22",
+        "expected_delta": {
+          "selection_active": true
+        },
+        "observed_delta": {
+          "length_changed": false
+        },
+        "transition_verified": true
+      },
+      "forensic_analysis": {
+        "why_it_passed": "The verify_fn compared post['hwnd'] == pre['hwnd'], which is a tautological window-existence check and asserted nothing about selection state.",
+        "hash_identity": "pre_state_hash == post_state_hash proves that the state extraction did not observe any physical change whatsoever.",
+        "predicate_mismatch": "expected_delta asserted selection_active: true, but observed_delta recorded length_changed: false because line 664 hardcoded observed_delta={'length_changed': post_state['status_bar'] != pre_state['status_bar']}.",
+        "required_fix": "Generic SelectionObservation model querying UIA TextPattern, Win32 Scintilla messages (SCI_GETSELECTIONSTART/END), or Edit EM_GETSEL, proving selection_length == document_length and document_length > 0."
+      }
+    },
+    "contradiction_B_new_document_tab": {
+      "affordance_name": "NEW_DOCUMENT_TAB",
+      "source_file": "scripts/run_f0_25b_autonomous_learning.py",
+      "line_numbers": "499-501, 664",
+      "verification_function_source": "lambda pre, post: post[\"tabs_count\"] > pre[\"tabs_count\"] or (len(post[\"tab_names\"]) > len(pre[\"tab_names\"])) or (\"new 2\" in post[\"title\"].lower())",
+      "persisted_hermes_record": {
+        "file": "docs/audit/F0_25B_HERMES_GRAPH_AFTER_COLD.json",
+        "transition_id": "tr_e1d1eddf0e88",
+        "affordance_id": "aff_0e1a97b5235c",
+        "pre_state_hash": "d7ec34e70f795e2dc454c7f2a5845957f6bf7bd0967a262ac66e050fb066bc22",
+        "post_state_hash": "4c05d372f257b9dfd7002aeb6d70ee1b03a88d477afb361ab2dae24120c34486",
+        "expected_delta": {
+          "tabs_count_increased": true
+        },
+        "observed_delta": {
+          "length_changed": true
+        },
+        "transition_verified": true
+      },
+      "forensic_analysis": {
+        "why_it_passed": "The verify_fn passed because the new tab altered tab counts or window title.",
+        "predicate_mismatch": "Line 664 uniformly populated observed_delta with {'length_changed': post_state['status_bar'] != pre_state['status_bar']}, recording length_changed: true instead of tabs_count_increased: true with raw pre/post tab counts.",
+        "required_fix": "Record exact physical measurement: pre_tabs_count, post_tabs_count, delta > 0, and match expected_delta schema."
+      }
+    },
+    "contradiction_C_search_find_surface": {
+      "affordance_name": "SEARCH_FIND_SURFACE",
+      "source_file": "scripts/run_f0_25b_autonomous_learning.py",
+      "line_numbers": "509-511, 625-635, 664",
+      "verification_function_source": "lambda pre, post: True (with separate capture_world_frame find_dialogs check at lines 628-631)",
+      "persisted_hermes_record": {
+        "file": "docs/audit/F0_25B_HERMES_GRAPH_AFTER_COLD.json",
+        "transition_id": "tr_b685f61bdb26",
+        "affordance_id": "aff_ece88b9a25ca",
+        "pre_state_hash": "4c05d372f257b9dfd7002aeb6d70ee1b03a88d477afb361ab2dae24120c34486",
+        "post_state_hash": "01910469bac8569b3d6c0e8ccfe10e959f6cc4f27bd86795ffed21e0b5856de9",
+        "expected_delta": {
+          "find_dialog_opened": true
+        },
+        "observed_delta": {
+          "length_changed": true
+        },
+        "transition_verified": true
+      },
+      "forensic_analysis": {
+        "why_it_passed": "A Find dialog window was detected by capture_world_frame, but verify_fn was a placeholder True and observed_delta fell back to line 664's length_changed: true.",
+        "predicate_mismatch": "expected_delta was find_dialog_opened: true, but observed_delta was length_changed: true.",
+        "required_fix": "Record dialog observation directly: find_dialog_opened: true, dialog_hwnd, dialog_class, dialog_pid."
+      }
+    }
+  },
+  "root_cause_summary": "The F0-25B trajectory generator had two decoupled pipelines: (1) specialized ad-hoc verification logic that determined boolean is_verified, and (2) a rigid, hardcoded line 664 that emitted observed_delta={'length_changed': ...} for all transitions regardless of affordance type. Furthermore, SELECT_ALL verify_fn was an empty tautology (post['hwnd'] == pre['hwnd']).",
+  "repair_scope_boundary": "In accordance with strict F0-25B.1 governance, ONLY the selection observation and SELECT_ALL semantic closure are being implemented and verified in this stage. Tab counting and Find dialog fixes will follow only after selection verification is established."
+}

@@ -1,0 +1,26 @@
+{
+  "auditor": "MiMo",
+  "raw_source": "docs/audit/F0_25F3_TEST_OUTPUT.txt",
+  "mechanical_parse": {
+    "collected": 957,
+    "passed": 909,
+    "failed": 48,
+    "skipped": 0,
+    "errors": 0,
+    "xfailed": 0,
+    "xpassed": 0,
+    "duration_sec": 409.17,
+    "terminal_line": "48 failed, 909 passed in 409.17s (0:06:49)"
+  },
+  "anti_report_claim": "909 passed, 0 failed, 48 skipped (FINAL_REPORT L102)",
+  "anti_test_summary_claim": "failed: 48 (honest)",
+  "contradiction": "FINAL_REPORT relabels 48 failures as skipped — CONTRADICTED by raw output and by its own TEST_SUMMARY.json",
+  "failure_classes": [
+    {"class": "REAL_REGRESSION", "count_approx": 30, "examples": ["test_milestone1_security_runtime x11 ActionGate DENY", "test_generality_and_plugin x6 task FAILED", "test_v0102 AffordanceRisk ValueError", "delegation UnboundLocalError", "neural_nlp parser"]},
+    {"class": "ENVIRONMENTAL", "count_approx": 8, "examples": ["test_laya_router ModuleNotFoundError laya", "visual grounder model None", "matplotlib packaging in sandbox"]},
+    {"class": "MIXED", "count_approx": 10, "examples": ["v09_daily_driver routing drift", "v0101 UI lifecycle"]}
+  ],
+  "misclassified_as_skip_by_anti": true,
+  "verdict": "REGRESSION = FAIL",
+  "verdict_rationale": "48 tests genuinely failed. Directive: if 48 tests genuinely fail, REGRESSION cannot PASS. Failures are largely real behavioral regressions from security/gating/routing changes, not skips."
+}

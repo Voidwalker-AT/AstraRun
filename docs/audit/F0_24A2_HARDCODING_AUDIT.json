@@ -1,0 +1,38 @@
+{
+  "status": "PASS",
+  "timestamp": "2026-10-11T00:15:00Z",
+  "modules_inspected": [
+    {
+      "path": "src/astrarun/computer_use/ui/editable_surface.py",
+      "lines": 491,
+      "findings_count": 0
+    },
+    {
+      "path": "src/astrarun/computer_use/ui/dialogs.py",
+      "lines": 229,
+      "findings_count": 0
+    },
+    {
+      "path": "src/astrarun/interaction/service.py",
+      "lines": 845,
+      "findings_count": 0
+    },
+    {
+      "path": "src/astrarun/interaction/document.py",
+      "lines": 397,
+      "findings_count": 0
+    },
+    {
+      "path": "src/astrarun/interaction/discovery.py",
+      "lines": 473,
+      "findings_count": 0
+    },
+    {
+      "path": "src/astrarun/tasks/resource_ledger.py",
+      "lines": 1083,
+      "findings_count": 0
+    }
+  ],
+  "findings": [],
+  "verdict": "Zero hardcoded application branches detected in generic execution paths."
+}

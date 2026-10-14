@@ -1,0 +1,12 @@
+{
+  "phase": "F0-25F.4",
+  "timestamp": 1791832680.4225092,
+  "build_status": "SUCCESS",
+  "dist_exe": "E:\\Workspace\\Agents\\AstraRun-Anti\\dist\\AstraRun\\AstraRun.exe",
+  "dist_sha256": "93eb73a983a625a2de3d9c0cb82c698b4ba07880fc2f417c7d0aa7ad2353e44d",
+  "dist_size_bytes": 12114195,
+  "install_exe": "C:\\Users\\hp\\AppData\\Local\\Programs\\AstraRun\\AstraRun.exe",
+  "install_sha256": "93eb73a983a625a2de3d9c0cb82c698b4ba07880fc2f417c7d0aa7ad2353e44d",
+  "install_size_bytes": 12114195,
+  "binary_parity_verified": true
+}

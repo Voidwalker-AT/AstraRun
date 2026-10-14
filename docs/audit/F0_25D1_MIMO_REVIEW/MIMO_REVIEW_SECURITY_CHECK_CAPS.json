@@ -1,0 +1,15 @@
+{
+  "review_phase": "F0_25D1_MIMO",
+  "capability_count_in_registry_py": 85,
+  "manifest_claim": "85 explicitly classified capabilities",
+  "static_note": "Count of register(Capability in registry.py is 85 — consistent with claim at time of review (FACT via rg count).",
+  "dangerous_capabilities_static_only": {
+    "execute_dynamic_tool": "PRESENT; routed via planner; not executed during this review",
+    "consult_delegate": "PRESENT in codebase paths; not invoked in dogfood screenshots",
+    "shell_execution": "Not fully enumerated here; static audit only",
+    "process_termination": "Harness kills AstraRun processes at start/end of dogfood script",
+    "file_creation": "Dynamic tool path can write deliverables; harness does not write deliverables pre-run"
+  },
+  "no_destructive_tests_run": true,
+  "evidence_class": "FACT_PLUS_LIMITED_STATIC"
+}

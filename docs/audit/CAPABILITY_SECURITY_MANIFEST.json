@@ -1,8 +1,8 @@
 {
-  "total_capabilities": 85,
-  "explicitly_classified": 85,
-  "read_only": 43,
-  "mutating": 42,
+  "total_capabilities": 89,
+  "explicitly_classified": 89,
+  "read_only": 45,
+  "mutating": 44,
   "confirmation_required": 3,
   "blocked": 2,
   "unknown_consequential": 0,
@@ -164,6 +164,30 @@
       "classification_source": "authoritative_manifest"
     },
     {
+      "id": "write_file",
+      "category": "FILE",
+      "operation_kind": "FILE_CREATE",
+      "risk": "LOW",
+      "mutates_state": true,
+      "requires_confirmation": false,
+      "resource_scope": "file",
+      "permission": "AUTO",
+      "read_only": false,
+      "classification_source": "authoritative_manifest"
+    },
+    {
+      "id": "verify_file",
+      "category": "FILE",
+      "operation_kind": "FILE_READ",
+      "risk": "LOW",
+      "mutates_state": false,
+      "requires_confirmation": false,
+      "resource_scope": "file",
+      "permission": "AUTO",
+      "read_only": true,
+      "classification_source": "authoritative_manifest"
+    },
+    {
       "id": "deliver_artifact",
       "category": "FILE",
       "operation_kind": "FILE_CREATE",
@@ -171,6 +195,18 @@
       "mutates_state": true,
       "requires_confirmation": false,
       "resource_scope": "file",
+      "permission": "AUTO",
+      "read_only": false,
+      "classification_source": "authoritative_manifest"
+    },
+    {
+      "id": "present_result",
+      "category": "APPLICATION",
+      "operation_kind": "APPLICATION_LAUNCH",
+      "risk": "LOW",
+      "mutates_state": true,
+      "requires_confirmation": false,
+      "resource_scope": "application",
       "permission": "AUTO",
       "read_only": false,
       "classification_source": "authoritative_manifest"
@@ -941,6 +977,18 @@
       "resource_scope": "interaction",
       "permission": "AUTO",
       "read_only": false,
+      "classification_source": "authoritative_manifest"
+    },
+    {
+      "id": "take_screenshot",
+      "category": "SYSTEM",
+      "operation_kind": "OBSERVE_READ_ONLY",
+      "risk": "LOW",
+      "mutates_state": false,
+      "requires_confirmation": false,
+      "resource_scope": "desktop",
+      "permission": "AUTO",
+      "read_only": true,
       "classification_source": "authoritative_manifest"
     },
     {

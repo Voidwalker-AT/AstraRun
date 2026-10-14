@@ -1,0 +1,29 @@
+{
+  "milestone": "F0_25D",
+  "title": "Final Desktop World State Post-Execution",
+  "timestamp": "2026-10-11T17:14:53.200000+05:30",
+  "state_hash": "afa6f0661b047aee04e32aed0f1e42a70c91011cc5627c57270c9f49ca1dd3b8",
+  "desktop": {
+    "visible_windows": 14,
+    "foreground_window": {
+      "hwnd": 11011478,
+      "pid": 1288,
+      "application": "Antigravity.exe",
+      "title": "AstraRun Generic Computer..."
+    },
+    "dialog_count": 2
+  },
+  "resource_residue": {
+    "active_task_resources": 0,
+    "orphaned_processes": 0,
+    "orphaned_windows": 0,
+    "temporary_files": 0,
+    "process_cleaned_up": true,
+    "verdict": "CLEAN"
+  },
+  "filesystem_residue": {
+    "destination": "E:\\AstraDogfood\\word_frequency",
+    "directory_exists": false,
+    "files_created": []
+  }
+}

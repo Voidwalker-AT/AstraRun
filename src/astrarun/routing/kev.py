@@ -88,9 +88,8 @@ class KevRouter(BaseRouter):
         self.confidence_threshold = float(self.config.get("confidence_threshold", 0.75))
         self.timeout_ms = float(self.config.get("timeout_ms", 5000.0))
         
-        # Ensure canonical HF cache location (release vs development)
         from astrarun.core.paths import get_cache_dir, is_release_mode
-        hf_cache_dir = str(get_cache_dir() / "huggingface") if is_release_mode() else "E:/AI_Models/HF_CACHE"
+        hf_cache_dir = os.environ.get("HF_HOME") or (str(get_cache_dir() / "huggingface") if is_release_mode() else os.environ.get("ASTRARUN_HF_CACHE", str(get_cache_dir() / "huggingface")))
         os.environ.setdefault("HF_HOME", hf_cache_dir)
         os.environ.setdefault("HF_HUB_DISABLE_SYMLINKS_WARNING", "1")
         

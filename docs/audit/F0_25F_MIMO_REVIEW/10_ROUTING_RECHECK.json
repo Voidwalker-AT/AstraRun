@@ -1,0 +1,31 @@
+{
+  "auditor": "MiMo",
+  "method": "GoalPlanner.parse_goal classification-only via .venv python (no tool execution). Model servers timed out on health check (logged) — classification still returned via fallbacks.",
+  "known_failures_recheck": [
+    {"prompt": "work out the roots of this quadratic equation and save them", "expected": "execute_dynamic_tool/LOCAL_MODEL", "actual": "composite_dag_workflow/SEMANTIC_RETRIEVAL", "classification": "STILL_FAILING"},
+    {"prompt": "generate a summary table of user login events in auth_summary.txt", "expected": "execute_dynamic_tool/LOCAL_MODEL", "actual": "system_summary/SEMANTIC_RETRIEVAL", "classification": "STILL_FAILING"}
+  ],
+  "quadratic_neighbors_10": {
+    "correct_execute_dynamic_tool": 2,
+    "wrong_composite_dag": 6,
+    "needs_clarification": 2,
+    "examples_correct": ["compute both solutions of the quadratic formula for x^2 + 4x + 4 and persist them", "calculate the zeros of the parabola y = x^2 - 9 and save output"],
+    "family_classification": "STILL_FAILING / OVERFIT — only phrasings with explicit 'quadratic formula'/'zeros of the parabola' hit execute_dynamic_tool; 'roots of equation' phrasing (the original family) still routes to composite_dag_workflow"
+  },
+  "login_neighbors_10": {
+    "correct_execute_dynamic_tool": 0,
+    "distribution": {"system_summary": 4, "save_text_file": 5, "list_recent_files": 1, "find_file": 1},
+    "family_classification": "STILL_FAILING — zero neighbors reach execute_dynamic_tool/LOCAL_MODEL"
+  },
+  "full_70_prompt_holdout": {
+    "rerun_status": "NOT re-executed as the pytest file writes evidence JSON; classification of the 2 known members + 20 neighbors performed instead",
+    "last_recorded_evidence": "docs/audit/C1_8_POST_FREEZE_ROUTING_EVIDENCE.json sha a3f82816...: passed=68 failed=2 accuracy=97.14%",
+    "f0_25f_claim": "NONE — F0-25F report never claims routing fixed",
+    "stale_contradictions": "multiple C2-era docs claim 70/70 — contradicted by evidence file and this recheck"
+  },
+  "verdict": {
+    "quadratic_family": "STILL_FAILING",
+    "login_family": "STILL_FAILING",
+    "overall_debt": "68/70 preserved; not OVERFIT-to-the-two-examples-only (some neighbors generalize) but insufficient generalization; not REGRESSED relative to prior evidence"
+  }
+}

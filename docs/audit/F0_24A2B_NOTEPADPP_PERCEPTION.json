@@ -1,0 +1,202 @@
+{
+  "gate_id": "GATE_A",
+  "description": "Perception Inventory & Structural Discovery",
+  "task_id": "lab_gate_a_1791690074",
+  "target_hwnd": 25299628,
+  "target_pid": 2916,
+  "pre_frame_id": "frame_000001",
+  "post_frame_id": "frame_000002",
+  "total_child_elements_observed": 15,
+  "child_elements": [
+    {
+      "hwnd": 32508734,
+      "class_name": "Scintilla",
+      "title": "Notepad++",
+      "bounds": [
+        394,
+        468,
+        1002,
+        477
+      ],
+      "is_enabled": true
+    },
+    {
+      "hwnd": 35785590,
+      "class_name": "SysTabControl32",
+      "title": "Tab",
+      "bounds": [
+        392,
+        436,
+        1006,
+        511
+      ],
+      "is_enabled": true
+    },
+    {
+      "hwnd": 7145542,
+      "class_name": "msctls_statusbar32",
+      "title": "",
+      "bounds": [
+        392,
+        947,
+        1006,
+        29
+      ],
+      "is_enabled": true
+    },
+    {
+      "hwnd": 10816674,
+      "class_name": "ReBarWindow32",
+      "title": "",
+      "bounds": [
+        392,
+        407,
+        1006,
+        29
+      ],
+      "is_enabled": true
+    },
+    {
+      "hwnd": 10225944,
+      "class_name": "ToolbarWindow32",
+      "title": "",
+      "bounds": [
+        394,
+        407,
+        1004,
+        29
+      ],
+      "is_enabled": true
+    },
+    {
+      "hwnd": 24906860,
+      "class_name": "ReBarWindow32",
+      "title": "",
+      "bounds": [
+        392,
+        947,
+        1006,
+        0
+      ],
+      "is_enabled": true
+    },
+    {
+      "hwnd": 9177660,
+      "class_name": "#32770",
+      "title": "",
+      "bounds": [
+        392,
+        947,
+        1190,
+        40
+      ],
+      "is_enabled": true
+    },
+    {
+      "hwnd": 8981656,
+      "class_name": "Button",
+      "title": "\u2715",
+      "bounds": [
+        396,
+        953,
+        28,
+        28
+      ],
+      "is_enabled": true
+    },
+    {
+      "hwnd": 5638246,
+      "class_name": "Static",
+      "title": "Find:",
+      "bounds": [
+        424,
+        959,
+        81,
+        24
+      ],
+      "is_enabled": true
+    },
+    {
+      "hwnd": 14551428,
+      "class_name": "Edit",
+      "title": "",
+      "bounds": [
+        506,
+        955,
+        306,
+        24
+      ],
+      "is_enabled": true
+    },
+    {
+      "hwnd": 11275312,
+      "class_name": "Button",
+      "title": "<",
+      "bounds": [
+        817,
+        953,
+        28,
+        28
+      ],
+      "is_enabled": true
+    },
+    {
+      "hwnd": 11339638,
+      "class_name": "Button",
+      "title": ">",
+      "bounds": [
+        852,
+        953,
+        28,
+        28
+      ],
+      "is_enabled": true
+    },
+    {
+      "hwnd": 11012422,
+      "class_name": "Button",
+      "title": "Match &case",
+      "bounds": [
+        900,
+        957,
+        85,
+        18
+      ],
+      "is_enabled": true
+    },
+    {
+      "hwnd": 14157030,
+      "class_name": "Button",
+      "title": "&Highlight all",
+      "bounds": [
+        1092,
+        957,
+        87,
+        18
+      ],
+      "is_enabled": true
+    },
+    {
+      "hwnd": 10554672,
+      "class_name": "Static",
+      "title": "",
+      "bounds": [
+        1302,
+        959,
+        315,
+        24
+      ],
+      "is_enabled": true
+    }
+  ],
+  "discovered_editable_surface": {
+    "hwnd": 32508734,
+    "control_type": "win32_edit",
+    "class_name": "Scintilla",
+    "discovery_mechanism": "WIN32_CHILD_ENUM",
+    "can_receive_text": true,
+    "focusable": true
+  },
+  "observation_generation": 1791690076840,
+  "verdict": "PASS"
+}

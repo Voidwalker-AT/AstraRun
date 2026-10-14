@@ -368,6 +368,7 @@ class TestVisualGrounder:
     """Verifies OmniParser v2.0 icon_detect executes on CPU at 0 MB GPU VRAM."""
 
     def test_grounder_model_loading_and_cpu_residency(self):
+        pytest.importorskip("ultralytics")
         grounder = VisualGrounder(enable_simulated=False)
         # OmniParser v2.0 icon_detect weights must exist in E:\AI_Models\Vision
         assert grounder.model_path.exists()
@@ -383,6 +384,7 @@ class TestVisualGrounder:
         assert all(el.confidence > 0.0 for el in elements)
 
     def test_grounder_target_query(self):
+        pytest.importorskip("ultralytics")
         grounder = VisualGrounder(enable_simulated=False)
         icon_fixture = FIXTURES_DIR / "VF02_unlabeled_icons.png"
         target = grounder.ground_target(icon_fixture, "icon")
@@ -503,6 +505,7 @@ class TestCanonicalEndToEndFixtures:
 
     def test_fixture_c_unlabeled_icons_visual_grounder(self):
         """Fixture C: Custom app with unlabeled icons resolved via Tier 6 OmniParser v2.0 on CPU."""
+        pytest.importorskip("ultralytics")
         grounder = VisualGrounder(enable_simulated=False)
         fixture_path = FIXTURES_DIR / "VF02_unlabeled_icons.png"
         assert fixture_path.exists()

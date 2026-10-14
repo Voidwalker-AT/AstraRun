@@ -412,9 +412,8 @@ def test_close_owned_resource_returns_false_when_process_remains(tmp_path):
         astra_created=True,
         lifecycle_state=ResourceLifecycleState.ACTIVE,
     )
-    # No pid/hwnd: close should succeed vacuously.
     ok = ledger.close_owned_resource(res)
-    assert ok is True
+    assert ok is False
 
 
 def test_null_contract_cannot_complete():

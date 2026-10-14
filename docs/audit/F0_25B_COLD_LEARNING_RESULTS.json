@@ -1,0 +1,19 @@
+{
+  "phase": "F0-25B",
+  "title": "Cold Autonomous Learning Results",
+  "task_id": "f025b_cold_1791711770219",
+  "model_id": "qwen2.5-coder-1.5b-instruct-q4_k_m",
+  "target_application": "Notepad++",
+  "cycles_executed": 6,
+  "verified_affordances_learned": [
+    "EDIT_TEXT",
+    "SELECT_ALL",
+    "NEW_DOCUMENT_TAB",
+    "SEARCH_FIND_SURFACE"
+  ],
+  "failed_experiments_count": 1,
+  "total_experiments_count": 5,
+  "task_resource_cleaned": true,
+  "reconcile_lifecycle_ok": true,
+  "status": "PASS"
+}

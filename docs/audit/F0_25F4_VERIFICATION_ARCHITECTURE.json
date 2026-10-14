@@ -1,0 +1,53 @@
+{
+  "phase": "F0-25F.4",
+  "component": "VerificationArchitecture",
+  "timestamp": 1791834350.0,
+  "architecture": {
+    "philosophy": "Empirical evidence over model declarations. Return codes or model claims alone can never satisfy side-effecting or semantic predicates.",
+    "tiers": [
+      {
+        "tier": "StepVerifier",
+        "scope": "PlanStep",
+        "description": "Evaluates workstation state immediately following individual capability execution.",
+        "strategies": {
+          "RETURN_CODE_ONLY": "Fail-closed rejected as dispatch-only for any task requiring persistent state, files, or UI.",
+          "FILE_EXISTS": "Confirms physical presence on filesystem using Path.exists().",
+          "FILE_NON_EMPTY": "Confirms physical presence and non-zero byte size on disk.",
+          "FILE_CONTAINS": "Reads disk file content directly and verifies exact or substring match.",
+          "WINDOW_READY": "Queries Win32 user32.IsWindow and IsWindowVisible for target HWND, or WindowDiscovery by title.",
+          "WINDOW_CLOSED": "Confirms target HWND no longer exists in Win32 window table.",
+          "NETWORK_SSID": "Queries WLAN API to confirm active SSID connection match."
+        }
+      },
+      {
+        "tier": "GoalVerifier",
+        "scope": "GoalContract",
+        "description": "Evaluates end-to-end goal contract acceptance predicates against physical workstation state.",
+        "predicates": [
+          "FILE_EXISTS",
+          "FILE_NON_EMPTY",
+          "FILE_CONTENT_CONTAINS",
+          "FILE_CONTENT_EQUALS",
+          "IMAGE_DECODES",
+          "PROCESS_RUNNING",
+          "PORT_LISTENING",
+          "APPLICATION_RUNNING",
+          "NETWORK_CONNECTED",
+          "DATA_COMPUTED"
+        ],
+        "provenance_binding": "Injects active run_id and task_id directly into predicate evidence to ensure trace integrity."
+      },
+      {
+        "tier": "AuthoritativeCompletionGate",
+        "scope": "Task Terminal State",
+        "description": "Final gatekeeper verifying that all mandatory predicates have affirmative satisfaction, valid provenance, no stale markers, no FAILED_CLEANUP, and required physical presentation."
+      }
+    ]
+  },
+  "invariants": [
+    "Planner derives VerifierStrategy from GoalContract acceptance predicates, never defaulting to RETURN_CODE_ONLY for artifact-producing tasks.",
+    "File tasks require affirmative disk reads with content/size checks.",
+    "Presentation tasks require physical window handle identity and visibility (RESULT_PRESENTED), never mere request.",
+    "Cleanup tasks require valid resource identity and absence of FAILED_CLEANUP."
+  ]
+}

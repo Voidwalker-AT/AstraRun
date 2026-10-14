@@ -109,12 +109,15 @@ def render_visualization(
         }
 
         # 4. Spawn out-of-process renderer worker under Job Object
-        py_exe = sys.executable
+        from astrarun.core.paths import resolve_python_executable
+        py_exe = resolve_python_executable()
+        worker_file = Path(__file__).resolve().parent / "render_worker.py"
+        src_root = Path(__file__).resolve().parent.parent.parent
+        venv_site = Path.cwd() / ".venv" / "Lib" / "site-packages"
+        clean_env["PYTHONPATH"] = f"{src_root};{venv_site}" if venv_site.exists() else str(src_root)
         cmd = [
             py_exe,
-            "-I",
-            "-m",
-            "astrarun.visualization.render_worker",
+            str(worker_file),
             "--spec-file",
             str(temp_spec_file),
             "--output-file",

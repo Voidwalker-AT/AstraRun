@@ -1,0 +1,274 @@
+{
+  "phase": "F0-25B",
+  "entity": {
+    "entity_id": "ent_fb37eccf5045",
+    "entity_type": "APPLICATION",
+    "name": "Notepad++",
+    "parent_entity_id": null,
+    "class_name": null,
+    "binary_hash": null,
+    "version": null,
+    "env_hash": "6d9fd205f5156c1f",
+    "metadata": {
+      "source": "governed_execution",
+      "binary": "C:\\Program Files\\Notepad++\\notepad++.exe"
+    },
+    "created_at": 1791711773.7066927,
+    "updated_at": 1791711773.7066963
+  },
+  "affordances_count": 4,
+  "affordances": [
+    {
+      "affordance_id": "aff_17bf34d1c234",
+      "entity_id": "ent_fb37eccf5045",
+      "action_name": "EDIT_TEXT",
+      "capability_id": "type_text",
+      "parameter_schema": {
+        "args": [
+          "text"
+        ]
+      },
+      "risk_level": "BENIGN_MUTATION",
+      "is_reversible": true,
+      "confidence": 0.9025,
+      "status": "VERIFIED",
+      "verification_count": 2,
+      "contradiction_count": 0,
+      "last_verified_at": 1791711782.342359,
+      "created_at": 1791711782.3368833
+    },
+    {
+      "affordance_id": "aff_26c426f097f6",
+      "entity_id": "ent_fb37eccf5045",
+      "action_name": "SELECT_ALL",
+      "capability_id": "press_keyboard_shortcut",
+      "parameter_schema": {
+        "args": [
+          "shortcut"
+        ]
+      },
+      "risk_level": "BENIGN_MUTATION",
+      "is_reversible": true,
+      "confidence": 0.9025,
+      "status": "VERIFIED",
+      "verification_count": 2,
+      "contradiction_count": 0,
+      "last_verified_at": 1791711790.2132463,
+      "created_at": 1791711790.2086346
+    },
+    {
+      "affordance_id": "aff_0e1a97b5235c",
+      "entity_id": "ent_fb37eccf5045",
+      "action_name": "NEW_DOCUMENT_TAB",
+      "capability_id": "press_keyboard_shortcut",
+      "parameter_schema": {
+        "args": [
+          "shortcut"
+        ]
+      },
+      "risk_level": "BENIGN_MUTATION",
+      "is_reversible": true,
+      "confidence": 0.9025,
+      "status": "VERIFIED",
+      "verification_count": 2,
+      "contradiction_count": 0,
+      "last_verified_at": 1791711799.2264378,
+      "created_at": 1791711799.2213042
+    },
+    {
+      "affordance_id": "aff_ece88b9a25ca",
+      "entity_id": "ent_fb37eccf5045",
+      "action_name": "SEARCH_FIND_SURFACE",
+      "capability_id": "press_keyboard_shortcut",
+      "parameter_schema": {
+        "args": [
+          "shortcut"
+        ]
+      },
+      "risk_level": "BENIGN_MUTATION",
+      "is_reversible": true,
+      "confidence": 0.9025,
+      "status": "VERIFIED",
+      "verification_count": 2,
+      "contradiction_count": 0,
+      "last_verified_at": 1791711807.7232764,
+      "created_at": 1791711807.7142942
+    }
+  ],
+  "transitions_count": 4,
+  "transitions": [
+    {
+      "transition_id": "tr_f30b36753329",
+      "affordance_id": "aff_17bf34d1c234",
+      "pre_state_hash": "16ecefda1227e1c6ffd29fa37b50a7922feedf1c29927f828d4aa8fae95412d6",
+      "action_payload": {
+        "text": "def astra_cold_probe():\n    return 100\n"
+      },
+      "post_state_hash": "d7ec34e70f795e2dc454c7f2a5845957f6bf7bd0967a262ac66e050fb066bc22",
+      "expected_delta": {
+        "length_increased": true,
+        "dirty_indicated": true
+      },
+      "observed_delta": {
+        "length_changed": true
+      },
+      "transition_verified": true,
+      "latency_ms": 6635.0,
+      "trace_id": "inf_60522057ba",
+      "pre_frame_id": "pre_1",
+      "post_frame_id": "post_1",
+      "timestamp": 1791711782.3423564
+    },
+    {
+      "transition_id": "tr_9e9003e225f8",
+      "affordance_id": "aff_26c426f097f6",
+      "pre_state_hash": "d7ec34e70f795e2dc454c7f2a5845957f6bf7bd0967a262ac66e050fb066bc22",
+      "action_payload": {
+        "shortcut": "Ctrl+A"
+      },
+      "post_state_hash": "d7ec34e70f795e2dc454c7f2a5845957f6bf7bd0967a262ac66e050fb066bc22",
+      "expected_delta": {
+        "selection_active": true
+      },
+      "observed_delta": {
+        "length_changed": false
+      },
+      "transition_verified": true,
+      "latency_ms": 6074.0,
+      "trace_id": "inf_bbf8640f69",
+      "pre_frame_id": "pre_2",
+      "post_frame_id": "post_2",
+      "timestamp": 1791711790.2132442
+    },
+    {
+      "transition_id": "tr_e1d1eddf0e88",
+      "affordance_id": "aff_0e1a97b5235c",
+      "pre_state_hash": "d7ec34e70f795e2dc454c7f2a5845957f6bf7bd0967a262ac66e050fb066bc22",
+      "action_payload": {
+        "shortcut": "Ctrl+N"
+      },
+      "post_state_hash": "4c05d372f257b9dfd7002aeb6d70ee1b03a88d477afb361ab2dae24120c34486",
+      "expected_delta": {
+        "tabs_count_increased": true
+      },
+      "observed_delta": {
+        "length_changed": true
+      },
+      "transition_verified": true,
+      "latency_ms": 7197.0,
+      "trace_id": "inf_d0cee4c2e4",
+      "pre_frame_id": "pre_3",
+      "post_frame_id": "post_3",
+      "timestamp": 1791711799.2264361
+    },
+    {
+      "transition_id": "tr_b685f61bdb26",
+      "affordance_id": "aff_ece88b9a25ca",
+      "pre_state_hash": "4c05d372f257b9dfd7002aeb6d70ee1b03a88d477afb361ab2dae24120c34486",
+      "action_payload": {
+        "shortcut": "Ctrl+F"
+      },
+      "post_state_hash": "01910469bac8569b3d6c0e8ccfe10e959f6cc4f27bd86795ffed21e0b5856de9",
+      "expected_delta": {
+        "find_dialog_opened": true
+      },
+      "observed_delta": {
+        "length_changed": true
+      },
+      "transition_verified": true,
+      "latency_ms": 5928.0,
+      "trace_id": "inf_75f76fe1c4",
+      "pre_frame_id": "pre_4",
+      "post_frame_id": "post_4",
+      "timestamp": 1791711807.723274
+    }
+  ],
+  "experiments_count": 5,
+  "experiments": [
+    {
+      "experiment_id": "exp_f16b0a9ffb1e",
+      "target_entity_id": "ent_fb37eccf5045",
+      "hypothesis": "Typing alphanumeric text into the focused window will insert content and update buffer length",
+      "probe_action_name": "type_text",
+      "probe_payload": {
+        "text": "def astra_cold_probe():\n    return 100\n"
+      },
+      "expected_outcome": "{\"length_increased\": true, \"dirty_indicated\": true}",
+      "actual_outcome": "{\"verified\": true, \"post_title\": \"*new 1 - Notepad++\"}",
+      "status": "CONFIRMED",
+      "task_id": "f025b_cold_1791711770219",
+      "trace_id": "",
+      "prompt_hash": "438b51b08ac13b287c3dcfb8b915cdcdbc1706f77a72b5d461cdbe43e2ed8622",
+      "response_hash": "55d5118ebf4fa0d32153a78551a2389ff46aa1e9da5e07937c80c8782abe056f",
+      "timestamp": 1791711782.3482392
+    },
+    {
+      "experiment_id": "exp_e042d38fea2a",
+      "target_entity_id": "ent_fb37eccf5045",
+      "hypothesis": "Sending shortcut Ctrl+A will select buffer text without modal interruption",
+      "probe_action_name": "press_keyboard_shortcut",
+      "probe_payload": {
+        "shortcut": "Ctrl+A"
+      },
+      "expected_outcome": "{\"selection_active\": true}",
+      "actual_outcome": "{\"verified\": true, \"post_title\": \"*new 1 - Notepad++\"}",
+      "status": "CONFIRMED",
+      "task_id": "f025b_cold_1791711770219",
+      "trace_id": "",
+      "prompt_hash": "91b2e06aae66472d2c2cfbf670c0d8f26d9f0b4deb297cb30c735f4275c7f7c0",
+      "response_hash": "658ab33c4bb3cfc6621dcc1817c7a6b43b1c42b8081d61f046a61f269823e5a9",
+      "timestamp": 1791711790.218715
+    },
+    {
+      "experiment_id": "exp_d7b73f2f3ded",
+      "target_entity_id": "ent_fb37eccf5045",
+      "hypothesis": "Sending navigation shortcut Ctrl+N will instantiate a new document buffer tab",
+      "probe_action_name": "press_keyboard_shortcut",
+      "probe_payload": {
+        "shortcut": "Ctrl+N"
+      },
+      "expected_outcome": "{\"tabs_count_increased\": true}",
+      "actual_outcome": "{\"verified\": true, \"post_title\": \"new 2 - Notepad++\"}",
+      "status": "CONFIRMED",
+      "task_id": "f025b_cold_1791711770219",
+      "trace_id": "",
+      "prompt_hash": "d12a671496ff7b56978e3a4d803d40e67d0f6c7de04d6c05d62a7700bb011be0",
+      "response_hash": "3ccefc31d2e47bbfa776324b8da6aa03fe35041b9072fe0479731bf8e11fe218",
+      "timestamp": 1791711799.231015
+    },
+    {
+      "experiment_id": "exp_1faf9b7ce0b4",
+      "target_entity_id": "ent_fb37eccf5045",
+      "hypothesis": "Sending shortcut Ctrl+F will open the Find dialog surface",
+      "probe_action_name": "press_keyboard_shortcut",
+      "probe_payload": {
+        "shortcut": "Ctrl+F"
+      },
+      "expected_outcome": "{\"find_dialog_opened\": true}",
+      "actual_outcome": "{\"verified\": true, \"post_title\": \"new 2 - Notepad++\"}",
+      "status": "CONFIRMED",
+      "task_id": "f025b_cold_1791711770219",
+      "trace_id": "",
+      "prompt_hash": "4f7d7dc0def45e17f8d45b59149303fd965c290f2db5efbba557720e55ffbba5",
+      "response_hash": "7c855d16708077e9061b73830e32c53b0a081bd797fb2cb2c56d0763b791855d",
+      "timestamp": 1791711807.7302089
+    },
+    {
+      "experiment_id": "exp_aa8d82584089",
+      "target_entity_id": "ent_fb37eccf5045",
+      "hypothesis": "Clicking an invalid unmapped button target will result in no state transition",
+      "probe_action_name": "click_ui_element",
+      "probe_payload": {
+        "button_target": "invalid_unmapped_button"
+      },
+      "expected_outcome": "{\"state_transition\": true}",
+      "actual_outcome": "{\"verified\": false, \"post_title\": \"new 2 - Notepad++\"}",
+      "status": "REFUTED",
+      "task_id": "f025b_cold_1791711770219",
+      "trace_id": "",
+      "prompt_hash": "de2ba8a74cf03111d740e0f5cad3b8c5df74e94d5b72af0210c3cfbeb823bddb",
+      "response_hash": "45c49c92c3f919c1dfde516a6ece02887cbe541cc60927b1aaa882f2c33be542",
+      "timestamp": 1791711815.2033339
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "auditor": "MiMo",
+  "files_reviewed": [
+    "scripts/f0_25e_evaluator.py (783 lines)",
+    "scripts/verify_f0_25f_launcher_physical.py (189 lines)",
+    "scripts/verify_f0_25f_complete_physical.py (217 lines)",
+    "tests/unit/test_f0_25f_evaluator_mutation.py (154 lines)"
+  ],
+  "verdict_production": [
+    {"dimension": "ASTRA_LAUNCHER_UI", "predicate_code": "dark_pct>=0.50 on hardcoded rect (448,48,1088,124) AND launcher_frames from world titles", "evidence_derived": "weak", "defects": ["hardcoded rect", "darkness-only", "no occlusion check"]},
+    {"dimension": "PROGRESS_UI", "predicate_code": "PASS if hud>0 or launcher>1 else FAIL (F0-25E rewrite)", "evidence_derived": "yes", "defects": ["improved from PARTIAL-default"]},
+    {"dimension": "OUTPUT_PRESENTATION", "predicate_code": "presented = any(e in (RESULT_PRESENTED, RESULT_PRESENTATION_REQUESTED)) or presentation_windows>0  [L425-434]", "evidence_derived": "NO - requested treated as presented", "defects": ["CONTRADICTS report L75 claiming RESULT_PRESENTED required", "mutation test only covers zero-events case"]},
+    {"dimension": "GOAL_CORRECTNESS / HOST_COMPUTATION", "predicate_code": "file existence + non-empty", "evidence_derived": "NO", "defects": ["existence-as-success"]},
+    {"dimension": "RESOURCE_RESTORATION", "predicate_code": "pid delta + hardcoded fields", "evidence_derived": "partial", "defects": ["target_dir_clean_state: True literal L487", "task_owned_windows_remaining: 0 literal L581"]},
+    {"dimension": "Stage6 status", "predicate_code": "hardcoded status:PASS L194 after asserts; clean_termination:True L209 even after forced kill", "evidence_derived": "mixed", "defects": ["clean_termination hardcoded"]},
+    {"dimension": "Stage1 verdict", "predicate_code": "PASS if attestation.is_visible and dark_pixels>30000 [L166,L139]", "evidence_derived": "weak", "defects": ["absolute count threshold screen-dependent", "trusts product state file for HWND/PID", "IPC readiness not gating"]}
+  ],
+  "mutation_audit": {
+    "tests_exist": 6,
+    "actually_mutate": ["white screenshot vs claimed launcher", "empty astra_windows", "events without presentation", "unrequested terminal", "leaked PID", "matrix aggregation"],
+    "not_mutated": ["RESULT_PRESENTATION_REQUESTED-only presentation", "dark-oracle threshold/geometry/wrong-reason darkness", "hardcoded evidence literals", "file-existence dimensions", "substring provenance", "all three f0_25f verifier scripts"],
+    "conclusion": "Mutation suite validates fail-closed DIRECTIONS for 6 predicates; it does not establish that PASS is impossible under adversarial evidence. Existing tests are NOT sufficient proof of evaluator integrity."
+  }
+}

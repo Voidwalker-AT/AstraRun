@@ -1,0 +1,55 @@
+{
+  "phase": "F0-25F.1",
+  "commit": "bd287eba38e6743565fdf6da21cb629023573c6b",
+  "dirty_count": 230,
+  "source_hashes": {
+    "src/astrarun/ui/result_presentation.py": {
+      "sha256": "3da74b89c060895e657eddd5643cea8b0965b1fd7c5975afd5be19db7643449b",
+      "size": 16880
+    },
+    "src/astrarun/ui/attestation.py": {
+      "sha256": "4aa76ff2768e4ea7c5dc2512b68a6a5e0ab54421f2d0050d76d865a192098002",
+      "size": 8772
+    },
+    "src/astrarun/tasks/resource_ledger.py": {
+      "sha256": "1dd1652309997e8beca48c5c907bee3dc53d77dfc3d7fbafd8e553a56de05198",
+      "size": 58224
+    },
+    "src/astrarun/core/telemetry.py": {
+      "sha256": "f1453554670f3678a0e07024e6f6da26da4c5476797e3ff37486a636c50b5056",
+      "size": 9867
+    },
+    "src/astrarun/agent/planner.py": {
+      "sha256": "7facaaa8eea59a551a09bb749d4b7c3c6b6e98244797624db12b16beef4783e8",
+      "size": 84300
+    },
+    "src/astrarun/cognition/service.py": {
+      "sha256": "e606b278d954885862cc44c8a74df74285a05008f3fcda66ca17f69f3e09c2ea",
+      "size": 36602
+    },
+    "src/astrarun/capabilities/manifest.py": {
+      "sha256": "e9b229121bf986a1436d8e90a5ec86d7d99c82fc86b4acaf3422e0e63f4639f3",
+      "size": 24740
+    },
+    "src/astrarun/capabilities/registry.py": {
+      "sha256": "f82ceadd8ea6c18eb48125dd38edaafba5b98f62e7b86d9c61817f8125ea97b4",
+      "size": 64559
+    },
+    "scripts/f0_25e_evaluator.py": {
+      "sha256": "dbcd814a9438b5778778187f4f5b86eb9ee23978e27273598c20038568a245fd",
+      "size": 34185
+    },
+    "scripts/verify_f0_25f_launcher_physical.py": {
+      "sha256": "66d9e1f29b93886f2e0c3e7253f4a59b2f36eb50417ea98b20d5d1b744dae7eb",
+      "size": 6518
+    },
+    "scripts/verify_f0_25f_complete_physical.py": {
+      "sha256": "c6b67a8e6ba4d629dfb517d375e1fa2edd1e6bff271badc6519003ea750768bf",
+      "size": 9887
+    },
+    "packaging/AstraRun.spec": {
+      "sha256": "83dfe4cd030c415661928b5020f9a24a4f2063ba3a1ff28f7ed9204811c9deb1",
+      "size": 5344
+    }
+  }
+}

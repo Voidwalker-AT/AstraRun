@@ -1,0 +1,536 @@
+{
+  "phase": "F0-25F.4",
+  "stage": "STAGE 5 \u2014 ROUTING BLIND HOLDOUT EVALUATION",
+  "manifest_sha256": "eb8c72cea888292a7aee834c7fac90ffceb8a2538fae603162b1611b79d778e8",
+  "total_prompts": 320,
+  "total_correct": 273,
+  "overall_accuracy": 0.8531,
+  "macro_metrics": {
+    "precision": 0.8539,
+    "recall": 0.8531,
+    "f1": 0.8518
+  },
+  "dynamic_computation_metrics": {
+    "precision": 0.9867,
+    "recall": 0.925,
+    "f1": 0.9548,
+    "false_positives_over_routes": 1,
+    "false_negatives": 6
+  },
+  "collision_cases_metrics": {
+    "total_collision_cases": 85,
+    "correct": 78,
+    "accuracy": 0.9176
+  },
+  "per_class_metrics": {
+    "DYNAMIC_COMPUTATION": {
+      "true_positives": 74,
+      "false_positives": 1,
+      "false_negatives": 6,
+      "precision": 0.9867,
+      "recall": 0.925,
+      "f1": 0.9548,
+      "support": 80
+    },
+    "KNOWN_CAPABILITY": {
+      "true_positives": 68,
+      "false_positives": 18,
+      "false_negatives": 12,
+      "precision": 0.7907,
+      "recall": 0.85,
+      "f1": 0.8193,
+      "support": 80
+    },
+    "CONVERSATIONAL": {
+      "true_positives": 76,
+      "false_positives": 12,
+      "false_negatives": 4,
+      "precision": 0.8636,
+      "recall": 0.95,
+      "f1": 0.9048,
+      "support": 80
+    },
+    "CLARIFICATION_REQUIRED": {
+      "true_positives": 55,
+      "false_positives": 16,
+      "false_negatives": 25,
+      "precision": 0.7746,
+      "recall": 0.6875,
+      "f1": 0.7285,
+      "support": 80
+    }
+  },
+  "false_positive_count": 47,
+  "misclassifications": [
+    {
+      "id": "BLIND-DYN-027",
+      "prompt": "solve a system of nonlinear differential equations using Runge-Kutta 4th order into rk4_output.csv",
+      "expected_class": "DYNAMIC_COMPUTATION",
+      "predicted_class": "KNOWN_CAPABILITY",
+      "intent": "system_summary",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "correct": false,
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-DYN-068",
+      "prompt": "generate a 2D heightmap grid using Perlin noise algorithm and save to heightmap.csv",
+      "expected_class": "DYNAMIC_COMPUTATION",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "correct": false,
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-DYN-072",
+      "prompt": "generate a Delaunay triangulation network from 50 random 2D vertices into triangulation.json",
+      "expected_class": "DYNAMIC_COMPUTATION",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "correct": false,
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-DYN-074",
+      "prompt": "generate an adjacency matrix for a scale-free Barabasi-Albert network into network_matrix.csv",
+      "expected_class": "DYNAMIC_COMPUTATION",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "correct": false,
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-DYN-077",
+      "prompt": "generate a 2D Gaussian mixture distribution sample into gaussian_samples.csv",
+      "expected_class": "DYNAMIC_COMPUTATION",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "correct": false,
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-DYN-080",
+      "prompt": "generate a decision tree split coordinate dataset into tree_splits.json",
+      "expected_class": "DYNAMIC_COMPUTATION",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "correct": false,
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CAP-007",
+      "prompt": "take a screenshot of the entire desktop",
+      "expected_class": "KNOWN_CAPABILITY",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "correct": false,
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CAP-008",
+      "prompt": "capture a screenshot right now",
+      "expected_class": "KNOWN_CAPABILITY",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "correct": false,
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CAP-015",
+      "prompt": "get system information and uptime",
+      "expected_class": "KNOWN_CAPABILITY",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "correct": false,
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CAP-016",
+      "prompt": "show computer hostname and OS version",
+      "expected_class": "KNOWN_CAPABILITY",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "correct": false,
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CAP-018",
+      "prompt": "what processes are currently running?",
+      "expected_class": "KNOWN_CAPABILITY",
+      "predicted_class": "CONVERSATIONAL",
+      "intent": "conversational_dialogue",
+      "tier": "LOCAL_MODEL",
+      "correct": false,
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CAP-041",
+      "prompt": "is notepad currently running?",
+      "expected_class": "KNOWN_CAPABILITY",
+      "predicted_class": "CONVERSATIONAL",
+      "intent": "conversational_dialogue",
+      "tier": "LOCAL_MODEL",
+      "correct": false,
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CAP-042",
+      "prompt": "check if calculator is open",
+      "expected_class": "KNOWN_CAPABILITY",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "correct": false,
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CAP-043",
+      "prompt": "is visual studio code running?",
+      "expected_class": "KNOWN_CAPABILITY",
+      "predicted_class": "CONVERSATIONAL",
+      "intent": "conversational_dialogue",
+      "tier": "LOCAL_MODEL",
+      "correct": false,
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CAP-044",
+      "prompt": "do i have notepad installed?",
+      "expected_class": "KNOWN_CAPABILITY",
+      "predicted_class": "CONVERSATIONAL",
+      "intent": "conversational_dialogue",
+      "tier": "LOCAL_MODEL",
+      "correct": false,
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CAP-045",
+      "prompt": "check if vivaldi is installed",
+      "expected_class": "KNOWN_CAPABILITY",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "correct": false,
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CAP-046",
+      "prompt": "is edge browser installed?",
+      "expected_class": "KNOWN_CAPABILITY",
+      "predicted_class": "CONVERSATIONAL",
+      "intent": "conversational_dialogue",
+      "tier": "LOCAL_MODEL",
+      "correct": false,
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CAP-076",
+      "prompt": "show installed apps table in settings",
+      "expected_class": "KNOWN_CAPABILITY",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "correct": false,
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-CONV-028",
+      "prompt": "have a wonderful day!",
+      "expected_class": "CONVERSATIONAL",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "correct": false,
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CONV-033",
+      "prompt": "help me choose between AWS and Azure for a small startup",
+      "expected_class": "CONVERSATIONAL",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "correct": false,
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CONV-038",
+      "prompt": "help me choose a good database migration strategy for zero downtime",
+      "expected_class": "CONVERSATIONAL",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "correct": false,
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CONV-067",
+      "prompt": "can you calculate how many days are between Halloween and Christmas in your head?",
+      "expected_class": "CONVERSATIONAL",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "correct": false,
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-CLAR-005",
+      "prompt": "run it now",
+      "expected_class": "CLARIFICATION_REQUIRED",
+      "predicted_class": "KNOWN_CAPABILITY",
+      "intent": "run_project_command",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "correct": false,
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CLAR-015",
+      "prompt": "generate the report",
+      "expected_class": "CLARIFICATION_REQUIRED",
+      "predicted_class": "KNOWN_CAPABILITY",
+      "intent": "generate_battery_report",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "correct": false,
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CLAR-016",
+      "prompt": "process the data",
+      "expected_class": "CLARIFICATION_REQUIRED",
+      "predicted_class": "KNOWN_CAPABILITY",
+      "intent": "find_process",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "correct": false,
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CLAR-018",
+      "prompt": "inspect the window",
+      "expected_class": "CLARIFICATION_REQUIRED",
+      "predicted_class": "KNOWN_CAPABILITY",
+      "intent": "inspect_window_ui",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "correct": false,
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CLAR-020",
+      "prompt": "find the document",
+      "expected_class": "CLARIFICATION_REQUIRED",
+      "predicted_class": "KNOWN_CAPABILITY",
+      "intent": "find_latest_file",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "correct": false,
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CLAR-021",
+      "prompt": "run the process",
+      "expected_class": "CLARIFICATION_REQUIRED",
+      "predicted_class": "KNOWN_CAPABILITY",
+      "intent": "run_project_command",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "correct": false,
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CLAR-023",
+      "prompt": "update the system",
+      "expected_class": "CLARIFICATION_REQUIRED",
+      "predicted_class": "KNOWN_CAPABILITY",
+      "intent": "system_summary",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "correct": false,
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CLAR-025",
+      "prompt": "connect to it",
+      "expected_class": "CLARIFICATION_REQUIRED",
+      "predicted_class": "KNOWN_CAPABILITY",
+      "intent": "wifi_connect",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "correct": false,
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CLAR-026",
+      "prompt": "restart the application",
+      "expected_class": "CLARIFICATION_REQUIRED",
+      "predicted_class": "KNOWN_CAPABILITY",
+      "intent": "is_application_running",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "correct": false,
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CLAR-030",
+      "prompt": "organize the files",
+      "expected_class": "CLARIFICATION_REQUIRED",
+      "predicted_class": "KNOWN_CAPABILITY",
+      "intent": "arrange_desktop",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "correct": false,
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CLAR-040",
+      "prompt": "use that previous value from earlier",
+      "expected_class": "CLARIFICATION_REQUIRED",
+      "predicted_class": "KNOWN_CAPABILITY",
+      "intent": "set_ui_element_value",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "correct": false,
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CLAR-042",
+      "prompt": "what happened to that task?",
+      "expected_class": "CLARIFICATION_REQUIRED",
+      "predicted_class": "CONVERSATIONAL",
+      "intent": "conversational_dialogue",
+      "tier": "LOCAL_MODEL",
+      "correct": false,
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CLAR-043",
+      "prompt": "did it finish yet?",
+      "expected_class": "CLARIFICATION_REQUIRED",
+      "predicted_class": "CONVERSATIONAL",
+      "intent": "conversational_dialogue",
+      "tier": "LOCAL_MODEL",
+      "correct": false,
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CLAR-044",
+      "prompt": "try running it again with different parameters",
+      "expected_class": "CLARIFICATION_REQUIRED",
+      "predicted_class": "KNOWN_CAPABILITY",
+      "intent": "is_application_running",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "correct": false,
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CLAR-050",
+      "prompt": "can you check on it?",
+      "expected_class": "CLARIFICATION_REQUIRED",
+      "predicted_class": "CONVERSATIONAL",
+      "intent": "conversational_dialogue",
+      "tier": "LOCAL_MODEL",
+      "correct": false,
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CLAR-051",
+      "prompt": "what was the name of that thing again?",
+      "expected_class": "CLARIFICATION_REQUIRED",
+      "predicted_class": "CONVERSATIONAL",
+      "intent": "conversational_dialogue",
+      "tier": "LOCAL_MODEL",
+      "correct": false,
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CLAR-052",
+      "prompt": "is it supposed to look like that?",
+      "expected_class": "CLARIFICATION_REQUIRED",
+      "predicted_class": "CONVERSATIONAL",
+      "intent": "conversational_dialogue",
+      "tier": "LOCAL_MODEL",
+      "correct": false,
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CLAR-053",
+      "prompt": "why did that happen just now?",
+      "expected_class": "CLARIFICATION_REQUIRED",
+      "predicted_class": "CONVERSATIONAL",
+      "intent": "conversational_dialogue",
+      "tier": "LOCAL_MODEL",
+      "correct": false,
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CLAR-054",
+      "prompt": "could you fix that error for me?",
+      "expected_class": "CLARIFICATION_REQUIRED",
+      "predicted_class": "CONVERSATIONAL",
+      "intent": "conversational_dialogue",
+      "tier": "LOCAL_MODEL",
+      "correct": false,
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CLAR-055",
+      "prompt": "put it back the way it was before",
+      "expected_class": "CLARIFICATION_REQUIRED",
+      "predicted_class": "KNOWN_CAPABILITY",
+      "intent": "save_text_file",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "correct": false,
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-CLAR-065",
+      "prompt": "report",
+      "expected_class": "CLARIFICATION_REQUIRED",
+      "predicted_class": "KNOWN_CAPABILITY",
+      "intent": "generate_battery_report",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "correct": false,
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-CLAR-068",
+      "prompt": "python",
+      "expected_class": "CLARIFICATION_REQUIRED",
+      "predicted_class": "DYNAMIC_COMPUTATION",
+      "intent": "execute_dynamic_tool",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "correct": false,
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-CLAR-069",
+      "prompt": "wifi",
+      "expected_class": "CLARIFICATION_REQUIRED",
+      "predicted_class": "KNOWN_CAPABILITY",
+      "intent": "wifi_scan",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "correct": false,
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-CLAR-070",
+      "prompt": "battery",
+      "expected_class": "CLARIFICATION_REQUIRED",
+      "predicted_class": "KNOWN_CAPABILITY",
+      "intent": "battery_status",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "correct": false,
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-CLAR-080",
+      "prompt": "generate table",
+      "expected_class": "CLARIFICATION_REQUIRED",
+      "predicted_class": "KNOWN_CAPABILITY",
+      "intent": "generate_battery_report",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "correct": false,
+      "is_collision_case": true
+    }
+  ]
+}

@@ -107,6 +107,10 @@ class AgentExecutionEngine:
         self.lock_manager = lock_manager or global_lock_manager
         self.planner = GoalPlanner(self.registry, model_service=model_service)
         self.listener = listener or AgentExecutionListener()
+        from astrarun.hermes.exploration import HermesExplorationEngine
+        self.exploration_engine = HermesExplorationEngine(model_service=self.model_service)
+        from astrarun.recovery.engine import IntelligentFallbackEngine
+        self.fallback_engine = IntelligentFallbackEngine(capability_registry=self.registry)
 
     def determine_resource_lock(self, step: PlanStep) -> Optional[str]:
         """Determine required resource lock for a step to prevent concurrency hazards."""
@@ -125,8 +129,33 @@ class AgentExecutionEngine:
 
     def execute_goal(self, prompt: str) -> AgentTask:
         """Entrypoint: parse goal from prompt, construct plan, validate, and execute closed loop."""
+        from astrarun.core.telemetry import CausalTelemetry, CausalEventType, compute_hash
+        telem = CausalTelemetry.get_instance()
+
         goal = self.planner.parse_goal(prompt)
+        if goal.contract:
+            telem.register_contract(goal.contract)
+
+        telem.emit(
+            event_type=CausalEventType.GOAL_INTERPRETED.value,
+            component="GoalPlanner",
+            data={
+                "goal_type": getattr(goal, "goal_type", "CUSTOM"),
+                "target": getattr(goal, "target", ""),
+                "description": getattr(goal, "description", ""),
+            },
+            input_hash=compute_hash(prompt),
+            output_hash=compute_hash(getattr(goal, "raw_prompt", str(goal))),
+        )
+
         plan = self.planner.create_plan(goal)
+        step_caps = [s.capability_id for s in plan.steps] if (plan and plan.steps) else []
+        telem.emit(
+            event_type=CausalEventType.PLAN_CREATED.value,
+            component="GoalPlanner",
+            data={"step_count": len(step_caps), "capabilities": step_caps},
+            output_hash=compute_hash(step_caps),
+        )
 
         task = AgentTask(
             goal=goal,
@@ -139,10 +168,24 @@ class AgentExecutionEngine:
 
     def run_task(self, task: AgentTask) -> AgentTask:
         """Run execution graph until all steps complete, fail, or task is cancelled."""
+        from astrarun.core.telemetry import CausalTelemetry
+        telem = CausalTelemetry.get_instance()
+        telem.set_task_context(task.task_id)
+
         task.status = AgentTaskStatus.RUNNING
         task.started_at = time.time()
         if not task.contract and getattr(task.goal, "contract", None):
             task.contract = task.goal.contract
+        if not task.contract and task.goal:
+            raw_p = getattr(task.goal, "raw_prompt", "") or getattr(task.goal, "intent", "")
+            if raw_p:
+                try:
+                    task.contract = self.planner.extract_goal_contract(raw_p)
+                    task.goal.contract = task.contract
+                except Exception:
+                    pass
+        if task.contract:
+            telem.register_contract(task.contract, task_id=task.task_id)
         self.listener.on_task_started(task)
 
         # 0. Pre-Task Ambient Observation Snapshot (Hierarchical Perception)
@@ -165,6 +208,89 @@ class AgentExecutionEngine:
 
         graph = ExecutionGraph(task.plan)
         task.progress_pct = graph.compute_progress_pct()
+
+        # Epistemic Uncertainty Quantification & Autonomous Exploration (Hermes)
+        target_app = None
+        for step in task.plan.steps:
+            cand = step.arguments.get("app_name") or step.arguments.get("app")
+            if not cand and isinstance(step.arguments.get("target"), str):
+                cand = step.arguments.get("target")
+            if isinstance(cand, str) and cand.strip():
+                target_app = cand.strip()
+                break
+        if not target_app and task.goal and hasattr(task.goal, "raw_prompt"):
+            import re
+            m = re.search(r"\b(?:open|launch)\s+([a-zA-Z0-9_\-\+]+)\b", task.goal.raw_prompt, re.IGNORECASE)
+            if m:
+                cand = m.group(1).strip()
+                if cand.lower() not in ('a', 'the', 'an', 'file', 'document', 'url', 'wifi', 'it', 'windows', 'program', 'script', 'code', 'python'):
+                    target_app = cand
+
+        if target_app:
+            assessment = self.exploration_engine.assess_epistemic_state(target_app)
+            task.context["hermes_epistemic_assessment"] = {
+                "target_entity": assessment.target_entity_name,
+                "decision_mode": assessment.decision_mode.value,
+                "confidence_score": assessment.confidence_score,
+                "confidence_band": assessment.confidence_band.value,
+                "known_affordances": assessment.known_affordances,
+                "uncertain_actions": assessment.uncertain_actions,
+                "rationale": assessment.rationale,
+            }
+            logger.info(
+                "Task %s Hermes Epistemic Assessment for '%s': mode=%s, confidence=%.2f (%s)",
+                task.task_id,
+                target_app,
+                assessment.decision_mode.value,
+                assessment.confidence_score,
+                assessment.confidence_band.value,
+            )
+
+            # Record DecisionContextSnapshot at task inception
+            try:
+                from astrarun.computer_use.observation.frame import DecisionContextSnapshot
+                dec_snapshot = DecisionContextSnapshot(
+                    decision_id=f"dec_init_{int(time.time()*1000)}",
+                    frame_id=task.context.get("initial_world_state_hash", "frame_0"),
+                    goal=getattr(task.goal, "raw_prompt", str(task.goal)),
+                    remaining_postconditions=[p.description for p in getattr(task.contract, "acceptance_predicates", [])] if getattr(task, "contract", None) else [],
+                    current_plan=[{"id": s.step_id, "cap": s.capability_id} for s in task.plan.steps],
+                    completed_steps=[],
+                    failed_attempts=[],
+                    bounded_action_history=[],
+                    target_identity=target_app,
+                    relevant_structural_ui=[],
+                    relevant_visual_observations=[],
+                    dialog_state={},
+                    resource_ownership={},
+                    user_takeover_state=False,
+                    available_generic_capabilities=[c.id for c in self.registry.list_all()] if hasattr(self.registry, "list_all") else [],
+                    hermes_experience={"affordances": assessment.known_affordances},
+                    epistemic_uncertainty={"confidence": assessment.confidence_score, "band": assessment.confidence_band.value},
+                    decision_mode=assessment.decision_mode.value,
+                )
+                task.context["initial_decision_snapshot"] = dec_snapshot.to_dict()
+            except Exception as dec_ex:
+                logger.debug("DecisionContextSnapshot capture exception: %s", dec_ex)
+
+            # If UNCERTAIN or UNKNOWN, formulate and execute bounded diagnostic probe
+            if assessment.decision_mode.value == "EXPLORE":
+                logger.info(
+                    "Entering EXPLORE mode for unfamiliar entity '%s'. Formulating diagnostic experiment...",
+                    target_app,
+                )
+                experiment = self.exploration_engine.formulate_experiment(
+                    assessment=assessment,
+                    task_context=task.context,
+                    goal_prompt=getattr(task.goal, "raw_prompt", str(task.goal)),
+                    task_id=task.task_id,
+                )
+                probe_res = self.exploration_engine.execute_experiment(
+                    experiment=experiment,
+                    execution_broker=self.execution_broker,
+                    task_id=task.task_id,
+                )
+                task.context["hermes_exploration_outcome"] = probe_res
 
         logger.info("Starting execution of task %s (%d steps)", task.task_id, len(task.plan.steps))
 
@@ -229,7 +355,7 @@ class AgentExecutionEngine:
                             final_state = DesktopObserver.get_instance().observe(task_id=task.task_id)
                             needs_cleanup = True
                             try:
-                                needs_cleanup = bool(final_state.has_astra_debris())
+                                needs_cleanup = bool(final_state.has_astra_debris(task_id=task.task_id))
                             except Exception:
                                 needs_cleanup = True
                             if needs_cleanup:
@@ -248,7 +374,7 @@ class AgentExecutionEngine:
                             )
                             time.sleep(0.3)
                             post_clean = DesktopObserver.get_instance().observe(task_id=task.task_id)
-                            debris_remains = bool(post_clean.has_astra_debris())
+                            debris_remains = bool(post_clean.has_astra_debris(task_id=task.task_id))
                             report_ok = bool(report.get("clean", False)) and not debris_remains
                             task.context["cleanup_report"] = report
                             if not report_ok:
@@ -323,6 +449,15 @@ class AgentExecutionEngine:
             # Always ensure all resource locks are cleanly released
             self.lock_manager.release_all_for_task(task.task_id)
 
+            # Finalize Computer Use trace
+            try:
+                from astrarun.computer_use.observation.frame import ComputerUseTraceRecorder
+                final_rec = ComputerUseTraceRecorder.get_recorder(task.task_id)
+                final_status = getattr(task.status, "value", str(task.status))
+                final_rec.finalize_trace(verdict=final_status, notes=task.error or "")
+            except Exception as final_rec_err:
+                logger.debug("Finalize trace failed: %s", final_rec_err)
+
         return task
 
 
@@ -359,6 +494,41 @@ class AgentExecutionEngine:
                     pre_world_state = DesktopObserver.get_instance().observe(task_id=task.task_id)
                 except Exception as ex:
                     logger.debug("Pre-observation skipped: %s", ex)
+
+                # Frame-by-frame Computer Use Trace Recorder (F0-24A.2B)
+                trace_rec = None
+                pre_frame = None
+                dec_rec = None
+                try:
+                    from astrarun.computer_use.observation.frame import (
+                        ComputerUseTraceRecorder,
+                        DecisionRecord,
+                    )
+                    trace_rec = ComputerUseTraceRecorder.get_recorder(task.task_id)
+                    should_capture_screen = bool(task.context.get("capture_screenshots", False))
+                    target_q = step.arguments.get("app_name") or step.arguments.get("window") or step.arguments.get("app")
+                    art_q = step.arguments.get("path") or step.arguments.get("output_path") or step.arguments.get("file_path")
+                    goal_id_str = getattr(task.goal, "goal_id", getattr(task.goal, "raw_prompt", str(task.goal)))
+                    pre_frame = trace_rec.capture_live_frame(
+                        step_id=step.step_id,
+                        goal_id=goal_id_str,
+                        expected_app=target_q,
+                        artifact_path=art_q,
+                        capture_screenshot=should_capture_screen,
+                    )
+                    dec_rec = DecisionRecord(
+                        decision_id=f"dec_{step.step_id}_{int(time.time() * 1000)}",
+                        frame_id=pre_frame.frame_id,
+                        task_id=task.task_id,
+                        timestamp=time.time(),
+                        chosen_capability=step.capability_id,
+                        parameters=step.arguments,
+                        rationale=f"Execute step {step.step_id}: {step.description}",
+                        confidence=0.95,
+                    )
+                    trace_rec.record_decision(dec_rec)
+                except Exception as rec_ex:
+                    logger.debug("Trace recorder pre-step exception: %s", rec_ex)
 
                 # Adaptive Check 1: User physical takeover
                 if pre_world_state and pre_world_state.user_takeover_active:
@@ -459,7 +629,12 @@ class AgentExecutionEngine:
                 task.observations.append(observation)
 
                 # 4. VERIFY & RECORD FULL TRACE (Req 4)
-                verification = self.verifier.verify(step, result, context=task.context)
+                ctx = dict(task.context or {})
+                if getattr(task, "contract", None):
+                    ctx["contract"] = task.contract
+                if getattr(task, "plan", None) and getattr(task.plan, "steps", None):
+                    ctx["is_terminal_step"] = (step.step_id == task.plan.steps[-1].step_id)
+                verification = self.verifier.verify(step, result, context=ctx)
                 step.verification = verification
 
                 # Record execution trace entry with before/after state
@@ -490,6 +665,101 @@ class AgentExecutionEngine:
                     "transition_verified": verification.verified,
                 }
                 task.execution_traces.append(trace_entry)
+
+                if trace_rec:
+                    try:
+                        from astrarun.computer_use.observation.frame import (
+                            ActionRecord,
+                            StateTransitionRecord,
+                        )
+                        should_capture_screen = bool(task.context.get("capture_screenshots", False))
+                        target_q = step.arguments.get("app_name") or step.arguments.get("window") or step.arguments.get("app")
+                        art_q = step.arguments.get("path") or step.arguments.get("output_path") or step.arguments.get("file_path")
+                        goal_id_str = getattr(task.goal, "goal_id", getattr(task.goal, "raw_prompt", str(task.goal)))
+                        post_frame = trace_rec.capture_live_frame(
+                            step_id=step.step_id,
+                            goal_id=goal_id_str,
+                            expected_app=target_q,
+                            artifact_path=art_q,
+                            capture_screenshot=should_capture_screen,
+                        )
+                        act_id = f"act_{step.step_id}_{int(time.time() * 1000)}"
+                        act_rec = ActionRecord(
+                            action_id=act_id,
+                            decision_id=dec_rec.decision_id if dec_rec else "",
+                            pre_frame_id=pre_frame.frame_id if pre_frame else "",
+                            capability=step.capability_id,
+                            parameters=step.arguments,
+                            target_identity=target_q or "",
+                            mechanism="ExecutionBroker",
+                            dispatch_timestamp=t_act_start,
+                            completion_timestamp=time.perf_counter(),
+                            broker_verdict="BLOCK" if broker_res.blocked else "ALLOW",
+                            os_return_status="SUCCESS" if result.success else "FAILURE",
+                            action_result=result.data,
+                            post_frame_id=post_frame.frame_id if post_frame else "",
+                        )
+                        trace_rec.record_action(act_rec)
+                        trans_rec = StateTransitionRecord(
+                            transition_id=f"trans_{step.step_id}_{int(time.time() * 1000)}",
+                            pre_frame_id=pre_frame.frame_id if pre_frame else "",
+                            action_id=act_id,
+                            post_frame_id=post_frame.frame_id if post_frame else "",
+                            expected_transition=step.description,
+                            observed_transition=result.message,
+                            matched=bool(verification.verified),
+                            divergence_notes=None if verification.verified else f"Verification failed: {verification.error}",
+                        )
+                        trace_rec.record_transition(trans_rec)
+
+                        # Ingest into Hermes experiential memory
+                        try:
+                            from astrarun.memory.service import MemoryService
+                            from astrarun.hermes.models import (
+                                EntityNode, EntityType, AffordanceEdge,
+                                EpistemicStatus, StateTransitionRecord as HermesTransRec
+                            )
+                            from astrarun.hermes.provenance import HermesProvenance
+                            hermes_store = MemoryService.get_instance().hermes
+                            app_identity = target_q or (pre_world_state.foreground_window.title if (pre_world_state and pre_world_state.foreground_window) else None)
+                            if app_identity and hermes_store:
+                                ent = hermes_store.find_entity_by_name(app_identity)
+                                if not ent:
+                                    ent = EntityNode.create(
+                                        entity_type=EntityType.APPLICATION,
+                                        name=app_identity,
+                                        class_name=pre_world_state.foreground_window.class_name if (pre_world_state and pre_world_state.foreground_window) else None,
+                                        env_hash=HermesProvenance.compute_env_hash(),
+                                    )
+                                    hermes_store.upsert_entity(ent)
+                                aff = hermes_store.find_affordance(ent.entity_id, step.capability_id)
+                                if not aff:
+                                    aff = AffordanceEdge.create(
+                                        entity_id=ent.entity_id,
+                                        action_name=step.capability_id,
+                                        capability_id=step.capability_id,
+                                        confidence=0.20,
+                                        status=EpistemicStatus.HYPOTHESIS,
+                                    )
+                                    hermes_store.upsert_affordance(aff)
+                                h_trans = HermesTransRec.create(
+                                    affordance_id=aff.affordance_id,
+                                    pre_state_hash=pre_world_state.compute_state_hash() if pre_world_state else "pre_state",
+                                    action_payload=step.arguments,
+                                    post_state_hash=post_world_state.compute_state_hash() if post_world_state else "post_state",
+                                    expected_delta={"description": step.description},
+                                    observed_delta={"success": result.success, "message": result.message},
+                                    transition_verified=bool(verification.verified),
+                                    latency_ms=(time.perf_counter() - t_act_start) * 1000.0,
+                                    trace_id=task.task_id,
+                                    pre_frame_id=pre_frame.frame_id if pre_frame else "pre_frame",
+                                    post_frame_id=post_frame.frame_id if post_frame else "post_frame",
+                                )
+                                hermes_store.record_transition(h_trans)
+                        except Exception as h_err:
+                            logger.debug("Hermes experiential memory ingestion exception: %s", h_err)
+                    except Exception as rec_ex:
+                        logger.debug("Trace recorder post-step exception: %s", rec_ex)
 
                 if verification.verified:
                     step.state = StepState.COMPLETED
@@ -543,6 +813,57 @@ class AgentExecutionEngine:
     def _attempt_replan(self, task: AgentTask, failed_step: PlanStep, graph: ExecutionGraph) -> bool:
         """Attempt dynamic replanning or graceful degradation for a failed step."""
         logger.info("Evaluating dynamic replan options for failed step: %s", failed_step.step_id)
+
+        # Stage 2 Intelligent Fallback Assessment
+        from astrarun.recovery.models import FailureCategory, FailureEvidence, RecoveryAction
+        cat = FailureCategory.ACTION_FAILED
+        err_str = (failed_step.error or "").lower()
+        if "timeout" in err_str:
+            cat = FailureCategory.TIMEOUT
+        elif "target" in err_str or "not found" in err_str:
+            cat = FailureCategory.TARGET_NOT_FOUND
+        elif "policy" in err_str or "blocked" in err_str or "denied" in err_str:
+            cat = FailureCategory.POLICY_BLOCKED
+        elif "verification" in err_str:
+            cat = FailureCategory.VERIFICATION_FAILED
+        elif "precondition" in err_str:
+            cat = FailureCategory.PRECONDITION_FAILED
+
+        evidence = FailureEvidence(
+            failure_category=cat,
+            what_failed=failed_step.capability_id,
+            evidence_summary=failed_step.error or "Step execution failed",
+            evidence_data=failed_step.result.data if failed_step.result else {},
+            source="AgentLoop._attempt_replan",
+            world_state_changed=False,
+            original_goal_valid=True,
+        )
+
+        decision = self.fallback_engine.evaluate_failure(evidence, task_id=task.task_id)
+        task.context.setdefault("fallback_decisions", []).append(decision.to_dict())
+
+        if decision.action in (RecoveryAction.FAIL_CLOSED, RecoveryAction.CLEANUP_AND_FAIL):
+            logger.warning("IntelligentFallbackEngine decided %s: %s", decision.action.value, decision.preference_rationale)
+            return False
+
+        if decision.action == RecoveryAction.SELECT_ALTERNATIVE_MODEL:
+            logger.info("Executing model fallback: Switching to alternative model for task %s", task.task_id)
+            current_model_role = task.context.get("active_model_role", "FAST")
+            new_role = "DEEP" if current_model_role == "FAST" else "FAST"
+            task.context["active_model_role"] = new_role
+            task.context["model_fallback_triggered"] = True
+            replan_event = ReplanEvent(
+                trigger_step_id=failed_step.step_id,
+                reason=f"Model fallback: Switched from {current_model_role} to {new_role}",
+                old_plan_version=task.plan.version,
+                new_plan_version=task.plan.version + 1,
+            )
+            failed_step.state = StepState.PENDING
+            failed_step.retry_count = 0
+            task.replans.append(replan_event)
+            self.listener.on_replan(task, replan_event)
+            return True
+
         if len(task.replans) >= 3:
             logger.warning("Maximum dynamic replan attempts (3) exceeded for task %s; aborting replan.", task.task_id)
             return False

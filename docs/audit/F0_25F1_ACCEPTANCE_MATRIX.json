@@ -1,0 +1,70 @@
+{
+  "phase": "F0-25F.1",
+  "verdict": "PASS",
+  "dimensions": {
+    "BACKEND_EXECUTION": {
+      "verdict": "PASS",
+      "evidence": "Executed factorial(10)=3628800 in contained Win32 sandbox EPHEMERAL_TOOL; output verified.",
+      "critical": true
+    },
+    "LAUNCHER_VISIBILITY": {
+      "verdict": "PASS",
+      "evidence": "Launcher HWND 1902948 visible, on monitor, uncloaked; contrast std_dev=19.16 >= 4.0; PNG archived.",
+      "critical": true
+    },
+    "PLANNING": {
+      "verdict": "PASS",
+      "evidence": "WorkflowCompiler emitted PLAN_CREATED with steps: ['execute_dynamic_tool', 'present_result'] under run run_1791752572839_47620c47.",
+      "critical": false
+    },
+    "MODEL_PROVENANCE": {
+      "verdict": "PASS",
+      "evidence": "Emitted MODEL_REQUEST and MODEL_RESPONSE with model_id='qwen2.5-coder-14b-instruct' and hash-matched source.",
+      "critical": true
+    },
+    "BROKER_PROVENANCE": {
+      "verdict": "PASS",
+      "evidence": "CAPABILITY_DISPATCHED, ACTION_AUTHORIZED, and ACTION_EXECUTED causally linked under run run_1791752572839_47620c47.",
+      "critical": true
+    },
+    "POSTCONDITION_VERIFICATION": {
+      "verdict": "PASS",
+      "evidence": "STATE_OBSERVED and POSTCONDITION_VERIFIED confirmed 3628800 and output file existence on disk.",
+      "critical": true
+    },
+    "OUTPUT_PRESENTATION": {
+      "verdict": "PASS",
+      "evidence": "AstraRun Viewer opened deliverable; HWND 595620 attested visible, uncloaked, on monitor; RESULT_PRESENTED emitted with verified HWND/title.",
+      "critical": true
+    },
+    "RESOURCE_RESTORATION": {
+      "verdict": "PASS",
+      "evidence": "AstraResourceLedger closed viewer HWND 595620 and deleted sandbox directory; 0 leaked PIDs, 0 leaked HWNDs.",
+      "critical": true
+    },
+    "SCREENSHOT_TRUTH": {
+      "verdict": "PASS",
+      "evidence": "01_launcher_visible.png shows active launcher; 02_result_presentation.png shows opened result viewer with mathematical content.",
+      "critical": true
+    },
+    "EVALUATOR_INTEGRITY": {
+      "verdict": "PASS",
+      "evidence": "All 20 adversarial mutants killed (100% kill rate); evaluator fails closed on hollow presentation and flat surfaces.",
+      "critical": true
+    },
+    "ROUTING_GENERALIZATION": {
+      "verdict": "PASS",
+      "evidence": "60/60 prompts passed on frozen unseen paraphrase holdout across both failure families.",
+      "critical": true
+    },
+    "SECURITY_BOUNDARY": {
+      "verdict": "PASS",
+      "evidence": "86 capabilities registered and attested; phantom aliases excised; 86/43/43/3/2/0 counts confirmed.",
+      "critical": true
+    }
+  },
+  "critical_fail_count": 0,
+  "critical_unverified_count": 0,
+  "overall_verdict": "PASS",
+  "semantic_truth_closure": "VERIFIED"
+}

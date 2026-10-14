@@ -1,0 +1,143 @@
+{
+  "milestone": "F0_25E",
+  "title": "MIMO Independent Acceptance Matrix — F0-25E",
+  "auditor": "MiMo (independent; no verdict inherited from Anti)",
+  "verdict_scale": ["PASS", "PARTIAL", "FAIL", "NOT_APPLICABLE", "UNVERIFIED"],
+  "dimensions": {
+    "GOAL_CORRECTNESS": {
+      "anti_verdict": "PASS",
+      "mimo_verdict": "PASS",
+      "anti_predicate": "len(py) > 0 and len(json) > 0 and len(txt) > 0 and all(size > 0)",
+      "predicate_audit": "Existence-only predicate, but independently upgraded: MIMO recomputed content and all three deliverables exist, are non-empty, and are semantically correct.",
+      "mimo_evidence": "filesystem_events.jsonl FINAL: main.py 1475B sha 31b559a4d149..., sample_input.txt 80B sha 19dcbda5e602..., word_frequencies.json 235B sha 2affa9f877e7...; personal read of all three files; content oracle match.",
+      "classification": "PROVEN"
+    },
+    "CAUSAL_PROVENANCE": {
+      "anti_verdict": "PASS",
+      "mimo_verdict": "UNVERIFIED",
+      "anti_predicate": "model_events > 0 and broker_events > 0 and filesystem_events > 0",
+      "predicate_audit": "VACUOUS COUNT PREDICATE. model_events.jsonl: 11 harvested log lines spanning 18:21-20:46, only 1 in this run's window; broker_events.jsonl: 32 harvested log lines spanning 18:09-20:46 across >=7 prior task IDs (incl. 2 MODEL_UNAVAILABLE errors), only 5 in this run's window. Outer timestamps are all harvest-time (1791731770.69), not event time. No request hash, response hash, purpose, parent-event, or resulting-action fields exist. Task-ID layers (task_f0_25e in events.jsonl vs task_99dc59e6 vs task_30b5a40d) are linked only by the production log, not by the frozen package. Prior-run lines satisfy counts>0 even if this run produced zero events.",
+      "mimo_evidence": "raw/model_events.jsonl (11 lines, 1 in-window), raw/broker_events.jsonl (32 lines, 5 in-window), raw/events.jsonl (1 line), raw/filesystem_events.jsonl (12 lines).",
+      "classification": "UNVERIFIED"
+    },
+    "PLANNING_SEMANTICS": {
+      "anti_verdict": "PASS",
+      "mimo_verdict": "UNVERIFIED",
+      "anti_predicate": "dynamic_tool synthesis logged in production trace",
+      "predicate_audit": "SYNTHESIS != PLANNING. The predicate checks that CandidateTool synthesis was logged (true once in-window), but planning semantics means goal interpretation -> plan construction. Zero planner/reasoner/intent model events for this run exist in the frozen package (harvest filters included 'Local intent reasoner'/'Deep planning' patterns but matched none in this run's window).",
+      "mimo_evidence": "raw/model_events.jsonl contains only 'Qwen synthesized CandidateTool' lines; no goal-interpretation or plan-construction record anywhere in frozen evidence.",
+      "classification": "UNVERIFIED"
+    },
+    "TOOL_DECISION_EXECUTION_ALIGNMENT": {
+      "anti_verdict": "PASS",
+      "mimo_verdict": "PASS",
+      "anti_predicate": "execute_dynamic_tool present in broker event stream",
+      "predicate_audit": "Predicate satisfied WITH in-window evidence: broker_events.jsonl line 28 (inner log time 20:45:51, task_99dc59e6) executes execute_dynamic_tool with the exact dogfood goal text, within the run window (submit 20:45:45.9 -> freeze 20:46:10.8). Corroborated by production log 'Starting execution of task task_99dc59e6 (2 steps)'.",
+      "mimo_evidence": "raw/broker_events.jsonl line 28; raw/events.jsonl REQUEST_SUBMITTED; production log (corroborating).",
+      "classification": "SUPPORTED"
+    },
+    "HOST_COMPUTATION": {
+      "anti_verdict": "PASS",
+      "mimo_verdict": "PASS",
+      "anti_predicate": "artifacts exist and are non-empty",
+      "predicate_audit": "Predicate is existence-only (re-tests GOAL_CORRECTNESS), but host-side artifact creation in this run is independently established: baseline dir empty (fs event 1, epoch 1791731736), files appear with mtimes 1791731764.48-764.54 (20:46:04), and frozen broker lines 29-31 record deliver_artifact deliveries from sandbox task_30b5a40d with source_sha256 values equal to the final file hashes.",
+      "mimo_evidence": "raw/filesystem_events.jsonl events 1, 11, 12; raw/broker_events.jsonl lines 29-31.",
+      "classification": "PROVEN"
+    },
+    "ASTRA_LAUNCHER_UI": {
+      "anti_verdict": "FAIL",
+      "mimo_verdict": "FAIL",
+      "anti_predicate": "frames_with_astra_launcher > 0 and launcher_topmost",
+      "predicate_audit": "Code enforces only frames>0 (topmost never checked); outcome unaffected because frames=0. Independent pixel inspection of all 15 PNGs: no launcher anywhere. world_frames: astra_windows=[] 15/15; window_count=14 at baseline and every later frame (launcher never appeared as a visible top-level window). Production log claims launcher visible at (448,48) during frames 0001/0002 - Astra self-report contradicted by pixels and enumeration.",
+      "mimo_evidence": "Personal inspection of frame_0000..0014; raw/world_frames.jsonl; observer filter/enum source (IsWindowVisible-gated, title/class match would have accepted 'AstraRun' title and Qt class).",
+      "classification": "PROVEN (absence)"
+    },
+    "PROGRESS_UI": {
+      "anti_verdict": "PARTIAL",
+      "mimo_verdict": "FAIL",
+      "anti_predicate": "hud_frames > 0 or progressive_launcher_frames > 1",
+      "predicate_audit": "ANTI'S PARTIAL IS NOT EVIDENCE-DERIVED. Evaluator code is 'PASS if hud>0 or launcher>1 else PARTIAL' (f0_25e_evaluator.py:345-346): with hud=0 and launcher=0 the predicate is false, yet the else-branch yields PARTIAL - a DEFAULT, not a graded finding. Evidence is exactly zero: 0 HUD frames, 0 launcher frames, 0 pixels of any Astra progress UI across all 15 frames. Per review directive 14, credit cannot be given for progress events never rendered visibly.",
+      "mimo_evidence": "F0_25E_ACCEPTANCE_MATRIX.json evidence {hud_frames_count: 0, launcher_frames_count: 0}; personal pixel inspection 0/15.",
+      "classification": "CONTRADICTED (Anti PARTIAL unjustified)"
+    },
+    "VISUAL_DESKTOP_ALIGNMENT": {
+      "anti_verdict": "PASS",
+      "mimo_verdict": "PARTIAL",
+      "anti_predicate": "len(screenshots) >= 3 and world_frames correlate",
+      "predicate_audit": "Code checks only len(screenshots)>=3; the advertised world_frames correlation is NEVER computed. What genuinely holds: 15 frames span the run (epoch 1791731736-1791731770), and filesystem changes time-correlate (files appear between frames 0011 and 0012). What fails: stage_hints assert LAUNCHER_OPEN / REQUEST_POPULATED / DELIVERABLES_PRODUCED for frames showing none of those things; the mapping is positional (sorted(screenshots)[idx] vs world_frames[idx]) with no verification.",
+      "mimo_evidence": "raw/world_frames.jsonl vs raw/filesystem_events.jsonl timing; frame-by-frame pixel audit.",
+      "classification": "SUPPORTED (partial)"
+    },
+    "EDITOR_INTERACTION": {
+      "anti_verdict": "NOT_APPLICABLE",
+      "mimo_verdict": "NOT_APPLICABLE",
+      "anti_predicate": "Direct dynamic synthesis selected; editor interaction not applicable",
+      "predicate_audit": "Verdict hardcoded (evaluator L367-373), not evidence-derived, but the OUTCOME is correct: no editor was required by the selected execution path and no editor appears in any frame. F0-25D.1's erroneous EDITOR PASS is not repeated.",
+      "mimo_evidence": "Pixel audit 0/15 editor frames; artifact provenance shows direct sandbox synthesis + broker delivery.",
+      "classification": "SUPPORTED"
+    },
+    "VISIBLE_TERMINAL_EXECUTION": {
+      "anti_verdict": "NOT_APPLICABLE",
+      "mimo_verdict": "NOT_APPLICABLE",
+      "anti_predicate": "Host computation executed via isolated sandbox; terminal not applicable",
+      "predicate_audit": "Outcome correct but mechanism is inverted: code returns NOT_APPLICABLE when terminal_wins==0 and PASS when a terminal EXISTS (evaluator L383) with a canned rationale - a latent mis-grant if a stray terminal ever appears. No terminal visible in any frame; execution was sandbox-based.",
+      "mimo_evidence": "Pixel audit 0/15 terminal frames; broker delivery lines show sandbox source paths.",
+      "classification": "SUPPORTED"
+    },
+    "OUTPUT_PRESENTATION": {
+      "anti_verdict": "PASS",
+      "mimo_verdict": "FAIL",
+      "anti_predicate": "deliverables present and accessible",
+      "predicate_audit": "PREDICATE DOES NOT MATCH THE DIMENSION. The user asked 'show me the useful result and tell me what you did'; the dimension is about presentation. Evaluator checks only file existence (L394-400; comment admits 'Check if explorer or default viewer was opened' was never implemented). Evidence of any presentation: ZERO. No JSON opened, no Explorer, no terminal, no in-launcher summary, no reveal/explorer/presentation activity in the production log after completion; 0/15 frames show any result UI. Review directive 12 mandates FAIL when none occurred.",
+      "mimo_evidence": "Pixel audit; production log grep (no reveal/explorer/present events 20:45-20:47); evaluator source L394-400.",
+      "classification": "CONTRADICTED (Anti PASS is file-existence masquerading as presentation)"
+    },
+    "RESULT_CORRECTNESS": {
+      "anti_verdict": "PASS",
+      "mimo_verdict": "PASS",
+      "anti_predicate": "oracle mathematical match == True",
+      "predicate_audit": "Genuinely evidence-derived and independently reproduced by MIMO WITHOUT executing main.py: regex tokenization of the exact frozen sample_input.txt yields 14 tokens, all count 1; frozen word_frequencies.json contains exactly those 14 keys each = 1. No discrepancies.",
+      "mimo_evidence": "MIMO_F0_25E_CONTENT_ORACLE.json; personal recomputation.",
+      "classification": "PROVEN"
+    },
+    "SEMANTIC_QUALITY": {
+      "anti_verdict": "PASS",
+      "mimo_verdict": "PASS",
+      "anti_predicate": "case_norm and punct_handling and top10_correct and json_valid",
+      "predicate_audit": "Derived from the content oracle. Independently confirmed: lowercase normalization applied, punctuation stripped, top-10 (first-10 insertion order, all counts 1) correct, JSON valid and well-formed. Caveat: with all counts =1 the top-10 check is weak-discriminating, and the program writes its own sample input (self-contained, as the prompt allowed).",
+      "mimo_evidence": "Personal read of main.py + word_frequencies.json; oracle recomputation.",
+      "classification": "SUPPORTED"
+    },
+    "RESOURCE_RESTORATION": {
+      "anti_verdict": "PASS",
+      "mimo_verdict": "UNVERIFIED",
+      "anti_predicate": "zero orphaned processes and resources properly registered",
+      "predicate_audit": "HARDCODED PASS WITH FABRICATED EVIDENCE (personally verified): f0_25e_evaluator.py:430-437 emits literal verdict 'PASS' with literal orphaned_processes: 0 and target_dir_clean_state: true; generate_resource_delta_report (L506-517) likewise returns literal zeros + PASS. No baseline-vs-final world comparison is performed. Frozen evidence has no process inventory at evaluation time. Counter-evidence and context: (a) the observer spawned AstraRun.exe and never terminated it - at eval time (20:46:21) PID 14464 was still alive; (b) sandbox dir task_30b5a40d (20:46:03) persists - but this is DELIBERATE design: dynamic_builder.py:348 sets preserve_on_exit=True, so retention is not an orphan; (c) hundreds of older test/repair/task dirs predate the run and are not F0-25E's. No proven residue VIOLATION exists, but zero-residue was never measured.",
+      "mimo_evidence": "evaluator source L430-437, L506-517; observer source L616/L715 (no terminate); dynamic_builder.py:348; sandbox dir listing; Get-Process (none now).",
+      "classification": "UNVERIFIED (measurement fabricated; no positive violation proven either)"
+    },
+    "USER_OBSERVABILITY": {
+      "anti_verdict": "FAIL",
+      "mimo_verdict": "FAIL",
+      "anti_predicate": "launcher rendered on screen and visible frames captured",
+      "predicate_audit": "Outcome correct. Evidence-based via launcher_frames=0. MIMO extends: a human watching these frames could not tell Astra received the request, was planning, was working, what tool it selected, whether execution happened, or where the result was. Internal event logs do not count.",
+      "mimo_evidence": "Personal pixel inspection 15/15; world_frames astra_windows=[] 15/15.",
+      "classification": "PROVEN (absence)"
+    }
+  },
+  "tally": {
+    "mimo": {"PASS": 5, "PARTIAL": 1, "FAIL": 4, "NOT_APPLICABLE": 2, "UNVERIFIED": 3},
+    "anti": {"PASS": 10, "PARTIAL": 1, "FAIL": 2, "NOT_APPLICABLE": 2, "UNVERIFIED": 0}
+  },
+  "deltas_vs_anti": [
+    "CAUSAL_PROVENANCE: PASS -> UNVERIFIED (vacuous counts, prior-run pollution, missing linkage)",
+    "PLANNING_SEMANTICS: PASS -> UNVERIFIED (no frozen planning evidence for this run)",
+    "PROGRESS_UI: PARTIAL -> FAIL (default else-branch, zero visible evidence)",
+    "VISUAL_DESKTOP_ALIGNMENT: PASS -> PARTIAL (correlation predicate never computed; stage_hints misrepresent frames)",
+    "OUTPUT_PRESENTATION: PASS -> FAIL (file existence != presentation; nothing shown to user)",
+    "RESOURCE_RESTORATION: PASS -> UNVERIFIED (hardcoded PASS with fabricated evidence)",
+    "Agreement: GOAL_CORRECTNESS PASS, TOOL_DECISION_EXECUTION_ALIGNMENT PASS, HOST_COMPUTATION PASS, ASTRA_LAUNCHER_UI FAIL, RESULT_CORRECTNESS PASS, SEMANTIC_QUALITY PASS, USER_OBSERVABILITY FAIL, EDITOR_INTERACTION N/A, VISIBLE_TERMINAL_EXECUTION N/A"
+  ],
+  "overall_independent_verdict": "FAIL",
+  "overall_rationale": "4 FAIL + 3 UNVERIFIED dimensions, including two dimensions Anti scored PASS on vacuous predicates, one dimension Anti scored PARTIAL on zero evidence, one hardcoded PASS surviving inside an engine that claims zero hardcoded PASSs, and the central product claims (visible launcher, progress UI, result presentation) all failing against pixels."
+}

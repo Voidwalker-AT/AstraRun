@@ -10,7 +10,7 @@ Complies with AstraRun 1.0 Release Specifications:
     - models/
     - skills/
     - runtimes/
-- Zero required dependency on developer drives (E:\\) in RELEASE mode.
+- Zero required dependency on developer drives in RELEASE mode.
 - Seamless fallback to developer overrides in DEVELOPMENT mode.
 """
 
@@ -222,6 +222,36 @@ class AstraPaths:
         return get_install_root()
 
     @classmethod
+    def workspace_root(cls) -> Path:
+        """Resolve workspace root dynamically via env, discovery, or parent traversal."""
+        ws_env = os.environ.get("WORKSPACE_ROOT")
+        if ws_env and Path(ws_env).exists():
+            return Path(ws_env).resolve()
+
+        current = get_install_root()
+        for parent in [current] + list(current.parents):
+            if (parent / "workspace.json").exists():
+                return parent
+            if parent.name.lower() == "workspace":
+                return parent
+
+        home_ws = Path.home() / "Workspace"
+        if home_ws.exists():
+            return home_ws
+
+        try:
+            import string
+            drives = [f"{d}:\\" for d in string.ascii_uppercase if os.path.exists(f"{d}:\\")]
+        except Exception:
+            drives = ["C:\\"]
+        for drive in drives:
+            cand = Path(drive) / "Workspace"
+            if cand.exists():
+                return cand
+
+        return current
+
+    @classmethod
     def resolve_model(cls, relative_name: str, dev_fallback: Optional[str | Path] = None) -> Path:
         """Resolve model without ever moving or deleting external user assets."""
         return resolve_model_path(relative_name, dev_fallback)
@@ -245,7 +275,7 @@ def resolve_model_path(relative_name: str, dev_fallback: Optional[str | Path] = 
     1. Checks models_config.json in config directory (configured existing assets).
     2. Checks user models directory (%LOCALAPPDATA%\\AstraRun\\models).
     3. Checks bundled models directory inside installation root.
-    4. Checks canonical machine model directories (E:\\AI_Models\\GGUF).
+    4. Checks configured machine model directories.
     5. In DEVELOPMENT mode: falls back to dev_fallback if found on disk.
     6. In RELEASE mode: defaults to user models directory path.
     """
@@ -270,17 +300,16 @@ def resolve_model_path(relative_name: str, dev_fallback: Optional[str | Path] = 
     if bundle_model_path.exists():
         return bundle_model_path
 
-    # 4. In DEVELOPMENT mode: check explicit workstation repo or dev fallback
-    if not is_release_mode():
-        # Check explicit development fallback
+    # 4. Check explicit development fallback or configured models repository
+    if os.environ.get("ASTRARUN_ENV") != "release":
         if dev_fallback:
             dev_path = Path(dev_fallback)
             if dev_path.exists():
                 return dev_path
 
-        # Workstation development fallback only when running in development environment
-        if os.environ.get("ASTRARUN_ENV") == "development" or os.environ.get("ASTRA_DEV") == "1":
-            dev_repo = Path(r"E:\AI_Models\GGUF") / relative_name
+        dev_models_dir = os.environ.get("ASTRARUN_MODELS_DIR")
+        if dev_models_dir:
+            dev_repo = Path(dev_models_dir) / relative_name
             if dev_repo.exists():
                 return dev_repo
 
@@ -292,8 +321,8 @@ def resolve_runtime_binary(binary_name: str, dev_fallback: Optional[str | Path] 
     Resolve a runtime executable (e.g. llama-server.exe).
     1. Checks bundled runtimes directory ({INSTALL_DIR}\\runtimes\\binary_name).
     2. Checks user runtimes directory (%LOCALAPPDATA%\\AstraRun\\runtimes\\binary_name).
-    3. In DEVELOPMENT mode: falls back to dev_fallback if found on disk.
-    4. In RELEASE mode: returns bundled or user runtime path.
+    3. Falls back to dev_fallback if found on disk.
+    4. Defaults to bundled binary path.
     """
     bundled_binary = get_install_root() / "runtimes" / binary_name
     if bundled_binary.exists():
@@ -303,9 +332,43 @@ def resolve_runtime_binary(binary_name: str, dev_fallback: Optional[str | Path] 
     if user_binary.exists():
         return user_binary
 
-    if not is_release_mode() and dev_fallback:
+    if dev_fallback:
         dev_path = Path(dev_fallback)
         if dev_path.exists():
             return dev_path
 
     return bundled_binary
+
+
+def resolve_python_executable(explicit: Optional[str | Path] = None) -> str:
+    """Resolve an authoritative Python interpreter for sandbox script execution."""
+    if explicit and Path(explicit).exists():
+        return str(explicit)
+
+    # 1. Prefer current Python interpreter if running under Python (e.g. local .venv)
+    if getattr(sys, "executable", None) and "astrarun" not in Path(sys.executable).name.lower() and Path(sys.executable).exists():
+        return str(Path(sys.executable).resolve())
+
+    # 2. Check project-relative venv
+    proj_root = Path(__file__).resolve().parent.parent.parent.parent
+    proj_venv = proj_root / ".venv" / "Scripts" / "python.exe"
+    if proj_venv.exists():
+        return str(proj_venv.resolve())
+
+    if sys.prefix and (Path(sys.prefix) / "Scripts" / "python.exe").exists():
+        return str((Path(sys.prefix) / "Scripts" / "python.exe").resolve())
+
+    # 3. Check PATH system python
+    import shutil
+    py_path = shutil.which("python.exe") or shutil.which("python")
+    if py_path and Path(py_path).exists() and "astrarun" not in Path(py_path).name.lower():
+        return str(Path(py_path).resolve())
+
+    # 4. Standard python installations
+    local_app = os.environ.get("LOCALAPPDATA", "")
+    for ver in ("Python313", "Python312", "Python311", "Python310"):
+        cand = Path(local_app) / "Programs" / "Python" / ver / "python.exe"
+        if cand.exists():
+            return str(cand.resolve())
+
+    return "python.exe"

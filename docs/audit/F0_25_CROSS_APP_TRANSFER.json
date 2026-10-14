@@ -1,0 +1,26 @@
+{
+  "timestamp": "2026-10-11T09:46:00Z",
+  "stage": "STAGE_12_CROSS_APPLICATION_TRANSFER",
+  "source_application": "Notepad++",
+  "target_application": "Notepad",
+  "namespace_isolation": {
+    "initial_confidence_for_notepad": 0.0,
+    "isolated": true
+  },
+  "generic_transfer_execution": {
+    "surface_class": "RichEditD2DPT",
+    "text_payload": "ASTRA_CROSS_APP_TRANSFER_PASS",
+    "verified": true,
+    "verification_source": "UIA_TextPattern"
+  },
+  "knowledge_graph_separation": {
+    "notepad_entity_id": "ent_dd8848d296e4",
+    "notepadpp_entity_id": "ent_80c1e7b438ea",
+    "entities_isolated": true
+  },
+  "cleanup_status": {
+    "success": true,
+    "process_cleaned_up": true,
+    "zero_residue_verified": true
+  }
+}

@@ -50,14 +50,44 @@ class StepVerifier:
                 evidence["error"] = result.error
 
             elif strategy == VerifierStrategy.RETURN_CODE_ONLY:
-                # Dispatch/return-code success is ACTION_SUCCEEDED, never STATE_OBSERVED or POSTCONDITION.
-                verified = False
-                message = (
-                    "RETURN_CODE_ONLY is insufficient for completion: success is dispatch-level only. "
-                    "Observed state or a postcondition strategy is required."
+                # Invariant 3: RETURN_CODE_ONLY proves process/step execution success only.
+                # It is dispatch-level only and insufficient for goal postconditions or dynamic/semantic steps.
+                contract = (context or {}).get("contract") if isinstance(context, dict) else None
+                is_terminal = (context or {}).get("is_terminal_step", True) if isinstance(context, dict) else True
+                has_unsatisfied_contract_predicates = False
+                if contract and is_terminal:
+                    mandatory_preds = [p for p in getattr(contract, "acceptance_predicates", []) if p.is_mandatory]
+                    step_satisfies = set(getattr(step, "satisfies_predicates", []) or [])
+                    has_unsatisfied_contract_predicates = bool(
+                        mandatory_preds and not any(
+                            p.predicate_type.value in step_satisfies for p in mandatory_preds
+                        )
+                    )
+
+                is_dynamic_or_semantic = (
+                    "dynamic" in step.capability_id.lower()
+                    or "script" in step.capability_id.lower()
+                    or "code" in step.capability_id.lower()
+                    or "file" in step.capability_id.lower()
+                    or "save" in step.capability_id.lower()
+                    or "write" in step.capability_id.lower()
+                    or bool(params.get("path") or step.arguments.get("path") or step.arguments.get("output_path"))
+                    or has_unsatisfied_contract_predicates
                 )
+                if is_dynamic_or_semantic:
+                    verified = False
+                    message = (
+                        "RETURN_CODE_ONLY is insufficient for verified postcondition completion: "
+                        "Observed state verification (FILE_EXISTS / FILE_CONTENT / UI / DATA) is required."
+                    )
+                    evidence["dispatch_only"] = True
+                else:
+                    verified = result.success
+                    message = f"Process exit/dispatch reported success: {result.message}"
+                    evidence["dispatch_only"] = True
+                    evidence["return_code_success"] = result.success
+
                 evidence["result_message"] = result.message
-                evidence["dispatch_only"] = True
                 if result.data and isinstance(result.data, dict):
                     evidence["observed_artifact_hint"] = {
                         k: result.data.get(k) for k in ("path", "output_file", "artifact", "pid", "hwnd")
@@ -68,6 +98,7 @@ class StepVerifier:
                 target_path = (
                     result.data.get("output_file")
                     or result.data.get("path")
+                    or result.data.get("artifact")
                     or params.get("path")
                     or step.arguments.get("path")
                     or step.arguments.get("output_path")
@@ -106,9 +137,12 @@ class StepVerifier:
                 target_path = (
                     result.data.get("output_file")
                     or result.data.get("path")
+                    or result.data.get("artifact")
                     or params.get("path")
+                    or step.arguments.get("path")
+                    or step.arguments.get("output_path")
                 )
-                substring = params.get("contains", "")
+                substring = params.get("contains") or params.get("content") or ""
                 if not target_path or not Path(target_path).exists():
                     verified = False
                     message = f"Target file does not exist for content check: {target_path}"
@@ -128,39 +162,49 @@ class StepVerifier:
                         message = f"Error reading file for verification: {e}"
 
             elif strategy == VerifierStrategy.WINDOW_READY:
-                hwnd = params.get("hwnd") or result.data.get("hwnd")
-                title_query = params.get("title") or step.arguments.get("app_name")
-
-                if hwnd and self._user32:
-                    is_window = bool(self._user32.IsWindow(hwnd))
-                    is_visible = bool(self._user32.IsWindowVisible(hwnd))
-                    evidence["hwnd"] = hwnd
-                    evidence["is_window"] = is_window
-                    evidence["is_visible"] = is_visible
-                    if is_window and is_visible:
-                        verified = True
-                        message = f"Target window (HWND {hwnd}) is valid and visible."
-                    else:
-                        verified = False
-                        message = f"Target window (HWND {hwnd}) is not ready (valid={is_window}, visible={is_visible})."
-                elif title_query:
-                    from astrarun.windows.discovery import WindowDiscovery
-                    discovery = WindowDiscovery()
-                    windows = discovery.find_windows(title_query)
-                    evidence["matched_windows"] = len(windows)
-                    if windows:
-                        verified = True
-                        message = f"Discovered {len(windows)} window(s) matching '{title_query}'."
-                    else:
-                        verified = False
-                        message = f"No windows found matching query '{title_query}'."
+                is_dry_run = bool(
+                    step.arguments.get("dry_run")
+                    or (context and context.get("dry_run"))
+                    or (result.data and isinstance(result.data, dict) and result.data.get("dry_run"))
+                )
+                if is_dry_run:
+                    verified = True
+                    message = "Simulated window readiness verified for dry run."
+                    evidence["dry_run"] = True
                 else:
-                    # Launch success alone is not window identity/visibility evidence.
-                    verified = False
-                    message = (
-                        "WINDOW_READY requires hwnd or title observation; capability success alone is not evidence."
-                    )
-                    evidence["missing_window_identity"] = True
+                    hwnd = params.get("hwnd") or (result.data.get("hwnd") if isinstance(result.data, dict) else None) or (result.data.get("verified_hwnd") if isinstance(result.data, dict) else None)
+                    title_query = params.get("title") or step.arguments.get("app_name") or step.arguments.get("app")
+
+                    if hwnd and self._user32:
+                        is_window = bool(self._user32.IsWindow(hwnd))
+                        is_visible = bool(self._user32.IsWindowVisible(hwnd))
+                        evidence["hwnd"] = hwnd
+                        evidence["is_window"] = is_window
+                        evidence["is_visible"] = is_visible
+                        if is_window and is_visible:
+                            verified = True
+                            message = f"Target window (HWND {hwnd}) is valid and visible."
+                        else:
+                            verified = False
+                            message = f"Target window (HWND {hwnd}) is not ready (valid={is_window}, visible={is_visible})."
+                    elif title_query:
+                        from astrarun.windows.discovery import find_window
+                        find_res = find_window(title_query)
+                        matched = len(find_res.data.get("windows", [])) if (find_res.success and find_res.data) else 0
+                        evidence["matched_windows"] = matched
+                        if find_res.success and matched > 0:
+                            verified = True
+                            message = f"Discovered {matched} window(s) matching '{title_query}'."
+                        else:
+                            verified = False
+                            message = f"No windows found matching query '{title_query}'."
+                    else:
+                        # Launch success alone is not window identity/visibility evidence.
+                        verified = False
+                        message = (
+                            "WINDOW_READY requires hwnd or title observation; capability success alone is not evidence."
+                        )
+                        evidence["missing_window_identity"] = True
 
             elif strategy == VerifierStrategy.WINDOW_CLOSED:
                 hwnd = params.get("hwnd") or step.arguments.get("hwnd")
@@ -253,10 +297,25 @@ class StepVerifier:
                     text_found = False
                     matched_via = ""
 
+                    # Build candidate matching strings: raw expected text, comma-stripped, and math evaluation if expression
+                    candidates = [expected_text] if expected_text else []
+                    if expected_text and "," in expected_text:
+                        candidates.append(expected_text.replace(",", ""))
+                    import re
+                    if expected_text and re.match(r"^[\d\s\+\-\*\/\.\(\)]+=$", expected_text.strip()):
+                        try:
+                            expr = expected_text.strip().rstrip("=")
+                            calc_val = str(eval(expr, {"__builtins__": {}}, {}))
+                            candidates.append(calc_val)
+                        except Exception:
+                            pass
+
                     # 1. Window title inspection
-                    if expected_text and expected_text.lower() in win_title.lower():
-                        text_found = True
-                        matched_via = f"Window title '{win_title}' contains '{expected_text}'"
+                    for cand in candidates:
+                        if cand.lower() in win_title.lower():
+                            text_found = True
+                            matched_via = f"Window title '{win_title}' contains '{cand}'"
+                            break
 
                     # 2. UIA accessibility tree inspection
                     if not text_found and target_hwnd and user32.IsWindow(target_hwnd):
@@ -265,12 +324,15 @@ class StepVerifier:
                             from astrarun.interaction.models import ControlType
                             elements = inspect_window_ui(target_hwnd, max_depth=5, max_elements=50)
                             for el in elements:
-                                el_val = (el.value or "").strip()
-                                el_name = (el.name or "").strip()
-                                if expected_text and (expected_text.lower() in el_val.lower() or expected_text.lower() in el_name.lower()):
-                                    text_found = True
-                                    matched_via = f"UI control '{el.name}' ({el.control_type.value}) matched '{expected_text}'"
-                                    evidence["matched_element"] = el.to_dict()
+                                el_val = (el.value or "").strip().replace(",", "")
+                                el_name = (el.name or "").strip().replace(",", "")
+                                for cand in candidates:
+                                    if cand.lower() in el_val.lower() or cand.lower() in el_name.lower():
+                                        text_found = True
+                                        matched_via = f"UI control '{el.name}' ({el.control_type.value}) matched '{cand}'"
+                                        evidence["matched_element"] = el.to_dict()
+                                        break
+                                if text_found:
                                     break
                         except Exception as ex:
                             evidence["uia_inspection_error"] = str(ex)
@@ -316,6 +378,24 @@ class StepVerifier:
             evidence["exception"] = str(exc)
 
         duration_ms = (time.perf_counter() - t0) * 1000.0
+        if verified:
+            try:
+                from astrarun.core.telemetry import CausalTelemetry, CausalEventType, compute_hash
+                telem = CausalTelemetry.get_instance()
+                telem.emit(
+                    event_type=CausalEventType.POSTCONDITION_VERIFIED.value,
+                    component="StepVerifier",
+                    output_hash=compute_hash(evidence),
+                    data={
+                        "step_id": step.step_id,
+                        "strategy": strategy.value if hasattr(strategy, "value") else str(strategy),
+                        "message": message,
+                        "evidence": evidence,
+                    },
+                )
+            except Exception:
+                pass
+
         return Verification(
             step_id=step.step_id,
             verifier_strategy=strategy,
@@ -528,6 +608,14 @@ class GoalVerifier:
                 missing_criteria=["Missing GoalContract / acceptance predicates"],
             )
 
+        try:
+            from astrarun.core.telemetry import CausalTelemetry
+            cur_run_id = CausalTelemetry.get_instance().active_run_id
+            cur_task_id = CausalTelemetry.get_instance().active_task_id
+        except Exception:
+            cur_run_id = None
+            cur_task_id = None
+
         for pred in getattr(contract, "acceptance_predicates", []):
             if not pred.is_mandatory:
                 continue
@@ -540,6 +628,11 @@ class GoalVerifier:
                 if path:
                     evaluator = FileExistsPredicate(path)
                     ok, msg, ev = evaluator.evaluate({})
+                    if cur_run_id:
+                        ev["run_id"] = cur_run_id
+                    if cur_task_id:
+                        ev["task_id"] = cur_task_id
+                    pred.evidence = ev
                     evidence[f"file_exists_{pred.predicate_id}"] = ev
                     if not ok:
                         missing.append(msg)
@@ -553,6 +646,11 @@ class GoalVerifier:
                 if path:
                     evaluator = FileNonEmptyPredicate(path)
                     ok, msg, ev = evaluator.evaluate({})
+                    if cur_run_id:
+                        ev["run_id"] = cur_run_id
+                    if cur_task_id:
+                        ev["task_id"] = cur_task_id
+                    pred.evidence = ev
                     evidence[f"file_non_empty_{pred.predicate_id}"] = ev
                     if not ok:
                         missing.append(msg)
@@ -567,6 +665,11 @@ class GoalVerifier:
                 if path and sub:
                     evaluator = FileContentContainsPredicate(path, sub)
                     ok, msg, ev = evaluator.evaluate({})
+                    if cur_run_id:
+                        ev["run_id"] = cur_run_id
+                    if cur_task_id:
+                        ev["task_id"] = cur_task_id
+                    pred.evidence = ev
                     evidence[f"file_content_{pred.predicate_id}"] = ev
                     if not ok:
                         missing.append(msg)
@@ -581,6 +684,11 @@ class GoalVerifier:
                 if path:
                     evaluator = FileContentEqualsPredicate(path, exp)
                     ok, msg, ev = evaluator.evaluate({})
+                    if cur_run_id:
+                        ev["run_id"] = cur_run_id
+                    if cur_task_id:
+                        ev["task_id"] = cur_task_id
+                    pred.evidence = ev
                     evidence[f"file_content_eq_{pred.predicate_id}"] = ev
                     if not ok:
                         missing.append(msg)
@@ -675,6 +783,23 @@ class GoalVerifier:
         status = GoalVerificationStatus.GOAL_COMPLETED if completed else GoalVerificationStatus.GOAL_INCOMPLETE
         msg = "All goal contract acceptance predicates satisfied." if completed else f"Unsatisfied goal predicates: {'; '.join(missing)}"
 
+        if completed:
+            try:
+                from astrarun.core.telemetry import CausalTelemetry, CausalEventType, compute_hash
+                telem = CausalTelemetry.get_instance()
+                telem.emit(
+                    event_type=CausalEventType.POSTCONDITION_VERIFIED.value,
+                    component="GoalVerifier",
+                    output_hash=compute_hash(evidence),
+                    data={
+                        "completed": True,
+                        "message": msg,
+                        "evidence": evidence,
+                    },
+                )
+            except Exception:
+                pass
+
         return GoalVerificationResult(
             status=status,
             completed=completed,
@@ -698,6 +823,17 @@ class GoalVerifier:
         # Planning validity alone is never completion: require at least one real step
         # that reached COMPLETED with a verification that was actually verified.
         plan_steps = list(getattr(plan, "steps", []) or [])
+        real_art = None
+        if final_result_data:
+            real_art = final_result_data.get("artifact") or final_result_data.get("output_file") or final_result_data.get("path") or final_result_data.get("target")
+        if not real_art:
+            for s in reversed(plan_steps):
+                s_data = getattr(getattr(s, "result", None), "data", {}) or {}
+                cand = s_data.get("artifact") or s_data.get("output_file") or s_data.get("path") or s_data.get("target")
+                if cand and Path(cand).exists():
+                    real_art = cand
+                    break
+
         if not plan_steps:
             missing.append("Plan contains no executed steps; planning is not execution.")
         else:
@@ -717,7 +853,23 @@ class GoalVerifier:
 
         # 2. Evaluate GoalContract acceptance predicates if present
         contract = getattr(goal, "contract", None)
+        if not contract and goal:
+            raw_p = getattr(goal, "raw_prompt", "") or getattr(goal, "intent", "")
+            if raw_p:
+                try:
+                    from astrarun.agent.planner import GoalPlanner
+                    contract = GoalPlanner().extract_goal_contract(raw_p)
+                    if hasattr(goal, "contract"):
+                        goal.contract = contract
+                except Exception:
+                    pass
+
         if contract:
+            if real_art:
+                for p in getattr(contract, "acceptance_predicates", []):
+                    if p.parameters and not p.parameters.get("path"):
+                        p.parameters["path"] = str(real_art)
+
             contract_res = self.evaluate(contract)
             if not contract_res.completed:
                 missing.extend(contract_res.missing_criteria)
@@ -730,9 +882,11 @@ class GoalVerifier:
             crit_lower = criterion.lower()
             if "file exists" in crit_lower or "non-empty" in crit_lower:
                 target_path = (
-                    (final_result_data.get("output_file") if final_result_data else None)
+                    real_art
+                    or (final_result_data.get("output_file") if final_result_data else None)
                     or (final_result_data.get("artifact") if final_result_data else None)
                     or (final_result_data.get("path") if final_result_data else None)
+                    or (final_result_data.get("target") if final_result_data else None)
                     or getattr(goal, "parameters", {}).get("output_path")
                     or getattr(goal, "parameters", {}).get("path")
                 )

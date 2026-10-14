@@ -1,0 +1,150 @@
+{
+  "benchmark": "STAGE_10_ADVERSARIAL_MUTATION_ORACLE_HARDENING",
+  "total_mutants": 20,
+  "killed_mutants": 20,
+  "survived_mutants": 0,
+  "kill_rate_pct": 100.0,
+  "all_killed": true,
+  "mutants": [
+    {
+      "id": "M1",
+      "name": "REQUESTED-only presentation",
+      "killed": true,
+      "mechanism": "Evaluator predicate requires affirmative RESULT_PRESENTED",
+      "details": "valid_presentation_events > 0 and matching_observed_windows > 0 and deliverables_on_disk == True"
+    },
+    {
+      "id": "M2",
+      "name": "hollow PRESENTED event",
+      "killed": true,
+      "mechanism": "Evaluator checks verified_hwnd truth",
+      "details": "verified_hwnd is None rejected"
+    },
+    {
+      "id": "M3",
+      "name": "unrelated Explorer window",
+      "killed": true,
+      "mechanism": "Target validation & window title matching",
+      "details": "success=False"
+    },
+    {
+      "id": "M4",
+      "name": "file exists but never displayed",
+      "killed": true,
+      "mechanism": "OUTPUT_PRESENTATION decoupled from file existence",
+      "details": "valid_presentation_events > 0 and matching_observed_windows > 0 and deliverables_on_disk == True"
+    },
+    {
+      "id": "M5",
+      "name": "black screenshot with no Astra",
+      "killed": true,
+      "mechanism": "Surface contrast oracle (std_dev >= 5.0)",
+      "details": "contrast_range=0.0"
+    },
+    {
+      "id": "M6",
+      "name": "genuine Astra launcher under lighter pixels",
+      "killed": true,
+      "mechanism": "Multi-factor contrast std_dev oracle",
+      "details": "contrast_range=210.0"
+    },
+    {
+      "id": "M7",
+      "name": "stale/wrong HWND",
+      "killed": true,
+      "mechanism": "Win32 IsWindow & Monitor validation",
+      "details": "is_vis=False"
+    },
+    {
+      "id": "M8",
+      "name": "cleanup attempted but directory remains",
+      "killed": true,
+      "mechanism": "Physical post-cleanup absence check in AstraResourceLedger",
+      "details": "state=FAILED_CLEANUP"
+    },
+    {
+      "id": "M9",
+      "name": "ledger says CLOSED while physical resource remains",
+      "killed": true,
+      "mechanism": "AstraResourceLedger verifies absence via path.exists()",
+      "details": "CLOSED refused"
+    },
+    {
+      "id": "M10",
+      "name": "prior-run telemetry contamination",
+      "killed": true,
+      "mechanism": "Run-scoped run_id indexing in CausalTelemetry",
+      "details": "filtered=3"
+    },
+    {
+      "id": "M11",
+      "name": "missing broker events on broker task",
+      "killed": true,
+      "mechanism": "CAUSAL_PROVENANCE requires broker records",
+      "details": "model_events > 0 and broker_events > 0 and filesystem_events > 0 and harness_manufactured == False"
+    },
+    {
+      "id": "M12",
+      "name": "semantically wrong repair artifact",
+      "killed": true,
+      "mechanism": "Semantic value extraction assertion in repair oracle",
+      "details": "verified=False"
+    },
+    {
+      "id": "M13",
+      "name": "exact-prompt routing patch",
+      "killed": true,
+      "mechanism": "Generalized regex & semantic classification in GoalPlanner",
+      "details": "g1_intent=execute_dynamic_tool, g2_intent=execute_dynamic_tool"
+    },
+    {
+      "id": "M14",
+      "name": "hardcoded clean_termination",
+      "killed": true,
+      "mechanism": "Predicate exit_code == 0 assertion",
+      "details": "clean=False"
+    },
+    {
+      "id": "M15",
+      "name": "hardcoded zero residue",
+      "killed": true,
+      "mechanism": "Real filesystem glob inspection of target/sandbox directory",
+      "details": "unmanaged=1"
+    },
+    {
+      "id": "M16",
+      "name": "screenshot before async postcondition",
+      "killed": true,
+      "mechanism": "Fail-closed check on frame windows",
+      "details": "FAIL"
+    },
+    {
+      "id": "M17",
+      "name": "unrelated pre-existing viewer",
+      "killed": true,
+      "mechanism": "Evaluator requires affirmative matching presentation window or event",
+      "details": "valid_presentation_events > 0 and matching_observed_windows > 0 and deliverables_on_disk == True"
+    },
+    {
+      "id": "M18",
+      "name": "RESULT_PRESENTED before observation",
+      "killed": true,
+      "mechanism": "present_result requires physical observation before emission",
+      "details": "has_presented=False"
+    },
+    {
+      "id": "M19",
+      "name": "telemetry write failure silently ignored",
+      "killed": true,
+      "mechanism": "Explicit error logging on persistence exception",
+      "details": "logged=True"
+    },
+    {
+      "id": "M20",
+      "name": "missing postcondition before GOAL_COMPLETED",
+      "killed": true,
+      "mechanism": "Evaluator checks RESULT_PRESENTED presence in event stream",
+      "details": "FAIL"
+    }
+  ]
+}

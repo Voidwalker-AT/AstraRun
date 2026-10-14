@@ -32,11 +32,24 @@ def _resolve_target_hwnd(
     hwnd: Optional[int] = None,
     window_query: Optional[str] = None,
     origin_window: Optional[WindowEntity | int] = None,
+    task_id: Optional[str] = None,
 ) -> Optional[int]:
-    """Resolve the target window HWND from explicit hwnd, window name, or origin/foreground window."""
+    """Resolve the target window HWND from explicit hwnd, task ownership, window name, or origin/foreground window."""
     from astrarun.windows.policy import is_astrarun_window
     if hwnd and hwnd > 0 and not is_astrarun_window(hwnd):
         return hwnd
+
+    # Priority 0: Target window owned by current task in resource ledger
+    if task_id:
+        try:
+            from astrarun.tasks.resource_ledger import AstraResourceLedger
+            task_res = AstraResourceLedger.get_instance().list_resources_for_task(task_id)
+            for r in reversed(task_res):
+                if r.hwnd and r.lifecycle_state in ("ACTIVE", "LAUNCHED", "DISCOVERED"):
+                    if not is_astrarun_window(r.hwnd):
+                        return r.hwnd
+        except Exception:
+            pass
 
     if sys.platform == "win32":
         try:
@@ -130,6 +143,8 @@ def click_element(
     window: Optional[str] = None,
     force: bool = False,
     origin_window: Optional[WindowEntity | int] = None,
+    task_id: Optional[str] = None,
+    **kwargs: Any,
 ) -> CapabilityResult:
     """Find and click a semantic button, menu item, or interactive control."""
     t0 = time.perf_counter()
@@ -144,7 +159,8 @@ def click_element(
             error_code=CapabilityErrorCode.PERMISSION_DENIED,
         )
 
-    target_hwnd = _resolve_target_hwnd(hwnd, window, origin_window)
+    eff_task_id = task_id or kwargs.get("task_id")
+    target_hwnd = _resolve_target_hwnd(hwnd, window, origin_window, task_id=eff_task_id)
     if not target_hwnd:
         return CapabilityResult.fail(
             capability="click_ui_element",
@@ -724,138 +740,34 @@ def type_literal_text(
         prior_title = pbuf.value
     prior_had_asterisk = "*" in prior_title
 
-    # 5. Discover editable control via UIA and/or semantic resolver
-    import comtypes.client
-    from comtypes.gen import UIAutomationClient
-    uia = comtypes.client.CreateObject(
-        UIAutomationClient.CUIAutomation,
-        interface=UIAutomationClient.IUIAutomation,
+    # 5. Discover editable surface via generic abstraction
+    from astrarun.computer_use.ui.editable_surface import (
+        discover_editable_surface,
+        execute_input_strategy_ladder,
+        verify_surface_content,
     )
-    root = uia.ElementFromHandle(target_hwnd)
 
-    edit_elem = None
-    target_element_ref = None
+    surface = discover_editable_surface(target_hwnd, target_name=target)
+    if not surface:
+        return CapabilityResult.fail(
+            capability="type_text",
+            message=f"No editable surface discovered in window HWND 0x{target_hwnd:x}.",
+            error_code=CapabilityErrorCode.TARGET_NOT_FOUND,
+            latency_ms=(time.perf_counter() - t0) * 1000,
+        )
 
-    if target:
-        elements = inspect_window_ui(target_hwnd, max_depth=5, max_elements=50)
-        res = UIElementResolver.resolve(target, elements)
-        if res.is_resolved:
-            target_element_ref = res.element
-            from astrarun.interaction.controller import _get_com_element
-            edit_elem = _get_com_element(target_element_ref)
-
-    if not edit_elem and root:
-        deadline_find = time.time() + 2.0
-        while time.time() < deadline_find:
-            try:
-                cond_edit = uia.CreateOrCondition(
-                    uia.CreatePropertyCondition(UIAutomationClient.UIA_ControlTypePropertyId, UIAutomationClient.UIA_DocumentControlTypeId),
-                    uia.CreatePropertyCondition(UIAutomationClient.UIA_ControlTypePropertyId, UIAutomationClient.UIA_EditControlTypeId),
-                )
-                edit_elem = root.FindFirst(UIAutomationClient.TreeScope_Descendants, cond_edit)
-                if edit_elem:
-                    break
-            except Exception as ex:
-                logger.debug("Failed finding editable control via UIA tree: %s", ex)
-            time.sleep(0.1)
-
-    # 6. Primary text entry: Direct UIA ValuePattern (in-process COM IPC)
-    entered = False
-    entry_mechanism = ""
-    if edit_elem:
-        try:
-            val_pat = edit_elem.GetCurrentPattern(UIAutomationClient.UIA_ValuePatternId)
-            if val_pat:
-                val_obj = val_pat.QueryInterface(UIAutomationClient.IUIAutomationValuePattern)
-                if not val_obj.CurrentIsReadOnly:
-                    val_obj.SetValue(text)
-                    entered = True
-                    entry_mechanism = "UIA_VALUE_PATTERN"
-                    logger.info("Successfully set text via UIA ValuePattern into control in HWND 0x%x", target_hwnd)
-        except Exception as ex:
-            logger.debug("ValuePattern.SetValue attempt failed: %s", ex)
-
-    # 7. Fallback text entry: Focus control and dispatch clipboard paste / keystrokes
+    # 6. Execute generic input strategy ladder
+    entered, entry_mechanism, err_msg = execute_input_strategy_ladder(surface, text)
     if not entered:
-        if edit_elem:
-            try:
-                edit_elem.SetFocus()
-                time.sleep(0.05)
-            except Exception:
-                pass
+        return CapabilityResult.fail(
+            capability="type_text",
+            message=err_msg or "Failed to enter text into editable surface.",
+            error_code=CapabilityErrorCode.OS_ERROR,
+            latency_ms=(time.perf_counter() - t0) * 1000,
+        )
 
-        user32.ShowWindow(target_hwnd, 9)
-        user32.SetForegroundWindow(target_hwnd)
-        time.sleep(0.1)
-
-        pasted = False
-        if len(text) > 0 and sys.platform == "win32":
-            try:
-                from astrarun.interaction.clipboard import set_clipboard_text
-                from astrarun.interaction.keyboard import dispatch_shortcut, parse_shortcut
-                if set_clipboard_text(text):
-                    time.sleep(0.05)
-                    ok_paste, _, _ = dispatch_shortcut(parse_shortcut("Ctrl+V"), target_hwnd=target_hwnd)
-                    if ok_paste:
-                        pasted = True
-                        entry_mechanism = "CLIPBOARD_PASTE"
-                        time.sleep(0.1)
-            except Exception as ex:
-                logger.debug("Clipboard paste attempt failed: %s", ex)
-
-        if not pasted:
-            ok, msg, err_code = type_text_into_active(text)
-            if not ok:
-                return CapabilityResult.fail(
-                    capability="type_text",
-                    message=msg,
-                    error_code=err_code or CapabilityErrorCode.OS_ERROR,
-                    latency_ms=(time.perf_counter() - t0) * 1000,
-                )
-            entry_mechanism = "SYNTHETIC_KEYSTROKES"
-
-    # 8. Mandatory postcondition verification
-    verified = False
-    verification_source = ""
-    if edit_elem:
-        # Check TextPattern
-        try:
-            txt_pat = edit_elem.GetCurrentPattern(UIAutomationClient.UIA_TextPatternId)
-            if txt_pat:
-                txt_obj = txt_pat.QueryInterface(UIAutomationClient.IUIAutomationTextPattern)
-                cur_txt = txt_obj.DocumentRange.GetText(-1)
-                if text in cur_txt:
-                    verified = True
-                    verification_source = "UIA_TextPattern"
-        except Exception:
-            pass
-
-        # Check ValuePattern
-        if not verified:
-            try:
-                val_pat = edit_elem.GetCurrentPattern(UIAutomationClient.UIA_ValuePatternId)
-                if val_pat:
-                    val_obj = val_pat.QueryInterface(UIAutomationClient.IUIAutomationValuePattern)
-                    cur_val = val_obj.CurrentValue or ""
-                    if text in cur_val:
-                        verified = True
-                        verification_source = "UIA_ValuePattern"
-            except Exception:
-                pass
-
-    # Check Window Title modification indicator
-    if not verified:
-        length = user32.GetWindowTextLengthW(target_hwnd)
-        if length > 0:
-            buf = ctypes.create_unicode_buffer(length + 1)
-            user32.GetWindowTextW(target_hwnd, buf, length + 1)
-            title = buf.value
-            if text in title:
-                verified = True
-                verification_source = "Window_Title_Text"
-            elif "*" in title and not prior_had_asterisk:
-                verified = True
-                verification_source = "Window_Title_Dirty_State"
+    # 7. Mandatory live postcondition verification
+    verified, verification_source = verify_surface_content(surface, text, prior_had_asterisk)
 
     # Fast path for simulated tests
     if not verified and is_simulated_interaction_validation():

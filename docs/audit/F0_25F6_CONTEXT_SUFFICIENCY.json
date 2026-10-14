@@ -1,0 +1,95 @@
+{
+  "phase": "F0-25F.6",
+  "component": "ContextSufficiencyEngine",
+  "version": "2.0.0",
+  "timestamp": 1791920000.0,
+  "specification": {
+    "principles": [
+      "Authoritative capability grounding: routing reasons over registered capability signatures",
+      "Explicit context sufficiency: distinguishes unknown language from missing execution parameters",
+      "Zero-argument system grounding: machine context grounds observation queries without target requirements",
+      "Hierarchical intent precedence: Security -> Delegation -> Conversational -> Dynamic Computation -> Composite -> Known Capability -> Clarification",
+      "Strict fail-closed boundaries: Destructive commands reject, ungrounded pronouns clarify"
+    ],
+    "classes": [
+      {
+        "name": "DYNAMIC_COMPUTATION",
+        "description": "Algorithmic synthesis, math modeling, data extraction, script execution",
+        "requires_code": true,
+        "precedence": 4
+      },
+      {
+        "name": "KNOWN_CAPABILITY",
+        "description": "Direct invocation of an authoritative registered workstation capability",
+        "requires_code": false,
+        "precedence": 6
+      },
+      {
+        "name": "COMPOSITE",
+        "description": "Multi-step operational workflow combining 2+ distinct capabilities",
+        "requires_code": false,
+        "precedence": 5
+      },
+      {
+        "name": "CONVERSATIONAL",
+        "description": "General knowledge, advice, greetings, literary discussion, symptom reports",
+        "requires_code": false,
+        "precedence": 3
+      },
+      {
+        "name": "CLARIFICATION_REQUIRED",
+        "description": "Bare nouns, bare verbs, ungrounded referents, missing mandatory arguments",
+        "requires_code": false,
+        "precedence": 7
+      },
+      {
+        "name": "DELEGATE_EXTERNAL_AI",
+        "description": "Explicit request to consult external AI advisors (ChatGPT, Claude, etc.)",
+        "requires_code": false,
+        "precedence": 2
+      },
+      {
+        "name": "SECURITY_REJECTION",
+        "description": "Prohibited destructive workstation actions failing closed immediately",
+        "requires_code": false,
+        "precedence": 1
+      }
+    ],
+    "grounding_rules": {
+      "zero_argument_capabilities": [
+        "list_windows",
+        "list_running_applications",
+        "foreground_window",
+        "system_summary",
+        "cpu_status",
+        "memory_status",
+        "disk_status",
+        "battery_status",
+        "gpu_status",
+        "audio_status",
+        "lock_workstation",
+        "take_screenshot",
+        "wifi_scan",
+        "wifi_status",
+        "wifi_disconnect",
+        "list_listening_ports",
+        "list_network_connections",
+        "list_processes",
+        "undo_window_layout",
+        "get_clipboard_content"
+      ],
+      "parameter_sufficiency_rules": {
+        "required_present_in_input": "SUFFICIENT -> KNOWN_CAPABILITY",
+        "required_present_in_context": "SUFFICIENT -> KNOWN_CAPABILITY",
+        "required_missing_and_ungrounded": "INSUFFICIENT -> CLARIFICATION_REQUIRED",
+        "zero_arg_or_optional_args": "SUFFICIENT -> KNOWN_CAPABILITY"
+      }
+    },
+    "security_invariants": {
+      "destructive_false_execution": 0,
+      "ungrounded_reference_execution": 0,
+      "block_persists_through_all_tiers": true,
+      "confirm_persists_through_all_tiers": true
+    }
+  }
+}

@@ -67,7 +67,7 @@ class PathPolicy:
         import tempfile
         from astrarun.core.paths import AstraPaths
         raw_workspaces = allowed_workspace_roots or [
-            r"E:\Workspace",
+            str(AstraPaths.workspace_root()),
             str(Path.home() / "Desktop"),
             str(Path.home() / "Downloads"),
             str(Path.home() / "Documents"),
@@ -299,6 +299,16 @@ class ASTCodePolicy:
         res = self.inspector.inspect(code_str)
         if not res.is_safe:
             violation_summary = "; ".join(res.violations[:3])
+            is_eval_exec_only = bool(res.violations) and all(
+                ("eval()" in v or "exec()" in v) and "shutil" not in v and "os." not in v
+                for v in res.violations
+            )
+            if is_eval_exec_only:
+                return (
+                    ActionGateVerdict.REQUIRE_CONFIRMATION,
+                    f"Dynamic code execution requires confirmation: {violation_summary}",
+                    RiskLevel.HIGH,
+                )
             return ActionGateVerdict.DENY, f"AST security violation: {violation_summary}", RiskLevel.CRITICAL
 
         # Additional defense-in-depth: check for obfuscated large base64 payload strings

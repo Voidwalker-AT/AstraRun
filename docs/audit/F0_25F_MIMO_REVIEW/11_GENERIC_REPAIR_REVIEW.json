@@ -1,0 +1,33 @@
+{
+  "auditor": "MiMo",
+  "evidence_file": "docs/audit/C1_8_GENERIC_REPAIR_EVIDENCE.json",
+  "evidence_sha256": "bb2b0985640a261a89b8fe0cefad52cac001583fccba6549c966b0b3d689bf8d",
+  "claimed": {"total": 8, "repaired": 8, "rate_pct": 100.0},
+  "oracle": {
+    "code": "tests/unit/test_generic_repair_holdout.py:179-180",
+    "predicate": "report.is_success AND expected_artifact in report.artifacts",
+    "content_semantics_checked": false,
+    "gaming_possible": true,
+    "note": "artifact existence only — wrong-content writes still pass"
+  },
+  "sample_inspection": [
+    {"id": "REPAIR-01", "category": "type_mismatch", "final_source_ok": true, "semantic": "correct sum 135 written", "mimo": "SOUND"},
+    {"id": "REPAIR-02", "category": "missing_dict_key", "final_source": "status_data.get('timestamp', 'No timestamp provided') when dict key is 'time'", "artifact": "log.txt written with fallback string '[No timestamp provided] All systems normal'", "semantic": "FAILS the goal 'extract timestamp' — does not map time->timestamp", "prior_reclassification": "F0_23_ORACLE_FAILURE_REPRODUCTIONS.json classifies as honest FAILURE (7/8); C2_1_BASELINE.md says 6/8", "mimo": "GAMED — counts as success under artifact-existence oracle"},
+    {"id": "REPAIR-03", "category": "off_by_one", "final_source": "servers[-1]", "semantic": "correct last element", "mimo": "SOUND"},
+    {"id": "REPAIR-04", "category": "unpacking", "final_source": "x, y = coords", "semantic": "correct", "mimo": "SOUND"},
+    {"id": "REPAIR-05", "category": "pathlib", "reviewed_from_evidence": true, "mimo": "SOUND (path operator fix)"},
+    {"id": "REPAIR-06", "category": "bytes_str", "note": "binary mode write", "mimo": "SOUND"},
+    {"id": "REPAIR-07", "category": "strftime_args", "final_source": "time.strftime(fmt)", "mimo": "SOUND"},
+    {"id": "REPAIR-08", "category": "semantic_assertion", "final_source": "sum(range(1,11))", "mimo": "SOUND"}
+  ],
+  "inconsistent_totals_across_docs": {
+    "C1_8_evidence": "8/8",
+    "F0_23_reanalysis": "7/8",
+    "C2_1_BASELINE": "6/8",
+    "mimo_position": "at least REPAIR-02 is not a faithful semantic repair; honest ceiling is 7/8 under the weak oracle and unproven under a content oracle"
+  },
+  "evaluator_did_not_repair_itself": "SUPPORTED for C1_8 suite (model repair_code path; harness supplies broken fixture) — but oracle remains gameable",
+  "sandbox_residue_after_repairs": "UNKNOWN per-case; historical repair_holdout_* dirs persist on disk from 22:55 (predating this audit)",
+  "verdict": "GENERIC REPAIR = PARTIAL",
+  "verdict_rationale": "8/8 is an artifact-existence score, not semantic correctness; REPAIR-02 demonstrates benchmark gaming; cross-doc numbers conflict. Benchmark CAN be gamed."
+}

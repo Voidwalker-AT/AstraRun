@@ -1,0 +1,29 @@
+{
+  "phase": "F0-25F.4",
+  "component": "ResultPresentationAttestation",
+  "timestamp": 1791834560.0,
+  "summary": {
+    "hardcoded_fallback_literals_removed": true,
+    "physical_observation_enforced": true,
+    "mechanism_specific_identity_verified": true,
+    "requested_vs_presented_distinction": "RESULT_PRESENTATION_REQUESTED is never sufficient; RESULT_PRESENTED requires physical HWND, process ID, window title, and visible placement on monitor."
+  },
+  "audited_mechanisms": [
+    {
+      "mechanism": "summary",
+      "identity_source": "Dynamic Win32 GetWindowTextW / GetClassNameW query against verified active HWND",
+      "removed_fallbacks": ["AstraRun", "QtLauncher"],
+      "verified": true
+    },
+    {
+      "mechanism": "explorer",
+      "identity_source": "Active Windows Explorer window HWND matching target directory or artifact stem",
+      "verified": true
+    },
+    {
+      "mechanism": "viewer",
+      "identity_source": "Physical PySide6 QMainWindow or system viewer displaying verified artifact content",
+      "verified": true
+    }
+  ]
+}

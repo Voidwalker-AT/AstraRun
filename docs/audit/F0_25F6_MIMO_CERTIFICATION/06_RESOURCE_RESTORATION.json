@@ -1,0 +1,16 @@
+{
+  "auditor": "MiMo",
+  "claim": "0 surviving notepad, 0 leaked FDs, desktop cleaned",
+  "json": "F0_25F6_RESOURCE_RESTORATION.json zero_resource_leak_verified=true",
+  "independent_process_check": "at certification time no notepad from run (expected — long after)",
+  "failed_attempt_resources": "not inventoried separately (single success-path accounting)",
+  "successful_fallback_resources": "recovered PID 22668 claimed cleaned",
+  "pids_create_times": "not archived in restoration JSON",
+  "hwnd_ownership": "claimed then cleaned; no post-state screenshot proof",
+  "ownership_class": {
+    "notepad_pids": "TASK_CREATED_DISPOSABLE (if they existed) — UNVERIFIED by pixels",
+    "zero_residue_by_killing_unrelated": "no evidence of mass kill; claim is specific to notepad",
+    "unknown": "whether windows ever appeared on interactive desktop"
+  },
+  "verdict": "RESOURCE RESTORATION = PARTIAL (bookkeeping claims zero leak; pixel/process evidence insufficient; not proven false)"
+}

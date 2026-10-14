@@ -1,0 +1,29 @@
+{
+  "auditor": "MiMo",
+  "total_failures": 18,
+  "listed_in_results_sample": 15,
+  "missing_from_sample": 3,
+  "analysis": [
+    {"id": "BLIND-004", "prompt": "LU decomposition linear equations -> solution.json", "expected": "DYNAMIC", "predicted": "KNOWN (composite_dag_workflow)", "category": "overly_conservative_dynamic_gate / semantic_retrieval_collision", "classification": "DEFINITE_PRODUCT_ERROR", "notes": "pure mathematical computation"},
+    {"id": "BLIND-007", "prompt": "rolling standard deviation variance of stock ticks", "expected": "DYNAMIC", "predicted": "CLARIFICATION", "category": "bad_clarification_threshold", "classification": "DEFINITE_PRODUCT_ERROR"},
+    {"id": "BLIND-012", "prompt": "convex hull Graham scan 2D points", "expected": "DYNAMIC", "predicted": "KNOWN (wifi_scan)", "category": "lexical_collision", "classification": "DEFINITE_PRODUCT_ERROR", "notes": "wifi_scan collision is bizarre - lexical?"},
+    {"id": "BLIND-027", "prompt": "SSH login failure summary table from auth.log", "expected": "DYNAMIC", "predicted": "KNOWN (system_summary)", "category": "semantic_retrieval_collision", "classification": "PLAUSIBLE_ALTERNATIVE_ROUTE", "notes": "could be decomposed as log parse+summary via known composite; benchmark single-label narrow", "collision": true},
+    {"id": "BLIND-031", "prompt": "nested JSON flatten sales summary", "expected": "DYNAMIC", "predicted": "KNOWN (system_summary)", "category": "semantic_retrieval_collision", "classification": "PLAUSIBLE_ALTERNATIVE_ROUTE", "collision": true},
+    {"id": "BLIND-033", "prompt": "git log aggregation commits/lines", "expected": "DYNAMIC", "predicted": "KNOWN (project_git_status)", "category": "semantic_retrieval_collision", "classification": "PLAUSIBLE_ALTERNATIVE_ROUTE", "collision": true},
+    {"id": "BLIND-036", "prompt": "HTTP 500 exceptions grouped report", "expected": "DYNAMIC", "predicted": "KNOWN (system_summary)", "category": "semantic_retrieval_collision", "classification": "PLAUSIBLE_ALTERNATIVE_ROUTE", "collision": true},
+    {"id": "BLIND-038", "prompt": "iostat.log I/O metrics group averages", "expected": "DYNAMIC", "predicted": "KNOWN (save_text_file)", "category": "lexical_collision", "classification": "PLAUSIBLE_ALTERNATIVE_ROUTE", "collision": true},
+    {"id": "BLIND-043", "prompt": "kernel panic stack trace report", "expected": "DYNAMIC", "predicted": "KNOWN (generate_battery_report)", "category": "lexical_collision", "classification": "DEFINITE_PRODUCT_ERROR", "notes": "battery_report for kernel panic is wrong capability"},
+    {"id": "BLIND-049", "prompt": "correlation matrix multivariate sensor data", "expected": "DYNAMIC", "predicted": "CLARIFICATION", "category": "bad_clarification_threshold", "classification": "DEFINITE_PRODUCT_ERROR"},
+    {"id": "BLIND-050", "prompt": "frequency histogram bin table customer ages", "expected": "DYNAMIC", "predicted": "CLARIFICATION", "category": "bad_clarification_threshold", "classification": "DEFINITE_PRODUCT_ERROR", "collision": true},
+    {"id": "BLIND-051", "prompt": "scatter plot coordinates k-means clustered data", "expected": "DYNAMIC", "predicted": "KNOWN (generate_battery_report)", "category": "lexical_collision", "classification": "DEFINITE_PRODUCT_ERROR"},
+    {"id": "BLIND-074", "prompt": "take a screenshot", "expected": "KNOWN", "predicted": "CLARIFICATION", "category": "bad_clarification_threshold", "classification": "DEFINITE_PRODUCT_ERROR"},
+    {"id": "BLIND-075", "prompt": "capture screen", "expected": "KNOWN", "predicted": "CLARIFICATION", "category": "bad_clarification_threshold", "classification": "DEFINITE_PRODUCT_ERROR"},
+    {"id": "BLIND-081", "prompt": "show hostname", "expected": "KNOWN", "predicted": "CLARIFICATION", "category": "bad_clarification_threshold", "classification": "DEFINITE_PRODUCT_ERROR"},
+    {"id": "MISSING-1", "prompt": "unknown", "expected": "KNOWN", "predicted": "CLARIFICATION", "category": "inferred_from_confusion", "classification": "UNVERIFIED_DETAIL"},
+    {"id": "MISSING-2", "prompt": "unknown", "expected": "CONVERSATIONAL", "predicted": "KNOWN", "category": "inferred", "classification": "UNVERIFIED_DETAIL"},
+    {"id": "MISSING-3", "prompt": "unknown", "expected": "CLARIFICATION", "predicted": "KNOWN", "category": "inferred", "classification": "UNVERIFIED_DETAIL"}
+  ],
+  "tally": {"DEFINITE_PRODUCT_ERROR": 10, "PLAUSIBLE_ALTERNATIVE_ROUTE": 6, "UNVERIFIED_DETAIL": 2, "BENCHMARK_LABEL_AMBIGUITY": "overlap with PLAUSIBLE (collision cases)"},
+  "label_questions": "Several collision-case DYNAMIC labels are debatable if composite known workflows legitimately handle log/summary transforms (BLIND-027/031/033/036/038); however BLIND-012 wifi_scan and BLIND-043/051 battery_report are clearly wrong capability mappings regardless of label philosophy",
+  "verdict": "Mixed: ~10 genuine product errors (mostly under-routing to clarification or wrong known capability), ~6 plausibly ambiguous labels, no fix performed"
+}

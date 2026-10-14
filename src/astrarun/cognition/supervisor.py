@@ -15,6 +15,7 @@ import os
 import secrets
 import subprocess
 import time
+from pathlib import Path
 from typing import Dict, Optional, Tuple
 
 import httpx
@@ -193,6 +194,7 @@ class ModelSupervisor:
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
                 creationflags=flags,
+                cwd=str(Path(self.server_binary).parent),
             )
             self._popens[model_id] = popen
 

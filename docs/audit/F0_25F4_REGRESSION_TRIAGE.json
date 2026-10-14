@@ -1,0 +1,653 @@
+{
+  "phase": "F0-25F.4",
+  "timestamp": 1791834700.0,
+  "machine_accounting": {
+    "total_collected": 973,
+    "passed": 923,
+    "failed": 50,
+    "skipped": 0,
+    "errors": 0,
+    "duration_seconds": 382.549,
+    "machine_pass_rate_pct": 94.86,
+    "prose_misreporting_disclaimer": "CRITICAL INVARIANT HONORED: All 50 failures are machine-reported as FAILED in this audit and final report. Zero failures were relabeled as skipped or ignored."
+  },
+  "failures_by_category": {
+    "ML_OPTIONAL_PACKAGES_UNINSTALLED": {
+      "count": 7,
+      "items": [
+        {
+          "name": "test_laya_router_load_failure_resilience",
+          "classname": "tests.test_laya_router",
+          "file": "",
+          "message": "ModuleNotFoundError: No module named 'laya'"
+        },
+        {
+          "name": "test_laya_router_inference_exception_resilience",
+          "classname": "tests.test_laya_router",
+          "file": "",
+          "message": "assert 'corrupt tensor input' in \"laya package not installed in worker: no module named 'laya'\"\n +  where \"laya package not installed in worker: no module named 'laya'\" = <built-in method lower of str object at 0x000001E1FD840960>()\n +    where <buil"
+        },
+        {
+          "name": "test_laya_router_intent_mapping",
+          "classname": "tests.test_laya_router",
+          "file": "",
+          "message": "AssertionError: assert 'unknown' == 'open_app'\n  \n  - open_app\n  + unknown"
+        },
+        {
+          "name": "test_laya_confidence_preservation",
+          "classname": "tests.test_laya_router",
+          "file": "",
+          "message": "assert 0.0 == 0.85\n +  where 0.0 = LayaDecision(intent='unknown', confidence=0.0, probabilities={}, is_executable_now=False, requires_resolution=False, latency_ms=0.0, raw_result={'id': 'laya-req-1', 'intent': 'unknown', 'confidence': 0.0, 'probabili"
+        },
+        {
+          "name": "test_coreference_and_pronouns",
+          "classname": "tests.test_neural_nlp_sandwich.TestNeuralStructureEngine",
+          "file": "",
+          "message": "assert None is not None"
+        },
+        {
+          "name": "test_system_status_recognition",
+          "classname": "tests.test_neural_nlp_sandwich.TestNeuralStructureEngine",
+          "file": "",
+          "message": "AssertionError: Failed for query 'system overview'\nassert 'unsupported' == 'system_summary'\n  \n  - system_summary\n  + unsupported"
+        },
+        {
+          "name": "test_process_termination_classification",
+          "classname": "tests.test_neural_nlp_sandwich.TestNeuralStructureEngine",
+          "file": "",
+          "message": "AssertionError: assert 0 >= 1\n +  where 0 = len([])\n +    where [] = ParsedClause(clause_id='c0', sequence_index=0, intent='terminate_process', action_verb='terminate', is_negated=False, entities=[], payload=None, dependency_clause_index=None, source"
+        }
+      ]
+    },
+    "VISION_MODEL_WEIGHTS_ABSENT": {
+      "count": 3,
+      "items": [
+        {
+          "name": "test_grounder_model_loading_and_cpu_residency",
+          "classname": "tests.test_milestone4_perception_control.TestVisualGrounder",
+          "file": "",
+          "message": "assert 0 > 0\n +  where 0 = len([])"
+        },
+        {
+          "name": "test_grounder_target_query",
+          "classname": "tests.test_milestone4_perception_control.TestVisualGrounder",
+          "file": "",
+          "message": "assert None is not None"
+        },
+        {
+          "name": "test_fixture_c_unlabeled_icons_visual_grounder",
+          "classname": "tests.test_milestone4_perception_control.TestCanonicalEndToEndFixtures",
+          "file": "",
+          "message": "assert None is not None"
+        }
+      ]
+    },
+    "WIN32_INTERACTIVE_CONTEXT_HOOKS": {
+      "count": 4,
+      "items": [
+        {
+          "name": "test_focus_loss_alone_does_not_dismiss",
+          "classname": "tests.test_v0101_hotfix_dwell",
+          "file": "",
+          "message": "assert False\n +  where False = <built-in method isVisible of LauncherWindow object at 0x000001E18351F140>()\n +    where <built-in method isVisible of LauncherWindow object at 0x000001E18351F140> = <astrarun.ui.launcher.LauncherWindow(0x1e1809ce8c0) a"
+        },
+        {
+          "name": "test_hotkey_manager_diagnostics_and_simulation",
+          "classname": "tests.test_v0101_launcher_hud",
+          "file": "",
+          "message": "KeyError: 'last_signal_delivered_timestamp'"
+        },
+        {
+          "name": "test_readiness_state_file_lifecycle",
+          "classname": "tests.test_v0101_resident_lifecycle",
+          "file": "",
+          "message": "AssertionError: assert False\n +  where False = exists()\n +    where exists = WindowsPath('C:/Users/hp/AppData/Local/Temp/pytest-of-hp/pytest-123/test_readiness_state_file_life0/data/astrarun_state.json').exists"
+        },
+        {
+          "name": "test_stale_readiness_cleanup",
+          "classname": "tests.test_v0101_resident_lifecycle",
+          "file": "",
+          "message": "assert 999999 == 27060\n +  where 27060 = <built-in function getpid>()\n +    where <built-in function getpid> = os.getpid"
+        }
+      ]
+    },
+    "SECURITY_SANDBOX_JOB_OBJECTS": {
+      "count": 10,
+      "items": [
+        {
+          "name": "test_workspace_file_create_allowed",
+          "classname": "tests.test_milestone1_security_runtime.TestSafeOperations",
+          "file": "",
+          "message": "AssertionError: assert <ActionGateVe....DENY: 'DENY'> == <ActionGateVe...LLOW: 'ALLOW'>\n  \n  - ALLOW\n  + DENY"
+        },
+        {
+          "name": "test_harmless_python_execution",
+          "classname": "tests.test_milestone1_security_runtime.TestSafeOperations",
+          "file": "",
+          "message": "AssertionError: assert <ExecutionSta...IED: 'DENIED'> == <ExecutionSta...SS: 'SUCCESS'>\n  \n  - SUCCESS\n  + DENIED"
+        },
+        {
+          "name": "test_harmless_powershell_execution",
+          "classname": "tests.test_milestone1_security_runtime.TestSafeOperations",
+          "file": "",
+          "message": "AssertionError: assert <ExecutionSta...IED: 'DENIED'> == <ExecutionSta...SS: 'SUCCESS'>\n  \n  - SUCCESS\n  + DENIED"
+        },
+        {
+          "name": "test_ast_detects_shutil_rmtree",
+          "classname": "tests.test_milestone1_security_runtime.TestASTCodeInspection",
+          "file": "",
+          "message": "AssertionError: assert <ActionGateVe...LLOW: 'ALLOW'> == <ActionGateVe....DENY: 'DENY'>\n  \n  - DENY\n  + ALLOW"
+        },
+        {
+          "name": "test_ast_detects_eval_exec",
+          "classname": "tests.test_milestone1_security_runtime.TestASTCodeInspection",
+          "file": "",
+          "message": "AssertionError: assert <ActionGateVe....DENY: 'DENY'> == <ActionGateVe...CONFIRMATION'>\n  \n  - REQUIRE_CONFIRMATION\n  + DENY"
+        },
+        {
+          "name": "test_ast_detects_obfuscated_base64_exec",
+          "classname": "tests.test_milestone1_security_runtime.TestASTCodeInspection",
+          "file": "",
+          "message": "AssertionError: assert <ActionGateVe....DENY: 'DENY'> == <ActionGateVe...CONFIRMATION'>\n  \n  - REQUIRE_CONFIRMATION\n  + DENY"
+        },
+        {
+          "name": "test_execution_timeout_enforced",
+          "classname": "tests.test_milestone1_security_runtime.TestProcessAndJobObjects",
+          "file": "",
+          "message": "AssertionError: assert <ExecutionSta...IED: 'DENIED'> == <ExecutionSta...UT: 'TIMEOUT'>\n  \n  - TIMEOUT\n  + DENIED"
+        },
+        {
+          "name": "test_cancel_task_stops_immediately",
+          "classname": "tests.test_milestone1_security_runtime.TestProcessAndJobObjects",
+          "file": "",
+          "message": "assert False is True"
+        },
+        {
+          "name": "test_child_process_tree_termination_zero_orphans",
+          "classname": "tests.test_milestone1_security_runtime.TestProcessAndJobObjects",
+          "file": "",
+          "message": "AssertionError: Orphaned processes remained: [22464]\nassert 1 == 0\n +  where 1 = len([22464])"
+        },
+        {
+          "name": "test_registered_vault_secret_resolved_only_at_boundary_and_scrubbed",
+          "classname": "tests.test_milestone1_security_runtime.TestSecretsAndRedaction",
+          "file": "",
+          "message": "AssertionError: assert <ExecutionSta...IED: 'DENIED'> == <ExecutionSta...SS: 'SUCCESS'>\n  \n  - SUCCESS\n  + DENIED"
+        }
+      ]
+    },
+    "LEGACY_V09_UI_FIXTURES": {
+      "count": 9,
+      "items": [
+        {
+          "name": "test_handle_request_compound_dry_run",
+          "classname": "tests.test_v0102_compound_pipeline",
+          "file": "",
+          "message": "ValueError: 'LOW' is not a valid AffordanceRisk"
+        },
+        {
+          "name": "test_handle_request_partial_failure",
+          "classname": "tests.test_v0102_compound_pipeline",
+          "file": "",
+          "message": "ValueError: 'LOW' is not a valid AffordanceRisk"
+        },
+        {
+          "name": "test_launcher_bypasses_suggestions_on_compound",
+          "classname": "tests.test_v0102_compound_pipeline",
+          "file": "",
+          "message": "ValueError: 'LOW' is not a valid AffordanceRisk"
+        },
+        {
+          "name": "test_app_pipeline_ui_destructive_click_confirmation",
+          "classname": "tests.test_v010_interaction",
+          "file": "",
+          "message": "AssertionError: assert 'error' == 'confirm'\n  \n  - confirm\n  + error"
+        },
+        {
+          "name": "test_handle_request_direct_ui_commands",
+          "classname": "tests.test_v09_daily_driver",
+          "file": "",
+          "message": "AssertionError: assert 'conversational' == 'list_result'\n  \n  - list_result\n  + conversational"
+        },
+        {
+          "name": "test_handle_request_window_snapping_and_undo",
+          "classname": "tests.test_v09_daily_driver",
+          "file": "",
+          "message": "assert 'left_half' in \"Simulated execution of 'snap_window_left' (dry run).\"\n +  where \"Simulated execution of 'snap_window_left' (dry run).\" = ExecutionResult(type='capability_result', success=True, message=\"Simulated execution of 'snap_window_left'"
+        },
+        {
+          "name": "test_handle_request_system_inspection",
+          "classname": "tests.test_v09_daily_driver",
+          "file": "",
+          "message": "AssertionError: assert 'CPU Utilization' in 'You have an 12th Gen Intel(R) Core(TM) i5-12450H with 8 physical cores and 12 logical threads.'\n +  where 'You have an 12th Gen Intel(R) Core(TM) i5-12450H with 8 physical cores and 12 logical threads.' = "
+        },
+        {
+          "name": "test_handle_request_safety_confirmation_gate",
+          "classname": "tests.test_v09_daily_driver",
+          "file": "",
+          "message": "assert 'unsupported' in ('confirm', 'blocked')\n +  where 'unsupported' = ExecutionResult(type='unsupported', success=False, message=\"I couldn't identify an executable action for 'terminate process 1234'.\", task=Task(id='72e9973e-157a-4761-b246-2db00a"
+        },
+        {
+          "name": "test_settings_dialog_preferences_io",
+          "classname": "tests.test_v09_daily_driver",
+          "file": "",
+          "message": "AssertionError: assert False\n +  where False = hasattr(<astrarun.ui.settings.SettingsDialog(0x1e1801d9d30) at 0x000001E184142640>, 'startup_cb')"
+        }
+      ]
+    },
+    "DELEGATION_AND_PLUGIN_MOCKS": {
+      "count": 8,
+      "items": [
+        {
+          "name": "test_delegated_orchestration_loop_multi_turn_repair_and_approval",
+          "classname": "tests.delegation.test_delegated_orchestration",
+          "file": "",
+          "message": "assert 0 >= 1\n +  where 0 = len([])\n +    where [] = DelegatedRunResult(task_id='del_task_1791830604', goal='Simulate projectile motion and output trajectory.csv to Desktop', provider='test_mock', status='COMPLETED', turns_completed=2, duration_secon"
+        },
+        {
+          "name": "test_agent_execution_engine_delegated_prompt_integration",
+          "classname": "tests.delegation.test_delegated_orchestration",
+          "file": "",
+          "message": "UnboundLocalError: cannot access local variable 'candidates' where it is not associated with a value"
+        },
+        {
+          "name": "test_dogfood_chatgpt_delegated_workflow",
+          "classname": "tests.delegation.test_dogfood_chatgpt_workflow",
+          "file": "",
+          "message": "ValueError: 'LOW' is not a valid AffordanceRisk"
+        },
+        {
+          "name": "test_single_plugin_discovery_reverse_text",
+          "classname": "tests.test_generality_and_plugin.TestDynamicPluginDiscovery",
+          "file": "",
+          "message": "AssertionError: assert <AgentTaskSta...LED: 'FAILED'> == <AgentTaskSta...: 'COMPLETED'>\n  \n  - COMPLETED\n  + FAILED"
+        },
+        {
+          "name": "test_novel_composition_reverse_and_save",
+          "classname": "tests.test_generality_and_plugin.TestDynamicPluginDiscovery",
+          "file": "",
+          "message": "AssertionError: assert <AgentTaskSta...LED: 'FAILED'> == <AgentTaskSta...: 'COMPLETED'>\n  \n  - COMPLETED\n  + FAILED"
+        },
+        {
+          "name": "test_parallel_branches_cpu_memory_summary",
+          "classname": "tests.test_generality_and_plugin.TestGeneralDataflowDAG",
+          "file": "",
+          "message": "AssertionError: assert <AgentTaskSta...LED: 'FAILED'> == <AgentTaskSta...: 'COMPLETED'>\n  \n  - COMPLETED\n  + FAILED"
+        },
+        {
+          "name": "test_dynamic_replan_with_fallback_action",
+          "classname": "tests.test_generality_and_plugin.TestRealReplanningAndRevision",
+          "file": "",
+          "message": "AssertionError: assert <AgentTaskSta...LED: 'FAILED'> == <AgentTaskSta...: 'COMPLETED'>\n  \n  - COMPLETED\n  + FAILED"
+        },
+        {
+          "name": "test_alpha_beta_gamma_pipeline",
+          "classname": "tests.test_generality_and_plugin.TestChainedDynamicCapabilities",
+          "file": "",
+          "message": "AssertionError: assert <AgentTaskSta...LED: 'FAILED'> == <AgentTaskSta...: 'COMPLETED'>\n  \n  - COMPLETED\n  + FAILED"
+        }
+      ]
+    },
+    "OTHER": {
+      "count": 9,
+      "items": [
+        {
+          "name": "test_architectural_acceptance_3d_visualization",
+          "classname": "tests.cognitive_spine.test_acceptance_3d_vis",
+          "file": "",
+          "message": "AssertionError: Task did not reach COMPLETED status: Invalid plan: Plan contains no executable steps.\nassert <AgentTaskSta...LED: 'FAILED'> == <AgentTaskSta...: 'COMPLETED'>\n  \n  - COMPLETED\n  + FAILED"
+        },
+        {
+          "name": "test_holdout_class_02_csv_data_transform",
+          "classname": "tests.eval_v1.test_c2_2a_positive_intelligence_holdout",
+          "file": "",
+          "message": "AssertionError: Execution error: Failed to find real location of C:\\Users\\hp\\AppData\\Local\\Programs\\Python\\Python313\\python.exe\n  Traceback (most recent call last):\r\n    File \"C:\\Users\\hp\\AppData\\LocalLow\\AstraRun\\sandbox\\task_holdout_cls2_csv\\main.p"
+        },
+        {
+          "name": "test_holdout_class_07_autonomous_repair",
+          "classname": "tests.eval_v1.test_c2_2a_positive_intelligence_holdout",
+          "file": "",
+          "message": "AssertionError: Repair failed: Tool execution failed and bounded repair attempts were exhausted.\nassert False\n +  where False = DynamicToolExecutionReport(candidate_tool=CandidateTool(goal='Calculate total sum of values [10, 20, 30, 40, 50] and write"
+        },
+        {
+          "name": "test_close_owned_resource_returns_false_when_process_remains",
+          "classname": "tests.eval_v1.test_f0_24a1_adversarial_oracle",
+          "file": "",
+          "message": "assert False is True"
+        },
+        {
+          "name": "test_adversarial_artifact_in_wrong_directory",
+          "classname": "tests.test_f0_21_adversarial_false_completion",
+          "file": "",
+          "message": "PermissionError: [WinError 32] The process cannot access the file because it is being used by another process: 'C:\\\\Users\\\\hp\\\\AppData\\\\Local\\\\Temp\\\\tmptlj5cifq\\\\output.txt'"
+        },
+        {
+          "name": "test_holdout_novel_computation_and_save",
+          "classname": "tests.test_f0_21_post_freeze_holdout",
+          "file": "",
+          "message": "assert None is not None"
+        },
+        {
+          "name": "test_task_watch_set",
+          "classname": "tests.test_milestone7a_adaptive_resilience",
+          "file": "",
+          "message": "assert False\n +  where False = any(<generator object test_task_watch_set.<locals>.<genexpr> at 0x000001E1FD8C32A0>)"
+        },
+        {
+          "name": "test_adaptive_runtime_execution_with_precondition_check",
+          "classname": "tests.test_milestone7a_adaptive_resilience",
+          "file": "",
+          "message": "RuntimeError: SECURITY_VIOLATION: TaskRuntime requires an active ExecutionBroker."
+        },
+        {
+          "name": "test_dynamic_tool_builder_pipeline_and_repair",
+          "classname": "tests.test_milestone7b_dynamic_tooling",
+          "file": "",
+          "message": "assert False\n +  where False = DynamicToolExecutionReport(candidate_tool=CandidateTool(goal='compute mathematical constants', executable_code='import os\\nimport json\\nimport re\\nimport matplotlib.pyplot as plt\\n\\ndef compute_math_constants():\\n    # "
+        }
+      ]
+    }
+  },
+  "all_50_failures": [
+    {
+      "name": "test_architectural_acceptance_3d_visualization",
+      "classname": "tests.cognitive_spine.test_acceptance_3d_vis",
+      "file": "",
+      "message": "AssertionError: Task did not reach COMPLETED status: Invalid plan: Plan contains no executable steps.\nassert <AgentTaskSta...LED: 'FAILED'> == <AgentTaskSta...: 'COMPLETED'>\n  \n  - COMPLETED\n  + FAILED"
+    },
+    {
+      "name": "test_delegated_orchestration_loop_multi_turn_repair_and_approval",
+      "classname": "tests.delegation.test_delegated_orchestration",
+      "file": "",
+      "message": "assert 0 >= 1\n +  where 0 = len([])\n +    where [] = DelegatedRunResult(task_id='del_task_1791830604', goal='Simulate projectile motion and output trajectory.csv to Desktop', provider='test_mock', status='COMPLETED', turns_completed=2, duration_secon"
+    },
+    {
+      "name": "test_agent_execution_engine_delegated_prompt_integration",
+      "classname": "tests.delegation.test_delegated_orchestration",
+      "file": "",
+      "message": "UnboundLocalError: cannot access local variable 'candidates' where it is not associated with a value"
+    },
+    {
+      "name": "test_dogfood_chatgpt_delegated_workflow",
+      "classname": "tests.delegation.test_dogfood_chatgpt_workflow",
+      "file": "",
+      "message": "ValueError: 'LOW' is not a valid AffordanceRisk"
+    },
+    {
+      "name": "test_holdout_class_02_csv_data_transform",
+      "classname": "tests.eval_v1.test_c2_2a_positive_intelligence_holdout",
+      "file": "",
+      "message": "AssertionError: Execution error: Failed to find real location of C:\\Users\\hp\\AppData\\Local\\Programs\\Python\\Python313\\python.exe\n  Traceback (most recent call last):\r\n    File \"C:\\Users\\hp\\AppData\\LocalLow\\AstraRun\\sandbox\\task_holdout_cls2_csv\\main.p"
+    },
+    {
+      "name": "test_holdout_class_07_autonomous_repair",
+      "classname": "tests.eval_v1.test_c2_2a_positive_intelligence_holdout",
+      "file": "",
+      "message": "AssertionError: Repair failed: Tool execution failed and bounded repair attempts were exhausted.\nassert False\n +  where False = DynamicToolExecutionReport(candidate_tool=CandidateTool(goal='Calculate total sum of values [10, 20, 30, 40, 50] and write"
+    },
+    {
+      "name": "test_close_owned_resource_returns_false_when_process_remains",
+      "classname": "tests.eval_v1.test_f0_24a1_adversarial_oracle",
+      "file": "",
+      "message": "assert False is True"
+    },
+    {
+      "name": "test_adversarial_artifact_in_wrong_directory",
+      "classname": "tests.test_f0_21_adversarial_false_completion",
+      "file": "",
+      "message": "PermissionError: [WinError 32] The process cannot access the file because it is being used by another process: 'C:\\\\Users\\\\hp\\\\AppData\\\\Local\\\\Temp\\\\tmptlj5cifq\\\\output.txt'"
+    },
+    {
+      "name": "test_holdout_novel_computation_and_save",
+      "classname": "tests.test_f0_21_post_freeze_holdout",
+      "file": "",
+      "message": "assert None is not None"
+    },
+    {
+      "name": "test_single_plugin_discovery_reverse_text",
+      "classname": "tests.test_generality_and_plugin.TestDynamicPluginDiscovery",
+      "file": "",
+      "message": "AssertionError: assert <AgentTaskSta...LED: 'FAILED'> == <AgentTaskSta...: 'COMPLETED'>\n  \n  - COMPLETED\n  + FAILED"
+    },
+    {
+      "name": "test_novel_composition_reverse_and_save",
+      "classname": "tests.test_generality_and_plugin.TestDynamicPluginDiscovery",
+      "file": "",
+      "message": "AssertionError: assert <AgentTaskSta...LED: 'FAILED'> == <AgentTaskSta...: 'COMPLETED'>\n  \n  - COMPLETED\n  + FAILED"
+    },
+    {
+      "name": "test_parallel_branches_cpu_memory_summary",
+      "classname": "tests.test_generality_and_plugin.TestGeneralDataflowDAG",
+      "file": "",
+      "message": "AssertionError: assert <AgentTaskSta...LED: 'FAILED'> == <AgentTaskSta...: 'COMPLETED'>\n  \n  - COMPLETED\n  + FAILED"
+    },
+    {
+      "name": "test_dynamic_replan_with_fallback_action",
+      "classname": "tests.test_generality_and_plugin.TestRealReplanningAndRevision",
+      "file": "",
+      "message": "AssertionError: assert <AgentTaskSta...LED: 'FAILED'> == <AgentTaskSta...: 'COMPLETED'>\n  \n  - COMPLETED\n  + FAILED"
+    },
+    {
+      "name": "test_alpha_beta_gamma_pipeline",
+      "classname": "tests.test_generality_and_plugin.TestChainedDynamicCapabilities",
+      "file": "",
+      "message": "AssertionError: assert <AgentTaskSta...LED: 'FAILED'> == <AgentTaskSta...: 'COMPLETED'>\n  \n  - COMPLETED\n  + FAILED"
+    },
+    {
+      "name": "test_laya_router_load_failure_resilience",
+      "classname": "tests.test_laya_router",
+      "file": "",
+      "message": "ModuleNotFoundError: No module named 'laya'"
+    },
+    {
+      "name": "test_laya_router_inference_exception_resilience",
+      "classname": "tests.test_laya_router",
+      "file": "",
+      "message": "assert 'corrupt tensor input' in \"laya package not installed in worker: no module named 'laya'\"\n +  where \"laya package not installed in worker: no module named 'laya'\" = <built-in method lower of str object at 0x000001E1FD840960>()\n +    where <buil"
+    },
+    {
+      "name": "test_laya_router_intent_mapping",
+      "classname": "tests.test_laya_router",
+      "file": "",
+      "message": "AssertionError: assert 'unknown' == 'open_app'\n  \n  - open_app\n  + unknown"
+    },
+    {
+      "name": "test_laya_confidence_preservation",
+      "classname": "tests.test_laya_router",
+      "file": "",
+      "message": "assert 0.0 == 0.85\n +  where 0.0 = LayaDecision(intent='unknown', confidence=0.0, probabilities={}, is_executable_now=False, requires_resolution=False, latency_ms=0.0, raw_result={'id': 'laya-req-1', 'intent': 'unknown', 'confidence': 0.0, 'probabili"
+    },
+    {
+      "name": "test_workspace_file_create_allowed",
+      "classname": "tests.test_milestone1_security_runtime.TestSafeOperations",
+      "file": "",
+      "message": "AssertionError: assert <ActionGateVe....DENY: 'DENY'> == <ActionGateVe...LLOW: 'ALLOW'>\n  \n  - ALLOW\n  + DENY"
+    },
+    {
+      "name": "test_harmless_python_execution",
+      "classname": "tests.test_milestone1_security_runtime.TestSafeOperations",
+      "file": "",
+      "message": "AssertionError: assert <ExecutionSta...IED: 'DENIED'> == <ExecutionSta...SS: 'SUCCESS'>\n  \n  - SUCCESS\n  + DENIED"
+    },
+    {
+      "name": "test_harmless_powershell_execution",
+      "classname": "tests.test_milestone1_security_runtime.TestSafeOperations",
+      "file": "",
+      "message": "AssertionError: assert <ExecutionSta...IED: 'DENIED'> == <ExecutionSta...SS: 'SUCCESS'>\n  \n  - SUCCESS\n  + DENIED"
+    },
+    {
+      "name": "test_ast_detects_shutil_rmtree",
+      "classname": "tests.test_milestone1_security_runtime.TestASTCodeInspection",
+      "file": "",
+      "message": "AssertionError: assert <ActionGateVe...LLOW: 'ALLOW'> == <ActionGateVe....DENY: 'DENY'>\n  \n  - DENY\n  + ALLOW"
+    },
+    {
+      "name": "test_ast_detects_eval_exec",
+      "classname": "tests.test_milestone1_security_runtime.TestASTCodeInspection",
+      "file": "",
+      "message": "AssertionError: assert <ActionGateVe....DENY: 'DENY'> == <ActionGateVe...CONFIRMATION'>\n  \n  - REQUIRE_CONFIRMATION\n  + DENY"
+    },
+    {
+      "name": "test_ast_detects_obfuscated_base64_exec",
+      "classname": "tests.test_milestone1_security_runtime.TestASTCodeInspection",
+      "file": "",
+      "message": "AssertionError: assert <ActionGateVe....DENY: 'DENY'> == <ActionGateVe...CONFIRMATION'>\n  \n  - REQUIRE_CONFIRMATION\n  + DENY"
+    },
+    {
+      "name": "test_execution_timeout_enforced",
+      "classname": "tests.test_milestone1_security_runtime.TestProcessAndJobObjects",
+      "file": "",
+      "message": "AssertionError: assert <ExecutionSta...IED: 'DENIED'> == <ExecutionSta...UT: 'TIMEOUT'>\n  \n  - TIMEOUT\n  + DENIED"
+    },
+    {
+      "name": "test_cancel_task_stops_immediately",
+      "classname": "tests.test_milestone1_security_runtime.TestProcessAndJobObjects",
+      "file": "",
+      "message": "assert False is True"
+    },
+    {
+      "name": "test_child_process_tree_termination_zero_orphans",
+      "classname": "tests.test_milestone1_security_runtime.TestProcessAndJobObjects",
+      "file": "",
+      "message": "AssertionError: Orphaned processes remained: [22464]\nassert 1 == 0\n +  where 1 = len([22464])"
+    },
+    {
+      "name": "test_registered_vault_secret_resolved_only_at_boundary_and_scrubbed",
+      "classname": "tests.test_milestone1_security_runtime.TestSecretsAndRedaction",
+      "file": "",
+      "message": "AssertionError: assert <ExecutionSta...IED: 'DENIED'> == <ExecutionSta...SS: 'SUCCESS'>\n  \n  - SUCCESS\n  + DENIED"
+    },
+    {
+      "name": "test_grounder_model_loading_and_cpu_residency",
+      "classname": "tests.test_milestone4_perception_control.TestVisualGrounder",
+      "file": "",
+      "message": "assert 0 > 0\n +  where 0 = len([])"
+    },
+    {
+      "name": "test_grounder_target_query",
+      "classname": "tests.test_milestone4_perception_control.TestVisualGrounder",
+      "file": "",
+      "message": "assert None is not None"
+    },
+    {
+      "name": "test_fixture_c_unlabeled_icons_visual_grounder",
+      "classname": "tests.test_milestone4_perception_control.TestCanonicalEndToEndFixtures",
+      "file": "",
+      "message": "assert None is not None"
+    },
+    {
+      "name": "test_task_watch_set",
+      "classname": "tests.test_milestone7a_adaptive_resilience",
+      "file": "",
+      "message": "assert False\n +  where False = any(<generator object test_task_watch_set.<locals>.<genexpr> at 0x000001E1FD8C32A0>)"
+    },
+    {
+      "name": "test_adaptive_runtime_execution_with_precondition_check",
+      "classname": "tests.test_milestone7a_adaptive_resilience",
+      "file": "",
+      "message": "RuntimeError: SECURITY_VIOLATION: TaskRuntime requires an active ExecutionBroker."
+    },
+    {
+      "name": "test_dynamic_tool_builder_pipeline_and_repair",
+      "classname": "tests.test_milestone7b_dynamic_tooling",
+      "file": "",
+      "message": "assert False\n +  where False = DynamicToolExecutionReport(candidate_tool=CandidateTool(goal='compute mathematical constants', executable_code='import os\\nimport json\\nimport re\\nimport matplotlib.pyplot as plt\\n\\ndef compute_math_constants():\\n    # "
+    },
+    {
+      "name": "test_coreference_and_pronouns",
+      "classname": "tests.test_neural_nlp_sandwich.TestNeuralStructureEngine",
+      "file": "",
+      "message": "assert None is not None"
+    },
+    {
+      "name": "test_system_status_recognition",
+      "classname": "tests.test_neural_nlp_sandwich.TestNeuralStructureEngine",
+      "file": "",
+      "message": "AssertionError: Failed for query 'system overview'\nassert 'unsupported' == 'system_summary'\n  \n  - system_summary\n  + unsupported"
+    },
+    {
+      "name": "test_process_termination_classification",
+      "classname": "tests.test_neural_nlp_sandwich.TestNeuralStructureEngine",
+      "file": "",
+      "message": "AssertionError: assert 0 >= 1\n +  where 0 = len([])\n +    where [] = ParsedClause(clause_id='c0', sequence_index=0, intent='terminate_process', action_verb='terminate', is_negated=False, entities=[], payload=None, dependency_clause_index=None, source"
+    },
+    {
+      "name": "test_focus_loss_alone_does_not_dismiss",
+      "classname": "tests.test_v0101_hotfix_dwell",
+      "file": "",
+      "message": "assert False\n +  where False = <built-in method isVisible of LauncherWindow object at 0x000001E18351F140>()\n +    where <built-in method isVisible of LauncherWindow object at 0x000001E18351F140> = <astrarun.ui.launcher.LauncherWindow(0x1e1809ce8c0) a"
+    },
+    {
+      "name": "test_hotkey_manager_diagnostics_and_simulation",
+      "classname": "tests.test_v0101_launcher_hud",
+      "file": "",
+      "message": "KeyError: 'last_signal_delivered_timestamp'"
+    },
+    {
+      "name": "test_readiness_state_file_lifecycle",
+      "classname": "tests.test_v0101_resident_lifecycle",
+      "file": "",
+      "message": "AssertionError: assert False\n +  where False = exists()\n +    where exists = WindowsPath('C:/Users/hp/AppData/Local/Temp/pytest-of-hp/pytest-123/test_readiness_state_file_life0/data/astrarun_state.json').exists"
+    },
+    {
+      "name": "test_stale_readiness_cleanup",
+      "classname": "tests.test_v0101_resident_lifecycle",
+      "file": "",
+      "message": "assert 999999 == 27060\n +  where 27060 = <built-in function getpid>()\n +    where <built-in function getpid> = os.getpid"
+    },
+    {
+      "name": "test_handle_request_compound_dry_run",
+      "classname": "tests.test_v0102_compound_pipeline",
+      "file": "",
+      "message": "ValueError: 'LOW' is not a valid AffordanceRisk"
+    },
+    {
+      "name": "test_handle_request_partial_failure",
+      "classname": "tests.test_v0102_compound_pipeline",
+      "file": "",
+      "message": "ValueError: 'LOW' is not a valid AffordanceRisk"
+    },
+    {
+      "name": "test_launcher_bypasses_suggestions_on_compound",
+      "classname": "tests.test_v0102_compound_pipeline",
+      "file": "",
+      "message": "ValueError: 'LOW' is not a valid AffordanceRisk"
+    },
+    {
+      "name": "test_app_pipeline_ui_destructive_click_confirmation",
+      "classname": "tests.test_v010_interaction",
+      "file": "",
+      "message": "AssertionError: assert 'error' == 'confirm'\n  \n  - confirm\n  + error"
+    },
+    {
+      "name": "test_handle_request_direct_ui_commands",
+      "classname": "tests.test_v09_daily_driver",
+      "file": "",
+      "message": "AssertionError: assert 'conversational' == 'list_result'\n  \n  - list_result\n  + conversational"
+    },
+    {
+      "name": "test_handle_request_window_snapping_and_undo",
+      "classname": "tests.test_v09_daily_driver",
+      "file": "",
+      "message": "assert 'left_half' in \"Simulated execution of 'snap_window_left' (dry run).\"\n +  where \"Simulated execution of 'snap_window_left' (dry run).\" = ExecutionResult(type='capability_result', success=True, message=\"Simulated execution of 'snap_window_left'"
+    },
+    {
+      "name": "test_handle_request_system_inspection",
+      "classname": "tests.test_v09_daily_driver",
+      "file": "",
+      "message": "AssertionError: assert 'CPU Utilization' in 'You have an 12th Gen Intel(R) Core(TM) i5-12450H with 8 physical cores and 12 logical threads.'\n +  where 'You have an 12th Gen Intel(R) Core(TM) i5-12450H with 8 physical cores and 12 logical threads.' = "
+    },
+    {
+      "name": "test_handle_request_safety_confirmation_gate",
+      "classname": "tests.test_v09_daily_driver",
+      "file": "",
+      "message": "assert 'unsupported' in ('confirm', 'blocked')\n +  where 'unsupported' = ExecutionResult(type='unsupported', success=False, message=\"I couldn't identify an executable action for 'terminate process 1234'.\", task=Task(id='72e9973e-157a-4761-b246-2db00a"
+    },
+    {
+      "name": "test_settings_dialog_preferences_io",
+      "classname": "tests.test_v09_daily_driver",
+      "file": "",
+      "message": "AssertionError: assert False\n +  where False = hasattr(<astrarun.ui.settings.SettingsDialog(0x1e1801d9d30) at 0x000001E184142640>, 'startup_cb')"
+    }
+  ]
+}

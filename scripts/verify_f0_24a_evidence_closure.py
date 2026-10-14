@@ -16,7 +16,7 @@ import hashlib
 from pathlib import Path
 from datetime import datetime, timezone
 
-REPO_ROOT = Path("e:/Workspace/Active/AstraRun")
+REPO_ROOT = Path(__file__).resolve().parent.parent
 AUDIT_DIR = REPO_ROOT / "docs" / "audit"
 closure_file = AUDIT_DIR / "F0_24A_EVIDENCE_CLOSURE.json"
 
@@ -70,25 +70,28 @@ def main():
         try:
             parsed_json = json.loads(raw_bytes.decode("utf-8"))
             json_valid = True
-            summary_obj = parsed_json.get("summary")
-            summary_verdict = summary_obj.get("verdict") if isinstance(summary_obj, dict) else None
-            verdict = parsed_json.get("verdict") or summary_verdict or "RECORDED"
-            # Contradiction gate: PASS_CLEAN with process_cleaned_up=false is not clean.
-            checks = parsed_json.get("checks")
-            if isinstance(checks, list):
-                for check in checks:
-                    if not isinstance(check, dict):
-                        continue
-                    if check.get("verdict") in ("PASS", "PASS_CLEAN") and check.get("process_cleaned_up") is False:
-                        verdict = "FAIL"
-                        print(
-                            f"[{stage_label}] CONTRADICTION: process_cleaned_up=false cannot coexist with "
-                            f"{check.get('verdict')}; forcing FAIL"
-                        )
-            if summary_obj.get("verdict") in ("PASS", "PASS_CLEAN"):
-                for key in ("process_cleaned_up", "cleanup_verified"):
-                    if summary_obj.get(key) is False:
-                        verdict = "FAIL"
+            if isinstance(parsed_json, dict):
+                summary_obj = parsed_json.get("summary")
+                summary_verdict = summary_obj.get("verdict") if isinstance(summary_obj, dict) else None
+                verdict = parsed_json.get("verdict") or summary_verdict or "RECORDED"
+                # Contradiction gate: PASS_CLEAN with process_cleaned_up=false is not clean.
+                checks = parsed_json.get("checks")
+                if isinstance(checks, list):
+                    for check in checks:
+                        if not isinstance(check, dict):
+                            continue
+                        if check.get("verdict") in ("PASS", "PASS_CLEAN") and check.get("process_cleaned_up") is False:
+                            verdict = "FAIL"
+                            print(
+                                f"[{stage_label}] CONTRADICTION: process_cleaned_up=false cannot coexist with "
+                                f"{check.get('verdict')}; forcing FAIL"
+                            )
+                if isinstance(summary_obj, dict) and summary_obj.get("verdict") in ("PASS", "PASS_CLEAN"):
+                    for key in ("process_cleaned_up", "cleanup_verified"):
+                        if summary_obj.get(key) is False:
+                            verdict = "FAIL"
+            else:
+                verdict = "RECORDED"
         except Exception as e:
             json_valid = False
             verdict = f"CORRUPT: {e}"

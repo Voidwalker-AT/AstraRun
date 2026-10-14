@@ -1,0 +1,12 @@
+{
+  "phase": "F0-25B",
+  "title": "Hermes-Disabled Control Task Results",
+  "task_id": "f025b_control_1791711836341",
+  "retrieved_affordances_count": 0,
+  "decision_mode": "EXPLORE",
+  "exploratory_probes_needed": 1,
+  "actions_dispatched": 2,
+  "execution_duration_seconds": 2.75,
+  "task_resource_cleaned": true,
+  "status": "PASS"
+}

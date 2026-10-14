@@ -13,7 +13,7 @@ def test_passive_observation_allowed():
     broker = ExecutionBroker()
     proposal = ActionProposal(
         category=ActionCategory.OBSERVE,
-        capability_id="inspect_process_list",
+        capability_id="list_processes",
         parameters={"limit": 10},
     )
     result = broker.execute(proposal, executor_override=lambda **kw: {"processes": [1, 2, 3]})
@@ -26,11 +26,10 @@ def test_passive_observation_allowed():
 
 def test_mutation_action_evaluated():
     broker = ExecutionBroker()
-    # open_app is generally AUTO/ALLOW in default allowlist
     proposal = ActionProposal(
         category=ActionCategory.ACT,
-        capability_id="open_app",
-        parameters={"app_name": "notepad"},
+        capability_id="open_application",
+        parameters={"app": "notepad"},
     )
     result = broker.execute(proposal, executor_override=lambda **kw: "Notepad opened")
     assert result.success is True

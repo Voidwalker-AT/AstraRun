@@ -1,0 +1,75 @@
+{
+  "status": "PASS",
+  "sample_input_path": "E:\\AstraDogfood\\word_frequency\\sample_input.txt",
+  "json_output_path": "E:\\AstraDogfood\\word_frequency\\word_frequencies.json",
+  "sample_text_length": 80,
+  "total_words_tokenized": 14,
+  "unique_words": 14,
+  "expected_top_10": [
+    [
+      "hello",
+      1
+    ],
+    [
+      "world",
+      1
+    ],
+    [
+      "this",
+      1
+    ],
+    [
+      "is",
+      1
+    ],
+    [
+      "a",
+      1
+    ],
+    [
+      "sample",
+      1
+    ],
+    [
+      "text",
+      1
+    ],
+    [
+      "file",
+      1
+    ],
+    [
+      "it",
+      1
+    ],
+    [
+      "contains",
+      1
+    ]
+  ],
+  "actual_json_counts": {
+    "hello": 1,
+    "world": 1,
+    "this": 1,
+    "is": 1,
+    "a": 1,
+    "sample": 1,
+    "text": 1,
+    "file": 1,
+    "it": 1,
+    "contains": 1,
+    "some": 1,
+    "words": 1,
+    "and": 1,
+    "punctuation": 1
+  },
+  "mathematical_match": true,
+  "discrepancies": [],
+  "semantic_quality": {
+    "case_normalization": true,
+    "punctuation_handling": true,
+    "top_10_correctness": true,
+    "json_format_valid": true,
+    "non_empty_output": true
+  }
+}

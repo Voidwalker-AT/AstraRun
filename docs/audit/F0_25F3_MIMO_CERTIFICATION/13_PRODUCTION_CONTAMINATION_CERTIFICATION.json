@@ -1,0 +1,18 @@
+{
+  "auditor": "MiMo",
+  "anti_claim": "325 files audited, 0 contamination hits",
+  "independent_tokens_searched": ["REPAIR-02", "factorial_result", "MATHEMATICALLY_VERIFIED", "3628800", "F0_25", "F0-25", "AstraRun-Anti", "E:\\Workspace", "E:/Workspace", "E:\\AstraDogfood", "No timestamp available"],
+  "method": "fixed-string rg -F across src/ (regex would under-match backslash paths)",
+  "result": {"src_py_files": 325, "hits": 0, "matches_anti_claim": true},
+  "semantic_scan": {
+    "test_only_branches": "no ASTRARUN_ENV test branches forcing PASS found in src/",
+    "benchmark_conditioned_behavior": "none found for routing holdout prompts",
+    "runtime_paths": "AstraPaths dynamic resolution used; workspace literals absent from src/"
+  },
+  "residuals_outside_src": {
+    "scripts/": "verification scripts still contain factorial/F0_25 tokens — harness scope, not production",
+    "summary_mode_fallback_literals": "result_presentation.py title/class fallbacks — product behavior not benchmark contamination"
+  },
+  "verdict": "PRODUCTION_PURITY = PASS",
+  "verdict_rationale": "Independent fixed-string scan confirms zero benchmark/workspace tokens in 325 production files. Contamination defects G/H closed for src/."
+}

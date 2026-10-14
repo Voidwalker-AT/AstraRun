@@ -1,0 +1,39 @@
+{
+  "gate_id": "GATES_I_AND_J",
+  "description": "Wrong-Target Safety & Resource Ownership Lifecycle",
+  "wrong_target_safety": {
+    "target": "nonexistent_editor_app_xyz",
+    "rejected": true,
+    "error_message": "Surface cannot receive text or is read-only"
+  },
+  "resource_ownership": {
+    "task_id": "lab_gate_ij_1791690135",
+    "spawned_pid": 13448,
+    "spawned_hwnd": 11734064,
+    "ledger_tracked": true,
+    "cleanup_report": {
+      "task_id": "lab_gate_ij_1791690135",
+      "cleaned_count": 1,
+      "preserved_count": 0,
+      "detached_count": 0,
+      "failed_count": 0,
+      "remaining_active_resources": 0,
+      "resources_owned": true,
+      "process_cleanup_required": true,
+      "process_residue_measured": true,
+      "window_residue_measured": true,
+      "ledger_residue_measured": true,
+      "process_cleaned_up": true,
+      "cleanup_executed": true,
+      "cleanup_exception": null,
+      "orphaned_processes": 0,
+      "orphaned_windows": 0,
+      "active_ledger_resources": 0,
+      "clean": true,
+      "verdict": "PASS_CLEAN"
+    },
+    "os_residue_detected": false,
+    "orphans_remaining": 0
+  },
+  "verdict": "PASS"
+}

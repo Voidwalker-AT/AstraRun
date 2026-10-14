@@ -1,0 +1,12 @@
+{
+  "status": "PASS",
+  "timestamp": 1791752557.4366775,
+  "built_executable": "E:\\Workspace\\Agents\\AstraRun-Anti\\dist\\AstraRun\\AstraRun.exe",
+  "built_sha256": "444b667947c938232f2640c35218655b2cd006f0a169dc9d36c6a70022eceed4",
+  "built_size_bytes": 12090828,
+  "installed_executable": "C:\\Users\\hp\\AppData\\Local\\Programs\\AstraRun\\AstraRun.exe",
+  "installed_sha256": "444b667947c938232f2640c35218655b2cd006f0a169dc9d36c6a70022eceed4",
+  "installed_size_bytes": 12090828,
+  "hash_parity": true,
+  "size_parity": true
+}

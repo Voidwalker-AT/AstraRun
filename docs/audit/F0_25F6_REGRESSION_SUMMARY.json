@@ -1,0 +1,28 @@
+{
+  "phase": "F0-25F.6",
+  "stage": "STAGE 12 \u2014 FULL REGRESSION",
+  "total_tests": 1015,
+  "passed": 999,
+  "failed": 2,
+  "errors": 0,
+  "skipped": 14,
+  "duration_seconds": 466.458,
+  "pass_rate_pct": 99.8,
+  "verdict": "FAIL",
+  "failed_tests": [
+    {
+      "classname": "tests.cognitive_spine.test_acceptance_3d_vis",
+      "name": "test_architectural_acceptance_3d_visualization",
+      "time": "5.359",
+      "message": "AssertionError: Task did not reach COMPLETED status: Invalid plan: Plan contains no executable steps.\nassert <AgentTaskSta...LED: 'FAILED'> == <AgentTaskSta...: 'COMPLETED'>\n  \n  - COMPLETED\n  + FAILED",
+      "text": "def test_architectural_acceptance_3d_visualization():\n        prompt = (\n            \"Create a Python program that generates a 3D visualization of a function you choose, \"\n            \"save the source and output to a new Desktop folder, run it, fix any errors yourself, \"\n            \"and show me the"
+    },
+    {
+      "classname": "tests.test_f0_21_post_freeze_holdout",
+      "name": "test_holdout_novel_computation_and_save",
+      "time": "0.524",
+      "message": "AssertionError: assert <PlanStatus.DRAFT: 'DRAFT'> == <PlanStatus.ACTIVE: 'ACTIVE'>\n  \n  - ACTIVE\n  + DRAFT",
+      "text": "def test_holdout_novel_computation_and_save():\n        \"\"\"Holdout: Dynamic hash computation with hex payload.\"\"\"\n        planner = GoalPlanner()\n        prompt = \"compute sha256 hash for 'confidential_payload_789'\"\n        goal = planner.parse_goal(prompt)\n        gc = goal.contract\n    \n        ass"
+    }
+  ]
+}

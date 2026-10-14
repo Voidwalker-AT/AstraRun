@@ -86,14 +86,18 @@ class EntityResolutionEngine:
 
     def __init__(
         self,
-        workspace_json_path: Path | str = r"E:\Workspace\workspace.json",
+        workspace_json_path: Optional[Path | str] = None,
         app_cache: Optional[AppDiscoveryCache] = None,
         folder_cache: Optional[FolderResolver] = None,
         project_registry: Optional[ProjectRegistry] = None,
         context_engine: Optional[Any] = None,
         alias_manager: Optional[Any] = None,
     ) -> None:
-        self.workspace_json_path = Path(workspace_json_path)
+        from astrarun.core.paths import AstraPaths
+        if workspace_json_path is None:
+            self.workspace_json_path = AstraPaths.workspace_root() / "workspace.json"
+        else:
+            self.workspace_json_path = Path(workspace_json_path)
         self.app_cache = app_cache or AppDiscoveryCache()
         self.folder_cache = folder_cache or FolderResolver()
         self.project_registry = project_registry or ProjectRegistry(workspace_json_path=self.workspace_json_path)

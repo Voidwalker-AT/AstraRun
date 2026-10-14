@@ -24,7 +24,7 @@ DEFAULT_SETTINGS: dict[str, Any] = {
         "height": 56,
         "theme": "dark",
         "placeholder": "What do you want to do?",
-        "hide_on_focus_loss": True,
+        "hide_on_focus_loss": False,
         "opacity": 0.98,
         "max_suggestions": 5
     },

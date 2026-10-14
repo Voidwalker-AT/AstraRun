@@ -1,0 +1,65 @@
+{
+  "auditor": "MiMo (personal visual inspection of every PNG; no inherited descriptions)",
+  "images": [
+    {
+      "filename": "F0_25F_reproduction.png",
+      "sha256": "040cd0d4997f513310f4017b968079aa436afe13978f328cf1a7d80efd445f58",
+      "actual_visible_foreground": "Antigravity.exe fullscreen (conversation about reproduce_f0_25f_launcher.py)",
+      "astra_ui_visible": false,
+      "expected_result_visible": false,
+      "terminal_visible": false,
+      "explorer_visible": false,
+      "description_matches_pixels": true,
+      "description_source": "root-cause JSON expects no launcher on Default — pixels agree",
+      "confidence": "HIGH",
+      "verdict": "HONEST (no launcher — consistent with pre-fix reproduction)"
+    },
+    {
+      "filename": "F0_25F_stage1_verified.png",
+      "sha256": "2e634e7014301767333771f560b5030180a8b3985135cc470a137cc33da30e9d",
+      "actual_visible_foreground": "Antigravity.exe fullscreen; Astra launcher bar 'What do you want to do?' with blue plus icon at top-center (~logical 448,48 640x76)",
+      "astra_ui_visible": true,
+      "expected_result_visible": false,
+      "terminal_visible": false,
+      "explorer_visible": false,
+      "description_matches_pixels": true,
+      "confidence": "HIGH",
+      "verdict": "HONEST — launcher GENUINELY VISIBLE in pixels"
+    },
+    {
+      "filename": "F0_25F_PHYSICAL_LAUNCHER.png",
+      "sha256": "ef98b8692b64e267cca542f336fe77c7c67464f4cdb7222bff1000b23487340a",
+      "actual_visible_foreground": "Antigravity.exe fullscreen; Astra launcher bar 'What do you want to do?' at top-center",
+      "astra_ui_visible": true,
+      "expected_result_visible": false,
+      "terminal_visible": false,
+      "explorer_visible": false,
+      "description_matches_pixels": true,
+      "confidence": "HIGH",
+      "verdict": "HONEST — launcher GENUINELY VISIBLE in pixels"
+    },
+    {
+      "filename": "F0_25F_PHYSICAL_PRESENTATION.png",
+      "sha256": "a5e6f710f9355463cb939a4dd5752073f62fd1f9da7c36df5a93a61e8bbeb42e",
+      "actual_visible_foreground": "Antigravity.exe fullscreen; goal panel shows '1 task running: .venv\\Scripts\\python scripts/verify_f0_25f_complete_physical.py'; right pane 'Task not found'; clock 10:53 PM",
+      "astra_ui_visible": false,
+      "expected_result_visible": false,
+      "explorer_visible": false,
+      "notepad_visible": false,
+      "result_viewer_visible": false,
+      "description_matches_pixels": false,
+      "description_problem": "File is cited as presentation_screenshot in Stage6 JSON; pixels contain NO presentation of any kind",
+      "confidence": "HIGH",
+      "verdict": "MISLEADING ROLE — honest pixels, dishonest implied caption (presentation evidence shows no presentation)"
+    },
+    {
+      "filename": "screenshots/mimo_launcher_observation.png (MiMo-generated)",
+      "sha256": "fce72f2586b77f5db1b93da9361ae102978a61851a45d695fbaf4d71895514ca",
+      "actual_visible_foreground": "MiMoCode/ChatGPT windows; Astra launcher bar clearly visible top-center",
+      "astra_ui_visible": true,
+      "confidence": "HIGH",
+      "verdict": "MiMo independent capture confirming launcher visibility"
+    }
+  ],
+  "summary": "Unlike F0-25E, two F0-25F launcher PNGs genuinely contain the Astra launcher (not mislabeled Antigravity-only frames). The presentation PNG genuinely contains no presentation. 0/4 F0-25F images show Explorer/Notepad/result content."
+}

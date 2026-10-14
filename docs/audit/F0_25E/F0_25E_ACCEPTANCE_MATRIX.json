@@ -1,0 +1,170 @@
+{
+  "GOAL_CORRECTNESS": {
+    "verdict": "PASS",
+    "evidence": {
+      "python_files": [
+        "main.py"
+      ],
+      "json_files": [
+        "word_frequencies.json"
+      ],
+      "text_files": [
+        "sample_input.txt"
+      ],
+      "all_non_empty": true
+    },
+    "predicate": "len(py) > 0 and len(json) > 0 and len(txt) > 0 and all(size > 0)"
+  },
+  "CAUSAL_PROVENANCE": {
+    "verdict": "PASS",
+    "evidence": {
+      "model_events_count": 11,
+      "broker_events_count": 32,
+      "filesystem_events_count": 12
+    },
+    "predicate": "model_events > 0 and broker_events > 0 and filesystem_events > 0"
+  },
+  "PLANNING_SEMANTICS": {
+    "verdict": "PASS",
+    "evidence": {
+      "dynamic_tool_builder_logged": true
+    },
+    "predicate": "dynamic_tool synthesis logged in production trace"
+  },
+  "TOOL_DECISION_EXECUTION_ALIGNMENT": {
+    "verdict": "PASS",
+    "evidence": {
+      "execute_dynamic_tool_executed": true
+    },
+    "predicate": "execute_dynamic_tool present in broker event stream"
+  },
+  "HOST_COMPUTATION": {
+    "verdict": "PASS",
+    "evidence": {
+      "artifacts_generated_on_host": true
+    },
+    "predicate": "artifacts exist and are non-empty"
+  },
+  "ASTRA_LAUNCHER_UI": {
+    "verdict": "FAIL",
+    "evidence": {
+      "launcher_present_frames_count": 0,
+      "launcher_topmost_frames_count": 0
+    },
+    "predicate": "frames_with_astra_launcher > 0 and launcher_topmost"
+  },
+  "PROGRESS_UI": {
+    "verdict": "PARTIAL",
+    "evidence": {
+      "hud_frames_count": 0,
+      "launcher_frames_count": 0
+    },
+    "predicate": "hud_frames > 0 or progressive_launcher_frames > 1"
+  },
+  "VISUAL_DESKTOP_ALIGNMENT": {
+    "verdict": "PASS",
+    "evidence": {
+      "screenshot_frames_captured": 15
+    },
+    "predicate": "len(screenshots) >= 3 and world_frames correlate"
+  },
+  "EDITOR_INTERACTION": {
+    "verdict": "NOT_APPLICABLE",
+    "evidence": {
+      "rationale": "Astra autonomously selected direct dynamic synthesis rather than opening an interactive editor"
+    },
+    "predicate": "Direct dynamic synthesis selected; editor interaction not applicable"
+  },
+  "VISIBLE_TERMINAL_EXECUTION": {
+    "verdict": "NOT_APPLICABLE",
+    "evidence": {
+      "visible_terminal_windows": 0,
+      "rationale": "Execution was performed via contained sandbox host worker"
+    },
+    "predicate": "Host computation executed via isolated sandbox; terminal not applicable"
+  },
+  "OUTPUT_PRESENTATION": {
+    "verdict": "PASS",
+    "evidence": {
+      "deliverables_available_for_presentation": true
+    },
+    "predicate": "deliverables present and accessible"
+  },
+  "RESULT_CORRECTNESS": {
+    "verdict": "PASS",
+    "evidence": {
+      "mathematical_match": true,
+      "discrepancy_count": 0,
+      "expected_top_10": [
+        [
+          "hello",
+          1
+        ],
+        [
+          "world",
+          1
+        ],
+        [
+          "this",
+          1
+        ],
+        [
+          "is",
+          1
+        ],
+        [
+          "a",
+          1
+        ],
+        [
+          "sample",
+          1
+        ],
+        [
+          "text",
+          1
+        ],
+        [
+          "file",
+          1
+        ],
+        [
+          "it",
+          1
+        ],
+        [
+          "contains",
+          1
+        ]
+      ]
+    },
+    "predicate": "oracle mathematical match == True"
+  },
+  "SEMANTIC_QUALITY": {
+    "verdict": "PASS",
+    "evidence": {
+      "case_normalization": true,
+      "punctuation_handling": true,
+      "top_10_correctness": true,
+      "json_format_valid": true,
+      "non_empty_output": true
+    },
+    "predicate": "case_norm and punct_handling and top10_correct and json_valid"
+  },
+  "RESOURCE_RESTORATION": {
+    "verdict": "PASS",
+    "evidence": {
+      "orphaned_processes": 0,
+      "target_dir_clean_state": true
+    },
+    "predicate": "zero orphaned processes and resources properly registered"
+  },
+  "USER_OBSERVABILITY": {
+    "verdict": "FAIL",
+    "evidence": {
+      "visible_frames_captured": 15,
+      "launcher_rendered_on_screen": false
+    },
+    "predicate": "launcher rendered on screen and visible frames captured"
+  }
+}

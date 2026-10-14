@@ -1,0 +1,80 @@
+{
+  "milestone": "F0_25E",
+  "title": "MIMO Independent Content Oracle — word frequency task",
+  "auditor": "MiMo (recomputed manually; Astra's main.py was NOT executed)",
+  "inputs": {
+    "sample_input_path": "E:\\AstraDogfood\\word_frequency\\sample_input.txt",
+    "sample_input_bytes": 80,
+    "sample_input_text": "Hello world! This is a sample text file. It contains some words and punctuation.",
+    "json_output_path": "E:\\AstraDogfood\\word_frequency\\word_frequencies.json",
+    "json_output_bytes": 235,
+    "main_py_path": "E:\\AstraDogfood\\word_frequency\\main.py",
+    "main_py_bytes": 1475,
+    "frozen_hashes_match_disk": {
+      "sample_input.txt": "19dcbda5e602c53b351eb1f812afedf683f68881555cd7fdba06b81b55292c03",
+      "word_frequencies.json": "2affa9f877e7a970e51569f2479318cfb1926c75d92606ab21181139e57b1db1",
+      "main.py": "31b559a4d1497603c651392d66de49456b36b6f150a22de0d685bc6fe57db78b",
+      "source": "filesystem_events.jsonl FINAL snapshot (frozen); equal to current on-disk files"
+    }
+  },
+  "implementation_tokenization_semantics": {
+    "source_lines": "main.py L10-12: words = re.findall(r'\\b[A-Za-z0-9_]+\\b', text.lower()); Counter(words)",
+    "case_handling": "lowercased before counting (case-insensitive)",
+    "punctuation_handling": "regex word-bounds strip punctuation; digits and underscores retained as word chars",
+    "contractions": "split on apostrophes (apostrophe not in class) - not exercised by this input",
+    "ordering": "JSON preserves Counter insertion order = first-appearance order; most_common(10) with all ties=1 returns first-10 insertion order (stable)",
+    "stdout": "prints 'word: count' per line for top 10 (L40-42) - stdout never captured in frozen evidence",
+    "self_containment": "main.py WRITES sample_input.txt itself (L28-30, hardcoded string identical to the delivered sample) then reads it - satisfies prompt 'Make a small sample input yourself' but means 'reads a text file' is self-fed",
+    "output_dir": "os.environ.get('ASTRARUN_OUTPUT_DIR', '.') - Astra sandbox convention; delivery copied results to target dir",
+    "quality_note": "Clean stdlib-only script, correct for the literal task; tokenization regex matches the production code-gen prompt guidance (cognition/service.py:421-424) - prompt-shaped output, not a canned template (no identical body exists in repo)"
+  },
+  "expected_recomputation": {
+    "method": "Apply main.py's own tokenization semantics manually to the frozen 80-byte input",
+    "token_count": 14,
+    "unique_words": 14,
+    "counts": {"hello": 1, "world": 1, "this": 1, "is": 1, "a": 1, "sample": 1, "text": 1, "file": 1, "it": 1, "contains": 1, "some": 1, "words": 1, "and": 1, "punctuation": 1},
+    "expected_top_10": [["hello", 1], ["world", 1], ["this", 1], ["is", 1], ["a", 1], ["sample", 1], ["text", 1], ["file", 1], ["it", 1], ["contains", 1]]
+  },
+  "actual_json": {
+    "keys": ["hello", "world", "this", "is", "a", "sample", "text", "file", "it", "contains", "some", "words", "and", "punctuation"],
+    "all_values": 1,
+    "json_valid": true,
+    "key_count": 14
+  },
+  "comparison": {
+    "expected": "14 tokens, 14 unique, all=1; top-10 = hello..contains",
+    "actual": "14 keys, all=1; key order hello..contains",
+    "differences": [],
+    "mathematical_match": true
+  },
+  "independent_checks": [
+    {"check": "case_normalization", "result": true, "basis": "input 'Hello' stored as key 'hello'"},
+    {"check": "punctuation_handling", "result": true, "basis": "'world!' -> 'world'; no '!' keys present"},
+    {"check": "top_10_correctness", "result": true, "basis": "first 10 keys exactly match expected top-10 (weak test: all counts equal 1)"},
+    {"check": "json_format_valid", "result": true, "basis": "parses as flat object of string->int"},
+    {"check": "non_empty_output", "result": true, "basis": "235 bytes"},
+    {"check": "no_extra_spurious_keys", "result": true, "basis": "exactly the 14 real tokens, no 'punctuation.' or 'file.' leakage"}
+  ],
+  "anti_content_oracle_crosscheck": {
+    "anti_artifact": "docs/audit/F0_25E/F0_25E_CONTENT_ORACLE.json (status PASS, 14/14 match)",
+    "mimo_recomputation_agrees": true,
+    "note": "Anti's oracle tokenizer regex [A-Za-z0-9_]+ matches main.py semantics; both agree with MIMO's manual recomputation. RESULT_CORRECTNESS=PASS is one of Anti's genuinely sound verdicts."
+  },
+  "literal_task_correctness": {
+    "reads_a_text_file": "yes (reads the sample it writes)",
+    "counts_word_frequencies": "yes",
+    "prints_10_most_common": "yes (code path present; stdout not evidenced)",
+    "saves_as_json": "yes",
+    "creates_under_requested_dir": "yes (via broker delivery)",
+    "makes_own_sample": "yes (hardcoded)",
+    "runs_and_works": "yes - outputs produced by program execution in sandbox (artifacts are program outputs: json identical to input's token counts)",
+    "verdict": "TASK SATISFIED literally and mathematically correct"
+  },
+  "implementation_quality": {
+    "rating": "ADEQUATE / PROMPT-SHAPED",
+    "strengths": "stdlib only, correct regex tokenization, case/punctuation handled, deterministic, structured functions",
+    "weaknesses": "writes its own input then 'reads' it (circular), depends on ASTRARUN_OUTPUT_DIR convention, stdout unaudited, self-authored sample makes the demonstration trivial (14 unique tokens, no repeats - frequency counting never actually disambiguated)",
+    "distinct_from": "F0-25D.1's delivered main.py (text.split(), case-sensitive, produced 'Hello'/'world!' keys) - this run's version is materially better"
+  },
+  "verdict": "PASS — mathematical match PROVEN by independent recomputation; implementation adequate for the literal request."
+}

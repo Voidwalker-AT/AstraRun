@@ -1,0 +1,40 @@
+{
+  "task_id": "real_task_restoration_1791748180",
+  "candidate_goal": "Compute factorials and write to disk",
+  "execution_result": {
+    "status": "SUCCESS",
+    "exit_code": 0,
+    "stdout": "Failed to find real location of C:\\Users\\hp\\AppData\\Local\\Programs\\Python\\Python313\\python.exe\nSUCCESS_FACTORIALS_WRITTEN",
+    "peak_memory_mb": 7.97
+  },
+  "sandbox_dir": "C:\\Users\\hp\\AppData\\LocalLow\\AstraRun\\sandbox\\real_task_restoration_1791748180",
+  "sandbox_physically_deleted": true,
+  "baseline_pids_count": 282,
+  "final_pids_count": 282,
+  "unmanaged_new_pids": [],
+  "baseline_hwnds_count": 0,
+  "final_hwnds_count": 0,
+  "unmanaged_new_hwnds": [],
+  "cleanup_report": {
+    "task_id": "real_task_restoration_1791748180",
+    "cleaned_count": 1,
+    "preserved_count": 0,
+    "detached_count": 0,
+    "failed_count": 0,
+    "remaining_active_resources": 0,
+    "resources_owned": true,
+    "process_cleanup_required": false,
+    "process_residue_measured": true,
+    "window_residue_measured": true,
+    "ledger_residue_measured": true,
+    "process_cleaned_up": true,
+    "cleanup_executed": true,
+    "cleanup_exception": null,
+    "orphaned_processes": 0,
+    "orphaned_windows": 0,
+    "active_ledger_resources": 0,
+    "clean": true,
+    "verdict": "PASS_CLEAN"
+  },
+  "verdict": "PASS"
+}

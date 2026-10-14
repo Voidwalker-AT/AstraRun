@@ -1,0 +1,194 @@
+{
+  "benchmark": "STAGE_11_ADVERSARIAL_MUTATION_QUALITY_AUDIT",
+  "phase": "F0-25F.3",
+  "total_mutants": 20,
+  "killed_mutants": 20,
+  "survived_mutants": 0,
+  "genuine_semantic_kills": 20,
+  "trivial_kills": 0,
+  "kill_rate_pct": 100.0,
+  "semantic_strength_pct": 100.0,
+  "all_killed_for_intended_reason": true,
+  "mutants": [
+    {
+      "id": "M1",
+      "name": "REQUESTED-only presentation",
+      "killed": true,
+      "semantic_invariant": "OUTPUT_PRESENTATION requires affirmative RESULT_PRESENTED",
+      "kill_reason": "Evaluator rejected REQUESTED-only stream",
+      "kill_validity": "GENUINE_SEMANTIC_KILL",
+      "died_for_intended_reason": true
+    },
+    {
+      "id": "M2",
+      "name": "hollow PRESENTED event",
+      "killed": true,
+      "semantic_invariant": "RESULT_PRESENTED requires affirmative non-null HWND and title",
+      "kill_reason": "Evaluator rejected null HWND presentation",
+      "kill_validity": "GENUINE_SEMANTIC_KILL",
+      "died_for_intended_reason": true
+    },
+    {
+      "id": "M3",
+      "name": "unrelated Explorer window",
+      "killed": true,
+      "semantic_invariant": "Target path must exist on disk and match Explorer window title",
+      "kill_reason": "present_result returned success=False",
+      "kill_validity": "GENUINE_SEMANTIC_KILL",
+      "died_for_intended_reason": true
+    },
+    {
+      "id": "M4",
+      "name": "file exists but never displayed",
+      "killed": true,
+      "semantic_invariant": "Presentation is decoupled from file existence; requires affirmative display",
+      "kill_reason": "Evaluator failed OUTPUT_PRESENTATION",
+      "kill_validity": "GENUINE_SEMANTIC_KILL",
+      "died_for_intended_reason": true
+    },
+    {
+      "id": "M5",
+      "name": "black screenshot with no Astra",
+      "killed": true,
+      "semantic_invariant": "Surface contrast oracle requires std_dev >= 5.0 and range >= 15.0",
+      "kill_reason": "contrast_range=0.0",
+      "kill_validity": "GENUINE_SEMANTIC_KILL",
+      "died_for_intended_reason": true
+    },
+    {
+      "id": "M6",
+      "name": "genuine Astra launcher under lighter pixels",
+      "killed": true,
+      "semantic_invariant": "Multi-factor contrast variance detects non-flat UI structure",
+      "kill_reason": "contrast_range=210.0",
+      "kill_validity": "GENUINE_SEMANTIC_KILL",
+      "died_for_intended_reason": true
+    },
+    {
+      "id": "M7",
+      "name": "stale/wrong HWND",
+      "killed": true,
+      "semantic_invariant": "Win32 IsWindow & Monitor bounds check rejects invalid HWND",
+      "kill_reason": "is_vis=False",
+      "kill_validity": "GENUINE_SEMANTIC_KILL",
+      "died_for_intended_reason": true
+    },
+    {
+      "id": "M8",
+      "name": "cleanup attempted but directory remains",
+      "killed": true,
+      "semantic_invariant": "Resource ledger requires physical absence; marks FAILED_CLEANUP on failure",
+      "kill_reason": "state=FAILED_CLEANUP",
+      "kill_validity": "GENUINE_SEMANTIC_KILL",
+      "died_for_intended_reason": true
+    },
+    {
+      "id": "M9",
+      "name": "ledger says CLOSED while physical resource remains",
+      "killed": true,
+      "semantic_invariant": "Post-cleanup physical absence assertion refuses CLOSED",
+      "kill_reason": "state=FAILED_CLEANUP",
+      "kill_validity": "GENUINE_SEMANTIC_KILL",
+      "died_for_intended_reason": true
+    },
+    {
+      "id": "M10",
+      "name": "prior-run telemetry contamination",
+      "killed": true,
+      "semantic_invariant": "Run-scoped run_id indexing isolates execution provenance",
+      "kill_reason": "filtered=3",
+      "kill_validity": "GENUINE_SEMANTIC_KILL",
+      "died_for_intended_reason": true
+    },
+    {
+      "id": "M11",
+      "name": "missing broker events on broker task",
+      "killed": true,
+      "semantic_invariant": "CAUSAL_PROVENANCE requires model -> broker -> action causal chain",
+      "kill_reason": "Evaluator rejected unbrokered execution",
+      "kill_validity": "GENUINE_SEMANTIC_KILL",
+      "died_for_intended_reason": true
+    },
+    {
+      "id": "M12",
+      "name": "semantically wrong repair artifact",
+      "killed": true,
+      "semantic_invariant": "AuthoritativeCompletionGate rejects VIOLATED acceptance predicates",
+      "kill_reason": "verdict=REJECTED",
+      "kill_validity": "GENUINE_SEMANTIC_KILL",
+      "died_for_intended_reason": true
+    },
+    {
+      "id": "M13",
+      "name": "exact-prompt routing patch",
+      "killed": true,
+      "semantic_invariant": "Structural computational and data pipeline regex in GoalPlanner",
+      "kill_reason": "g1=execute_dynamic_tool, g2=execute_dynamic_tool",
+      "kill_validity": "GENUINE_SEMANTIC_KILL",
+      "died_for_intended_reason": true
+    },
+    {
+      "id": "M14",
+      "name": "unverified exit_code blocks completion",
+      "killed": true,
+      "semantic_invariant": "AuthoritativeCompletionGate rejects PENDING predicate",
+      "kill_reason": "verdict=REJECTED",
+      "kill_validity": "GENUINE_SEMANTIC_KILL",
+      "died_for_intended_reason": true
+    },
+    {
+      "id": "M15",
+      "name": "hardcoded zero residue",
+      "killed": true,
+      "semantic_invariant": "Resource ledger directly inspects active resources; rejects clean=True when residue exists",
+      "kill_reason": "verdict=FAIL",
+      "kill_validity": "GENUINE_SEMANTIC_KILL",
+      "died_for_intended_reason": true
+    },
+    {
+      "id": "M16",
+      "name": "screenshot before async postcondition",
+      "killed": true,
+      "semantic_invariant": "Evaluator requires matching window frame in observed frames",
+      "kill_reason": "FAIL",
+      "kill_validity": "GENUINE_SEMANTIC_KILL",
+      "died_for_intended_reason": true
+    },
+    {
+      "id": "M17",
+      "name": "unrelated pre-existing viewer",
+      "killed": true,
+      "semantic_invariant": "Evaluator matches affirmative window title to target file stem",
+      "kill_reason": "valid_presentation_events > 0 and matching_observed_windows > 0 and deliverables_on_disk == True",
+      "kill_validity": "GENUINE_SEMANTIC_KILL",
+      "died_for_intended_reason": true
+    },
+    {
+      "id": "M18",
+      "name": "RESULT_PRESENTED before observation",
+      "killed": true,
+      "semantic_invariant": "present_result requires affirmative physical observation before emission",
+      "kill_reason": "has_presented=False",
+      "kill_validity": "GENUINE_SEMANTIC_KILL",
+      "died_for_intended_reason": true
+    },
+    {
+      "id": "M19",
+      "name": "vacuous resource disposal rejected",
+      "killed": true,
+      "semantic_invariant": "AstraResourceLedger transitions unmaterialized/empty paths to NOT_MATERIALIZED",
+      "kill_reason": "state=NOT_MATERIALIZED",
+      "kill_validity": "GENUINE_SEMANTIC_KILL",
+      "died_for_intended_reason": true
+    },
+    {
+      "id": "M20",
+      "name": "missing postcondition before GOAL_COMPLETED",
+      "killed": true,
+      "semantic_invariant": "AuthoritativeCompletionGate blocks completion when any predicate is UNKNOWN",
+      "kill_reason": "verdict=REJECTED",
+      "kill_validity": "GENUINE_SEMANTIC_KILL",
+      "died_for_intended_reason": true
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "phase": "F0-25F.3",
+  "binary_path": "C:\\Users\\hp\\AppData\\Local\\Programs\\AstraRun\\AstraRun.exe",
+  "binary_sha256": "5b4226d8a3343cb42a9a5997568402b64265262920a2c667d2a86174e8fe928f",
+  "binary_size": 12107133,
+  "launcher_verified": true,
+  "launcher_hwnd": 138168,
+  "presentation_verified": false,
+  "presentation_event": null,
+  "presentation_hwnd": null,
+  "presentation_title": "",
+  "goal_completed_verified": false,
+  "goal_completed_event": null,
+  "clean_resource_restoration": false,
+  "verdict": "FAIL"
+}

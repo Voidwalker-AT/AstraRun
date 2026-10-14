@@ -1,0 +1,138 @@
+{
+  "phase": "F0-25F.6",
+  "stage": "STAGE 14 \u2014 PHYSICAL RECOVERY TEST ON INSTALLED BINARY",
+  "canonical_binary": "C:\\Users\\hp\\AppData\\Local\\Programs\\AstraRun\\AstraRun.exe",
+  "canonical_binary_exists": true,
+  "scenarios": {
+    "scenario_a": {
+      "name": "Application Crash Recovery",
+      "steps": [
+        "Launch Notepad",
+        "Simulate Crash (Kill PID)",
+        "Recover (Relaunch Notepad)",
+        "Clean Up"
+      ],
+      "observations": [
+        "Notepad PID=3228, HWND=2231082",
+        "Recovered Notepad PID=22668, HWND=2229926"
+      ],
+      "verdict": "PASS",
+      "failure_evidence": {
+        "failure_category": "TARGET_NOT_FOUND",
+        "what_failed": "Notepad",
+        "evidence_summary": "Notepad process terminated unexpectedly during execution",
+        "evidence_data": {
+          "original_pid": 3228,
+          "is_alive": false
+        },
+        "timestamp": 1791922983.2371597,
+        "source": "runtime_loop",
+        "world_state_changed": false,
+        "original_goal_valid": true
+      },
+      "recovery_decision": {
+        "decision_id": "dec_97cdb448",
+        "failure_evidence": {
+          "failure_category": "TARGET_NOT_FOUND",
+          "what_failed": "Notepad",
+          "evidence_summary": "Notepad process terminated unexpectedly during execution",
+          "evidence_data": {
+            "original_pid": 3228,
+            "is_alive": false
+          },
+          "timestamp": 1791922983.2371597,
+          "source": "runtime_loop",
+          "world_state_changed": false,
+          "original_goal_valid": true
+        },
+        "action": "RETRY_WITH_NEW_OBSERVATION",
+        "is_retry_safe": true,
+        "world_state_changed": false,
+        "original_goal_valid": true,
+        "alternative_selected": "fresh_desktop_observation",
+        "preference_rationale": "Target environment shifted or observation stale; refreshing live desktop sensor state.",
+        "new_verification_required": "target_presence_observation",
+        "fingerprint": "e89eaa7ebea61cf1",
+        "attempt_number": 1,
+        "policy_verdict": "PERMIT",
+        "timestamp": 1791922983.2373004,
+        "provenance": {
+          "task_id": null,
+          "strategy": "IntelligentFallbackHierarchy_v1",
+          "timestamp": 1791922983.2372937
+        }
+      },
+      "verification": {
+        "recovered_pid_alive": true,
+        "recovered_window_present": true,
+        "recovered_pid": 22668
+      }
+    },
+    "scenario_b": {
+      "name": "Window State & Precondition Recovery",
+      "steps": [
+        "Launch target Notepad",
+        "Introduce Precondition Mismatch (Minimize Window)",
+        "Recover (Restore Window & Set Foreground)",
+        "Clean Up"
+      ],
+      "observations": [
+        "Initial PID=13828, HWND=399328",
+        "Window Minimized=True"
+      ],
+      "verdict": "PASS",
+      "failure_evidence": {
+        "failure_category": "PRECONDITION_FAILED",
+        "what_failed": "Notepad",
+        "evidence_summary": "Target window is minimized/occluded, foreground interaction required",
+        "evidence_data": {
+          "hwnd": 399328,
+          "is_iconic": true
+        },
+        "timestamp": 1791922992.3106592,
+        "source": "runtime_loop",
+        "world_state_changed": false,
+        "original_goal_valid": true
+      },
+      "recovery_decision": {
+        "decision_id": "dec_238a6ff0",
+        "failure_evidence": {
+          "failure_category": "PRECONDITION_FAILED",
+          "what_failed": "Notepad",
+          "evidence_summary": "Target window is minimized/occluded, foreground interaction required",
+          "evidence_data": {
+            "hwnd": 399328,
+            "is_iconic": true
+          },
+          "timestamp": 1791922992.3106592,
+          "source": "runtime_loop",
+          "world_state_changed": false,
+          "original_goal_valid": true
+        },
+        "action": "REPLAN",
+        "is_retry_safe": false,
+        "world_state_changed": false,
+        "original_goal_valid": true,
+        "alternative_selected": "replan_with_remediation_step",
+        "preference_rationale": "Verification oracle or contract pre/postcondition failed for Notepad; replanning with remediation.",
+        "new_verification_required": "independent_goal_verification",
+        "fingerprint": "a59cf427c030dcfe",
+        "attempt_number": 1,
+        "policy_verdict": "PERMIT",
+        "timestamp": 1791922992.3108249,
+        "provenance": {
+          "task_id": null,
+          "strategy": "IntelligentFallbackHierarchy_v1",
+          "timestamp": 1791922992.3108127
+        }
+      },
+      "verification": {
+        "is_unminimized": true,
+        "is_foreground": false,
+        "foreground_hwnd": 0,
+        "target_hwnd": 399328
+      }
+    }
+  },
+  "verdict": "PASS"
+}

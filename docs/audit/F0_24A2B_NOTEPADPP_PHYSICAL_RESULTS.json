@@ -1,0 +1,36 @@
+{
+  "GATE_B": {
+    "verdict": "PASS",
+    "initial_token": "ASTRA_NPP_20573A92",
+    "input_mechanism": "CLIPBOARD_PASTE",
+    "verified_initial": true,
+    "verified_appended": true,
+    "verified_replaced": true
+  },
+  "GATE_C": {
+    "verdict": "PASS",
+    "file_path": "C:\\Users\\hp\\AppData\\Local\\Temp\\astra_lab_gate_c_9b69df.txt",
+    "size_bytes": 124,
+    "sha256": "dfbf731c27264defad33421ea64cba6be3f66cc45ec97be417da17a59e6ff6ef",
+    "content_verified": true
+  },
+  "GATE_D": {
+    "verdict": "PASS",
+    "initial_size": 124,
+    "modified_size": 150,
+    "modified_sha256": "01d28fef03df055ce3fa26a656c06007a3f082b326cc7b6153bb33bba2664a24",
+    "modification_verified": true
+  },
+  "GATE_E": {
+    "verdict": "PASS",
+    "tab1_token": "DOC_1_2257b9",
+    "tab2_token": "DOC_2_698000",
+    "tab_switching_verified": true
+  },
+  "GATE_F": {
+    "verdict": "PASS",
+    "find_dialog_observed": true,
+    "replace_dialog_observed": true,
+    "unsaved_prompt_handled_safely": true
+  }
+}

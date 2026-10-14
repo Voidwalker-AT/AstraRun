@@ -1,0 +1,67 @@
+{
+  "phase": "F0-25F.7",
+  "stage": "STAGE 10 \u2014 ROUTING SOURCE FREEZE",
+  "frozen_at": "2026-10-14T08:40:29.204442+00:00",
+  "policy": "FROZEN \u2014 STRICTLY NO MODIFICATIONS PERMITTED AFTER THIS STEP",
+  "hash_specification": {
+    "whole_file_sha256": "SHA-256 of raw bytes on filesystem",
+    "canonical_content_sha256": "SHA-256 of LF-normalized, whitespace-stripped content"
+  },
+  "files": {
+    "src/astrarun/agent/models.py": {
+      "whole_file_sha256": "cbf570c753184118a6e3398fe69e81a095ee972961c40d6ba4a29793c2f60544",
+      "canonical_content_sha256": "5bf905cec921afddd80b87e23631724d36b2d01b49b31b943177930c5e681b39",
+      "size_bytes": 30502
+    },
+    "src/astrarun/agent/planner.py": {
+      "whole_file_sha256": "bb600f7ef54de1c74eb30d65b00dfdca4e72fa639751d05c781359688875d62c",
+      "canonical_content_sha256": "1473550a81d7c2c9d317282f338cadc296e1abcab1a96e21b78c657152bc741e",
+      "size_bytes": 97224
+    },
+    "src/astrarun/capabilities/manifest.py": {
+      "whole_file_sha256": "c55b39f2894ace3eb51c2f1c7f316ab7b0380bbb3a9e1496e9aa60c909caf264",
+      "canonical_content_sha256": "325b8138f55157ecf6bee6e149e87362dd5116b177f10bb69b663ad07d610d7a",
+      "size_bytes": 25487
+    },
+    "src/astrarun/capabilities/registry.py": {
+      "whole_file_sha256": "862ac6cca293a53bb4d3bfc516d8e8cf51666eeda1436c4bc3f565808168d95f",
+      "canonical_content_sha256": "e3c92e3a464e1831a28b7d1a815965364aad85fb1e86dbc503d7707d507770c2",
+      "size_bytes": 67655
+    },
+    "src/astrarun/capabilities/schema.py": {
+      "whole_file_sha256": "a6aed0f9398abb6cd8d02e897c2bfd567265db247f01ba4447b1a09352e1b09e",
+      "canonical_content_sha256": "526f9e59d71f20f077f95b753ec9d1e6271e6e71dbdcad32900a54196f2e69ec",
+      "size_bytes": 6737
+    },
+    "src/astrarun/recovery/engine.py": {
+      "whole_file_sha256": "772fa6b765a1e36628642847c0b78ddae5474537a4e7951cdd6aeb717af9c9b3",
+      "canonical_content_sha256": "1ec8468e1dd77184174d850182a3c5e7cc954805d7f11e3a176b62c8552854ac",
+      "size_bytes": 12759
+    },
+    "src/astrarun/recovery/models.py": {
+      "whole_file_sha256": "c66f39e68324e2e57c3bdf1266e65d872ce40944663b4fd9a1a954e66111a33d",
+      "canonical_content_sha256": "d430190db470507e9473fc6e90e8f2183bad7b99125cd50270b07353fcc49e47",
+      "size_bytes": 4507
+    },
+    "src/astrarun/routing/context_sufficiency.py": {
+      "whole_file_sha256": "e7f89fa6c7f5cca7e95e2d6ff0a1beb339d06bc84f125d347922a04d8727a46f",
+      "canonical_content_sha256": "0638e4c00227c422ea8baadda282b96a21a26e9f24b98ae38f28f3281cf1a3f0",
+      "size_bytes": 38413
+    },
+    "src/astrarun/routing/context_grounding.py": {
+      "whole_file_sha256": "ab90d8424320f92a6b05e27b9256b08d0c5990b6c46080103c79357ba76fcd3c",
+      "canonical_content_sha256": "83609bf447a2194225bb3b7a7208ebd714f853847340f995fc531cfe59399fe9",
+      "size_bytes": 7345
+    },
+    "src/astrarun/routing/capability_grounding.py": {
+      "whole_file_sha256": "379e72495b38a919b4c63d458894834d879d560ef3cbe6fc41b7a8b36617a0db",
+      "canonical_content_sha256": "8f3972f40821ac33384b124afb0d2609f5a0f40ea49bd4c5cd377ec6c70ced60",
+      "size_bytes": 12252
+    },
+    "src/astrarun/routing/learned_router.py": {
+      "whole_file_sha256": "701cbcd2e0164f30f5135729cb20c6ee6bb9b0e090d585479c2cf9e1b76ddc99",
+      "canonical_content_sha256": "00a8f3ec1137cc47b74897349fb2a378e9155da98acfff171f5a1331c7b51963",
+      "size_bytes": 16682
+    }
+  }
+}

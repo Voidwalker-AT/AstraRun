@@ -1,0 +1,17 @@
+{
+  "auditor": "MiMo",
+  "source": "docs/audit/F0_25F_REPAIR_REPORT.md + Stage JSONs",
+  "claims": [
+    {"id": "C1", "claim": "F0-25F PRODUCT REPAIR = PASS", "evidence_cited": "report L6,132", "mimo": "OVERALL-DOWNDRIVEN-BY-FAILS: OUTPUT_PRESENTATION FAIL + LAUNCHER EVALUATOR FAIL + evaluator residuals => overall FAIL"},
+    {"id": "C2", "claim": "Launcher invisible root cause = exebox-* desktop; repaired by WinSta0\\Default attach", "evidence_cited": "F0_25F_LAUNCHER_ROOT_CAUSE.json (desktop_name exebox-...; desktop_windows_on_default_desktop: []); main.py:145-157; reproduction.png shows no launcher", "mimo": "SUPPORTED (reproduction evidence + repair source present + MiMo independent observation shows launcher on Default)"},
+    {"id": "C3", "claim": "Launcher renders on user desktop (FACT)", "evidence_cited": "HWND 21759736; 93.0% dark pixels PHYSICAL_LAUNCHER.png", "mimo": "FACT for those captures (MiMo visual inspection: launcher bar 'What do you want to do?' present) + FACT via independent MiMo observation (HWND 17304052 visible+foreground)"},
+    {"id": "C4", "claim": "93% dark-pixel oracle validates physical visibility", "evidence_cited": "stage1 45256/48640; stage6 ratio 0.93", "mimo": "CONTRADICTED as a validity argument: oracle is darkness-only; MiMo independent observation of a genuinely visible launcher yielded dark_count=29274 which FAILS Stage-1's >30000 absolute threshold (false negative) and any dark non-Astra content would pass (false positive)"},
+    {"id": "C5", "claim": "Result Presentation: PASS (RESULT_PRESENTATION_REQUESTED recorded)", "evidence_cited": "report L106; Stage6 presentation_events only REQUESTED", "mimo": "CONTRADICTED: REQUESTED != PRESENTED; PHYSICAL_PRESENTATION.png shows no Explorer/Notepad/viewer; RESULT_PRESENTED exists in run file but verified_hwnd=null; evaluator accepts REQUESTED (L425-427) contradicting report L75"},
+    {"id": "C6", "claim": "Native run-scoped causal telemetry (19 event types)", "evidence_cited": "telemetry.py; runs/*.jsonl", "mimo": "PARTIAL: real run-scoped streams with parent links exist (FACT); enum has 20 types (STATE_OBSERVED dead); ad-hoc run_id escape; silent persistence failures; Stage6 computation run has only 4 events"},
+    {"id": "C7", "claim": "Evaluator purged hardcoded PASS; 6/6 mutation tests", "evidence_cited": "test_f0_25f_evaluator_mutation.py", "mimo": "PARTIAL: mutation suite real for 6 directions but REQUESTED-vs-PRESENTED, oracle geometry, hardcoded target_dir_clean_state/clean_termination untested; those defects remain in source"},
+    {"id": "C8", "claim": "Sandbox directories cleaned up (FACT); Stage6 sandbox verified", "evidence_cited": "resource_ledger; Stage6 dummy dir", "mimo": "PARTIAL: unit tests 3/3 PASS (FACT this session); ledger marks CLOSED after rmtree(ignore_errors=True) without disk verification; Stage6 check is synthetic dummy not a real task sandbox"},
+    {"id": "C9", "claim": "Canonical binary 2c59d0fe... built==installed", "evidence_cited": "report L101,124", "mimo": "FACT (MiMo independent double hash)"},
+    {"id": "C10", "claim": "Zero regressions: 100/100 unit tests", "evidence_cited": "report L123 (no archived output)", "mimo": "UNVERIFIED (no evidence file in package; MiMo re-ran only the 3 sandbox tests)"},
+    {"id": "C11", "claim": "Ready for autonomous dogfood run (INFERENCE)", "evidence_cited": "report L125", "mimo": "NOT READY per 13_ACCEPTANCE_MATRIX critical FAILs"}
+  ]
+}

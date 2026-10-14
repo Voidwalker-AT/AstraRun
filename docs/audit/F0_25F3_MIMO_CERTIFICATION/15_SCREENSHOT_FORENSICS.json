@@ -1,0 +1,31 @@
+{
+  "auditor": "MiMo",
+  "images": [
+    {
+      "file": "docs/audit/F0_25F3/screenshots/01_launcher_visible.png",
+      "pixels": "Antigravity fullscreen; Astra launcher bar 'What do you want to do?' with blue plus icon visible top-center; goal panel shows verify_f0_25f3_physical_acceptance.py running; clock 11:00 PM 10/12/2026",
+      "launcher_visible": true,
+      "request_text_visible": false,
+      "result_viewer_visible": false,
+      "expected_output_visible": false,
+      "unexpected_app": "none beyond Antigravity harness",
+      "description_matches_pixels": true,
+      "confidence": "HIGH",
+      "verdict": "HONEST launcher capture"
+    },
+    {
+      "file": "docs/audit/F0_25F3/screenshots/02_result_presentation.png",
+      "pixels": "Same scene; launcher now shows text 'pute first 50 fibonacci numbers and save to fibonacci.txt and reveal in explorer' (truncated 'compute'); NO result viewer, NO explorer, NO fibonacci.txt content anywhere",
+      "launcher_visible": true,
+      "request_text_visible": true,
+      "result_viewer_visible": false,
+      "expected_output_visible": false,
+      "description_matches_pixels_if_called_presentation": false,
+      "confidence": "HIGH",
+      "verdict": "HONEST for request capture; filename '02_result_presentation' is MISLEADING — pixels show request-in-launcher, not a presented result (consistent with physical FAIL)"
+    }
+  ],
+  "fibonacci_request_genuinely_visible": true,
+  "result_ever_physically_presented": false,
+  "verdict": "SCREENSHOT_TRUTH = PASS (both images honest to pixels; second filename misleading but content consistent with failed presentation)"
+}

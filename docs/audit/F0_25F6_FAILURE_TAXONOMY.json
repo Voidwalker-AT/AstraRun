@@ -1,0 +1,164 @@
+{
+  "phase": "F0-25F.6",
+  "component": "IntelligentFallbackEngine",
+  "version": "1.0.0",
+  "timestamp": 1791920200.0,
+  "failure_categories": [
+    {
+      "code": "ROUTING_UNCERTAIN",
+      "description": "Confidence below threshold or ambiguous intent mapping",
+      "default_recovery": "REQUEST_CLARIFICATION"
+    },
+    {
+      "code": "MISSING_CONTEXT",
+      "description": "Mandatory parameters or referents ungrounded in active context",
+      "default_recovery": "REQUEST_CLARIFICATION"
+    },
+    {
+      "code": "CAPABILITY_UNAVAILABLE",
+      "description": "Capability adapter degraded, missing prerequisites, or OS unsupported",
+      "default_recovery": "SELECT_ALTERNATIVE_CAPABILITY"
+    },
+    {
+      "code": "MODEL_UNAVAILABLE",
+      "description": "Preferred resident or external inference model unreachable or timed out",
+      "default_recovery": "SELECT_ALTERNATIVE_MODEL"
+    },
+    {
+      "code": "MODEL_OUTPUT_INVALID",
+      "description": "Model emitted unparseable JSON, hallucinated schema, or illegal keys",
+      "default_recovery": "FALLBACK_TO_DETERMINISTIC_METHOD"
+    },
+    {
+      "code": "POLICY_BLOCKED",
+      "description": "Security ActionGate or broker blocked execution by policy",
+      "default_recovery": "FAIL_CLOSED"
+    },
+    {
+      "code": "PRECONDITION_FAILED",
+      "description": "Required initial condition (e.g. process running, window visible) not met",
+      "default_recovery": "REPLAN"
+    },
+    {
+      "code": "TARGET_NOT_FOUND",
+      "description": "Target window, UI control, file, or PID not located in active OS state",
+      "default_recovery": "RETRY_WITH_NEW_OBSERVATION"
+    },
+    {
+      "code": "TARGET_CHANGED",
+      "description": "Target state or HWND changed during execution (TOCTOU violation)",
+      "default_recovery": "RETRY_WITH_NEW_OBSERVATION"
+    },
+    {
+      "code": "ACTION_FAILED",
+      "description": "Tool returned non-zero exit code or explicit failure result",
+      "default_recovery": "SELECT_ALTERNATIVE_CAPABILITY"
+    },
+    {
+      "code": "OBSERVATION_INCONCLUSIVE",
+      "description": "Sensor capture or UIA inspection returned empty/ambiguous state",
+      "default_recovery": "RETRY_WITH_NEW_OBSERVATION"
+    },
+    {
+      "code": "POSTCONDITION_FAILED",
+      "description": "Post-action state verification failed to confirm expected effect",
+      "default_recovery": "REPLAN"
+    },
+    {
+      "code": "VERIFICATION_FAILED",
+      "description": "Independent goal verifier oracle detected missing or corrupt output",
+      "default_recovery": "REPLAN"
+    },
+    {
+      "code": "RESOURCE_CLEANUP_FAILED",
+      "description": "Resource ledger detected unreleased subprocess, file lock, or window",
+      "default_recovery": "CLEANUP_AND_FAIL"
+    },
+    {
+      "code": "USER_TAKEOVER",
+      "description": "User moved mouse, typed keyboard, or cancelled task mid-flight",
+      "default_recovery": "PAUSE_FOR_USER"
+    },
+    {
+      "code": "TIMEOUT",
+      "description": "Operation exceeded allowed execution or observation timeout budget",
+      "default_recovery": "RETRY_WITH_NEW_OBSERVATION"
+    },
+    {
+      "code": "PROVIDER_UNAVAILABLE",
+      "description": "External delegation service or API provider connection refused",
+      "default_recovery": "FALLBACK_TO_DETERMINISTIC_METHOD"
+    },
+    {
+      "code": "UNRECOVERABLE",
+      "description": "Fatal OS error, corruption, or repeated loop exhaustion",
+      "default_recovery": "FAIL_CLOSED"
+    }
+  ],
+  "recovery_actions": [
+    "RETRY_SAME",
+    "RETRY_WITH_NEW_OBSERVATION",
+    "REPLAN",
+    "SELECT_ALTERNATIVE_CAPABILITY",
+    "SELECT_ALTERNATIVE_MODEL",
+    "FALLBACK_TO_DETERMINISTIC_METHOD",
+    "REQUEST_CLARIFICATION",
+    "REQUEST_CONFIRMATION",
+    "PAUSE_FOR_USER",
+    "ROLLBACK",
+    "CLEANUP_AND_FAIL",
+    "FAIL_CLOSED"
+  ],
+  "diagnostic_questions": [
+    "1. What failed?",
+    "2. What evidence proves it failed?",
+    "3. Is retry safe?",
+    "4. Has world state changed?",
+    "5. Is the original goal still valid?",
+    "6. What alternative is available?",
+    "7. Why is that alternative preferable?",
+    "8. What new verification is required?"
+  ],
+  "hierarchies": {
+    "reasoning": [
+      "preferred_model",
+      "alternate_configured_model",
+      "deterministic_local_capability",
+      "clarification_or_fail_closed"
+    ],
+    "computer_use": [
+      "semantic_uia_interaction",
+      "refreshed_observation_and_semantic",
+      "alternate_generic_interaction",
+      "visual_grounding_verified",
+      "fail_closed"
+    ],
+    "execution": [
+      "known_capability",
+      "composition_dag",
+      "governed_dynamic_tool",
+      "external_delegation",
+      "clarification_or_fail_closed"
+    ],
+    "verification": [
+      "strong_semantic_oracle",
+      "alternate_independent_observation",
+      "alternate_evidence_source",
+      "fail_honestly"
+    ]
+  },
+  "budget_and_loop_prevention": {
+    "max_retries_per_fingerprint": 2,
+    "max_total_replans_per_task": 3,
+    "fingerprint_algorithm": "sha256(category:target:action:error)",
+    "cycle_detection_window": 4,
+    "terminal_escalation": "FAIL_CLOSED"
+  },
+  "security_invariants": {
+    "block_remains_block": true,
+    "confirm_remains_confirm": true,
+    "zero_policy_bypass": true,
+    "zero_scope_expansion": true,
+    "zero_self_certification": true
+  }
+}

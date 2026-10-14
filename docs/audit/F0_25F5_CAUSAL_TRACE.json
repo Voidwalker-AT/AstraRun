@@ -1,0 +1,974 @@
+[
+  {
+    "event_id": "cev_1791918683418_5483c4",
+    "run_id": "run_1791918683418_8ff18085",
+    "task_id": "task_b914a849",
+    "parent_event_id": null,
+    "timestamp_monotonic": 14767.5131698,
+    "timestamp_wall": 1791918683.418476,
+    "event_type": "REQUEST_RECEIVED",
+    "component": "AgentExecutionEngine",
+    "input_hash": "250ceeffd2bf540d5ca518d42538ffd6403f968acc0fe40bd130608c1ca709d4",
+    "output_hash": null,
+    "model_id": null,
+    "capability": null,
+    "authorization_verdict": null,
+    "resulting_event_id": null,
+    "data": {
+      "query": "open notepad type hello and save it to desktop with name test1.txt"
+    }
+  },
+  {
+    "event_id": "cev_1791918684111_e3fb0f",
+    "run_id": "run_1791918683418_8ff18085",
+    "task_id": "task_b914a849",
+    "parent_event_id": "cev_1791918683418_5483c4",
+    "timestamp_monotonic": 14768.2066982,
+    "timestamp_wall": 1791918684.1120043,
+    "event_type": "GOAL_INTERPRETED",
+    "component": "GoalPlanner",
+    "input_hash": "250ceeffd2bf540d5ca518d42538ffd6403f968acc0fe40bd130608c1ca709d4",
+    "output_hash": "250ceeffd2bf540d5ca518d42538ffd6403f968acc0fe40bd130608c1ca709d4",
+    "model_id": null,
+    "capability": null,
+    "authorization_verdict": null,
+    "resulting_event_id": null,
+    "data": {
+      "goal_type": "CUSTOM",
+      "target": "",
+      "description": ""
+    }
+  },
+  {
+    "event_id": "cev_1791918684146_2bead0",
+    "run_id": "run_1791918683418_8ff18085",
+    "task_id": "task_b914a849",
+    "parent_event_id": "cev_1791918684111_e3fb0f",
+    "timestamp_monotonic": 14768.2417015,
+    "timestamp_wall": 1791918684.1470077,
+    "event_type": "PLAN_CREATED",
+    "component": "GoalPlanner",
+    "input_hash": null,
+    "output_hash": "1a9d69972e97f6e55714ce0c0b67c4e03b091dd59ccd2f0bd76d24e39003a5ce",
+    "model_id": null,
+    "capability": null,
+    "authorization_verdict": null,
+    "resulting_event_id": null,
+    "data": {
+      "step_count": 3,
+      "capabilities": [
+        "open_application",
+        "type_into_window",
+        "save_document_via_ui"
+      ]
+    }
+  },
+  {
+    "event_id": "cev_1791918684204_6afafc",
+    "run_id": "run_1791918683418_8ff18085",
+    "task_id": "task_fc6d9e39",
+    "parent_event_id": "cev_1791918684146_2bead0",
+    "timestamp_monotonic": 14768.2992123,
+    "timestamp_wall": 1791918684.2045188,
+    "event_type": "STATE_OBSERVED",
+    "component": "DesktopObserver",
+    "input_hash": null,
+    "output_hash": null,
+    "model_id": null,
+    "capability": null,
+    "authorization_verdict": null,
+    "resulting_event_id": null,
+    "data": {
+      "foreground_title": "AstraRun",
+      "visible_window_count": 10,
+      "dialog_count": 1,
+      "observation_latency_ms": 53.67
+    }
+  },
+  {
+    "event_id": "cev_1791918686499_dfa936",
+    "run_id": "run_1791918683418_8ff18085",
+    "task_id": "task_fc6d9e39",
+    "parent_event_id": "cev_1791918684204_6afafc",
+    "timestamp_monotonic": 14770.5946602,
+    "timestamp_wall": 1791918686.4999666,
+    "event_type": "ACTION_PROPOSED",
+    "component": "ExecutionBroker",
+    "input_hash": "e51fe14e072fe582038b42b7ec84f8d191b08533e778d62763884337add4ed65",
+    "output_hash": null,
+    "model_id": null,
+    "capability": "focus_application",
+    "authorization_verdict": null,
+    "resulting_event_id": null,
+    "data": {
+      "source": "hermes_exploration",
+      "category": "ACT",
+      "step_id": null,
+      "dry_run": false
+    }
+  },
+  {
+    "event_id": "cev_1791918686501_b89fd9",
+    "run_id": "run_1791918683418_8ff18085",
+    "task_id": "task_fc6d9e39",
+    "parent_event_id": "cev_1791918686499_dfa936",
+    "timestamp_monotonic": 14770.5962152,
+    "timestamp_wall": 1791918686.5015213,
+    "event_type": "ACTION_AUTHORIZED",
+    "component": "ExecutionBroker",
+    "input_hash": null,
+    "output_hash": null,
+    "model_id": null,
+    "capability": "focus_application",
+    "authorization_verdict": "ALLOW",
+    "resulting_event_id": null,
+    "data": {
+      "category": "ACT"
+    }
+  },
+  {
+    "event_id": "cev_1791918686502_b32fd6",
+    "run_id": "run_1791918683418_8ff18085",
+    "task_id": "task_fc6d9e39",
+    "parent_event_id": "cev_1791918686499_dfa936",
+    "timestamp_monotonic": 14770.5974446,
+    "timestamp_wall": 1791918686.5027506,
+    "event_type": "ACTION_DISPATCHED",
+    "component": "ExecutionBroker",
+    "input_hash": null,
+    "output_hash": null,
+    "model_id": null,
+    "capability": "focus_application",
+    "authorization_verdict": null,
+    "resulting_event_id": null,
+    "data": {
+      "parameters": {
+        "app_name": "notepad"
+      }
+    }
+  },
+  {
+    "event_id": "cev_1791918686506_a4bc31",
+    "run_id": "run_1791918683418_8ff18085",
+    "task_id": "task_fc6d9e39",
+    "parent_event_id": "cev_1791918686502_b32fd6",
+    "timestamp_monotonic": 14770.6013542,
+    "timestamp_wall": 1791918686.5066605,
+    "event_type": "ACTION_RESULT",
+    "component": "ExecutionBroker",
+    "input_hash": null,
+    "output_hash": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+    "model_id": null,
+    "capability": "focus_application",
+    "authorization_verdict": null,
+    "resulting_event_id": null,
+    "data": {
+      "success": false,
+      "message": "Invalid arguments for 'focus_application': focus_application() missing 1 required positional argument: 'app'",
+      "duration_ms": 5.029500000091502
+    }
+  },
+  {
+    "event_id": "cev_1791918686528_4b0980",
+    "run_id": "run_1791918683418_8ff18085",
+    "task_id": "task_fc6d9e39",
+    "parent_event_id": "cev_1791918686506_a4bc31",
+    "timestamp_monotonic": 14770.6235044,
+    "timestamp_wall": 1791918686.5288105,
+    "event_type": "STATE_OBSERVED",
+    "component": "DesktopObserver",
+    "input_hash": null,
+    "output_hash": null,
+    "model_id": null,
+    "capability": null,
+    "authorization_verdict": null,
+    "resulting_event_id": null,
+    "data": {
+      "foreground_title": "AstraRun",
+      "visible_window_count": 10,
+      "dialog_count": 1,
+      "observation_latency_ms": 2.02
+    }
+  },
+  {
+    "event_id": "cev_1791918686675_373390",
+    "run_id": "run_1791918683418_8ff18085",
+    "task_id": "task_fc6d9e39",
+    "parent_event_id": "cev_1791918686528_4b0980",
+    "timestamp_monotonic": 14770.7704926,
+    "timestamp_wall": 1791918686.675799,
+    "event_type": "ACTION_PROPOSED",
+    "component": "ExecutionBroker",
+    "input_hash": "628b5ff7a791aaa007335034ed39d8f213e7bfd6f2ceddc1d0897e528ad1866d",
+    "output_hash": null,
+    "model_id": null,
+    "capability": "open_application",
+    "authorization_verdict": null,
+    "resulting_event_id": null,
+    "data": {
+      "source": "agent_planner",
+      "category": "ACT",
+      "step_id": null,
+      "dry_run": false
+    }
+  },
+  {
+    "event_id": "cev_1791918686677_c502c8",
+    "run_id": "run_1791918683418_8ff18085",
+    "task_id": "task_fc6d9e39",
+    "parent_event_id": "cev_1791918686675_373390",
+    "timestamp_monotonic": 14770.7725797,
+    "timestamp_wall": 1791918686.6778858,
+    "event_type": "ACTION_AUTHORIZED",
+    "component": "ExecutionBroker",
+    "input_hash": null,
+    "output_hash": null,
+    "model_id": null,
+    "capability": "open_application",
+    "authorization_verdict": "ALLOW",
+    "resulting_event_id": null,
+    "data": {
+      "category": "ACT"
+    }
+  },
+  {
+    "event_id": "cev_1791918686679_0033fb",
+    "run_id": "run_1791918683418_8ff18085",
+    "task_id": "task_fc6d9e39",
+    "parent_event_id": "cev_1791918686675_373390",
+    "timestamp_monotonic": 14770.773967,
+    "timestamp_wall": 1791918686.6792731,
+    "event_type": "ACTION_DISPATCHED",
+    "component": "ExecutionBroker",
+    "input_hash": null,
+    "output_hash": null,
+    "model_id": null,
+    "capability": "open_application",
+    "authorization_verdict": null,
+    "resulting_event_id": null,
+    "data": {
+      "parameters": {
+        "app": "notepad"
+      }
+    }
+  },
+  {
+    "event_id": "cev_1791918688938_20d240",
+    "run_id": "run_1791918683418_8ff18085",
+    "task_id": "task_fc6d9e39",
+    "parent_event_id": "cev_1791918686679_0033fb",
+    "timestamp_monotonic": 14773.033596,
+    "timestamp_wall": 1791918688.9389033,
+    "event_type": "RESOURCE_REGISTERED",
+    "component": "AstraResourceLedger",
+    "input_hash": null,
+    "output_hash": null,
+    "model_id": null,
+    "capability": null,
+    "authorization_verdict": null,
+    "resulting_event_id": null,
+    "data": {
+      "resource_id": "d73a0efc-8b0a-4f0c-9a57-1494c9b1a35e",
+      "resource_type": "APPLICATION",
+      "pid": 21804,
+      "hwnd": 330094,
+      "document_path": "C:\\WINDOWS\\notepad.exe"
+    }
+  },
+  {
+    "event_id": "cev_1791918688940_3b1c09",
+    "run_id": "run_1791918683418_8ff18085",
+    "task_id": "task_fc6d9e39",
+    "parent_event_id": "cev_1791918688938_20d240",
+    "timestamp_monotonic": 14773.035491,
+    "timestamp_wall": 1791918688.940797,
+    "event_type": "RESOURCE_REGISTERED",
+    "component": "AstraResourceLedger",
+    "input_hash": null,
+    "output_hash": null,
+    "model_id": null,
+    "capability": null,
+    "authorization_verdict": null,
+    "resulting_event_id": null,
+    "data": {
+      "resource_id": "d73a0efc-8b0a-4f0c-9a57-1494c9b1a35e",
+      "resource_type": "APPLICATION",
+      "pid": 21804,
+      "hwnd": 330094,
+      "astra_created": true,
+      "existed_before": false,
+      "cleanup_policy": "AUTO_CLOSE_ON_COMPLETION"
+    }
+  },
+  {
+    "event_id": "cev_1791918688943_911224",
+    "run_id": "run_1791918683418_8ff18085",
+    "task_id": "task_fc6d9e39",
+    "parent_event_id": "cev_1791918688940_3b1c09",
+    "timestamp_monotonic": 14773.0379301,
+    "timestamp_wall": 1791918688.943236,
+    "event_type": "ACTION_RESULT",
+    "component": "ExecutionBroker",
+    "input_hash": null,
+    "output_hash": "3e0d9574590d0f630b0a175ce7e2c1b39af3c5468b94381fb9d9fdb956e4748f",
+    "model_id": null,
+    "capability": "open_application",
+    "authorization_verdict": null,
+    "resulting_event_id": null,
+    "data": {
+      "success": true,
+      "message": "Application 'notepad' launched successfully (PID=21804, HWND=330094).",
+      "duration_ms": 2266.4975999996386
+    }
+  },
+  {
+    "event_id": "cev_1791918688968_ec6e2f",
+    "run_id": "run_1791918683418_8ff18085",
+    "task_id": "task_fc6d9e39",
+    "parent_event_id": "cev_1791918688943_911224",
+    "timestamp_monotonic": 14773.0627351,
+    "timestamp_wall": 1791918688.9680414,
+    "event_type": "STATE_OBSERVED",
+    "component": "DesktopObserver",
+    "input_hash": null,
+    "output_hash": null,
+    "model_id": null,
+    "capability": null,
+    "authorization_verdict": null,
+    "resulting_event_id": null,
+    "data": {
+      "foreground_title": "AstraRun",
+      "visible_window_count": 17,
+      "dialog_count": 1,
+      "observation_latency_ms": 22.84
+    }
+  },
+  {
+    "event_id": "cev_1791918689030_20edd0",
+    "run_id": "run_1791918683418_8ff18085",
+    "task_id": "task_fc6d9e39",
+    "parent_event_id": "cev_1791918688968_ec6e2f",
+    "timestamp_monotonic": 14773.125221,
+    "timestamp_wall": 1791918689.0305269,
+    "event_type": "POSTCONDITION_VERIFIED",
+    "component": "StepVerifier",
+    "input_hash": null,
+    "output_hash": "a32bb6783993da8b9c526de07b3bd3f8d25bc76199ed4c4444061234e1056c4b",
+    "model_id": null,
+    "capability": null,
+    "authorization_verdict": null,
+    "resulting_event_id": null,
+    "data": {
+      "step_id": "step_1",
+      "strategy": "WINDOW_READY",
+      "message": "Target window (HWND 330094) is valid and visible.",
+      "evidence": {
+        "hwnd": 330094,
+        "is_window": true,
+        "is_visible": true
+      }
+    }
+  },
+  {
+    "event_id": "cev_1791918689667_444f2b",
+    "run_id": "run_1791918683418_8ff18085",
+    "task_id": "task_fc6d9e39",
+    "parent_event_id": "cev_1791918689030_20edd0",
+    "timestamp_monotonic": 14773.7618485,
+    "timestamp_wall": 1791918689.6671546,
+    "event_type": "STATE_OBSERVED",
+    "component": "DesktopObserver",
+    "input_hash": null,
+    "output_hash": null,
+    "model_id": null,
+    "capability": null,
+    "authorization_verdict": null,
+    "resulting_event_id": null,
+    "data": {
+      "foreground_title": "AstraRun",
+      "visible_window_count": 51,
+      "dialog_count": 1,
+      "observation_latency_ms": 30.67
+    }
+  },
+  {
+    "event_id": "cev_1791918690507_d7d5b5",
+    "run_id": "run_1791918683418_8ff18085",
+    "task_id": "task_fc6d9e39",
+    "parent_event_id": "cev_1791918689667_444f2b",
+    "timestamp_monotonic": 14774.6017693,
+    "timestamp_wall": 1791918690.5070753,
+    "event_type": "ACTION_PROPOSED",
+    "component": "ExecutionBroker",
+    "input_hash": "f87dead0e2ea8bbc3bfd80db67ffca7c2725d4cefd3515472adcf192435c1c69",
+    "output_hash": null,
+    "model_id": null,
+    "capability": "type_into_window",
+    "authorization_verdict": null,
+    "resulting_event_id": null,
+    "data": {
+      "source": "agent_planner",
+      "category": "ACT",
+      "step_id": null,
+      "dry_run": false
+    }
+  },
+  {
+    "event_id": "cev_1791918690509_4d7755",
+    "run_id": "run_1791918683418_8ff18085",
+    "task_id": "task_fc6d9e39",
+    "parent_event_id": "cev_1791918690507_d7d5b5",
+    "timestamp_monotonic": 14774.6041119,
+    "timestamp_wall": 1791918690.509418,
+    "event_type": "ACTION_AUTHORIZED",
+    "component": "ExecutionBroker",
+    "input_hash": null,
+    "output_hash": null,
+    "model_id": null,
+    "capability": "type_into_window",
+    "authorization_verdict": "ALLOW",
+    "resulting_event_id": null,
+    "data": {
+      "category": "ACT"
+    }
+  },
+  {
+    "event_id": "cev_1791918690511_600d01",
+    "run_id": "run_1791918683418_8ff18085",
+    "task_id": "task_fc6d9e39",
+    "parent_event_id": "cev_1791918690507_d7d5b5",
+    "timestamp_monotonic": 14774.605783,
+    "timestamp_wall": 1791918690.511089,
+    "event_type": "ACTION_DISPATCHED",
+    "component": "ExecutionBroker",
+    "input_hash": null,
+    "output_hash": null,
+    "model_id": null,
+    "capability": "type_into_window",
+    "authorization_verdict": null,
+    "resulting_event_id": null,
+    "data": {
+      "parameters": {
+        "text": "hello",
+        "app_name": "notepad"
+      }
+    }
+  },
+  {
+    "event_id": "cev_1791918693121_6e9310",
+    "run_id": "run_1791918683418_8ff18085",
+    "task_id": "task_fc6d9e39",
+    "parent_event_id": "cev_1791918690511_600d01",
+    "timestamp_monotonic": 14777.2167248,
+    "timestamp_wall": 1791918693.1220312,
+    "event_type": "ACTION_RESULT",
+    "component": "ExecutionBroker",
+    "input_hash": null,
+    "output_hash": "5ea44300139c00d15c6d25edd23e0551cb11b946361d7d4228c3c8bdf6b305e9",
+    "model_id": null,
+    "capability": "type_into_window",
+    "authorization_verdict": null,
+    "resulting_event_id": null,
+    "data": {
+      "success": true,
+      "message": "Entered 5 characters.",
+      "duration_ms": 2612.1172000002844
+    }
+  },
+  {
+    "event_id": "cev_1791918693158_5271ea",
+    "run_id": "run_1791918683418_8ff18085",
+    "task_id": "task_fc6d9e39",
+    "parent_event_id": "cev_1791918693121_6e9310",
+    "timestamp_monotonic": 14777.2531731,
+    "timestamp_wall": 1791918693.1584792,
+    "event_type": "STATE_OBSERVED",
+    "component": "DesktopObserver",
+    "input_hash": null,
+    "output_hash": null,
+    "model_id": null,
+    "capability": null,
+    "authorization_verdict": null,
+    "resulting_event_id": null,
+    "data": {
+      "foreground_title": "empty.txt - Notepad",
+      "visible_window_count": 71,
+      "dialog_count": 1,
+      "observation_latency_ms": 32.76
+    }
+  },
+  {
+    "event_id": "cev_1791918697866_34fb8f",
+    "run_id": "run_1791918683418_8ff18085",
+    "task_id": "task_fc6d9e39",
+    "parent_event_id": "cev_1791918693158_5271ea",
+    "timestamp_monotonic": 14781.961715,
+    "timestamp_wall": 1791918697.8670213,
+    "event_type": "STATE_OBSERVED",
+    "component": "DesktopObserver",
+    "input_hash": null,
+    "output_hash": null,
+    "model_id": null,
+    "capability": null,
+    "authorization_verdict": null,
+    "resulting_event_id": null,
+    "data": {
+      "foreground_title": "empty.txt - Notepad",
+      "visible_window_count": 71,
+      "dialog_count": 1,
+      "observation_latency_ms": 27.97
+    }
+  },
+  {
+    "event_id": "cev_1791918700127_f572cf",
+    "run_id": "run_1791918683418_8ff18085",
+    "task_id": "task_fc6d9e39",
+    "parent_event_id": "cev_1791918697866_34fb8f",
+    "timestamp_monotonic": 14784.2220188,
+    "timestamp_wall": 1791918700.1273258,
+    "event_type": "ACTION_PROPOSED",
+    "component": "ExecutionBroker",
+    "input_hash": "f87dead0e2ea8bbc3bfd80db67ffca7c2725d4cefd3515472adcf192435c1c69",
+    "output_hash": null,
+    "model_id": null,
+    "capability": "type_into_window",
+    "authorization_verdict": null,
+    "resulting_event_id": null,
+    "data": {
+      "source": "agent_planner",
+      "category": "ACT",
+      "step_id": null,
+      "dry_run": false
+    }
+  },
+  {
+    "event_id": "cev_1791918700131_017739",
+    "run_id": "run_1791918683418_8ff18085",
+    "task_id": "task_fc6d9e39",
+    "parent_event_id": "cev_1791918700127_f572cf",
+    "timestamp_monotonic": 14784.2259236,
+    "timestamp_wall": 1791918700.1312296,
+    "event_type": "ACTION_AUTHORIZED",
+    "component": "ExecutionBroker",
+    "input_hash": null,
+    "output_hash": null,
+    "model_id": null,
+    "capability": "type_into_window",
+    "authorization_verdict": "ALLOW",
+    "resulting_event_id": null,
+    "data": {
+      "category": "ACT"
+    }
+  },
+  {
+    "event_id": "cev_1791918700133_ec724f",
+    "run_id": "run_1791918683418_8ff18085",
+    "task_id": "task_fc6d9e39",
+    "parent_event_id": "cev_1791918700127_f572cf",
+    "timestamp_monotonic": 14784.2279343,
+    "timestamp_wall": 1791918700.1332405,
+    "event_type": "ACTION_DISPATCHED",
+    "component": "ExecutionBroker",
+    "input_hash": null,
+    "output_hash": null,
+    "model_id": null,
+    "capability": "type_into_window",
+    "authorization_verdict": null,
+    "resulting_event_id": null,
+    "data": {
+      "parameters": {
+        "text": "hello",
+        "app_name": "notepad"
+      }
+    }
+  },
+  {
+    "event_id": "cev_1791918700996_7177f9",
+    "run_id": "run_1791918683418_8ff18085",
+    "task_id": "task_fc6d9e39",
+    "parent_event_id": "cev_1791918700133_ec724f",
+    "timestamp_monotonic": 14785.0909604,
+    "timestamp_wall": 1791918700.9962666,
+    "event_type": "ACTION_RESULT",
+    "component": "ExecutionBroker",
+    "input_hash": null,
+    "output_hash": "5ea44300139c00d15c6d25edd23e0551cb11b946361d7d4228c3c8bdf6b305e9",
+    "model_id": null,
+    "capability": "type_into_window",
+    "authorization_verdict": null,
+    "resulting_event_id": null,
+    "data": {
+      "success": true,
+      "message": "Entered 5 characters.",
+      "duration_ms": 868.0002999990393
+    }
+  },
+  {
+    "event_id": "cev_1791918701022_2a9ff8",
+    "run_id": "run_1791918683418_8ff18085",
+    "task_id": "task_fc6d9e39",
+    "parent_event_id": "cev_1791918700996_7177f9",
+    "timestamp_monotonic": 14785.1172786,
+    "timestamp_wall": 1791918701.0225847,
+    "event_type": "STATE_OBSERVED",
+    "component": "DesktopObserver",
+    "input_hash": null,
+    "output_hash": null,
+    "model_id": null,
+    "capability": null,
+    "authorization_verdict": null,
+    "resulting_event_id": null,
+    "data": {
+      "foreground_title": "empty.txt - Notepad",
+      "visible_window_count": 71,
+      "dialog_count": 1,
+      "observation_latency_ms": 24.42
+    }
+  },
+  {
+    "event_id": "cev_1791918701642_1e63f5",
+    "run_id": "run_1791918683418_8ff18085",
+    "task_id": "task_fc6d9e39",
+    "parent_event_id": "cev_1791918701022_2a9ff8",
+    "timestamp_monotonic": 14785.7375554,
+    "timestamp_wall": 1791918701.6428618,
+    "event_type": "POSTCONDITION_VERIFIED",
+    "component": "StepVerifier",
+    "input_hash": null,
+    "output_hash": "2d3581275202cbc32a5092b675e2cff9493da26e547774d58107489e1473b946",
+    "model_id": null,
+    "capability": null,
+    "authorization_verdict": null,
+    "resulting_event_id": null,
+    "data": {
+      "step_id": "step_2",
+      "strategy": "UI_ELEMENT_STATE",
+      "message": "UI text state verified: UI control 'Text editor' (document) matched 'hello'",
+      "evidence": {
+        "hwnd": 330094,
+        "window_title": "empty.txt - Notepad",
+        "matched_element": {
+          "hwnd": 330094,
+          "pid": 21804,
+          "control_type": "document",
+          "automation_id": "",
+          "name": "Text editor",
+          "class_name": "RichEditD2DPT",
+          "bounds": [
+            48,
+            133,
+            777,
+            552
+          ],
+          "is_enabled": true,
+          "is_offscreen": false,
+          "is_password": false,
+          "has_keyboard_focus": true,
+          "supported_patterns": [
+            "value",
+            "text",
+            "scroll"
+          ],
+          "depth": 2,
+          "value": "hello"
+        },
+        "keystroke_dispatched_chars": 5,
+        "matched_via": "UI control 'Text editor' (document) matched 'hello'"
+      }
+    }
+  },
+  {
+    "event_id": "cev_1791918701777_d7fe93",
+    "run_id": "run_1791918683418_8ff18085",
+    "task_id": "task_fc6d9e39",
+    "parent_event_id": "cev_1791918701642_1e63f5",
+    "timestamp_monotonic": 14785.8724898,
+    "timestamp_wall": 1791918701.7777958,
+    "event_type": "STATE_OBSERVED",
+    "component": "DesktopObserver",
+    "input_hash": null,
+    "output_hash": null,
+    "model_id": null,
+    "capability": null,
+    "authorization_verdict": null,
+    "resulting_event_id": null,
+    "data": {
+      "foreground_title": "empty.txt - Notepad",
+      "visible_window_count": 71,
+      "dialog_count": 1,
+      "observation_latency_ms": 6.01
+    }
+  },
+  {
+    "event_id": "cev_1791918701893_fcaad8",
+    "run_id": "run_1791918683418_8ff18085",
+    "task_id": "task_fc6d9e39",
+    "parent_event_id": "cev_1791918701777_d7fe93",
+    "timestamp_monotonic": 14785.9886309,
+    "timestamp_wall": 1791918701.8939369,
+    "event_type": "ACTION_PROPOSED",
+    "component": "ExecutionBroker",
+    "input_hash": "0fe0824d894d6d789fb7a9eb7716d1088eea8e87d2cda967c5666b0aa8a03e1b",
+    "output_hash": null,
+    "model_id": null,
+    "capability": "save_document_via_ui",
+    "authorization_verdict": null,
+    "resulting_event_id": null,
+    "data": {
+      "source": "agent_planner",
+      "category": "ACT",
+      "step_id": null,
+      "dry_run": false
+    }
+  },
+  {
+    "event_id": "cev_1791918701896_f7e93e",
+    "run_id": "run_1791918683418_8ff18085",
+    "task_id": "task_fc6d9e39",
+    "parent_event_id": "cev_1791918701893_fcaad8",
+    "timestamp_monotonic": 14785.9911272,
+    "timestamp_wall": 1791918701.896433,
+    "event_type": "ACTION_AUTHORIZED",
+    "component": "ExecutionBroker",
+    "input_hash": null,
+    "output_hash": null,
+    "model_id": null,
+    "capability": "save_document_via_ui",
+    "authorization_verdict": "ALLOW",
+    "resulting_event_id": null,
+    "data": {
+      "category": "ACT"
+    }
+  },
+  {
+    "event_id": "cev_1791918701898_c46873",
+    "run_id": "run_1791918683418_8ff18085",
+    "task_id": "task_fc6d9e39",
+    "parent_event_id": "cev_1791918701893_fcaad8",
+    "timestamp_monotonic": 14785.9928156,
+    "timestamp_wall": 1791918701.8981218,
+    "event_type": "ACTION_DISPATCHED",
+    "component": "ExecutionBroker",
+    "input_hash": null,
+    "output_hash": null,
+    "model_id": null,
+    "capability": "save_document_via_ui",
+    "authorization_verdict": null,
+    "resulting_event_id": null,
+    "data": {
+      "parameters": {
+        "app_name": "notepad",
+        "filename": "test1.txt",
+        "path": "C:\\Users\\hp\\Desktop\\test1.txt",
+        "folder": "Desktop",
+        "text": "hello",
+        "content": "hello"
+      }
+    }
+  },
+  {
+    "event_id": "cev_1791918706380_b7749d",
+    "run_id": "run_1791918683418_8ff18085",
+    "task_id": "task_fc6d9e39",
+    "parent_event_id": "cev_1791918701898_c46873",
+    "timestamp_monotonic": 14790.4753072,
+    "timestamp_wall": 1791918706.3806133,
+    "event_type": "ACTION_RESULT",
+    "component": "ExecutionBroker",
+    "input_hash": null,
+    "output_hash": "781b820c2378829c802eba9e075edf040d06c8cdc5ad7d6fc3c0f9c0a442e06a",
+    "model_id": null,
+    "capability": "save_document_via_ui",
+    "authorization_verdict": null,
+    "resulting_event_id": null,
+    "data": {
+      "success": true,
+      "message": "Document successfully saved via application UI to 'C:\\Users\\hp\\Desktop\\test1.txt'.",
+      "duration_ms": 4485.146600000007
+    }
+  },
+  {
+    "event_id": "cev_1791918706396_a48d38",
+    "run_id": "run_1791918683418_8ff18085",
+    "task_id": "task_fc6d9e39",
+    "parent_event_id": "cev_1791918706380_b7749d",
+    "timestamp_monotonic": 14790.4914833,
+    "timestamp_wall": 1791918706.3967896,
+    "event_type": "STATE_OBSERVED",
+    "component": "DesktopObserver",
+    "input_hash": null,
+    "output_hash": null,
+    "model_id": null,
+    "capability": null,
+    "authorization_verdict": null,
+    "resulting_event_id": null,
+    "data": {
+      "foreground_title": "Untitled - Notepad",
+      "visible_window_count": 71,
+      "dialog_count": 1,
+      "observation_latency_ms": 13.17
+    }
+  },
+  {
+    "event_id": "cev_1791918706441_f1b7b2",
+    "run_id": "run_1791918683418_8ff18085",
+    "task_id": "task_fc6d9e39",
+    "parent_event_id": "cev_1791918706396_a48d38",
+    "timestamp_monotonic": 14790.5357705,
+    "timestamp_wall": 1791918706.4410765,
+    "event_type": "POSTCONDITION_VERIFIED",
+    "component": "StepVerifier",
+    "input_hash": null,
+    "output_hash": "e2a197fc2310916ecd69d6d9feeaafe749b78d00c1386ce15e855d303622bcc6",
+    "model_id": null,
+    "capability": null,
+    "authorization_verdict": null,
+    "resulting_event_id": null,
+    "data": {
+      "step_id": "step_3",
+      "strategy": "FILE_NON_EMPTY",
+      "message": "Verified file exists and is non-empty (5 bytes).",
+      "evidence": {
+        "path": "C:\\Users\\hp\\Desktop\\test1.txt",
+        "exists": true,
+        "size_bytes": 5
+      }
+    }
+  },
+  {
+    "event_id": "cev_1791918706573_8614f1",
+    "run_id": "run_1791918683418_8ff18085",
+    "task_id": "task_fc6d9e39",
+    "parent_event_id": "cev_1791918706441_f1b7b2",
+    "timestamp_monotonic": 14790.6686083,
+    "timestamp_wall": 1791918706.5739143,
+    "event_type": "POSTCONDITION_VERIFIED",
+    "component": "GoalVerifier",
+    "input_hash": null,
+    "output_hash": "aac73a96cc5d42abbcfee131eeadf6f823de299b9e7a56780dadfe8c12331d4c",
+    "model_id": null,
+    "capability": null,
+    "authorization_verdict": null,
+    "resulting_event_id": null,
+    "data": {
+      "completed": true,
+      "message": "All goal contract acceptance predicates satisfied.",
+      "evidence": {
+        "file_exists_pred_7187e4": {
+          "path": "C:\\Users\\hp\\Desktop\\test1.txt",
+          "exists": true,
+          "size": 5,
+          "run_id": "run_1791918683418_8ff18085",
+          "task_id": "task_fc6d9e39"
+        },
+        "file_non_empty_pred_947b5f": {
+          "path": "C:\\Users\\hp\\Desktop\\test1.txt",
+          "exists": true,
+          "size": 5,
+          "non_empty": true,
+          "run_id": "run_1791918683418_8ff18085",
+          "task_id": "task_fc6d9e39"
+        },
+        "file_content_pred_b9835a": {
+          "path": "C:\\Users\\hp\\Desktop\\test1.txt",
+          "contains": true,
+          "expected": "hello",
+          "run_id": "run_1791918683418_8ff18085",
+          "task_id": "task_fc6d9e39"
+        }
+      }
+    }
+  },
+  {
+    "event_id": "cev_1791918706581_69d0a4",
+    "run_id": "run_1791918683418_8ff18085",
+    "task_id": "task_fc6d9e39",
+    "parent_event_id": "cev_1791918706573_8614f1",
+    "timestamp_monotonic": 14790.6757335,
+    "timestamp_wall": 1791918706.5810397,
+    "event_type": "STATE_OBSERVED",
+    "component": "DesktopObserver",
+    "input_hash": null,
+    "output_hash": null,
+    "model_id": null,
+    "capability": null,
+    "authorization_verdict": null,
+    "resulting_event_id": null,
+    "data": {
+      "foreground_title": "Untitled - Notepad",
+      "visible_window_count": 71,
+      "dialog_count": 1,
+      "observation_latency_ms": 5.97
+    }
+  },
+  {
+    "event_id": "cev_1791918708043_8eac67",
+    "run_id": "run_1791918683418_8ff18085",
+    "task_id": "task_fc6d9e39",
+    "parent_event_id": "cev_1791918706581_69d0a4",
+    "timestamp_monotonic": 14792.1377451,
+    "timestamp_wall": 1791918708.0430512,
+    "event_type": "RESOURCE_DISPOSED",
+    "component": "AstraResourceLedger",
+    "input_hash": null,
+    "output_hash": null,
+    "model_id": null,
+    "capability": null,
+    "authorization_verdict": null,
+    "resulting_event_id": null,
+    "data": {
+      "resource_id": "d73a0efc-8b0a-4f0c-9a57-1494c9b1a35e",
+      "resource_type": "APPLICATION",
+      "pid": 21804,
+      "hwnd": 330094,
+      "state": "CLOSED"
+    }
+  },
+  {
+    "event_id": "cev_1791918708044_a124c0",
+    "run_id": "run_1791918683418_8ff18085",
+    "task_id": "task_fc6d9e39",
+    "parent_event_id": "cev_1791918708043_8eac67",
+    "timestamp_monotonic": 14792.1389347,
+    "timestamp_wall": 1791918708.044241,
+    "event_type": "RESOURCE_RESTORATION_VERIFIED",
+    "component": "AstraResourceLedger",
+    "input_hash": null,
+    "output_hash": null,
+    "model_id": null,
+    "capability": null,
+    "authorization_verdict": null,
+    "resulting_event_id": null,
+    "data": {
+      "cleaned_count": 1,
+      "preserved_count": 0,
+      "detached_count": 0,
+      "failed_count": 0,
+      "clean_ok": true,
+      "process_cleaned_up": true,
+      "remaining_active": 0
+    }
+  },
+  {
+    "event_id": "cev_1791918708349_ce91ae",
+    "run_id": "run_1791918683418_8ff18085",
+    "task_id": "task_fc6d9e39",
+    "parent_event_id": "cev_1791918708044_a124c0",
+    "timestamp_monotonic": 14792.4439323,
+    "timestamp_wall": 1791918708.3492386,
+    "event_type": "STATE_OBSERVED",
+    "component": "DesktopObserver",
+    "input_hash": null,
+    "output_hash": null,
+    "model_id": null,
+    "capability": null,
+    "authorization_verdict": null,
+    "resulting_event_id": null,
+    "data": {
+      "foreground_title": "Phase F0-25F.3 Production...",
+      "visible_window_count": 10,
+      "dialog_count": 1,
+      "observation_latency_ms": 3.59
+    }
+  }
+]

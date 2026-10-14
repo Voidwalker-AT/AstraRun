@@ -1,0 +1,52 @@
+{
+  "milestone": "F0_25D",
+  "title": "AstraRun Production Product Identity Audit",
+  "timestamp": "2026-10-11T17:16:00.000000+05:30",
+  "canonical_installed_product": {
+    "entry_point": "C:\\Users\\hp\\AppData\\Local\\Programs\\AstraRun\\AstraRun.exe",
+    "version": "1.0.0-rc.6-dogfood",
+    "sha256": "f58740a9579e2fd9d36c753f3721e66c99964421fcf7311a1b8a44a9ddd3b26a",
+    "size_bytes": 11959949,
+    "build_timestamp": "2026-10-10T19:24:00.000000+00:00",
+    "git_commit": "bd287eb",
+    "packager": "PyInstaller 6.22.3",
+    "installer_path": "E:\\Workspace\\Agents\\AstraRun-Anti\\dist\\installer\\AstraRun-Setup-1.0.0-rc.6-dogfood.exe",
+    "installer_sha256": "69a683b9c6b3e88b44a808cfda3c6da2e23d8a948d91a23f125f3129584ad84e",
+    "hermes_integrated": false,
+    "status": "CANONICAL_PRODUCT_STALE"
+  },
+  "canonical_source_product": {
+    "entry_point": "src/astrarun/main.py",
+    "runtime": "E:\\Workspace\\Agents\\AstraRun-Anti\\.venv\\Scripts\\python.exe",
+    "sha256": "69bc34bdab4a7ac04546a753ff3ea2b82608f39f1d514bd3e1755d9cb9965b95",
+    "git_branch": "agent/anti-f0-24a1",
+    "git_commit": "bd287eb (with uncommitted F0-25 working tree)",
+    "working_directory": "E:\\Workspace\\Agents\\AstraRun-Anti",
+    "hermes_integrated": true,
+    "hermes_db": "docs/audit/hermes_f025b1_reverif.db",
+    "config_dir": "C:\\Users\\hp\\AppData\\Local\\AstraRun\\config"
+  },
+  "runtime_environment": {
+    "os": "Windows 10.0.19045 AMD64",
+    "python_version": "3.13.0",
+    "installed_compilers": [
+      "gcc (Rev2, Built by MSYS2 project) 14.2.0",
+      "javac 21.0.5"
+    ],
+    "installed_editors": [
+      "Notepad++ (C:\\Program Files\\Notepad++\\notepad++.exe)",
+      "VS Code (code.cmd)",
+      "Notepad (notepad.exe)"
+    ],
+    "installed_browsers": [
+      "msedge.exe",
+      "chrome.exe",
+      "vivaldi.exe"
+    ]
+  },
+  "staleness_verdict": {
+    "is_installed_binary_stale": true,
+    "reason": "Installed binary AstraRun.exe was packaged on 2026-10-10 prior to Phase F0-25. It lacks Hermes experiential memory and workstation agent reasoning modules.",
+    "verdict_code": "CANONICAL_PRODUCT_STALE"
+  }
+}

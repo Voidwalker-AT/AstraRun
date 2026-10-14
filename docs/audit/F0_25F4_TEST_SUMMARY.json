@@ -1,0 +1,70 @@
+{
+  "phase": "F0-25F.4",
+  "audit_name": "FULL_REGRESSION_TEST_SUMMARY",
+  "total_collected": 973,
+  "passed": 923,
+  "failed": 50,
+  "skipped": 0,
+  "errors": 0,
+  "duration_seconds": 382.549,
+  "junit_xml_source": "E:\\Workspace\\Agents\\AstraRun-Anti\\docs\\audit\\junit_f0_25f4.xml",
+  "key_suite_results": {
+    "completion_wiring": {
+      "path": "tests/unit/test_f0_25f4_completion_wiring.py",
+      "status": "PASS",
+      "passed": 10,
+      "failed": 0
+    },
+    "verification_strategies": {
+      "path": "tests/unit/test_f0_25f4_verification.py",
+      "status": "PASS",
+      "passed": 6,
+      "failed": 0
+    },
+    "completion_gate": {
+      "path": "tests/unit/test_f0_25f3_completion_gate.py",
+      "status": "PASS",
+      "passed": 14,
+      "failed": 0
+    },
+    "adversarial_mutations": {
+      "path": "tests/unit/test_f0_25f3_mutations.py",
+      "status": "PASS",
+      "passed": 21,
+      "failed": 0
+    },
+    "generic_repair_holdout": {
+      "path": "tests/unit/test_generic_repair_holdout.py",
+      "status": "PASS",
+      "passed": 1,
+      "failed": 0,
+      "honest_score": "7/8",
+      "repair_02_fail_closed": true
+    },
+    "post_freeze_routing_holdout": {
+      "path": "tests/unit/test_post_freeze_routing_holdout.py",
+      "status": "PASS",
+      "passed": 1,
+      "failed": 0
+    },
+    "frozen_blind_manifest_320": {
+      "path": "docs/audit/F0_25F4_ROUTING_BLIND_MANIFEST.json",
+      "manifest_sha256": "eb8c72cea888292a7aee834c7fac90ffceb8a2538fae603162b1611b79d778e8",
+      "status": "PASS",
+      "total_prompts": 320,
+      "overall_accuracy_pct": 85.31,
+      "dynamic_precision_pct": 98.67,
+      "dynamic_recall_pct": 92.5
+    },
+    "capability_security_manifest": {
+      "path": "tests/unit/test_capability_manifest_consistency.py",
+      "status": "PASS",
+      "total_capabilities": 86,
+      "read_only": 43,
+      "mutating": 43,
+      "confirmation_required": 3,
+      "blocked": 2,
+      "unknown_consequential": 0
+    }
+  }
+}

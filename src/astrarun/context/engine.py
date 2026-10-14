@@ -43,15 +43,17 @@ class WorkstationContextEngine:
 
     def __init__(
         self,
-        persistence_file: Path | str = r"E:\Workspace\Active\AstraRun\data\context_state.json",
+        persistence_file: Optional[Path | str] = None,
         project_registry: Optional[ProjectRegistry] = None,
         history_limit: int = 30,
         retention_hours: float = 48.0,
         process_ttl_seconds: float = 300.0,   # 5 minutes for ephemeral processes/ports/files
         project_ttl_seconds: float = 86400.0, # 24 hours for projects
     ) -> None:
+        from astrarun.core.paths import AstraPaths
+        p_file = persistence_file or (AstraPaths.data_dir() / "context_state.json")
         self.persistence_store = ContextPersistenceStore(
-            file_path=persistence_file,
+            file_path=p_file,
             history_limit=history_limit,
             retention_hours=retention_hours,
         )

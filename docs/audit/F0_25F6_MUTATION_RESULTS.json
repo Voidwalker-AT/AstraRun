@@ -1,0 +1,332 @@
+{
+  "benchmark": "F0_25F6_VERIFICATION_MUTATION_SUITE",
+  "phase": "F0-25F.6",
+  "total_mutants": 12,
+  "killed_mutants": 12,
+  "survived_mutants": 0,
+  "kill_rate_pct": 100.0,
+  "required_kill_rate_pct": 100.0,
+  "verdict": "PASS",
+  "mutation_categories": {
+    "empty_file_instead_of_content": [
+      {
+        "id": "MUT-01A",
+        "mutation_type": "empty_file_instead_of_content",
+        "target_verifier": "StepVerifier.FILE_NON_EMPTY",
+        "description": "0-byte file presented when non-empty content was required",
+        "killed": true,
+        "kill_reason": "File exists but is empty (0 bytes): C:\\Users\\hp\\AppData\\Local\\Temp\\tmpkkzyb4im",
+        "kill_validity": "GENUINE_SEMANTIC_KILL",
+        "details": {
+          "verified": false,
+          "size_bytes": 0
+        }
+      },
+      {
+        "id": "MUT-01B",
+        "mutation_type": "empty_file_instead_of_content",
+        "target_verifier": "AuthoritativeCompletionGate",
+        "description": "Authoritative completion gate must reject 0-byte file despite SATISFIED claim",
+        "killed": true,
+        "kill_reason": "Failed predicates: pred_095d81: artifact C:\\Users\\hp\\AppData\\Local\\Temp\\tmp6ulrjlm4 is empty (0 bytes)",
+        "kill_validity": "GENUINE_SEMANTIC_KILL",
+        "details": {
+          "can_complete": false,
+          "verdict": "REJECTED"
+        }
+      },
+      {
+        "id": "MUT-01C",
+        "mutation_type": "empty_file_instead_of_content",
+        "target_verifier": "IntelligentFallbackEngine",
+        "description": "Fallback engine recognizes POSTCONDITION_FAILED and prevents naive identical retry",
+        "killed": true,
+        "kill_reason": "action=REPLAN, safe_retry=False",
+        "kill_validity": "GENUINE_SEMANTIC_KILL",
+        "details": {
+          "action": "REPLAN",
+          "preference_rationale": "Verification oracle or contract pre/postcondition failed for FileNonEmptyPredicate; replanning with remediation."
+        }
+      }
+    ],
+    "wrong_window_targeted": [
+      {
+        "id": "MUT-02A",
+        "mutation_type": "wrong_window_targeted",
+        "target_verifier": "StepVerifier.WINDOW_READY",
+        "description": "Targeting non-existent/invalid HWND 99999999 must fail window verification",
+        "killed": true,
+        "kill_reason": "Target window (HWND 99999999) is not ready (valid=False, visible=False).",
+        "kill_validity": "GENUINE_SEMANTIC_KILL",
+        "details": {
+          "verified": false,
+          "is_window": false
+        }
+      },
+      {
+        "id": "MUT-02B",
+        "mutation_type": "wrong_window_targeted",
+        "target_verifier": "StepVerifier.WINDOW_READY_TITLE",
+        "description": "Searching for phantom title must fail verification",
+        "killed": true,
+        "kill_reason": "No windows found matching query 'NonExistentPhantomWindowX99'.",
+        "kill_validity": "GENUINE_SEMANTIC_KILL",
+        "details": {
+          "verified": false,
+          "matched_windows": 0
+        }
+      },
+      {
+        "id": "MUT-02C",
+        "mutation_type": "wrong_window_targeted",
+        "target_verifier": "IntelligentFallbackEngine",
+        "description": "TARGET_NOT_FOUND triggers RETRY_WITH_NEW_OBSERVATION rather than blind clicking",
+        "killed": true,
+        "kill_reason": "action=RETRY_WITH_NEW_OBSERVATION",
+        "kill_validity": "GENUINE_SEMANTIC_KILL",
+        "details": {
+          "action": "RETRY_WITH_NEW_OBSERVATION",
+          "rationale": "Target environment shifted or observation stale; refreshing live desktop sensor state."
+        }
+      }
+    ],
+    "process_killed_before_completion": [
+      {
+        "id": "MUT-03A",
+        "mutation_type": "process_killed_before_completion",
+        "target_verifier": "StepVerifier.PROCESS_RUNNING",
+        "description": "Process dead before verification must fail verification",
+        "killed": true,
+        "kill_reason": "Process PID 999999 is not running.",
+        "kill_validity": "GENUINE_SEMANTIC_KILL",
+        "details": {
+          "verified": false,
+          "running": false
+        }
+      },
+      {
+        "id": "MUT-03B",
+        "mutation_type": "process_killed_before_completion",
+        "target_verifier": "AuthoritativeCompletionGate",
+        "description": "Application running predicate violated blocks goal completion",
+        "killed": true,
+        "kill_reason": "Failed predicates: pred_a34590: predicate is VIOLATED (C4): Process PhantomAppNeverRunning is not running",
+        "kill_validity": "GENUINE_SEMANTIC_KILL",
+        "details": {
+          "can_complete": false,
+          "verdict": "REJECTED"
+        }
+      },
+      {
+        "id": "MUT-03C",
+        "mutation_type": "process_killed_before_completion",
+        "target_verifier": "IntelligentFallbackEngine",
+        "description": "Premature process termination triggers alternative capability selection",
+        "killed": true,
+        "kill_reason": "action=SELECT_ALTERNATIVE_CAPABILITY, alternative=launch_in_isolated_worker",
+        "kill_validity": "GENUINE_SEMANTIC_KILL",
+        "details": {
+          "action": "SELECT_ALTERNATIVE_CAPABILITY",
+          "alternative": "launch_in_isolated_worker"
+        }
+      }
+    ],
+    "malformed_json_returned": [
+      {
+        "id": "MUT-04A",
+        "mutation_type": "malformed_json_returned",
+        "target_verifier": "JSONDecoder",
+        "description": "Malformed model output fails json.loads with JSONDecodeError",
+        "killed": true,
+        "kill_reason": "Expecting value: line 1 column 29 (char 28)",
+        "kill_validity": "GENUINE_SEMANTIC_KILL",
+        "details": {
+          "parsing_failed": true
+        }
+      },
+      {
+        "id": "MUT-04B",
+        "mutation_type": "malformed_json_returned",
+        "target_verifier": "IntelligentFallbackEngine",
+        "description": "MODEL_OUTPUT_INVALID triggers FALLBACK_TO_DETERMINISTIC_METHOD without executing invalid payload",
+        "killed": true,
+        "kill_reason": "action=FALLBACK_TO_DETERMINISTIC_METHOD",
+        "kill_validity": "GENUINE_SEMANTIC_KILL",
+        "details": {
+          "action": "FALLBACK_TO_DETERMINISTIC_METHOD",
+          "rationale": "Model emitted malformed output; falling back to authoritative deterministic capability matching."
+        }
+      },
+      {
+        "id": "MUT-04C",
+        "mutation_type": "malformed_json_returned",
+        "target_verifier": "AuthoritativeCompletionGate.FILE_CONTENT",
+        "description": "Malformed JSON lacking required success content rejects completion",
+        "killed": true,
+        "kill_reason": "Failed predicates: pred_90a69d: artifact content does not contain expected substring (C7)",
+        "kill_validity": "GENUINE_SEMANTIC_KILL",
+        "details": {
+          "can_complete": false,
+          "verdict": "REJECTED"
+        }
+      }
+    ]
+  },
+  "mutants": [
+    {
+      "id": "MUT-01A",
+      "mutation_type": "empty_file_instead_of_content",
+      "target_verifier": "StepVerifier.FILE_NON_EMPTY",
+      "description": "0-byte file presented when non-empty content was required",
+      "killed": true,
+      "kill_reason": "File exists but is empty (0 bytes): C:\\Users\\hp\\AppData\\Local\\Temp\\tmpkkzyb4im",
+      "kill_validity": "GENUINE_SEMANTIC_KILL",
+      "details": {
+        "verified": false,
+        "size_bytes": 0
+      }
+    },
+    {
+      "id": "MUT-01B",
+      "mutation_type": "empty_file_instead_of_content",
+      "target_verifier": "AuthoritativeCompletionGate",
+      "description": "Authoritative completion gate must reject 0-byte file despite SATISFIED claim",
+      "killed": true,
+      "kill_reason": "Failed predicates: pred_095d81: artifact C:\\Users\\hp\\AppData\\Local\\Temp\\tmp6ulrjlm4 is empty (0 bytes)",
+      "kill_validity": "GENUINE_SEMANTIC_KILL",
+      "details": {
+        "can_complete": false,
+        "verdict": "REJECTED"
+      }
+    },
+    {
+      "id": "MUT-01C",
+      "mutation_type": "empty_file_instead_of_content",
+      "target_verifier": "IntelligentFallbackEngine",
+      "description": "Fallback engine recognizes POSTCONDITION_FAILED and prevents naive identical retry",
+      "killed": true,
+      "kill_reason": "action=REPLAN, safe_retry=False",
+      "kill_validity": "GENUINE_SEMANTIC_KILL",
+      "details": {
+        "action": "REPLAN",
+        "preference_rationale": "Verification oracle or contract pre/postcondition failed for FileNonEmptyPredicate; replanning with remediation."
+      }
+    },
+    {
+      "id": "MUT-02A",
+      "mutation_type": "wrong_window_targeted",
+      "target_verifier": "StepVerifier.WINDOW_READY",
+      "description": "Targeting non-existent/invalid HWND 99999999 must fail window verification",
+      "killed": true,
+      "kill_reason": "Target window (HWND 99999999) is not ready (valid=False, visible=False).",
+      "kill_validity": "GENUINE_SEMANTIC_KILL",
+      "details": {
+        "verified": false,
+        "is_window": false
+      }
+    },
+    {
+      "id": "MUT-02B",
+      "mutation_type": "wrong_window_targeted",
+      "target_verifier": "StepVerifier.WINDOW_READY_TITLE",
+      "description": "Searching for phantom title must fail verification",
+      "killed": true,
+      "kill_reason": "No windows found matching query 'NonExistentPhantomWindowX99'.",
+      "kill_validity": "GENUINE_SEMANTIC_KILL",
+      "details": {
+        "verified": false,
+        "matched_windows": 0
+      }
+    },
+    {
+      "id": "MUT-02C",
+      "mutation_type": "wrong_window_targeted",
+      "target_verifier": "IntelligentFallbackEngine",
+      "description": "TARGET_NOT_FOUND triggers RETRY_WITH_NEW_OBSERVATION rather than blind clicking",
+      "killed": true,
+      "kill_reason": "action=RETRY_WITH_NEW_OBSERVATION",
+      "kill_validity": "GENUINE_SEMANTIC_KILL",
+      "details": {
+        "action": "RETRY_WITH_NEW_OBSERVATION",
+        "rationale": "Target environment shifted or observation stale; refreshing live desktop sensor state."
+      }
+    },
+    {
+      "id": "MUT-03A",
+      "mutation_type": "process_killed_before_completion",
+      "target_verifier": "StepVerifier.PROCESS_RUNNING",
+      "description": "Process dead before verification must fail verification",
+      "killed": true,
+      "kill_reason": "Process PID 999999 is not running.",
+      "kill_validity": "GENUINE_SEMANTIC_KILL",
+      "details": {
+        "verified": false,
+        "running": false
+      }
+    },
+    {
+      "id": "MUT-03B",
+      "mutation_type": "process_killed_before_completion",
+      "target_verifier": "AuthoritativeCompletionGate",
+      "description": "Application running predicate violated blocks goal completion",
+      "killed": true,
+      "kill_reason": "Failed predicates: pred_a34590: predicate is VIOLATED (C4): Process PhantomAppNeverRunning is not running",
+      "kill_validity": "GENUINE_SEMANTIC_KILL",
+      "details": {
+        "can_complete": false,
+        "verdict": "REJECTED"
+      }
+    },
+    {
+      "id": "MUT-03C",
+      "mutation_type": "process_killed_before_completion",
+      "target_verifier": "IntelligentFallbackEngine",
+      "description": "Premature process termination triggers alternative capability selection",
+      "killed": true,
+      "kill_reason": "action=SELECT_ALTERNATIVE_CAPABILITY, alternative=launch_in_isolated_worker",
+      "kill_validity": "GENUINE_SEMANTIC_KILL",
+      "details": {
+        "action": "SELECT_ALTERNATIVE_CAPABILITY",
+        "alternative": "launch_in_isolated_worker"
+      }
+    },
+    {
+      "id": "MUT-04A",
+      "mutation_type": "malformed_json_returned",
+      "target_verifier": "JSONDecoder",
+      "description": "Malformed model output fails json.loads with JSONDecodeError",
+      "killed": true,
+      "kill_reason": "Expecting value: line 1 column 29 (char 28)",
+      "kill_validity": "GENUINE_SEMANTIC_KILL",
+      "details": {
+        "parsing_failed": true
+      }
+    },
+    {
+      "id": "MUT-04B",
+      "mutation_type": "malformed_json_returned",
+      "target_verifier": "IntelligentFallbackEngine",
+      "description": "MODEL_OUTPUT_INVALID triggers FALLBACK_TO_DETERMINISTIC_METHOD without executing invalid payload",
+      "killed": true,
+      "kill_reason": "action=FALLBACK_TO_DETERMINISTIC_METHOD",
+      "kill_validity": "GENUINE_SEMANTIC_KILL",
+      "details": {
+        "action": "FALLBACK_TO_DETERMINISTIC_METHOD",
+        "rationale": "Model emitted malformed output; falling back to authoritative deterministic capability matching."
+      }
+    },
+    {
+      "id": "MUT-04C",
+      "mutation_type": "malformed_json_returned",
+      "target_verifier": "AuthoritativeCompletionGate.FILE_CONTENT",
+      "description": "Malformed JSON lacking required success content rejects completion",
+      "killed": true,
+      "kill_reason": "Failed predicates: pred_90a69d: artifact content does not contain expected substring (C7)",
+      "kill_validity": "GENUINE_SEMANTIC_KILL",
+      "details": {
+        "can_complete": false,
+        "verdict": "REJECTED"
+      }
+    }
+  ]
+}

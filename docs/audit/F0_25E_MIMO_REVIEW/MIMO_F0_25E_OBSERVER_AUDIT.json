@@ -1,0 +1,95 @@
+{
+  "milestone": "F0_25E",
+  "title": "MIMO Independent Observer Capability Audit — scripts/f0_25e_observer.py",
+  "auditor": "MiMo (full source inspection; permission manifest NOT accepted as proof)",
+  "source_file": "scripts/f0_25e_observer.py (732 lines)",
+  "companion_files_reviewed": ["scripts/f0_25e_evaluator.py (717 lines)", "tests/acceptance/test_f0_25e_acceptance_engine.py (203 lines)"],
+  "method": "Line-level classification of every subprocess / input-API / file-write / copy-move / shell / IPC call path, direct and indirect.",
+  "capability_findings": [
+    {
+      "capability": "typing after initial submission",
+      "can_observer_do_it": false,
+      "evidence": "Zero occurrences of keybd_event, mouse_event, SendInput, pyautogui, keyboard module, or any input injection API in the file. The request is delivered via IPC (si.send_command('POPULATE_QUERY') L657, si.send_command('SUBMIT_QUERY') L663); after L663 no send_command call exists anywhere in the observation loop (L676-702 performs only TARGET_DIR.glob, capture_frame, record_filesystem_snapshot).",
+      "classification": "PROVEN INCAPABLE (source-level)"
+    },
+    {
+      "capability": "clicking",
+      "can_observer_do_it": false,
+      "evidence": "No mouse APIs. Only AllowSetForegroundWindow (L623, L627) which GRANTS the child process focus rights and moves nothing itself. SetForegroundWindow never called.",
+      "classification": "PROVEN INCAPABLE (source-level)"
+    },
+    {
+      "capability": "writing task output files",
+      "can_observer_do_it": "false after guard install; true during setup wipe",
+      "evidence": "install_evaluator_write_guard (L72-110) monkeypatches builtins.open / os.remove / os.unlink to raise on write-modes targeting E:\\AstraDogfood\\word_frequency. HOWEVER: (a) the guard is installed at L604 AFTER the observer has already wiped the target dir with _real_unlink + shutil.rmtree (L578-584); (b) the guard is bypassable - pathlib.Path.write_text / Path.open use io.open, and os.rename / os.replace / os.mkdir / shutil.move / shutil.copy are NOT patched; (c) all evidence writes use deliberately captured _real_open. Net: during the observation window (post L604) normal open()-based writes to target are blocked, but the structural claim 'write-protected' overstates coverage, and the observer DID mutate the target dir pre-guard by design (setup wipe).",
+      "classification": "PARTIALLY CAPABLE - setup-phase wipe is intended harness behavior; guard is real but partial (io.open/shutil/rename bypasses)"
+    },
+    {
+      "capability": "executing main.py / running the generated program",
+      "can_observer_do_it": false,
+      "evidence": "Only subprocess call in the file is subprocess.Popen([CANONICAL_EXE, '--show-now']) at L616-619 (launches the installed product). Grep for 'main.py' execution: none. No os.system, no shell=True, no eval, no exec, no powershell, no Invoke-Expression anywhere.",
+      "classification": "PROVEN INCAPABLE (source-level)"
+    },
+    {
+      "capability": "opening editors",
+      "can_observer_do_it": false,
+      "evidence": "No os.startfile, ShellExecute, or webbrowser calls. Zero matches for notepad/vscode/code launch patterns.",
+      "classification": "PROVEN INCAPABLE (source-level)"
+    },
+    {
+      "capability": "opening terminals",
+      "can_observer_do_it": false,
+      "evidence": "No conhost/powershell/cmd spawn paths; the single Popen launches AstraRun.exe only.",
+      "classification": "PROVEN INCAPABLE (source-level)"
+    },
+    {
+      "capability": "opening browser",
+      "can_observer_do_it": false,
+      "evidence": "No webbrowser module, no startfile of URLs.",
+      "classification": "PROVEN INCAPABLE (source-level)"
+    },
+    {
+      "capability": "repairing artifacts (modifying deliverables to make them pass)",
+      "can_observer_do_it": "false post-guard; true during setup wipe",
+      "evidence": "Post-guard, open-for-write to target is blocked (partial guard). The observer never edits deliverables; it does wipe the target dir during setup (L578-584) and wipes prior raw evidence (L587-591) before capture - a reset, not a repair. The evaluator (separate file) never writes to target either (no subprocess, write calls only under docs/audit/F0_25E).",
+      "classification": "PROVEN INCAPABLE of artifact repair during acceptance; CAPABLE of pre-run reset (by design)"
+    },
+    {
+      "capability": "cleaning Astra resources before freeze (cleanup on Astra's behalf)",
+      "can_observer_do_it": "partially - pre-run only",
+      "evidence": "L594-600 kills ALL *astrarun* processes before the run (pre-run hygiene). After the run: the spawned AstraRun.exe (L616) is NEVER terminated - run_dogfood_observation returns at L715 with the child alive (contrast F0-25D.1 harness which terminated it). No post-run Astra resource cleanup occurs at all.",
+      "classification": "PROVEN: no cleanup on Astra's behalf before freeze; but also no post-run cleanup of its own child"
+    },
+    {
+      "capability": "sending further IPC commands after SUBMIT_QUERY (indirect control path)",
+      "can_observer_do_it": "structurally yes, behaviorally no",
+      "evidence": "IPC surface (astrarun.core.single_instance) supports PAUSE/RESUME/RESTART/QUIT; the observer instantiates AstraSingleInstance (L632) and could send more commands. Static analysis of all si.send_command call sites: L638 (SHOW_MAIN_UI readiness loop), L657 (POPULATE_QUERY), L663 (SUBMIT_QUERY) - none after L663.",
+      "classification": "PROVEN NO post-submission IPC (call-site complete enumeration)"
+    }
+  ],
+  "destructive_and_side_capabilities_observed": [
+    {"line": "578-584", "action": "wipe entire target dir (files + subdirs) before guard install", "phase": "setup"},
+    {"line": "587-591", "action": "delete every file under docs/audit/F0_25E/raw (destroys previous 'frozen' evidence)", "phase": "setup", "note": "cryptographic freeze is per-run only; a re-run destroys prior raw evidence"},
+    {"line": "594-600", "action": "kill all astrarun processes", "phase": "setup"},
+    {"line": "616-619", "action": "Popen installed AstraRun.exe --show-now", "phase": "setup"},
+    {"line": "715", "action": "exit WITHOUT terminating spawned AstraRun", "phase": "teardown", "note": "child left resident"}
+  ],
+  "self_report_artifacts_treated_as_claims_not_proof": [
+    {
+      "artifact": "docs/audit/F0_25E/F0_25E_OBSERVER_CAPABILITY_AUDIT.json",
+      "how_produced": "generate_observer_capability_audit() L465-506 writes a hand-written literal dict; verdict 'FAIL_CLOSED_STRUCTURALLY_ENFORCED' is a hardcoded string at L502. No static analysis or runtime enforcement check feeds it. main() regenerates it on every invocation (L723).",
+      "mimo_classification": "UNVERIFIED self-declaration"
+    },
+    {
+      "artifact": "Report narrative 'physically incapacitated from mouse/keyboard inputs'",
+      "how_produced": "Static string in evaluator write_final_markdown_report L585, stamped [DERIVED_FROM_FROZEN_EVIDENCE] though it derives from nothing.",
+      "mimo_classification": "SUPPORTED by source analysis (no input APIs) but the STAMP is false"
+    }
+  ],
+  "desktop_attachment_defect": {
+    "finding": "ensure_desktop_attached is defined twice (L117-131 with WinSta0+OpenInputDesktop; L134-141 with only OpenDesktopW('Default')). The second definition shadows the first, making the WinSta0 attach dead code.",
+    "impact": "Screenshots/window enumeration rely solely on SetThreadDesktop(OpenDesktopW('Default')). On this run the capture clearly worked for Antigravity windows, so the defect did not corrupt captures, but it is a latent correctness gap.",
+    "classification": "DEFECT RECORDED (does not invalidate frames)"
+  },
+  "verdict": "The observer is structurally incapable of typing, clicking, executing main.py, opening editors/terminals/browsers, sending post-submission IPC, or repairing artifacts during acceptance - proven by exhaustive source enumeration, NOT by its own permission manifest. Its manifest and capability-audit JSON are self-declared literals (UNVERIFIED as proof). Real caveats: partial write guard (io.open/shutil/rename bypass), pre-guard target wipe, pre-run process kills, raw-evidence destruction on re-run, and no teardown of the AstraRun child."
+}

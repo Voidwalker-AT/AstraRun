@@ -1,0 +1,26 @@
+{
+  "review_phase": "F0_25D1_MIMO",
+  "harness": "scripts/run_f0_25d1_dogfood.py",
+  "action_table": [
+    {"action": "create_target_directory", "by": "HARNESS", "mutating": true, "lines": "179-186", "note": "Deletes and recreates E:\\AstraDogfood\\word_frequency before run"},
+    {"action": "create_main.py", "by": "NOT_HARNESS", "mutating": false, "note": "Harness does not write main.py"},
+    {"action": "create_sample_input.txt", "by": "NOT_HARNESS_INITIALLY", "mutating": false, "note": "Harness does not write it before task; main.py itself writes it when executed"},
+    {"action": "create_word_frequencies.json", "by": "NOT_HARNESS_INITIALLY", "mutating": false, "note": "Written by main.py; harness independent re-run of main.py rewrites it"},
+    {"action": "launch_installed_astrarun", "by": "HARNESS", "mutating": false, "lines": "216-220"},
+    {"action": "ipc_populate_query", "by": "HARNESS", "mutating": false, "lines": "262"},
+    {"action": "ipc_submit_query", "by": "HARNESS", "mutating": false, "lines": "276", "note": "Permitted initial user request"},
+    {"action": "take_screenshots", "by": "HARNESS", "mutating": false, "lines": "120-171"},
+    {"action": "label_screenshots_as_milestones", "by": "HARNESS", "mutating": false, "note": "Labels assigned by stage name without pixel verification"},
+    {"action": "independent_python_run_of_main_py", "by": "HARNESS_EVALUATOR", "mutating": true, "lines": "546-552", "note": "CRITICAL: re-executes deliverable after Astra; rewrites sample_input.txt and word_frequencies.json"},
+    {"action": "hardcode_ui_audit_pass", "by": "HARNESS", "mutating": false, "lines": "588-603", "note": "UI audit fields forced PASS without image analysis"},
+    {"action": "hardcode_most_acceptance_dimensions_pass", "by": "HARNESS", "mutating": false, "lines": "648-724"},
+    {"action": "terminate_astrarun_process", "by": "HARNESS", "mutating": true, "lines": "189-197, 732-740"}
+  ],
+  "critical_invalidations": [
+    "Harness does not create deliverables itself (good), but independently re-runs main.py which regenerates sample_input and JSON (partial contamination of verification).",
+    "Screenshots 06-10 fire on file-existence/timer, not on visible Astra/terminal/editor milestones.",
+    "UI audit is manufactured PASS without looking at pixels.",
+    "Acceptance matrix PLANNING_SEMANTICS through USER_OBSERVABILITY are hardcoded PASS independent of screenshot content."
+  ],
+  "evidence_class": "FACT"
+}

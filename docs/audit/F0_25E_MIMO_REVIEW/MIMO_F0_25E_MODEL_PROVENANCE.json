@@ -1,0 +1,43 @@
+{
+  "milestone": "F0_25E",
+  "title": "MIMO Independent Model Provenance Audit — raw/model_events.jsonl",
+  "auditor": "MiMo",
+  "claimed_count_by_anti": 11,
+  "actual_line_count": 11,
+  "count_claim_holds": true,
+  "structure_analysis": {
+    "actual_record_shape": "{timestamp: <harvest epoch>, source: \"astrarun.cognition\", raw_log: \"<verbatim production log line>\"}",
+    "required_fields_absent": ["model identity per event (only implied by log text 'Qwen')", "request hash", "response hash", "purpose", "parent causal event", "resulting action"],
+    "timestamp_semantics": "All 11 outer timestamps are 1791731770.695-1791731770.705 - the harvest instant at freeze. Event time exists ONLY inside raw_log text.",
+    "harvest_mechanism": "scripts/f0_25e_observer.py harvest_provenance_events() L394-424 greps C:\\Users\\hp\\AppData\\Local\\AstraRun\\logs\\astrarun.log for substrings ('Qwen synthesized CandidateTool', 'Local intent reasoner', 'Deep planning')",
+    "provenance_class": "POST-HOC LOG EXCERPTS, not structured model events"
+  },
+  "run_window_definition": "20:45:45.9 (submit) .. 20:46:10.8 (freeze); extended context window 20:45:39 (AstraRun start) .. 20:46:21 (evaluation)",
+  "events": [
+    {"line": 1, "log_time": "18:21:41", "in_run_window": false, "content": "Qwen synthesized CandidateTool [dyn_tool_7847cd60] hash=6298d49b08db", "belongs_to": "prior run (task_c6a53743 era)"},
+    {"line": 2, "log_time": "18:21:59", "in_run_window": false, "content": "Qwen synthesized CandidateTool [dyn_tool_2d2d1a5e] hash=cb220d2650f9", "belongs_to": "prior run"},
+    {"line": 3, "log_time": "18:40:59", "in_run_window": false, "content": "Qwen synthesized CandidateTool [dyn_tool_59516e4a] hash=a5ca0fc9b084", "belongs_to": "prior run"},
+    {"line": 4, "log_time": "18:41:14", "in_run_window": false, "content": "Qwen synthesized CandidateTool [dyn_tool_241f8864] hash=276d8d5003c8", "belongs_to": "prior run"},
+    {"line": 5, "log_time": "18:53:10", "in_run_window": false, "content": "Qwen synthesized CandidateTool [dyn_tool_d2892250] hash=3b5a0a87b953", "belongs_to": "prior run"},
+    {"line": 6, "log_time": "18:53:25", "in_run_window": false, "content": "Qwen synthesized CandidateTool [dyn_tool_cc7ce376] hash=295a7324e399", "belongs_to": "prior run"},
+    {"line": 7, "log_time": "19:10:56", "in_run_window": false, "content": "Qwen synthesized CandidateTool [dyn_tool_2f8bf458] hash=a9ca0816c010", "belongs_to": "prior run"},
+    {"line": 8, "log_time": "19:11:16", "in_run_window": false, "content": "Qwen synthesized CandidateTool [dyn_tool_4c97c481] hash=62443c942b71", "belongs_to": "prior run"},
+    {"line": 9, "log_time": "20:19:25", "in_run_window": false, "content": "Qwen synthesized CandidateTool [dyn_tool_7182369c] hash=e1705689349d", "belongs_to": "prior run (task_38561e0d era)"},
+    {"line": 10, "log_time": "20:19:41", "in_run_window": false, "content": "Qwen synthesized CandidateTool [dyn_tool_78ba248a] hash=e2320bffbd93", "belongs_to": "prior run"},
+    {"line": 11, "log_time": "20:46:02", "in_run_window": true, "content": "Qwen synthesized CandidateTool [dyn_tool_2e61a0f5] (1 files, entry=main.py, hash=31b559a4d149)", "belongs_to": "THIS RUN (task_99dc59e6 / sandbox task_30b5a40d)", "significance": "hash 31b559a4d149 is the 12-hex prefix of the frozen main.py sha256 31b559a4d1497603c651392d66de49456b36b6f150a22de0d685bc6fe57db78b"}
+  ],
+  "coverage_by_purpose": {
+    "goal_interpretation": {"events": 0, "classification": "ABSENT"},
+    "planning": {"events": 0, "classification": "ABSENT (no 'Deep planning'/'Local intent reasoner' lines harvested at all - the run produced none or harvest filter missed them)"},
+    "dynamic_tool_generation": {"events": 1, "classification": "PROVEN for this run (line 11), plus 10 prior-run lines"},
+    "verification_or_replanning": {"events": 0, "classification": "ABSENT in model_events; production log shows an agent-loop verification failure at 20:46:04 ('RETURN_CODE_ONLY is insufficient...') but no model involvement is recorded"},
+    "model_identity": "Qwen2.5-Coder (named in log lines; backend startup 'Starting local model backend [qwen2.5-coder]' at 20:45:48 in production log)",
+    "request_response_hashes": "NOT CAPTURED anywhere"
+  },
+  "did_model_output_cause_execute_dynamic_tool": {
+    "answer": "PARTIALLY - inverted causation",
+    "analysis": "execute_dynamic_tool is invoked by the agent loop (planner decision, link UNVERIFIED in frozen evidence); the model is called INSIDE the capability (synthesis at 20:46:02 occurs 11s AFTER the first execute_dynamic_tool dispatch at 20:45:51). So model output caused the CONTENT of the executed tool, not the decision to execute it. The frozen package evidences the former (line 11 + hash chain) and not the latter.",
+    "classification": "SUPPORTED for content causation; UNVERIFIED for decision causation"
+  },
+  "overall": "Count claim (11) TRUE; as run-provenance, 1/11 usable. Frozen model provenance documents exactly one thing for this run: Qwen synthesized the delivered main.py. Goal interpretation, planning, and verification model steps are undocumented. The dimension claim 'Harvested 11 model events' implying this run's model activity is CONTRADICTED by the timestamps."
+}

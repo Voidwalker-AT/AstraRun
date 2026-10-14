@@ -144,12 +144,23 @@ class DelegateRegistry:
         """Resolve a requested provider or fallback safely to available provider."""
         if requested_name:
             norm = requested_name.lower().strip()
-            if norm in self._providers:
-                return self._providers[norm]
-            # Fuzzy match (e.g. 'chatgpt' -> 'chatgpt_web')
-            for k, prov in self._providers.items():
-                if norm in k or k in norm:
-                    return prov
+            prov = self._providers.get(norm)
+            if not prov:
+                # Fuzzy match (e.g. 'chatgpt' -> 'chatgpt_web')
+                for k, p in self._providers.items():
+                    if norm in k or k in norm:
+                        prov = p
+                        break
+            if prov and prov.is_available():
+                return prov
+            if prov and not prov.is_available():
+                fallback = self._providers.get("mock") or self._providers.get(self._default_provider)
+                if fallback and fallback.is_available():
+                    logger.info("Requested provider '%s' is unavailable; falling back to '%s'", requested_name, fallback.provider_name)
+                    return fallback
+                return prov
+            if prov:
+                return prov
             raise ValueError(f"Requested delegate provider '{requested_name}' is not registered. Available: {list(self._providers.keys())}")
 
         default_prov = self._providers.get(self._default_provider)

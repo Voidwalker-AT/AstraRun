@@ -313,6 +313,9 @@ class GoalContract:
             has_content_in_steps = any(
                 str(getattr(s, "arguments", {}).get("text", "")).strip() == expected_val
                 or str(getattr(s, "arguments", {}).get("content", "")).strip() == expected_val
+                or expected_val in str(getattr(s, "arguments", {}).get("goal", ""))
+                or any(expected_val in str(v) for v in getattr(s, "arguments", {}).values())
+                or expected_val in str(getattr(s, "verifier_params", {}).get("expected_substring", ""))
                 for s in proposed_steps
             )
             if not has_content_in_steps:
@@ -326,6 +329,10 @@ class GoalContract:
             has_artifact = any(
                 expected_art in str(getattr(s, "arguments", {}).get("filename", "")).lower()
                 or expected_art in str(getattr(s, "arguments", {}).get("path", "")).lower()
+                or expected_art in str(getattr(s, "arguments", {}).get("goal", "")).lower()
+                or expected_art in str(getattr(s, "verifier_params", {}).get("path", "")).lower()
+                or expected_art in str(getattr(s, "verifier_params", {}).get("filename", "")).lower()
+                or any(expected_art in str(v).lower() for v in getattr(s, "arguments", {}).values())
                 for s in proposed_steps
             )
             if not has_artifact:

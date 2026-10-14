@@ -1,0 +1,84 @@
+{
+  "phase": "F0-25F.5-DEV",
+  "total_prompts": 110,
+  "correct": 110,
+  "overall_accuracy": 1.0,
+  "macro_f1": 1.0,
+  "destructive_false_executions": 0,
+  "ungrounded_false_executions": 0,
+  "per_class_metrics": {
+    "DYNAMIC_COMPUTATION": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "true_count": 20,
+      "pred_count": 20
+    },
+    "KNOWN_CAPABILITY": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "true_count": 20,
+      "pred_count": 20
+    },
+    "CONVERSATIONAL": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "true_count": 20,
+      "pred_count": 20
+    },
+    "CLARIFICATION_REQUIRED": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "true_count": 30,
+      "pred_count": 30
+    },
+    "COMPOSITE": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "true_count": 20,
+      "pred_count": 20
+    }
+  },
+  "confusion_matrix": {
+    "DYNAMIC_COMPUTATION": {
+      "DYNAMIC_COMPUTATION": 20,
+      "KNOWN_CAPABILITY": 0,
+      "CONVERSATIONAL": 0,
+      "CLARIFICATION_REQUIRED": 0,
+      "COMPOSITE": 0
+    },
+    "KNOWN_CAPABILITY": {
+      "DYNAMIC_COMPUTATION": 0,
+      "KNOWN_CAPABILITY": 20,
+      "CONVERSATIONAL": 0,
+      "CLARIFICATION_REQUIRED": 0,
+      "COMPOSITE": 0
+    },
+    "CONVERSATIONAL": {
+      "DYNAMIC_COMPUTATION": 0,
+      "KNOWN_CAPABILITY": 0,
+      "CONVERSATIONAL": 20,
+      "CLARIFICATION_REQUIRED": 0,
+      "COMPOSITE": 0
+    },
+    "CLARIFICATION_REQUIRED": {
+      "DYNAMIC_COMPUTATION": 0,
+      "KNOWN_CAPABILITY": 0,
+      "CONVERSATIONAL": 0,
+      "CLARIFICATION_REQUIRED": 30,
+      "COMPOSITE": 0
+    },
+    "COMPOSITE": {
+      "DYNAMIC_COMPUTATION": 0,
+      "KNOWN_CAPABILITY": 0,
+      "CONVERSATIONAL": 0,
+      "CLARIFICATION_REQUIRED": 0,
+      "COMPOSITE": 20
+    }
+  },
+  "failures": []
+}

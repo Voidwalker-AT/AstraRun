@@ -1,0 +1,65 @@
+{
+  "defect_a_requested_accepted_as_presented": {
+    "evaluator_references_requested": true,
+    "stage6_allows_requested_only": true,
+    "reproduced": true
+  },
+  "defect_b_hollow_result_presented": {
+    "event_found": true,
+    "verified_hwnd": null,
+    "verified_title": "",
+    "reproduced": true
+  },
+  "defect_c_darkness_oracle_false_positive": {
+    "black_surface_pixel_count": 48640,
+    "black_surface_ratio": 1.0,
+    "passes_ratio_threshold": true,
+    "passes_count_threshold": true,
+    "reproduced": true
+  },
+  "defect_d_darkness_oracle_false_negative": {
+    "mimo_observed_dark_count": 29274,
+    "stage1_required_count": 30000,
+    "falsely_rejected": true,
+    "reproduced": true
+  },
+  "defect_e_ledger_closed_despite_failed_deletion": {
+    "close_owned_resource_returned": true,
+    "directory_still_existed_on_disk": true,
+    "persisted_lifecycle_state": "CLOSED",
+    "reproduced": true
+  },
+  "defect_f_synthetic_stage6_restoration": {
+    "stage6_used_dummy_dir": true,
+    "before_after_pid_delta_missing": true,
+    "before_after_hwnd_delta_missing": true,
+    "reproduced": true
+  },
+  "defect_g_routing_failures": {
+    "quadratic_query": "work out the roots of this quadratic equation and save them",
+    "quadratic_intent": "composite_dag_workflow",
+    "quadratic_tier": "SEMANTIC_RETRIEVAL",
+    "quadratic_expected": "execute_dynamic_tool / LOCAL_MODEL",
+    "quadratic_failed": true,
+    "auth_summary_query": "generate a summary table of user login events in auth_summary.txt",
+    "auth_summary_intent": "system_summary",
+    "auth_summary_tier": "SEMANTIC_RETRIEVAL",
+    "auth_summary_expected": "execute_dynamic_tool / LOCAL_MODEL",
+    "auth_summary_failed": true,
+    "reproduced": true
+  },
+  "defect_h_repair_02_semantic_oracle_weakness": {
+    "fixture_exists": true,
+    "semantic_value_checked": false,
+    "reproduced": true
+  },
+  "defect_i_security_manifest_hygiene": {
+    "manifest_count": 88,
+    "registry_count": 86,
+    "phantom_keys": [
+      "inspect_process_list",
+      "open_app"
+    ],
+    "reproduced": true
+  }
+}

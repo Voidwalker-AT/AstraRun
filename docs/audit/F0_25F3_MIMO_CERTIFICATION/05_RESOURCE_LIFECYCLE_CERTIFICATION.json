@@ -1,0 +1,23 @@
+{
+  "auditor": "MiMo",
+  "anti_evidence": "F0_25F3_RESOURCE_RESULTS.json R1-R7 all passed",
+  "independent_case_analysis": [
+    {"id": "R1", "case": "empty path", "anti": "NOT_MATERIALIZED", "mimo": "SUPPORTED", "source": "resource_ledger unmaterialized guard"},
+    {"id": "R2", "case": "None path", "anti": "NOT_MATERIALIZED", "mimo": "SUPPORTED"},
+    {"id": "R3", "case": "never materialized", "anti": "NOT_MATERIALIZED", "mimo": "SUPPORTED"},
+    {"id": "R4", "case": "normal materialized dir", "anti": "CLOSED + physical absence", "mimo": "SUPPORTED", "source": "exists-gate L774-780"},
+    {"id": "R5", "case": "pre-existing user resource", "anti": "never closed", "mimo": "SUPPORTED", "source": "astra_created=False guard"},
+    {"id": "R6", "case": "preserve-on-failure", "anti": "SAVED", "mimo": "SUPPORTED"},
+    {"id": "R7", "case": "stale PID / reuse", "anti": "STALE_REUSED", "mimo": "SUPPORTED", "source": "create_time mismatch"},
+    {"id": "R8", "case": "locked directory", "anti": "(covered by prior FAILED_CLEANUP tests)", "mimo": "SUPPORTED via FAILED_CLEANUP gate"},
+    {"id": "R9", "case": "process cleanup failure", "anti": "FAILED_CLEANUP", "mimo": "SUPPORTED", "source": "L924-940"},
+    {"id": "R10", "case": "directory deletion failure", "anti": "exists-check -> FAILED_CLEANUP", "mimo": "SUPPORTED"},
+    {"id": "R11", "case": "resource disappears before cleanup", "anti": "absence => CLOSED acceptable", "mimo": "SUPPORTED (absence is the postcondition)"},
+    {"id": "R12", "case": "cleanup reports success but resource still exists", "anti": "prevented for SANDBOX_DIR by exists-gate", "mimo": "PARTIAL — vacuous CLOSED if document_path empty AFTER materialization race; non-temp document types not disk-checked in general branch L925"},
+    {"id": "R13", "case": "CLOSED with physically present resource", "anti": "prevented", "mimo": "PARTIAL — same gaps as R12; ledger exception swallowed fail-open L231-232 in gate resource check"},
+    {"id": "R14", "case": "empty identity cannot become CLOSED merely because absence returns false", "anti": "NOT_MATERIALIZED path", "mimo": "SUPPORTED for never-materialized; RACE for path-cleared-after-materialize edge"}
+  ],
+  "physical_outranks_ledger": "ENFORCED for SANDBOX_DIR with non-empty path",
+  "verdict": "RESOURCE_DISPOSAL = PARTIAL",
+  "verdict_rationale": "Core vacuous-closure defect (D) substantially closed: R1-R3 honest NOT_MATERIALIZED; R4/R7 physical verification real. Residual: empty-path-after-race, non-temp type scope, ledger-exception fail-open prevent full PASS."
+}

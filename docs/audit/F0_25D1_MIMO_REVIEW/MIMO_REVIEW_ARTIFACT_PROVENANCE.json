@@ -1,0 +1,32 @@
+{
+  "review_phase": "F0_25D1_MIMO",
+  "target_dir": "E:\\AstraDogfood\\word_frequency",
+  "filesystem": {
+    "main.py": {"size": 1486, "mtime": "2026-10-11T19:11:17", "created": "2026-10-11T19:11:17"},
+    "sample_input.txt": {"size": 68, "mtime": "2026-10-11T19:11:24", "created": "2026-10-11T19:11:17"},
+    "word_frequencies.json": {"size": 204, "mtime": "2026-10-11T19:11:24", "created": "2026-10-11T19:11:17"}
+  },
+  "provenance_assessment": {
+    "main.py": {
+      "who_created": "UNVERIFIED_ASTRA_OR_OTHER",
+      "harness_wrote_it": false,
+      "existed_before_run": false,
+      "chain": "MODEL→CAPABILITY→BROKER→SANDBOX→DELIVERY NOT ESTABLISHED from available evidence",
+      "note": "Appeared during observation window after SUBMIT_QUERY; no model request/response log in F0_25D1 package"
+    },
+    "sample_input.txt": {
+      "content": "Hello world! This is a sample text file for word frequency analysis.",
+      "written_by_main_py_when_executed": true,
+      "harness_independent_rerun_rewrote": true,
+      "note": "CreationTime 19:11:17, LastWrite 19:11:24 aligns with harness independent python run"
+    },
+    "word_frequencies.json": {
+      "written_by_main_py_when_executed": true,
+      "harness_independent_rerun_rewrote": true,
+      "math_verified_field_is_weak": true,
+      "math_verified_impl": "json is dict/list AND txt exists — NOT content equality check (harness lines 536-537)"
+    }
+  },
+  "verdict": "PARTIAL: artifacts exist and main.py is non-trivial; full MODEL→ARTIFACT chain UNVERIFIED; JSON verification contaminated by harness re-execution of main.py",
+  "evidence_class": "FACT"
+}

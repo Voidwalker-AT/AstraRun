@@ -1,0 +1,16 @@
+{
+  "auditor": "MiMo",
+  "anti_claim": "F0_25F1_RESOURCE_RESTORATION.json + PHYSICAL_RESULTS: 0 leaked PIDs/HWNDs, sandbox deleted, PASS_CLEAN",
+  "independent_basis": "MiMo inspected PHYSICAL_RESULTS flags (process_residue_measured, window_residue_measured true); source of measurement is verify_f0_25f1_complete_physical.py harness; MiMo did not re-run the factorial task (would require model path). MiMo's own presentation run left Explorer (registered EXPLORER_WINDOW) open as intended presentation residue.",
+  "deltas_classified": {
+    "PRE_EXISTING_USER": "Antigravity/MiMoCode/Explorer user windows — not charged",
+    "TASK_CREATED": "factorial sandbox (deleted per evidence); viewer process 3028 (closed per evidence)",
+    "EXPECTED_PERSISTENT_OUTPUT": "factorial_result.txt delivered",
+    "EXPECTED_RETAINED": "none claimed",
+    "DISPOSABLE_TASK_RESOURCE": "sandbox dir, viewer HWND/PID",
+    "UNKNOWN": "python.exe path-resolution warning in the same success stdout"
+  },
+  "false_closed_check": "ledger gate exists; no positive evidence of false CLOSED in this phase",
+  "verdict": "RESOURCE RESTORATION = PARTIAL",
+  "verdict_rationale": "Physical measurement claims are structured and consistent; disposal gate repaired; but the same acceptance run's stdout contains CPython path-resolution failure, and completion events were harness-fabricated — restoration PASS stands on measured OS deltas only, not on the narrative."
+}

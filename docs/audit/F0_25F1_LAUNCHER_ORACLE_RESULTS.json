@@ -1,0 +1,38 @@
+{
+  "black_surface": {
+    "passes": false,
+    "metrics": {
+      "std_dev": 0.0,
+      "contrast_range": 0.0,
+      "mean_brightness": 0.0
+    },
+    "expected_pass": false
+  },
+  "white_surface": {
+    "passes": false,
+    "metrics": {
+      "std_dev": 0.0,
+      "contrast_range": 0.0,
+      "mean_brightness": 255.0
+    },
+    "expected_pass": false
+  },
+  "flat_gray_surface": {
+    "passes": false,
+    "metrics": {
+      "std_dev": 0.0,
+      "contrast_range": 0.0,
+      "mean_brightness": 30.0
+    },
+    "expected_pass": false
+  },
+  "real_launcher_surface": {
+    "passes": true,
+    "metrics": {
+      "std_dev": 19.16,
+      "contrast_range": 145.0,
+      "mean_brightness": 23.25
+    },
+    "expected_pass": true
+  }
+}

@@ -1,0 +1,232 @@
+{
+  "phase": "F0-25F.3",
+  "stage": "STAGE 7 \u2014 ROUTING BLIND HOLDOUT EVALUATION",
+  "manifest_sha256": "b402565c83908bd4dda2467d22f421ad05b1189cbc47567223d4e7fc760cf023",
+  "total_prompts": 220,
+  "total_correct": 202,
+  "overall_accuracy": 0.9182,
+  "macro_metrics": {
+    "precision": 0.927,
+    "recall": 0.9182,
+    "f1": 0.9178
+  },
+  "dynamic_computation_metrics": {
+    "precision": 1.0,
+    "recall": 0.7818,
+    "f1": 0.8776,
+    "false_positives_over_routes": 0,
+    "false_negatives": 12
+  },
+  "collision_cases_metrics": {
+    "total_collision_cases": 62,
+    "correct": 54,
+    "accuracy": 0.871
+  },
+  "per_class_metrics": {
+    "DYNAMIC_COMPUTATION": {
+      "true_positives": 43,
+      "false_positives": 0,
+      "false_negatives": 12,
+      "precision": 1.0,
+      "recall": 0.7818,
+      "f1": 0.8776,
+      "support": 55
+    },
+    "KNOWN_CAPABILITY": {
+      "true_positives": 51,
+      "false_positives": 11,
+      "false_negatives": 4,
+      "precision": 0.8226,
+      "recall": 0.9273,
+      "f1": 0.8718,
+      "support": 55
+    },
+    "CONVERSATIONAL": {
+      "true_positives": 54,
+      "false_positives": 0,
+      "false_negatives": 1,
+      "precision": 1.0,
+      "recall": 0.9818,
+      "f1": 0.9908,
+      "support": 55
+    },
+    "CLARIFICATION_REQUIRED": {
+      "true_positives": 54,
+      "false_positives": 7,
+      "false_negatives": 1,
+      "precision": 0.8852,
+      "recall": 0.9818,
+      "f1": 0.931,
+      "support": 55
+    }
+  },
+  "false_positive_count": 18,
+  "false_positives_sample": [
+    {
+      "id": "BLIND-004",
+      "prompt": "solve this system of five linear equations using LU decomposition and save to solution.json",
+      "category": "dynamic_computation",
+      "expected_class": "DYNAMIC_COMPUTATION",
+      "predicted_class": "KNOWN_CAPABILITY",
+      "intent": "composite_dag_workflow",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "correct": false,
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-007",
+      "prompt": "compute the rolling standard deviation and variance of these stock ticks into volatility.json",
+      "category": "dynamic_computation",
+      "expected_class": "DYNAMIC_COMPUTATION",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "correct": false,
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-012",
+      "prompt": "compute the convex hull of these 2D points using the Graham scan algorithm into hull.json",
+      "category": "dynamic_computation",
+      "expected_class": "DYNAMIC_COMPUTATION",
+      "predicted_class": "KNOWN_CAPABILITY",
+      "intent": "wifi_scan",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "correct": false,
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-027",
+      "prompt": "compile a summary table of failed SSH login attempts from auth.log into ssh_failures.txt",
+      "category": "dynamic_computation",
+      "expected_class": "DYNAMIC_COMPUTATION",
+      "predicted_class": "KNOWN_CAPABILITY",
+      "intent": "system_summary",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "correct": false,
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-031",
+      "prompt": "transform this nested json of customer orders into a flattened sales summary table in sales.csv",
+      "category": "dynamic_computation",
+      "expected_class": "DYNAMIC_COMPUTATION",
+      "predicted_class": "KNOWN_CAPABILITY",
+      "intent": "system_summary",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "correct": false,
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-033",
+      "prompt": "parse git log output and compute total commits and lines changed per author into author_stats.txt",
+      "category": "dynamic_computation",
+      "expected_class": "DYNAMIC_COMPUTATION",
+      "predicted_class": "KNOWN_CAPABILITY",
+      "intent": "project_git_status",
+      "tier": "LOCAL_MODEL",
+      "correct": false,
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-036",
+      "prompt": "compile a summary table of HTTP 500 exceptions from app.log grouped by endpoint into error_table.txt",
+      "category": "dynamic_computation",
+      "expected_class": "DYNAMIC_COMPUTATION",
+      "predicted_class": "KNOWN_CAPABILITY",
+      "intent": "system_summary",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "correct": false,
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-038",
+      "prompt": "extract disk I/O metrics from iostat.log and group average write times by device into disk_io.json",
+      "category": "dynamic_computation",
+      "expected_class": "DYNAMIC_COMPUTATION",
+      "predicted_class": "KNOWN_CAPABILITY",
+      "intent": "save_text_file",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "correct": false,
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-043",
+      "prompt": "compile a summary report of kernel panic stack traces into kernel_analysis.txt",
+      "category": "dynamic_computation",
+      "expected_class": "DYNAMIC_COMPUTATION",
+      "predicted_class": "KNOWN_CAPABILITY",
+      "intent": "generate_battery_report",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "correct": false,
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-049",
+      "prompt": "generate a correlation matrix from multivariate sensor data and save heatmap data to correlation.json",
+      "category": "dynamic_computation",
+      "expected_class": "DYNAMIC_COMPUTATION",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "correct": false,
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-050",
+      "prompt": "generate a frequency histogram bin table for these customer age values into age_histogram.csv",
+      "category": "dynamic_computation",
+      "expected_class": "DYNAMIC_COMPUTATION",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "correct": false,
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-051",
+      "prompt": "generate a scatter plot coordinate dataset for k-means clustered data into clusters.json",
+      "category": "dynamic_computation",
+      "expected_class": "DYNAMIC_COMPUTATION",
+      "predicted_class": "KNOWN_CAPABILITY",
+      "intent": "generate_battery_report",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "correct": false,
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-074",
+      "prompt": "take a screenshot",
+      "category": "known_capability",
+      "expected_class": "KNOWN_CAPABILITY",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "correct": false,
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-075",
+      "prompt": "capture screen",
+      "category": "known_capability",
+      "expected_class": "KNOWN_CAPABILITY",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "correct": false,
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-081",
+      "prompt": "show hostname",
+      "category": "known_capability",
+      "expected_class": "KNOWN_CAPABILITY",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "correct": false,
+      "is_collision_case": false
+    }
+  ],
+  "verdict": "PASS"
+}

@@ -1,0 +1,35 @@
+{
+  "milestone": "F0_25E",
+  "title": "Observer Structural Incapacitation Audit",
+  "timestamp": 1791731735.2864609,
+  "permissions_allowed": [
+    "screenshot capture (PIL ImageGrab)",
+    "process enumeration (psutil)",
+    "HWND enumeration (EnumWindows)",
+    "foreground-window inspection (GetForegroundWindow)",
+    "filesystem metadata read (stat, hash)",
+    "read final artifact contents (after freeze)",
+    "Astra/model/broker event subscription/harvesting",
+    "resource inventory and delta comparison"
+  ],
+  "permissions_forbidden": [
+    "keyboard input after initial request submission",
+    "mouse input after initial request submission",
+    "file creation inside task output directory",
+    "file modification inside task output directory",
+    "executing generated user program (main.py)",
+    "copying or moving Astra artifacts during primary acceptance",
+    "launching editors for Astra",
+    "launching terminal for Astra",
+    "focusing Astra's selected tools",
+    "dismissing dialogs on Astra's behalf",
+    "cleanup on Astra's behalf before acceptance freeze"
+  ],
+  "structural_mechanisms": [
+    "install_evaluator_write_guard monkeypatches builtins.open, os.remove, os.unlink",
+    "Zero win32api keybd_event / mouse_event calls after SUBMIT_QUERY",
+    "Zero subprocess.run calls targeting target_dir / main.py",
+    "Evaluation engine operates strictly as pure function over frozen manifest"
+  ],
+  "verdict": "FAIL_CLOSED_STRUCTURALLY_ENFORCED"
+}

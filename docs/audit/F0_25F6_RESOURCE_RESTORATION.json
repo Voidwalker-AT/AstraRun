@@ -1,0 +1,19 @@
+{
+  "phase": "F0-25F.6",
+  "stage": "STAGE 14 \u2014 RESOURCE RESTORATION VERIFICATION",
+  "surviving_notepad_processes_count": 0,
+  "surviving_pids": [],
+  "zero_resource_leak_verified": true,
+  "desktop_cleaned": true,
+  "screenshots_captured": [
+    "scenario_a_01_notepad_launched.png",
+    "scenario_a_02_notepad_killed.png",
+    "scenario_a_03_notepad_recovered.png",
+    "scenario_a_04_notepad_cleaned.png",
+    "scenario_b_01_window_normal.png",
+    "scenario_b_02_window_minimized_occluded.png",
+    "scenario_b_03_window_restored_foreground.png",
+    "scenario_b_04_clean_desktop.png"
+  ],
+  "verdict": "PASS"
+}

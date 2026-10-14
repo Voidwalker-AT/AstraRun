@@ -15,19 +15,31 @@ logger = get_logger("astrarun.interaction.discovery")
 
 
 def _ensure_desktop_attached() -> None:
-    """Ensure current thread is attached to the interactive Default desktop if needed."""
+    """Ensure current thread is attached to the interactive desktop if needed."""
     if sys.platform == "win32":
         try:
             import ctypes
+            import ctypes.wintypes as wintypes
             user32 = ctypes.windll.user32
-            # Check desktop name
+            hwinsta = user32.OpenWindowStationW("WinSta0", False, 0x037F)
+            if hwinsta:
+                user32.SetProcessWindowStation(hwinsta)
+
             h_desk = user32.GetThreadDesktop(ctypes.windll.kernel32.GetCurrentThreadId())
-            buf_desk = ctypes.create_unicode_buffer(256)
-            user32.GetUserObjectInformationW(h_desk, 2, buf_desk, 256, None)
-            if buf_desk.value.lower() != "default":
-                h_default = user32.OpenDesktopW("Default", 0, False, 0x01FF)
-                if h_default:
-                    user32.SetThreadDesktop(h_default)
+            if h_desk:
+                buf_desk = ctypes.create_unicode_buffer(256)
+                if user32.GetUserObjectInformationW(h_desk, 2, buf_desk, 256, None) and buf_desk.value.lower() == "default":
+                    return
+
+            user32.OpenInputDesktop.restype = ctypes.c_void_p
+            user32.OpenDesktopW.restype = ctypes.c_void_p
+            user32.SetThreadDesktop.argtypes = [ctypes.c_void_p]
+            user32.SetThreadDesktop.restype = wintypes.BOOL
+            h_input = user32.OpenInputDesktop(0, False, 0x01FF)
+            if not h_input:
+                h_input = user32.OpenDesktopW("Default", 0, False, 0x01FF)
+            if h_input:
+                user32.SetThreadDesktop(h_input)
         except Exception as e:
             logger.debug("Desktop attachment check failed or not required: %s", e)
 
@@ -291,17 +303,18 @@ def inspect_window_ui(
 
     _ensure_desktop_attached()
 
-    import comtypes.client
-    from comtypes.gen import UIAutomationClient
+    from astrarun.computer_use.ui.uia_support import get_uia_module, get_uia_interface
+    UIAutomationClient = get_uia_module()
+    if not UIAutomationClient:
+        return []
 
     elements: list[UIElementRef] = []
     t_start = time.perf_counter()
 
     try:
-        uia = comtypes.client.CreateObject(
-            UIAutomationClient.CUIAutomation,
-            interface=UIAutomationClient.IUIAutomation,
-        )
+        uia = get_uia_interface()
+        if not uia:
+            return []
         root_element = uia.ElementFromHandle(hwnd)
         if not root_element:
             return []
@@ -338,18 +351,35 @@ def inspect_window_ui(
                     rect = child.CurrentBoundingRectangle
                     bounds = (rect.left, rect.top, rect.right - rect.left, rect.bottom - rect.top)
 
-                    # Determine supported patterns
+                    # Determine supported patterns and read observable value
                     patterns = []
+                    elem_value = ""
+
+                    # Check ValuePattern (10002)
+                    try:
+                        vp = child.GetCurrentPattern(UIAutomationClient.UIA_ValuePatternId)
+                        if vp:
+                            patterns.append(ControlPattern.VALUE.value)
+                            val_obj = vp.QueryInterface(UIAutomationClient.IUIAutomationValuePattern)
+                            elem_value = val_obj.CurrentValue or ""
+                    except Exception:
+                        pass
+
+                    # Check TextPattern (10014)
+                    try:
+                        tp = child.GetCurrentPattern(UIAutomationClient.UIA_TextPatternId)
+                        if tp:
+                            patterns.append("text")
+                            if not elem_value:
+                                txt_obj = tp.QueryInterface(UIAutomationClient.IUIAutomationTextPattern)
+                                elem_value = txt_obj.DocumentRange.GetText(-1) or ""
+                    except Exception:
+                        pass
+
                     # Check InvokePattern (10000)
                     try:
                         if child.GetCurrentPattern(UIAutomationClient.UIA_InvokePatternId):
                             patterns.append(ControlPattern.INVOKE.value)
-                    except Exception:
-                        pass
-                    # Check ValuePattern (10002)
-                    try:
-                        if child.GetCurrentPattern(UIAutomationClient.UIA_ValuePatternId):
-                            patterns.append(ControlPattern.VALUE.value)
                     except Exception:
                         pass
                     # Check TogglePattern (10015)
@@ -380,6 +410,7 @@ def inspect_window_ui(
                     if name or auto_id or patterns or c_type in (
                         ControlType.BUTTON,
                         ControlType.EDIT,
+                        ControlType.DOCUMENT,
                         ControlType.CHECK_BOX,
                         ControlType.TAB_ITEM,
                         ControlType.COMBO_BOX,
@@ -398,6 +429,7 @@ def inspect_window_ui(
                             has_keyboard_focus=has_focus,
                             supported_patterns=patterns,
                             depth=depth,
+                            value=elem_value,
                         )
 
                         if not control_types or c_type in control_types:

@@ -1,0 +1,139 @@
+{
+  "phase": "F0-25F.3",
+  "phase_name": "PRODUCTION CAUSALITY & GENERALIZATION CLOSURE",
+  "timestamp": "2026-10-12T23:02:30+05:30",
+  "blockers": {
+    "BLOCKER_01_AUTHORITATIVE_GOAL_COMPLETION_GATE": {
+      "status": "PASS",
+      "summary": "GOAL_COMPLETED authoritatively gated by AuthoritativeCompletionGate. 14/14 adversarial gating conditions verified.",
+      "evidence_file": "docs/audit/F0_25F3_COMPLETION_GATE_RESULTS.json",
+      "source_reference": "src/astrarun/agent/completion_gate.py",
+      "key_metrics": {
+        "conditions_tested": 14,
+        "conditions_passed": 14,
+        "unconditional_emissions_blocked": true
+      }
+    },
+    "BLOCKER_02_PRODUCTION_CAUSAL_PROVENANCE": {
+      "status": "PASS",
+      "summary": "Full causal chain validated: REQUEST -> INTERPRETATION -> CONTRACT -> PLAN -> MODEL -> BROKER -> ACTION -> OBSERVATION -> POSTCONDITION -> PRESENTATION -> COMPLETION.",
+      "evidence_file": "docs/audit/F0_25F3_CAUSAL_PROVENANCE.json",
+      "source_reference": "src/astrarun/core/telemetry.py",
+      "key_metrics": {
+        "verified_transitions": 8,
+        "forged_parent_events_blocked": true
+      }
+    },
+    "BLOCKER_03_REQUESTED_OR_PRESENTED_LEGACY_PURGE": {
+      "status": "PASS",
+      "summary": "Removed legacy 'or RESULT_PRESENTATION_REQUESTED' fallback. Window title and HWND strictly validated via Win32 uncloaked DWM inspection.",
+      "evidence_file": "docs/audit/F0_25F3_PRESENTATION_RESULTS.json",
+      "source_reference": "src/astrarun/ui/result_presentation.py",
+      "key_metrics": {
+        "legacy_requested_or_presented_purged": true,
+        "unverified_hwnd_zero_blocked": true
+      }
+    },
+    "BLOCKER_04_RESOURCE_DISPOSAL_VACUOUS_SUCCESS": {
+      "status": "PASS",
+      "summary": "Fixed vacuous edges where empty/None/never-materialized resources became CLOSED/DISPOSED. ResourceLedger now marks unallocated resources NOT_MATERIALIZED and enforces non-empty handles.",
+      "evidence_file": "docs/audit/F0_25F3_RESOURCE_RESULTS.json",
+      "source_reference": "src/astrarun/tasks/resource_ledger.py",
+      "key_metrics": {
+        "vacuous_success_eliminated": true,
+        "not_materialized_state_enforced": true
+      }
+    },
+    "BLOCKER_05_ROUTING_GENERALIZATION": {
+      "status": "PASS",
+      "summary": "Evaluated against 220-prompt frozen blind holdout (SHA256: b402565c83908bd4dda2467d22f421ad05b1189cbc47567223d4e7fc760cf023) executed exactly once. Achieved 91.82% overall accuracy, 100% dynamic precision, 0 false positive over-routes (eliminating MiMo's 26 over-routes).",
+      "evidence_file": "docs/audit/F0_25F3_ROUTING_BLIND_RESULTS.json",
+      "source_reference": "src/astrarun/agent/planner.py",
+      "key_metrics": {
+        "total_prompts": 220,
+        "accuracy": 0.9181818181818182,
+        "dynamic_precision": 1.0,
+        "dynamic_recall": 0.8181818181818182,
+        "false_positive_overroutes": 0,
+        "mimo_overroutes_eliminated": 26
+      }
+    },
+    "BLOCKER_06_HARNESS_CAUSAL_STUB_ELIMINATION": {
+      "status": "PASS",
+      "summary": "Purged manual telemetry emission and broker mocks from acceptance harness. Acceptance runner now executes genuine installed binary and observes real CausalTelemetry events.",
+      "evidence_file": "docs/audit/F0_25F3_CAUSAL_PROVENANCE.json",
+      "source_reference": "scripts/verify_f0_25f3_physical_acceptance.py",
+      "key_metrics": {
+        "harness_stubs_removed": true,
+        "evaluator_forged_events_blocked": true
+      }
+    },
+    "BLOCKER_07_BENCHMARK_AND_WORKSPACE_CONTAMINATION": {
+      "status": "PASS",
+      "summary": "Audited all 325 src/ files. Purged REPAIR-02 fixture literals, test prompt special cases, and hardcoded workspace paths. Runtime paths use AstraPaths dynamic discovery.",
+      "evidence_file": "docs/audit/F0_25F3_PRODUCTION_CONTAMINATION_AUDIT.json",
+      "source_reference": "src/astrarun/core/paths.py",
+      "key_metrics": {
+        "files_audited": 325,
+        "hardcoded_paths_found": 0,
+        "fixture_literals_found": 0
+      }
+    },
+    "BLOCKER_08_MUTATION_TEST_QUALITY": {
+      "status": "PASS",
+      "summary": "Audited 20 adversarial mutation tests. 20/20 mutants killed by their intended semantic invariant (0 wrong-reason or superficial kills).",
+      "evidence_file": "docs/audit/F0_25F3_MUTATION_RESULTS.json",
+      "source_reference": "tests/unit/test_f0_25f3_mutations.py",
+      "key_metrics": {
+        "mutants_tested": 20,
+        "mutants_killed": 20,
+        "genuine_semantic_kills": 20,
+        "wrong_reason_kills": 0
+      }
+    },
+    "BLOCKER_09_SOURCE_FREEZE_INTEGRITY": {
+      "status": "PASS",
+      "summary": "Authoritative freeze manifest generated after all source, test, and evaluator modifications (691 files, 9,587,587 bytes). Post-acceptance integrity verified 691/691 matched (100.00% match, 0 modifications).",
+      "evidence_file": "docs/audit/F0_25F3_POST_FREEZE_INTEGRITY.json",
+      "source_reference": "docs/audit/F0_25F3_SOURCE_FREEZE.json",
+      "key_metrics": {
+        "frozen_files": 691,
+        "matched_files": 691,
+        "mismatches": 0,
+        "post_freeze_changes": 0
+      }
+    },
+    "BLOCKER_10_FULL_REGRESSION_AND_SECURITY": {
+      "status": "PASS",
+      "summary": "Full test suite executed across all 957 tests: 909 passed, 0 errors, 48 skipped. Security classification manifest recomputed: 86 total / 43 read-only / 43 mutating / 3 confirmation / 2 blocked / 0 unknown consequential.",
+      "evidence_file": "docs/audit/F0_25F3_TEST_SUMMARY.json",
+      "source_reference": "docs/audit/F0_25F3_SECURITY_RECOMPUTATION.json",
+      "key_metrics": {
+        "total_tests": 957,
+        "passed_tests": 909,
+        "failed_tests": 0,
+        "skipped_tests": 48,
+        "security_total": 86,
+        "security_read_only": 43,
+        "security_mutating": 43,
+        "security_confirmation": 3,
+        "security_blocked": 2,
+        "security_unknown": 0
+      }
+    }
+  },
+  "physical_acceptance": {
+    "status": "FAIL",
+    "summary": "Installed binary executed on WinSta0\\Default. Launcher verified with DWM uncloaked check and screenshot. Genuine model query executed via loopback Qwen2.5-Coder and sandboxed tool executed. However, step verifier RETURN_CODE_ONLY strategy correctly rejected dispatch-only completion, causing completion gate to refuse completion and resulting in no final presentation event.",
+    "evidence_file": "docs/audit/F0_25F3_PHYSICAL_RESULTS.json",
+    "causal_trace": "docs/audit/F0_25F3_CAUSAL_TRACE.json",
+    "launcher_verified": true,
+    "launcher_hwnd": 138168,
+    "presentation_verified": false,
+    "goal_completed_verified": false,
+    "clean_resource_restoration": false,
+    "rule_20_invoked": true,
+    "post_freeze_source_mutation_prevented": true
+  },
+  "overall_verdict": "PARTIAL"
+}

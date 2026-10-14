@@ -70,6 +70,17 @@ class ModelClient:
             clean_content, _ = self.secret_broker.scrub_text(content)
             scrubbed_messages.append({"role": role, "content": clean_content})
 
+        from astrarun.core.telemetry import CausalTelemetry, CausalEventType, compute_hash
+        telem = CausalTelemetry.get_instance()
+        input_h = compute_hash(scrubbed_messages)
+        req_ev = telem.emit(
+            event_type=CausalEventType.MODEL_REQUEST.value,
+            component="ModelClient",
+            model_id=model_id,
+            input_hash=input_h,
+            data={"endpoint": endpoint, "role": request.role.value, "max_tokens": request.max_tokens},
+        )
+
         url = f"{endpoint.rstrip('/')}/v1/chat/completions"
         payload = {
             "messages": scrubbed_messages,
@@ -87,6 +98,15 @@ class ModelClient:
             lat_ms = (time.perf_counter() - start_t) * 1000.0
 
             if res.status_code != 200:
+                telem.emit(
+                    event_type=CausalEventType.MODEL_RESPONSE.value,
+                    component="ModelClient",
+                    model_id=model_id,
+                    parent_event_id=req_ev.event_id,
+                    input_hash=input_h,
+                    output_hash="",
+                    data={"status": "FAILED", "http_status": res.status_code, "latency_ms": lat_ms},
+                )
                 return InferenceObservation(
                     model_id=model_id,
                     status="FAILED",
@@ -114,6 +134,21 @@ class ModelClient:
 
             status = "SUCCESS" if is_valid else "SCHEMA_INVALID"
 
+            telem.emit(
+                event_type=CausalEventType.MODEL_RESPONSE.value,
+                component="ModelClient",
+                model_id=model_id,
+                parent_event_id=req_ev.event_id,
+                input_hash=input_h,
+                output_hash=compute_hash(clean_raw_content),
+                data={
+                    "status": status,
+                    "latency_ms": lat_ms,
+                    "prompt_tokens": prompt_tok,
+                    "completion_tokens": comp_tok,
+                },
+            )
+
             return InferenceObservation(
                 model_id=model_id,
                 status=status,
@@ -128,6 +163,15 @@ class ModelClient:
 
         except httpx.TimeoutException:
             lat_ms = (time.perf_counter() - start_t) * 1000.0
+            telem.emit(
+                event_type=CausalEventType.MODEL_RESPONSE.value,
+                component="ModelClient",
+                model_id=model_id,
+                parent_event_id=req_ev.event_id,
+                input_hash=input_h,
+                output_hash="",
+                data={"status": "TIMEOUT", "latency_ms": lat_ms},
+            )
             return InferenceObservation(
                 model_id=model_id,
                 status="TIMEOUT",
@@ -136,6 +180,15 @@ class ModelClient:
             )
         except Exception as e:
             lat_ms = (time.perf_counter() - start_t) * 1000.0
+            telem.emit(
+                event_type=CausalEventType.MODEL_RESPONSE.value,
+                component="ModelClient",
+                model_id=model_id,
+                parent_event_id=req_ev.event_id,
+                input_hash=input_h,
+                output_hash="",
+                data={"status": "FAILED", "latency_ms": lat_ms, "error": str(e)},
+            )
             return InferenceObservation(
                 model_id=model_id,
                 status="FAILED",

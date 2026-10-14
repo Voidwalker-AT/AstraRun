@@ -182,6 +182,18 @@ class DynamicToolBuilder:
             try:
                 candidate = self.model_service.generate_code(goal=goal, context=inputs)
                 if candidate and candidate.source_files:
+                    from astrarun.core.telemetry import CausalTelemetry, CausalEventType
+                    telem = CausalTelemetry.get_instance()
+                    telem.emit(
+                        event_type=CausalEventType.ARTIFACT_CREATED.value,
+                        component="DynamicToolBuilder",
+                        output_hash=candidate.compute_source_hash(),
+                        data={
+                            "tool_id": candidate.tool_id,
+                            "entrypoint": candidate.entrypoint,
+                            "files": list(candidate.source_files.keys()),
+                        },
+                    )
                     return candidate
             except Exception as e:
                 logger.error("ModelService code generation failed: %s", e)
@@ -235,6 +247,19 @@ class DynamicToolBuilder:
         res = self.execution_broker.execute(act_prop)
         if res.success:
             logger.info("Artifact delivered via ExecutionBroker: %s -> %s", proposal.source, proposal.destination)
+            from astrarun.core.telemetry import CausalTelemetry, CausalEventType
+            telem = CausalTelemetry.get_instance()
+            telem.emit(
+                event_type=CausalEventType.ARTIFACT_DELIVERED.value,
+                component="DynamicToolBuilder",
+                task_id=proposal.task_id,
+                input_hash=proposal.source_sha256,
+                output_hash=proposal.source_sha256,
+                data={
+                    "source": str(proposal.source),
+                    "destination": str(proposal.destination),
+                },
+            )
             return True
         else:
             logger.warning("Artifact delivery blocked by ExecutionBroker: %s (%s)", res.message, res.verdict)
@@ -382,9 +407,28 @@ class DynamicToolBuilder:
             )
             current_tool.provenance.record_revision(rev_rec)
 
-            if sb_res.is_success:
+            goal_lower = current_tool.goal.lower()
+            has_explicit_error = any(
+                err_kw in (sb_res.stdout or "").lower()
+                for err_kw in ("error: file", "filenotfounderror", "traceback (most recent call last)")
+            )
+            goal_expects_json = "json" in goal_lower
+            produced_json = any(a.suffix.lower() == ".json" for a in (sb_res.created_artifacts or []))
+
+            execution_truly_succeeded = sb_res.is_success and not has_explicit_error
+            if goal_expects_json and not produced_json:
+                execution_truly_succeeded = False
+
+            if execution_truly_succeeded:
                 logger.info("Dynamic tool %s executed successfully in %sms", current_tool.tool_id, sb_res.duration_ms)
                 all_artifacts = list(sb_res.created_artifacts)
+                # Ensure all tool source files created in sandbox workspace are captured as artifacts
+                if hasattr(sb_res, "working_dir") and sb_res.working_dir:
+                    for src_name in getattr(current_tool, "source_files", {}):
+                        src_p = Path(sb_res.working_dir) / src_name
+                        if src_p.exists() and src_p not in all_artifacts:
+                            all_artifacts.append(src_p)
+
                 delivered_artifacts: List[Path] = []
 
                 # Parse stdout for explicit printed artifact paths
@@ -403,14 +447,19 @@ class DynamicToolBuilder:
 
                 target_dest_dir = None
                 if not negated_delivery:
-                    if "desktop" in goal_lower:
+                    # Check for explicit Windows directory path in goal (e.g. under: C:\path\to\dir or in D:\...)
+                    path_match = re.search(r'\b(?:under|in|into|at|to)\s*:?\s*([A-Za-z]:\\[a-zA-Z0-9_\-\\]+)', current_tool.goal, re.I)
+                    if path_match:
+                        target_dest_dir = Path(path_match.group(1).strip())
+                    elif "desktop" in goal_lower:
                         target_dest_dir = Path.home() / "Desktop"
                     elif "documents" in goal_lower:
                         target_dest_dir = Path.home() / "Documents"
                     elif "downloads" in goal_lower:
                         target_dest_dir = Path.home() / "Downloads"
 
-                if target_dest_dir and target_dest_dir.exists():
+                if target_dest_dir:
+                    target_dest_dir.mkdir(parents=True, exist_ok=True)
                     for art in all_artifacts:
                         if art.parent != target_dest_dir and art.is_file():
                             art_hash = hashlib.sha256(art.read_bytes()).hexdigest()
@@ -425,13 +474,14 @@ class DynamicToolBuilder:
                                 delivered_path = target_dest_dir / art.name
                                 delivered_artifacts.append(delivered_path)
 
+                report_artifacts = delivered_artifacts if delivered_artifacts else all_artifacts
                 return DynamicToolExecutionReport(
                     candidate_tool=current_tool,
                     sandbox_result=sb_res,
                     ast_result=ast_res,
                     repair_attempts=repair_attempts,
                     is_success=True,
-                    artifacts=all_artifacts,
+                    artifacts=report_artifacts,
                     delivered_artifacts=delivered_artifacts,
                 )
 
@@ -441,6 +491,8 @@ class DynamicToolBuilder:
                 break
 
             repair_attempts += 1
+            if not sb_res.stderr and (has_explicit_error or (goal_expects_json and not produced_json)):
+                sb_res.stderr = f"Runtime validation failed: stdout reported '{sb_res.stdout.strip()}'. Expected deliverables (e.g. JSON file) were not created. Ensure sample input file is created and written before reading, and results are saved to JSON."
             err_text = (sb_res.stderr or "").strip() or (sb_res.stdout or "").strip()
             exc_details = extract_exception_details(err_text)
 

@@ -81,7 +81,12 @@ class ResourceSnapshot:
 
         # 3. Storage Free per Drive
         disk_free: Dict[str, float] = {}
-        for mount in ["C:\\", "E:\\", "D:\\"]:
+        try:
+            partitions = psutil.disk_partitions(all=False)
+            mounts = [p.mountpoint for p in partitions if p.mountpoint]
+        except Exception:
+            mounts = ["C:\\"]
+        for mount in mounts:
             try:
                 u = psutil.disk_usage(mount)
                 drive_key = mount[0].upper()

@@ -1,0 +1,39 @@
+{
+  "phase": "F0-25B.1",
+  "audit_target": "Precise Contamination and Prior Knowledge Scope Audit",
+  "timestamp": "2026-10-11T16:28:40Z",
+  "authoritative_statement": "Zero Notepad++-scoped procedural Hermes knowledge at cold start.",
+  "scope_disaggregation": {
+    "generic_prior_available": {
+      "status": true,
+      "description": "AstraRun's Computer Use platform globally provides generic input primitives (type_text, press_keyboard_shortcut, click_ui_element), universal Win32 desktop interaction strategies (universal shortcuts like Ctrl+A, Ctrl+N, Ctrl+F, Save-As dialog detectors), and generic editable-surface adapters (Win32 Edit, Scintilla, UIA TextPattern). AstraRun does NOT claim zero global procedural priors across all of computing."
+    },
+    "generic_prior_in_model_context": {
+      "status": false,
+      "description": "The local reasoning model prompt did not contain generic application shortcut dictionaries, Scintilla command mappings, or pre-scripted editing workflows. The prompt provided only live UI inspection facts, current uncertainty questions, and the empty Hermes retrieval set."
+    },
+    "Notepadpp_scoped_prior_in_model_context": {
+      "status": false,
+      "description": "At cold start, the Hermes namespace for Notepad++ contained exactly zero prior verified affordance edges, zero transition records, and zero pre-baked procedures. All Notepad++ affordances were empirically learned through governed physical probes."
+    }
+  },
+  "prompt_inspection_audit": {
+    "system_prompt_tokens": [
+      "AstraRun autonomous application learning core",
+      "Interacting with an unfamiliar Windows application",
+      "Analyze live UI state, prior knowledge, and decide whether to EXPLORE or STOP"
+    ],
+    "user_prompt_tokens": [
+      "GOAL",
+      "TARGET APPLICATION: Notepad++",
+      "CURRENT OBSERVATION (Window Title, Tabs, Status Bar, Controls Visible)",
+      "HERMES RETRIEVAL (PRIOR VERIFIED AFFORDANCES): []",
+      "CURRENT UNCERTAINTY TO INVESTIGATE",
+      "PROPOSED HYPOTHESIS"
+    ],
+    "contained_scintilla_ids": false,
+    "contained_npp_command_ids": false,
+    "contained_hardcoded_shortcuts": false
+  },
+  "verdict": "CONTAMINATION_PRECISION_ESTABLISHED"
+}

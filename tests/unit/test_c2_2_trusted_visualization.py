@@ -14,6 +14,7 @@ from astrarun.visualization.renderer import render_visualization
 
 
 def test_visualization_2d_line_and_scatter():
+    pytest.importorskip("matplotlib")
     with tempfile.TemporaryDirectory() as td:
         out_png = Path(td) / "test_2d.png"
         spec = {
@@ -52,6 +53,7 @@ def test_visualization_2d_line_and_scatter():
 
 
 def test_visualization_3d_surface():
+    pytest.importorskip("matplotlib")
     with tempfile.TemporaryDirectory() as td:
         out_3d = Path(td) / "test_surface.png"
         spec = {

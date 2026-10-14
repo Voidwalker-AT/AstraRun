@@ -1,0 +1,10 @@
+{
+  "phase": "F0-25C",
+  "task_id": "f025c_run_1791718247490",
+  "pre_existing_resources_preserved": true,
+  "task_owned_processes_terminated": true,
+  "task_owned_npp_terminated": true,
+  "disposed_resources_count": 1,
+  "undisposed_resources_count": 0,
+  "status": "RESTORED_CLEAN"
+}

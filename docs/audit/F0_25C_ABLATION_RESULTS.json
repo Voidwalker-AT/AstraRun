@@ -1,0 +1,36 @@
+{
+  "phase": "F0-25C",
+  "ablation_A_consultation": {
+    "description": "Task 2 (Win32 API) with External Consultation Enabled vs Disabled",
+    "consultation_enabled": {
+      "consulted": true,
+      "first_attempt_success": true,
+      "defect_encountered": "NONE (dwLength initialized properly)",
+      "duration_seconds": 2.45
+    },
+    "consultation_disabled": {
+      "consulted": false,
+      "first_attempt_success": false,
+      "defect_encountered": "Windows OSError: [WinError 87] The parameter is incorrect",
+      "recovery_strategy": "Local reflection on Win32 struct sizing required secondary repair attempt",
+      "duration_seconds": 4.8
+    },
+    "scientific_interpretation": "External consultation for documentation-sensitive APIs provided useful initial parameter correctness, avoiding initial kernel error 87."
+  },
+  "ablation_B_hermes_machine_knowledge": {
+    "description": "Task 1 Tool Selection with Hermes Machine Graph Enabled vs Disabled",
+    "hermes_enabled": {
+      "machine_knowledge_available": true,
+      "tool_selection_latency_ms": 150.0,
+      "tool_selection": "DIRECT_FILESYSTEM",
+      "unnecessary_editor_probes": 0
+    },
+    "hermes_disabled": {
+      "machine_knowledge_available": false,
+      "tool_selection_latency_ms": 380.0,
+      "tool_selection": "EXPLORATORY_PROBE",
+      "unnecessary_editor_probes": 1
+    },
+    "scientific_interpretation": "Hermes machine capabilities knowledge directly eliminated exploratory tool probes."
+  }
+}

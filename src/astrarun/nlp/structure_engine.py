@@ -569,11 +569,49 @@ class NeuralStructureEngine:
                             confidence=0.9
                         ))
 
+            if (raw_c.action in ("terminate_process", "kill_process") or raw_c.intent in ("terminate_process", "kill_process")) and not any(e.entity_type == "process" for e in ents):
+                pid_m = re.search(r'\b(\d{1,6})\b', c_text)
+                if pid_m:
+                    pid_val = pid_m.group(1)
+                    p_s = query.find(pid_val, s_idx)
+                    p_e = p_s + len(pid_val) if p_s != -1 else e_idx
+                    ents.append(ParsedEntity(
+                        entity_type="process",
+                        value=pid_val,
+                        source_span=TextSpan(start=p_s if p_s != -1 else s_idx, end=p_e, raw=query[p_s:p_e] if p_s != -1 else pid_val),
+                        confidence=0.99
+                    ))
+
+            # Coreference/pronoun targets (e.g. "minimize it", "close that", "this window")
+            pro_m = re.search(r'\b(it|this|that|them|the\s+window)\b', c_text, re.I)
+            if pro_m and not any(e.entity_type == "target_ref" for e in ents):
+                ref_val = pro_m.group(1).lower()
+                r_s = query.lower().find(ref_val, s_idx)
+                r_e = r_s + len(ref_val) if r_s != -1 else e_idx
+                ents.append(ParsedEntity(
+                    entity_type="target_ref",
+                    value=ref_val,
+                    source_span=TextSpan(start=r_s if r_s != -1 else s_idx, end=r_e, raw=query[r_s:r_e] if r_s != -1 else ref_val),
+                    confidence=0.85,
+                    referent_index=seq_idx - 1 if seq_idx > 0 else 0,
+                ))
+
+            intent_val = raw_c.action or raw_c.intent or "unknown"
+            action_verb_val = raw_c.action.split("_")[0] if raw_c.action else "unknown"
+            c_lower = c_text.lower()
+            if intent_val in ("unknown", "unsupported"):
+                if re.search(r'\b(?:volume|mute)\b', c_lower):
+                    intent_val = "system_volume"
+                    action_verb_val = "mute" if "mute" in c_lower else "volume"
+                elif any(k in c_lower for k in ("system status", "system overview", "system summary", "workstation status")):
+                    intent_val = "system_summary"
+                    action_verb_val = "status"
+
             parsed_clauses.append(ParsedClause(
                 clause_id=f"c{seq_idx}",
                 sequence_index=seq_idx,
-                intent=raw_c.action or raw_c.intent or "unknown",
-                action_verb=raw_c.action.split("_")[0] if raw_c.action else "unknown",
+                intent=intent_val,
+                action_verb=action_verb_val,
                 is_negated=is_neg,
                 entities=ents,
                 payload=payload,

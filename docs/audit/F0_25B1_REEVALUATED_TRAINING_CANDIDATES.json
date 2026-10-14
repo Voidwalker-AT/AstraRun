@@ -1,0 +1,245 @@
+{
+  "phase": "F0-25B.1",
+  "total_passed_candidates": 5,
+  "passed_from_f0_25b_legacy": 1,
+  "passed_from_f0_25b1_reverified": 4,
+  "candidates": [
+    {
+      "trajectory_id": "traj_cold_001",
+      "source_dataset": "F0-25B",
+      "audit_status": "PASSED",
+      "gate_evaluation": {
+        "passed": true,
+        "rejection_reasons": []
+      },
+      "candidate_payload": {
+        "trajectory_id": "traj_cold_001",
+        "task_id": "f025b_cold_1791711770219",
+        "cycle_id": 1,
+        "timestamp": 1791711774.0103483,
+        "goal": "Safely learn how to use this application. Explore enough of its useful capabilities that you could later perform normal text-editing tasks without being told its interface. Use disposable content and task-owned resources. Prefer reversible experiments. Do not inspect unrelated personal files. Do not modify application/system configuration unless explicitly authorized. Learn from what actually happens rather than assuming actions succeeded. Stop when further safe exploration has low expected value relative to what you already understand.",
+        "remaining_postconditions": [
+          "explore_capabilities"
+        ],
+        "world_state_reference": {
+          "foreground_hwnd": 9373910,
+          "foreground_pid": 22588,
+          "active_windows_count": 1,
+          "task_owned_resources": [
+            "process:22588",
+            "window:9373910"
+          ],
+          "pre_existing_resources": []
+        },
+        "structural_perception": {
+          "identity_source": "LIVE_WINDOWS_UIA",
+          "top_level_hwnd": 9373910,
+          "top_level_title": "new 1 - Notepad++",
+          "elements_count": 40,
+          "sample_elements": [
+            {
+              "control_type": "TAB",
+              "name": "Tab",
+              "automation_id": ""
+            },
+            {
+              "control_type": "TAB_ITEM",
+              "name": "new 1",
+              "automation_id": ""
+            },
+            {
+              "control_type": "UNKNOWN",
+              "name": "Normal text file",
+              "automation_id": ""
+            },
+            {
+              "control_type": "UNKNOWN",
+              "name": "length: 0    lines: 1",
+              "automation_id": ""
+            },
+            {
+              "control_type": "UNKNOWN",
+              "name": "Ln: 1    Col: 1    Pos: 1",
+              "automation_id": ""
+            },
+            {
+              "control_type": "UNKNOWN",
+              "name": "Windows (CR LF)",
+              "automation_id": ""
+            },
+            {
+              "control_type": "UNKNOWN",
+              "name": "UTF-8",
+              "automation_id": ""
+            },
+            {
+              "control_type": "UNKNOWN",
+              "name": "INS",
+              "automation_id": ""
+            },
+            {
+              "control_type": "BUTTON",
+              "name": "",
+              "automation_id": ""
+            },
+            {
+              "control_type": "BUTTON",
+              "name": "",
+              "automation_id": ""
+            },
+            {
+              "control_type": "BUTTON",
+              "name": "",
+              "automation_id": ""
+            },
+            {
+              "control_type": "BUTTON",
+              "name": "",
+              "automation_id": ""
+            }
+          ]
+        },
+        "visual_perception_if_real": null,
+        "Hermes_retrieval": {
+          "query": "Notepad++ affordances",
+          "candidate_memories": [],
+          "selected_memories": [],
+          "retrieved_affordances_count": 0
+        },
+        "known_facts": [],
+        "uncertainties": [
+          "How to enter text into the document buffer"
+        ],
+        "previous_action": null,
+        "previous_result": "SUCCESS",
+        "model_provenance": {
+          "model_role": "DEEP_COGNITION",
+          "model_identity": "qwen2.5-coder-1.5b-instruct-q4_k_m",
+          "model_file": "E:\\AI_Models\\GGUF\\qwen2.5-coder-1.5b-instruct-q4_k_m.gguf",
+          "model_sha256": "cc324af070c2ecbfd324a30884d2f951a7ff756aba85cb811a6ec436933bb046",
+          "runtime": "llama-server.exe (llama.cpp)",
+          "endpoint": "http://127.0.0.1:8089",
+          "latency_seconds": 6.635,
+          "prompt_sha256": "438b51b08ac13b287c3dcfb8b915cdcdbc1706f77a72b5d461cdbe43e2ed8622",
+          "response_sha256": "55d5118ebf4fa0d32153a78551a2389ff46aa1e9da5e07937c80c8782abe056f",
+          "operational_rationale": "To safely learn how to use Notepad++ by exploring its useful capabilities and understanding how to enter text into the document buffer."
+        },
+        "model_input_reference": "438b51b08ac13b287c3dcfb8b915cdcdbc1706f77a72b5d461cdbe43e2ed8622",
+        "model_output_reference": "55d5118ebf4fa0d32153a78551a2389ff46aa1e9da5e07937c80c8782abe056f",
+        "mode": "EXPLORE",
+        "selected_action_or_experiment": {
+          "hypothesis": "Typing alphanumeric text into the focused window will insert content and update buffer length",
+          "unknown_being_resolved": "How to enter text into the document buffer",
+          "capability_id": "type_text",
+          "arguments": {
+            "text": "def astra_cold_probe():\n    return 100\n"
+          },
+          "expected_transition_if_supported": {
+            "length_increased": true,
+            "dirty_indicated": true
+          },
+          "expected_transition_if_refuted": {
+            "length_increased": false
+          },
+          "risk_level": "BENIGN_MUTATION",
+          "is_reversible": true,
+          "verification_method": "live_state_delta"
+        },
+        "broker_verdict": {
+          "action_id": "step_1",
+          "category": "ACT",
+          "status": "ALLOW",
+          "verdict_reason": "ALLOW_BENIGN"
+        },
+        "observed_transition": {
+          "transition_verified": true,
+          "pre_state_hash": "16ecefda1227e1c6ffd29fa37b50a7922feedf1c29927f828d4aa8fae95412d6",
+          "post_state_hash": "d7ec34e70f795e2dc454c7f2a5845957f6bf7bd0967a262ac66e050fb066bc22",
+          "status_transition": "1_tabs -> 1_tabs",
+          "raw_observation_delta": {
+            "status_bar": "length: 37    lines: 1 Ln: 1    Col: 38    Pos: 38"
+          }
+        },
+        "postcondition_result": {
+          "verified": true
+        },
+        "Hermes_writes": [
+          {
+            "entity_name": "Notepad++",
+            "affordance_name": "EDIT_TEXT",
+            "status": "VERIFIED",
+            "confidence_before": 0.2,
+            "confidence_after": 0.85
+          }
+        ],
+        "confidence_changes": {
+          "EDIT_TEXT": 0.65
+        },
+        "resource_delta": {
+          "created": [],
+          "preserved": [],
+          "disposed": []
+        },
+        "cleanup_state": "ACTIVE",
+        "final_task_outcome": "IN_PROGRESS",
+        "evidence_class": "REAL_LOCAL_MODEL_INFERENCE",
+        "contamination_flags": {
+          "harness_selected_action": false,
+          "fixture_model_response": false,
+          "contains_sensitive_data": false,
+          "eligible_for_training": true,
+          "holdout_reserved": false,
+          "contamination_reason": null
+        }
+      }
+    },
+    {
+      "trajectory_id": "traj_f025b1_reverif_001",
+      "source_dataset": "F0-25B.1 (Empirically Reverified)",
+      "audit_status": "PASSED",
+      "affordance_name": "EDIT_TEXT",
+      "predicate_type": "TEXT_BUFFER_DELTA",
+      "raw_evidence_reference": "scintilla_wm_char_len_41",
+      "gate_evaluation": {
+        "passed": true,
+        "rejection_reasons": []
+      }
+    },
+    {
+      "trajectory_id": "traj_f025b1_reverif_002",
+      "source_dataset": "F0-25B.1 (Empirically Reverified)",
+      "audit_status": "PASSED",
+      "affordance_name": "SELECT_ALL",
+      "predicate_type": "SELECTION_RANGE_SPAN",
+      "raw_evidence_reference": "scintilla_0x770cd4_start_0_end_39_doclen_39",
+      "gate_evaluation": {
+        "passed": true,
+        "rejection_reasons": []
+      }
+    },
+    {
+      "trajectory_id": "traj_f025b1_reverif_003",
+      "source_dataset": "F0-25B.1 (Empirically Reverified)",
+      "audit_status": "PASSED",
+      "affordance_name": "NEW_DOCUMENT_TAB",
+      "predicate_type": "DOCUMENT_TAB_COUNT",
+      "raw_evidence_reference": "win32_wm_command_41001_file_new",
+      "gate_evaluation": {
+        "passed": true,
+        "rejection_reasons": []
+      }
+    },
+    {
+      "trajectory_id": "traj_f025b1_reverif_004",
+      "source_dataset": "F0-25B.1 (Empirically Reverified)",
+      "audit_status": "PASSED",
+      "affordance_name": "SEARCH_FIND_SURFACE",
+      "predicate_type": "DIALOG_SURFACE_PRESENCE",
+      "raw_evidence_reference": "win32_dialog_hwnd_0xe60c5e",
+      "gate_evaluation": {
+        "passed": true,
+        "rejection_reasons": []
+      }
+    }
+  ]
+}

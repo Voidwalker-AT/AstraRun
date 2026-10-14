@@ -8,9 +8,8 @@
       "verified": false,
       "message": "UI text state failed: expected 'hello' not observed in UI (dispatch reported 5 chars, which is not postcondition evidence).",
       "evidence": {
-        "hwnd": 4917538,
-        "window_title": "test1_source_parity.txt - Notepad",
-        "uia_inspection_error": "No module named 'comtypes'",
+        "hwnd": 0,
+        "window_title": "",
         "keystroke_dispatched_chars": 5,
         "matched_via": ""
       },

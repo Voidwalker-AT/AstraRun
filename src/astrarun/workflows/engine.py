@@ -40,11 +40,12 @@ class WorkflowEngine:
         self,
         tool_registry: Optional[ToolRegistry] = None,
         context_engine: Optional[WorkstationContextEngine] = None,
-        audit_log_path: Path | str = r"E:\Workspace\Active\AstraRun\data\workflow_audit.jsonl",
+        audit_log_path: Optional[Path | str] = None,
     ) -> None:
+        from astrarun.core.paths import AstraPaths
         self.tool_registry = tool_registry or ToolRegistry()
         self.context_engine = context_engine
-        self.audit_log_path = Path(audit_log_path).resolve()
+        self.audit_log_path = Path(audit_log_path).resolve() if audit_log_path else (AstraPaths.data_dir() / "workflow_audit.jsonl")
         self.audit_log_path.parent.mkdir(parents=True, exist_ok=True)
 
     def create_open_project_workflow(self, project_id: str) -> Workflow:

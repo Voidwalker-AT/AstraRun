@@ -1,0 +1,74 @@
+{
+  "phase": "F0-25F.4",
+  "test_suite": "tests/unit/test_f0_25f4_completion_wiring.py",
+  "timestamp": 1791834280.0,
+  "summary": {
+    "total": 10,
+    "passed": 10,
+    "failed": 0,
+    "skipped": 0,
+    "verdict": "PASS"
+  },
+  "tests": {
+    "A1_authoritative_contract_registration_api": {
+      "name": "test_a1_authoritative_contract_registration_api",
+      "description": "GoalContract registration API stores contract mapped to run_id and task_id",
+      "status": "PASSED",
+      "verdict": "PASS"
+    },
+    "A2_contract_retrieval_by_run_and_task": {
+      "name": "test_a2_contract_retrieval_by_run_and_task",
+      "description": "Completion gate can_complete looks up registered contract by active run_id/task_id if omitted",
+      "status": "PASSED",
+      "verdict": "PASS"
+    },
+    "A3_contract_unregistration_cleans_mapping": {
+      "name": "test_a3_contract_unregistration_cleans_mapping",
+      "description": "Unregistering contract removes run and task mappings, preventing cross-task leaks",
+      "status": "PASSED",
+      "verdict": "PASS"
+    },
+    "A4_run_scoped_isolation": {
+      "name": "test_a4_run_scoped_isolation",
+      "description": "Contract for Run 1 does not leak into Run 2",
+      "status": "PASSED",
+      "verdict": "PASS"
+    },
+    "A5_legitimate_completion_approved": {
+      "name": "test_a5_legitimate_completion_approved",
+      "description": "Legitimate contract with verified predicates achieves APPROVED verdict",
+      "status": "PASSED",
+      "verdict": "PASS"
+    },
+    "A6_telemetry_end_run_emits_goal_completed_on_approval": {
+      "name": "test_a6_telemetry_end_run_emits_goal_completed_on_approval",
+      "description": "Telemetry end_run(status='SUCCESS') emits GOAL_COMPLETED when contract is satisfied and approved",
+      "status": "PASSED",
+      "verdict": "PASS"
+    },
+    "A7_telemetry_end_run_emits_run_terminated_on_gate_rejection": {
+      "name": "test_a7_telemetry_end_run_emits_run_terminated_on_gate_rejection",
+      "description": "Telemetry end_run(status='SUCCESS') with violated contract emits RUN_TERMINATED and completed=False",
+      "status": "PASSED",
+      "verdict": "PASS"
+    },
+    "A8_non_success_end_run_never_emits_goal_completed": {
+      "name": "test_a8_non_success_end_run_never_emits_goal_completed",
+      "description": "Telemetry end_run with FAILED or CANCELLED emits RUN_TERMINATED, never GOAL_COMPLETED",
+      "status": "PASSED",
+      "verdict": "PASS"
+    },
+    "A9_app_handle_request_wires_goal_contract": {
+      "name": "test_a9_app_handle_request_wires_goal_contract",
+      "description": "Verifies loop.execute_goal registers contract with telemetry and end_run has contract",
+      "status": "PASSED",
+      "verdict": "PASS"
+    },
+    "A10_direct_emit_blocks_ungated_variants": {
+      "name": "test_a10_direct_emit_blocks_ungated_variants",
+      "description": "Direct telemetry.emit(GOAL_COMPLETED) with non-SUCCESS status or without gate approval is blocked",
+      "status": "PASSED",
+      "verdict": "PASS"
+    }
+  }
+}

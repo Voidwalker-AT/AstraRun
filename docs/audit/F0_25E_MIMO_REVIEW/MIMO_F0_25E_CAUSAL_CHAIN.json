@@ -1,0 +1,109 @@
+{
+  "milestone": "F0_25E",
+  "title": "MIMO Independent Causal Chain Reconstruction — F0-25E Word-Frequency Task",
+  "auditor": "MiMo (rebuilt from raw event IDs/timestamps; Anti's reconstructed narrative in F0_25E_CAUSAL_PROVENANCE.json NOT relied upon)",
+  "run_window": {
+    "baseline_frame_epoch": 1791731736.5565352,
+    "request_submitted_epoch": 1791731745.933465,
+    "freeze_epoch": 1791731770.762412,
+    "evaluation_timestamp": "2026-10-11 20:46:21",
+    "mapped_local_clock": "epoch 1791731745.93 ~ 20:45:45.9; epoch 1791731770.76 ~ 20:46:10.8 (aligned via REQUEST_SUBMITTED vs IPC SUBMIT_QUERY log at 20:45:45)"
+  },
+  "links": [
+    {
+      "link": 1,
+      "name": "USER_REQUEST -> SUBMISSION",
+      "evidence": [
+        "raw/events.jsonl line 1: event_id ev_1791731745933_3, task_id task_f0_25e, type REQUEST_SUBMITTED, full query text (466 chars)",
+        "Harness source: si.send_command('POPULATE_QUERY') L657 then si.send_command('SUBMIT_QUERY') L663 immediately before record_event",
+        "Production log (corroborating): 20:45:44 IPC POPULATE_QUERY; 20:45:45 IPC SUBMIT_QUERY; '[IPC] on_ipc_query executing query (466 chars)'"
+      ],
+      "classification": "PROVEN",
+      "notes": "Submission via IPC, not typed input. Alt+Space was registered but never used; invocation was programmatic (--show-now + IPC)."
+    },
+    {
+      "link": 2,
+      "name": "SUBMISSION -> PLANNER/GOAL INTERPRETATION DECISION",
+      "evidence": [
+        "raw/model_events.jsonl: ZERO planner/reasoner/intent events for this run (harvest filter patterns 'Local intent reasoner'/'Deep planning' matched nothing in-window)",
+        "Production log (corroborating, outside frozen pkg): 'Starting execution of task task_99dc59e6 (2 steps)' at 20:45:51 - proves an agent loop formed a plan, but the frozen package contains no record of the model I/O behind it",
+        "No reasoner/planner line appears in the production log for 20:45:45-20:45:51 either"
+      ],
+      "classification": "UNVERIFIED",
+      "missing_for_proof": "A frozen goal-interpretation event (model input/output or structured planner decision) tying the request to execute_dynamic_tool selection.",
+      "notes": "Link exists in reality (execution followed within 6s) but the frozen evidence does not document HOW the decision was reached."
+    },
+    {
+      "link": 3,
+      "name": "DECISION -> CAPABILITY EXECUTION (execute_dynamic_tool)",
+      "evidence": [
+        "raw/broker_events.jsonl line 28: inner log time 20:45:51, task_99dc59e6, 'Executing capability execute_dynamic_tool' with exact goal text - IN WINDOW",
+        "raw/broker_events.jsonl line 32: retry execution 20:46:04, same task/goal - IN WINDOW",
+        "Production log: same lines plus 'agent.loop:251 Starting execution of task task_99dc59e6 (2 steps)'"
+      ],
+      "classification": "SUPPORTED",
+      "notes": "Frozen evidence contains the capability execution records for this run; the DECISION link (link 2) that led here remains unverified."
+    },
+    {
+      "link": 4,
+      "name": "CAPABILITY -> DYNAMIC TOOL SYNTHESIS (model generates code)",
+      "evidence": [
+        "raw/model_events.jsonl line 11: inner log time 20:46:02, 'Qwen synthesized CandidateTool [dyn_tool_2e61a0f5] (1 files, entry=main.py, hash=31b559a4d149)' - IN WINDOW (the only in-window model event)",
+        "Hash chain: synthesized hash 31b559a4d149 == delivered main.py source_sha256 31b559a4d1497603c651392d66de49456b36b6f150a22de0d685bc6fe57db78b == frozen filesystem_events main.py sha256 == on-disk main.py sha256"
+      ],
+      "classification": "PROVEN",
+      "notes": "This is the strongest chain in the package: model output bytes are hash-identical to the delivered and frozen artifact."
+    },
+    {
+      "link": 5,
+      "name": "SYNTHESIS -> SANDBOX EXECUTION",
+      "evidence": [
+        "raw/broker_events.jsonl lines 29-31 reference sandbox source paths C:\\Users\\hp\\AppData\\LocalLow\\AstraRun\\sandbox\\task_30b5a40d\\...",
+        "Production log (corroborating): 20:46:03 ResourceGovernor SERIALIZE_HEAVY_WORK; 20:46:04 'Dynamic tool dyn_tool_2e61a0f5 executed successfully in 846.72ms'",
+        "Sandbox dir task_30b5a40d exists on disk with mtime 2026-10-11 20:46:03"
+      ],
+      "classification": "SUPPORTED",
+      "notes": "Frozen evidence shows sandbox paths in delivery records; the execution-success line itself is only in the production log (not harvested)."
+    },
+    {
+      "link": 6,
+      "name": "SANDBOX -> ARTIFACT DELIVERY TO FINAL PATH",
+      "evidence": [
+        "raw/broker_events.jsonl line 29: 20:46:04 word_frequencies.json sandbox -> E:\\AstraDogfood\\word_frequency\\word_frequencies.json",
+        "raw/broker_events.jsonl line 30: 20:46:04 sample_input.txt delivery",
+        "raw/broker_events.jsonl line 31: 20:46:04 main.py delivery",
+        "Production log: deliver_artifact capability entries carrying source_sha256 equal to final file hashes (2affa9f877e7..., 19dcbda5e602..., 31b559a4d149...)",
+        "raw/filesystem_events.jsonl: dir 0 files at epochs ...747.88 through ...763.30; 3 files at ...765.22 with mtimes ...764.48/.51/.54 (20:46:04)"
+      ],
+      "classification": "PROVEN",
+      "notes": "Delivery records, filesystem appearance, and hash equality all coincide inside the run window."
+    },
+    {
+      "link": 7,
+      "name": "ARTIFACT -> USER-VISIBLE PRESENTATION / REVEAL",
+      "evidence": [
+        "No presentation evidence anywhere: 0/15 frames show result UI; production log 20:45-20:47 contains no reveal/explorer/viewer/presentation activity; evaluator's OUTPUT_PRESENTATION check is file-existence only",
+        "Planner source sets reveal_result for 'show me the useful result' phrasing (planner.py:769) - intent exists in code, but no executed reveal is recorded"
+      ],
+      "classification": "CONTRADICTED (chain broken)",
+      "notes": "The task's explicit 'show me the useful result' step has no executed link. Anti's report lists stage 7 OUTPUT_PRESENTATION as 'Artifact verified by Content Oracle' - that is verification, not presentation; the claimed stage mislabels the missing step."
+    }
+  ],
+  "task_id_layering": {
+    "harness_label": "task_f0_25e (raw/events.jsonl)",
+    "agent_loop_id": "task_99dc59e6 (broker lines 28, 32)",
+    "sandbox_and_delivery_id": "task_30b5a40d (broker lines 29-31)",
+    "linkage_within_frozen_package": "ABSENT - the three IDs never co-occur in any frozen record; they are tied together only by the external production log clock",
+    "classification": "UNVERIFIED inside frozen evidence; SUPPORTED only via corroborating log"
+  },
+  "versus_anti_causal_report": {
+    "anti_artifact": "docs/audit/F0_25E/F0_25E_CAUSAL_PROVENANCE.json (verdict PASS)",
+    "anti_stage_2_planner": "canned prose 'GoalPlanner classified goal into execute_dynamic_tool' - no event ID, no timestamp",
+    "anti_stage_3_synthesis": "'Harvested 11 model events' - count includes 10 prior-run events",
+    "anti_stage_4_broker": "'Harvested 32 broker authorization events' - they are registry/delivery log lines, not authorization records; 27 are prior-run",
+    "anti_stage_5_sandbox": "canned prose, no event",
+    "anti_stage_7": "relabeled missing presentation as oracle verification",
+    "mimo_classification": "2 of 7 stages carry real in-window frozen evidence; 3 are canned prose; counts polluted; presentation stage fabricated -> Anti's PASS is CONTRADICTED"
+  },
+  "overall_chain_verdict": "PARTIALLY_ESTABLISHED: request submission, model synthesis (hash-identical), capability execution, sandbox delivery, and artifact appearance are proven/supported for THIS run. The planning-decision link and the presentation link are not established (UNVERIFIED / broken). Therefore 'complete verified causal sequence' (Anti stage list) is CONTRADICTED; a correct statement is: request -> (unverified decision) -> capability execution -> model synthesis -> sandbox exec -> delivery -> files on disk -> (no presentation)."
+}

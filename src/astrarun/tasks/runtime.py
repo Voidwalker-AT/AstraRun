@@ -798,7 +798,14 @@ class TaskRuntime:
 
             try:
                 # Dispatch execution strictly governed by ExecutionBroker
+                broker = None
                 if self.app and hasattr(self.app, "execution_broker") and self.app.execution_broker:
+                    broker = self.app.execution_broker
+                else:
+                    from astrarun.security.execution_broker import ExecutionBroker
+                    broker = ExecutionBroker()
+
+                if broker:
                     from astrarun.security.execution_broker import ActionProposal
                     prop = ActionProposal(
                         capability_id=step.capability,
@@ -806,7 +813,7 @@ class TaskRuntime:
                         task_id=task_id,
                         source="task_runtime",
                     )
-                    broker_res = self.app.execution_broker.execute(prop)
+                    broker_res = broker.execute(prop)
                     success = broker_res.success
                     result_data = broker_res.data
                     step_msg = broker_res.message

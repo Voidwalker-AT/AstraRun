@@ -1,0 +1,18 @@
+{
+  "auditor": "MiMo",
+  "independent_pytest": {
+    "command": "pytest tests/unit/test_f0_25f1_mutations.py tests/unit/test_f0_25f_resource_ledger_sandbox.py tests/unit/test_f0_25f_evaluator_mutation.py tests/unit/test_generic_repair_holdout.py tests/unit/test_post_freeze_routing_holdout.py tests/unit/test_execution_broker.py -v",
+    "collected": 35,
+    "passed": 35,
+    "failed": 0,
+    "skipped": 0,
+    "xfailed": 0,
+    "errors": 0,
+    "duration_sec": 92.79,
+    "raw_output": "13_TEST_RESULTS.txt",
+    "note": "Full 106-test claim from F0_25F.1 NOT re-run in full; subset covers F0-25F.1 mutations, sandbox ledger, evaluator mutations, generic repair, historical routing holdout, execution broker"
+  },
+  "side_effects_honest_note": "Running test_generic_repair_holdout.py and test_post_freeze_routing_holdout.py rewrote docs/audit/F0_25F1_GENERIC_REPAIR_RESULTS.json and C1_8_* evidence files (hash changed from freeze). Mutation results file remained byte-identical. This was an unavoidable side effect of executing existing tests as permitted; not intentional regeneration.",
+  "anti_106_claim": "UNVERIFIED (not fully re-executed; subset 35/35 PASS)",
+  "verdict": "REGRESSION = PARTIAL (subset PASS; full-suite unverified; freeze stale for two files vs final source)"
+}

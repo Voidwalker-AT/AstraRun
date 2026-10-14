@@ -1,0 +1,14 @@
+{
+  "locked_case": {
+    "close_returned": false,
+    "dir_still_exists": true,
+    "persisted_state": "FAILED_CLEANUP",
+    "fail_closed_verified": true
+  },
+  "unlocked_case": {
+    "close_returned": true,
+    "dir_exists": false,
+    "persisted_state": "CLOSED",
+    "success_verified": true
+  }
+}

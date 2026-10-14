@@ -118,7 +118,7 @@ class LayaProcessClient:
 
             try:
                 from astrarun.core.paths import get_cache_dir, is_release_mode
-                hf_cache_dir = str(get_cache_dir() / "huggingface") if is_release_mode() else "E:/AI_Models/HF_CACHE"
+                hf_cache_dir = os.environ.get("HF_HOME") or (str(get_cache_dir() / "huggingface") if is_release_mode() else os.environ.get("ASTRARUN_HF_CACHE", str(get_cache_dir() / "huggingface")))
 
                 env = os.environ.copy()
                 env["HF_HOME"] = hf_cache_dir

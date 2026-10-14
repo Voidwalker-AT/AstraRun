@@ -67,6 +67,7 @@ FORBIDDEN_ATTR_CALLS: Set[str] = {
     "spawnvp",
     "spawnvpe",
     "kill",
+    "rmtree",
 }
 
 
@@ -138,7 +139,11 @@ class _SecurityASTVisitor(ast.NodeVisitor):
         elif isinstance(node.func, ast.Attribute):
             attr_name = node.func.attr
             self.calls_detected.add(attr_name)
-            if attr_name in FORBIDDEN_ATTR_CALLS:
+            if attr_name == "rmtree" or (isinstance(node.func.value, ast.Name) and node.func.value.id == "shutil" and attr_name == "rmtree"):
+                self.violations.append(
+                    f"Line {node.lineno}: Prohibited destructive file call 'shutil.rmtree()'."
+                )
+            elif attr_name in FORBIDDEN_ATTR_CALLS:
                 if isinstance(node.func.value, ast.Name) and node.func.value.id in {"os", "posix", "nt"}:
                     self.violations.append(
                         f"Line {node.lineno}: Prohibited OS execution call '{node.func.value.id}.{attr_name}()'."

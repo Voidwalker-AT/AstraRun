@@ -1,0 +1,164 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "AstraRun F0-25B Training-Grade Trajectory Schema",
+  "description": "Standard schema for capturing complete, contamination-resistant, causal decision trajectories suitable for future model fine-tuning.",
+  "type": "object",
+  "required": [
+    "trajectory_id",
+    "task_id",
+    "cycle_id",
+    "timestamp",
+    "goal",
+    "world_state_reference",
+    "structural_perception",
+    "Hermes_retrieval",
+    "known_facts",
+    "uncertainties",
+    "model_provenance",
+    "mode",
+    "selected_action_or_experiment",
+    "broker_verdict",
+    "observed_transition",
+    "Hermes_writes",
+    "evidence_class",
+    "contamination_flags"
+  ],
+  "properties": {
+    "trajectory_id": { "type": "string" },
+    "task_id": { "type": "string" },
+    "cycle_id": { "type": "integer" },
+    "timestamp": { "type": "number" },
+    "goal": { "type": "string" },
+    "remaining_postconditions": { "type": "array", "items": { "type": "string" } },
+    "world_state_reference": {
+      "type": "object",
+      "properties": {
+        "foreground_hwnd": { "type": ["integer", "null"] },
+        "foreground_pid": { "type": ["integer", "null"] },
+        "active_windows_count": { "type": "integer" },
+        "task_owned_resources": { "type": "array", "items": { "type": "string" } },
+        "pre_existing_resources": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "structural_perception": {
+      "type": "object",
+      "properties": {
+        "identity_source": { "type": "string" },
+        "top_level_hwnd": { "type": ["integer", "null"] },
+        "top_level_title": { "type": "string" },
+        "elements_count": { "type": "integer" },
+        "sample_elements": { "type": "array" }
+      }
+    },
+    "visual_perception_if_real": {
+      "type": ["object", "null"],
+      "properties": {
+        "screenshot_hash": { "type": "string" },
+        "vision_model_invoked": { "type": "boolean" },
+        "vision_model_identity": { "type": ["string", "null"] },
+        "vision_derived_semantics": { "type": ["object", "null"] }
+      }
+    },
+    "Hermes_retrieval": {
+      "type": "object",
+      "properties": {
+        "query": { "type": "string" },
+        "candidate_memories": { "type": "array" },
+        "selected_memories": { "type": "array" },
+        "retrieved_affordances_count": { "type": "integer" }
+      }
+    },
+    "known_facts": { "type": "array", "items": { "type": "string" } },
+    "uncertainties": { "type": "array", "items": { "type": "string" } },
+    "previous_action": { "type": ["string", "null"] },
+    "previous_result": { "type": ["string", "null"] },
+    "model_provenance": {
+      "type": "object",
+      "properties": {
+        "model_role": { "type": "string" },
+        "model_identity": { "type": "string" },
+        "model_file": { "type": "string" },
+        "model_sha256": { "type": "string" },
+        "runtime": { "type": "string" },
+        "endpoint": { "type": "string" },
+        "latency_seconds": { "type": "number" },
+        "prompt_sha256": { "type": "string" },
+        "response_sha256": { "type": "string" },
+        "operational_rationale": { "type": "string" }
+      }
+    },
+    "model_input_reference": { "type": "string" },
+    "model_output_reference": { "type": "string" },
+    "mode": { "type": "string", "enum": ["ACT", "EXPLORE", "VERIFY", "STOP", "RECONSIDER"] },
+    "selected_action_or_experiment": {
+      "type": "object",
+      "properties": {
+        "hypothesis": { "type": "string" },
+        "unknown_being_resolved": { "type": "string" },
+        "capability_id": { "type": "string" },
+        "arguments": { "type": "object" },
+        "expected_transition_if_supported": { "type": "object" },
+        "expected_transition_if_refuted": { "type": "object" },
+        "risk_level": { "type": "string" },
+        "is_reversible": { "type": "boolean" },
+        "verification_method": { "type": "string" }
+      }
+    },
+    "broker_verdict": {
+      "type": "object",
+      "properties": {
+        "action_id": { "type": "string" },
+        "category": { "type": "string" },
+        "status": { "type": "string" },
+        "verdict_reason": { "type": "string" }
+      }
+    },
+    "observed_transition": {
+      "type": "object",
+      "properties": {
+        "transition_verified": { "type": "boolean" },
+        "pre_state_hash": { "type": "string" },
+        "post_state_hash": { "type": "string" },
+        "status_transition": { "type": "string" },
+        "raw_observation_delta": { "type": "object" }
+      }
+    },
+    "postcondition_result": { "type": ["object", "null"] },
+    "Hermes_writes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "entity_name": { "type": "string" },
+          "affordance_name": { "type": "string" },
+          "status": { "type": "string" },
+          "confidence_before": { "type": "number" },
+          "confidence_after": { "type": "number" }
+        }
+      }
+    },
+    "confidence_changes": { "type": "object" },
+    "resource_delta": {
+      "type": "object",
+      "properties": {
+        "created": { "type": "array" },
+        "preserved": { "type": "array" },
+        "disposed": { "type": "array" }
+      }
+    },
+    "cleanup_state": { "type": "string" },
+    "final_task_outcome": { "type": "string" },
+    "evidence_class": { "type": "string", "enum": ["REAL_LOCAL_MODEL_INFERENCE", "REAL_COMPUTER_USE", "CAUSAL_PROVENANCE", "SOURCE_INTEGRATION"] },
+    "contamination_flags": {
+      "type": "object",
+      "properties": {
+        "harness_selected_action": { "type": "boolean" },
+        "fixture_model_response": { "type": "boolean" },
+        "contains_sensitive_data": { "type": "boolean" },
+        "eligible_for_training": { "type": "boolean" },
+        "holdout_reserved": { "type": "boolean" },
+        "contamination_reason": { "type": ["string", "null"] }
+      }
+    }
+  }
+}

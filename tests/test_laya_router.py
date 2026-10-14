@@ -34,6 +34,7 @@ def test_laya_router_construction():
 
 def test_laya_router_load_failure_resilience():
     """Verify graceful error recovery when model fails to load."""
+    pytest.importorskip("laya")
     router = LayaRouter(config={"enabled": True, "device": "cpu"})
     with patch("laya.load", side_effect=RuntimeError("CUDA out of memory")):
         dec = router.predict_intent("open my project")
@@ -44,6 +45,7 @@ def test_laya_router_load_failure_resilience():
 
 def test_laya_router_inference_exception_resilience():
     """Verify inference exceptions do not crash AstraRun."""
+    pytest.importorskip("laya")
     router = LayaRouter(config={"enabled": True, "device": "cpu"})
     mock_agent = MagicMock()
     mock_agent.predict.side_effect = ValueError("Corrupt tensor input")
@@ -57,6 +59,7 @@ def test_laya_router_inference_exception_resilience():
 
 def test_laya_router_intent_mapping():
     """Verify mapping from Laya choice output to AstraRun Decision."""
+    pytest.importorskip("laya")
     router = LayaRouter(config={"enabled": True, "device": "cpu"})
     mock_agent = MagicMock()
     
@@ -97,6 +100,7 @@ def test_laya_router_intent_mapping():
 
 def test_laya_confidence_preservation():
     """Verify full calibrated probability distribution is preserved."""
+    pytest.importorskip("laya")
     router = LayaRouter(config={"enabled": True, "device": "cpu"})
     mock_agent = MagicMock()
     raw_probs = {

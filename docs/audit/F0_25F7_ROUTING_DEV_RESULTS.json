@@ -1,0 +1,114 @@
+{
+  "phase": "F0-25F.7",
+  "benchmark": "F0-25F.7 1500-PROMPT ROUTING DEVELOPMENT BENCHMARK",
+  "total_evaluated": 1500,
+  "total_correct": 1500,
+  "accuracy_pct": 100.0,
+  "macro_f1": 1.0,
+  "dynamic_recall": 1.0,
+  "clarification_fp_rate": 0.0,
+  "clarification_fp_count": 0,
+  "blocked_false_executions": 0,
+  "duration_seconds": 2.03,
+  "labels": [
+    "CLARIFICATION_REQUIRED",
+    "COMPOSITE",
+    "CONVERSATIONAL",
+    "DYNAMIC_COMPUTATION",
+    "KNOWN_CAPABILITY",
+    "SECURITY_REJECTION"
+  ],
+  "confusion_matrix": [
+    [
+      200,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      250,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      250,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      350,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      350,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0,
+      100
+    ]
+  ],
+  "classification_report": {
+    "CLARIFICATION_REQUIRED": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1-score": 1.0,
+      "support": 200
+    },
+    "COMPOSITE": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1-score": 1.0,
+      "support": 250
+    },
+    "CONVERSATIONAL": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1-score": 1.0,
+      "support": 250
+    },
+    "DYNAMIC_COMPUTATION": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1-score": 1.0,
+      "support": 350
+    },
+    "KNOWN_CAPABILITY": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1-score": 1.0,
+      "support": 350
+    },
+    "SECURITY_REJECTION": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1-score": 1.0,
+      "support": 100
+    },
+    "macro avg": {
+      "f1-score": 1.0
+    }
+  },
+  "mismatches": [],
+  "verdict": "PASS"
+}

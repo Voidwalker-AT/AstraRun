@@ -1,0 +1,16 @@
+{
+  "auditor": "MiMo",
+  "message": "Failed to find real location of C:\\Users\\hp\\AppData\\Local\\Programs\\Python\\Python313\\python.exe",
+  "appears_in": [
+    "docs/audit/F0_25F1_RESOURCE_RESTORATION.json stdout",
+    "docs/audit/F0_25F1_CAUSAL_TRACE.json stdout"
+  ],
+  "emitting_process": "CPython 3.13 interpreter (python313.dll getpath initialization) running under AstraRun AppContainer/restricted token — NOT AstraRun source (zero hits in src/)",
+  "mechanism": "resolve_python_executable() in src/astrarun/core/paths.py prefers system LOCALAPPDATA python.exe; under restricted launch CPython cannot resolve its real path and prints the warning to the same stdout as program output",
+  "is_real_execution_defect": "ENVIRONMENT_WARNING + EVIDENCE_CONTAMINATION — execution continued (SUCCESS_FACTORIALS_WRITTEN / COMPUTATION_SUCCESS markers present); exit success still came from the intended governed sandbox path, but the interpreter is workstation CPython under ACL stress, not a fully isolated interpreter",
+  "fallback_execution": "Yes — CPython continues after the warning; program ran",
+  "governed_path": "SUPPORTED — sandbox manager still executes the candidate; warning is from child interpreter not from harness bypass",
+  "future_nondeterminism_risk": "MEDIUM — path resolution depends on ACLs/AV/python install layout; a harder failure mode could abort the child; oracles currently ignore warning lines",
+  "verdict": "PYTHON PATH ANOMALY = REAL WARNING, NON-FATAL, EVIDENCE-CONTAMINATING",
+  "classification": "FACT (message origin); INFERENCE (AppContainer ACL cause)"
+}

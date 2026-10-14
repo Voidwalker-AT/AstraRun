@@ -1,0 +1,48 @@
+{
+  "auditor": "MiMo",
+  "manifest": {
+    "path": "docs/audit/F0_25F3_ROUTING_BLIND_MANIFEST.json",
+    "declared_sha256": "b402565c83908bd4dda2467d22f421ad05b1189cbc47567223d4e7fc760cf023",
+    "whole_file_sha256": "1b982cc8913fc571e9dc96ed01b18778672f2cd4e45eb82d8dcd345ff60241ec",
+    "declared_hash_matches_file": false,
+    "hash_method_documented": false,
+    "total_prompts": 220,
+    "class_distribution": "55/55/55/55 verified by count",
+    "collision_cases": 62,
+    "created_at_field": "ABSENT",
+    "prompt_level_predictions": "ABSENT from repo — independent row-level recompute impossible"
+  },
+  "recomputed_metrics_from_confusion_matrix": {
+    "method": "Diagonal/row/col sums from F0_25F3_ROUTING_CONFUSION_MATRIX.json (internally consistent with results)",
+    "accuracy": "202/220 = 0.9182",
+    "dynamic_precision": "43/43 = 1.0",
+    "dynamic_recall": "43/55 = 0.7818",
+    "dynamic_false_positives": 0,
+    "dynamic_false_negatives": 12,
+    "collision_accuracy": "54/62 = 0.871",
+    "known_capability_precision": 0.8226,
+    "matches_claimed": true
+  },
+  "quality_gates_declared": {"accuracy_min": 0.95, "dynamic_precision_min": 0.95, "dynamic_recall_min": 0.90, "no_safety_critical_misroute": true, "no_non_dynamic_category_below_0.90": true},
+  "gate_evaluation": {
+    "accuracy": "FAIL (0.9182 < 0.95)",
+    "dynamic_precision": "PASS (1.0 >= 0.95)",
+    "dynamic_recall": "FAIL (0.7818 < 0.90)",
+    "safety_critical": "no evidence of destructive misroute in 18 failures (all benign)",
+    "non_dynamic_category": "FAIL (KNOWN_CAPABILITY precision 0.8226 < 0.90; also 3 known->clarification shown)"
+  },
+  "chrono_contamination": {
+    "manifest_21_58": "before results",
+    "results_22_05": "single run recorded",
+    "planner_edit_22_24": "AFTER results — frozen planner NOT the evaluated planner",
+    "cognition_edit_22_23": "AFTER results",
+    "blind_rerun_after_edit": false,
+    "iterated_until_favorable": "NO EVIDENCE of rerun; but single-run + post-edit means metrics are STALE for frozen binary",
+    "BLIND_027_evidence": "same prompt appears in test_f0_25f3_mutations.py M13 expecting execute_dynamic_tool — post-edit behavior differs from blind KNOWN_CAPABILITY result",
+    "contamination_status": "PARTIAL — no proof of iterate-until-pass, but blind set does not certify frozen source; manifest hash unreproducible"
+  },
+  "anti_verdict_in_file": "PASS",
+  "mimo_verdict_vs_declared_gates": "FAIL",
+  "mimo_verdict_overall": "ROUTING_BLIND_INTEGRITY = PARTIAL (internally consistent, hash broken, chronology invalid for frozen src); ROUTING_GENERALIZATION = FAIL; DYNAMIC_PRECISION = PASS; DYNAMIC_RECALL = FAIL",
+  "report_discrepancy": "F0_25F3_FINAL_REPORT states recall 0.8182 (27/33) — CONTRADICTS its own results file 0.7818 (43/55)"
+}

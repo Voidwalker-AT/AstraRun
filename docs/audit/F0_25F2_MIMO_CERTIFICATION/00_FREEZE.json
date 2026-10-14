@@ -1,0 +1,42 @@
+{
+  "auditor": "MiMo",
+  "phase": "F0-25F.2",
+  "frozen_at": "2026-10-12 (certification session)",
+  "git": {
+    "status_short_entries": 242,
+    "branch": "agent/anti-f0-24a1",
+    "head": "bd287eba38e6743565fdf6da21cb629023573c6b",
+    "diff_stat_summary": "56 files changed, 2336 insertions(+), 2974 deletions(-) (pre-existing dirty worktree; includes F0-25F.1 production changes by Anti)",
+    "diff_check": "src/astrarun/computer_use/ui/__init__.py:22: new blank line at EOF (STILL PRESENT — FACT, independently re-checked; F0-25F.1 baseline claim of this defect remains true)",
+    "working_tree_clean": false
+  },
+  "binaries": {
+    "dist": {"sha256": "444b667947c938232f2640c35218655b2cd006f0a169dc9d36c6a70022eceed4", "size": 12090828, "mtime": "2026-10-12 02:32:29"},
+    "installed": {"sha256": "444b667947c938232f2640c35218655b2cd006f0a169dc9d36c6a70022eceed4", "size": 12090828, "mtime": "2026-10-12 02:32:29"},
+    "identical": true,
+    "matches_f0_25f1_report_claim": true,
+    "note": "Independently hashed. Prior F0-25F binary was 2c59d0fe... (12,082,666 B) — F0-25F.1 rebuilt to 444b6679..."
+  },
+  "f0_25f1_evidence_hashes_sha256": {
+    "F0_25F1_FINAL_REPORT.md": "b46a81b4e39c88e7fbdcc5456c5546d9e6a67a5ba697c8acd0f869655eda43f2",
+    "F0_25F1_ACCEPTANCE_MATRIX.json": "a53e01407fd406adff1d087e9c6abf7b9b660a5d944894975e1ff7ea4501092f",
+    "F0_25F1_BASELINE.json": "b983c3f0cc8ae5776a3b2ef39f6ed772d061fb7d6a684401b97775d4b153461b",
+    "F0_25F1_BUILD_INSTALL.json": "836aaf8687f96dbc1c5fb0bec1056aa869d19e261256ff23bf68b8324a37e1b2",
+    "F0_25F1_CAUSAL_TRACE.json": "dfe31c8ad951d12d8220313e3207d2abf34806ef1dde4b8a9cc31b28e7556327",
+    "F0_25F1_GENERIC_REPAIR_RESULTS.json": "e10ed3610f6e332d55963af52883c66fefe6ccebdc281e9444d40cb773dee5da",
+    "F0_25F1_LAUNCHER_ORACLE_RESULTS.json": "f2c860b44c850ccb959c54645a436bd5cf4d7b64167a08a6ae94cc9357bcdefc",
+    "F0_25F1_MUTATION_RESULTS.json": "219fa0cbf3de20d26f70f39c6c455ea4dde067508e30c1136eef5b49e6d2e039",
+    "F0_25F1_PHYSICAL_RESULTS.json": "42f73937f38ac2e11383a52b3fb0a66b5fcce10fe1f2f2c26ed7a56a73da1654",
+    "F0_25F1_PRE_FIX_REPRODUCTIONS.json": "3cac80913877bc2295ab440922b7736bfdb809077ab5ee81312e6635d93fc062",
+    "F0_25F1_PRESENTATION_STATE_MODEL.json": "0b09f573731e7d4b5b8ae48724edd30c9140baae405b3ced0c470f948ff629da",
+    "F0_25F1_RESOURCE_LIFECYCLE_RESULTS.json": "aec28975342e641e7a4c95d8f9b1d1f0e800a9e7503f8cd06bfbded6161e6f84",
+    "F0_25F1_RESOURCE_RESTORATION.json": "0cf2cb443416f485b5482a8dfef56ca9ffe6839eaff8fc2a3f1006bb081cb73e",
+    "F0_25F1_ROUTING_HOLDOUT_MANIFEST.json": "81de5739776f00195040aec682ed4bb29c45f7ee46db45a16381e87c1104b62b",
+    "F0_25F1_ROUTING_RESULTS.json": "6fc409a36c1cfe07e76cbae6c5e15332befa952fab7454e54c7b37606ff4dba5",
+    "F0_25F1_SECURITY_RECOMPUTATION.json": "b6652d1516964239c52ae27b57ab40c77eb75e125e1bfcf01cfb8a6dce04fd4a",
+    "F0_25F1_SOURCE_FREEZE.json": "29510a4fb60d58097a3e396c5aa9c543f386159a662150da3801b8579cade263",
+    "F0_25F1_TELEMETRY_RESULTS.json": "c50e05ab67d66959f7b971177a2a037f0d6e7ef3a8eaee6b9d2ef10572a6f68f",
+    "F0_25F1_TEST_OUTPUT.txt": "5ac68d7ad0a16ef503f60494fd7551833a198a86a406d6b4c7149220173211b9"
+  },
+  "commitment": "MiMo will not mutate any listed file or any F0_25F1*/F0_25F_MIMO_REVIEW path."
+}

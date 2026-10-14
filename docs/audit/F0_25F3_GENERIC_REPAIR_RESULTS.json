@@ -1,0 +1,165 @@
+{
+  "benchmark": "SECTION_J_GENERIC_REPAIR_GENERALIZATION_HOLDOUT",
+  "total_programs": 8,
+  "repaired_successfully": 7,
+  "failed_repairs": 1,
+  "success_rate_pct": 87.5,
+  "security_escapes": 0,
+  "threshold_pct": 75.0,
+  "min_required_repairs": 6,
+  "results": [
+    {
+      "id": "REPAIR-01",
+      "category": "type_mismatch",
+      "goal": "Calculate total revenue by adding subtotal 120 and tax 15, then write result to report.txt",
+      "is_success": true,
+      "has_artifact": true,
+      "semantic_verified": true,
+      "semantic_value_extracted": "Total: 135",
+      "repair_attempts": 1,
+      "revisions_recorded": 3,
+      "artifacts_found": [
+        "C:\\Users\\hp\\AppData\\LocalLow\\AstraRun\\sandbox\\repair_holdout_repair_01_1791966369116\\report.txt",
+        "C:\\Users\\hp\\AppData\\LocalLow\\AstraRun\\sandbox\\repair_holdout_repair_01_1791966369116\\main.py"
+      ],
+      "expected_artifact": "report.txt",
+      "exit_code": 0,
+      "duration_sec": 2.08,
+      "final_source": "subtotal = 120\ntax = 15\ntotal = subtotal + tax\nwith open(\"report.txt\", \"w\", encoding=\"utf-8\") as f:\n    f.write(f\"Total: {total}\\n\")"
+    },
+    {
+      "id": "REPAIR-02",
+      "category": "missing_dict_key",
+      "goal": "Parse status dictionary and extract timestamp and message to log.txt",
+      "is_success": false,
+      "has_artifact": false,
+      "semantic_verified": false,
+      "semantic_value_extracted": null,
+      "repair_attempts": 1,
+      "revisions_recorded": 3,
+      "artifacts_found": [
+        "C:\\Users\\hp\\AppData\\LocalLow\\AstraRun\\sandbox\\repair_holdout_repair_02_1791966371201\\main.py"
+      ],
+      "expected_artifact": "log.txt",
+      "exit_code": 0,
+      "duration_sec": 2.67,
+      "final_source": "status_data = {\"time\": \"2026-10-06T12:00:00Z\", \"message\": \"All systems normal\"}\nts = status_data.get(\"timestamp\", None)\nmsg = status_data.get(\"message\", None)\nif ts is not None and msg is not None:\n    with open(\"log.txt\", \"w\", encoding=\"utf-8\") as f:\n        f.write(f\"[{ts}] {msg}\\n\")\nelse:\n    print(\"Error: Missing 'timestamp' or 'message' in status data.\")"
+    },
+    {
+      "id": "REPAIR-03",
+      "category": "off_by_one_index",
+      "goal": "Find the last item in the server list and write it to active.txt",
+      "is_success": true,
+      "has_artifact": true,
+      "semantic_verified": true,
+      "semantic_value_extracted": "cache-redis",
+      "repair_attempts": 1,
+      "revisions_recorded": 3,
+      "artifacts_found": [
+        "C:\\Users\\hp\\AppData\\LocalLow\\AstraRun\\sandbox\\repair_holdout_repair_03_1791966373869\\active.txt",
+        "C:\\Users\\hp\\AppData\\LocalLow\\AstraRun\\sandbox\\repair_holdout_repair_03_1791966373869\\main.py"
+      ],
+      "expected_artifact": "active.txt",
+      "exit_code": 0,
+      "duration_sec": 2.4,
+      "final_source": "servers = [\"web-01\", \"web-02\", \"db-primary\", \"cache-redis\"]\nif servers:  # Check if the list is not empty\n    last_server = servers[-1]  # Get the last item in the list\n    with open(\"active.txt\", \"w\", encoding=\"utf-8\") as f:\n        f.write(last_server + \"\\n\")\nelse:\n    print(\"The server list is empty.\")"
+    },
+    {
+      "id": "REPAIR-04",
+      "category": "unpacking_mismatch",
+      "goal": "Unpack pair of coordinates (x, y) and write formatted point to point.txt",
+      "is_success": true,
+      "has_artifact": true,
+      "semantic_verified": true,
+      "semantic_value_extracted": "Point(10, 20)",
+      "repair_attempts": 1,
+      "revisions_recorded": 3,
+      "artifacts_found": [
+        "C:\\Users\\hp\\AppData\\LocalLow\\AstraRun\\sandbox\\repair_holdout_repair_04_1791966376270\\point.txt",
+        "C:\\Users\\hp\\AppData\\LocalLow\\AstraRun\\sandbox\\repair_holdout_repair_04_1791966376270\\main.py"
+      ],
+      "expected_artifact": "point.txt",
+      "exit_code": 0,
+      "duration_sec": 1.81,
+      "final_source": "coords = (10, 20)\nx, y = coords\nwith open(\"point.txt\", \"w\", encoding=\"utf-8\") as f:\n    f.write(f\"Point({x}, {y})\\n\")"
+    },
+    {
+      "id": "REPAIR-05",
+      "category": "pathlib_str_concat",
+      "goal": "Construct full path to config.json in output directory and write default config",
+      "is_success": true,
+      "has_artifact": true,
+      "semantic_verified": true,
+      "semantic_value_extracted": {
+        "status": "ok"
+      },
+      "repair_attempts": 1,
+      "revisions_recorded": 3,
+      "artifacts_found": [
+        "C:\\Users\\hp\\AppData\\LocalLow\\AstraRun\\sandbox\\repair_holdout_repair_05_1791966378083\\config.json",
+        "C:\\Users\\hp\\AppData\\LocalLow\\AstraRun\\sandbox\\repair_holdout_repair_05_1791966378083\\main.py"
+      ],
+      "expected_artifact": "config.json",
+      "exit_code": 0,
+      "duration_sec": 1.72,
+      "final_source": "from pathlib import Path\nout_dir = Path(\".\")\nout_file = out_dir / \"config.json\"\nwith open(out_file, \"w\", encoding=\"utf-8\") as f:\n    f.write('{\"status\": \"ok\"}\\n')"
+    },
+    {
+      "id": "REPAIR-06",
+      "category": "bytes_str_encoding",
+      "goal": "Write binary signature bytes to signature.bin",
+      "is_success": true,
+      "has_artifact": true,
+      "semantic_verified": true,
+      "semantic_value_extracted": "bytes_len=8",
+      "repair_attempts": 1,
+      "revisions_recorded": 3,
+      "artifacts_found": [
+        "C:\\Users\\hp\\AppData\\LocalLow\\AstraRun\\sandbox\\repair_holdout_repair_06_1791966379811\\signature.bin",
+        "C:\\Users\\hp\\AppData\\LocalLow\\AstraRun\\sandbox\\repair_holdout_repair_06_1791966379811\\main.py"
+      ],
+      "expected_artifact": "signature.bin",
+      "exit_code": 0,
+      "duration_sec": 1.68,
+      "final_source": "import os, sys, math, struct, zlib, json, re; from pathlib import Path\n\nsig = b\"\\x89PNG\\r\\n\\x1a\\n\"\nwith open(\"signature.bin\", \"wb\") as f:\n    f.write(sig)"
+    },
+    {
+      "id": "REPAIR-07",
+      "category": "function_signature_mismatch",
+      "goal": "Format current timestamp using time.strftime and write to timestamp.txt",
+      "is_success": true,
+      "has_artifact": true,
+      "semantic_verified": true,
+      "semantic_value_extracted": "2026-10-14 13:56:23",
+      "repair_attempts": 1,
+      "revisions_recorded": 3,
+      "artifacts_found": [
+        "C:\\Users\\hp\\AppData\\LocalLow\\AstraRun\\sandbox\\repair_holdout_repair_07_1791966381494\\timestamp.txt",
+        "C:\\Users\\hp\\AppData\\LocalLow\\AstraRun\\sandbox\\repair_holdout_repair_07_1791966381494\\main.py"
+      ],
+      "expected_artifact": "timestamp.txt",
+      "exit_code": 0,
+      "duration_sec": 1.66,
+      "final_source": "import time\nts = time.strftime(\"%Y-%m-%d %H:%M:%S\")\nwith open(\"timestamp.txt\", \"w\", encoding=\"utf-8\") as f:\n    f.write(ts + \"\\n\")"
+    },
+    {
+      "id": "REPAIR-08",
+      "category": "semantic_assertion_logic",
+      "goal": "Compute sum of numbers 1 to 10 and verify it equals 55 in result.txt",
+      "is_success": true,
+      "has_artifact": true,
+      "semantic_verified": true,
+      "semantic_value_extracted": "55",
+      "repair_attempts": 1,
+      "revisions_recorded": 3,
+      "artifacts_found": [
+        "C:\\Users\\hp\\AppData\\LocalLow\\AstraRun\\sandbox\\repair_holdout_repair_08_1791966383176\\result.txt",
+        "C:\\Users\\hp\\AppData\\LocalLow\\AstraRun\\sandbox\\repair_holdout_repair_08_1791966383176\\main.py"
+      ],
+      "expected_artifact": "result.txt",
+      "exit_code": 0,
+      "duration_sec": 1.87,
+      "final_source": "total = sum(range(1, 11))  # Corrected the range to include 10\nassert total == 55, f\"Expected total 55 but got {total}\"\nwith open(\"result.txt\", \"w\", encoding=\"utf-8\") as f:\n    f.write(str(total) + \"\\n\")"
+    }
+  ]
+}

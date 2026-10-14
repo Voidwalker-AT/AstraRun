@@ -1,0 +1,45 @@
+============================= test session starts =============================
+platform win32 -- Python 3.13.0, pytest-9.1.1, pluggy-1.6.0 -- E:\Workspace\Agents\AstraRun-Anti\.venv\Scripts\python.exe
+cachedir: .pytest_cache
+rootdir: E:\Workspace\Agents\AstraRun-Anti
+configfile: pyproject.toml
+plugins: anyio-4.15.1
+collecting ... collected 35 items
+
+tests/unit/test_f0_25f1_mutations.py::test_m1_requested_only_presentation PASSED [  2%]
+tests/unit/test_f0_25f1_mutations.py::test_m2_hollow_presented_event PASSED [  5%]
+tests/unit/test_f0_25f1_mutations.py::test_m3_unrelated_explorer_window PASSED [  8%]
+tests/unit/test_f0_25f1_mutations.py::test_m4_file_exists_but_never_displayed PASSED [ 11%]
+tests/unit/test_f0_25f1_mutations.py::test_m5_black_screenshot_no_astra PASSED [ 14%]
+tests/unit/test_f0_25f1_mutations.py::test_m6_genuine_astra_launcher_under_lighter_pixels PASSED [ 17%]
+tests/unit/test_f0_25f1_mutations.py::test_m7_stale_or_wrong_hwnd PASSED [ 20%]
+tests/unit/test_f0_25f1_mutations.py::test_m8_cleanup_attempted_but_directory_remains PASSED [ 22%]
+tests/unit/test_f0_25f1_mutations.py::test_m9_ledger_says_closed_while_resource_remains PASSED [ 25%]
+tests/unit/test_f0_25f1_mutations.py::test_m10_prior_run_telemetry_contamination PASSED [ 28%]
+tests/unit/test_f0_25f1_mutations.py::test_m11_missing_broker_events_on_broker_requiring_task PASSED [ 31%]
+tests/unit/test_f0_25f1_mutations.py::test_m12_semantically_wrong_repair_artifact PASSED [ 34%]
+tests/unit/test_f0_25f1_mutations.py::test_m13_exact_prompt_routing_patch PASSED [ 37%]
+tests/unit/test_f0_25f1_mutations.py::test_m14_hardcoded_clean_termination PASSED [ 40%]
+tests/unit/test_f0_25f1_mutations.py::test_m15_hardcoded_zero_residue PASSED [ 42%]
+tests/unit/test_f0_25f1_mutations.py::test_m16_screenshot_captured_before_asynchronous_postcondition PASSED [ 45%]
+tests/unit/test_f0_25f1_mutations.py::test_m17_unrelated_pre_existing_viewer PASSED [ 48%]
+tests/unit/test_f0_25f1_mutations.py::test_m18_result_presented_emitted_before_observation PASSED [ 51%]
+tests/unit/test_f0_25f1_mutations.py::test_m19_telemetry_write_failure_surfaced PASSED [ 54%]
+tests/unit/test_f0_25f1_mutations.py::test_m20_missing_postcondition_followed_by_goal_completed PASSED [ 57%]
+tests/unit/test_f0_25f1_mutations.py::test_save_mutation_results PASSED  [ 60%]
+tests/unit/test_f0_25f_resource_ledger_sandbox.py::test_sandbox_dir_registration_and_auto_close PASSED [ 62%]
+tests/unit/test_f0_25f_resource_ledger_sandbox.py::test_sandbox_dir_preserve_on_failure PASSED [ 65%]
+tests/unit/test_f0_25f_resource_ledger_sandbox.py::test_cleanup_task_resources_cleans_sandbox PASSED [ 68%]
+tests/unit/test_f0_25f_evaluator_mutation.py::test_evaluator_fails_launcher_ui_when_zero_dark_pixels PASSED [ 71%]
+tests/unit/test_f0_25f_evaluator_mutation.py::test_evaluator_fails_progress_ui_when_zero_frames PASSED [ 74%]
+tests/unit/test_f0_25f_evaluator_mutation.py::test_evaluator_fails_output_presentation_when_unpresented PASSED [ 77%]
+tests/unit/test_f0_25f_evaluator_mutation.py::test_evaluator_fails_visible_terminal_when_unrequested_terminal_appears PASSED [ 80%]
+tests/unit/test_f0_25f_evaluator_mutation.py::test_evaluator_fails_resource_restoration_when_unmanaged_pid_leaks PASSED [ 82%]
+tests/unit/test_f0_25f_evaluator_mutation.py::test_evaluator_overall_verdict_cannot_pass_with_partial_or_fail PASSED [ 85%]
+tests/unit/test_generic_repair_holdout.py::test_generic_repair_generalization_holdout PASSED [ 88%]
+tests/unit/test_post_freeze_routing_holdout.py::test_post_freeze_70_prompt_routing_holdout PASSED [ 91%]
+tests/unit/test_execution_broker.py::test_passive_observation_allowed PASSED [ 94%]
+tests/unit/test_execution_broker.py::test_mutation_action_evaluated PASSED [ 97%]
+tests/unit/test_execution_broker.py::test_destructive_action_requires_confirmation PASSED [100%]
+
+======================== 35 passed in 92.79s (0:01:32) ========================

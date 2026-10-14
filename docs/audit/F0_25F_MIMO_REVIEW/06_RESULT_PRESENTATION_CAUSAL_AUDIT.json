@@ -1,0 +1,30 @@
+{
+  "auditor": "MiMo",
+  "primary_stop_condition": true,
+  "user_request": "show me the result",
+  "chain": [
+    {"arrow": "USER REQUEST", "evidence": "run file line 1 REQUEST_RECEIVED data.query='show me the result'", "status": "FACT"},
+    {"arrow": "RESULT_PRESENTATION_REQUESTED", "evidence": "run file line 4 cev_1791739411231_2f8627 target=E:\\AstraDogfood\\word_frequency mode=auto", "status": "FACT"},
+    {"arrow": "presentation capability invocation", "evidence": "app.py:604-639 regex router -> present_result(target, mode='auto'); result_presentation.py:39 emits REQUESTED then proceeds", "status": "SUPPORTED"},
+    {"arrow": "OS/UI action", "evidence": "mechanism=explorer; explorer.exe /select or path Popen (result_presentation.py:92-94); success set on Popen alone (L95-96)", "status": "SUPPORTED (process launch)"},
+    {"arrow": "visible viewer/result", "evidence": "F0_25F_PHYSICAL_PRESENTATION.png (sha a5e6f710...): MiMo visual inspection shows ONLY Antigravity running the verifier task — NO Explorer window, NO Notepad, NO launcher, NO file selection UI anywhere", "status": "CONTRADICTED by pixels"},
+    {"arrow": "independent observation", "evidence": "MiMo personal inspection of PHYSICAL_PRESENTATION.png; Stage6 never analyzed the screenshot it captured (verify script L143-145 unused for verdict)", "status": "NOT OBSERVED"},
+    {"arrow": "RESULT_PRESENTED", "evidence": "run file line 5 cev_1791739414304_865f06: mechanism=explorer, verified_hwnd=NULL, verified_pid=22948, verified_title='' — attestation of the presented window FAILED but event still emitted (result_presentation.py:187-199 emits unconditionally on path reaching L187)", "status": "EMITTED BUT HOLLOW"},
+    {"arrow": "GOAL_COMPLETED SUCCESS", "evidence": "run file line 6 'Revealed in File Explorer: ...' — self-report, no hwnd/title proof", "status": "SELF-REPORT"}
+  ],
+  "report_vs_reality": {
+    "report_claim": "Result Presentation: PASS (RESULT_PRESENTATION_REQUESTED recorded in telemetry) [REPAIR_REPORT L106]",
+    "report_also_claims": "OUTPUT_PRESENTATION requires RESULT_PRESENTED [L75]",
+    "evaluator_actual": "accepts RESULT_PRESENTED OR RESULT_PRESENTATION_REQUESTED (f0_25e_evaluator.py:425-427)",
+    "stage6_actual": "assert accepts PRESENTED or REQUESTED (verify_f0_25f_complete_physical.py:153)",
+    "stage6_json_actual": "listed only REQUESTED (snapshot race)",
+    "contradiction": "PASS was justified by REQUESTED; PRESENTED event is hollow; physical viewer never observed"
+  },
+  "additional_defects": [
+    "present_result summary path: attest_window_visibility() called WITHOUT required hwnd arg -> TypeError -> except sets success=True (result_presentation.py:121-133)",
+    "window discovery accepts ANY new visible titled window as the presentation window (L146-153)",
+    "explorer/viewer registered NEVER_CLOSE in resource ledger (L181) — residue risk"
+  ],
+  "verdict": "OUTPUT_PRESENTATION = FAIL",
+  "verdict_rationale": "Per directive 6: if the physical postcondition was not affirmatively observed, FAIL. The screenshot shows no viewer; the PRESENTED event carries no verified hwnd/title; the report PASS rests on REQUESTED. File-exists and explorer-launched are not user-saw-result."
+}

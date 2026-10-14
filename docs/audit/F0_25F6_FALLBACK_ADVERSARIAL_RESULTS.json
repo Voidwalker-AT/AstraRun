@@ -1,0 +1,131 @@
+{
+  "phase": "F0-25F.6",
+  "benchmark": "STAGE 7 \u2014 FALLBACK ADVERSARIAL MATRIX",
+  "total_scenarios": 20,
+  "scenarios_passed": 20,
+  "scenarios_failed": 0,
+  "pass_rate_pct": 100.0,
+  "scenarios": [
+    {
+      "id": 1,
+      "name": "preferred_model_unavailable",
+      "status": "PASS",
+      "action": "SELECT_ALTERNATIVE_MODEL"
+    },
+    {
+      "id": 2,
+      "name": "malformed_model_json",
+      "status": "PASS",
+      "action": "FALLBACK_TO_DETERMINISTIC_METHOD"
+    },
+    {
+      "id": 3,
+      "name": "capability_missing",
+      "status": "PASS",
+      "action": "SELECT_ALTERNATIVE_CAPABILITY"
+    },
+    {
+      "id": 4,
+      "name": "capability_throws_exception",
+      "status": "PASS",
+      "action": "REPLAN"
+    },
+    {
+      "id": 5,
+      "name": "target_disappears",
+      "status": "PASS",
+      "action": "RETRY_WITH_NEW_OBSERVATION"
+    },
+    {
+      "id": 6,
+      "name": "wrong_foreground_window",
+      "status": "PASS",
+      "action": "RETRY_WITH_NEW_OBSERVATION"
+    },
+    {
+      "id": 7,
+      "name": "stale_hwnd",
+      "status": "PASS",
+      "action": "RETRY_WITH_NEW_OBSERVATION"
+    },
+    {
+      "id": 8,
+      "name": "ui_changes_after_planning",
+      "status": "PASS",
+      "action": "REPLAN"
+    },
+    {
+      "id": 9,
+      "name": "file_created_in_wrong_directory",
+      "status": "PASS",
+      "action": "REPLAN"
+    },
+    {
+      "id": 10,
+      "name": "partial_file_written",
+      "status": "PASS",
+      "action": "REPLAN"
+    },
+    {
+      "id": 11,
+      "name": "output_semantically_wrong",
+      "status": "PASS",
+      "action": "REPLAN"
+    },
+    {
+      "id": 12,
+      "name": "result_exists_but_not_presented",
+      "status": "PASS",
+      "action": "REPLAN"
+    },
+    {
+      "id": 13,
+      "name": "cleanup_fails",
+      "status": "PASS",
+      "action": "CLEANUP_AND_FAIL"
+    },
+    {
+      "id": 14,
+      "name": "subprocess_survives",
+      "status": "PASS",
+      "action": "CLEANUP_AND_FAIL"
+    },
+    {
+      "id": 15,
+      "name": "user_takes_over",
+      "status": "PASS",
+      "action": "PAUSE_FOR_USER"
+    },
+    {
+      "id": 16,
+      "name": "policy_blocks_preferred_path",
+      "status": "PASS",
+      "action": "FAIL_CLOSED"
+    },
+    {
+      "id": 17,
+      "name": "fallback_path_is_also_blocked",
+      "status": "PASS",
+      "action": "FAIL_CLOSED"
+    },
+    {
+      "id": 18,
+      "name": "repeated_failure_loop",
+      "status": "PASS",
+      "action": "CYCLE_TERMINATED"
+    },
+    {
+      "id": 19,
+      "name": "observation_sensor_fails",
+      "status": "PASS",
+      "action": "RETRY_WITH_NEW_OBSERVATION"
+    },
+    {
+      "id": 20,
+      "name": "verification_oracle_crashes",
+      "status": "PASS",
+      "action": "REPLAN"
+    }
+  ],
+  "verdict": "PASS"
+}

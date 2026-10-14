@@ -1,0 +1,108 @@
+{
+  "phase": "F0-25F.5",
+  "title": "Phase F0-25F.5 Regression & Routing Release Closure Report",
+  "timestamp": 1791918800.0,
+  "verdict": "PARTIAL",
+  "verdict_formula": "F0-25F.5 REGRESSION & ROUTING RELEASE CLOSURE = PARTIAL",
+  "verdict_rationale": "All 50 historical regressions cleared honestly with 0 test failures (969 passed, 0 failed, 14 skipped). Frozen binary built and installed with verified SHA-256 parity. Physical non-Fibonacci agentic artifact task executed end-to-end on installed binary with zero leaked processes/windows and full process hygiene. However, the frozen 500-prompt blind routing holdout scored 91.40% accuracy against the >= 95% release gate due to conservative clarification routing. Per contract, evidence truth outranks getting PASS and no holdout rerun is permitted.",
+  "regression_suite": {
+    "total_collected": 983,
+    "passed": 969,
+    "failed": 0,
+    "skipped": 14,
+    "historical_regressions_cleared": 50,
+    "verdict": "PASS",
+    "evidence_file": "docs/audit/F0_25F5_REGRESSION_RESULTS.json"
+  },
+  "routing_evaluation": {
+    "engine": "ContextSufficiencyEngine",
+    "dev_set": {
+      "total": 110,
+      "passed": 110,
+      "accuracy": 1.0,
+      "macro_f1": 1.0,
+      "destructive_false_execution": 0,
+      "ungrounded_reference_execution": 0
+    },
+    "blind_holdout": {
+      "manifest_sha256": "35108d3f7e17cbd0a16222f98548e99d1c4831472fa81cbcb0bfcd09e304910a",
+      "total_prompts": 500,
+      "correct_predictions": 457,
+      "overall_accuracy": 0.914,
+      "overall_accuracy_gate": 0.95,
+      "overall_accuracy_passed": false,
+      "macro_f1": 0.9161,
+      "macro_f1_gate": 0.94,
+      "macro_f1_passed": false,
+      "destructive_false_execution": 0,
+      "destructive_false_execution_gate": 0,
+      "destructive_false_execution_passed": true,
+      "ungrounded_reference_execution": 0,
+      "ungrounded_reference_execution_gate": 0,
+      "ungrounded_reference_execution_passed": true,
+      "categories": {
+        "DYNAMIC_COMPUTATION": {
+          "precision": 0.97,
+          "recall": 0.97,
+          "f1": 0.97,
+          "gate_passed": true
+        },
+        "COMPOSITE": {
+          "precision": 0.9684,
+          "recall": 0.92,
+          "f1": 0.9436,
+          "gate_passed": true
+        },
+        "CONVERSATIONAL": {
+          "precision": 0.9495,
+          "recall": 0.94,
+          "f1": 0.9447,
+          "gate_passed": true
+        },
+        "KNOWN_CAPABILITY": {
+          "precision": 0.9615,
+          "recall": 0.75,
+          "f1": 0.8427,
+          "gate_passed": false,
+          "note": "25 prompts conservatively routed to clarification rather than false execution"
+        },
+        "CLARIFICATION_REQUIRED": {
+          "precision": 0.7874,
+          "recall": 1.0,
+          "f1": 0.8811,
+          "gate_passed": false,
+          "note": "Elevated false positives due to fail-safe conservatism"
+        }
+      },
+      "holdout_protocol": "Frozen manifest executed exactly once. Zero post-hoc repairs or reruns."
+    }
+  },
+  "frozen_binary_build": {
+    "dist_exe": "E:\\Workspace\\Agents\\AstraRun-Anti\\dist\\AstraRun\\AstraRun.exe",
+    "install_exe": "C:\\Users\\hp\\AppData\\Local\\Programs\\AstraRun\\AstraRun.exe",
+    "sha256": "4eaeeb0b5f77adfd93d5fd6244ffffa7b92f67ca0b3c242c45c738f943d22aa2",
+    "size_bytes": 12135827,
+    "binary_parity_verified": true,
+    "verdict": "PASS"
+  },
+  "physical_acceptance": {
+    "task_prompt": "open notepad type hello and save it to desktop with name test1.txt",
+    "task_type": "NON_FIBONACCI_AGENTIC_ARTIFACT",
+    "launcher_verified": true,
+    "launcher_hwnd": 461428,
+    "agent_task_id": "task_fc6d9e39",
+    "agent_task_status": "COMPLETED",
+    "steps_executed": 3,
+    "artifact_verified": true,
+    "artifact_path": "C:\\Users\\hp\\Desktop\\test1.txt",
+    "artifact_sha256": "2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824",
+    "artifact_content": "hello",
+    "process_hygiene": {
+      "clean_pids": true,
+      "clean_hwnds": true,
+      "lingering_notepads": 0,
+      "lingering_astrarun": 0
+    },
+    "verdict": "PASS"
+  }
+}

@@ -203,9 +203,9 @@ def test_holdout_class_02_csv_data_transform(qwen_server):
         "os.path.join(os.environ['ASTRARUN_WORKSPACE_DIR'], 'source', 'raw_inventory.csv'). "
         "Filter for items where category == 'Electronics' OR int(quantity) >= 30. "
         "Calculate 'total_value' as float(unit_price) * int(quantity) for each matched item. "
-        "Write the filtered rows using csv.writer or csv.DictWriter(..., extrasaction='ignore') "
-        "with header [sku,item_name,category,total_value] to 'inventory_summary.csv' "
+        "Write the filtered rows with header [sku,item_name,category,total_value] to 'inventory_summary.csv' "
         "inside the directory specified by os.environ['ASTRARUN_OUTPUT_DIR']. "
+        "If using csv.DictWriter, you MUST specify extrasaction='ignore' so extra fields from the input are ignored. "
         "Output ONLY the python code in ```python ``` blocks. Do not include markdown commentary."
     )
     raw, latency_ms, p_hash, r_hash = run_qwen_inference(qwen_server, prompt)
@@ -331,6 +331,7 @@ def test_holdout_class_03_statistics_summary(qwen_server):
 
 def test_holdout_class_04_2d_visualization_spec(qwen_server):
     """Class 4: 2D declarative visualization spec generation + trusted render."""
+    pytest.importorskip("matplotlib")
     prompt = (
         "Write a pure Python script that generates a 2D line chart visualization spec in JSON format. "
         "The spec must be written to 'line_chart_spec.json' in os.environ['ASTRARUN_OUTPUT_DIR']. "
@@ -413,6 +414,7 @@ def test_holdout_class_04_2d_visualization_spec(qwen_server):
 
 def test_holdout_class_05_3d_visualization_spec(qwen_server):
     """Class 5: 3D visualization declarative surface spec generation + trusted render."""
+    pytest.importorskip("matplotlib")
     prompt = (
         "Write a pure Python script that generates a 3D surface mesh visualization spec in JSON format. "
         "The spec must be written to 'surface_3d_spec.json' inside os.environ['ASTRARUN_OUTPUT_DIR']. "
@@ -499,6 +501,7 @@ def test_holdout_class_05_3d_visualization_spec(qwen_server):
 
 def test_holdout_class_06_multistep_workflow(qwen_server):
     """Class 6: Multi-step workflow (compute -> render spec -> reveal)."""
+    pytest.importorskip("matplotlib")
     prompt = (
         "Write a pure Python script implementing a multi-step analytical workflow: "
         "Step 1: Compute compound monthly investment balance at the end of each month for months 1 to 6, starting with principal 1000 and 1% monthly interest (recording exactly 6 float balances, one for each month 1 through 6). "

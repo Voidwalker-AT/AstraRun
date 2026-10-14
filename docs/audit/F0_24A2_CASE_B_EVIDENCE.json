@@ -1,0 +1,80 @@
+{
+  "case_id": "CASE_B",
+  "prompt": "open notepad type hello and save it to desktop with name test2.txt",
+  "task_id": "task_304cc1a2",
+  "task_status": "COMPLETED",
+  "duration_seconds": 7.43,
+  "steps": [
+    {
+      "capability": "open_application",
+      "arguments": {
+        "app": "notepad"
+      },
+      "success": true,
+      "message": "Application 'notepad' launched successfully (PID=15104, HWND=11472040)."
+    },
+    {
+      "capability": "type_into_window",
+      "arguments": {
+        "text": "hello",
+        "app_name": "notepad"
+      },
+      "success": true,
+      "message": "Entered 5 characters."
+    },
+    {
+      "capability": "save_document_via_ui",
+      "arguments": {
+        "app_name": "notepad",
+        "filename": "test2.txt",
+        "path": "C:\\Users\\hp\\Desktop\\test2.txt",
+        "folder": "Desktop",
+        "text": "hello",
+        "content": "hello"
+      },
+      "success": true,
+      "message": "Document successfully saved via application UI to 'C:\\Users\\hp\\Desktop\\test2.txt'."
+    }
+  ],
+  "artifact": {
+    "path": "C:\\Users\\hp\\Desktop\\test2.txt",
+    "exists": true,
+    "size_bytes": 5,
+    "content": "hello",
+    "sha256": "2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824",
+    "semantic_match": true
+  },
+  "pre_existing_preservation": {
+    "initial_user_pids": [
+      6264,
+      18624
+    ],
+    "retained_user_pids": [
+      6264,
+      18624
+    ],
+    "user_application_preserved": true
+  },
+  "cleanup": {
+    "task_id": "task_304cc1a2",
+    "cleaned_count": 1,
+    "preserved_count": 0,
+    "detached_count": 0,
+    "failed_count": 0,
+    "remaining_active_resources": 0,
+    "resources_owned": true,
+    "process_cleanup_required": true,
+    "process_residue_measured": true,
+    "window_residue_measured": true,
+    "ledger_residue_measured": true,
+    "process_cleaned_up": true,
+    "cleanup_executed": true,
+    "cleanup_exception": null,
+    "orphaned_processes": 0,
+    "orphaned_windows": 0,
+    "active_ledger_resources": 0,
+    "clean": true,
+    "verdict": "PASS_CLEAN"
+  },
+  "overall_success": true
+}

@@ -2,10 +2,10 @@
   "milestone": "F0_24A",
   "stage": 15,
   "title": "Source Runtime vs Frozen Executable Parity Verification",
-  "timestamp": "2026-10-10T06:29:23.629334+00:00",
+  "timestamp": "2026-10-10T19:24:17.670003+00:00",
   "source_execution": {
-    "runtime": "e:\\Workspace\\Active\\AstraRun\\.venv\\Scripts\\python.exe",
-    "duration_sec": 13.25,
+    "runtime": "E:\\Workspace\\Agents\\AstraRun-Anti\\.venv\\Scripts\\python.exe",
+    "duration_sec": 10.198,
     "exit_code": 0,
     "artifact_path": "C:\\Users\\hp\\Desktop\\test1_source_parity.txt",
     "artifact_exists": true,
@@ -15,7 +15,7 @@
   },
   "frozen_execution": {
     "binary_path": "C:\\Users\\hp\\AppData\\Local\\Programs\\AstraRun\\AstraRun.exe",
-    "duration_sec": 12.604,
+    "duration_sec": 13.012,
     "exit_code": 0,
     "artifact_path": "C:\\Users\\hp\\Desktop\\test1_frozen_parity.txt",
     "artifact_exists": true,

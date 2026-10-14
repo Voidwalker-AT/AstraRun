@@ -140,27 +140,43 @@ class GoalPlanner:
         objective = "GENERAL_TASK"
 
         # 1. Target artifact & location extraction
-        fmatch = re.search(r'\b([a-zA-Z0-9_\-]+\.(?:txt|html|json|csv|md|py|xml|log|pdf|png|sha|toml|docx))\b', clean, re.I)
-        target_artifact = fmatch.group(1) if fmatch else None
-
-        locmatch = re.search(r'\b(?:on|in|to)\s+(?:the\s+|my\s+)?(Desktop|Downloads|Documents|Temp)\b', clean, re.I)
-        target_location = locmatch.group(1).capitalize() if locmatch else None
-
+        abs_file_match = re.search(r'([A-Za-z]:\\[^\r\n,;\"\'\s]+\.[a-zA-Z0-9_]+)', clean)
         full_path = None
-        if target_artifact:
-            if ":" in target_artifact:
-                full_path = target_artifact
-            elif target_location == "Desktop":
-                full_path = str(Path.home() / "Desktop" / target_artifact)
-            elif target_location == "Downloads":
-                full_path = str(Path.home() / "Downloads" / target_artifact)
-            elif target_location == "Documents":
-                full_path = str(Path.home() / "Documents" / target_artifact)
-            elif target_location == "Temp":
-                from astrarun.core.paths import AstraPaths
-                full_path = str(AstraPaths.temp_dir() / target_artifact)
-            else:
-                full_path = str(Path.home() / "Desktop" / target_artifact) if "desktop" in clean.lower() else target_artifact
+        target_artifact = None
+        target_location = None
+
+        if abs_file_match:
+            abs_p = Path(abs_file_match.group(1).strip())
+            full_path = str(abs_p)
+            target_artifact = abs_p.name
+            target_location = str(abs_p.parent)
+        else:
+            fmatch = re.search(r'\b([a-zA-Z0-9_\-]+\.(?:txt|html|json|csv|md|py|xml|log|pdf|png|sha|toml|docx))\b', clean, re.I)
+            target_artifact = fmatch.group(1) if fmatch else None
+
+            locmatch = re.search(r'\b(?:on|in|to)\s+(?:the\s+|my\s+)?(Desktop|Downloads|Documents|Temp)\b', clean, re.I)
+            target_location = locmatch.group(1).capitalize() if locmatch else None
+            if not target_location:
+                dirmatch = re.search(r'\b(?:under|in|into|at|to)\s*:?\s*([A-Za-z]:\\[a-zA-Z0-9_\-\\]+)', clean, re.I)
+                if dirmatch:
+                    target_location = dirmatch.group(1).strip()
+
+            if target_artifact:
+                if ":" in target_artifact:
+                    full_path = target_artifact
+                elif target_location == "Desktop":
+                    full_path = str(Path.home() / "Desktop" / target_artifact)
+                elif target_location == "Downloads":
+                    full_path = str(Path.home() / "Downloads" / target_artifact)
+                elif target_location == "Documents":
+                    full_path = str(Path.home() / "Documents" / target_artifact)
+                elif target_location == "Temp":
+                    from astrarun.core.paths import AstraPaths
+                    full_path = str(AstraPaths.temp_dir() / target_artifact)
+                elif target_location and ":" in target_location:
+                    full_path = str(Path(target_location) / target_artifact)
+                else:
+                    full_path = str(Path.home() / "Desktop" / target_artifact) if "desktop" in clean.lower() else target_artifact
 
         # 2. Content / payload extraction
         qmatch = re.search(r'["\']([^"\']+)["\']', clean)
@@ -180,18 +196,27 @@ class GoalPlanner:
                     if pmatch:
                         required_content = pmatch.group(1).strip()
                     else:
-                        rmatch = re.search(r'\b(?:reverse\s+(?:text\s+)?|hash\s+of\s+|hash\s+for\s+)(.+?)$', clean, re.I)
+                        rmatch = re.search(r'\b(?:reverse\s+(?:text\s+)?|hash\s+of\s+|hash\s+for\s+)([^;\r\n]+?)(?=\s*,\s*(?:then|and|save)|\s+(?:and|save|then|to|in|into|on|as|\.|$)|,|;|$)', clean, re.I)
                         if rmatch:
                             required_content = rmatch.group(1).strip()
 
         # 3. Application extraction
-        appmatch = re.search(r'\b(?:open|launch|start|run|close|use|execute)\s+(?:a\s+suitable\s+)?(?:text\s+)?([a-zA-Z0-9_\-\s]+?)(?=\s+(?:and|then|with|to|type|write|save|as|on|in|into|for|,|;|\.|$)|,|;|\.|$)', clean, re.I)
+        appmatch = re.search(r'\b(?:open|launch|start|run|close|use|execute)\s+(?:a\s+suitable\s+)?(?:text\s+)?([a-zA-Z0-9_\-\+\s]+?)(?=\s+(?:and|then|with|to|type|write|save|as|on|in|into|for|,|;|\.|$)|,|;|\.|$)', clean, re.I)
         target_application = None
         if appmatch:
             candidate_app = appmatch.group(1).strip()
             candidate_app = re.sub(r'^(?:the\s+|an?\s+|up\s+)', '', candidate_app, flags=re.I).strip()
-            candidate_app = re.sub(r'\s+(?:application|app|tool|window|console|utility|editor)$', '', candidate_app, flags=re.I).strip()
-            if candidate_app and candidate_app.lower() not in ('a', 'the', 'an', 'file', 'document', 'url', 'wifi', 'it', 'battery report', 'battery'):
+            excluded_apps = (
+                'a', 'the', 'an', 'file', 'document', 'url', 'wifi', 'it', 'battery report', 'battery', 'windows',
+                'program', 'script', 'code', 'solution', 'tests', 'test', 'command', 'cli', 'suite', 'task',
+                'executable', 'query', 'calculation', 'simulation', 'whatever', 'whatever tools', 'tools', 'tool',
+                'result', 'sample', 'action', 'actions', 'pipeline', 'workflow', 'fallback', 'job', 'routine',
+                'step', 'steps', 'computation', 'algorithm', 'method', 'procedure'
+            )
+            cand_lower = candidate_app.lower()
+            if candidate_app and cand_lower not in excluded_apps and not any(term in cand_lower for term in (
+                "action", "pipeline", "workflow", "fallback", "job", "routine", "task", "solution", "simulation", "computation", "algorithm"
+            )):
                 target_application = candidate_app
 
         # 4. Wi-Fi extraction
@@ -202,8 +227,82 @@ class GoalPlanner:
 
         # 5. Objective classification & predicate construction
         clean_lower = clean.lower()
-        has_doc_intent = target_artifact or bool(re.search(r'\b(?:save|document|write|create\s+file|save\s+file|put)\b', clean_lower))
-        if has_doc_intent:
+        dynamic_compute_pattern = (
+            r'\b(?:python\s+(?:program|script|code)|program\s+that|script\s+that|dynamic|algorithm|'
+            r'monte\s+carlo|calculate|frequencies|counts?\s+words?|work\s+out|solve|roots|quadratic|'
+            r'equation|formula|compute|simulation|collatz|prime|regression|orbital|fibonacci|'
+            r'summary\s+table|summary\s+report|parse\s+log|extract\s+metrics|aggregate|events|'
+            r'transform\s+dataset|tabular\s+csv|visualiz|histogram|scatter\s+plot|determinant|'
+            r'bar\s+chart|line\s+chart|heatmap|chart)\b'
+        )
+        has_code_intent = bool(re.search(dynamic_compute_pattern, clean_lower))
+        has_doc_intent = not has_code_intent and (target_artifact or bool(re.search(r'\b(?:save|saves|saving|saved|document|write|writes|writing|create\s+file|save\s+file|put)\b', clean_lower)))
+        if has_code_intent:
+            objective = "DYNAMIC_COMPUTATION"
+            if target_location:
+                entities["location"] = target_location
+                constraints.append(SemanticConstraint(
+                    constraint_type=ConstraintType.OUTPUT_LOCATION,
+                    description=f"Output location {target_location}",
+                    target_key="location",
+                    expected_value=target_location,
+                    is_mandatory=True,
+                ))
+            if target_artifact:
+                entities["artifact"] = target_artifact
+                constraints.append(SemanticConstraint(
+                    constraint_type=ConstraintType.TARGET_ARTIFACT,
+                    description=f"Artifact named {target_artifact}",
+                    target_key="artifact",
+                    expected_value=target_artifact,
+                    is_mandatory=True,
+                ))
+            if required_content:
+                entities["payload"] = required_content
+                entities["content"] = required_content
+                constraints.append(SemanticConstraint(
+                    constraint_type=ConstraintType.REQUIRED_CONTENT,
+                    description=f"Payload or content '{required_content}'",
+                    target_key="content",
+                    expected_value=required_content,
+                    is_mandatory=True,
+                ))
+                constraints.append(SemanticConstraint(
+                    constraint_type=ConstraintType.REQUIRED_CONTENT,
+                    description=f"Payload or content '{required_content}'",
+                    target_key="payload",
+                    expected_value=required_content,
+                    is_mandatory=True,
+                ))
+            if full_path:
+                entities["target_path"] = full_path
+                acceptance_predicates.append(GoalPredicate(
+                    predicate_type=PredicateType.FILE_EXISTS,
+                    description=f"File exists at {full_path}",
+                    parameters={"path": full_path},
+                    is_mandatory=True,
+                ))
+                acceptance_predicates.append(GoalPredicate(
+                    predicate_type=PredicateType.FILE_NON_EMPTY,
+                    description=f"File is non-empty at {full_path}",
+                    parameters={"path": full_path},
+                    is_mandatory=True,
+                ))
+                if required_content:
+                    expected_file_content = required_content[::-1] if "reverse" in clean_lower else required_content
+                    acceptance_predicates.append(GoalPredicate(
+                        predicate_type=PredicateType.FILE_CONTENT_CONTAINS,
+                        description=f"File contains '{expected_file_content}'",
+                        parameters={"path": full_path, "contains": expected_file_content},
+                        is_mandatory=True,
+                    ))
+            acceptance_predicates.append(GoalPredicate(
+                predicate_type=PredicateType.DATA_COMPUTED,
+                description="Dynamic program execution and result verified",
+                parameters={"location": target_location} if target_location else {},
+                is_mandatory=True,
+            ))
+        elif has_doc_intent:
             objective = "PRODUCE_DOCUMENT"
             if target_artifact:
                 entities["artifact"] = target_artifact
@@ -256,10 +355,11 @@ class GoalPlanner:
                     is_mandatory=True,
                 ))
                 if required_content:
+                    expected_file_content = required_content[::-1] if "reverse" in clean_lower else required_content
                     acceptance_predicates.append(GoalPredicate(
                         predicate_type=PredicateType.FILE_CONTENT_CONTAINS,
-                        description=f"File contains '{required_content}'",
-                        parameters={"path": full_path, "contains": required_content},
+                        description=f"File contains '{expected_file_content}'",
+                        parameters={"path": full_path, "contains": expected_file_content},
                         is_mandatory=True,
                     ))
 
@@ -297,6 +397,21 @@ class GoalPlanner:
                 parameters={"app": target_application},
                 is_mandatory=True,
             ))
+            if required_content:
+                entities["content"] = required_content
+                constraints.append(SemanticConstraint(
+                    constraint_type=ConstraintType.REQUIRED_CONTENT,
+                    description=f"Required interaction text '{required_content}'",
+                    target_key="content",
+                    expected_value=required_content,
+                    is_mandatory=True,
+                ))
+                acceptance_predicates.append(GoalPredicate(
+                    predicate_type=PredicateType.DATA_COMPUTED,
+                    description=f"Interactive content '{required_content}' delivered to {target_application}",
+                    parameters={"payload": required_content, "app": target_application},
+                    is_mandatory=True,
+                ))
 
         elif required_content and any(w in clean_lower for w in ("reverse", "hash", "count words", "format")):
             objective = "DYNAMIC_COMPUTATION"
@@ -319,8 +434,9 @@ class GoalPlanner:
         interaction_requirement = InteractionRequirement.DIRECT_RESULT_ALLOWED
         if target_application or bool(re.search(r'\b(?:open|launch|start|run|in|using|with)\s+(?:notepad|editor|wordpad|calc|calculator|paint|word|excel|chrome|edge|firefox|browser|terminal|powershell|cmd)\b', clean_lower)) or bool(re.search(r'\btype\s+(?:into|in)\b', clean_lower)):
             interaction_requirement = InteractionRequirement.APPLICATION_UI_REQUIRED
-        elif bool(re.search(r'\b(?:browser|url|website|web\s+page|browse|navigate\s+to|search\s+for)\b', clean_lower)):
-            interaction_requirement = InteractionRequirement.BROWSER_UI_REQUIRED
+        if any(w in clean_lower for w in ("reveal the file", "show in explorer", "reveal in explorer", "show file", "open folder", "open in explorer", "show me the useful result", "show me the result", "show result", "reveal")):
+            entities["reveal_result"] = True
+            entities["presentation_requested"] = True
 
         return GoalContract(
             original_utterance=clean,
@@ -510,18 +626,27 @@ class GoalPlanner:
         # =====================================================================
         clean_lower = clean.lower()
 
-        # 0. Security Policy Gate (Authoritative Fail-Closed Rejection)
-        # Destructive or malicious system requests rejected immediately by policy
-        destructive_patterns = (
-            "format c:", "format drive", "delete system32", "rm -rf /",
-            "drop database", "download malware", "wipe disk", "wipe drive",
-            "shred disk", "destroy system", "delete c:\\windows", "erase hard drive"
-        )
-        if any(w in clean_lower for w in destructive_patterns):
+        # 0. Context-Sufficiency & Intent Clarity Assessment
+        from astrarun.routing.context_sufficiency import ContextSufficiencyEngine, RoutingClassification
+
+        sufficiency = ContextSufficiencyEngine.evaluate(clean, active_context=goal.parameters)
+
+        # 0A. Security Policy Gate (Authoritative Fail-Closed Rejection)
+        if sufficiency.classification == RoutingClassification.SECURITY_REJECTION:
             goal.intent = "security_denial"
             goal.parameters["routing_tier"] = "SECURITY_REJECTION"
             goal.parameters["routing_source"] = "SECURITY_POLICY"
-            goal.parameters["rejection_reason"] = "Destructive system operation rejected by policy."
+            goal.parameters["rejection_reason"] = sufficiency.reason
+            self._infer_success_criteria(goal)
+            return goal
+
+        # 0B. Clarification Gate (Bare nouns, ungrounded referents, nonsense fail-closed)
+        if sufficiency.classification == RoutingClassification.CLARIFICATION_REQUIRED:
+            goal.intent = "needs_clarification"
+            goal.parameters["routing_tier"] = "CLARIFICATION"
+            goal.parameters["routing_source"] = "CONTEXT_SUFFICIENCY"
+            goal.parameters["clarification_reason"] = sufficiency.reason
+            goal.parameters["missing_parameters"] = sufficiency.missing_parameters
             self._infer_success_criteria(goal)
             return goal
 
@@ -534,20 +659,8 @@ class GoalPlanner:
             self._infer_success_criteria(goal)
             return goal
 
-        # Tier 4: Clarification when intent is short and underspecified
-        if len(clean.split()) <= 2 and clean_lower in ("hello", "hi", "help", "what", "test", "do something", "who are you", "run", "inspect", "start", "check"):
-            goal.intent = "needs_clarification"
-            goal.parameters["routing_tier"] = "CLARIFICATION"
-            goal.parameters["routing_source"] = "CLARIFICATION"
-            self._infer_success_criteria(goal)
-            return goal
-
         # Delegation Check: External AI Advisor Routing
-        is_delegated_task = (
-            any(w in clean_lower for w in ("chatgpt", "claude", "gemini", "external ai", "delegate", "consult delegate", "advisor"))
-            or ("ask" in clean_lower and any(w in clean_lower for w in ("chatgpt", "ai", "advisor", "external")))
-        )
-        if is_delegated_task:
+        if sufficiency.classification == RoutingClassification.DELEGATE_EXTERNAL_AI:
             goal.intent = "consult_delegate"
             goal.parameters["goal"] = clean
             goal.parameters["routing_tier"] = "LOCAL_MODEL"
@@ -562,28 +675,111 @@ class GoalPlanner:
             self._infer_success_criteria(goal)
             return goal
 
+        # Conversational / Inquiry / Advice / Trivia Check
+        if sufficiency.classification == RoutingClassification.CONVERSATIONAL:
+            goal.intent = "conversational_dialogue"
+            goal.parameters["goal"] = clean
+            goal.parameters["routing_tier"] = "LOCAL_MODEL"
+            goal.parameters["requires_code"] = False
+            self._infer_success_criteria(goal)
+            return goal
+
+        # Dynamic Computation / Transformation Check from Sufficiency Engine
+        if sufficiency.classification == RoutingClassification.DYNAMIC_COMPUTATION:
+            goal.intent = "execute_dynamic_tool"
+            goal.parameters["goal"] = clean
+            goal.parameters["routing_tier"] = "LOCAL_MODEL"
+            goal.parameters["requires_code"] = True
+            goal.parameters["reveal_result"] = any(w in clean_lower for w in ("reveal the file", "show in explorer", "reveal in explorer", "show file", "open folder", "open in explorer", "show me the useful result", "show me the result", "show result"))
+            goal.parameters["reveal_type"] = "reveal_file" if any(w in clean_lower for w in ("reveal", "explorer", "folder")) else "open_file"
+            self._infer_success_criteria(goal)
+            return goal
+
+        # Composite Workflow Check from Sufficiency Engine
+        if sufficiency.classification == RoutingClassification.COMPOSITE:
+            valid_sub_goals = [sg for sg in sub_goals if sg.get("capability_id")]
+            goal.intent = "composite_dag_workflow"
+            goal.parameters["routing_tier"] = "SEMANTIC_RETRIEVAL"
+            goal.parameters["routing_source"] = "COMPOSITE_PIPELINE"
+            for sg in valid_sub_goals:
+                for k in ("path", "output_path", "ssid", "query"):
+                    if k in sg.get("arguments", {}) and k not in goal.parameters:
+                        goal.parameters[k] = sg["arguments"][k]
+            self._infer_success_criteria(goal)
+            return goal
+
+        # Direct App Launch / Directory Open Check (Guarded against composite workflows)
+        if not any(c in clean_lower for c in (" and ", " then ", ";")):
+            app_launch_match = re.match(r"^(?:open|launch|start)\s+([a-zA-Z0-9_\-\s\.\+]+)$", clean_lower)
+            known_apps = (
+                "notepad", "calculator", "calc", "visual studio code", "vs code", "code",
+                "vivaldi", "browser", "windows terminal", "terminal", "wt", "cmd", "command prompt",
+                "powershell", "task manager", "file explorer", "explorer", "edge",
+                "control panel", "device manager", "disk management", "registry editor",
+                "settings", "taskbar settings", "services manager", "character map",
+                "downloads folder", "desktop directory", "documents folder", "date and time settings",
+                "sound settings", "display settings", "bluetooth settings", "installed apps list",
+                "default apps settings", "clipboard settings", "storage settings", "network connections"
+            )
+            if app_launch_match and any(app_launch_match.group(1).strip() == a or app_launch_match.group(1).strip().startswith(a) for a in known_apps):
+                target_app = app_launch_match.group(1).strip()
+                goal.intent = "open_application"
+                goal.parameters["app"] = target_app
+                goal.parameters["routing_tier"] = "SEMANTIC_RETRIEVAL"
+                goal.parameters["routing_source"] = "SEMANTIC"
+                self._infer_success_criteria(goal)
+                return goal
+
+        # Explicit Known Capability from Sufficiency Engine
+        if sufficiency.classification == RoutingClassification.KNOWN_CAPABILITY:
+            valid_sub_goals = [sg for sg in sub_goals if sg.get("capability_id")]
+            chosen_cap = sufficiency.target_capability or (valid_sub_goals[0]["capability_id"] if valid_sub_goals else None)
+            if chosen_cap and self.registry.has_capability(chosen_cap):
+                goal.intent = chosen_cap
+                goal.parameters.update(sufficiency.extracted_parameters)
+                goal.parameters["routing_tier"] = "SEMANTIC_RETRIEVAL"
+                goal.parameters["routing_source"] = "CONTEXT_SUFFICIENCY"
+                for sg in valid_sub_goals:
+                    for k in ("path", "output_path", "filename", "folder", "app"):
+                        if k in sg.get("arguments", {}) and k not in goal.parameters:
+                            goal.parameters[k] = sg["arguments"][k]
+                self._infer_success_criteria(goal)
+                return goal
+
         # Tier 1: Semantic capability retrieval for existing discrete capabilities
         valid_sub_goals = [sg for sg in sub_goals if sg.get("capability_id")]
         unresolved_sub_goals = [sg for sg in sub_goals if not sg.get("capability_id")]
 
-        explicit_code_words = (
-            "script", "python", "code", "csv", "json", "plot", "graph",
-            "histogram", "calculate", "simulation", "monte carlo", "visualiz",
-            "table", "dataset", "organize", "turn this", "convert this", "chart",
-            "bar", "parse", "log", "heatmap", "equation", "roots", "work out", "solve"
+        # Genuine computational domain terms (avoid single generic unigrams like 'code', 'plot', 'table', 'log')
+        comp_domains = (
+            "eigenvalue", "eigenvalues", "polynomial", "roots of", "random walk",
+            "double pendulum", "lotka-volterra", "monte carlo", "collatz", "fibonacci",
+            "three-body", "numerical integration", "simpson's rule", "heat diffusion",
+            "fourier transform", "fft", "dijkstra", "brownian motion", "markov chain",
+            "mandelbrot", "game of life", "singular value decomposition", "svd",
+            "poisson equation", "geodesic distance", "autocorrelation", "cellular automaton",
+            "pagerank", "chi-square", "pareto front", "prim's algorithm", "linear regression",
+            "write a script", "write python script", "generate script", "run script",
+            "synthetic time-series", "correlation matrix", "histogram bin table", "frequency histogram",
+            "determinant", "prime factorization", "checksum", "sha256",
+            "lu decomposition", "cholesky", "qr decomposition", "linear equations",
+            "rolling standard deviation", "variance", "volatility",
+            "convex hull", "graham scan", "voronoi", "delaunay", "k-means", "clustered data",
+            "kernel panic", "stack traces", "iostat", "auth.log", "app.log", "nested json",
+            "commits per author", "git log", "python program", "python script", "create a python",
+            "program that generates", "3d visualization", "visualization of"
         )
-        is_explicit_code = any(w in clean_lower for w in explicit_code_words)
+        is_explicit_code = any(w in clean_lower for w in comp_domains) or (
+            bool(re.search(r'\b(?:parse|extract|aggregate|transform|compile|convert|turn|merge|organize|generate|flatten)\b', clean_lower)) and (
+                any(ext in clean_lower for ext in (".json", ".csv", ".txt", ".log"))
+                or any(kw in clean_lower for kw in ("dataset", "server log", "payload", "summary table", "report table", "test files", "login events", "orders", "commits", "metrics", "exceptions"))
+            )
+        ) or bool(re.search(r'\bgenerate\s+(?:a\s+)?(?:\d+x\d+\s+)?(?:random\s+)?(?:maze|grid|synthetic|mandelbrot|matrix|dataset|distribution|scatter\s+plot|histogram)\b', clean_lower)) or bool(re.search(r'\b(?:plot|render|generate|create|make)\s+(?:a\s+)?(?:\d+[dD]\s+)?(?:scatter\s+plot|line\s+chart|bar\s+chart|histogram|heatmap|chart|plot|visualization|surface\s+plot)\b', clean_lower)) or bool(re.search(r'\b(?:visualiz\w*|plot\w*)\s+(?:memory|cpu|activity|temperature|sales|revenue|expenses|scores|readings|function|3d)\b', clean_lower)) or bool(re.search(r'\b(?:python\s+(?:program|script|code)|program\s+that|script\s+that|create\s+(?:a\s+)?python|write\s+(?:a\s+)?python)\b', clean_lower))
 
-        inquiry_starters = (
-            "why ", "what is ", "what does ", "what was ", "can you explain",
-            "could you explain", "how does ", "how do i ", "help me decide",
-            "tell me about "
-        )
-        is_inquiry = clean_lower.startswith(inquiry_starters) or clean_lower.endswith("?") or any(w in clean_lower for w in ("acting weird", "went wrong", "which project to work on", "what we were doing yesterday", "difference between"))
-
-        if not is_inquiry and not is_explicit_code and len(valid_sub_goals) == 1 and not unresolved_sub_goals:
+        if not is_explicit_code and len(valid_sub_goals) == 1 and not unresolved_sub_goals:
             top_score = valid_sub_goals[0].get("score", 0.0)
-            if top_score >= 0.50:
+            min_score = 0.30 if getattr(goal.contract, "objective", "") == "PRODUCE_DOCUMENT" else 0.50
+            if top_score >= min_score:
                 goal.intent = valid_sub_goals[0]["capability_id"]
                 goal.parameters.update(valid_sub_goals[0]["arguments"])
                 goal.parameters["routing_tier"] = "SEMANTIC_RETRIEVAL"
@@ -592,7 +788,7 @@ class GoalPlanner:
                 return goal
 
         # Composite multi-step workflow via existing discrete capabilities
-        if not is_inquiry and not is_explicit_code and len(valid_sub_goals) > 1 and not unresolved_sub_goals:
+        if not is_explicit_code and len(valid_sub_goals) > 1 and not unresolved_sub_goals:
             # If the primary action produces the target report file directly (e.g. generate_battery_report),
             # prefer the dedicated capability only when battery is explicitly requested
             if any(sg.get("capability_id") == "generate_battery_report" for sg in valid_sub_goals) and "battery" in clean_lower:
@@ -632,7 +828,15 @@ class GoalPlanner:
         # {intent_class, candidate_capabilities, confidence, reason, requires_code}
         available_cap_ids = [c.id for c in self.registry.list_capabilities()]
         reasoner_result = None
-        if self.model_service:
+        has_running_backend = (
+            self.model_service
+            and hasattr(self.model_service, "supervisor")
+            and (
+                self.model_service.supervisor.is_running(ModelRole.FAST)
+                or self.model_service.supervisor.is_running(ModelRole.DEEP)
+            )
+        )
+        if has_running_backend:
             try:
                 reasoner_result = self.model_service.classify_intent_reasoner(
                     clean, available_capabilities=available_cap_ids, context=goal.parameters
@@ -716,7 +920,7 @@ class GoalPlanner:
             goal.intent = "execute_dynamic_tool"
             goal.parameters["goal"] = clean
             goal.parameters["routing_tier"] = "LOCAL_MODEL"
-            goal.parameters["reveal_result"] = any(w in clean_lower for w in ("reveal the file", "show in explorer", "reveal in explorer", "show file", "open folder", "open in explorer"))
+            goal.parameters["reveal_result"] = any(w in clean_lower for w in ("reveal the file", "show in explorer", "reveal in explorer", "show file", "open folder", "open in explorer", "show me the useful result", "show me the result", "show result"))
             goal.parameters["reveal_type"] = "reveal_file" if any(w in clean_lower for w in ("reveal", "explorer", "folder")) else "open_file"
             self._infer_success_criteria(goal)
             return goal
@@ -776,6 +980,26 @@ class GoalPlanner:
                 logger.debug("RAG context synthesis in planner error: %s", err)
 
         if goal.intent == "consult_delegate":
+            contract = getattr(goal, "contract", None)
+            strat = VerifierStrategy.FILE_NON_EMPTY
+            strat_params: dict[str, Any] = {}
+            if contract:
+                for p in contract.acceptance_predicates:
+                    pt = p.predicate_type.value if hasattr(p.predicate_type, "value") else str(p.predicate_type)
+                    if pt in ("FILE_CONTENT_CONTAINS", "FILE_NON_EMPTY", "FILE_EXISTS"):
+                        strat = VerifierStrategy(pt)
+                        strat_params = dict(p.parameters)
+                        break
+            if not strat_params and goal.parameters.get("path"):
+                strat_params = {"path": goal.parameters["path"]}
+
+            del_satisfies = [PredicateType.DATA_COMPUTED.value]
+            if contract:
+                for p in contract.acceptance_predicates:
+                    pt = p.predicate_type.value if hasattr(p.predicate_type, "value") else str(p.predicate_type)
+                    if pt not in del_satisfies:
+                        del_satisfies.append(pt)
+
             step_1 = PlanStep(
                 step_id="step_1",
                 capability_id="consult_delegate",
@@ -787,21 +1011,22 @@ class GoalPlanner:
                 description="Consult external AI advisor in an authoritative closed-loop orchestration cycle",
                 human_label="Orchestrate delegated AI session and empirical verification",
                 interaction_tier=InteractionTier.TIER_B_STRUCTURED_CLI,
-                verifier_strategy=VerifierStrategy.RETURN_CODE_ONLY,
+                verifier_strategy=strat,
+                verifier_params=strat_params,
+                satisfies_predicates=del_satisfies,
             )
             plan.steps.append(step_1)
 
             if goal.parameters.get("reveal_result"):
-                reveal_cap = goal.parameters.get("reveal_type", "open_file")
                 step_2 = PlanStep(
                     step_id="step_2",
-                    capability_id=reveal_cap,
-                    arguments={"path": OutputReference(step_id="step_1", field="artifact")},
+                    capability_id="present_result",
+                    arguments={"target": OutputReference(step_id="step_1", field="artifact")},
                     dependencies=[StepDependency(step_id="step_1")],
-                    description=f"{reveal_cap.replace('_', ' ').title()} output artifact",
+                    description="Present output artifact to user",
                     human_label="Show finished artifact",
                     interaction_tier=InteractionTier.TIER_A_NATIVE,
-                    verifier_strategy=VerifierStrategy.RETURN_CODE_ONLY,
+                    verifier_strategy=VerifierStrategy.WINDOW_READY,
                 )
                 plan.steps.append(step_2)
 
@@ -810,28 +1035,63 @@ class GoalPlanner:
             return plan
 
         if goal.intent == "execute_dynamic_tool":
+            contract = getattr(goal, "contract", None)
+            strat = VerifierStrategy.FILE_NON_EMPTY
+            strat_params: dict[str, Any] = {}
+            if contract:
+                for p in contract.acceptance_predicates:
+                    pt = p.predicate_type.value if hasattr(p.predicate_type, "value") else str(p.predicate_type)
+                    if pt == "FILE_CONTENT_CONTAINS":
+                        strat = VerifierStrategy.FILE_CONTAINS
+                        strat_params = dict(p.parameters)
+                        break
+                    elif pt in ("FILE_NON_EMPTY", "FILE_EXISTS"):
+                        strat = VerifierStrategy(pt)
+                        strat_params = dict(p.parameters)
+            if not strat_params and goal.parameters.get("path"):
+                strat_params = {"path": goal.parameters["path"]}
+
+            step_args: dict[str, Any] = {"goal": goal.parameters.get("goal", goal.raw_prompt)}
+            if goal.parameters.get("filename"):
+                step_args["filename"] = goal.parameters["filename"]
+            if goal.parameters.get("path"):
+                step_args["path"] = goal.parameters["path"]
+            elif contract and contract.target_artifact:
+                step_args["filename"] = contract.target_artifact
+                step_args["path"] = strat_params.get("path", contract.target_artifact)
+            elif strat_params.get("path"):
+                step_args["path"] = strat_params["path"]
+
+            dyn_satisfies = [PredicateType.DATA_COMPUTED.value]
+            if contract:
+                for p in contract.acceptance_predicates:
+                    pt = p.predicate_type.value if hasattr(p.predicate_type, "value") else str(p.predicate_type)
+                    if pt not in dyn_satisfies:
+                        dyn_satisfies.append(pt)
+
             step_1 = PlanStep(
                 step_id="step_1",
                 capability_id="execute_dynamic_tool",
-                arguments={"goal": goal.parameters.get("goal", goal.raw_prompt)},
+                arguments=step_args,
                 description="Synthesize, inspect, execute, and self-repair dynamic Python program in contained execution workspace",
                 human_label="Synthesize and run dynamic Python program",
                 interaction_tier=InteractionTier.TIER_B_STRUCTURED_CLI,
-                verifier_strategy=VerifierStrategy.RETURN_CODE_ONLY,
+                verifier_strategy=strat,
+                verifier_params=strat_params,
+                satisfies_predicates=dyn_satisfies,
             )
             plan.steps.append(step_1)
 
             if goal.parameters.get("reveal_result"):
-                reveal_cap = goal.parameters.get("reveal_type", "open_file")
                 step_2 = PlanStep(
                     step_id="step_2",
-                    capability_id=reveal_cap,
-                    arguments={"path": OutputReference(step_id="step_1", field="artifact")},
+                    capability_id="present_result",
+                    arguments={"target": OutputReference(step_id="step_1", field="artifact")},
                     dependencies=[StepDependency(step_id="step_1")],
-                    description=f"{reveal_cap.replace('_', ' ').title()} output artifact",
+                    description="Present output artifact to user",
                     human_label="Show finished visualization artifact",
                     interaction_tier=InteractionTier.TIER_A_NATIVE,
-                    verifier_strategy=VerifierStrategy.RETURN_CODE_ONLY,
+                    verifier_strategy=VerifierStrategy.WINDOW_READY,
                 )
                 plan.steps.append(step_2)
 
@@ -950,35 +1210,38 @@ class GoalPlanner:
 
         target_alt = alternative_capability_id
         if not target_alt:
-            entry = self.indexer.get_entry(failed_step.capability_id)
-            domains = " ".join(entry.domains) if entry else failed_step.capability_id
-            candidates = self.indexer.retrieve(domains, top_k=10)
+            if failed_step.capability_id == "consult_delegate":
+                target_alt = "execute_dynamic_tool"
+            else:
+                entry = self.indexer.get_entry(failed_step.capability_id)
+                domains = " ".join(entry.domains) if entry else failed_step.capability_id
+                candidates = self.indexer.retrieve(domains, top_k=10)
 
-            for c in candidates:
-                if c.capability_id == failed_step.capability_id:
-                    continue
-
-                cand_schema = self.registry.get_capability_schema(c.capability_id)
-                cand_effects = getattr(cand_schema, "side_effects", []) if cand_schema else []
-                effect_names = [e.value if hasattr(e, "value") else str(e) for e in cand_effects]
-
-                # Goal-directed filter:
-                if requires_file_production:
-                    # Replacement MUST create or modify files; READ_ONLY capabilities (open_folder, reveal_file) are REJECTED!
-                    if not any(e in ("CREATES_FILE", "MODIFIES_FILE") for e in effect_names):
-                        logger.debug("Replanner rejecting '%s': cannot satisfy file production predicates", c.capability_id)
+                for c in candidates:
+                    if c.capability_id == failed_step.capability_id:
                         continue
 
-                if requires_app_launch:
-                    if not any(e in ("SPAWNS_PROCESS", "MODIFIES_WINDOW", "SYSTEM_STATE") for e in effect_names):
-                        continue
+                    cand_schema = self.registry.get_capability_schema(c.capability_id)
+                    cand_effects = getattr(cand_schema, "side_effects", []) if cand_schema else []
+                    effect_names = [e.value if hasattr(e, "value") else str(e) for e in cand_effects]
 
-                if requires_network:
-                    if "NETWORK_STATE" not in effect_names:
-                        continue
+                    # Goal-directed filter:
+                    if requires_file_production:
+                        # Replacement MUST create or modify files; READ_ONLY capabilities (open_folder, reveal_file) are REJECTED!
+                        if not any(e in ("CREATES_FILE", "MODIFIES_FILE") for e in effect_names):
+                            logger.debug("Replanner rejecting '%s': cannot satisfy file production predicates", c.capability_id)
+                            continue
 
-                target_alt = c.capability_id
-                break
+                    if requires_app_launch:
+                        if not any(e in ("SPAWNS_PROCESS", "MODIFIES_WINDOW", "SYSTEM_STATE") for e in effect_names):
+                            continue
+
+                    if requires_network:
+                        if "NETWORK_STATE" not in effect_names:
+                            continue
+
+                    target_alt = c.capability_id
+                    break
 
         # Check if requested alternative satisfies the predicate requirement
         if target_alt:
@@ -1050,11 +1313,11 @@ class GoalPlanner:
                 continue
             # If clause begins with in-page target ("find the section", etc.) or relative display target
             if clauses and re.match(
-                r"^(?:into|in|find\s+(?:the\s+)?section\b|navigate\s+to\s+(?:the\s+)?section\b|scroll\s+to\b|search\s+for\s+section\b)\b",
+                r"^(?:into|in|open\s+windows\b|find\s+(?:the\s+)?section\b|navigate\s+to\s+(?:the\s+)?section\b|scroll\s+to\b|search\s+for\s+section\b)\b",
                 c,
                 re.IGNORECASE,
             ):
-                clauses[-1] = f"{clauses[-1]} and {c}"
+                clauses[-1] = f"{clauses[-1]} {c}"
             elif clauses and re.match(r"^(?:show\s+(?:me\s+)?(?:the\s+)?file|reveal\s+(?:the\s+)?file)\b", c, re.IGNORECASE):
                 if any(w in clauses[-1].lower() for w in ("explorer", "folder", "open")):
                     clauses[-1] = f"{clauses[-1]} and {c}"
@@ -1192,7 +1455,7 @@ class GoalPlanner:
                     args["ssid"] = ssid
 
         # 5. App Name extraction
-        app_match = re.search(r"\b(?:application|app|is|focus|open|launch|start|close|find)(?:\s+application|\s+app)?\s+([a-zA-Z0-9_\-]+)(?:\s+running)?\b", clause, re.IGNORECASE)
+        app_match = re.search(r"\b(?:application|app|is|focus|open|launch|start|close|find)(?:\s+application|\s+app)?\s+([a-zA-Z0-9_\-\+]+)(?:\s+running)?\b", clause, re.IGNORECASE)
         if app_match:
             matched_app = app_match.group(1).strip()
             if matched_app.lower() not in ("application", "app", "the", "a", "is", "for", "with", "all", "running", "file", "process", "window", "wifi"):
@@ -1204,6 +1467,14 @@ class GoalPlanner:
                     args["app_name"] = matched_app
                 if "query" in args_schema:
                     args["query"] = matched_app
+
+        # 5b. Target extraction for UI clicks and control interaction
+        if "target" in args_schema or cap_id in ("click_ui_element", "focus_ui_element", "toggle_ui_element", "select_ui_element"):
+            click_match = re.search(r"\b(?:click|press|tap|invoke|select|focus|toggle)\s+(?:on\s+)?(?:the\s+)?(?:button\s+)?([^\r\n,;]+?)(?:\s+button|\s+in\s+|\s+on\s+|$)", clause, re.IGNORECASE)
+            if click_match:
+                tgt = click_match.group(1).strip()
+                if tgt.lower() not in ("it", "the", "a", "button", "ui", "element"):
+                    args["target"] = tgt
 
         # 6. Process name query
         proc_match = re.search(r"\bfind\s+process\s+([a-zA-Z0-9_\-]+)\b", clause, re.IGNORECASE)
@@ -1241,15 +1512,27 @@ class GoalPlanner:
         schema = self.registry.get_capability_schema(cap_id) if hasattr(self.registry, "get_capability_schema") else None
 
         tier = getattr(schema, "interaction_tier", getattr(cap, "interaction_tier", InteractionTier.TIER_A_NATIVE))
-        verifier = getattr(schema, "verifier_strategy", getattr(cap, "verifier_strategy", VerifierStrategy.RETURN_CODE_ONLY))
-        if cap_id == "generate_battery_report":
-            tier = InteractionTier.TIER_B_STRUCTURED_CLI
-            verifier = VerifierStrategy.FILE_NON_EMPTY
-        elif cap_id == "wifi_connect":
-            verifier = VerifierStrategy.NETWORK_SSID
-        elif cap_id in ("type_text", "type_into_window"):
-            tier = InteractionTier.TIER_C_UI_AUTOMATION
-            verifier = VerifierStrategy.UI_ELEMENT_STATE
+        verifier = getattr(schema, "verifier_strategy", getattr(cap, "verifier_strategy", None))
+        if not verifier or verifier == VerifierStrategy.RETURN_CODE_ONLY:
+            if cap_id in ("save_text_file", "save_document_via_ui"):
+                tier = InteractionTier.TIER_C_UI_AUTOMATION if cap_id == "save_document_via_ui" else InteractionTier.TIER_A_NATIVE
+                content = arguments.get("content") or arguments.get("text")
+                verifier = VerifierStrategy.FILE_CONTAINS if content else VerifierStrategy.FILE_NON_EMPTY
+            elif cap_id in ("type_text", "type_into_window", "click_ui_element", "set_ui_element_value", "toggle_ui_element", "select_ui_element"):
+                tier = InteractionTier.TIER_C_UI_AUTOMATION
+                verifier = VerifierStrategy.UI_ELEMENT_STATE
+            elif cap_id in ("open_application", "open_app", "focus_application"):
+                tier = InteractionTier.TIER_A_NATIVE
+                verifier = VerifierStrategy.WINDOW_READY
+            elif cap_id in ("close_application", "close_app"):
+                verifier = VerifierStrategy.PROCESS_EXIT
+            elif cap_id == "generate_battery_report":
+                tier = InteractionTier.TIER_B_STRUCTURED_CLI
+                verifier = VerifierStrategy.FILE_NON_EMPTY
+            elif cap_id == "wifi_connect":
+                verifier = VerifierStrategy.NETWORK_SSID
+            elif verifier is None:
+                verifier = VerifierStrategy.RETURN_CODE_ONLY
         desc = getattr(cap, "description", f"Execute {cap_id}")
 
         # Human label derivation for user HUD
@@ -1284,7 +1567,7 @@ class GoalPlanner:
             satisfies_preds = [PredicateType.APPLICATION_RUNNING.value, PredicateType.WINDOW_ACTIVE.value]
             effects = ["SPAWNS_PROCESS", "MODIFIES_WINDOW"]
         elif cap_id in ("type_text", "type_into_window"):
-            satisfies_preds = ["DOCUMENT_CONTENT_WRITTEN"]
+            satisfies_preds = ["DOCUMENT_CONTENT_WRITTEN", PredicateType.DATA_COMPUTED.value]
             requires_preds = [PredicateType.WINDOW_ACTIVE.value]
             effects = ["WRITES_CONTENT", "MODIFIES_WINDOW"]
         elif cap_id in ("save_text_file", "save_document_via_ui"):
@@ -1354,7 +1637,7 @@ class GoalPlanner:
         text_payload = None
         saved_file_path = None
         for step in steps:
-            if step.capability_id in ("type_text", "type_into_window", "reverse_text"):
+            if step.capability_id in ("type_text", "type_into_window"):
                 text_payload = step.arguments.get("text")
             elif step.capability_id in ("save_text_file", "save_document_via_ui"):
                 if not step.arguments.get("text") and not step.arguments.get("content") and text_payload:
@@ -1375,9 +1658,14 @@ class GoalPlanner:
                         if not step.arguments.get("text"):
                             step.arguments["text"] = content_val
                     elif step.capability_id in ("save_text_file", "save_document_via_ui"):
-                        if not step.arguments.get("text") and not step.arguments.get("content"):
-                            step.arguments["text"] = content_val
-                            step.arguments["content"] = content_val
+                        preceding_transform = any(
+                            s.capability_id in ("reverse_text", "calculate_hash", "count_words") or "reverse" in s.capability_id
+                            for s in steps[:steps.index(step)]
+                        )
+                        if not preceding_transform:
+                            if not step.arguments.get("text") and not step.arguments.get("content"):
+                                step.arguments["text"] = content_val
+                                step.arguments["content"] = content_val
 
             req_artifact = contract.get_constraint("artifact") or contract.get_constraint("filename") or contract.get_constraint("target_artifact")
             if req_artifact and req_artifact.expected_value:

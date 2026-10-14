@@ -63,3 +63,24 @@ f0_*_prompt.txt
 
 # Ad-hoc frozen-product verification output
 test1_frozen_result.json
+
+# Historical/local PyInstaller phase build directories
+build_f0*/
+build_f025f1/
+
+# Local audit databases
+docs/audit/*.db
+
+# Python/PyInstaller generated package intermediates
+*.pkg
+*.pyz
+
+# Generated workstation-agent dogfood projects
+projects/
+
+# Ad-hoc one-off diagnostic helpers
+scripts/detail_*.py
+scripts/dump_details.py
+scripts/inspect_*.py
+scripts/print_all.py
+scripts/print_msgs.py

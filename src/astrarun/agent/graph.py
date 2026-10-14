@@ -140,10 +140,10 @@ class ExecutionGraph:
                             resolved_val = next(iter(ref_step.result.data.values()))
 
                 if resolved_val is not None:
-                    step.arguments[arg_name] = str(resolved_val)
+                    step.arguments[arg_name] = resolved_val
                     step.argument_bindings[arg_name] = ArgumentBinding(
                         parameter=arg_name,
-                        value=str(resolved_val),
+                        value=resolved_val,
                         source_type=ArgumentSourceType.PREVIOUS_STEP,
                         source_reference=f"{arg_val.step_id}.{arg_val.field}",
                         confidence=1.0,

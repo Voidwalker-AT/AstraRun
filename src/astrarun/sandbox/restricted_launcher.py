@@ -354,8 +354,9 @@ class RestrictedWorkerLauncher:
 
         pi = PROCESS_INFORMATION()
 
-        exe = python_executable or sys.executable
-        cmd = f'"{exe}" "{entrypoint_file}"'
+        from astrarun.core.paths import resolve_python_executable
+        exe = resolve_python_executable(python_executable)
+        cmd = f'"{exe}" "{Path(entrypoint_file).resolve()}"'
         env_buf = cls.build_sanitized_environment(workspace, extra_env=extra_env)
 
         job = Win32JobObject(

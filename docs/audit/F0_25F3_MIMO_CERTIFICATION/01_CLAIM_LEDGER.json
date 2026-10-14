@@ -1,0 +1,38 @@
+{
+  "auditor": "MiMo",
+  "claims": [
+    {"id": "A01", "claim": "AuthoritativeCompletionGate exists", "mimo": "PROVEN", "evidence": "src/astrarun/agent/completion_gate.py 262 lines; sole production callers telemetry.py:268/330"},
+    {"id": "A02", "claim": "all GOAL_COMPLETED paths gated", "mimo": "CONTRADICTED", "evidence": "end_run non-SUCCESS branch emits GOAL_COMPLETED ungated (telemetry.py:318-351); emit with status!=SUCCESS bypasses gate (L259-260); _emit_raw latent bypass (L173)"},
+    {"id": "A03", "claim": "direct GOAL_COMPLETED emission cannot bypass gate", "mimo": "PARTIAL", "evidence": "status=SUCCESS/default gated to None; other status strings ungated; _emit_raw ungated"},
+    {"id": "A04", "claim": "wrong run/task evidence rejected", "mimo": "PARTIAL", "evidence": "C13/C14 pass only if evidence carries foreign ids; setdefault injects active ids into empty evidence (telemetry.py:265-266)"},
+    {"id": "A05", "claim": "UNKNOWN cannot complete", "mimo": "PROVEN", "evidence": "completion_gate.py L120-122 reject; C3 test 14/14"},
+    {"id": "A06", "claim": "missing predicates cannot complete", "mimo": "PROVEN", "evidence": "PENDING->missing->REJECT L117-119; but all-optional contract approves with zero verification (edge)"},
+    {"id": "A07", "claim": "presentation requested != presented", "mimo": "PROVEN", "evidence": "gate C5 requires RESULT_PRESENTED; evaluator L436-456; legacy OR removed from verify_f0_25f_complete_physical.py:153"},
+    {"id": "A08", "claim": "presentation identity sufficiently strong", "mimo": "PARTIAL", "evidence": "target_observed+hwnd required; summary mode falls back to literal title/class or 'AstraRun'/'QtLauncher' (L272,275)"},
+    {"id": "A09", "claim": "vacuous cleanup eliminated", "mimo": "SUPPORTED", "evidence": "RESOURCE_RESULTS R1-R3 NOT_MATERIALIZED; R4 physical absence verified; but R14/R15 residual gaps (empty path after materialization race, type scope)"},
+    {"id": "A10", "claim": "NOT_MATERIALIZED works honestly", "mimo": "SUPPORTED", "evidence": "resource_ledger + R1-R3 cases"},
+    {"id": "A11", "claim": "PID reuse protected", "mimo": "SUPPORTED", "evidence": "R7 STALE_REUSED; create_time mismatch"},
+    {"id": "A12", "claim": "harness-generated causality rejected", "mimo": "PARTIAL", "evidence": "physical trace producers all production components (ModelClient/ExecutionBroker/GoalPlanner...); BUT 44 entries contain only 22 unique event_ids (duplicated archive)"},
+
+    {"id": "A13", "claim": "broker stubs rejected for production acceptance", "mimo": "SUPPORTED", "evidence": "no executor_override in verify_f0_25f3_physical_acceptance.py (IPC client only per report; causal producers are production)"},
+    {"id": "A14", "claim": "production causal events originate from production", "mimo": "SUPPORTED", "evidence": "44-trace components: ExecutionBroker/ModelClient/GoalPlanner/DesktopObserver/DynamicToolBuilder/AstraResourceLedger/AstraApplication; single run_id"},
+    {"id": "A15", "claim": "benchmark contamination removed", "mimo": "PROVEN", "evidence": "rg -F 10 tokens across 325 src files = 0 hits (MiMo independent)"},
+    {"id": "A16", "claim": "workspace-specific production paths removed", "mimo": "PROVEN", "evidence": "E:\\Workspace / AstraRun-Anti fixed-string search in src = 0"},
+    {"id": "A17", "claim": "fabricated attestation removed", "mimo": "PARTIAL", "evidence": "numeric verified_hwnd literals gone; summary-mode title/class fallback literals remain; field name fabricated_hwnd_constants=true is INVERTED (means none found)"},
+    {"id": "A18", "claim": "routing over-routes eliminated", "mimo": "SUPPORTED", "evidence": "blind dynamic FP=0; confusion matrix precision 1.0 (MiMo recompute)"},
+    {"id": "A19", "claim": "routing generalizes", "mimo": "CONTRADICTED", "evidence": "accuracy 91.82% < 95% gate; dynamic recall 0.7818 < 90% gate; KNOWN precision 0.8226 < 90%; results predate final planner edit"},
+    {"id": "A20", "claim": "generic repair semantics honest", "mimo": "SUPPORTED", "evidence": "7/8 with REPAIR-02 fail-closed (test summary)"},
+    {"id": "A21", "claim": "mutation score semantically meaningful", "mimo": "PARTIAL", "evidence": "20/20 killed; M6/M13 are positive controls miscounted as kills => 18/20 genuine; self-certified by same test"},
+    {"id": "A22", "claim": "full regression clean", "mimo": "CONTRADICTED", "evidence": "raw pytest: 48 failed, 909 passed, 0 skipped; FINAL_REPORT claims 48 skipped / 0 failed"},
+    {"id": "A23", "claim": "source freeze final", "mimo": "PROVEN", "evidence": "691/691 independent rehash match; 0 post-freeze mtime"},
+    {"id": "A24", "claim": "built == installed", "mimo": "PROVEN", "evidence": "5b4226d8... both, double-hashed"},
+    {"id": "A25", "claim": "physical launcher works", "mimo": "PROVEN", "evidence": "01_launcher_visible.png launcher bar visible (MiMo visual)"},
+    {"id": "A26", "claim": "real agentic physical task completes", "mimo": "CONTRADICTED", "evidence": "PHYSICAL_RESULTS goal_completed_verified=false, presentation_verified=false, verdict FAIL"},
+    {"id": "A27", "claim": "requested result presented", "mimo": "CONTRADICTED", "evidence": "02_result_presentation.png shows fibonacci request in launcher, NO viewer; presentation_event null"},
+    {"id": "A28", "claim": "resource restoration succeeds", "mimo": "CONTRADICTED", "evidence": "4 leaked PIDs, clean_resource_restoration=false"},
+    {"id": "A29", "claim": "no Astra-owned PID/HWND residue", "mimo": "CONTRADICTED", "evidence": "leaked_pids 29304,28324,2572,26568; HWNDs clean"},
+    {"id": "A30", "claim": "GOAL_COMPLETED follows all required postconditions", "mimo": "SUPPORTED as fail-closed", "evidence": "no GOAL_COMPLETED in 44-event trace; gate refused because RETURN_CODE_ONLY failed verification — correct refusal"},
+    {"id": "A31", "claim": "gate 14/14 adversarial", "mimo": "SUPPORTED", "evidence": "COMPLETION_GATE_RESULTS 14/14; MiMo could not re-run all 14 without executing tests (tests permitted; partial trust via source review of gate logic matches cases)"},
+    {"id": "A32", "claim": "routing manifest hash b402565c...", "mimo": "CONTRADICTED", "evidence": "whole-file SHA256 = 1b982cc8...; declared hash unreproducible/undocumented"}
+  ]
+}

@@ -62,6 +62,8 @@ class ActionGateConfig:
     confidence_threshold: float = 0.70
     js_threshold: float = 0.25
     permissions: dict[str, str] = field(default_factory=lambda: {
+        "file_system": "AUTO",
+        "execution_runtime": "AUTO",
         "open_project": "AUTO",
         "open_project_folder": "AUTO",
         "open_project_in_vscode": "AUTO",

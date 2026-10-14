@@ -1,0 +1,91 @@
+{
+  "review_phase": "F0_25D1_MIMO",
+  "overall_independent_verdict": "FAIL",
+  "rationale": "Build parity is real and three files exist on disk, but the acceptance package's visual evidence is invalid: every screenshot shows Antigravity, not AstraRun launcher/task UI. Multiple PASS dimensions are manufactured by the harness without pixel or model-log proof. EDITOR_INTERACTION and VISIBLE_TERMINAL_EXECUTION are misclassified.",
+  "dimensions": {
+    "GOAL_CORRECTNESS": {
+      "anti": "PASS",
+      "mimo": "PARTIAL",
+      "why": "main.py/sample_input/word_frequencies.json exist at requested path; full autonomous causal chain UNVERIFIED; harness re-run of main.py regenerates outputs"
+    },
+    "PLANNING_SEMANTICS": {
+      "anti": "PASS",
+      "mimo": "UNVERIFIED",
+      "why": "No planner/tool-selection UI or model event log in F0_25D1 package; screenshot 003 is Antigravity harness task"
+    },
+    "OPTIONAL_PERMISSION_HANDLING": {
+      "anti": "PASS",
+      "mimo": "UNVERIFIED",
+      "why": "ChatGPT permission phrase not visible; no consult_delegate evidence; no negative consultation mock in screenshots"
+    },
+    "RECOVERY": {
+      "anti": "PASS",
+      "mimo": "UNVERIFIED",
+      "why": "No failure/repair cycle observed in package"
+    },
+    "TOOL_DECISION_EXECUTION_ALIGNMENT": {
+      "anti": "PASS",
+      "mimo": "UNVERIFIED",
+      "why": "No broker/action/model logs packaged with F0_25D1; cannot prove execute_dynamic_tool was chosen"
+    },
+    "PHYSICAL_DESKTOP_EXECUTION": {
+      "anti": "PASS",
+      "mimo": "PARTIAL",
+      "why": "COMPUTATION_EXECUTED_ON_HOST likely true (files appear during run); VISIBLE_TERMINAL_EXECUTION not observed"
+    },
+    "ASTRA_LAUNCHER_UI": {
+      "anti": "PASS",
+      "mimo": "FAIL",
+      "why": "Launcher never visible in any of 12 screenshots; foreground is Antigravity.exe"
+    },
+    "PROGRESS_UI": {
+      "anti": "PASS",
+      "mimo": "FAIL",
+      "why": "No Astra progress text visible; UI audit hardcoded PASS"
+    },
+    "VISUAL_DESKTOP_ALIGNMENT": {
+      "anti": "PASS",
+      "mimo": "FAIL",
+      "why": "Visual states are Antigravity snapshots, not filesystem/process milestone alignment"
+    },
+    "EXTERNAL_CONSULTATION_TRUTH": {
+      "anti": "PASS",
+      "mimo": "PARTIAL",
+      "why": "No browser ChatGPT mock observed (good); cannot prove model did not internally call delegate without logs"
+    },
+    "EDITOR_INTERACTION": {
+      "anti": "PASS",
+      "mimo": "NOT_APPLICABLE",
+      "why": "No editor used; direct file synthesis is not editor interaction"
+    },
+    "TERMINAL_EXECUTION": {
+      "anti": "PASS",
+      "mimo": "NOT_APPLICABLE",
+      "why": "No visible terminal; harness independent subprocess is evaluator verification, not user-visible terminal execution"
+    },
+    "OUTPUT_PRESENTATION": {
+      "anti": "PASS",
+      "mimo": "PARTIAL",
+      "why": "Files on disk; no Explorer/result presentation in screenshots; no Astra final summary visible"
+    },
+    "RESOURCE_RESTORATION": {
+      "anti": "PASS",
+      "mimo": "PARTIAL",
+      "why": "Harness terminates AstraRun; post_cleanup screenshot still shows Antigravity; many Notepad processes currently alive (may be user, not task residue)"
+    },
+    "USER_OBSERVABILITY": {
+      "anti": "PASS",
+      "mimo": "FAIL",
+      "why": "A human watching the captured desktop would only see Antigravity running the dogfood harness"
+    }
+  },
+  "score_summary": {
+    "anti_pass": 15,
+    "mimo_fail": 4,
+    "mimo_partial": 5,
+    "mimo_unverified": 5,
+    "mimo_not_applicable": 2
+  },
+  "accept_f0_25d_1": false,
+  "ready_for_true_user_dogfood": false
+}

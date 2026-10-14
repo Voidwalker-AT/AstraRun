@@ -1,0 +1,15 @@
+{
+  "phase": "F0-25F.6",
+  "stage": "STAGE 13 \u2014 PRODUCTION ARTIFACT VERIFICATION",
+  "timestamp": 1791922089.9619136,
+  "build_status": "SUCCESS",
+  "dist_exe": "E:\\Workspace\\Agents\\AstraRun-Anti\\dist\\AstraRun\\AstraRun.exe",
+  "dist_sha256": "2f422df75a03d5b57428bd328368b43e9588fa68c001ada3c410065affd7b2c4",
+  "dist_size_bytes": 12147547,
+  "install_exe": "C:\\Users\\hp\\AppData\\Local\\Programs\\AstraRun\\AstraRun.exe",
+  "install_sha256": "2f422df75a03d5b57428bd328368b43e9588fa68c001ada3c410065affd7b2c4",
+  "install_size_bytes": 12147547,
+  "binary_parity_verified": true,
+  "hash_parity": true,
+  "size_parity": true
+}

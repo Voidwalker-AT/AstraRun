@@ -39,6 +39,16 @@ def _ensure_desktop_attached() -> None:
         return
     try:
         user32 = ctypes.windll.user32
+        hwinsta = user32.OpenWindowStationW("WinSta0", False, 0x037F)
+        if hwinsta:
+            user32.SetProcessWindowStation(hwinsta)
+
+        h_desk = user32.GetThreadDesktop(ctypes.windll.kernel32.GetCurrentThreadId())
+        if h_desk:
+            buf_desk = ctypes.create_unicode_buffer(256)
+            if user32.GetUserObjectInformationW(h_desk, 2, buf_desk, 256, None) and buf_desk.value.lower() == "default":
+                return
+
         user32.OpenInputDesktop.restype = ctypes.c_void_p
         user32.OpenDesktopW.restype = ctypes.c_void_p
         user32.SetThreadDesktop.argtypes = [ctypes.c_void_p]

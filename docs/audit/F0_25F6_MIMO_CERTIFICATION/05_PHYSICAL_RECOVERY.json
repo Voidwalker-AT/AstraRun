@@ -1,0 +1,22 @@
+{
+  "auditor": "MiMo",
+  "scenario_a": {
+    "claimed": "Notepad launch -> kill PID 3228 -> recover PID 22668 HWND 2229926",
+    "json_evidence": "structured failure_evidence + recovery_decision from IntelligentFallbackEngine; PIDs/HWNDs recorded",
+    "screenshot_a01_launched": "VISUAL: Antigravity only — NO Notepad window (MiMo pixel inspection)",
+    "screenshot_a03_recovered": "VISUAL: Antigravity only — NO Notepad window",
+    "screenshot_a04_cleaned": "not needed — already falsified by a01/a03",
+    "physical_state_verified_by_pixels": false,
+    "classification": "SIMULATED/HARNESS-DRIVEN with real Win32 PID bookkeeping but MISLEADING physical screenshots; not a verified physical attestation of visible Notepad"
+  },
+  "scenario_b": {
+    "claimed": "minimize/restore window to foreground",
+    "screenshot_b03": "VISUAL: Antigravity only — NO restored app window",
+    "physical_state_verified_by_pixels": false,
+    "classification": "same as A — screenshots do not show claimed windows"
+  },
+  "real_recovery_decision_objects": "SUPPORTED — FailureEvidence/RecoveryDecision structures match production engine schemas",
+  "genuine_physical_windows": "CONTRADICTED by screenshots",
+  "mocked_vs_physical": "Harness invoked real OS process APIs (PIDs plausible) but captured desktop does not show target apps — likely wrong-desktop capture or capture-during-wrong-moment; cannot certify as physical recovery evidence",
+  "verdict": "PHYSICAL RECOVERY = PARTIAL (engine decisions real; pixel attestation FALSE/misleading; not mock-only but not honestly physically evidenced)"
+}

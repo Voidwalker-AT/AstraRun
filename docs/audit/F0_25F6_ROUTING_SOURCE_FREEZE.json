@@ -1,0 +1,40 @@
+{
+  "phase": "F0-25F.6",
+  "stage": "STAGE 10 \u2014 ROUTING SOURCE FREEZE",
+  "frozen_at": "2026-10-13T19:50:56.360868+00:00",
+  "policy": "FROZEN \u2014 STRICTLY NO MODIFICATIONS PERMITTED AFTER THIS STEP",
+  "files": {
+    "src/astrarun/agent/models.py": {
+      "sha256": "cbf570c753184118a6e3398fe69e81a095ee972961c40d6ba4a29793c2f60544",
+      "size_bytes": 30502
+    },
+    "src/astrarun/agent/planner.py": {
+      "sha256": "10bdab693c95545568416fce66e27a1d93f55983ba49587074a03ad944f253c9",
+      "size_bytes": 96838
+    },
+    "src/astrarun/capabilities/manifest.py": {
+      "sha256": "c55b39f2894ace3eb51c2f1c7f316ab7b0380bbb3a9e1496e9aa60c909caf264",
+      "size_bytes": 25487
+    },
+    "src/astrarun/capabilities/registry.py": {
+      "sha256": "862ac6cca293a53bb4d3bfc516d8e8cf51666eeda1436c4bc3f565808168d95f",
+      "size_bytes": 67655
+    },
+    "src/astrarun/capabilities/schema.py": {
+      "sha256": "a6aed0f9398abb6cd8d02e897c2bfd567265db247f01ba4447b1a09352e1b09e",
+      "size_bytes": 6737
+    },
+    "src/astrarun/recovery/engine.py": {
+      "sha256": "772fa6b765a1e36628642847c0b78ddae5474537a4e7951cdd6aeb717af9c9b3",
+      "size_bytes": 12759
+    },
+    "src/astrarun/recovery/models.py": {
+      "sha256": "c66f39e68324e2e57c3bdf1266e65d872ce40944663b4fd9a1a954e66111a33d",
+      "size_bytes": 4507
+    },
+    "src/astrarun/routing/context_sufficiency.py": {
+      "sha256": "f833c221c6099ef81dd724a68c6c440e110fec11050f768ac983fb31630cedc7",
+      "size_bytes": 33432
+    }
+  }
+}

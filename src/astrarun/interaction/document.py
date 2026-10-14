@@ -145,10 +145,11 @@ def save_document_via_ui(
     # Attempt UIA File -> Save as menu item first, then keyboard shortcuts
     menu_triggered = False
     try:
-        import comtypes.client
-        from comtypes.gen import UIAutomationClient
-        uia = comtypes.client.CreateObject(UIAutomationClient.CUIAutomation, interface=UIAutomationClient.IUIAutomation)
-        root = uia.ElementFromHandle(target_hwnd)
+        from astrarun.computer_use.ui.uia_support import get_uia_module, get_uia_interface
+        UIAutomationClient = get_uia_module()
+        uia = get_uia_interface()
+        if uia and UIAutomationClient:
+            root = uia.ElementFromHandle(target_hwnd)
         if root:
             cond_file = uia.CreateAndCondition(
                 uia.CreatePropertyCondition(UIAutomationClient.UIA_ControlTypePropertyId, UIAutomationClient.UIA_MenuItemControlTypeId),
@@ -183,20 +184,11 @@ def save_document_via_ui(
     except Exception as ex:
         logger.debug("UIA menu Save As trigger attempt: %s", ex)
 
-    if not menu_triggered:
-        logger.info("Dispatching Ctrl+Shift+S to HWND 0x%x for UI document save", target_hwnd)
-        shortcut = parse_shortcut("Ctrl+Shift+S")
-        dispatch_shortcut(shortcut, target_hwnd=target_hwnd)
-        time.sleep(0.3)
-        dispatch_shortcut(parse_shortcut("Ctrl+S"), target_hwnd=target_hwnd)
-        time.sleep(0.3)
-
-    # 5. Fast enum search for Save As dialog
-    save_dialog_hwnd = 0
-    deadline = time.time() + 6.0
-    while time.time() < deadline:
+    # 5. Fast enum search helper for Save As dialog
+    def _find_save_dialog() -> int:
+        found_h = 0
         def enum_save_dlg(h: int, _: int) -> bool:
-            nonlocal save_dialog_hwnd
+            nonlocal found_h
             if user32.IsWindowVisible(h):
                 length = user32.GetWindowTextLengthW(h)
                 if length > 0:
@@ -204,22 +196,37 @@ def save_document_via_ui(
                     user32.GetWindowTextW(h, buf, length + 1)
                     t = buf.value.lower()
                     if "save as" in t or t == "save":
-                        save_dialog_hwnd = h
+                        found_h = h
                         return False
             return True
-
         user32.EnumWindows(ctypes.WINFUNCTYPE(ctypes.c_bool, wintypes.HWND, wintypes.LPARAM)(enum_save_dlg), 0)
-        if save_dialog_hwnd:
-            break
+        return found_h
 
-        # Fallback keyboard accelerators if dialog not yet open
-        if time.time() > (deadline - 3.0) and not save_dialog_hwnd:
-            dispatch_shortcut(parse_shortcut("Alt+F"), target_hwnd=target_hwnd)
-            time.sleep(0.2)
-            dispatch_shortcut(parse_shortcut("A"), target_hwnd=target_hwnd)
-            time.sleep(0.3)
+    save_dialog_hwnd = _find_save_dialog()
 
+    if not menu_triggered and not save_dialog_hwnd:
+        # Note: Do NOT use Ctrl+Alt+S as it collides with OEM global hotkeys (e.g. HP System Information on HP laptops)
+        for sc in ("Ctrl+Shift+S", "F12", "Ctrl+S"):
+            logger.info("Attempting Save shortcut '%s' on HWND 0x%x", sc, target_hwnd)
+            dispatch_shortcut(parse_shortcut(sc), target_hwnd=target_hwnd)
+            for _ in range(6):
+                time.sleep(0.15)
+                save_dialog_hwnd = _find_save_dialog()
+                if save_dialog_hwnd:
+                    break
+            if save_dialog_hwnd:
+                break
+
+    if not save_dialog_hwnd:
+        logger.info("Attempting Alt+F -> A menu accelerator fallback on HWND 0x%x", target_hwnd)
+        dispatch_shortcut(parse_shortcut("Alt+F"), target_hwnd=target_hwnd)
         time.sleep(0.2)
+        dispatch_shortcut(parse_shortcut("A"), target_hwnd=target_hwnd)
+        for _ in range(8):
+            time.sleep(0.15)
+            save_dialog_hwnd = _find_save_dialog()
+            if save_dialog_hwnd:
+                break
 
     if save_dialog_hwnd:
         logger.info("Found Save dialog HWND 0x%x.", save_dialog_hwnd)
@@ -242,12 +249,16 @@ def save_document_via_ui(
             type_text_into_active(str(dest_path))
         time.sleep(0.15)
 
-        # Confirm Save via Alt+S and Enter
-        logger.info("Submitting Save dialog HWND 0x%x via Alt+S / Enter", save_dialog_hwnd)
+        # Confirm Save via Alt+S, Enter, direct Button click, and WM_COMMAND
+        logger.info("Submitting Save dialog HWND 0x%x via Alt+S / Enter / Save Button", save_dialog_hwnd)
         dispatch_shortcut(parse_shortcut("Alt+S"), target_hwnd=save_dialog_hwnd)
         time.sleep(0.1)
+        save_btn = _find_dialog_button(save_dialog_hwnd, "save")
+        if save_btn:
+            BM_CLICK = 0x00F5
+            user32.PostMessageW(save_btn, BM_CLICK, 0, 0)
         dispatch_shortcut(parse_shortcut("Enter"), target_hwnd=save_dialog_hwnd)
-        time.sleep(0.3)
+        time.sleep(0.2)
         # Also post WM_COMMAND IDOK directly to dialog as standard Win32 confirmation
         user32.PostMessageW(save_dialog_hwnd, 0x0111, 1, 0)
         time.sleep(0.3)

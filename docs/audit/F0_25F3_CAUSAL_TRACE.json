@@ -1,0 +1,950 @@
+[
+  {
+    "event_id": "cev_1791826249112_f43de0",
+    "run_id": "run_1791826249112_f05f4fb7",
+    "task_id": "task_05b85510",
+    "parent_event_id": null,
+    "timestamp_monotonic": 424636.1799672,
+    "timestamp_wall": 1791826249.1123345,
+    "event_type": "REQUEST_RECEIVED",
+    "component": "AstraApplication",
+    "input_hash": "6b898647a9ae71b159343839b27bd47245f17b9efd6cc6823049230c62276184",
+    "output_hash": null,
+    "model_id": null,
+    "capability": null,
+    "authorization_verdict": null,
+    "resulting_event_id": null,
+    "data": {
+      "query": "compute first 50 fibonacci numbers and save to fibonacci.txt and reveal in explorer"
+    }
+  },
+  {
+    "event_id": "cev_1791826257941_d7fddb",
+    "run_id": "run_1791826249112_f05f4fb7",
+    "task_id": "task_05b85510",
+    "parent_event_id": "cev_1791826249112_f43de0",
+    "timestamp_monotonic": 424645.0089302,
+    "timestamp_wall": 1791826257.9412978,
+    "event_type": "GOAL_INTERPRETED",
+    "component": "GoalPlanner",
+    "input_hash": "6b898647a9ae71b159343839b27bd47245f17b9efd6cc6823049230c62276184",
+    "output_hash": "6b898647a9ae71b159343839b27bd47245f17b9efd6cc6823049230c62276184",
+    "model_id": null,
+    "capability": null,
+    "authorization_verdict": null,
+    "resulting_event_id": null,
+    "data": {
+      "goal_type": "CUSTOM",
+      "target": "",
+      "description": ""
+    }
+  },
+  {
+    "event_id": "cev_1791826257953_5f58de",
+    "run_id": "run_1791826249112_f05f4fb7",
+    "task_id": "task_05b85510",
+    "parent_event_id": "cev_1791826257941_d7fddb",
+    "timestamp_monotonic": 424645.0215303,
+    "timestamp_wall": 1791826257.9538975,
+    "event_type": "PLAN_CREATED",
+    "component": "GoalPlanner",
+    "input_hash": null,
+    "output_hash": "80ac3f7121f6283a0fabf4fc20a08c68b94cb7d877024ba6fb203b6a513b9873",
+    "model_id": null,
+    "capability": null,
+    "authorization_verdict": null,
+    "resulting_event_id": null,
+    "data": {
+      "step_count": 2,
+      "capabilities": [
+        "execute_dynamic_tool",
+        "reveal_file"
+      ]
+    }
+  },
+  {
+    "event_id": "cev_1791826257988_e96adc",
+    "run_id": "run_1791826249112_f05f4fb7",
+    "task_id": "task_fd2dd2a9",
+    "parent_event_id": "cev_1791826257953_5f58de",
+    "timestamp_monotonic": 424645.0561216,
+    "timestamp_wall": 1791826257.9884892,
+    "event_type": "STATE_OBSERVED",
+    "component": "DesktopObserver",
+    "input_hash": null,
+    "output_hash": null,
+    "model_id": null,
+    "capability": null,
+    "authorization_verdict": null,
+    "resulting_event_id": null,
+    "data": {
+      "foreground_title": "AstraRun",
+      "visible_window_count": 17,
+      "dialog_count": 1,
+      "observation_latency_ms": 3.42
+    }
+  },
+  {
+    "event_id": "cev_1791826258011_80f19d",
+    "run_id": "run_1791826249112_f05f4fb7",
+    "task_id": "task_fd2dd2a9",
+    "parent_event_id": "cev_1791826257988_e96adc",
+    "timestamp_monotonic": 424645.0792299,
+    "timestamp_wall": 1791826258.0115972,
+    "event_type": "STATE_OBSERVED",
+    "component": "DesktopObserver",
+    "input_hash": null,
+    "output_hash": null,
+    "model_id": null,
+    "capability": null,
+    "authorization_verdict": null,
+    "resulting_event_id": null,
+    "data": {
+      "foreground_title": "AstraRun",
+      "visible_window_count": 17,
+      "dialog_count": 1,
+      "observation_latency_ms": 3.5
+    }
+  },
+  {
+    "event_id": "cev_1791826258121_9fbc4e",
+    "run_id": "run_1791826249112_f05f4fb7",
+    "task_id": "task_fd2dd2a9",
+    "parent_event_id": "cev_1791826258011_80f19d",
+    "timestamp_monotonic": 424645.1888429,
+    "timestamp_wall": 1791826258.12121,
+    "event_type": "ACTION_PROPOSED",
+    "component": "ExecutionBroker",
+    "input_hash": "45ff995e38331e0d825a139cc801568ee196f2fa197c50186658e564e34cc52e",
+    "output_hash": null,
+    "model_id": null,
+    "capability": "execute_dynamic_tool",
+    "authorization_verdict": null,
+    "resulting_event_id": null,
+    "data": {
+      "source": "agent_planner",
+      "category": "ACT",
+      "step_id": null,
+      "dry_run": false
+    }
+  },
+  {
+    "event_id": "cev_1791826258125_be7546",
+    "run_id": "run_1791826249112_f05f4fb7",
+    "task_id": "task_fd2dd2a9",
+    "parent_event_id": "cev_1791826258121_9fbc4e",
+    "timestamp_monotonic": 424645.1933638,
+    "timestamp_wall": 1791826258.1257312,
+    "event_type": "ACTION_AUTHORIZED",
+    "component": "ExecutionBroker",
+    "input_hash": null,
+    "output_hash": null,
+    "model_id": null,
+    "capability": "execute_dynamic_tool",
+    "authorization_verdict": "ALLOW",
+    "resulting_event_id": null,
+    "data": {
+      "category": "ACT"
+    }
+  },
+  {
+    "event_id": "cev_1791826258127_c7a98f",
+    "run_id": "run_1791826249112_f05f4fb7",
+    "task_id": "task_fd2dd2a9",
+    "parent_event_id": "cev_1791826258121_9fbc4e",
+    "timestamp_monotonic": 424645.1949637,
+    "timestamp_wall": 1791826258.127331,
+    "event_type": "ACTION_DISPATCHED",
+    "component": "ExecutionBroker",
+    "input_hash": null,
+    "output_hash": null,
+    "model_id": null,
+    "capability": "execute_dynamic_tool",
+    "authorization_verdict": null,
+    "resulting_event_id": null,
+    "data": {
+      "parameters": {
+        "goal": "compute first 50 fibonacci numbers and save to fibonacci.txt and reveal in explorer"
+      }
+    }
+  },
+  {
+    "event_id": "cev_1791826264354_75578d",
+    "run_id": "run_1791826249112_f05f4fb7",
+    "task_id": "task_fd2dd2a9",
+    "parent_event_id": "cev_1791826258127_c7a98f",
+    "timestamp_monotonic": 424651.4223768,
+    "timestamp_wall": 1791826264.354744,
+    "event_type": "MODEL_REQUEST",
+    "component": "ModelClient",
+    "input_hash": "f9d5d1a72609d3cad9480acd87cb4063853f43d9e6bafb04ac6064e4ccc94fbc",
+    "output_hash": null,
+    "model_id": "DEEP@http://127.0.0.1:8089",
+    "capability": null,
+    "authorization_verdict": null,
+    "resulting_event_id": null,
+    "data": {
+      "endpoint": "http://127.0.0.1:8089",
+      "role": "DEEP",
+      "max_tokens": 2048
+    }
+  },
+  {
+    "event_id": "cev_1791826267982_fe2bd2",
+    "run_id": "run_1791826249112_f05f4fb7",
+    "task_id": "task_fd2dd2a9",
+    "parent_event_id": "cev_1791826264354_75578d",
+    "timestamp_monotonic": 424655.0505756,
+    "timestamp_wall": 1791826267.9829428,
+    "event_type": "MODEL_RESPONSE",
+    "component": "ModelClient",
+    "input_hash": "f9d5d1a72609d3cad9480acd87cb4063853f43d9e6bafb04ac6064e4ccc94fbc",
+    "output_hash": "2ee2b1188dae0f12076d878b5859206fa77aeb7a3c6f2523ace45f1944b56381",
+    "model_id": "DEEP@http://127.0.0.1:8089",
+    "capability": null,
+    "authorization_verdict": null,
+    "resulting_event_id": null,
+    "data": {
+      "status": "SUCCESS",
+      "latency_ms": 3628.3663000212982,
+      "prompt_tokens": 534,
+      "completion_tokens": 255
+    }
+  },
+  {
+    "event_id": "cev_1791826267985_e99db2",
+    "run_id": "run_1791826249112_f05f4fb7",
+    "task_id": "task_fd2dd2a9",
+    "parent_event_id": "cev_1791826267982_fe2bd2",
+    "timestamp_monotonic": 424655.0527449,
+    "timestamp_wall": 1791826267.985112,
+    "event_type": "ARTIFACT_CREATED",
+    "component": "DynamicToolBuilder",
+    "input_hash": null,
+    "output_hash": "81c64e02e49497febc9107ffefcea56d22a0e3fb90572a88d4f46dee4a77c438",
+    "model_id": null,
+    "capability": null,
+    "authorization_verdict": null,
+    "resulting_event_id": null,
+    "data": {
+      "tool_id": "dyn_tool_f8e16006",
+      "entrypoint": "main.py",
+      "files": [
+        "main.py"
+      ]
+    }
+  },
+  {
+    "event_id": "cev_1791826268265_10d199",
+    "run_id": "run_1791826249112_f05f4fb7",
+    "task_id": "task_9c9d3951",
+    "parent_event_id": "cev_1791826267985_e99db2",
+    "timestamp_monotonic": 424655.3331367,
+    "timestamp_wall": 1791826268.265504,
+    "event_type": "RESOURCE_REGISTERED",
+    "component": "AstraResourceLedger",
+    "input_hash": null,
+    "output_hash": null,
+    "model_id": null,
+    "capability": null,
+    "authorization_verdict": null,
+    "resulting_event_id": null,
+    "data": {
+      "resource_id": "51d29e71-c51f-46b0-9bda-23005a52ff2a",
+      "resource_type": "SANDBOX_DIR",
+      "pid": null,
+      "hwnd": null,
+      "document_path": "C:\\Users\\hp\\AppData\\LocalLow\\AstraRun\\sandbox\\task_9c9d3951"
+    }
+  },
+  {
+    "event_id": "cev_1791826269036_58567b",
+    "run_id": "run_1791826249112_f05f4fb7",
+    "task_id": "task_fd2dd2a9",
+    "parent_event_id": "cev_1791826268265_10d199",
+    "timestamp_monotonic": 424656.104276,
+    "timestamp_wall": 1791826269.0366433,
+    "event_type": "ACTION_RESULT",
+    "component": "ExecutionBroker",
+    "input_hash": null,
+    "output_hash": "333aebbb317ae151371f8eb30afe1b4a34ce504643838a4a10bcceeec50fd334",
+    "model_id": null,
+    "capability": "execute_dynamic_tool",
+    "authorization_verdict": null,
+    "resulting_event_id": null,
+    "data": {
+      "success": true,
+      "message": "Dynamic execution succeeded with 2 artifact(s) created.",
+      "duration_ms": 10913.706499966793
+    }
+  },
+  {
+    "event_id": "cev_1791826269044_48028f",
+    "run_id": "run_1791826249112_f05f4fb7",
+    "task_id": "task_fd2dd2a9",
+    "parent_event_id": "cev_1791826269036_58567b",
+    "timestamp_monotonic": 424656.1125479,
+    "timestamp_wall": 1791826269.0449152,
+    "event_type": "STATE_OBSERVED",
+    "component": "DesktopObserver",
+    "input_hash": null,
+    "output_hash": null,
+    "model_id": null,
+    "capability": null,
+    "authorization_verdict": null,
+    "resulting_event_id": null,
+    "data": {
+      "foreground_title": "AstraRun",
+      "visible_window_count": 17,
+      "dialog_count": 1,
+      "observation_latency_ms": 6.11
+    }
+  },
+  {
+    "event_id": "cev_1791826269398_5afb35",
+    "run_id": "run_1791826249112_f05f4fb7",
+    "task_id": "task_fd2dd2a9",
+    "parent_event_id": "cev_1791826269044_48028f",
+    "timestamp_monotonic": 424656.4661244,
+    "timestamp_wall": 1791826269.3984914,
+    "event_type": "STATE_OBSERVED",
+    "component": "DesktopObserver",
+    "input_hash": null,
+    "output_hash": null,
+    "model_id": null,
+    "capability": null,
+    "authorization_verdict": null,
+    "resulting_event_id": null,
+    "data": {
+      "foreground_title": "AstraRun",
+      "visible_window_count": 17,
+      "dialog_count": 1,
+      "observation_latency_ms": 2.11
+    }
+  },
+  {
+    "event_id": "cev_1791826269405_e801ba",
+    "run_id": "run_1791826249112_f05f4fb7",
+    "task_id": "task_fd2dd2a9",
+    "parent_event_id": "cev_1791826269398_5afb35",
+    "timestamp_monotonic": 424656.4732082,
+    "timestamp_wall": 1791826269.4055755,
+    "event_type": "ACTION_PROPOSED",
+    "component": "ExecutionBroker",
+    "input_hash": "45ff995e38331e0d825a139cc801568ee196f2fa197c50186658e564e34cc52e",
+    "output_hash": null,
+    "model_id": null,
+    "capability": "execute_dynamic_tool",
+    "authorization_verdict": null,
+    "resulting_event_id": null,
+    "data": {
+      "source": "agent_planner",
+      "category": "ACT",
+      "step_id": null,
+      "dry_run": false
+    }
+  },
+  {
+    "event_id": "cev_1791826269409_11b672",
+    "run_id": "run_1791826249112_f05f4fb7",
+    "task_id": "task_fd2dd2a9",
+    "parent_event_id": "cev_1791826269405_e801ba",
+    "timestamp_monotonic": 424656.4773986,
+    "timestamp_wall": 1791826269.409766,
+    "event_type": "ACTION_AUTHORIZED",
+    "component": "ExecutionBroker",
+    "input_hash": null,
+    "output_hash": null,
+    "model_id": null,
+    "capability": "execute_dynamic_tool",
+    "authorization_verdict": "ALLOW",
+    "resulting_event_id": null,
+    "data": {
+      "category": "ACT"
+    }
+  },
+  {
+    "event_id": "cev_1791826269411_b0340b",
+    "run_id": "run_1791826249112_f05f4fb7",
+    "task_id": "task_fd2dd2a9",
+    "parent_event_id": "cev_1791826269405_e801ba",
+    "timestamp_monotonic": 424656.4796597,
+    "timestamp_wall": 1791826269.412028,
+    "event_type": "ACTION_DISPATCHED",
+    "component": "ExecutionBroker",
+    "input_hash": null,
+    "output_hash": null,
+    "model_id": null,
+    "capability": "execute_dynamic_tool",
+    "authorization_verdict": null,
+    "resulting_event_id": null,
+    "data": {
+      "parameters": {
+        "goal": "compute first 50 fibonacci numbers and save to fibonacci.txt and reveal in explorer"
+      }
+    }
+  },
+  {
+    "event_id": "cev_1791826269685_2992fe",
+    "run_id": "run_1791826249112_f05f4fb7",
+    "task_id": "task_fd2dd2a9",
+    "parent_event_id": "cev_1791826269411_b0340b",
+    "timestamp_monotonic": 424656.7528216,
+    "timestamp_wall": 1791826269.6851888,
+    "event_type": "MODEL_REQUEST",
+    "component": "ModelClient",
+    "input_hash": "f9d5d1a72609d3cad9480acd87cb4063853f43d9e6bafb04ac6064e4ccc94fbc",
+    "output_hash": null,
+    "model_id": "DEEP@http://127.0.0.1:8089",
+    "capability": null,
+    "authorization_verdict": null,
+    "resulting_event_id": null,
+    "data": {
+      "endpoint": "http://127.0.0.1:8089",
+      "role": "DEEP",
+      "max_tokens": 2048
+    }
+  },
+  {
+    "event_id": "cev_1791826272865_6dca3c",
+    "run_id": "run_1791826249112_f05f4fb7",
+    "task_id": "task_fd2dd2a9",
+    "parent_event_id": "cev_1791826269685_2992fe",
+    "timestamp_monotonic": 424659.9333167,
+    "timestamp_wall": 1791826272.865684,
+    "event_type": "MODEL_RESPONSE",
+    "component": "ModelClient",
+    "input_hash": "f9d5d1a72609d3cad9480acd87cb4063853f43d9e6bafb04ac6064e4ccc94fbc",
+    "output_hash": "0aad035f91b3a3ccfe2586b3db89a248c0332296e2e84d1e6035600c8d8bbd60",
+    "model_id": "DEEP@http://127.0.0.1:8089",
+    "capability": null,
+    "authorization_verdict": null,
+    "resulting_event_id": null,
+    "data": {
+      "status": "SUCCESS",
+      "latency_ms": 3180.653200019151,
+      "prompt_tokens": 534,
+      "completion_tokens": 234
+    }
+  },
+  {
+    "event_id": "cev_1791826272867_a33844",
+    "run_id": "run_1791826249112_f05f4fb7",
+    "task_id": "task_fd2dd2a9",
+    "parent_event_id": "cev_1791826272865_6dca3c",
+    "timestamp_monotonic": 424659.9353987,
+    "timestamp_wall": 1791826272.867766,
+    "event_type": "ARTIFACT_CREATED",
+    "component": "DynamicToolBuilder",
+    "input_hash": null,
+    "output_hash": "d07a979767a537c68d14e5e660a81a415069e440fa4b42ccdf3d5696fb1634ef",
+    "model_id": null,
+    "capability": null,
+    "authorization_verdict": null,
+    "resulting_event_id": null,
+    "data": {
+      "tool_id": "dyn_tool_df9c1481",
+      "entrypoint": "main.py",
+      "files": [
+        "main.py"
+      ]
+    }
+  },
+  {
+    "event_id": "cev_1791826272941_c058d7",
+    "run_id": "run_1791826249112_f05f4fb7",
+    "task_id": "task_aa04d6a1",
+    "parent_event_id": "cev_1791826272867_a33844",
+    "timestamp_monotonic": 424660.0088264,
+    "timestamp_wall": 1791826272.9411938,
+    "event_type": "RESOURCE_REGISTERED",
+    "component": "AstraResourceLedger",
+    "input_hash": null,
+    "output_hash": null,
+    "model_id": null,
+    "capability": null,
+    "authorization_verdict": null,
+    "resulting_event_id": null,
+    "data": {
+      "resource_id": "502e7926-5709-48f8-9ef8-bb5bd6f94483",
+      "resource_type": "SANDBOX_DIR",
+      "pid": null,
+      "hwnd": null,
+      "document_path": "C:\\Users\\hp\\AppData\\LocalLow\\AstraRun\\sandbox\\task_aa04d6a1"
+    }
+  },
+  {
+    "event_id": "cev_1791826249112_f43de0",
+    "run_id": "run_1791826249112_f05f4fb7",
+    "task_id": "task_05b85510",
+    "parent_event_id": null,
+    "timestamp_monotonic": 424636.1799672,
+    "timestamp_wall": 1791826249.1123345,
+    "event_type": "REQUEST_RECEIVED",
+    "component": "AstraApplication",
+    "input_hash": "6b898647a9ae71b159343839b27bd47245f17b9efd6cc6823049230c62276184",
+    "output_hash": null,
+    "model_id": null,
+    "capability": null,
+    "authorization_verdict": null,
+    "resulting_event_id": null,
+    "data": {
+      "query": "compute first 50 fibonacci numbers and save to fibonacci.txt and reveal in explorer"
+    }
+  },
+  {
+    "event_id": "cev_1791826257941_d7fddb",
+    "run_id": "run_1791826249112_f05f4fb7",
+    "task_id": "task_05b85510",
+    "parent_event_id": "cev_1791826249112_f43de0",
+    "timestamp_monotonic": 424645.0089302,
+    "timestamp_wall": 1791826257.9412978,
+    "event_type": "GOAL_INTERPRETED",
+    "component": "GoalPlanner",
+    "input_hash": "6b898647a9ae71b159343839b27bd47245f17b9efd6cc6823049230c62276184",
+    "output_hash": "6b898647a9ae71b159343839b27bd47245f17b9efd6cc6823049230c62276184",
+    "model_id": null,
+    "capability": null,
+    "authorization_verdict": null,
+    "resulting_event_id": null,
+    "data": {
+      "goal_type": "CUSTOM",
+      "target": "",
+      "description": ""
+    }
+  },
+  {
+    "event_id": "cev_1791826257953_5f58de",
+    "run_id": "run_1791826249112_f05f4fb7",
+    "task_id": "task_05b85510",
+    "parent_event_id": "cev_1791826257941_d7fddb",
+    "timestamp_monotonic": 424645.0215303,
+    "timestamp_wall": 1791826257.9538975,
+    "event_type": "PLAN_CREATED",
+    "component": "GoalPlanner",
+    "input_hash": null,
+    "output_hash": "80ac3f7121f6283a0fabf4fc20a08c68b94cb7d877024ba6fb203b6a513b9873",
+    "model_id": null,
+    "capability": null,
+    "authorization_verdict": null,
+    "resulting_event_id": null,
+    "data": {
+      "step_count": 2,
+      "capabilities": [
+        "execute_dynamic_tool",
+        "reveal_file"
+      ]
+    }
+  },
+  {
+    "event_id": "cev_1791826257988_e96adc",
+    "run_id": "run_1791826249112_f05f4fb7",
+    "task_id": "task_fd2dd2a9",
+    "parent_event_id": "cev_1791826257953_5f58de",
+    "timestamp_monotonic": 424645.0561216,
+    "timestamp_wall": 1791826257.9884892,
+    "event_type": "STATE_OBSERVED",
+    "component": "DesktopObserver",
+    "input_hash": null,
+    "output_hash": null,
+    "model_id": null,
+    "capability": null,
+    "authorization_verdict": null,
+    "resulting_event_id": null,
+    "data": {
+      "foreground_title": "AstraRun",
+      "visible_window_count": 17,
+      "dialog_count": 1,
+      "observation_latency_ms": 3.42
+    }
+  },
+  {
+    "event_id": "cev_1791826258011_80f19d",
+    "run_id": "run_1791826249112_f05f4fb7",
+    "task_id": "task_fd2dd2a9",
+    "parent_event_id": "cev_1791826257988_e96adc",
+    "timestamp_monotonic": 424645.0792299,
+    "timestamp_wall": 1791826258.0115972,
+    "event_type": "STATE_OBSERVED",
+    "component": "DesktopObserver",
+    "input_hash": null,
+    "output_hash": null,
+    "model_id": null,
+    "capability": null,
+    "authorization_verdict": null,
+    "resulting_event_id": null,
+    "data": {
+      "foreground_title": "AstraRun",
+      "visible_window_count": 17,
+      "dialog_count": 1,
+      "observation_latency_ms": 3.5
+    }
+  },
+  {
+    "event_id": "cev_1791826258121_9fbc4e",
+    "run_id": "run_1791826249112_f05f4fb7",
+    "task_id": "task_fd2dd2a9",
+    "parent_event_id": "cev_1791826258011_80f19d",
+    "timestamp_monotonic": 424645.1888429,
+    "timestamp_wall": 1791826258.12121,
+    "event_type": "ACTION_PROPOSED",
+    "component": "ExecutionBroker",
+    "input_hash": "45ff995e38331e0d825a139cc801568ee196f2fa197c50186658e564e34cc52e",
+    "output_hash": null,
+    "model_id": null,
+    "capability": "execute_dynamic_tool",
+    "authorization_verdict": null,
+    "resulting_event_id": null,
+    "data": {
+      "source": "agent_planner",
+      "category": "ACT",
+      "step_id": null,
+      "dry_run": false
+    }
+  },
+  {
+    "event_id": "cev_1791826258125_be7546",
+    "run_id": "run_1791826249112_f05f4fb7",
+    "task_id": "task_fd2dd2a9",
+    "parent_event_id": "cev_1791826258121_9fbc4e",
+    "timestamp_monotonic": 424645.1933638,
+    "timestamp_wall": 1791826258.1257312,
+    "event_type": "ACTION_AUTHORIZED",
+    "component": "ExecutionBroker",
+    "input_hash": null,
+    "output_hash": null,
+    "model_id": null,
+    "capability": "execute_dynamic_tool",
+    "authorization_verdict": "ALLOW",
+    "resulting_event_id": null,
+    "data": {
+      "category": "ACT"
+    }
+  },
+  {
+    "event_id": "cev_1791826258127_c7a98f",
+    "run_id": "run_1791826249112_f05f4fb7",
+    "task_id": "task_fd2dd2a9",
+    "parent_event_id": "cev_1791826258121_9fbc4e",
+    "timestamp_monotonic": 424645.1949637,
+    "timestamp_wall": 1791826258.127331,
+    "event_type": "ACTION_DISPATCHED",
+    "component": "ExecutionBroker",
+    "input_hash": null,
+    "output_hash": null,
+    "model_id": null,
+    "capability": "execute_dynamic_tool",
+    "authorization_verdict": null,
+    "resulting_event_id": null,
+    "data": {
+      "parameters": {
+        "goal": "compute first 50 fibonacci numbers and save to fibonacci.txt and reveal in explorer"
+      }
+    }
+  },
+  {
+    "event_id": "cev_1791826264354_75578d",
+    "run_id": "run_1791826249112_f05f4fb7",
+    "task_id": "task_fd2dd2a9",
+    "parent_event_id": "cev_1791826258127_c7a98f",
+    "timestamp_monotonic": 424651.4223768,
+    "timestamp_wall": 1791826264.354744,
+    "event_type": "MODEL_REQUEST",
+    "component": "ModelClient",
+    "input_hash": "f9d5d1a72609d3cad9480acd87cb4063853f43d9e6bafb04ac6064e4ccc94fbc",
+    "output_hash": null,
+    "model_id": "DEEP@http://127.0.0.1:8089",
+    "capability": null,
+    "authorization_verdict": null,
+    "resulting_event_id": null,
+    "data": {
+      "endpoint": "http://127.0.0.1:8089",
+      "role": "DEEP",
+      "max_tokens": 2048
+    }
+  },
+  {
+    "event_id": "cev_1791826267982_fe2bd2",
+    "run_id": "run_1791826249112_f05f4fb7",
+    "task_id": "task_fd2dd2a9",
+    "parent_event_id": "cev_1791826264354_75578d",
+    "timestamp_monotonic": 424655.0505756,
+    "timestamp_wall": 1791826267.9829428,
+    "event_type": "MODEL_RESPONSE",
+    "component": "ModelClient",
+    "input_hash": "f9d5d1a72609d3cad9480acd87cb4063853f43d9e6bafb04ac6064e4ccc94fbc",
+    "output_hash": "2ee2b1188dae0f12076d878b5859206fa77aeb7a3c6f2523ace45f1944b56381",
+    "model_id": "DEEP@http://127.0.0.1:8089",
+    "capability": null,
+    "authorization_verdict": null,
+    "resulting_event_id": null,
+    "data": {
+      "status": "SUCCESS",
+      "latency_ms": 3628.3663000212982,
+      "prompt_tokens": 534,
+      "completion_tokens": 255
+    }
+  },
+  {
+    "event_id": "cev_1791826267985_e99db2",
+    "run_id": "run_1791826249112_f05f4fb7",
+    "task_id": "task_fd2dd2a9",
+    "parent_event_id": "cev_1791826267982_fe2bd2",
+    "timestamp_monotonic": 424655.0527449,
+    "timestamp_wall": 1791826267.985112,
+    "event_type": "ARTIFACT_CREATED",
+    "component": "DynamicToolBuilder",
+    "input_hash": null,
+    "output_hash": "81c64e02e49497febc9107ffefcea56d22a0e3fb90572a88d4f46dee4a77c438",
+    "model_id": null,
+    "capability": null,
+    "authorization_verdict": null,
+    "resulting_event_id": null,
+    "data": {
+      "tool_id": "dyn_tool_f8e16006",
+      "entrypoint": "main.py",
+      "files": [
+        "main.py"
+      ]
+    }
+  },
+  {
+    "event_id": "cev_1791826268265_10d199",
+    "run_id": "run_1791826249112_f05f4fb7",
+    "task_id": "task_9c9d3951",
+    "parent_event_id": "cev_1791826267985_e99db2",
+    "timestamp_monotonic": 424655.3331367,
+    "timestamp_wall": 1791826268.265504,
+    "event_type": "RESOURCE_REGISTERED",
+    "component": "AstraResourceLedger",
+    "input_hash": null,
+    "output_hash": null,
+    "model_id": null,
+    "capability": null,
+    "authorization_verdict": null,
+    "resulting_event_id": null,
+    "data": {
+      "resource_id": "51d29e71-c51f-46b0-9bda-23005a52ff2a",
+      "resource_type": "SANDBOX_DIR",
+      "pid": null,
+      "hwnd": null,
+      "document_path": "C:\\Users\\hp\\AppData\\LocalLow\\AstraRun\\sandbox\\task_9c9d3951"
+    }
+  },
+  {
+    "event_id": "cev_1791826269036_58567b",
+    "run_id": "run_1791826249112_f05f4fb7",
+    "task_id": "task_fd2dd2a9",
+    "parent_event_id": "cev_1791826268265_10d199",
+    "timestamp_monotonic": 424656.104276,
+    "timestamp_wall": 1791826269.0366433,
+    "event_type": "ACTION_RESULT",
+    "component": "ExecutionBroker",
+    "input_hash": null,
+    "output_hash": "333aebbb317ae151371f8eb30afe1b4a34ce504643838a4a10bcceeec50fd334",
+    "model_id": null,
+    "capability": "execute_dynamic_tool",
+    "authorization_verdict": null,
+    "resulting_event_id": null,
+    "data": {
+      "success": true,
+      "message": "Dynamic execution succeeded with 2 artifact(s) created.",
+      "duration_ms": 10913.706499966793
+    }
+  },
+  {
+    "event_id": "cev_1791826269044_48028f",
+    "run_id": "run_1791826249112_f05f4fb7",
+    "task_id": "task_fd2dd2a9",
+    "parent_event_id": "cev_1791826269036_58567b",
+    "timestamp_monotonic": 424656.1125479,
+    "timestamp_wall": 1791826269.0449152,
+    "event_type": "STATE_OBSERVED",
+    "component": "DesktopObserver",
+    "input_hash": null,
+    "output_hash": null,
+    "model_id": null,
+    "capability": null,
+    "authorization_verdict": null,
+    "resulting_event_id": null,
+    "data": {
+      "foreground_title": "AstraRun",
+      "visible_window_count": 17,
+      "dialog_count": 1,
+      "observation_latency_ms": 6.11
+    }
+  },
+  {
+    "event_id": "cev_1791826269398_5afb35",
+    "run_id": "run_1791826249112_f05f4fb7",
+    "task_id": "task_fd2dd2a9",
+    "parent_event_id": "cev_1791826269044_48028f",
+    "timestamp_monotonic": 424656.4661244,
+    "timestamp_wall": 1791826269.3984914,
+    "event_type": "STATE_OBSERVED",
+    "component": "DesktopObserver",
+    "input_hash": null,
+    "output_hash": null,
+    "model_id": null,
+    "capability": null,
+    "authorization_verdict": null,
+    "resulting_event_id": null,
+    "data": {
+      "foreground_title": "AstraRun",
+      "visible_window_count": 17,
+      "dialog_count": 1,
+      "observation_latency_ms": 2.11
+    }
+  },
+  {
+    "event_id": "cev_1791826269405_e801ba",
+    "run_id": "run_1791826249112_f05f4fb7",
+    "task_id": "task_fd2dd2a9",
+    "parent_event_id": "cev_1791826269398_5afb35",
+    "timestamp_monotonic": 424656.4732082,
+    "timestamp_wall": 1791826269.4055755,
+    "event_type": "ACTION_PROPOSED",
+    "component": "ExecutionBroker",
+    "input_hash": "45ff995e38331e0d825a139cc801568ee196f2fa197c50186658e564e34cc52e",
+    "output_hash": null,
+    "model_id": null,
+    "capability": "execute_dynamic_tool",
+    "authorization_verdict": null,
+    "resulting_event_id": null,
+    "data": {
+      "source": "agent_planner",
+      "category": "ACT",
+      "step_id": null,
+      "dry_run": false
+    }
+  },
+  {
+    "event_id": "cev_1791826269409_11b672",
+    "run_id": "run_1791826249112_f05f4fb7",
+    "task_id": "task_fd2dd2a9",
+    "parent_event_id": "cev_1791826269405_e801ba",
+    "timestamp_monotonic": 424656.4773986,
+    "timestamp_wall": 1791826269.409766,
+    "event_type": "ACTION_AUTHORIZED",
+    "component": "ExecutionBroker",
+    "input_hash": null,
+    "output_hash": null,
+    "model_id": null,
+    "capability": "execute_dynamic_tool",
+    "authorization_verdict": "ALLOW",
+    "resulting_event_id": null,
+    "data": {
+      "category": "ACT"
+    }
+  },
+  {
+    "event_id": "cev_1791826269411_b0340b",
+    "run_id": "run_1791826249112_f05f4fb7",
+    "task_id": "task_fd2dd2a9",
+    "parent_event_id": "cev_1791826269405_e801ba",
+    "timestamp_monotonic": 424656.4796597,
+    "timestamp_wall": 1791826269.412028,
+    "event_type": "ACTION_DISPATCHED",
+    "component": "ExecutionBroker",
+    "input_hash": null,
+    "output_hash": null,
+    "model_id": null,
+    "capability": "execute_dynamic_tool",
+    "authorization_verdict": null,
+    "resulting_event_id": null,
+    "data": {
+      "parameters": {
+        "goal": "compute first 50 fibonacci numbers and save to fibonacci.txt and reveal in explorer"
+      }
+    }
+  },
+  {
+    "event_id": "cev_1791826269685_2992fe",
+    "run_id": "run_1791826249112_f05f4fb7",
+    "task_id": "task_fd2dd2a9",
+    "parent_event_id": "cev_1791826269411_b0340b",
+    "timestamp_monotonic": 424656.7528216,
+    "timestamp_wall": 1791826269.6851888,
+    "event_type": "MODEL_REQUEST",
+    "component": "ModelClient",
+    "input_hash": "f9d5d1a72609d3cad9480acd87cb4063853f43d9e6bafb04ac6064e4ccc94fbc",
+    "output_hash": null,
+    "model_id": "DEEP@http://127.0.0.1:8089",
+    "capability": null,
+    "authorization_verdict": null,
+    "resulting_event_id": null,
+    "data": {
+      "endpoint": "http://127.0.0.1:8089",
+      "role": "DEEP",
+      "max_tokens": 2048
+    }
+  },
+  {
+    "event_id": "cev_1791826272865_6dca3c",
+    "run_id": "run_1791826249112_f05f4fb7",
+    "task_id": "task_fd2dd2a9",
+    "parent_event_id": "cev_1791826269685_2992fe",
+    "timestamp_monotonic": 424659.9333167,
+    "timestamp_wall": 1791826272.865684,
+    "event_type": "MODEL_RESPONSE",
+    "component": "ModelClient",
+    "input_hash": "f9d5d1a72609d3cad9480acd87cb4063853f43d9e6bafb04ac6064e4ccc94fbc",
+    "output_hash": "0aad035f91b3a3ccfe2586b3db89a248c0332296e2e84d1e6035600c8d8bbd60",
+    "model_id": "DEEP@http://127.0.0.1:8089",
+    "capability": null,
+    "authorization_verdict": null,
+    "resulting_event_id": null,
+    "data": {
+      "status": "SUCCESS",
+      "latency_ms": 3180.653200019151,
+      "prompt_tokens": 534,
+      "completion_tokens": 234
+    }
+  },
+  {
+    "event_id": "cev_1791826272867_a33844",
+    "run_id": "run_1791826249112_f05f4fb7",
+    "task_id": "task_fd2dd2a9",
+    "parent_event_id": "cev_1791826272865_6dca3c",
+    "timestamp_monotonic": 424659.9353987,
+    "timestamp_wall": 1791826272.867766,
+    "event_type": "ARTIFACT_CREATED",
+    "component": "DynamicToolBuilder",
+    "input_hash": null,
+    "output_hash": "d07a979767a537c68d14e5e660a81a415069e440fa4b42ccdf3d5696fb1634ef",
+    "model_id": null,
+    "capability": null,
+    "authorization_verdict": null,
+    "resulting_event_id": null,
+    "data": {
+      "tool_id": "dyn_tool_df9c1481",
+      "entrypoint": "main.py",
+      "files": [
+        "main.py"
+      ]
+    }
+  },
+  {
+    "event_id": "cev_1791826272941_c058d7",
+    "run_id": "run_1791826249112_f05f4fb7",
+    "task_id": "task_aa04d6a1",
+    "parent_event_id": "cev_1791826272867_a33844",
+    "timestamp_monotonic": 424660.0088264,
+    "timestamp_wall": 1791826272.9411938,
+    "event_type": "RESOURCE_REGISTERED",
+    "component": "AstraResourceLedger",
+    "input_hash": null,
+    "output_hash": null,
+    "model_id": null,
+    "capability": null,
+    "authorization_verdict": null,
+    "resulting_event_id": null,
+    "data": {
+      "resource_id": "502e7926-5709-48f8-9ef8-bb5bd6f94483",
+      "resource_type": "SANDBOX_DIR",
+      "pid": null,
+      "hwnd": null,
+      "document_path": "C:\\Users\\hp\\AppData\\LocalLow\\AstraRun\\sandbox\\task_aa04d6a1"
+    }
+  }
+]

@@ -1,0 +1,20 @@
+{
+  "phase": "F0-25B",
+  "title": "Warm Unseen Task Execution Results",
+  "task_id": "f025b_warm_1791711824120",
+  "model_id": "qwen2.5-coder-1.5b-instruct-q4_k_m",
+  "retrieved_affordances_count": 4,
+  "retrieved_affordances": [
+    "EDIT_TEXT",
+    "SELECT_ALL",
+    "NEW_DOCUMENT_TAB",
+    "SEARCH_FIND_SURFACE"
+  ],
+  "decision_mode": "ACT",
+  "actions_dispatched": 2,
+  "exploratory_probes_needed": 0,
+  "task_completed": true,
+  "execution_duration_seconds": 7.53,
+  "task_resource_cleaned": true,
+  "status": "PASS"
+}

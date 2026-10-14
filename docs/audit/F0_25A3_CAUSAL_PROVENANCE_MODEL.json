@@ -1,0 +1,69 @@
+{
+  "phase": "F0-25A.3",
+  "title": "Causal Provenance & Resource Attribution Model",
+  "core_invariant": "A RESOURCE APPEARING AFTER AN ASTRA ACTION DOES NOT IMPLY THAT ASTRA CREATED OR OWNS IT. Temporal correlation is NOT causal ownership.",
+  "module": "src/astrarun/hermes/resource_lifecycle.py",
+  "classification_taxonomy": {
+    "NEW_TO_WORLD": {
+      "nature": "OBSERVATIONAL_DELTA",
+      "implies_ownership": false,
+      "definition": "A resource identity that was absent in the pre-action snapshot but present in the post-action snapshot. This is a purely observational delta and confers zero ownership or disposal rights."
+    },
+    "TASK_CREATED": {
+      "nature": "AFFIRMATIVE_CAUSAL_OWNERSHIP",
+      "implies_ownership": true,
+      "disposable": true,
+      "definition": "A resource affirmatively created by a governed Astra action (e.g. direct Popen return, explicit launch PID, or HWND owned by the launched PID)."
+    },
+    "TASK_DESCENDANT": {
+      "nature": "PROVEN_ANCESTRY_OWNERSHIP",
+      "implies_ownership": true,
+      "disposable": true,
+      "definition": "A child or descendant process whose process tree ancestry (PPID chain) connects to an existing proven TASK_CREATED process."
+    },
+    "PRE_EXISTING_USER": {
+      "nature": "USER_OWNED_PROTECTED",
+      "implies_ownership": false,
+      "disposable": false,
+      "definition": "A resource identity present in the pre-task baseline. Strictly preserved and protected under CRITICAL_OWNERSHIP_RULE."
+    },
+    "EXTERNAL_CONCURRENT": {
+      "nature": "UNREQUESTED_CONCURRENT_PROTECTED",
+      "implies_ownership": false,
+      "disposable": false,
+      "definition": "A resource that appeared during an Astra action interval from an independent user or operating system activity without affirmative causal linkage to the task. Strictly protected and preserved during cleanup."
+    },
+    "UNKNOWN": {
+      "nature": "UNATTRIBUTABLE_FAIL_SAFE",
+      "implies_ownership": false,
+      "disposable": false,
+      "definition": "A resource whose origin cannot be affirmatively proven. Strictly safe: may be observed and recorded, but MUST NEVER be closed, terminated, deleted, or modified."
+    }
+  },
+  "resource_layer_separation": {
+    "observed_resources": "All entities detected across the desktop in WorldFrame (windows, processes, documents, dialogs, files).",
+    "new_resources": "Entities present in post-action frame but absent in pre-action frame (NEW_TO_WORLD).",
+    "causally_attributed_resources": "Entities with affirmative causal provenance connecting them to the task (TASK_CREATED, TASK_DESCENDANT).",
+    "task_owned_resources": "Subset of causally attributed entities that the task actively governs.",
+    "disposable_resources": "Task-owned resources whose goal-required final state is disposable (eligible for verified cleanup)."
+  },
+  "affirmative_causal_evidence_rules": {
+    "A_DIRECT_GOVERNED_LAUNCH": "Process PID returned directly from Astra's governed ExecutionBroker launch operation (e.g. subprocess.Popen.pid or Win32 CreateProcess PROCESS_INFORMATION.dwProcessId).",
+    "B_GOVERNED_LAUNCH_TARGET": "Process identity explicitly observed as the exact intended target of the governed launch operation.",
+    "C_DESCENDANT_PROCESS": "Descendant process whose ancestry can be traced via the OS process tree (PPID chain via psutil) to a proven TASK_CREATED ancestor.",
+    "D_HWND_OF_TASK_PID": "Top-level Win32 window HWND whose owning PID (via GetWindowThreadProcessId) belongs to a proven TASK_CREATED or TASK_DESCENDANT process.",
+    "E_STRUCTURAL_CHILD": "UIA document, tab, pane, or control whose parent HWND is a proven task-owned window.",
+    "F_DIALOG_OF_TASK": "Dialog window whose parent HWND or owning PID is a proven task-owned resource.",
+    "G_TASK_DECLARED_ARTIFACT_SCOPE": "File created inside an explicitly declared task-owned artifact or temp scope path by the governed action.",
+    "H_INDEPENDENTLY_VERIFIED_RELATION": "Another affirmative, machine-verifiable causal link proven by kernel or runtime tracing."
+  },
+  "safety_invariants_for_unknown_and_concurrent": [
+    "Temporal coincidence ('absent before + present after') is NEVER sufficient to establish ownership.",
+    "UNKNOWN and EXTERNAL_CONCURRENT resources MUST NOT be closed.",
+    "UNKNOWN and EXTERNAL_CONCURRENT resources MUST NOT be terminated.",
+    "UNKNOWN and EXTERNAL_CONCURRENT resources MUST NOT be deleted.",
+    "UNKNOWN and EXTERNAL_CONCURRENT resources MUST NOT be modified during lifecycle cleanup.",
+    "Lifecycle completion distinguishes unknown unrelated world delta from unresolved task-owned resources."
+  ],
+  "generic_architecture_guarantee": "No brand-specific, process-name, or window-title hacks. Causal provenance is determined purely through OS process trees, Win32 window-thread relationships, UIA structural ancestry, and declared artifact boundaries."
+}

@@ -1,0 +1,28 @@
+{
+  "auditor": "MiMo",
+  "implementation_review": {
+    "models": "SandboxProfile EPHEMERAL_TOOL/WORKSPACE_TEST/RESEARCH_DOWNLOAD; preserve_on_exit on SandboxConfig",
+    "execute_script_cleanup": "manager.py:362-367 deletes run_dir ONLY if not preserve_on_exit AND len(new_files)==0; artifacts present => retention by design",
+    "execute_candidate_cleanup": "manager.py:371+ NO manager-side rmtree; relies on ledger close",
+    "ledger_close": "resource_ledger.py:740-772 rmtree(ignore_errors=True) then CLOSED+RESOURCE_DISPOSED unconditionally"
+  },
+  "case_analysis_static": {
+    "A_successful_task": "artifact produced => manager does not delete; ledger close deletes only if invoked with right policy — retention/cleanup depends on ledger wiring, not manager",
+    "B_failed_task": "no new_files => manager may rmtree; PRESERVE_ON_FAILURE policy retains and marks SAVED (unit-tested)",
+    "C_exception_during_execution": "not covered by unit tests; manager paths swallow some errors with warnings",
+    "D_preserve_on_exit": "NEVER_CLOSE registration; unit test covers PRESERVE_ON_FAILURE not full preserve_on_exit through manager",
+    "E_cleanup_failure": "ignore_errors=True + ledger still marks CLOSED — FAILURE INVISIBLE to ledger consumers",
+    "F_repeated_task": "no test; design allows accumulation of retained artifact-bearing dirs (historical sandbox listing had hundreds)",
+    "G_stale_resource_record": "not tested; orphan recovery exists at startup (prior sessions) but not verified in F0-25F package",
+    "H_nested_task_resource": "not supported/tested"
+  },
+  "unit_test_execution_this_session": {
+    "command": "pytest tests/unit/test_f0_25f_resource_ledger_sandbox.py -v",
+    "result": "3 passed in 2.51s",
+    "tests": ["test_sandbox_dir_registration_and_auto_close PASSED", "test_sandbox_dir_preserve_on_failure PASSED", "test_cleanup_task_resources_cleans_sandbox PASSED"],
+    "scope_limit": "hermetic temp dirs/db only; does not exercise SandboxManager.execute_candidate wiring; does not assert telemetry; does not test cleanup-failure or NEVER_CLOSE"
+  },
+  "ledger_says_disposed_but_dir_exists_risk": "CONFIRMED possible by code reading (E_cleanup_failure): disposed telemetry can fire while directory remains",
+  "verdict": "SANDBOX LIFECYCLE = PARTIAL",
+  "verdict_rationale": "Unit-tested happy paths pass (FACT). Deterministic end-to-end cleanup for real task sandboxes is not demonstrated; cleanup failures are silent; Stage6's 'verified' check is synthetic."
+}

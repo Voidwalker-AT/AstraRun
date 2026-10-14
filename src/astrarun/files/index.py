@@ -54,9 +54,10 @@ class FileMetadataIndex:
 
     def _init_default_roots(self) -> None:
         """Initialize standard safe user roots."""
+        from astrarun.core.paths import AstraPaths
         home = Path.home()
         candidates = [
-            Path(r"E:\Workspace"),
+            AstraPaths.workspace_root(),
             home / "Downloads",
             home / "Documents",
             home / "Desktop",

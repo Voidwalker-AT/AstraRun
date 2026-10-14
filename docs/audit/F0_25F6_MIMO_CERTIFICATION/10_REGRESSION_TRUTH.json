@@ -1,0 +1,34 @@
+{
+  "auditor": "MiMo",
+  "raw_source": "F0_25F6_REGRESSION.xml (JUnit)",
+  "mechanical_parse": {
+    "collected": 1015,
+    "passed": 999,
+    "failed": 2,
+    "skipped": 14,
+    "errors": 0,
+    "xfailed": 0,
+    "xpassed": 0,
+    "duration_sec": 466.458
+  },
+  "failed_tests_actual": [
+    "tests.cognitive_spine.test_acceptance_3d_vis::test_architectural_acceptance_3d_visualization (plan no executable steps; task FAILED)",
+    "tests.test_f0_21_post_freeze_holdout::test_holdout_novel_computation_and_save (PlanStatus DRAFT vs ACTIVE)"
+  ],
+  "report_claimed_failures": [
+    "test_f0_24a1_oracle_mutations.py::test_mutation_synthetic_sleep_in_sandbox",
+    "test_hermes_dataset_generator.py::test_synthetic_token_scrubber"
+  ],
+  "failure_identification_contradiction": "FINAL_REPORT L209-210 names DIFFERENT tests than the actual 2 failures in JUnit — MISATTRIBUTION",
+  "skipped_tests": [
+    "4x test_laya_router (ModuleNotFoundError laya — optional neural router; product runs without laya)",
+    "3x visualization/holdout c2_2 (matplotlib/ultralytics path)",
+    "3x TestVisualGrounder (model not present)",
+    "3x c2_2 trusted visualization / matplotlib png",
+    "1x c2_2a multistep workflow"
+  ],
+  "skips_optional_for_installed_product": "laya=YES optional (degraded warmup warning at runtime); matplotlib/ultralytics visualization=genuinely optional for core launcher; not silently converted from failures",
+  "summary_json": "honest 999/2/14 (verdict FAIL on failed>0)",
+  "verdict": "REGRESSION TRUTH = PARTIAL",
+  "verdict_rationale": "JUnit+summary honest (2 real failures, 14 skips, 0 error). FINAL_REPORT misidentifies the failing tests — evidence honesty defect. Failures are real behavioral issues (plan not active/executable), not skips."
+}

@@ -1,0 +1,73 @@
+{
+  "phase": "F0-25A.3",
+  "title": "Synthetic Identity Audit: document:9702606:synth_child_e",
+  "target_identity": "document:9702606:synth_child_e",
+  "originating_artifact": "docs/audit/F0_25A2_MULTI_RESOURCE_RESULTS.json",
+  "originating_code_location": "scripts/f0_25a2_physical_scenarios.py:226-230",
+  "verbatim_code": "if created:\n    rec.register_nested_from_structure(created[0], [\n        ResourceIdentity(kind=\"document\", pid=created[0].identity.pid, hwnd=created[0].identity.hwnd, uia_id=\"synth_child_e\")\n    ], action_id=\"multi_open_e\")",
+  "investigation_findings": {
+    "why_it_exists": "In scenario_e_multi_resource (scripts/f0_25a2_physical_scenarios.py), the author wanted to verify nested child tracking (document under parent window) during a multi-instance launch. Instead of inspecting real UIA document elements from Character Map or Notepad, the author manually synthesized and injected a fake ResourceIdentity with uia_id=\"synth_child_e\".",
+    "why_it_violates_invariants": "The scenario was executed and published as a live physical test in F0_25A2_MULTI_RESOURCE_RESULTS.json. Presenting mock or manually synthesized objects within physical evidence contaminates the execution-truth oracle and falsifies empirical verification.",
+    "remedy": "Synthetic data is strictly quarantined to UNIT_SYNTHETIC tests. Physical scenarios must observe ONLY authentic Win32/UIA entities returned from operating system APIs (EnumWindows, UI Automation tree inspection, psutil)."
+  },
+  "case_classification_taxonomy": {
+    "UNIT_SYNTHETIC": {
+      "description": "Pure isolated unit tests using synthetic/mock identities, in-memory databases, and stubbed capabilities.",
+      "allowed_evidence": ["synthetic ResourceIdentity", "mock pids", "simulated timestamps", "fake window titles"],
+      "examples": ["tests/hermes/test_hermes_experiential_memory.py", "tests/eval_v1/test_f0_24a1_adversarial_oracle.py", "tests/test_v08_tasks.py"]
+    },
+    "SOURCE_INTEGRATION": {
+      "description": "Integration tests checking interface contracts, schemas, registry lookups, and serialization across modules without live desktop interaction.",
+      "allowed_evidence": ["live SQLite tables", "real serialization streams", "real local files in temp"],
+      "examples": ["tests/test_agent_runtime.py", "tests/test_f0_19_brain_computer_use.py"]
+    },
+    "PHYSICAL": {
+      "description": "Physical execution against live Windows desktop apps (Notepad, Character Map, etc.) observing authentic HWNDs, PIDs, Win32 window text, and UIA trees.",
+      "allowed_evidence": ["real Win32 HWNDs", "real OS PIDs", "live psutil metrics", "real UIA control patterns"],
+      "forbidden_evidence": ["manually synthesized ResourceIdentity", "mock UIA ids", "stubbed delta injection"],
+      "examples": ["scripts/run_f0_24a2b_laboratory.py", "adversarial concurrency test", "child process test"]
+    },
+    "MODEL_CAUSAL": {
+      "description": "Closed-loop execution guided by local/remote SLM/LLM inference where model outputs govern actions and update Hermes experiential memory.",
+      "allowed_evidence": ["real model responses with sha256", "real observation frames", "real belief state updates"],
+      "examples": ["scripts/run_f0_25_hermes_experiment.py", "scripts/run_f0_25a_full_chain.py"]
+    },
+    "FROZEN": {
+      "description": "Post-freeze verification against the packaged PyInstaller binary/installer running in an isolated environment.",
+      "allowed_evidence": ["compiled binary exit codes", "binary output logs", "frozen registry verification"],
+      "examples": ["scripts/run_f0_24a_frozen_holdout.py", "tests/eval_v1/test_c2_2_post_freeze_holdout.py"]
+    }
+  },
+  "case_classification_audit": [
+    {
+      "case": "F0-25A.2 Scenario E (multi_resource)",
+      "historical_label": "PHYSICAL",
+      "true_classification": "CONTAMINATED (PHYSICAL with UNIT_SYNTHETIC injection)",
+      "verdict": "REJECTED_AS_PHYSICAL"
+    },
+    {
+      "case": "F0-25 Hermes 4-Stage Experiment",
+      "historical_label": "PHYSICAL",
+      "true_classification": "PHYSICAL",
+      "verdict": "VALID_PHYSICAL"
+    },
+    {
+      "case": "F0-24A.2B Notepad++ Laboratory",
+      "historical_label": "PHYSICAL",
+      "true_classification": "PHYSICAL",
+      "verdict": "VALID_PHYSICAL"
+    },
+    {
+      "case": "F0-25A.3 Adversarial Concurrency Test",
+      "historical_label": "PHYSICAL",
+      "true_classification": "PHYSICAL",
+      "verdict": "PENDING_PHYSICAL_EXECUTION"
+    },
+    {
+      "case": "F0-25A.3 Mutation Suite",
+      "historical_label": "UNIT_SYNTHETIC",
+      "true_classification": "UNIT_SYNTHETIC",
+      "verdict": "VALID_UNIT"
+    }
+  ]
+}

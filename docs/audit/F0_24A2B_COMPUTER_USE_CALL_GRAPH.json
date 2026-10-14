@@ -1,0 +1,152 @@
+{
+  "milestone": "F0_24A.2B",
+  "stage": "PRODUCTION_PATH_AUDIT",
+  "timestamp": "2026-10-10T19:42:00.000000+00:00",
+  "title": "AstraRun Computer Use Reachable Production Call Graph",
+  "root_entrypoints": [
+    {
+      "component": "AstraApplication",
+      "file": "src/astrarun/app.py",
+      "method": "handle_request(prompt)"
+    },
+    {
+      "component": "AgentExecutionEngine",
+      "file": "src/astrarun/agent/loop.py",
+      "method": "execute_goal(prompt)"
+    }
+  ],
+  "causal_execution_pipeline": [
+    {
+      "phase": "1. GOAL_UNDERSTANDING_AND_PLANNING",
+      "caller": "AgentExecutionEngine.execute_goal",
+      "callees": [
+        {
+          "callee": "GoalPlanner.parse_goal",
+          "module": "src/astrarun/agent/planner.py",
+          "purpose": "Extracts intent verbs, target applications, file entities, and synthesizes GoalContract with explicit acceptance predicates."
+        },
+        {
+          "callee": "GoalPlanner.create_plan",
+          "module": "src/astrarun/agent/planner.py",
+          "purpose": "Decomposes goal contract into topological PlanStep sequence (open -> type -> save -> verify)."
+        },
+        {
+          "callee": "PlanQualityValidator.validate_plan",
+          "module": "src/astrarun/agent/validator.py",
+          "purpose": "Enforces plan invariants, information completeness, and dependency soundness before execution."
+        }
+      ]
+    },
+    {
+      "phase": "2. PRE_ACTION_OBSERVATION_FRAME",
+      "caller": "AgentExecutionEngine._execute_step_with_closed_loop",
+      "callees": [
+        {
+          "callee": "DesktopObserver.observe",
+          "module": "src/astrarun/computer_use/observation/observer.py",
+          "purpose": "Captures raw desktop state: foreground HWND, cursor position, top-level visible windows, active modal dialogs, and user takeover indicators."
+        },
+        {
+          "callee": "PhysicalInputController.check_user_takeover",
+          "module": "src/astrarun/perception/input.py",
+          "purpose": "Detects physical human mouse/keyboard motion to halt synthetic input."
+        },
+        {
+          "callee": "ComputerUseTraceRecorder.capture_frame",
+          "module": "src/astrarun/computer_use/observation/frame.py",
+          "purpose": "Persists immutable pre-action observation frame (JSON + PNG) with raw observation and derived interpretation separation."
+        }
+      ]
+    },
+    {
+      "phase": "3. GOVERNED_ACTION_DISPATCH",
+      "caller": "AgentExecutionEngine._execute_step_with_closed_loop",
+      "callees": [
+        {
+          "callee": "ExecutionBroker.execute",
+          "module": "src/astrarun/security/execution_broker.py",
+          "purpose": "Enforces security perimeter, policy authorization, and ActionGate verification before any capability executes."
+        },
+        {
+          "callee": "CapabilityRegistry.execute",
+          "module": "src/astrarun/capabilities/registry.py",
+          "purpose": "Routes validated proposal to registered capability handler."
+        }
+      ]
+    },
+    {
+      "phase": "4. CAPABILITY_EXECUTION_AND_INTERACTION",
+      "caller": "CapabilityRegistry -> Capability Handlers",
+      "callees": [
+        {
+          "capability": "open_application",
+          "handler": "src/astrarun/applications/service.py:open_application",
+          "sub_callees": [
+            "src/astrarun/discovery/apps.py:discover_all_apps",
+            "src/astrarun/tasks/resource_ledger.py:capture_pre_launch_snapshot",
+            "src/astrarun/tasks/resource_ledger.py:identify_and_register_launched_resource"
+          ]
+        },
+        {
+          "capability": "type_into_window",
+          "handler": "src/astrarun/interaction/service.py:type_into_window",
+          "sub_callees": [
+            "src/astrarun/computer_use/ui/editable_surface.py:discover_editable_surface",
+            "src/astrarun/computer_use/ui/editable_surface.py:execute_input_strategy_ladder",
+            "src/astrarun/ui/presentation.py:force_foreground_activation"
+          ]
+        },
+        {
+          "capability": "save_document_via_ui",
+          "handler": "src/astrarun/interaction/service.py:save_document_via_ui",
+          "sub_callees": [
+            "src/astrarun/interaction/document.py:DocumentInteractionAdapter.save_document",
+            "src/astrarun/computer_use/ui/dialogs.py:DialogDetector.find_active_dialog"
+          ]
+        }
+      ]
+    },
+    {
+      "phase": "5. POST_ACTION_OBSERVATION_AND_VERIFICATION",
+      "caller": "AgentExecutionEngine._execute_step_with_closed_loop",
+      "callees": [
+        {
+          "callee": "DesktopObserver.observe",
+          "module": "src/astrarun/computer_use/observation/observer.py",
+          "purpose": "Captures post-action desktop state, detecting window changes, dialogs, and control modifications."
+        },
+        {
+          "callee": "ComputerUseTraceRecorder.record_transition",
+          "module": "src/astrarun/computer_use/observation/frame.py",
+          "purpose": "Calculates StateTransitionRecord comparing PRE and POST frames against expected transition."
+        },
+        {
+          "callee": "StepVerifier.verify",
+          "module": "src/astrarun/agent/verifier.py",
+          "purpose": "Empirically validates expected postconditions (file existence, non-zero bytes, SHA-256 match, UI element state)."
+        }
+      ]
+    },
+    {
+      "phase": "6. RECOVERY_OR_COMPLETION_LIFECYCLE",
+      "caller": "AgentExecutionEngine.run_task",
+      "callees": [
+        {
+          "callee": "GoalVerifier.verify_goal",
+          "module": "src/astrarun/agent/verifier.py",
+          "purpose": "Verifies all contract constraints and predicates are empirically satisfied in live world state."
+        },
+        {
+          "callee": "AstraResourceLedger.cleanup_task_resources",
+          "module": "src/astrarun/tasks/resource_ledger.py",
+          "purpose": "Gracefully terminates task-owned processes and closes task windows; preserves pre-existing user applications."
+        },
+        {
+          "callee": "DesktopObserver.observe",
+          "module": "src/astrarun/computer_use/observation/observer.py",
+          "purpose": "Affirmatively measures post-cleanup OS state to confirm zero residual debris or orphaned processes."
+        }
+      ]
+    }
+  ]
+}

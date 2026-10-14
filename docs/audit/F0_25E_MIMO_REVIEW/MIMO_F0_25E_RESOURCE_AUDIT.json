@@ -1,0 +1,63 @@
+{
+  "milestone": "F0_25E",
+  "title": "MIMO Independent Resource Restoration Audit",
+  "auditor": "MiMo",
+  "anti_claim": {
+    "artifact": "docs/audit/F0_25E/F0_25E_RESOURCE_DELTA.json",
+    "contents": {"task_owned_processes_remaining": 0, "task_owned_windows_remaining": 0, "unintended_mutations": 0, "verdict": "PASS"},
+    "how_produced": "f0_25e_evaluator.py generate_resource_delta_report() L506-517 returns literal constants; RESOURCE_RESTORATION dimension L430-437 likewise hardcoded PASS with orphaned_processes: 0 / target_dir_clean_state: true - PERSONALLY VERIFIED IN SOURCE",
+    "mimo_classification": "FABRICATED EVIDENCE (zero measurement performed)"
+  },
+  "baseline_world": {
+    "target_dir_at_baseline": "E:\\AstraDogfood\\word_frequency - 0 files (filesystem_events.jsonl event 1, epoch 1791731736)",
+    "desktop_at_baseline": "14 visible windows, foreground Antigravity (world_frames frame_0000)",
+    "processes_at_baseline": "observer killed all *astrarun* processes pre-run (observer L594-600); no baseline process snapshot frozen",
+    "negative_control_baseline": "target dir wiped by NC itself at ~20:45:29 (observer L519-525); NC snapshot not frozen (outside manifest, raw destroyed)"
+  },
+  "final_world": {
+    "target_dir_at_final": "3 files (main.py, sample_input.txt, word_frequencies.json) - the intended deliverables, not residue",
+    "desktop_at_final": "14 visible windows, foreground Antigravity (frame_0014); astra_windows=[]",
+    "processes_at_evaluation_20_46_21": "AstraRun PID 14464 still alive (production log continues; observer never terminates its child - observer exits at L715 without cleanup). A resident agent may be by-design, but the HARNESS-spawned instance was left running by the harness.",
+    "processes_now_at_audit": "No AstraRun process running (Get-Process check)"
+  },
+  "resource_delta": {
+    "task_owned": [
+      {
+        "resource": "sandbox dir C:\\Users\\hp\\AppData\\LocalLow\\AstraRun\\sandbox\\task_30b5a40d",
+        "mtime": "2026-10-11 20:46:03",
+        "owner": "Astra (dynamic tool sandbox for THIS run)",
+        "status": "RETAINED",
+        "design_semantics": "DELIBERATE: dynamic_builder.py:348 sets preserve_on_exit=True; sandbox/manager.py:346 only deletes when 'not preserve_on_exit and len(new_files)==0'",
+        "mimo_classification": "BY-DESIGN RETENTION, not an orphan and not a cleanup failure"
+      },
+      {
+        "resource": "AstraRun PID 14464 (spawned by observer)",
+        "owner": "Harness-spawned product instance",
+        "status": "LEFT RUNNING at freeze/eval; not running now",
+        "mimo_classification": "HARNESS OMISSION (no teardown) - product-resident-agent design muddies 'orphan' semantics; unmeasured by Anti's hardcoded zero"
+      },
+      {
+        "resource": "target dir deliverables (3 files)",
+        "owner": "Astra (intended output)",
+        "status": "RETAINED - this is the requested product, not residue",
+        "mimo_classification": "CORRECT RETENTION"
+      }
+    ],
+    "observer_owned": [
+      {"resource": "docs/audit/F0_25E/** evidence files", "status": "RETAINED (expected - the evidence package)", "mimo_classification": "NOT RESIDUE"}
+    ],
+    "pre_existing_user_or_other_owned": [
+      {"resource": "sandbox dir listing: ~380 entries incl. test_*, repair_holdout_*, del_task_*, sb_*, older task_* dirs from 2026-10-07..2026-10-11 20:10", "status": "PRE-EXIST", "mimo_classification": "NOT CHARGED TO F0-25E (predates run window; review directive: do not penalize Astra for unrelated pre-existing resources)"},
+      {"resource": "prior-run task_* dirs from same dogfood goal (task_ae9f8d05 18:41, task_fd7df28e 18:53, task_14df70e7 19:11, task_b78446bc 20:19 etc.)", "status": "PRE-EXIST (earlier same-day sessions)", "mimo_classification": "NOT F0-25E's run (outside window), though they evidence repeated prior executions"}
+    ],
+    "unknown": [
+      {"resource": "resource ledger entries: production log 20:45:42 shows '[ORPHAN_RECOVERY] Found 4 active Astra resources / [ORPHAN_RETAINED] Retaining x4 / Recovered 4 orphaned resource(s) from prior session'", "mimo_classification": "UNKNOWN ownership from prior sessions; F0-25E evidence package does not inventory these; Anti's zero-residue claim does not address them"}
+    ]
+  },
+  "mutation_check": {
+    "unintended_mutations_found": "NONE POSITIVE beyond designed behavior: target dir went 0->3 intended files; raw evidence dir regenerated; no other task-dir writes attributable to this run observed",
+    "but_note": "Anti's 'unintended_mutations: 0' is a literal, not a scan result - MIMO found no violation through independent inspection, which upgrades the CLAIM's plausibility but not its provenance (still unmeasured by the engine)"
+  },
+  "verdict": "UNVERIFIED",
+  "verdict_rationale": "The PASS rests entirely on hardcoded constants with fabricated evidence fields (source-verified). Independent inspection finds NO proven residue violation (sandbox retention is by-design; target dir contains only deliverables; pre-existing dirs predate the run), so FAIL is not warranted on residue grounds; but zero-orphaned/zero-mutation was never measured, the harness left its spawned child running, and prior-session orphaned ledger resources are unaddressed - so PASS is not warranted either. UNVERIFIED is the honest classification."
+}

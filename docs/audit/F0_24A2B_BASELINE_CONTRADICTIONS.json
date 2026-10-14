@@ -1,0 +1,77 @@
+{
+  "milestone": "F0_24A.2B",
+  "stage": "BASELINE_AUDIT",
+  "timestamp": "2026-10-10T19:40:00.000000+00:00",
+  "audit_title": "F0-24A.2 Baseline Contradictions & Rejection Inventory",
+  "status": "REJECTED_BASELINE_CLASSIFIED",
+  "authority": "F0-24A.1 Execution-Truth Oracle (Hardened, Fail-Closed)",
+  "rejection_findings": [
+    {
+      "finding_id": "REJECTION-01-NOTEPADPP-FALSE-PASS",
+      "severity": "CRITICAL",
+      "subsystem": "ComputerUse / Unrelated Editor Execution",
+      "claimed_verdict": "PASS (PASS_UI_SURFACE_ENGAGED)",
+      "actual_evidence_state": {
+        "type_result_success": false,
+        "save_result_success": false,
+        "file_size_bytes": 0,
+        "verified_non_zero": false
+      },
+      "root_cause": "Semantic inflation where engaging UI surface was reported as full task completion despite 0-byte file and unfulfilled postconditions.",
+      "remediation_mandate": "Real application-mediated save must produce non-zero file with verified content hash; no partial engagement may ever be reported as PASS."
+    },
+    {
+      "finding_id": "REJECTION-02-GENERALIZATION-RATE-INFLATION",
+      "severity": "HIGH",
+      "subsystem": "Benchmark / Generalization Suite",
+      "claimed_verdict": "120/120 (100.0%)",
+      "actual_evidence_state": {
+        "actual_passed": 119,
+        "actual_total": 120,
+        "discrepancy": 1
+      },
+      "root_cause": "Rounding or reporting discrepancy that rounded 119/120 up to 100%, violating the zero-tolerance empirical rule.",
+      "remediation_mandate": "Exact rational counts required; 119/120 must be reported strictly as 99.2% and fail any 100% invariant."
+    },
+    {
+      "finding_id": "REJECTION-03-RESOURCE-CLEANUP-CONTRADICTION",
+      "severity": "CRITICAL",
+      "subsystem": "Resource Ledger / Task Lifecycle",
+      "claimed_verdict": "PASS_CLEAN",
+      "actual_evidence_state": {
+        "process_cleaned_up": false,
+        "post_debris_detected": true
+      },
+      "root_cause": "Verdict self-promotion where PASS_CLEAN was emitted despite unresolved debris and process_cleaned_up=false.",
+      "remediation_mandate": "Contradiction gate enforced: process_cleaned_up=false or post_debris_detected=true forces verdict to FAIL with zero tolerance."
+    },
+    {
+      "finding_id": "REJECTION-04-PLAN-VALIDATION-SUBSTITUTION",
+      "severity": "HIGH",
+      "subsystem": "Evaluation Harness",
+      "claimed_verdict": "GENERALIZATION_PASSED",
+      "actual_evidence_state": {
+        "nature_of_test": "Static plan validation without physical UI interaction dispatch"
+      },
+      "root_cause": "Syntactic plan checks were substituted for end-to-end physical computer use execution.",
+      "remediation_mandate": "Physical laboratory must execute real Windows events, observe UI transitions, and verify physical disk/window artifacts."
+    },
+    {
+      "finding_id": "REJECTION-05-EXIT-CODE-ONLY-HOLDOUT",
+      "severity": "HIGH",
+      "subsystem": "Frozen Product Holdout",
+      "claimed_verdict": "HOLDOUT_PASSED",
+      "actual_evidence_state": {
+        "nature_of_test": "Binary launch and exit code 0 without observable state transition verification"
+      },
+      "root_cause": "Process return code 0 was accepted as proof of desktop interaction completion.",
+      "remediation_mandate": "Return code alone is never proof of task success; affirmative postcondition verification on physical window/file state is mandatory."
+    }
+  ],
+  "governing_principles": {
+    "oracle_inviolability": "F0-24A.1 execution-truth oracle is authoritative and must not be weakened, bypassed, or special-cased.",
+    "telemetry_first": "Every decision point must record WHAT WAS SEEN, WHAT WAS INFERRED, WHAT WAS DECIDED, and WHAT CHANGED.",
+    "laboratory_not_special_case": "Notepad++ is the physical microscope for generic interaction, never a hardcoded production branch.",
+    "affirmative_cleanup": "All task-owned application resources must be cleanly terminated upon task completion with zero orphaned processes or windows."
+  }
+}

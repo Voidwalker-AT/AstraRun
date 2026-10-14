@@ -23,11 +23,13 @@ class ContextPersistenceStore:
 
     def __init__(
         self,
-        file_path: Path | str = r"E:\Workspace\Active\AstraRun\data\context_state.json",
+        file_path: Optional[Path | str] = None,
         history_limit: int = 30,
         retention_hours: float = 48.0,
     ) -> None:
-        self.file_path = Path(file_path).resolve()
+        from astrarun.core.paths import AstraPaths
+        p_file = file_path or (AstraPaths.data_dir() / "context_state.json")
+        self.file_path = Path(p_file).resolve()
         self.history_limit = history_limit
         self.retention_hours = retention_hours
         self.file_path.parent.mkdir(parents=True, exist_ok=True)

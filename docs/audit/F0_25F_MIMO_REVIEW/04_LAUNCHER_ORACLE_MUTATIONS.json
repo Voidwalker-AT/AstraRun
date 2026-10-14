@@ -1,0 +1,21 @@
+{
+  "auditor": "MiMo",
+  "oracles": {
+    "stage1": {"code": "scripts/verify_f0_25f_launcher_physical.py:135-139,166", "rule": "dark_pixels(rgb<40) > 30000 AND attestation.is_visible", "type": "absolute count"},
+    "stage6": {"code": "scripts/verify_f0_25f_complete_physical.py:102-107", "rule": "dark_pixel_ratio > 0.50", "type": "ratio"},
+    "evaluator": {"code": "scripts/f0_25e_evaluator.py:322,336-340", "rule": "hardcoded rect (448,48,1088,124); dark_pct >= 0.50 (rgb<50)", "type": "ratio on fixed rect"}
+  },
+  "adversarial_cases": [
+    {"case": "dark Antigravity/app region at launcher coords, launcher absent", "stage1": "PASS risk (dark count high)", "stage6": "PASS risk", "verdict": "FALSE PASS possible", "basis": "darkness-only; no process/ownership/occlusion check"},
+    {"case": "all-black screenshot crop", "stage1": "PASS", "stage6": "PASS", "verdict": "FALSE PASS", "basis": "pure black satisfies both"},
+    {"case": "genuinely visible launcher on lighter surrounding content (MiMo observation)", "stage1": "FAIL (dark_count=29274<=30000)", "stage6": "PASS (0.60>0.50)", "verdict": "FALSE NEGATIVE on Stage-1", "basis": "FACT from independent observation this session"},
+    {"case": "wrong/stale HWND from product state file", "stage1": "possible PASS", "verdict": "product self-nominates window under test", "basis": "verifier reads launcher_hwnd/pid from state file; expected_pid = that pid"},
+    {"case": "valid Astra HWND off-monitor", "stage1": "attestation fails intersects_monitor", "verdict": "caught by attestation layer", "basis": "attestation.py:93-110"},
+    {"case": "cloaked Astra window", "stage1": "attestation fails dwm_cloaked", "verdict": "caught by attestation layer", "basis": "attestation.py:112-119"},
+    {"case": "launcher covered by another topmost window", "stage1": "dark pixels of covering window measured; no z-order check", "verdict": "FALSE PASS possible", "basis": "no occlusion check anywhere in verdict path"},
+    {"case": "launcher not yet presented (IsWindowVisible=false, plain spawn)", "stage1": "FAIL via attestation", "verdict": "correct fail", "basis": "MiMo observation 1"}
+  ],
+  "mutation_tests_coverage": "The 6 unit mutation tests only prove white screenshots FAIL. They never mutate darkness-with-wrong-content, threshold boundaries, or occlusion.",
+  "verdict": "LAUNCHER EVALUATOR = FAIL",
+  "verdict_rationale": "Per audit directive 4: if adversarial cases can falsely classify as PASS, the evaluator FAILs even though the real launcher currently works. Independently demonstrated: (1) false-pass risk from darkness-only predicate; (2) false-negative FACT: real visible launcher failed Stage-1 absolute threshold in MiMo's own observation (29274<=30000)."
+}

@@ -1,0 +1,25 @@
+{
+  "phase": "F0-25F.7",
+  "benchmark": "RESOURCE RESTORATION & PROCESS HYGIENE",
+  "spawned_processes_tracked": [
+    {
+      "pid": 6140,
+      "create_time": 1791965795.2248676
+    },
+    {
+      "pid": 22280,
+      "create_time": 1791965802.013444
+    },
+    {
+      "pid": 17872,
+      "create_time": 1791965809.071038
+    }
+  ],
+  "leaked_spawned_pids": [],
+  "surviving_notepad_count": 0,
+  "target_process_cleaned": true,
+  "orphaned_processes_count": 0,
+  "pid_reuse_detected": false,
+  "pixels_visibly_attested": true,
+  "verdict": "PASS"
+}

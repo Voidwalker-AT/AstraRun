@@ -136,10 +136,12 @@ class DesktopObserver:
 
                 # Check Astra ownership
                 is_astra = False
+                res_task_id = None
                 if ledger:
                     res = ledger.get_resource_for_hwnd(hwnd)
                     if res:
                         is_astra = True
+                        res_task_id = res.task_id
 
                 w_obs = WindowObservation(
                     hwnd=hwnd,
@@ -157,7 +159,7 @@ class DesktopObserver:
                     is_dialog=is_dialog,
                     dialog_type=cls_name if is_dialog else "",
                     astra_owned=is_astra,
-                    task_id=task_id if is_astra else None,
+                    task_id=res_task_id or (task_id if is_astra else None),
                     uia_available=True,
                     last_observed=time.time(),
                 )
@@ -229,6 +231,23 @@ class DesktopObserver:
         )
 
         self._last_state = state
+        if task_id:
+            try:
+                from astrarun.core.telemetry import CausalTelemetry, CausalEventType
+                telem = CausalTelemetry.get_instance()
+                telem.emit(
+                    event_type=CausalEventType.STATE_OBSERVED.value,
+                    component="DesktopObserver",
+                    task_id=task_id,
+                    data={
+                        "foreground_title": fg_obs.title if fg_obs else None,
+                        "visible_window_count": len(visible_windows),
+                        "dialog_count": len(dialogs),
+                        "observation_latency_ms": latency_ms,
+                    },
+                )
+            except Exception:
+                pass
         return state
 
     def _get_proc_info(self, pid: int) -> Tuple[float, str, str]:

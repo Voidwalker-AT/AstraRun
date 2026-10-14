@@ -138,13 +138,13 @@ class DesktopWorldState:
         """Active dialogs observed on desktop."""
         return self.dialogs
 
-    def has_astra_debris(self) -> bool:
-        """Check whether any Astra-owned windows or dialogs remain open."""
+    def has_astra_debris(self, task_id: Optional[str] = None) -> bool:
+        """Check whether any Astra-owned windows or dialogs remain open (optionally filtered by task_id)."""
         for w in self.visible_windows:
-            if w.astra_owned:
+            if w.astra_owned and (task_id is None or getattr(w, "task_id", None) == task_id):
                 return True
         for d in self.dialogs:
-            if d.astra_owned:
+            if d.astra_owned and (task_id is None or getattr(d, "task_id", None) == task_id):
                 return True
         return False
 

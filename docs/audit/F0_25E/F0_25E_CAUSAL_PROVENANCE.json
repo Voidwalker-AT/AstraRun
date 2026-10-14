@@ -1,0 +1,43 @@
+{
+  "milestone": "F0_25E",
+  "title": "AstraRun F0-25E Causal Provenance Reconstruction",
+  "timestamp": 1791731781.0968575,
+  "causal_chain": [
+    {
+      "stage": 1,
+      "event": "USER_REQUEST",
+      "evidence": "Populated and submitted via IPC SUBMIT_QUERY"
+    },
+    {
+      "stage": 2,
+      "event": "PLANNER_DECISION",
+      "evidence": "GoalPlanner classified goal into execute_dynamic_tool"
+    },
+    {
+      "stage": 3,
+      "event": "DYNAMIC_TOOL_SYNTHESIS",
+      "evidence": "Harvested 11 model events"
+    },
+    {
+      "stage": 4,
+      "event": "BROKER_AUTHORIZATION",
+      "evidence": "Harvested 32 broker authorization events"
+    },
+    {
+      "stage": 5,
+      "event": "SANDBOX_EXECUTION",
+      "evidence": "Executed in contained sandbox worker"
+    },
+    {
+      "stage": 6,
+      "event": "ARTIFACT_DELIVERY",
+      "evidence": "Delivered deliverables to E:\\AstraDogfood\\word_frequency"
+    },
+    {
+      "stage": 7,
+      "event": "FINAL_VERIFICATION",
+      "evidence": "Result verified with Content Oracle: PASS"
+    }
+  ],
+  "verdict": "PASS"
+}

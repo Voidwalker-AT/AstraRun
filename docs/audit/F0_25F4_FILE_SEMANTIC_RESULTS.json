@@ -1,0 +1,46 @@
+{
+  "phase": "F0-25F.4",
+  "component": "FileSemanticVerification",
+  "timestamp": 1791834440.0,
+  "summary": {
+    "generic_file_verification_implemented": true,
+    "empirical_disk_read_enforced": true,
+    "model_claims_rejected_as_verification": true,
+    "dispatch_only_return_code_rejected": true
+  },
+  "verified_capabilities": [
+    {
+      "predicate": "FILE_EXISTS",
+      "evaluator": "FileExistsPredicate",
+      "mechanism": "Path.exists() && Path.is_file()",
+      "verification_status": "VERIFIED",
+      "fail_closed_on_missing": true
+    },
+    {
+      "predicate": "FILE_NON_EMPTY",
+      "evaluator": "FileNonEmptyPredicate",
+      "mechanism": "Path.stat().st_size > 0",
+      "verification_status": "VERIFIED",
+      "fail_closed_on_zero_bytes": true
+    },
+    {
+      "predicate": "FILE_CONTENT_CONTAINS",
+      "evaluator": "FileContentContainsPredicate",
+      "mechanism": "Path.read_text(encoding='utf-8') substring scan",
+      "verification_status": "VERIFIED",
+      "fail_closed_on_content_mismatch": true
+    },
+    {
+      "predicate": "FILE_CONTENT_EQUALS",
+      "evaluator": "FileContentEqualsPredicate",
+      "mechanism": "Path.read_text(encoding='utf-8') exact equality match",
+      "verification_status": "VERIFIED",
+      "fail_closed_on_inequality": true
+    }
+  ],
+  "derivation_pipeline": {
+    "utterance_analysis": "GoalPlanner.extract_goal_contract detects target_artifact, target_location, and required_content, generating GoalPredicate items.",
+    "plan_strategy_mapping": "GoalPlanner.create_plan maps GoalPredicate to VerifierStrategy (FILE_NON_EMPTY, FILE_CONTAINS, or FILE_EXISTS) with target parameters.",
+    "runtime_execution": "StepVerifier executes empirical disk check upon capability completion; GoalVerifier evaluates overall contract predicates with active run_id and task_id provenance."
+  }
+}

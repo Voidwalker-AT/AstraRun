@@ -1,0 +1,75 @@
+{
+  "phase": "F0-25F.4",
+  "component": "AuthoritativeCompletionWiring",
+  "timestamp": 1791834270.0,
+  "architecture": {
+    "completion_authority_model": "AuthoritativeCompletionGate is the sole gatekeeper for terminal GOAL_COMPLETED emission across the entire AstraRun runtime.",
+    "registration_lifecycle": {
+      "entry_point": "GoalPlanner.parse_goal generates GoalContract with acceptance predicates.",
+      "telemetry_registration": "CausalTelemetry.register_contract registers contract with AuthoritativeCompletionGate under active run_id and task_id.",
+      "loop_execution": "AgentExecutionEngine.execute_goal and run_task propagate GoalContract to task.contract and register it.",
+      "exit_point": "AstraApplication.handle_request passes contract from res.task to telemetry.end_run.",
+      "cleanup": "telemetry.end_run automatically unregisters contract upon run termination to prevent cross-run/cross-task leakage."
+    },
+    "terminal_semantics": {
+      "success_path": {
+        "event_type": "GOAL_COMPLETED",
+        "condition": "status == 'SUCCESS' AND AuthoritativeCompletionGate.can_complete(...) returns can_complete == True with verdict APPROVED",
+        "completed_flag": true
+      },
+      "termination_failure_path": {
+        "event_type": "RUN_TERMINATED",
+        "condition": "status != 'SUCCESS' OR AuthoritativeCompletionGate.can_complete(...) returns can_complete == False with verdict REJECTED",
+        "completed_flag": false
+      },
+      "direct_emission_blocking": "Direct emission of GOAL_COMPLETED with non-SUCCESS status or unapproved gate evaluation is strictly rejected and dropped."
+    },
+    "call_graph_nodes": [
+      {
+        "caller": "astrarun.agent.planner.GoalPlanner.parse_goal",
+        "callee": "GoalContract.__init__",
+        "purpose": "Constructs contract and derives acceptance predicates from user utterance"
+      },
+      {
+        "caller": "astrarun.agent.loop.AgentExecutionEngine.execute_goal",
+        "callee": "astrarun.core.telemetry.CausalTelemetry.register_contract",
+        "purpose": "Registers GoalContract for active run"
+      },
+      {
+        "caller": "astrarun.agent.loop.AgentExecutionEngine.run_task",
+        "callee": "astrarun.core.telemetry.CausalTelemetry.register_contract",
+        "purpose": "Registers GoalContract for active task"
+      },
+      {
+        "caller": "astrarun.core.telemetry.CausalTelemetry.register_contract",
+        "callee": "astrarun.agent.completion_gate.AuthoritativeCompletionGate.register_contract",
+        "purpose": "Stores thread-safe mapping in _contracts_by_run and _contracts_by_task"
+      },
+      {
+        "caller": "astrarun.app.AstraApplication.handle_request",
+        "callee": "astrarun.core.telemetry.CausalTelemetry.end_run",
+        "purpose": "Hands res.task.contract to end_run upon request completion"
+      },
+      {
+        "caller": "astrarun.core.telemetry.CausalTelemetry.end_run",
+        "callee": "astrarun.agent.completion_gate.AuthoritativeCompletionGate.can_complete",
+        "purpose": "Authoritatively evaluates mandatory predicate satisfaction before emitting GOAL_COMPLETED"
+      },
+      {
+        "caller": "astrarun.core.telemetry.CausalTelemetry.end_run",
+        "callee": "astrarun.agent.completion_gate.AuthoritativeCompletionGate.unregister_contract",
+        "purpose": "Removes run/task contract mapping upon run termination"
+      }
+    ]
+  },
+  "invariants_enforced": [
+    "No goal may complete without an explicit GoalContract containing mandatory acceptance predicates.",
+    "Every required predicate must have run-scoped affirmative physical evidence.",
+    "Missing, pending, or unknown predicates fail closed.",
+    "Stale evidence or mismatched run/task IDs fail closed.",
+    "Requested presentation requires verified physical observation (RESULT_PRESENTED).",
+    "Cleanups must not be in FAILED_CLEANUP state.",
+    "Non-SUCCESS terminations emit RUN_TERMINATED, never GOAL_COMPLETED.",
+    "Contracts do not leak across runs or tasks."
+  ]
+}

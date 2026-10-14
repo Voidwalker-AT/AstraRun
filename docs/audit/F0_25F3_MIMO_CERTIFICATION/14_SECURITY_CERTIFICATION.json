@@ -1,0 +1,27 @@
+{
+  "auditor": "MiMo",
+  "recomputed": {
+    "total": 86,
+    "manifest_entries": 86,
+    "read_only": 43,
+    "mutating": 43,
+    "confirmation_required": 3,
+    "blocked": ["restart_workstation", "shutdown_workstation"],
+    "unknown_consequential": 0
+  },
+  "matches_anti": true,
+  "f0_25f3_new_unknowns": "none — counts unchanged from F0-25F.2 independent recompute",
+  "key_capabilities": {
+    "execute_dynamic_tool": "present",
+    "present_result": "present",
+    "consult_delegate": "present",
+    "open_url": "present",
+    "run_project_command": "present",
+    "terminate_process": "present (confirm)",
+    "shutdown_workstation": "present (blocked)",
+    "restart_workstation": "present (blocked)",
+    "filesystem_mutation": "covered in mutating set",
+    "ui_mutation": "covered in mutating set"
+  },
+  "verdict": "SECURITY = PASS"
+}

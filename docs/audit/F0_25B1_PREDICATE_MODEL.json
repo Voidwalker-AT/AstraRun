@@ -1,0 +1,153 @@
+{
+  "phase": "F0-25B.1",
+  "model": "Predicate-Typed Verification Model",
+  "timestamp": "2026-10-11T16:25:30Z",
+  "invariants": [
+    "No generic 'state changed => verified' heuristics permitted.",
+    "Every state transition edge MUST carry typed postconditions.",
+    "Every verification must persist raw empirical measurement alongside boolean verdict."
+  ],
+  "typed_predicates": {
+    "TEXT_BUFFER_DELTA": {
+      "target_affordances": ["EDIT_TEXT", "APPEND_TEXT", "INSERT_SNIPPET"],
+      "schema": {
+        "predicate_type": "TEXT_BUFFER_DELTA",
+        "expected_value": {
+          "length_increased": "bool",
+          "min_char_delta": "int",
+          "dirty_indicated": "bool"
+        },
+        "observed_value": {
+          "pre_length": "int",
+          "post_length": "int",
+          "delta": "int",
+          "is_dirty": "bool",
+          "status_bar_changed": "bool"
+        },
+        "evaluation": {
+          "passed": "bool",
+          "criterion": "str"
+        },
+        "raw_evidence_reference": "str (e.g. 'scintilla_0x..._pre_0_post_75')"
+      }
+    },
+    "SELECTION_RANGE_SPAN": {
+      "target_affordances": ["SELECT_ALL"],
+      "schema": {
+        "predicate_type": "SELECTION_RANGE_SPAN",
+        "expected_value": {
+          "selection_active": "bool",
+          "full_buffer": "bool"
+        },
+        "observed_value": {
+          "observable": "bool",
+          "source": "str (UIA_TEXT_PATTERN | SCINTILLA_ADAPTER | WIN32_EDIT)",
+          "start": "int",
+          "end": "int",
+          "selected_length": "int",
+          "document_length": "int"
+        },
+        "evaluation": {
+          "passed": "bool",
+          "criterion": "str (observable == True and document_length > 0 and selected_length == document_length)"
+        },
+        "raw_evidence_reference": "str (e.g. 'scintilla_0x12f032c_start_0_end_75_doclen_75')"
+      }
+    },
+    "DOCUMENT_TAB_COUNT": {
+      "target_affordances": ["NEW_DOCUMENT_TAB"],
+      "schema": {
+        "predicate_type": "DOCUMENT_TAB_COUNT",
+        "expected_value": {
+          "tabs_count_increased": "bool",
+          "min_tab_delta": "int"
+        },
+        "observed_value": {
+          "pre_tabs_count": "int",
+          "post_tabs_count": "int",
+          "delta": "int",
+          "pre_tab_names": "list[str]",
+          "post_tab_names": "list[str]",
+          "title": "str"
+        },
+        "evaluation": {
+          "passed": "bool",
+          "criterion": "str (post_tabs_count > pre_tabs_count or tab_names increased)"
+        },
+        "raw_evidence_reference": "str (e.g. 'uia_tabs_pre_1_post_2_delta_1')"
+      }
+    },
+    "DIALOG_SURFACE_PRESENCE": {
+      "target_affordances": ["SEARCH_FIND_SURFACE"],
+      "schema": {
+        "predicate_type": "DIALOG_SURFACE_PRESENCE",
+        "expected_value": {
+          "find_dialog_opened": "bool",
+          "dialog_class": "str (#32770)"
+        },
+        "observed_value": {
+          "dialog_found": "bool",
+          "dialog_hwnds": "list[str]",
+          "dialog_class": "str",
+          "dialog_pid": "int",
+          "parent_hwnd": "str"
+        },
+        "evaluation": {
+          "passed": "bool",
+          "criterion": "str (dialog_found == True and matching PID/HWND)"
+        },
+        "raw_evidence_reference": "str (e.g. 'win32_dialog_hwnd_0x32014_class_#32770')"
+      }
+    },
+    "FILE_SYSTEM_MUTATION": {
+      "target_affordances": ["SAVE_FILE", "EXPORT_FILE"],
+      "schema": {
+        "predicate_type": "FILE_SYSTEM_MUTATION",
+        "expected_value": {
+          "file_exists": "bool",
+          "min_bytes": "int"
+        },
+        "observed_value": {
+          "file_exists": "bool",
+          "file_size": "int",
+          "content_hash": "str"
+        },
+        "evaluation": {
+          "passed": "bool",
+          "criterion": "str (file_exists and file_size >= min_bytes)"
+        },
+        "raw_evidence_reference": "str (e.g. 'fs_path_c_temp_canary_txt_bytes_120')"
+      }
+    },
+    "STATE_INVARIANCE": {
+      "target_affordances": ["UNMAPPED_BUTTON_CLICK", "BENIGN_PROBE"],
+      "schema": {
+        "predicate_type": "STATE_INVARIANCE",
+        "expected_value": {
+          "state_transition": "bool (false)"
+        },
+        "observed_value": {
+          "state_transition_occurred": "bool",
+          "pre_hash": "str",
+          "post_hash": "str"
+        },
+        "evaluation": {
+          "passed": "bool",
+          "criterion": "str (state_transition_occurred == False)"
+        },
+        "raw_evidence_reference": "str (e.g. 'invariance_pre_hash_post_hash_match')"
+      }
+    }
+  },
+  "transition_record_integration": {
+    "module": "src/astrarun/hermes/models.py",
+    "class": "StateTransitionRecord",
+    "mandatory_fields": [
+      "predicate_type",
+      "expected_value",
+      "observed_value",
+      "evaluation",
+      "raw_evidence_reference"
+    ]
+  }
+}

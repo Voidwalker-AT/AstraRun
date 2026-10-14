@@ -36,7 +36,7 @@ _ACTION_PATTERNS: list[tuple[re.Pattern, str, str]] = [
     (re.compile(r'\b(?:why\s+is\s+(?:port|it|this)|explain|diagnose|summarize|write\s+code\s+for|how\s+do\s+i|why\s+did\s+my\s+server\s+crash|figure\s+out\s+what\'s\s+wrong|fix\s+my\s+development\s+environment|decide\s+which\s+project)\b', re.I), "ai_query", "ai_query"),
     (re.compile(r'\b(?:kill|terminate|stop|end\s+process|abort)\b', re.I), "terminate_process", "process_action"),
     (re.compile(r'\b(?:show\s+running\s+applications|show\s+running\s+apps|list\s+running\s+applications|list\s+running\s+apps|running\s+applications|running\s+apps)\b', re.I), "list_running_applications", "application_action"),
-    (re.compile(r'\b(?:system\s+status|system\s+summary|workstation\s+status|system\s+info)\b', re.I), "system_summary", "system_action"),
+    (re.compile(r'\b(?:system\s+status|system\s+summary|system\s+overview|workstation\s+status|system\s+info)\b', re.I), "system_summary", "system_action"),
     (re.compile(r'\b(?:gpu\s+status|gpu\s+usage|show\s+gpu|vram\s+status)\b', re.I), "gpu_status", "system_action"),
     (re.compile(r'\b(?:memory\s+status|show\s+memory(?:\s+usage)?|ram\s+usage|how\s+much\s+ram|ram\s+status|free\s+ram)\b', re.I), "memory_status", "system_action"),
     (re.compile(r'\b(?:cpu\s+status|cpu\s+usage|show\s+cpu|cpu\s+utilization)\b', re.I), "cpu_status", "system_action"),
@@ -226,7 +226,7 @@ def infer_action_and_intent(
         return ("click_ui_element", "interaction_action", 0.95)
 
     # 4. Check for system health status queries
-    if re.search(r'\b(?:system\s+status|system\s+summary|workstation\s+status|system\s+info)\b', text_clean, re.I):
+    if re.search(r'\b(?:system\s+status|system\s+summary|system\s+overview|workstation\s+status|system\s+info)\b', text_clean, re.I):
         return ("system_summary", "system_action", 0.98)
 
     if re.search(r'\b(?:gpu\s+status|gpu\s+usage|show\s+gpu|vram\s+status)\b', text_clean, re.I):

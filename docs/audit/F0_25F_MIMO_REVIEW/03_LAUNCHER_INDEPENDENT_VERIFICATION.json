@@ -1,0 +1,52 @@
+{
+  "auditor": "MiMo",
+  "observation_time": "2026-10-12 00:22 local (from screenshot taskbar)",
+  "method": "MiMo spawned installed AstraRun.exe from interactive session; sent IPC SHOW_MAIN_UI; enumerated ALL windows for Astra PIDs via EnumWindows from MiMo's thread; captured ImageGrab; personally inspected pixels. IPC QUIT teardown exit 0.",
+  "OS_ATTESTATION": {
+    "astra_process_pids": [12744, 22484],
+    "launcher_hwnd": 17304052,
+    "launcher_pid": 12744,
+    "title": "AstraRun",
+    "class": "Qt6120QWindowToolSaveBits",
+    "is_window": true,
+    "is_window_visible": true,
+    "rect": [448, 48, 1088, 124],
+    "width": 640,
+    "height": 76,
+    "dwm_cloaked": 0,
+    "found_in_enum_windows_from_interactive_desktop": true,
+    "monitor_rect": [0, 0, 1536, 864],
+    "intersects_monitor": true,
+    "foreground_hwnd": 17304052,
+    "foreground_pid": 12744,
+    "launcher_was_foreground": true,
+    "classification": "FACT (independent OS observation)"
+  },
+  "PIXEL_ATTESTATION": {
+    "screenshot": "screenshots/mimo_launcher_observation.png",
+    "sha256": "fce72f2586b77f5db1b93da9361ae102978a61851a45d695fbaf4d71895514ca",
+    "crop": "screenshots/mimo_launcher_observation_crop.png",
+    "crop_sha256": "b5d4927ccd01d45ccf8ea867a0ea4e4e193c5e7ba6ccd1351251da1543e2249c",
+    "crop_rect": [448, 48, 1088, 124],
+    "dark_count": 29274,
+    "dark_ratio": 0.6019,
+    "stage1_threshold_would_pass": false,
+    "stage1_threshold_would_pass_reason": "dark_count 29274 <= 30000 absolute threshold — Stage-1 oracle would FALSE-NEGATIVE a genuinely visible launcher on this screen content",
+    "stage6_threshold_would_pass": true,
+    "classification": "FACT (independent capture)"
+  },
+  "VISUAL_ATTESTATION": {
+    "inspector": "MiMo (human-equivalent visual read of the PNG)",
+    "full_screenshot_shows": "Desktop with MiMoCode/ChatGPT windows; Astra launcher bar clearly visible at top-center overlapping the app title area",
+    "crop_shows": "Dark rounded search-bar UI with blue plus/sparkle icon and placeholder text 'What do you want to do?' — unmistakably the Astra launcher",
+    "astra_ui_visible": true,
+    "confidence": "HIGH",
+    "classification": "FACT (personal visual inspection)"
+  },
+  "comparison_to_f0_25f_evidence": {
+    "f0_25f_stage1_and_stage6_pngs": "MiMo also visually confirmed launcher present in F0_25F_stage1_verified.png and F0_25F_PHYSICAL_LAUNCHER.png",
+    "independent_replication": "YES — launcher visibility on interactive desktop independently reproduced with the canonical installed binary 2c59d0fe...",
+    "caveats": ["plain spawn without SHOW_MAIN_UI leaves launcher IsWindowVisible=false (MiMo observation 1); presentation requires IPC/--show-now", "F0-25F verifiers trust product state file for HWND/PID nomination"]
+  },
+  "overall": "LAUNCHER PRODUCT VISIBILITY = PASS (independently established). LAUNCHER EVALUATOR ORACLE = FAIL (see 04_LAUNCHER_ORACLE_MUTATIONS.json)."
+}

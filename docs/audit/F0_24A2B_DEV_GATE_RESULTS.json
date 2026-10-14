@@ -1,0 +1,32 @@
+{
+  "phase": "F0-24A.2B",
+  "title": "Perception-First Computer Use + Deep Notepad++ Physical Laboratory",
+  "duration_seconds": 74.51,
+  "timestamp_iso": "2026-10-11T03:42:28Z",
+  "gates": {
+    "GATE_A_PERCEPTION_INVENTORY": "PASS",
+    "GATE_B_TEXT_INSERTION_VERIFICATION": "PASS",
+    "GATE_C_SAVE_AS_MEDIATION": "PASS",
+    "GATE_D_MODIFY_AND_SAVE": "PASS",
+    "GATE_E_MULTI_TAB_MANAGEMENT": "PASS",
+    "GATE_F_DIALOG_INTERACTIONS": "PASS",
+    "GATE_G_FAILURE_INJECTION_RECOVERY": "PASS",
+    "GATE_H_USER_TAKEOVER_BEHAVIOR": "PASS",
+    "GATE_I_WRONG_TARGET_SAFETY": true,
+    "GATE_J_RESOURCE_OWNERSHIP_AUDIT": "PASS",
+    "ANTI_HARDCODING_AUDIT": "PASS"
+  },
+  "all_gates_passed": true,
+  "artifacts_generated": [
+    "docs/audit/F0_24A2B_BASELINE_CONTRADICTIONS.json",
+    "docs/audit/F0_24A2B_COMPUTER_USE_CALL_GRAPH.json",
+    "docs/audit/F0_24A2B_PERCEPTION_ARCHITECTURE.md",
+    "docs/audit/F0_24A2B_NOTEPADPP_PERCEPTION.json",
+    "docs/audit/F0_24A2B_NOTEPADPP_PHYSICAL_RESULTS.json",
+    "docs/audit/F0_24A2B_RECOVERY_RESULTS.json",
+    "docs/audit/F0_24A2B_USER_TAKEOVER_RESULTS.json",
+    "docs/audit/F0_24A2B_RESOURCE_RESULTS.json",
+    "docs/audit/F0_24A2B_HARDCODING_AUDIT.json",
+    "docs/audit/F0_24A2B_DEV_GATE_RESULTS.json"
+  ]
+}

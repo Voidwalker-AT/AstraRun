@@ -1,0 +1,34 @@
+{
+  "phase": "F0-25B",
+  "title": "Fresh Hermes Namespace Initialization & Zero-Contamination Audit",
+  "timestamp": 1791711760.808259,
+  "namespace_profile": "f025b_notepadpp_learning",
+  "db_path": "C:\\Users\\hp\\AppData\\Local\\AstraRun\\data\\hermes\\f025b_notepadpp_learning.db",
+  "db_size_bytes": 94208,
+  "generic_concepts_loaded": [
+    "WINDOW",
+    "MENU",
+    "BUTTON",
+    "EDITABLE_SURFACE",
+    "TAB",
+    "DOCUMENT",
+    "DIALOG",
+    "FILE",
+    "TEXT",
+    "FOCUS",
+    "SAVE",
+    "SEARCH",
+    "SCROLL",
+    "SELECTION"
+  ],
+  "generic_concepts_count": 14,
+  "notepadpp_audit": {
+    "target_entity_exists": false,
+    "notepadpp_procedural_affordances": 0,
+    "notepadpp_action_transitions": 0,
+    "notepadpp_shortcuts": 0,
+    "notepadpp_experiment_history": 0,
+    "procedural_knowledge_is_zero": true
+  },
+  "cold_namespace_status": "PASS"
+}

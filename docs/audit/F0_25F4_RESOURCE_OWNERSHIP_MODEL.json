@@ -1,0 +1,51 @@
+{
+  "phase": "F0-25F.4",
+  "component": "ResourceOwnershipModel",
+  "timestamp": 1791834520.0,
+  "schema": {
+    "entity": "OwnedResource",
+    "primary_key": "resource_id",
+    "required_provenance_attributes": [
+      "task_id",
+      "resource_type",
+      "launching_capability",
+      "pid",
+      "process_creation_time",
+      "create_time",
+      "parent_pid",
+      "creator_action",
+      "ownership_class",
+      "executable_path",
+      "lifecycle_state",
+      "cleanup_policy"
+    ],
+    "ownership_classes": [
+      "ASTRA_CREATED",
+      "ASTRA_ADOPTED",
+      "PRE_EXISTING_USER",
+      "UNKNOWN"
+    ],
+    "lifecycle_states": [
+      "DISCOVERED",
+      "LAUNCHED",
+      "ACTIVE",
+      "USER_TAKEOVER_DETACHED",
+      "SAVING",
+      "SAVED",
+      "CLOSING",
+      "CLOSED",
+      "ORPHANED_CLEANED",
+      "FAILED_CLEANUP",
+      "STALE_REUSED",
+      "NOT_MATERIALIZED",
+      "INVALID_IDENTITY"
+    ]
+  },
+  "invariants": [
+    "PID ownership is established at creation/adoption time, never inferred after the fact.",
+    "Process creation timestamp (create_time) protects against Windows PID recycling hazards.",
+    "Pre-existing user processes/windows are marked existed_before=True and never closed by Astra.",
+    "Empty, None, or unverified resource identities fail closed as NOT_MATERIALIZED or INVALID_IDENTITY.",
+    "Unsuccessful cleanup remains FAILED_CLEANUP and halts positive completion."
+  ]
+}

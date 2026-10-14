@@ -1,0 +1,42 @@
+{
+  "auditor": "MiMo",
+  "reported_behavior": {
+    "launcher": "visible HWND 138168 (01_launcher_visible.png FACT)",
+    "request": "compute first 50 fibonacci numbers and save to fibonacci.txt and reveal in explorer (visible in 02 launcher)",
+    "model": "live Qwen2.5-Coder DEEP@127.0.0.1:8089, dyn_tool_df9c1481, 3180ms (production ModelClient events FACT)",
+    "execution": "sandbox task_aa04d6a1 allocated; ARTIFACT_CREATED events present",
+    "verifier": "step strategies RETURN_CODE_ONLY -> dispatch-level only -> verification failed",
+    "gate": "AuthoritativeCompletionGate refused GOAL_COMPLETED (0 GOAL_COMPLETED in 44-event trace FACT)",
+    "presentation": "not triggered; presentation_verified=false; screenshot shows no viewer (FACT)",
+    "physical_verdict": "FAIL"
+  },
+  "trace_chain": {
+    "REQUEST": "REQUEST_RECEIVED 1791826249112",
+    "GOAL": "GOAL_INTERPRETED GoalPlanner",
+    "CONTRACT": "present in gate architecture; injection dead (no set_active_contract callers) — contract registration during this run UNVERIFIED",
+    "PLAN": "PLAN_CREATED + steps with verifier_strategy=RETURN_CODE_ONLY",
+    "MODEL": "MODEL_REQUEST/RESPONSE ModelClient production",
+    "BROKER": "ACTION_PROPOSED/AUTHORIZED/DISPATCHED ExecutionBroker",
+    "ACTION": "execute_dynamic_tool + reveal_file",
+    "RESULT": "ACTION_RESULT + ARTIFACT_CREATED",
+    "OBSERVATION": "STATE_OBSERVED DesktopObserver",
+    "VERIFIER": "RETURN_CODE_ONLY insufficient (known since F0-25E step_1 verification)",
+    "GATE": "no GOAL_COMPLETED emitted",
+    "PRESENTATION": "no RESULT_PRESENTED"
+  },
+  "root_cause_classification": {
+    "A_correct_fail_closed_insufficient_verification": "YES — primary: gate correctly withheld completion when postcondition unverified",
+    "B_model_planner_defect": "CONTRIBUTING — planner selected RETURN_CODE_ONLY for a task requiring file-content semantics (fibonacci.txt)",
+    "C_execution_defect": "NO positive evidence of execution failure (ARTIFACT_CREATED present)",
+    "D_goal_contract_defect": "POSSIBLE — contract may demand stronger evidence than RETURN_CODE_ONLY can produce",
+    "E_verifier_defect": "RETURN_CODE_ONLY behavior is intentional fail-closed; defect is strategy SELECTION not verifier logic",
+    "F_evaluator_defect": "ACCEPTANCE script presence-based weakness exists but did not cause this failure",
+    "G_combination": "YES — A (correct refusal) + B/D (verification strategy mismatch) = G"
+  },
+  "would_production_need_to_observe": "FILE_EXISTS / FILE_NON_EMPTY / FILE_CONTENT semantics on fibonacci.txt in sandbox or delivered path, plus explorer/reveal observation for the 'reveal in explorer' clause",
+  "did_action_create_result": "LIKELY YES (ARTIFACT_CREATED events) but semantic content unverified under RETURN_CODE_ONLY",
+  "was_result_correct_but_unverifiable": "PLAUSIBLE — artifact created; content not checked by chosen strategy",
+  "who_selected_return_code_only": "planner/model plan step configuration (verify strategy on PlanStep) — INFERENCE from report L141",
+  "did_contract_ask_stronger_evidence": "INFERENCE: goal includes save+reveal => content+presentation predicates require more than exit code",
+  "was_go_completed_correctly_withheld": "YES — FACT (absent from trace; gate semantics match)"
+}

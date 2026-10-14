@@ -109,7 +109,9 @@ class CapabilityRegistry:
         family = family_map.get(cap.category, CapabilityFamily.SYSTEM_DIAGNOSTICS)
 
         # Infer tier
-        if cap.id == "generate_battery_report":
+        if getattr(cap, "interaction_tier", None):
+            tier = cap.interaction_tier
+        elif cap.id == "generate_battery_report":
             tier = InteractionTier.TIER_B_STRUCTURED_CLI
         elif cap.category == CapabilityCategory.INTERACTION:
             tier = InteractionTier.TIER_C_UI_AUTOMATION
@@ -117,8 +119,14 @@ class CapabilityRegistry:
             tier = InteractionTier.TIER_A_NATIVE
 
         # Infer verifier strategy
-        if "file" in cap.id or "report" in cap.id:
+        if getattr(cap, "verifier_strategy", None):
+            verifier_strat = cap.verifier_strategy
+        elif any(k in cap.id for k in ("save", "document", "file", "report", "csv", "json", "artifact")):
             verifier_strat = VerifierStrategy.FILE_EXISTS if cap.read_only else VerifierStrategy.FILE_NON_EMPTY
+        elif any(k in cap.id for k in ("type", "click", "toggle", "select", "focus_ui", "scroll", "set_ui")):
+            verifier_strat = VerifierStrategy.UI_ELEMENT_STATE
+        elif "close" in cap.id:
+            verifier_strat = VerifierStrategy.PROCESS_EXIT
         elif "window" in cap.id or "application" in cap.id:
             verifier_strat = VerifierStrategy.WINDOW_READY
         elif "wifi" in cap.id and "connect" in cap.id:
@@ -135,6 +143,8 @@ class CapabilityRegistry:
         effects = [SideEffect.READ_ONLY] if cap.read_only else [SideEffect.SYSTEM_STATE]
         if "file" in cap.id or "report" in cap.id or "save" in cap.id or "document" in cap.id:
             effects = [SideEffect.CREATES_FILE, SideEffect.MODIFIES_FILE] if not cap.read_only else [SideEffect.READ_ONLY]
+        elif cap.id in ("execute_dynamic_tool", "consult_delegate"):
+            effects = [SideEffect.CREATES_FILE, SideEffect.MODIFIES_FILE, SideEffect.SPAWNS_PROCESS, SideEffect.SYSTEM_STATE]
 
         return CapabilitySchema(
             id=cap.id,
@@ -208,14 +218,31 @@ class CapabilityRegistry:
         try:
             # Filter arguments to match declared args_schema or callable signature
             filtered_args = dict(args)
+            if task_id and "task_id" not in filtered_args:
+                filtered_args["task_id"] = task_id
+
+            import inspect
+            handler_params = set()
+            has_kwargs = False
+            try:
+                sig = inspect.signature(cap.handler)
+                handler_params = set(sig.parameters.keys())
+                has_kwargs = any(p.kind == inspect.Parameter.VAR_KEYWORD for p in sig.parameters.values())
+            except Exception:
+                pass
+
             if hasattr(cap, "args_schema") and isinstance(cap.args_schema, dict):
-                filtered_args = {k: v for k, v in args.items() if k in cap.args_schema}
-            else:
-                import inspect
-                try:
-                    sig = inspect.signature(cap.handler)
-                except Exception:
-                    pass
+                filtered_args = {k: v for k, v in filtered_args.items() if k in cap.args_schema or k in handler_params or has_kwargs}
+            elif handler_params and not has_kwargs:
+                filtered_args = {k: v for k, v in filtered_args.items() if k in handler_params}
+
+            # If task_id is passed and accepted by handler (directly or via kwargs), preserve it
+            if task_id and ("task_id" in handler_params or has_kwargs):
+                filtered_args["task_id"] = task_id
+
+            if not has_kwargs and handler_params:
+                filtered_args = {k: v for k, v in filtered_args.items() if k in handler_params}
+
             from astrarun.agent.models import OutputReference
             for k, v in list(filtered_args.items()):
                 if isinstance(v, OutputReference):
@@ -378,7 +405,7 @@ class CapabilityRegistry:
             id="open_application",
             category=CapabilityCategory.APPLICATION,
             description="Launch a verified local application executable",
-            args_schema={"app": str, "path": Optional[str]},
+            args_schema={"app": str, "path": Optional[str], "target": Optional[str], "task_id": Optional[str], "cleanup_policy": Optional[str], "content_classification": Optional[str]},
             risk=ToolRisk.LOW,
             read_only=False,
             handler=open_application,
@@ -389,7 +416,7 @@ class CapabilityRegistry:
             id="focus_application",
             category=CapabilityCategory.APPLICATION,
             description="Focus an open application window, disambiguating multiple windows",
-            args_schema={"app": str},
+            args_schema={"app": str, "task_id": Optional[str]},
             risk=ToolRisk.LOW,
             read_only=False,
             handler=focus_application,
@@ -400,7 +427,7 @@ class CapabilityRegistry:
             id="close_application",
             category=CapabilityCategory.APPLICATION,
             description="Gracefully close an application window via WM_CLOSE (no force-kill)",
-            args_schema={"app": str},
+            args_schema={"app": str, "pid": Optional[int], "hwnd": Optional[int], "task_id": Optional[str]},
             risk=ToolRisk.MEDIUM,
             read_only=False,
             requires_confirmation=False,
@@ -485,6 +512,40 @@ class CapabilityRegistry:
             permission=CapabilityPermission.AUTO,
             context_effects=["file_created"],
         ))
+
+        def _write_file_handler(path: str, content: Optional[str] = None, text: Optional[str] = None, **kwargs):
+            payload = content if content is not None else (text if text is not None else "")
+            return save_text_file(path=path, text=payload)
+
+        self.register(Capability(
+            id="write_file",
+            category=CapabilityCategory.FILE,
+            description="Write text content to a destination file on disk",
+            args_schema={"path": str, "content": Optional[str], "text": Optional[str]},
+            risk=ToolRisk.LOW,
+            read_only=False,
+            handler=_write_file_handler,
+            permission=CapabilityPermission.AUTO,
+            context_effects=["file_created"],
+        ))
+
+        def _verify_file_handler(path: str, **kwargs):
+            from pathlib import Path
+            p = Path(path)
+            if p.exists():
+                return CapabilityResult.ok(capability="verify_file", message="File verified", data={"path": str(p), "exists": True, "size": p.stat().st_size})
+            return CapabilityResult.fail(capability="verify_file", message=f"File not found: {path}")
+
+        self.register(Capability(
+            id="verify_file",
+            category=CapabilityCategory.FILE,
+            description="Verify that a destination file exists and is accessible on disk",
+            args_schema={"path": str},
+            risk=ToolRisk.LOW,
+            read_only=True,
+            handler=_verify_file_handler,
+            permission=CapabilityPermission.AUTO,
+        ))
         self.register(Capability(
             id="deliver_artifact",
             category=CapabilityCategory.FILE,
@@ -504,6 +565,18 @@ class CapabilityRegistry:
             handler=deliver_artifact,
             permission=CapabilityPermission.AUTO,
             context_effects=["artifact_delivered"],
+        ))
+        from astrarun.ui.result_presentation import present_result
+        self.register(Capability(
+            id="present_result",
+            category=CapabilityCategory.APPLICATION,
+            description="Present a task deliverable or summary to the user via Explorer, viewer, editor, or launcher card",
+            args_schema={"target": Optional[str], "mode": Optional[str], "task_id": Optional[str]},
+            risk=ToolRisk.LOW,
+            read_only=False,
+            handler=present_result,
+            permission=CapabilityPermission.AUTO,
+            context_effects=["result_presented"],
         ))
         self.register(Capability(
             id="render_visualization",
@@ -1102,7 +1175,7 @@ class CapabilityRegistry:
             id="click_ui_element",
             category=CapabilityCategory.INTERACTION,
             description="Click or invoke a semantic button, menu item, or interactive control",
-            args_schema={"target": str, "hwnd": int, "window": str, "force": bool},
+            args_schema={"target": str, "hwnd": Optional[int], "window": Optional[str], "force": Optional[bool], "task_id": Optional[str]},
             risk=ToolRisk.MEDIUM,
             read_only=False,
             handler=click_element,
@@ -1221,6 +1294,34 @@ class CapabilityRegistry:
             context_effects=["document_saved"],
         ))
 
+        def _take_screenshot(save_path: Optional[str] = None, hwnd: Optional[int] = None) -> CapabilityResult:
+            try:
+                from astrarun.perception.capture import ScreenCapture
+                from astrarun.perception.models import BoundingBox
+                sc = ScreenCapture()
+                if hwnd:
+                    img, meta = sc.capture_window(hwnd=hwnd, save_path=save_path)
+                else:
+                    img, meta = sc.capture_region(bbox=BoundingBox(x=0, y=0, width=1920, height=1080), save_path=save_path)
+                return CapabilityResult.ok(
+                    "take_screenshot",
+                    "Screenshot captured successfully.",
+                    data={"path": save_path or "ephemeral", "captured": True, "provenance": meta},
+                )
+            except Exception as e:
+                return CapabilityResult.fail("take_screenshot", f"Screenshot capture failed: {e}")
+
+        self.register(Capability(
+            id="take_screenshot",
+            category=CapabilityCategory.SYSTEM,
+            description="Capture full desktop or window screenshot with metadata",
+            args_schema={"save_path": Optional[str], "hwnd": Optional[int]},
+            risk=ToolRisk.LOW,
+            read_only=True,
+            handler=_take_screenshot,
+            permission=CapabilityPermission.AUTO,
+        ))
+
 
         # ---------------------------------------------------------
         # V0.11 NATIVE WI-FI & SYSTEM UTILITY CAPABILITIES
@@ -1298,7 +1399,7 @@ class CapabilityRegistry:
                 art_strs = [str(a) for a in report.artifacts]
                 primary_art = art_strs[0] if art_strs else ""
                 for a in art_strs:
-                    if any(a.lower().endswith(ext) for ext in (".png", ".jpg", ".jpeg", ".svg")):
+                    if any(a.lower().endswith(ext) for ext in (".json", ".csv", ".png", ".jpg", ".jpeg", ".svg", ".txt", ".html")):
                         primary_art = a
                         break
                 return CapabilityResult.ok(

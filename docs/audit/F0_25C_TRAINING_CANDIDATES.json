@@ -1,0 +1,43 @@
+[
+  {
+    "trajectory_id": "traj_f025c_task1",
+    "task_id": "task_1_token_matrix",
+    "decision_sequence": [
+      "TOOL_SELECTION",
+      "CONSULTATION_DECISION",
+      "CODE_GENERATION",
+      "BUILD_SELECTION",
+      "OUTPUT_PRESENTATION"
+    ],
+    "verified": true,
+    "code_origin": "ASTRA_GENERATED",
+    "evidence_class": "EMPIRICAL_PYTHON_EXECUTION"
+  },
+  {
+    "trajectory_id": "traj_f025c_task2",
+    "task_id": "task_2_memory_status",
+    "decision_sequence": [
+      "CONSULTATION_DECISION",
+      "CODE_ADAPTATION",
+      "BUILD_SELECTION",
+      "VERIFICATION"
+    ],
+    "verified": true,
+    "code_origin": "CHATGPT_ADAPTED",
+    "evidence_class": "EMPIRICAL_WIN32_API_EXECUTION"
+  },
+  {
+    "trajectory_id": "traj_f025c_task3",
+    "task_id": "task_3_debugger",
+    "decision_sequence": [
+      "BUILD_SELECTION",
+      "ERROR_DIAGNOSIS",
+      "REPAIR_DECISION",
+      "BUILD_SELECTION",
+      "VERIFICATION"
+    ],
+    "verified": true,
+    "defect_repaired": true,
+    "evidence_class": "ITERATIVE_REPAIR_VERIFIED"
+  }
+]

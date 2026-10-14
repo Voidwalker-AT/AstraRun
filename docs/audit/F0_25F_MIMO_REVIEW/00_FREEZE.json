@@ -1,0 +1,54 @@
+{
+  "auditor": "MiMo (independent adversarial evaluator)",
+  "phase": "F0-25F.M",
+  "frozen_at_utc_approx": "2026-10-12 (audit session)",
+  "git": {
+    "status_short_entries": 210,
+    "branch": "agent/anti-f0-24a1",
+    "head": "bd287eba38e6743565fdf6da21cb629023573c6b",
+    "diff_stat_summary": "53 files changed, 2174 insertions(+), 2939 deletions(-) (pre-existing Anti working tree; MiMo modified none of it)",
+    "diff_check": "warning: LF->CRLF on docs/audit/F0_24A_BUILD_INSTALL.json; src/astrarun/computer_use/ui/__init__.py:22: new blank line at EOF"
+  },
+  "binaries": {
+    "dist": {
+      "path": "E:\\Workspace\\Agents\\AstraRun-Anti\\dist\\AstraRun\\AstraRun.exe",
+      "sha256": "2c59d0fe313488db8ee7e07e9a6721da609fc6ad15416430c24804ddfcd04c43",
+      "size_bytes": 12082666,
+      "mtime": "2026-10-11 22:52:07"
+    },
+    "installed": {
+      "path": "C:\\Users\\hp\\AppData\\Local\\Programs\\AstraRun\\AstraRun.exe",
+      "sha256": "2c59d0fe313488db8ee7e07e9a6721da609fc6ad15416430c24804ddfcd04c43",
+      "size_bytes": 12082666,
+      "mtime": "2026-10-11 22:52:07"
+    },
+    "identical": true,
+    "note": "Independently hashed by MiMo twice this session. Matches F0-25F claimed hash in REPAIR_REPORT.md:101 and STAGE6 json:5. Stage-1 evidence used an earlier intermediate build b76e2521... (different binary)."
+  },
+  "evidence_hashes_sha256": {
+    "docs/audit/F0_25F_REPAIR_REPORT.md": {"sha256": "0a4bdad3c33bb27fea4815506d3f06a0d83b6903f5ffe09bf26435cfbfcf273c", "size": 11593},
+    "docs/audit/F0_25F_LAUNCHER_ROOT_CAUSE.json": {"sha256": "51994d32383bc06f105f21cb1d1ea9fd6be672e8097f75fe4547069e475c88cb", "size": 11358},
+    "docs/audit/F0_25F_STAGE1_PHYSICAL_VERIFICATION.json": {"sha256": "84f6fc6625df939edf2ef6dd0318c5143bb1719a1d588193b725532dc0091ab4", "size": 1555},
+    "docs/audit/F0_25F_STAGE6_PHYSICAL_VERIFICATION.json": {"sha256": "0f4d20ea0f46489f077ce2dd84886a44b298c02fa57436800af6675321992688", "size": 1784},
+    "docs/audit/F0_25F_reproduction.png": {"sha256": "040cd0d4997f513310f4017b968079aa436afe13978f328cf1a7d80efd445f58", "size": 140515},
+    "docs/audit/F0_25F_stage1_verified.png": {"sha256": "2e634e7014301767333771f560b5030180a8b3985135cc470a137cc33da30e9d", "size": 158940},
+    "docs/audit/F0_25F_PHYSICAL_LAUNCHER.png": {"sha256": "ef98b8692b64e267cca542f336fe77c7c67464f4cdb7222bff1000b23487340a", "size": 159134},
+    "docs/audit/F0_25F_PHYSICAL_PRESENTATION.png": {"sha256": "a5e6f710f9355463cb939a4dd5752073f62fd1f9da7c36df5a93a61e8bbeb42e", "size": 158096},
+    "scripts/reproduce_f0_25f_launcher.py": {"sha256": "5db879f48b512fa1b9df45be3e554e1998a25dda6916bb62d7e20743cbdb8eb0", "size": 13389},
+    "scripts/verify_f0_25f_launcher_physical.py": {"sha256": "0594198b36d26e20cf88a472a4e0b5e62a92e4631d051973c53f6cbbcc949546", "size": 6654},
+    "scripts/verify_f0_25f_complete_physical.py": {"sha256": "c3598d2ade5fb4dc74e5afbb28d0fb02f228240d4bc058022c424df5c3d0f973", "size": 9298},
+    "tests/unit/test_f0_25f_evaluator_mutation.py": {"sha256": "3247b5370206806ba0cbf769d37b0ed086f5dba6933bf478a8a233e7f01b8ea0", "size": 6172},
+    "tests/unit/test_f0_25f_resource_ledger_sandbox.py": {"sha256": "70c2f4db39467d4e34ee50a01d48b91f6760307d41389e9a17edae0d8164a245", "size": 3269},
+    "scripts/f0_25e_evaluator.py": {"sha256": "78e364303f3523d601c94fbfad23c09701632c4a8c72f5ba989408b2e656c2b8", "size": 32341},
+    "src/astrarun/core/telemetry.py": {"sha256": "70601c0d62b3ef962166a1bfa62ad52a055c0367cc797f3b8ca5b9305f13a6ad", "size": 9641},
+    "src/astrarun/ui/result_presentation.py": {"sha256": "b3ff2d86a8ba983bb4177fcf2ca7276da8f33aacf12edbbaccd5ecf3862ac38a", "size": 8043},
+    "src/astrarun/ui/attestation.py": {"sha256": "713616cbc50f35163e19823fa8a419eeb14edf79228075e35b8ed8d053c740cf", "size": 5667},
+    "src/astrarun/main.py": {"sha256": "bc50a10b29e19f35cbb458b637bf8e5158fe8be6f1ea10411a939011a0a7cced", "size": 26051},
+    "docs/audit/CAPABILITY_SECURITY_MANIFEST.json": {"sha256": "1e05b89c5fc488bcbe91f07909fcd013df9bfb6d6fc08e83cae2d9bf672f0fb5", "size": 31450},
+    "docs/audit/C1_8_POST_FREEZE_ROUTING_EVIDENCE.json": {"sha256": "a3f82816110f897fac6c8c1801f0d54073318b685f1e5ce43848454023fd80ce", "size": 22233},
+    "docs/audit/C1_8_GENERIC_REPAIR_EVIDENCE.json": {"sha256": "bb2b0985640a261a89b8fe0cefad52cac001583fccba6549c966b0b3d689bf8d", "size": 6997},
+    "C:/Users/hp/AppData/Local/AstraRun/data/runs/run_1791739409208_19ae404c.jsonl": {"sha256": "61c4e1604904958f61bdbc3c1144e1c23a5471b75264615c32efe80fac6870d4", "size": 2232},
+    "C:/Users/hp/AppData/Local/AstraRun/data/runs/run_1791739411208_4dc3b5d6.jsonl": {"sha256": "91cbe8ebc78cd32809ba2e9d05f83fb6bbf519aa645b7b412d8b6af7910525e4", "size": 3397}
+  },
+  "commitment": "These hashes are the audit baseline; MiMo will not modify any listed file."
+}

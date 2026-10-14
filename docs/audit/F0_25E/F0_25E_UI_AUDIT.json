@@ -1,0 +1,142 @@
+{
+  "milestone": "F0_25E",
+  "title": "AstraRun F0-25E Screen UI & Visual Audit",
+  "total_frames_audited": 15,
+  "entries": [
+    {
+      "frame_id": "frame_0000",
+      "filename": "frame_0000.png",
+      "sha256": "e45d4f289469c2cff600616f926e411a5e63f54787d924bace19ae46019cbab0",
+      "foreground_process": "Antigravity.exe",
+      "foreground_title": "AstraRun Generic Computer...",
+      "astra_launcher_visible": false,
+      "astra_hud_visible": false
+    },
+    {
+      "frame_id": "frame_0001",
+      "filename": "frame_0001.png",
+      "sha256": "c8ada41507f4c86abcfcc376000f9b9682ac3922c3d7ac7227b408a6c2c21672",
+      "foreground_process": "Antigravity.exe",
+      "foreground_title": "AstraRun Generic Computer...",
+      "astra_launcher_visible": false,
+      "astra_hud_visible": false
+    },
+    {
+      "frame_id": "frame_0002",
+      "filename": "frame_0002.png",
+      "sha256": "d8e6f27c72d6c6e8fb2ca76b4f78c69e425e85cbd5a33a126d6dac60a04d9d0d",
+      "foreground_process": "Antigravity.exe",
+      "foreground_title": "AstraRun Generic Computer...",
+      "astra_launcher_visible": false,
+      "astra_hud_visible": false
+    },
+    {
+      "frame_id": "frame_0003",
+      "filename": "frame_0003.png",
+      "sha256": "5d6106cc067018c856f62bd22f2ba91f2ec7797aea6d518cedde0ea1e16b03dc",
+      "foreground_process": "Antigravity.exe",
+      "foreground_title": "AstraRun Generic Computer...",
+      "astra_launcher_visible": false,
+      "astra_hud_visible": false
+    },
+    {
+      "frame_id": "frame_0004",
+      "filename": "frame_0004.png",
+      "sha256": "964875468fa6481346737b185ca903fa5aeac13aefe102fa87f37d654c48462c",
+      "foreground_process": "Antigravity.exe",
+      "foreground_title": "AstraRun Generic Computer...",
+      "astra_launcher_visible": false,
+      "astra_hud_visible": false
+    },
+    {
+      "frame_id": "frame_0005",
+      "filename": "frame_0005.png",
+      "sha256": "ebc605da42e910571a14af1117eb3d9e2a55d6673066c1e413e7f5478624dd2c",
+      "foreground_process": "Antigravity.exe",
+      "foreground_title": "AstraRun Generic Computer...",
+      "astra_launcher_visible": false,
+      "astra_hud_visible": false
+    },
+    {
+      "frame_id": "frame_0006",
+      "filename": "frame_0006.png",
+      "sha256": "3827001dde97a9d5ca5938ca94ea5ec40d8f4375cdc91fcfedf0bd3beefebd5e",
+      "foreground_process": "Antigravity.exe",
+      "foreground_title": "AstraRun Generic Computer...",
+      "astra_launcher_visible": false,
+      "astra_hud_visible": false
+    },
+    {
+      "frame_id": "frame_0007",
+      "filename": "frame_0007.png",
+      "sha256": "2f44b0298920b1f0aba446d79c3d64d1bdca97cc98bf17517fe0531c506b348f",
+      "foreground_process": "Antigravity.exe",
+      "foreground_title": "AstraRun Generic Computer...",
+      "astra_launcher_visible": false,
+      "astra_hud_visible": false
+    },
+    {
+      "frame_id": "frame_0008",
+      "filename": "frame_0008.png",
+      "sha256": "d247e8d3305ba72ccab40d0688ac05e8cf1b86c612bbe31c481cedf53255a4b7",
+      "foreground_process": "Antigravity.exe",
+      "foreground_title": "AstraRun Generic Computer...",
+      "astra_launcher_visible": false,
+      "astra_hud_visible": false
+    },
+    {
+      "frame_id": "frame_0009",
+      "filename": "frame_0009.png",
+      "sha256": "dde93da8e7055a70a4968df52abb864412a5c0a5e3ffbac67b30bc1b8810a2be",
+      "foreground_process": "Antigravity.exe",
+      "foreground_title": "AstraRun Generic Computer...",
+      "astra_launcher_visible": false,
+      "astra_hud_visible": false
+    },
+    {
+      "frame_id": "frame_0010",
+      "filename": "frame_0010.png",
+      "sha256": "9cd74854bfdc0f14a23fce1734cb7c26a9f194f6fb1fd2b0fee559f85b013e87",
+      "foreground_process": "Antigravity.exe",
+      "foreground_title": "AstraRun Generic Computer...",
+      "astra_launcher_visible": false,
+      "astra_hud_visible": false
+    },
+    {
+      "frame_id": "frame_0011",
+      "filename": "frame_0011.png",
+      "sha256": "d6b372ad4e17beb2b4adbb9f6e3d6bdc850c4731c948adad9416656f2208ba96",
+      "foreground_process": "Antigravity.exe",
+      "foreground_title": "AstraRun Generic Computer...",
+      "astra_launcher_visible": false,
+      "astra_hud_visible": false
+    },
+    {
+      "frame_id": "frame_0012",
+      "filename": "frame_0012.png",
+      "sha256": "fc6fb3beac1b68b0074d09561f8797b65e8422aa5445208d61dcbaf6a7b81878",
+      "foreground_process": "Antigravity.exe",
+      "foreground_title": "AstraRun Generic Computer...",
+      "astra_launcher_visible": false,
+      "astra_hud_visible": false
+    },
+    {
+      "frame_id": "frame_0013",
+      "filename": "frame_0013.png",
+      "sha256": "a1f24a92de49aa598531a9a86864c5bf88b8583c63cac19b3addbbeddb3ac3c2",
+      "foreground_process": "Antigravity.exe",
+      "foreground_title": "AstraRun Generic Computer...",
+      "astra_launcher_visible": false,
+      "astra_hud_visible": false
+    },
+    {
+      "frame_id": "frame_0014",
+      "filename": "frame_0014.png",
+      "sha256": "9b19e7b8765d66ad4cc7976a9732793ec91d797a87fc2f44425c5ed5420a8e03",
+      "foreground_process": "Antigravity.exe",
+      "foreground_title": "AstraRun Generic Computer...",
+      "astra_launcher_visible": false,
+      "astra_hud_visible": false
+    }
+  ]
+}

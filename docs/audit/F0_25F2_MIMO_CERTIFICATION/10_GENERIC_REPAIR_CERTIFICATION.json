@@ -1,0 +1,20 @@
+{
+  "auditor": "MiMo",
+  "historical_claim": "8/8 then F0-25F.1 claimed 7/8 with semantic REPAIR-02 fail-closed",
+  "semantic_oracle_now": "test_generic_repair_holdout.py L201-203 REPAIR-02 requires '2026-10-06T12:00:00Z' AND 'All systems normal'; L234 is_success = report.is_success AND has_artifact AND semantic_verified",
+  "per_fixture": [
+    {"id": "REPAIR-01", "semantic": "135 substring only — weak but consistent with goal", "honest": "PASS"},
+    {"id": "REPAIR-02", "semantic": "oracle requires real timestamp string; model produced '[No timestamp available] All systems normal'; is_success=false CONFIRMED in F0_25F1_GENERIC_REPAIR_RESULTS", "honest": "FAIL (correct fail-closed)"},
+    {"id": "REPAIR-03", "semantic": "servers[-1] last element", "honest": "PASS"},
+    {"id": "REPAIR-04", "semantic": "substring '10' and '20'; evidence accepted Point(10,20,30) which mismatches original (x,y) goal", "honest": "WEAK_PASS / questionable"},
+    {"id": "REPAIR-05", "semantic": "pathlib operator fix", "honest": "PASS"},
+    {"id": "REPAIR-06", "semantic": "PNG magic OR len>=8 bytes — any 8 bytes pass", "honest": "WEAK_PASS / gameable"},
+    {"id": "REPAIR-07", "semantic": "date regex only", "honest": "WEAK_PASS"},
+    {"id": "REPAIR-08", "semantic": "55 substring for sum", "honest": "PASS"}
+  ],
+  "honest_score": "7/8 as scored by F0-25F.1 is defensible for REPAIR-02 fail-closed; however 2-3 remaining cases have gameable substring oracles, so semantic honesty ceiling is ~5-6 STRICT / 7 LOOSE",
+  "evaluator_did_not_self_repair": "SUPPORTED — model repair_code authors revision; REPAIR-02 correctly failed",
+  "production_prompt_contamination": "cognition/service.py repair-prompt rule 5 hardcodes REPAIR-02 fixture scenario ('timestamp' missing but 'time' present; do NOT use placeholder 'No timestamp available') — fixture-specific production prompt (HARDCODING)",
+  "verdict": "GENERIC REPAIR SEMANTICS = PARTIAL",
+  "verdict_rationale": "REPAIR-02 semantic fail-closed is a real repair (honest 7/8). Residual weak oracles and production prompt contamination of the exact failing scenario prevent full PASS."
+}

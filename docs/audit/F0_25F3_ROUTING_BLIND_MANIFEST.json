@@ -1,0 +1,1995 @@
+{
+  "phase": "F0-25F.3",
+  "stage": "STAGE 6 \u2014 FREEZE ROUTING BLIND HOLDOUT MANIFEST",
+  "total_prompts": 220,
+  "class_distribution": {
+    "DYNAMIC_COMPUTATION": 55,
+    "KNOWN_CAPABILITY": 55,
+    "CONVERSATIONAL": 55,
+    "CLARIFICATION_REQUIRED": 55
+  },
+  "collision_cases_count": 62,
+  "sha256": "b402565c83908bd4dda2467d22f421ad05b1189cbc47567223d4e7fc760cf023",
+  "prompts": [
+    {
+      "id": "BLIND-001",
+      "category": "dynamic_computation",
+      "prompt": "compute the eigenvalues of this 4x4 covariance matrix and output to eigenvalues.json",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "expected_intent": "execute_dynamic_tool",
+      "expected_tier": "LOCAL_MODEL",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-002",
+      "category": "dynamic_computation",
+      "prompt": "calculate the trajectories of a double pendulum over 20 seconds and save to pendulum.csv",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "expected_intent": "execute_dynamic_tool",
+      "expected_tier": "LOCAL_MODEL",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-003",
+      "category": "dynamic_computation",
+      "prompt": "work out the real and complex roots of this quartic polynomial into roots.txt",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "expected_intent": "execute_dynamic_tool",
+      "expected_tier": "LOCAL_MODEL",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-004",
+      "category": "dynamic_computation",
+      "prompt": "solve this system of five linear equations using LU decomposition and save to solution.json",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "expected_intent": "execute_dynamic_tool",
+      "expected_tier": "LOCAL_MODEL",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-005",
+      "category": "dynamic_computation",
+      "prompt": "simulate a 3D random walk with 5000 steps and save the displacement history to walk_3d.csv",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "expected_intent": "execute_dynamic_tool",
+      "expected_tier": "LOCAL_MODEL",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-006",
+      "category": "dynamic_computation",
+      "prompt": "calculate the perimeter and polygon area from these GPS vertices and export to geom_metrics.json",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "expected_intent": "execute_dynamic_tool",
+      "expected_tier": "LOCAL_MODEL",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-007",
+      "category": "dynamic_computation",
+      "prompt": "compute the rolling standard deviation and variance of these stock ticks into volatility.json",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "expected_intent": "execute_dynamic_tool",
+      "expected_tier": "LOCAL_MODEL",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-008",
+      "category": "dynamic_computation",
+      "prompt": "simulate a predator-prey Lotka-Volterra model across 100 timesteps and write to simulation.csv",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "expected_intent": "execute_dynamic_tool",
+      "expected_tier": "LOCAL_MODEL",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-009",
+      "category": "dynamic_computation",
+      "prompt": "calculate the first 100 prime numbers and their successive gaps into prime_gaps.txt",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "expected_intent": "execute_dynamic_tool",
+      "expected_tier": "LOCAL_MODEL",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-010",
+      "category": "dynamic_computation",
+      "prompt": "compute the fast fourier transform of this discrete audio signal and save magnitudes to fft.json",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "expected_intent": "execute_dynamic_tool",
+      "expected_tier": "LOCAL_MODEL",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-011",
+      "category": "dynamic_computation",
+      "prompt": "simulate Brownian motion for 100 particles and record final positions in particles.json",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "expected_intent": "execute_dynamic_tool",
+      "expected_tier": "LOCAL_MODEL",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-012",
+      "category": "dynamic_computation",
+      "prompt": "compute the convex hull of these 2D points using the Graham scan algorithm into hull.json",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "expected_intent": "execute_dynamic_tool",
+      "expected_tier": "LOCAL_MODEL",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-013",
+      "category": "dynamic_computation",
+      "prompt": "calculate the Fibonacci sequence up to index 200 with arbitrary precision into fib.txt",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "expected_intent": "execute_dynamic_tool",
+      "expected_tier": "LOCAL_MODEL",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-014",
+      "category": "dynamic_computation",
+      "prompt": "solve the one-dimensional heat diffusion equation across a rod into heat_profile.csv",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "expected_intent": "execute_dynamic_tool",
+      "expected_tier": "LOCAL_MODEL",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-015",
+      "category": "dynamic_computation",
+      "prompt": "compute the singular value decomposition of this matrix and store singular values in svd.json",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "expected_intent": "execute_dynamic_tool",
+      "expected_tier": "LOCAL_MODEL",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-016",
+      "category": "dynamic_computation",
+      "prompt": "calculate the shortest path distances in this weighted graph using Dijkstra into distances.json",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "expected_intent": "execute_dynamic_tool",
+      "expected_tier": "LOCAL_MODEL",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-017",
+      "category": "dynamic_computation",
+      "prompt": "simulate the Collatz sequence for all integers up to 1000 and record max sequence lengths in collatz.csv",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "expected_intent": "execute_dynamic_tool",
+      "expected_tier": "LOCAL_MODEL",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-018",
+      "category": "dynamic_computation",
+      "prompt": "compute the linear regression coefficients and R-squared for these paired readings into regression.json",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "expected_intent": "execute_dynamic_tool",
+      "expected_tier": "LOCAL_MODEL",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-019",
+      "category": "dynamic_computation",
+      "prompt": "simulate a three-body gravitational orbital system and save step coordinates to orbits.csv",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "expected_intent": "execute_dynamic_tool",
+      "expected_tier": "LOCAL_MODEL",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-020",
+      "category": "dynamic_computation",
+      "prompt": "calculate numerical integration of the error function from 0 to 5 using Simpson's rule into integral.txt",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "expected_intent": "execute_dynamic_tool",
+      "expected_tier": "LOCAL_MODEL",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-021",
+      "category": "dynamic_computation",
+      "prompt": "work out the eigenvalues and condition number of this Hilbert matrix into hilbert_stats.json",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "expected_intent": "execute_dynamic_tool",
+      "expected_tier": "LOCAL_MODEL",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-022",
+      "category": "dynamic_computation",
+      "prompt": "simulate a Markov chain with 4 states across 1000 transitions and write state frequencies to markov.json",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "expected_intent": "execute_dynamic_tool",
+      "expected_tier": "LOCAL_MODEL",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-023",
+      "category": "dynamic_computation",
+      "prompt": "calculate the geodesic distance between pairs of coordinate points and save to distances.csv",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "expected_intent": "execute_dynamic_tool",
+      "expected_tier": "LOCAL_MODEL",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-024",
+      "category": "dynamic_computation",
+      "prompt": "compute the autocorrelation of this sensor time-series data and write lags to autocorr.json",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "expected_intent": "execute_dynamic_tool",
+      "expected_tier": "LOCAL_MODEL",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-025",
+      "category": "dynamic_computation",
+      "prompt": "solve the Poisson equation on a 20x20 grid with Dirichlet boundary conditions into grid.csv",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "expected_intent": "execute_dynamic_tool",
+      "expected_tier": "LOCAL_MODEL",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-026",
+      "category": "dynamic_computation",
+      "prompt": "parse nginx access logs and aggregate request count per status code into http_codes.json",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "expected_intent": "execute_dynamic_tool",
+      "expected_tier": "LOCAL_MODEL",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-027",
+      "category": "dynamic_computation",
+      "prompt": "compile a summary table of failed SSH login attempts from auth.log into ssh_failures.txt",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "expected_intent": "execute_dynamic_tool",
+      "expected_tier": "LOCAL_MODEL",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-028",
+      "category": "dynamic_computation",
+      "prompt": "parse this apache error log and compute the top 10 most frequent client IPs into top_ips.json",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "expected_intent": "execute_dynamic_tool",
+      "expected_tier": "LOCAL_MODEL",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-029",
+      "category": "dynamic_computation",
+      "prompt": "extract API response latencies from request.log and calculate 95th and 99th percentiles into latencies.json",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "expected_intent": "execute_dynamic_tool",
+      "expected_tier": "LOCAL_MODEL",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-030",
+      "category": "dynamic_computation",
+      "prompt": "parse sys_metrics.csv and generate a summary report of CPU utilization spikes into cpu_spikes.txt",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "expected_intent": "execute_dynamic_tool",
+      "expected_tier": "LOCAL_MODEL",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-031",
+      "category": "dynamic_computation",
+      "prompt": "transform this nested json of customer orders into a flattened sales summary table in sales.csv",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "expected_intent": "execute_dynamic_tool",
+      "expected_tier": "LOCAL_MODEL",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-032",
+      "category": "dynamic_computation",
+      "prompt": "aggregate total network bandwidth used per port from netflow.log into net_usage.json",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "expected_intent": "execute_dynamic_tool",
+      "expected_tier": "LOCAL_MODEL",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-033",
+      "category": "dynamic_computation",
+      "prompt": "parse git log output and compute total commits and lines changed per author into author_stats.txt",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "expected_intent": "execute_dynamic_tool",
+      "expected_tier": "LOCAL_MODEL",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-034",
+      "category": "dynamic_computation",
+      "prompt": "extract SQL slow query durations from db_slow.log and aggregate average execution time per table into query_summary.json",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "expected_intent": "execute_dynamic_tool",
+      "expected_tier": "LOCAL_MODEL",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-035",
+      "category": "dynamic_computation",
+      "prompt": "parse memory allocation logs and compute peak heap usage per thread into thread_memory.json",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "expected_intent": "execute_dynamic_tool",
+      "expected_tier": "LOCAL_MODEL",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-036",
+      "category": "dynamic_computation",
+      "prompt": "compile a summary table of HTTP 500 exceptions from app.log grouped by endpoint into error_table.txt",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "expected_intent": "execute_dynamic_tool",
+      "expected_tier": "LOCAL_MODEL",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-037",
+      "category": "dynamic_computation",
+      "prompt": "parse docker daemon logs and count container crash events per image into crash_metrics.json",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "expected_intent": "execute_dynamic_tool",
+      "expected_tier": "LOCAL_MODEL",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-038",
+      "category": "dynamic_computation",
+      "prompt": "extract disk I/O metrics from iostat.log and group average write times by device into disk_io.json",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "expected_intent": "execute_dynamic_tool",
+      "expected_tier": "LOCAL_MODEL",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-039",
+      "category": "dynamic_computation",
+      "prompt": "aggregate daily weather measurements from sensor_dump.csv and compute monthly temperature averages into monthly_weather.csv",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "expected_intent": "execute_dynamic_tool",
+      "expected_tier": "LOCAL_MODEL",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-040",
+      "category": "dynamic_computation",
+      "prompt": "transform this json array of telemetry events into a frequency distribution table in event_freqs.json",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "expected_intent": "execute_dynamic_tool",
+      "expected_tier": "LOCAL_MODEL",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-041",
+      "category": "dynamic_computation",
+      "prompt": "parse audit.log to compute total user permission changes per role into role_audit.txt",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "expected_intent": "execute_dynamic_tool",
+      "expected_tier": "LOCAL_MODEL",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-042",
+      "category": "dynamic_computation",
+      "prompt": "extract batch processing runtimes from job_history.csv and compute throughput per hour into throughput.json",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "expected_intent": "execute_dynamic_tool",
+      "expected_tier": "LOCAL_MODEL",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-043",
+      "category": "dynamic_computation",
+      "prompt": "compile a summary report of kernel panic stack traces into kernel_analysis.txt",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "expected_intent": "execute_dynamic_tool",
+      "expected_tier": "LOCAL_MODEL",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-044",
+      "category": "dynamic_computation",
+      "prompt": "parse load balancer metrics and compute request error rates per backend host into host_health.json",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "expected_intent": "execute_dynamic_tool",
+      "expected_tier": "LOCAL_MODEL",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-045",
+      "category": "dynamic_computation",
+      "prompt": "aggregate page load timings from browser_rum.csv and create a latency distribution into rum_percentiles.json",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "expected_intent": "execute_dynamic_tool",
+      "expected_tier": "LOCAL_MODEL",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-046",
+      "category": "dynamic_computation",
+      "prompt": "generate a 20x20 random maze grid using Prim's algorithm and save representation to maze.txt",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "expected_intent": "execute_dynamic_tool",
+      "expected_tier": "LOCAL_MODEL",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-047",
+      "category": "dynamic_computation",
+      "prompt": "generate Mandelbrot set boundary coordinates at resolution 400x400 into mandelbrot.csv",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "expected_intent": "execute_dynamic_tool",
+      "expected_tier": "LOCAL_MODEL",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-048",
+      "category": "dynamic_computation",
+      "prompt": "generate synthetic time-series data with Gaussian noise and seasonal trends into synthetic_series.csv",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "expected_intent": "execute_dynamic_tool",
+      "expected_tier": "LOCAL_MODEL",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-049",
+      "category": "dynamic_computation",
+      "prompt": "generate a correlation matrix from multivariate sensor data and save heatmap data to correlation.json",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "expected_intent": "execute_dynamic_tool",
+      "expected_tier": "LOCAL_MODEL",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-050",
+      "category": "dynamic_computation",
+      "prompt": "generate a frequency histogram bin table for these customer age values into age_histogram.csv",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "expected_intent": "execute_dynamic_tool",
+      "expected_tier": "LOCAL_MODEL",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-051",
+      "category": "dynamic_computation",
+      "prompt": "generate a scatter plot coordinate dataset for k-means clustered data into clusters.json",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "expected_intent": "execute_dynamic_tool",
+      "expected_tier": "LOCAL_MODEL",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-052",
+      "category": "dynamic_computation",
+      "prompt": "compute the Pareto front of this multi-objective optimization problem into pareto.json",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "expected_intent": "execute_dynamic_tool",
+      "expected_tier": "LOCAL_MODEL",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-053",
+      "category": "dynamic_computation",
+      "prompt": "generate a cellular automaton Game of Life evolution matrix over 50 steps into life_steps.csv",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "expected_intent": "execute_dynamic_tool",
+      "expected_tier": "LOCAL_MODEL",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-054",
+      "category": "dynamic_computation",
+      "prompt": "calculate the page rank scores for this web page link graph into pagerank.json",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "expected_intent": "execute_dynamic_tool",
+      "expected_tier": "LOCAL_MODEL",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-055",
+      "category": "dynamic_computation",
+      "prompt": "generate a contingency table and chi-square test statistic from survey_responses.csv into chi_square.txt",
+      "expected_intent_class": "DYNAMIC_COMPUTATION",
+      "expected_intent": "execute_dynamic_tool",
+      "expected_tier": "LOCAL_MODEL",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-056",
+      "category": "known_capability",
+      "prompt": "open notepad",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "expected_intent": "KNOWN_OR_SYSTEM_CAPABILITY",
+      "expected_tier": "DETERMINISTIC_OR_SEMANTIC",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-057",
+      "category": "known_capability",
+      "prompt": "launch calculator",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "expected_intent": "KNOWN_OR_SYSTEM_CAPABILITY",
+      "expected_tier": "DETERMINISTIC_OR_SEMANTIC",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-058",
+      "category": "known_capability",
+      "prompt": "open visual studio code",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "expected_intent": "KNOWN_OR_SYSTEM_CAPABILITY",
+      "expected_tier": "DETERMINISTIC_OR_SEMANTIC",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-059",
+      "category": "known_capability",
+      "prompt": "launch vivaldi browser",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "expected_intent": "KNOWN_OR_SYSTEM_CAPABILITY",
+      "expected_tier": "DETERMINISTIC_OR_SEMANTIC",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-060",
+      "category": "known_capability",
+      "prompt": "open windows terminal",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "expected_intent": "KNOWN_OR_SYSTEM_CAPABILITY",
+      "expected_tier": "DETERMINISTIC_OR_SEMANTIC",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-061",
+      "category": "known_capability",
+      "prompt": "launch cmd",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "expected_intent": "KNOWN_OR_SYSTEM_CAPABILITY",
+      "expected_tier": "DETERMINISTIC_OR_SEMANTIC",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-062",
+      "category": "known_capability",
+      "prompt": "open powershell",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "expected_intent": "KNOWN_OR_SYSTEM_CAPABILITY",
+      "expected_tier": "DETERMINISTIC_OR_SEMANTIC",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-063",
+      "category": "known_capability",
+      "prompt": "start task manager",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "expected_intent": "KNOWN_OR_SYSTEM_CAPABILITY",
+      "expected_tier": "DETERMINISTIC_OR_SEMANTIC",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-064",
+      "category": "known_capability",
+      "prompt": "open file explorer",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "expected_intent": "KNOWN_OR_SYSTEM_CAPABILITY",
+      "expected_tier": "DETERMINISTIC_OR_SEMANTIC",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-065",
+      "category": "known_capability",
+      "prompt": "launch edge",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "expected_intent": "KNOWN_OR_SYSTEM_CAPABILITY",
+      "expected_tier": "DETERMINISTIC_OR_SEMANTIC",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-066",
+      "category": "known_capability",
+      "prompt": "generate battery report",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "expected_intent": "KNOWN_OR_SYSTEM_CAPABILITY",
+      "expected_tier": "DETERMINISTIC_OR_SEMANTIC",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-067",
+      "category": "known_capability",
+      "prompt": "show battery status",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "expected_intent": "KNOWN_OR_SYSTEM_CAPABILITY",
+      "expected_tier": "DETERMINISTIC_OR_SEMANTIC",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-068",
+      "category": "known_capability",
+      "prompt": "check battery health report",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "expected_intent": "KNOWN_OR_SYSTEM_CAPABILITY",
+      "expected_tier": "DETERMINISTIC_OR_SEMANTIC",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-069",
+      "category": "known_capability",
+      "prompt": "show available wifi networks",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "expected_intent": "KNOWN_OR_SYSTEM_CAPABILITY",
+      "expected_tier": "DETERMINISTIC_OR_SEMANTIC",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-070",
+      "category": "known_capability",
+      "prompt": "scan wifi networks",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "expected_intent": "KNOWN_OR_SYSTEM_CAPABILITY",
+      "expected_tier": "DETERMINISTIC_OR_SEMANTIC",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-071",
+      "category": "known_capability",
+      "prompt": "check system memory usage",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "expected_intent": "KNOWN_OR_SYSTEM_CAPABILITY",
+      "expected_tier": "DETERMINISTIC_OR_SEMANTIC",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-072",
+      "category": "known_capability",
+      "prompt": "show total disk space",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "expected_intent": "KNOWN_OR_SYSTEM_CAPABILITY",
+      "expected_tier": "DETERMINISTIC_OR_SEMANTIC",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-073",
+      "category": "known_capability",
+      "prompt": "display cpu usage",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "expected_intent": "KNOWN_OR_SYSTEM_CAPABILITY",
+      "expected_tier": "DETERMINISTIC_OR_SEMANTIC",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-074",
+      "category": "known_capability",
+      "prompt": "take a screenshot",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "expected_intent": "KNOWN_OR_SYSTEM_CAPABILITY",
+      "expected_tier": "DETERMINISTIC_OR_SEMANTIC",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-075",
+      "category": "known_capability",
+      "prompt": "capture screen",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "expected_intent": "KNOWN_OR_SYSTEM_CAPABILITY",
+      "expected_tier": "DETERMINISTIC_OR_SEMANTIC",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-076",
+      "category": "known_capability",
+      "prompt": "lock workstation",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "expected_intent": "KNOWN_OR_SYSTEM_CAPABILITY",
+      "expected_tier": "DETERMINISTIC_OR_SEMANTIC",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-077",
+      "category": "known_capability",
+      "prompt": "mute system audio",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "expected_intent": "KNOWN_OR_SYSTEM_CAPABILITY",
+      "expected_tier": "DETERMINISTIC_OR_SEMANTIC",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-078",
+      "category": "known_capability",
+      "prompt": "unmute system audio",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "expected_intent": "KNOWN_OR_SYSTEM_CAPABILITY",
+      "expected_tier": "DETERMINISTIC_OR_SEMANTIC",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-079",
+      "category": "known_capability",
+      "prompt": "list running processes",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "expected_intent": "KNOWN_OR_SYSTEM_CAPABILITY",
+      "expected_tier": "DETERMINISTIC_OR_SEMANTIC",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-080",
+      "category": "known_capability",
+      "prompt": "get network ip address",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "expected_intent": "KNOWN_OR_SYSTEM_CAPABILITY",
+      "expected_tier": "DETERMINISTIC_OR_SEMANTIC",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-081",
+      "category": "known_capability",
+      "prompt": "show hostname",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "expected_intent": "KNOWN_OR_SYSTEM_CAPABILITY",
+      "expected_tier": "DETERMINISTIC_OR_SEMANTIC",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-082",
+      "category": "known_capability",
+      "prompt": "check uptime",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "expected_intent": "KNOWN_OR_SYSTEM_CAPABILITY",
+      "expected_tier": "DETERMINISTIC_OR_SEMANTIC",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-083",
+      "category": "known_capability",
+      "prompt": "get git status of current repository",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "expected_intent": "KNOWN_OR_SYSTEM_CAPABILITY",
+      "expected_tier": "DETERMINISTIC_OR_SEMANTIC",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-084",
+      "category": "known_capability",
+      "prompt": "show git status",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "expected_intent": "KNOWN_OR_SYSTEM_CAPABILITY",
+      "expected_tier": "DETERMINISTIC_OR_SEMANTIC",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-085",
+      "category": "known_capability",
+      "prompt": "view git branch",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "expected_intent": "KNOWN_OR_SYSTEM_CAPABILITY",
+      "expected_tier": "DETERMINISTIC_OR_SEMANTIC",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-086",
+      "category": "known_capability",
+      "prompt": "check git status of project",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "expected_intent": "KNOWN_OR_SYSTEM_CAPABILITY",
+      "expected_tier": "DETERMINISTIC_OR_SEMANTIC",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-087",
+      "category": "known_capability",
+      "prompt": "open downloads folder",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "expected_intent": "KNOWN_OR_SYSTEM_CAPABILITY",
+      "expected_tier": "DETERMINISTIC_OR_SEMANTIC",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-088",
+      "category": "known_capability",
+      "prompt": "open desktop directory",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "expected_intent": "KNOWN_OR_SYSTEM_CAPABILITY",
+      "expected_tier": "DETERMINISTIC_OR_SEMANTIC",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-089",
+      "category": "known_capability",
+      "prompt": "open documents folder",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "expected_intent": "KNOWN_OR_SYSTEM_CAPABILITY",
+      "expected_tier": "DETERMINISTIC_OR_SEMANTIC",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-090",
+      "category": "known_capability",
+      "prompt": "reveal file in explorer",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "expected_intent": "KNOWN_OR_SYSTEM_CAPABILITY",
+      "expected_tier": "DETERMINISTIC_OR_SEMANTIC",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-091",
+      "category": "known_capability",
+      "prompt": "show output file in explorer",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "expected_intent": "KNOWN_OR_SYSTEM_CAPABILITY",
+      "expected_tier": "DETERMINISTIC_OR_SEMANTIC",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-092",
+      "category": "known_capability",
+      "prompt": "open current project folder",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "expected_intent": "KNOWN_OR_SYSTEM_CAPABILITY",
+      "expected_tier": "DETERMINISTIC_OR_SEMANTIC",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-093",
+      "category": "known_capability",
+      "prompt": "open system event log in event viewer",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "expected_intent": "KNOWN_OR_SYSTEM_CAPABILITY",
+      "expected_tier": "DETERMINISTIC_OR_SEMANTIC",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-094",
+      "category": "known_capability",
+      "prompt": "open taskbar settings",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "expected_intent": "KNOWN_OR_SYSTEM_CAPABILITY",
+      "expected_tier": "DETERMINISTIC_OR_SEMANTIC",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-095",
+      "category": "known_capability",
+      "prompt": "open character map",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "expected_intent": "KNOWN_OR_SYSTEM_CAPABILITY",
+      "expected_tier": "DETERMINISTIC_OR_SEMANTIC",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-096",
+      "category": "known_capability",
+      "prompt": "open control panel",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "expected_intent": "KNOWN_OR_SYSTEM_CAPABILITY",
+      "expected_tier": "DETERMINISTIC_OR_SEMANTIC",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-097",
+      "category": "known_capability",
+      "prompt": "open device manager",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "expected_intent": "KNOWN_OR_SYSTEM_CAPABILITY",
+      "expected_tier": "DETERMINISTIC_OR_SEMANTIC",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-098",
+      "category": "known_capability",
+      "prompt": "open disk management",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "expected_intent": "KNOWN_OR_SYSTEM_CAPABILITY",
+      "expected_tier": "DETERMINISTIC_OR_SEMANTIC",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-099",
+      "category": "known_capability",
+      "prompt": "open network connections",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "expected_intent": "KNOWN_OR_SYSTEM_CAPABILITY",
+      "expected_tier": "DETERMINISTIC_OR_SEMANTIC",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-100",
+      "category": "known_capability",
+      "prompt": "open registry editor",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "expected_intent": "KNOWN_OR_SYSTEM_CAPABILITY",
+      "expected_tier": "DETERMINISTIC_OR_SEMANTIC",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-101",
+      "category": "known_capability",
+      "prompt": "open services manager",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "expected_intent": "KNOWN_OR_SYSTEM_CAPABILITY",
+      "expected_tier": "DETERMINISTIC_OR_SEMANTIC",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-102",
+      "category": "known_capability",
+      "prompt": "open windows settings",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "expected_intent": "KNOWN_OR_SYSTEM_CAPABILITY",
+      "expected_tier": "DETERMINISTIC_OR_SEMANTIC",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-103",
+      "category": "known_capability",
+      "prompt": "open date and time settings",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "expected_intent": "KNOWN_OR_SYSTEM_CAPABILITY",
+      "expected_tier": "DETERMINISTIC_OR_SEMANTIC",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-104",
+      "category": "known_capability",
+      "prompt": "open sound settings",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "expected_intent": "KNOWN_OR_SYSTEM_CAPABILITY",
+      "expected_tier": "DETERMINISTIC_OR_SEMANTIC",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-105",
+      "category": "known_capability",
+      "prompt": "open display settings",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "expected_intent": "KNOWN_OR_SYSTEM_CAPABILITY",
+      "expected_tier": "DETERMINISTIC_OR_SEMANTIC",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-106",
+      "category": "known_capability",
+      "prompt": "open bluetooth settings",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "expected_intent": "KNOWN_OR_SYSTEM_CAPABILITY",
+      "expected_tier": "DETERMINISTIC_OR_SEMANTIC",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-107",
+      "category": "known_capability",
+      "prompt": "open installed apps list",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "expected_intent": "KNOWN_OR_SYSTEM_CAPABILITY",
+      "expected_tier": "DETERMINISTIC_OR_SEMANTIC",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-108",
+      "category": "known_capability",
+      "prompt": "open default apps settings",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "expected_intent": "KNOWN_OR_SYSTEM_CAPABILITY",
+      "expected_tier": "DETERMINISTIC_OR_SEMANTIC",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-109",
+      "category": "known_capability",
+      "prompt": "open clipboard settings",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "expected_intent": "KNOWN_OR_SYSTEM_CAPABILITY",
+      "expected_tier": "DETERMINISTIC_OR_SEMANTIC",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-110",
+      "category": "known_capability",
+      "prompt": "open storage settings",
+      "expected_intent_class": "KNOWN_CAPABILITY",
+      "expected_intent": "KNOWN_OR_SYSTEM_CAPABILITY",
+      "expected_tier": "DETERMINISTIC_OR_SEMANTIC",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-111",
+      "category": "conversational",
+      "prompt": "what is the plot of hamlet?",
+      "expected_intent_class": "CONVERSATIONAL",
+      "expected_intent": "conversational_dialogue",
+      "expected_tier": "LOCAL_MODEL",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-112",
+      "category": "conversational",
+      "prompt": "can you explain the plot of the great gatsby?",
+      "expected_intent_class": "CONVERSATIONAL",
+      "expected_intent": "conversational_dialogue",
+      "expected_tier": "LOCAL_MODEL",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-113",
+      "category": "conversational",
+      "prompt": "summarize the main plot points of macbeth",
+      "expected_intent_class": "CONVERSATIONAL",
+      "expected_intent": "conversational_dialogue",
+      "expected_tier": "LOCAL_MODEL",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-114",
+      "category": "conversational",
+      "prompt": "help me solve this riddle: what has keys but no locks?",
+      "expected_intent_class": "CONVERSATIONAL",
+      "expected_intent": "conversational_dialogue",
+      "expected_tier": "LOCAL_MODEL",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-115",
+      "category": "conversational",
+      "prompt": "can you solve this lateral thinking puzzle about a man in an elevator?",
+      "expected_intent_class": "CONVERSATIONAL",
+      "expected_intent": "conversational_dialogue",
+      "expected_tier": "LOCAL_MODEL",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-116",
+      "category": "conversational",
+      "prompt": "how do i solve a dispute between team members amicably?",
+      "expected_intent_class": "CONVERSATIONAL",
+      "expected_intent": "conversational_dialogue",
+      "expected_tier": "LOCAL_MODEL",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-117",
+      "category": "conversational",
+      "prompt": "what is the best way to solve conflict in an engineering team?",
+      "expected_intent_class": "CONVERSATIONAL",
+      "expected_intent": "conversational_dialogue",
+      "expected_tier": "LOCAL_MODEL",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-118",
+      "category": "conversational",
+      "prompt": "what is python and where is it used?",
+      "expected_intent_class": "CONVERSATIONAL",
+      "expected_intent": "conversational_dialogue",
+      "expected_tier": "LOCAL_MODEL",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-119",
+      "category": "conversational",
+      "prompt": "explain what a python decorator is conceptually",
+      "expected_intent_class": "CONVERSATIONAL",
+      "expected_intent": "conversational_dialogue",
+      "expected_tier": "LOCAL_MODEL",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-120",
+      "category": "conversational",
+      "prompt": "what is the difference between a process and a thread in python?",
+      "expected_intent_class": "CONVERSATIONAL",
+      "expected_intent": "conversational_dialogue",
+      "expected_tier": "LOCAL_MODEL",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-121",
+      "category": "conversational",
+      "prompt": "what does clean code mean in software engineering?",
+      "expected_intent_class": "CONVERSATIONAL",
+      "expected_intent": "conversational_dialogue",
+      "expected_tier": "LOCAL_MODEL",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-122",
+      "category": "conversational",
+      "prompt": "what is the airport code for London Heathrow?",
+      "expected_intent_class": "CONVERSATIONAL",
+      "expected_intent": "conversational_dialogue",
+      "expected_tier": "LOCAL_MODEL",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-123",
+      "category": "conversational",
+      "prompt": "what is the postal code format for Canada?",
+      "expected_intent_class": "CONVERSATIONAL",
+      "expected_intent": "conversational_dialogue",
+      "expected_tier": "LOCAL_MODEL",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-124",
+      "category": "conversational",
+      "prompt": "why do programmers use pseudocode before writing real code?",
+      "expected_intent_class": "CONVERSATIONAL",
+      "expected_intent": "conversational_dialogue",
+      "expected_tier": "LOCAL_MODEL",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-125",
+      "category": "conversational",
+      "prompt": "can you explain the periodic table of elements?",
+      "expected_intent_class": "CONVERSATIONAL",
+      "expected_intent": "conversational_dialogue",
+      "expected_tier": "LOCAL_MODEL",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-126",
+      "category": "conversational",
+      "prompt": "what are the dimensions of a regulation table tennis table?",
+      "expected_intent_class": "CONVERSATIONAL",
+      "expected_intent": "conversational_dialogue",
+      "expected_tier": "LOCAL_MODEL",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-127",
+      "category": "conversational",
+      "prompt": "what is the difference between TCP and UDP?",
+      "expected_intent_class": "CONVERSATIONAL",
+      "expected_intent": "conversational_dialogue",
+      "expected_tier": "LOCAL_MODEL",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-128",
+      "category": "conversational",
+      "prompt": "explain the difference between synchronous and asynchronous execution",
+      "expected_intent_class": "CONVERSATIONAL",
+      "expected_intent": "conversational_dialogue",
+      "expected_tier": "LOCAL_MODEL",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-129",
+      "category": "conversational",
+      "prompt": "what does acid compliance mean in relational databases?",
+      "expected_intent_class": "CONVERSATIONAL",
+      "expected_intent": "conversational_dialogue",
+      "expected_tier": "LOCAL_MODEL",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-130",
+      "category": "conversational",
+      "prompt": "what is the cap theorem?",
+      "expected_intent_class": "CONVERSATIONAL",
+      "expected_intent": "conversational_dialogue",
+      "expected_tier": "LOCAL_MODEL",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-131",
+      "category": "conversational",
+      "prompt": "how does public key cryptography work?",
+      "expected_intent_class": "CONVERSATIONAL",
+      "expected_intent": "conversational_dialogue",
+      "expected_tier": "LOCAL_MODEL",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-132",
+      "category": "conversational",
+      "prompt": "explain the concept of recursion with an analogy",
+      "expected_intent_class": "CONVERSATIONAL",
+      "expected_intent": "conversational_dialogue",
+      "expected_tier": "LOCAL_MODEL",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-133",
+      "category": "conversational",
+      "prompt": "write an email thanking my mentor for their career guidance",
+      "expected_intent_class": "CONVERSATIONAL",
+      "expected_intent": "conversational_dialogue",
+      "expected_tier": "LOCAL_MODEL",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-134",
+      "category": "conversational",
+      "prompt": "write a congratulatory note for a colleague who got promoted",
+      "expected_intent_class": "CONVERSATIONAL",
+      "expected_intent": "conversational_dialogue",
+      "expected_tier": "LOCAL_MODEL",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-135",
+      "category": "conversational",
+      "prompt": "draft a polite decline message for an invitation",
+      "expected_intent_class": "CONVERSATIONAL",
+      "expected_intent": "conversational_dialogue",
+      "expected_tier": "LOCAL_MODEL",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-136",
+      "category": "conversational",
+      "prompt": "give me a summary of the historical causes of World War One",
+      "expected_intent_class": "CONVERSATIONAL",
+      "expected_intent": "conversational_dialogue",
+      "expected_tier": "LOCAL_MODEL",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-137",
+      "category": "conversational",
+      "prompt": "can you give me a brief summary of the book Sapiens?",
+      "expected_intent_class": "CONVERSATIONAL",
+      "expected_intent": "conversational_dialogue",
+      "expected_tier": "LOCAL_MODEL",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-138",
+      "category": "conversational",
+      "prompt": "what was the Warren Commission report about?",
+      "expected_intent_class": "CONVERSATIONAL",
+      "expected_intent": "conversational_dialogue",
+      "expected_tier": "LOCAL_MODEL",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-139",
+      "category": "conversational",
+      "prompt": "explain the difference between a captain's log and a diary",
+      "expected_intent_class": "CONVERSATIONAL",
+      "expected_intent": "conversational_dialogue",
+      "expected_tier": "LOCAL_MODEL",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-140",
+      "category": "conversational",
+      "prompt": "how does an airplane flight data recorder or black box log information?",
+      "expected_intent_class": "CONVERSATIONAL",
+      "expected_intent": "conversational_dialogue",
+      "expected_tier": "LOCAL_MODEL",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-141",
+      "category": "conversational",
+      "prompt": "count me in for the team lunch tomorrow",
+      "expected_intent_class": "CONVERSATIONAL",
+      "expected_intent": "conversational_dialogue",
+      "expected_tier": "LOCAL_MODEL",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-142",
+      "category": "conversational",
+      "prompt": "can you explain why every vote should count in a democracy?",
+      "expected_intent_class": "CONVERSATIONAL",
+      "expected_intent": "conversational_dialogue",
+      "expected_tier": "LOCAL_MODEL",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-143",
+      "category": "conversational",
+      "prompt": "what does it mean when someone says don't count your chickens before they hatch?",
+      "expected_intent_class": "CONVERSATIONAL",
+      "expected_intent": "conversational_dialogue",
+      "expected_tier": "LOCAL_MODEL",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-144",
+      "category": "conversational",
+      "prompt": "how do astronauts sleep in zero gravity?",
+      "expected_intent_class": "CONVERSATIONAL",
+      "expected_intent": "conversational_dialogue",
+      "expected_tier": "LOCAL_MODEL",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-145",
+      "category": "conversational",
+      "prompt": "why is the sky blue during the day and red at sunset?",
+      "expected_intent_class": "CONVERSATIONAL",
+      "expected_intent": "conversational_dialogue",
+      "expected_tier": "LOCAL_MODEL",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-146",
+      "category": "conversational",
+      "prompt": "what causes ocean tides?",
+      "expected_intent_class": "CONVERSATIONAL",
+      "expected_intent": "conversational_dialogue",
+      "expected_tier": "LOCAL_MODEL",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-147",
+      "category": "conversational",
+      "prompt": "who painted the Mona Lisa?",
+      "expected_intent_class": "CONVERSATIONAL",
+      "expected_intent": "conversational_dialogue",
+      "expected_tier": "LOCAL_MODEL",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-148",
+      "category": "conversational",
+      "prompt": "what is the capital of Australia?",
+      "expected_intent_class": "CONVERSATIONAL",
+      "expected_intent": "conversational_dialogue",
+      "expected_tier": "LOCAL_MODEL",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-149",
+      "category": "conversational",
+      "prompt": "how do noise cancelling headphones work?",
+      "expected_intent_class": "CONVERSATIONAL",
+      "expected_intent": "conversational_dialogue",
+      "expected_tier": "LOCAL_MODEL",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-150",
+      "category": "conversational",
+      "prompt": "what is the difference between astronomy and astrology?",
+      "expected_intent_class": "CONVERSATIONAL",
+      "expected_intent": "conversational_dialogue",
+      "expected_tier": "LOCAL_MODEL",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-151",
+      "category": "conversational",
+      "prompt": "why do leaves change color in autumn?",
+      "expected_intent_class": "CONVERSATIONAL",
+      "expected_intent": "conversational_dialogue",
+      "expected_tier": "LOCAL_MODEL",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-152",
+      "category": "conversational",
+      "prompt": "can you suggest some healthy breakfast ideas?",
+      "expected_intent_class": "CONVERSATIONAL",
+      "expected_intent": "conversational_dialogue",
+      "expected_tier": "LOCAL_MODEL",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-153",
+      "category": "conversational",
+      "prompt": "how can I improve my focus while studying?",
+      "expected_intent_class": "CONVERSATIONAL",
+      "expected_intent": "conversational_dialogue",
+      "expected_tier": "LOCAL_MODEL",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-154",
+      "category": "conversational",
+      "prompt": "what is the difference between deductive and inductive reasoning?",
+      "expected_intent_class": "CONVERSATIONAL",
+      "expected_intent": "conversational_dialogue",
+      "expected_tier": "LOCAL_MODEL",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-155",
+      "category": "conversational",
+      "prompt": "good morning, how are you today?",
+      "expected_intent_class": "CONVERSATIONAL",
+      "expected_intent": "conversational_dialogue",
+      "expected_tier": "LOCAL_MODEL",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-156",
+      "category": "conversational",
+      "prompt": "hello there!",
+      "expected_intent_class": "CONVERSATIONAL",
+      "expected_intent": "conversational_dialogue",
+      "expected_tier": "LOCAL_MODEL",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-157",
+      "category": "conversational",
+      "prompt": "thank you for your assistance",
+      "expected_intent_class": "CONVERSATIONAL",
+      "expected_intent": "conversational_dialogue",
+      "expected_tier": "LOCAL_MODEL",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-158",
+      "category": "conversational",
+      "prompt": "have a great afternoon",
+      "expected_intent_class": "CONVERSATIONAL",
+      "expected_intent": "conversational_dialogue",
+      "expected_tier": "LOCAL_MODEL",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-159",
+      "category": "conversational",
+      "prompt": "who are you and what is your purpose?",
+      "expected_intent_class": "CONVERSATIONAL",
+      "expected_intent": "conversational_dialogue",
+      "expected_tier": "LOCAL_MODEL",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-160",
+      "category": "conversational",
+      "prompt": "tell me a clever programming joke",
+      "expected_intent_class": "CONVERSATIONAL",
+      "expected_intent": "conversational_dialogue",
+      "expected_tier": "LOCAL_MODEL",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-161",
+      "category": "conversational",
+      "prompt": "can you tell me an interesting science trivia fact?",
+      "expected_intent_class": "CONVERSATIONAL",
+      "expected_intent": "conversational_dialogue",
+      "expected_tier": "LOCAL_MODEL",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-162",
+      "category": "conversational",
+      "prompt": "what are three interesting facts about octopuses?",
+      "expected_intent_class": "CONVERSATIONAL",
+      "expected_intent": "conversational_dialogue",
+      "expected_tier": "LOCAL_MODEL",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-163",
+      "category": "conversational",
+      "prompt": "how does photosynthesis convert sunlight into chemical energy?",
+      "expected_intent_class": "CONVERSATIONAL",
+      "expected_intent": "conversational_dialogue",
+      "expected_tier": "LOCAL_MODEL",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-164",
+      "category": "conversational",
+      "prompt": "explain quantum superposition in simple terms",
+      "expected_intent_class": "CONVERSATIONAL",
+      "expected_intent": "conversational_dialogue",
+      "expected_tier": "LOCAL_MODEL",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-165",
+      "category": "conversational",
+      "prompt": "can you recommend a good book about the history of computing?",
+      "expected_intent_class": "CONVERSATIONAL",
+      "expected_intent": "conversational_dialogue",
+      "expected_tier": "LOCAL_MODEL",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-166",
+      "category": "clarification_required",
+      "prompt": "solve",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "expected_intent": "needs_clarification",
+      "expected_tier": "CLARIFICATION",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-167",
+      "category": "clarification_required",
+      "prompt": "calculate",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "expected_intent": "needs_clarification",
+      "expected_tier": "CLARIFICATION",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-168",
+      "category": "clarification_required",
+      "prompt": "compute",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "expected_intent": "needs_clarification",
+      "expected_tier": "CLARIFICATION",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-169",
+      "category": "clarification_required",
+      "prompt": "plot",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "expected_intent": "needs_clarification",
+      "expected_tier": "CLARIFICATION",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-170",
+      "category": "clarification_required",
+      "prompt": "code",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "expected_intent": "needs_clarification",
+      "expected_tier": "CLARIFICATION",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-171",
+      "category": "clarification_required",
+      "prompt": "script",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "expected_intent": "needs_clarification",
+      "expected_tier": "CLARIFICATION",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-172",
+      "category": "clarification_required",
+      "prompt": "run",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "expected_intent": "needs_clarification",
+      "expected_tier": "CLARIFICATION",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-173",
+      "category": "clarification_required",
+      "prompt": "start",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "expected_intent": "needs_clarification",
+      "expected_tier": "CLARIFICATION",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-174",
+      "category": "clarification_required",
+      "prompt": "open",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "expected_intent": "needs_clarification",
+      "expected_tier": "CLARIFICATION",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-175",
+      "category": "clarification_required",
+      "prompt": "save",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "expected_intent": "needs_clarification",
+      "expected_tier": "CLARIFICATION",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-176",
+      "category": "clarification_required",
+      "prompt": "delete",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "expected_intent": "needs_clarification",
+      "expected_tier": "CLARIFICATION",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-177",
+      "category": "clarification_required",
+      "prompt": "check",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "expected_intent": "needs_clarification",
+      "expected_tier": "CLARIFICATION",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-178",
+      "category": "clarification_required",
+      "prompt": "inspect",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "expected_intent": "needs_clarification",
+      "expected_tier": "CLARIFICATION",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-179",
+      "category": "clarification_required",
+      "prompt": "do",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "expected_intent": "needs_clarification",
+      "expected_tier": "CLARIFICATION",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-180",
+      "category": "clarification_required",
+      "prompt": "help",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "expected_intent": "needs_clarification",
+      "expected_tier": "CLARIFICATION",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-181",
+      "category": "clarification_required",
+      "prompt": "convert",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "expected_intent": "needs_clarification",
+      "expected_tier": "CLARIFICATION",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-182",
+      "category": "clarification_required",
+      "prompt": "generate",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "expected_intent": "needs_clarification",
+      "expected_tier": "CLARIFICATION",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-183",
+      "category": "clarification_required",
+      "prompt": "summary",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "expected_intent": "needs_clarification",
+      "expected_tier": "CLARIFICATION",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-184",
+      "category": "clarification_required",
+      "prompt": "run the thing",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "expected_intent": "needs_clarification",
+      "expected_tier": "CLARIFICATION",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-185",
+      "category": "clarification_required",
+      "prompt": "do that task for me",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "expected_intent": "needs_clarification",
+      "expected_tier": "CLARIFICATION",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-186",
+      "category": "clarification_required",
+      "prompt": "fix the problem",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "expected_intent": "needs_clarification",
+      "expected_tier": "CLARIFICATION",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-187",
+      "category": "clarification_required",
+      "prompt": "continue what we were doing",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "expected_intent": "needs_clarification",
+      "expected_tier": "CLARIFICATION",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-188",
+      "category": "clarification_required",
+      "prompt": "process it now",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "expected_intent": "needs_clarification",
+      "expected_tier": "CLARIFICATION",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-189",
+      "category": "clarification_required",
+      "prompt": "start the job",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "expected_intent": "needs_clarification",
+      "expected_tier": "CLARIFICATION",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-190",
+      "category": "clarification_required",
+      "prompt": "make it work",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "expected_intent": "needs_clarification",
+      "expected_tier": "CLARIFICATION",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-191",
+      "category": "clarification_required",
+      "prompt": "show me",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "expected_intent": "needs_clarification",
+      "expected_tier": "CLARIFICATION",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-192",
+      "category": "clarification_required",
+      "prompt": "find the file",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "expected_intent": "needs_clarification",
+      "expected_tier": "CLARIFICATION",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-193",
+      "category": "clarification_required",
+      "prompt": "save it to disk",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "expected_intent": "needs_clarification",
+      "expected_tier": "CLARIFICATION",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-194",
+      "category": "clarification_required",
+      "prompt": "delete that folder",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "expected_intent": "needs_clarification",
+      "expected_tier": "CLARIFICATION",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-195",
+      "category": "clarification_required",
+      "prompt": "open the application",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "expected_intent": "needs_clarification",
+      "expected_tier": "CLARIFICATION",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-196",
+      "category": "clarification_required",
+      "prompt": "calculate the result",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "expected_intent": "needs_clarification",
+      "expected_tier": "CLARIFICATION",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-197",
+      "category": "clarification_required",
+      "prompt": "solve the equation",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "expected_intent": "needs_clarification",
+      "expected_tier": "CLARIFICATION",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-198",
+      "category": "clarification_required",
+      "prompt": "compute the numbers",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "expected_intent": "needs_clarification",
+      "expected_tier": "CLARIFICATION",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-199",
+      "category": "clarification_required",
+      "prompt": "plot the chart",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "expected_intent": "needs_clarification",
+      "expected_tier": "CLARIFICATION",
+      "is_collision_case": true
+    },
+    {
+      "id": "BLIND-200",
+      "category": "clarification_required",
+      "prompt": "parse the log",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "expected_intent": "needs_clarification",
+      "expected_tier": "CLARIFICATION",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-201",
+      "category": "clarification_required",
+      "prompt": "send it over",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "expected_intent": "needs_clarification",
+      "expected_tier": "CLARIFICATION",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-202",
+      "category": "clarification_required",
+      "prompt": "update the settings",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "expected_intent": "needs_clarification",
+      "expected_tier": "CLARIFICATION",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-203",
+      "category": "clarification_required",
+      "prompt": "clean up everything",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "expected_intent": "needs_clarification",
+      "expected_tier": "CLARIFICATION",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-204",
+      "category": "clarification_required",
+      "prompt": "handle this please",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "expected_intent": "needs_clarification",
+      "expected_tier": "CLARIFICATION",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-205",
+      "category": "clarification_required",
+      "prompt": "can you please",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "expected_intent": "needs_clarification",
+      "expected_tier": "CLARIFICATION",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-206",
+      "category": "clarification_required",
+      "prompt": "i would like to",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "expected_intent": "needs_clarification",
+      "expected_tier": "CLARIFICATION",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-207",
+      "category": "clarification_required",
+      "prompt": "where is the",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "expected_intent": "needs_clarification",
+      "expected_tier": "CLARIFICATION",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-208",
+      "category": "clarification_required",
+      "prompt": "how do i get to",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "expected_intent": "needs_clarification",
+      "expected_tier": "CLARIFICATION",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-209",
+      "category": "clarification_required",
+      "prompt": "because of the",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "expected_intent": "needs_clarification",
+      "expected_tier": "CLARIFICATION",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-210",
+      "category": "clarification_required",
+      "prompt": "if you can then",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "expected_intent": "needs_clarification",
+      "expected_tier": "CLARIFICATION",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-211",
+      "category": "clarification_required",
+      "prompt": "asdfghjkl",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "expected_intent": "needs_clarification",
+      "expected_tier": "CLARIFICATION",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-212",
+      "category": "clarification_required",
+      "prompt": "qwertyuiop zxcvbnm",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "expected_intent": "needs_clarification",
+      "expected_tier": "CLARIFICATION",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-213",
+      "category": "clarification_required",
+      "prompt": "1234567890 !@#$%^",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "expected_intent": "needs_clarification",
+      "expected_tier": "CLARIFICATION",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-214",
+      "category": "clarification_required",
+      "prompt": "banana potato spaceship umbrella",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "expected_intent": "needs_clarification",
+      "expected_tier": "CLARIFICATION",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-215",
+      "category": "clarification_required",
+      "prompt": "purple elephant dancing backwards on ceiling",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "expected_intent": "needs_clarification",
+      "expected_tier": "CLARIFICATION",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-216",
+      "category": "clarification_required",
+      "prompt": "blablabla whatever whatever",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "expected_intent": "needs_clarification",
+      "expected_tier": "CLARIFICATION",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-217",
+      "category": "clarification_required",
+      "prompt": "??? !!! ???",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "expected_intent": "needs_clarification",
+      "expected_tier": "CLARIFICATION",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-218",
+      "category": "clarification_required",
+      "prompt": "............",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "expected_intent": "needs_clarification",
+      "expected_tier": "CLARIFICATION",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-219",
+      "category": "clarification_required",
+      "prompt": "undefined null NaN void",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "expected_intent": "needs_clarification",
+      "expected_tier": "CLARIFICATION",
+      "is_collision_case": false
+    },
+    {
+      "id": "BLIND-220",
+      "category": "clarification_required",
+      "prompt": "foo bar baz qux corge",
+      "expected_intent_class": "CLARIFICATION_REQUIRED",
+      "expected_intent": "needs_clarification",
+      "expected_tier": "CLARIFICATION",
+      "is_collision_case": false
+    }
+  ]
+}

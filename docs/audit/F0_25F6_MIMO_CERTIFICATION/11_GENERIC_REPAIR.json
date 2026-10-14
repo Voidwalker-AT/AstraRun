@@ -1,0 +1,10 @@
+{
+  "auditor": "MiMo",
+  "claimed": "7/8 87.5%",
+  "recomputed": "7/8 confirmed from results array",
+  "REPAIR-02": {"is_success": false, "semantic_verified": false, "extracted": "[Unknown] All systems normal", "verdict": "HONEST FAIL — semantic schema key mismatch remains; production fixture contamination from F0-25F.2 era not re-introduced as false pass"},
+  "REPAIR-08": {"is_success": true, "semantic_verified": true, "extracted": "55", "verdict": "HONEST PASS — sum(range(1,11)) with assert 55"},
+  "fixture_specific_production_logic": "purity scan clean for REPAIR-02 tokens in src",
+  "artifact_existence_alone": "semantic_verified gates success — not mere existence",
+  "verdict": "GENERIC REPAIR = PASS (honest 7/8; REPAIR-02 correctly failed)"
+}

@@ -1,0 +1,284 @@
+{
+  "audit_phase": "F0-24A.2",
+  "stage": "BASELINE_REPRODUCTION",
+  "timestamp": "2026-10-10T17:48:22.537078+00:00",
+  "evidence_class": "RAW_PHYSICAL_EXECUTION",
+  "cases": [
+    {
+      "case_id": "CASE_A",
+      "prompt": "open notepad type hello and save it to desktop with name test1.txt",
+      "timestamp": "2026-10-10T17:45:14Z",
+      "process_id": 22180,
+      "hwnd": 14813472,
+      "application_identity": "C:\\WINDOWS\\notepad.exe",
+      "foreground_window_before": "Windows PowerShell / Terminal",
+      "observation_generation_id": "obs_f93eed0e_01",
+      "selected_ui_target": "Notepad Document Control",
+      "target_bounding_box": [
+        0,
+        0,
+        1024,
+        768
+      ],
+      "target_automation_properties": {
+        "ControlType": "UIA_DocumentControlTypeId",
+        "Name": "Text Editor",
+        "ClassName": "RichEditD2DPT"
+      },
+      "input_mechanism_selected": "UIA_VALUE_PATTERN",
+      "action_result": {
+        "step_1": {
+          "capability": "open_application",
+          "success": true,
+          "pid": 22180,
+          "hwnd": 14813472
+        },
+        "step_2": {
+          "capability": "type_into_window",
+          "success": true,
+          "mechanism": "UIA_VALUE_PATTERN"
+        },
+        "step_3": {
+          "capability": "save_document_via_ui",
+          "success": false,
+          "error": "RETURN_CODE_ONLY is insufficient for completion: success is dispatch-level only. Observed state or a postcondition strategy is required."
+        }
+      },
+      "post_action_observation": {
+        "file_created_on_disk": true,
+        "file_path": "C:\\Users\\hp\\Desktop\\test1.txt",
+        "file_size": 7,
+        "file_content": "hello\r\n",
+        "file_sha256": "97157327732741c29fa17ff31946186e580d6a06a10741fe89a5c98721f32989"
+      },
+      "dialogs_created": [
+        "Save As (HWND 0x4e08a2)",
+        "Confirm Save As overwrite (HWND 0x1b0796)"
+      ],
+      "files_created_modified": [
+        "C:\\Users\\hp\\Desktop\\test1.txt"
+      ],
+      "cleanup_report": {
+        "clean": true,
+        "cleaned": 0,
+        "process_cleaned_up": true,
+        "remaining_active_resources": 0,
+        "verdict": "FALSE_CLEAN"
+      },
+      "remaining_task_owned_processes": [
+        22180
+      ],
+      "remaining_task_owned_windows": [
+        14813472
+      ],
+      "unexpected_side_effects": [
+        "Resource registered under default_task instead of task ID, bypassing cleanup",
+        "Notepad PID 22180 leaked and remained running after task failure",
+        "RETURN_CODE_ONLY verifier rejected step_3 despite successful save on disk"
+      ],
+      "root_causes": [
+        "TASK_ID_PROPAGATION_FAILURE",
+        "RESOURCE_LIFECYCLE_LEAK",
+        "VERIFIER_STRATEGY_MISCONFIGURATION"
+      ]
+    },
+    {
+      "case_id": "CASE_B",
+      "prompt": "open notepad type hello and save it to desktop with name test1.txt (from existing Notepad running state)",
+      "timestamp": "2026-10-10T17:46:41Z",
+      "process_id": 9668,
+      "hwnd": 11273446,
+      "application_identity": "C:\\WINDOWS\\notepad.exe",
+      "foreground_window_before": "Existing Notepad (PID 22180)",
+      "observation_generation_id": "obs_1b9e52a5_01",
+      "selected_ui_target": "Notepad candidate window",
+      "target_bounding_box": [
+        0,
+        0,
+        1024,
+        768
+      ],
+      "target_automation_properties": {
+        "candidates_found": 2,
+        "ambiguous": true
+      },
+      "input_mechanism_selected": "UIA_VALUE_PATTERN",
+      "action_result": {
+        "step_1": {
+          "capability": "open_application",
+          "success": true,
+          "pid": 22180,
+          "hwnd": 11273446
+        },
+        "step_2": {
+          "capability": "type_into_window",
+          "success": true,
+          "mechanism": "UIA_VALUE_PATTERN"
+        },
+        "step_3": {
+          "capability": "save_document_via_ui",
+          "success": false,
+          "error": "RETURN_CODE_ONLY is insufficient for completion"
+        }
+      },
+      "post_action_observation": {
+        "file_created_on_disk": true,
+        "file_path": "C:\\Users\\hp\\Desktop\\test1.txt"
+      },
+      "dialogs_created": [
+        "Save As (HWND 0x6204d0)",
+        "Confirm Save As overwrite (HWND 0x450c6e)"
+      ],
+      "files_created_modified": [
+        "C:\\Users\\hp\\Desktop\\test1.txt"
+      ],
+      "cleanup_report": {
+        "clean": true,
+        "cleaned": 0,
+        "process_cleaned_up": true,
+        "remaining_active_resources": 0,
+        "verdict": "FALSE_CLEAN"
+      },
+      "remaining_task_owned_processes": [
+        9668,
+        22180
+      ],
+      "remaining_task_owned_windows": [
+        11273446
+      ],
+      "unexpected_side_effects": [
+        "Ambiguous window match selected wrong candidate window",
+        "Both pre-existing and new Notepad instances remained running"
+      ],
+      "root_causes": [
+        "FOCUS_OWNERSHIP_FAILURE",
+        "AMBIGUOUS_WINDOW_RESOLUTION",
+        "RESOURCE_LIFECYCLE_LEAK"
+      ]
+    },
+    {
+      "case_id": "CASE_C",
+      "prompt": "open notepad++ type hello_npp_unique and save it to desktop with name npp_test1.txt",
+      "timestamp": "2026-10-10T17:47:14Z",
+      "process_id": 15224,
+      "hwnd": 13568292,
+      "application_identity": "C:\\WINDOWS\\notepad.exe (MISRESOLVED from notepad++)",
+      "foreground_window_before": "Windows PowerShell / Terminal",
+      "observation_generation_id": "obs_e607e95d_01",
+      "selected_ui_target": "Notepad Edit Control (wrong app)",
+      "target_bounding_box": [
+        0,
+        0,
+        800,
+        600
+      ],
+      "target_automation_properties": {
+        "app_resolved": "notepad"
+      },
+      "input_mechanism_selected": "UIA_VALUE_PATTERN",
+      "action_result": {
+        "step_1": {
+          "capability": "open_application",
+          "success": true,
+          "launched_app": "notepad"
+        },
+        "step_2": {
+          "capability": "type_into_window",
+          "success": false,
+          "error": "UI text state failed: expected hello_npp_unique not observed in UI"
+        },
+        "step_3": {
+          "capability": "save_document_via_ui",
+          "success": false,
+          "error": "Not reached due to step_2 failure"
+        }
+      },
+      "post_action_observation": {
+        "npp_test1_created": false
+      },
+      "dialogs_created": [],
+      "files_created_modified": [],
+      "cleanup_report": {
+        "clean": true,
+        "cleaned": 0,
+        "process_cleaned_up": true,
+        "verdict": "FALSE_CLEAN"
+      },
+      "remaining_task_owned_processes": [
+        15224
+      ],
+      "remaining_task_owned_windows": [
+        13568292
+      ],
+      "unexpected_side_effects": [
+        "Regex entity parsing truncated notepad++ to notepad",
+        "Incorrect application launched",
+        "Typing verification failed",
+        "Leaked Notepad PID 15224"
+      ],
+      "root_causes": [
+        "ENTITY_RESOLUTION_FAILURE",
+        "APPLICATION_RESOLUTION_FAILURE",
+        "RESOURCE_LIFECYCLE_LEAK"
+      ]
+    },
+    {
+      "case_id": "CASE_D",
+      "prompt": "open calculator and click 7",
+      "timestamp": "2026-10-10T17:47:39Z",
+      "process_id": 16856,
+      "hwnd": 3147460,
+      "application_identity": "C:\\windows\\system32\\calc.exe -> CalculatorApp.exe",
+      "foreground_window_before": "Windows PowerShell / Terminal",
+      "observation_generation_id": "obs_40e51905_01",
+      "selected_ui_target": "Target 7 in window 3147460",
+      "target_bounding_box": [],
+      "target_automation_properties": {},
+      "input_mechanism_selected": "UIA_CLICK",
+      "action_result": {
+        "planner_result": "Plan validation failed: Step step_2 missing required argument target for capability click_ui_element",
+        "workflow_fallback": {
+          "step_1": {
+            "capability": "open_application",
+            "success": true,
+            "pid": 21204
+          },
+          "step_2": {
+            "capability": "wait_for_window",
+            "success": true
+          },
+          "step_3": {
+            "capability": "click_ui_element",
+            "success": false,
+            "error": "No accessible UI elements found in window 3147460"
+          }
+        }
+      },
+      "post_action_observation": {
+        "calculator_visible": true,
+        "state_transition_verified": false
+      },
+      "dialogs_created": [],
+      "files_created_modified": [],
+      "cleanup_report": {
+        "clean": true,
+        "cleaned": 0,
+        "verdict": "FALSE_CLEAN"
+      },
+      "remaining_task_owned_processes": [
+        16856
+      ],
+      "remaining_task_owned_windows": [],
+      "unexpected_side_effects": [
+        "Planner failed to construct target argument for click_ui_element",
+        "UWP stub window 3147460 had no accessible elements before CalculatorApp UI loaded",
+        "CalculatorApp PID 16856 leaked in background"
+      ],
+      "root_causes": [
+        "PLANNER_ARGUMENT_BINDING_FAILURE",
+        "UWP_APPLICATION_TREE_INITIALIZATION_RACE",
+        "RESOURCE_LIFECYCLE_LEAK"
+      ]
+    }
+  ]
+}

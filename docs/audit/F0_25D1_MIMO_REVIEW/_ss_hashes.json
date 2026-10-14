@@ -1,0 +1,74 @@
+[
+  {
+    "name": "00_baseline.png",
+    "size": 162937,
+    "mtime": "2026-10-11T19:10:33.4308319+05:30",
+    "sha256": "e47e022e7750c5a73891cd81d353c1c72eef08b3736f554387207b4fb7edbed3"
+  },
+  {
+    "name": "01_astra_launcher_open.png",
+    "size": 162917,
+    "mtime": "2026-10-11T19:10:41.1780634+05:30",
+    "sha256": "4b157657acfa023235cd42706ce298cef261190c18531b4b94bfbdb994aa4a9a"
+  },
+  {
+    "name": "02_request_entered.png",
+    "size": 166602,
+    "mtime": "2026-10-11T19:10:42.7960645+05:30",
+    "sha256": "f789727a2c3f15d6b707d7b197a27f5a16aae85bbc4939e9dde834f9c7d2d19b"
+  },
+  {
+    "name": "03_initial_working_state.png",
+    "size": 166667,
+    "mtime": "2026-10-11T19:10:44.0980815+05:30",
+    "sha256": "4af84e5ba7745a8ec22cb338668b4fd058e65a6d162108974a38863f0ed4e2e1"
+  },
+  {
+    "name": "04_tool_selected.png",
+    "size": 166632,
+    "mtime": "2026-10-11T19:10:46.1999048+05:30",
+    "sha256": "66de7aa76fdeeb38347092fe59ec53aa0d9ef5a8dbbb8a1c511a6347627706f4"
+  },
+  {
+    "name": "05_selected_application_open.png",
+    "size": 166440,
+    "mtime": "2026-10-11T19:10:47.8029462+05:30",
+    "sha256": "1c856c2b238bad0103950308e41714babcbc8bdaa40d80e0ef28b75c18e842a7"
+  },
+  {
+    "name": "06_code_or_artifact_visible.png",
+    "size": 167600,
+    "mtime": "2026-10-11T19:11:18.4306507+05:30",
+    "sha256": "3ca02b37fb021d719b2e824a05f978cc9436d814ed4e16965e7110909a263ace"
+  },
+  {
+    "name": "07_execution_environment_open.png",
+    "size": 167454,
+    "mtime": "2026-10-11T19:11:19.3380379+05:30",
+    "sha256": "7ddab50bcc80b743f461223cb43d4ba2d0d35d1cbe3073532f4a8d02e620c1a0"
+  },
+  {
+    "name": "08_program_execution.png",
+    "size": 167575,
+    "mtime": "2026-10-11T19:11:19.9510431+05:30",
+    "sha256": "6e005365dde4f9e5d099f2c69ca9eaea1a78d7d20a4c1aab20567cfad9000b8d"
+  },
+  {
+    "name": "09_verified_result.png",
+    "size": 167481,
+    "mtime": "2026-10-11T19:11:20.8697294+05:30",
+    "sha256": "4e02087697436bea43db9f688f759839e1ccde502a9b3a8baed1c35fb00444bd"
+  },
+  {
+    "name": "10_astra_final_summary.png",
+    "size": 167495,
+    "mtime": "2026-10-11T19:11:22.4975951+05:30",
+    "sha256": "224688af299238d29f1a3f83bdd50e76bfe7b4383addad4fa3c55b106ecc9666"
+  },
+  {
+    "name": "11_post_cleanup_desktop.png",
+    "size": 167051,
+    "mtime": "2026-10-11T19:11:24.1126814+05:30",
+    "sha256": "638564b979757cc7ed2396e7f0e1841cdee4381c6b88379397e6adbeac404194"
+  }
+]

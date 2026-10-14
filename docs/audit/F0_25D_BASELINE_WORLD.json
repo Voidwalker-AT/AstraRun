@@ -1,0 +1,27 @@
+{
+  "milestone": "F0_25D",
+  "title": "Baseline World State Prior to Dogfood Submission",
+  "timestamp": "2026-10-11T17:14:48.000000+05:30",
+  "state_hash": "afa6f0661b047aee04e32aed0f1e42a70c91011cc5627c57270c9f49ca1dd3b8",
+  "desktop": {
+    "visible_window_count": 14,
+    "foreground_window": {
+      "hwnd": 11011478,
+      "pid": 1288,
+      "title": "AstraRun Generic Computer...",
+      "application": "Antigravity.exe",
+      "is_maximized": true
+    },
+    "dialog_count": 2,
+    "user_takeover_active": false
+  },
+  "filesystem": {
+    "target_destination": "E:\\AstraDogfood\\word_frequency",
+    "exists": false,
+    "is_clean": true
+  },
+  "resource_ledger": {
+    "active_task_resources": 0,
+    "orphaned_resources": 0
+  }
+}

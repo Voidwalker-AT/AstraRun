@@ -117,7 +117,7 @@ class DecisionFusionEngine:
     ) -> None:
         from astrarun.core.paths import resolve_model_path
         self.generic_router = generic_router or LayaRouter({"model": "convaiinnovations/laya"})
-        self.finetuned_router = finetuned_router or LayaRouter({"model": str(resolve_model_path("AstraRun-Laya", dev_fallback="E:/AI_Models/AstraRun-Laya"))})
+        self.finetuned_router = finetuned_router or LayaRouter({"model": str(resolve_model_path("AstraRun-Laya", dev_fallback=os.environ.get("ASTRARUN_LAYA_MODEL_PATH")))})
         self.default_mode = default_mode.upper()
         self.js_threshold = js_threshold
         self.confidence_threshold = confidence_threshold

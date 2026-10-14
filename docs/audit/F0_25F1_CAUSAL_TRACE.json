@@ -1,0 +1,529 @@
+{
+  "run_id": "run_1791752572839_47620c47",
+  "task_id": "task_f025f1_1791752572",
+  "total_events": 24,
+  "events": [
+    {
+      "event_id": "cev_1791752572839_df5e0a",
+      "run_id": "run_1791752572839_47620c47",
+      "task_id": "task_f025f1_1791752572",
+      "parent_event_id": null,
+      "timestamp_monotonic": 350954.5810279,
+      "timestamp_wall": 1791752572.8396173,
+      "event_type": "REQUEST_RECEIVED",
+      "component": "AstraWorkstationAgent",
+      "input_hash": "30a30a2f0834f20a897480eeb94c6f02a3380c6ae71715adbe3dcebd0247a9b2",
+      "output_hash": null,
+      "model_id": null,
+      "capability": null,
+      "authorization_verdict": null,
+      "resulting_event_id": null,
+      "data": {
+        "query": "Calculate factorial of 10 and display output artifact in viewer"
+      }
+    },
+    {
+      "event_id": "cev_1791752572841_f25122",
+      "run_id": "run_1791752572839_47620c47",
+      "task_id": "task_f025f1_1791752572",
+      "parent_event_id": "cev_1791752572839_df5e0a",
+      "timestamp_monotonic": 350954.5832823,
+      "timestamp_wall": 1791752572.8418713,
+      "event_type": "GOAL_INTERPRETED",
+      "component": "GoalPlanner",
+      "input_hash": "30a30a2f0834f20a897480eeb94c6f02a3380c6ae71715adbe3dcebd0247a9b2",
+      "output_hash": "98d9a14996660f754361d4d2e619e6b89edc5f734ae82d842cca75e44c9a7c26",
+      "model_id": null,
+      "capability": null,
+      "authorization_verdict": null,
+      "resulting_event_id": null,
+      "data": {
+        "intent": "autonomous_dynamic_computation",
+        "goal_type": "computational_deliverable",
+        "extracted_target": "factorial_10"
+      }
+    },
+    {
+      "event_id": "cev_1791752572842_ec6d79",
+      "run_id": "run_1791752572839_47620c47",
+      "task_id": "task_f025f1_1791752572",
+      "parent_event_id": "cev_1791752572841_f25122",
+      "timestamp_monotonic": 350954.5841796,
+      "timestamp_wall": 1791752572.8427687,
+      "event_type": "MODEL_REQUEST",
+      "component": "QwenCognitionService",
+      "input_hash": "30a30a2f0834f20a897480eeb94c6f02a3380c6ae71715adbe3dcebd0247a9b2",
+      "output_hash": null,
+      "model_id": "qwen2.5-coder-14b-instruct",
+      "capability": null,
+      "authorization_verdict": null,
+      "resulting_event_id": null,
+      "data": {
+        "prompt": "Synthesize self-verifying Python tool to compute factorial(10) and save to output/factorial_result.txt"
+      }
+    },
+    {
+      "event_id": "cev_1791752572844_a615c6",
+      "run_id": "run_1791752572839_47620c47",
+      "task_id": "task_f025f1_1791752572",
+      "parent_event_id": "cev_1791752572842_ec6d79",
+      "timestamp_monotonic": 350954.5863415,
+      "timestamp_wall": 1791752572.844931,
+      "event_type": "MODEL_RESPONSE",
+      "component": "QwenCognitionService",
+      "input_hash": null,
+      "output_hash": "cce3c1a6bd61005e4cec290b17d28958f7dbd3f16186af83988491388fa05f5e",
+      "model_id": "qwen2.5-coder-14b-instruct",
+      "capability": null,
+      "authorization_verdict": null,
+      "resulting_event_id": null,
+      "data": {
+        "code_entrypoint": "main.py",
+        "lines_generated": 11
+      }
+    },
+    {
+      "event_id": "cev_1791752572847_719b6f",
+      "run_id": "run_1791752572839_47620c47",
+      "task_id": "task_f025f1_1791752572",
+      "parent_event_id": "cev_1791752572844_a615c6",
+      "timestamp_monotonic": 350954.5885987,
+      "timestamp_wall": 1791752572.8471882,
+      "event_type": "PLAN_CREATED",
+      "component": "WorkflowCompiler",
+      "input_hash": null,
+      "output_hash": "c7a01ccffb172403b6a38e51c989f98c83c738a66893e7d87547a76896e6cc99",
+      "model_id": null,
+      "capability": null,
+      "authorization_verdict": null,
+      "resulting_event_id": null,
+      "data": {
+        "step_count": 2,
+        "capabilities": [
+          "execute_dynamic_tool",
+          "present_result"
+        ]
+      }
+    },
+    {
+      "event_id": "cev_1791752572849_3b5361",
+      "run_id": "run_1791752572839_47620c47",
+      "task_id": "task_f025f1_1791752572",
+      "parent_event_id": "cev_1791752572847_719b6f",
+      "timestamp_monotonic": 350954.5909022,
+      "timestamp_wall": 1791752572.8494914,
+      "event_type": "ACTION_PROPOSED",
+      "component": "ExecutionBroker",
+      "input_hash": "f14db799104f75767a62cc76a6e0dcabdf594cbb1ca6469da7ff76cc23d81b56",
+      "output_hash": null,
+      "model_id": null,
+      "capability": "execute_dynamic_tool",
+      "authorization_verdict": null,
+      "resulting_event_id": null,
+      "data": {
+        "source": "plan_step_1",
+        "category": "ACT",
+        "step_id": null,
+        "dry_run": false
+      }
+    },
+    {
+      "event_id": "cev_1791752572850_347b20",
+      "run_id": "run_1791752572839_47620c47",
+      "task_id": "task_f025f1_1791752572",
+      "parent_event_id": "cev_1791752572849_3b5361",
+      "timestamp_monotonic": 350954.5923683,
+      "timestamp_wall": 1791752572.8509574,
+      "event_type": "ACTION_AUTHORIZED",
+      "component": "ExecutionBroker",
+      "input_hash": null,
+      "output_hash": null,
+      "model_id": null,
+      "capability": "execute_dynamic_tool",
+      "authorization_verdict": "ALLOW",
+      "resulting_event_id": null,
+      "data": {
+        "category": "ACT"
+      }
+    },
+    {
+      "event_id": "cev_1791752572851_4d6935",
+      "run_id": "run_1791752572839_47620c47",
+      "task_id": "task_f025f1_1791752572",
+      "parent_event_id": "cev_1791752572849_3b5361",
+      "timestamp_monotonic": 350954.593246,
+      "timestamp_wall": 1791752572.8518348,
+      "event_type": "ACTION_DISPATCHED",
+      "component": "ExecutionBroker",
+      "input_hash": null,
+      "output_hash": null,
+      "model_id": null,
+      "capability": "execute_dynamic_tool",
+      "authorization_verdict": null,
+      "resulting_event_id": null,
+      "data": {
+        "parameters": {
+          "goal": "factorial_10"
+        }
+      }
+    },
+    {
+      "event_id": "cev_1791752572854_2d6d2e",
+      "run_id": "run_1791752572839_47620c47",
+      "task_id": "task_f025f1_1791752572",
+      "parent_event_id": "cev_1791752572851_4d6935",
+      "timestamp_monotonic": 350954.5961899,
+      "timestamp_wall": 1791752572.8547792,
+      "event_type": "ACTION_RESULT",
+      "component": "ExecutionBroker",
+      "input_hash": null,
+      "output_hash": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "model_id": null,
+      "capability": "execute_dynamic_tool",
+      "authorization_verdict": null,
+      "resulting_event_id": null,
+      "data": {
+        "success": true,
+        "message": "Executed successfully",
+        "duration_ms": 3.3741999650374055
+      }
+    },
+    {
+      "event_id": "cev_1791752572858_00003f",
+      "run_id": "run_1791752572839_47620c47",
+      "task_id": "task_f025f1_1791752572",
+      "parent_event_id": "cev_1791752572854_2d6d2e",
+      "timestamp_monotonic": 350954.6003247,
+      "timestamp_wall": 1791752572.858914,
+      "event_type": "RESOURCE_REGISTERED",
+      "component": "AstraResourceLedger",
+      "input_hash": null,
+      "output_hash": null,
+      "model_id": null,
+      "capability": null,
+      "authorization_verdict": null,
+      "resulting_event_id": null,
+      "data": {
+        "resource_id": "3586b6b6-361a-40d1-8cd2-69351912c40b",
+        "resource_type": "SANDBOX_DIR",
+        "pid": null,
+        "hwnd": null,
+        "document_path": "C:\\Users\\hp\\AppData\\Local\\Temp\\AstraRun\\sandbox\\task_f025f1_1791752572"
+      }
+    },
+    {
+      "event_id": "cev_1791752572861_67650a",
+      "run_id": "run_1791752572839_47620c47",
+      "task_id": "task_f025f1_1791752572",
+      "parent_event_id": "cev_1791752572858_00003f",
+      "timestamp_monotonic": 350954.6029467,
+      "timestamp_wall": 1791752572.8615358,
+      "event_type": "RESOURCE_REGISTERED",
+      "component": "AstraResourceLedger",
+      "input_hash": null,
+      "output_hash": null,
+      "model_id": null,
+      "capability": null,
+      "authorization_verdict": null,
+      "resulting_event_id": null,
+      "data": {
+        "resource_id": "4e3191c2-5b0d-4463-9397-2da66e1a2fc2",
+        "resource_type": "SANDBOX_DIR",
+        "pid": null,
+        "hwnd": null,
+        "document_path": "C:\\Users\\hp\\AppData\\Local\\Temp\\AstraRun\\sandbox\\task_f025f1_1791752572"
+      }
+    },
+    {
+      "event_id": "cev_1791752573041_cbbfa9",
+      "run_id": "run_1791752572839_47620c47",
+      "task_id": "task_f025f1_1791752572",
+      "parent_event_id": "cev_1791752572861_67650a",
+      "timestamp_monotonic": 350954.7826895,
+      "timestamp_wall": 1791752573.0412788,
+      "event_type": "ARTIFACT_CREATED",
+      "component": "SandboxManager",
+      "input_hash": null,
+      "output_hash": null,
+      "model_id": null,
+      "capability": null,
+      "authorization_verdict": null,
+      "resulting_event_id": null,
+      "data": {
+        "stdout": "Failed to find real location of C:\\Users\\hp\\AppData\\Local\\Programs\\Python\\Python313\\python.exe\nCOMPUTATION_SUCCESS: 10! = 3628800",
+        "exit_code": 0,
+        "duration_ms": 172.61
+      }
+    },
+    {
+      "event_id": "cev_1791752573046_0728f0",
+      "run_id": "run_1791752572839_47620c47",
+      "task_id": "task_f025f1_1791752572",
+      "parent_event_id": "cev_1791752573041_cbbfa9",
+      "timestamp_monotonic": 350954.7879269,
+      "timestamp_wall": 1791752573.046516,
+      "event_type": "STATE_OBSERVED",
+      "component": "AstraWorkstationAgent",
+      "input_hash": null,
+      "output_hash": null,
+      "model_id": null,
+      "capability": null,
+      "authorization_verdict": null,
+      "resulting_event_id": null,
+      "data": {
+        "target_observed": true,
+        "produced_file": "C:\\Users\\hp\\AppData\\Local\\Temp\\AstraRun\\sandbox\\task_f025f1_1791752572\\output\\factorial_result.txt",
+        "file_size": 60,
+        "sha256": "6aeb9c3502d67143924fecb91af45acd64ed2165f500001848c79e0a2151bd83",
+        "computed_factorial": 3628800
+      }
+    },
+    {
+      "event_id": "cev_1791752573048_38ce34",
+      "run_id": "run_1791752572839_47620c47",
+      "task_id": "task_f025f1_1791752572",
+      "parent_event_id": "cev_1791752573046_0728f0",
+      "timestamp_monotonic": 350954.7896814,
+      "timestamp_wall": 1791752573.0482707,
+      "event_type": "POSTCONDITION_VERIFIED",
+      "component": "PostconditionVerifier",
+      "input_hash": null,
+      "output_hash": null,
+      "model_id": null,
+      "capability": null,
+      "authorization_verdict": null,
+      "resulting_event_id": null,
+      "data": {
+        "predicate": "factorial(10) == 3628800 and output_file_exists",
+        "status": "VERIFIED"
+      }
+    },
+    {
+      "event_id": "cev_1791752573050_569a72",
+      "run_id": "run_1791752572839_47620c47",
+      "task_id": "task_f025f1_1791752572",
+      "parent_event_id": "cev_1791752573048_38ce34",
+      "timestamp_monotonic": 350954.7920082,
+      "timestamp_wall": 1791752573.0505977,
+      "event_type": "RESULT_PRESENTATION_REQUESTED",
+      "component": "ResultPresentation",
+      "input_hash": "62cbc8e3e19c15772216a1e1e7565320a15f7ea6e9802324f86a249021af199b",
+      "output_hash": null,
+      "model_id": null,
+      "capability": null,
+      "authorization_verdict": null,
+      "resulting_event_id": null,
+      "data": {
+        "target": "C:\\Users\\hp\\AppData\\Local\\Temp\\AstraRun\\sandbox\\task_f025f1_1791752572\\output\\factorial_result.txt",
+        "mode": "viewer",
+        "state": "PRESENTATION_REQUESTED"
+      }
+    },
+    {
+      "event_id": "cev_1791752573878_ee1ec5",
+      "run_id": "run_1791752572839_47620c47",
+      "task_id": "task_f025f1_1791752572",
+      "parent_event_id": "cev_1791752573050_569a72",
+      "timestamp_monotonic": 350955.6196769,
+      "timestamp_wall": 1791752573.8782663,
+      "event_type": "STATE_OBSERVED",
+      "component": "ResultPresentation",
+      "input_hash": null,
+      "output_hash": null,
+      "model_id": null,
+      "capability": null,
+      "authorization_verdict": null,
+      "resulting_event_id": null,
+      "data": {
+        "target_observed": true,
+        "hwnd": 595620,
+        "pid": 3028,
+        "title": "factorial_result.txt - AstraRun Viewer",
+        "class": "Qt6120QWindowIcon",
+        "mechanism": "viewer"
+      }
+    },
+    {
+      "event_id": "cev_1791752573880_bee5d4",
+      "run_id": "run_1791752572839_47620c47",
+      "task_id": "task_f025f1_1791752572",
+      "parent_event_id": "cev_1791752573878_ee1ec5",
+      "timestamp_monotonic": 350955.6214514,
+      "timestamp_wall": 1791752573.8800404,
+      "event_type": "POSTCONDITION_VERIFIED",
+      "component": "ResultPresentation",
+      "input_hash": null,
+      "output_hash": null,
+      "model_id": null,
+      "capability": null,
+      "authorization_verdict": null,
+      "resulting_event_id": null,
+      "data": {
+        "postcondition": "RESULT_VISIBLE_TO_USER",
+        "hwnd": 595620,
+        "target": "C:\\Users\\hp\\AppData\\Local\\Temp\\AstraRun\\sandbox\\task_f025f1_1791752572\\output\\factorial_result.txt"
+      }
+    },
+    {
+      "event_id": "cev_1791752573881_9b6e5b",
+      "run_id": "run_1791752572839_47620c47",
+      "task_id": "task_f025f1_1791752572",
+      "parent_event_id": "cev_1791752573880_bee5d4",
+      "timestamp_monotonic": 350955.6231195,
+      "timestamp_wall": 1791752573.8817086,
+      "event_type": "RESULT_PRESENTED",
+      "component": "ResultPresentation",
+      "input_hash": null,
+      "output_hash": "6b240ba2114b42750193e3de1d391fde67adb5743becba9675a486b674593304",
+      "model_id": null,
+      "capability": null,
+      "authorization_verdict": null,
+      "resulting_event_id": null,
+      "data": {
+        "target_observed": true,
+        "mechanism": "viewer",
+        "target": "C:\\Users\\hp\\AppData\\Local\\Temp\\AstraRun\\sandbox\\task_f025f1_1791752572\\output\\factorial_result.txt",
+        "verified_hwnd": 595620,
+        "verified_pid": 3028,
+        "verified_title": "factorial_result.txt - AstraRun Viewer",
+        "verified_class": "Qt6120QWindowIcon",
+        "duration_ms": 831.1550617218018
+      }
+    },
+    {
+      "event_id": "cev_1791752573885_42de54",
+      "run_id": "run_1791752572839_47620c47",
+      "task_id": "task_f025f1_1791752572",
+      "parent_event_id": "cev_1791752573881_9b6e5b",
+      "timestamp_monotonic": 350955.626644,
+      "timestamp_wall": 1791752573.8852334,
+      "event_type": "RESOURCE_REGISTERED",
+      "component": "AstraResourceLedger",
+      "input_hash": null,
+      "output_hash": null,
+      "model_id": null,
+      "capability": null,
+      "authorization_verdict": null,
+      "resulting_event_id": null,
+      "data": {
+        "resource_id": "1a1cee48-ebb3-4f67-99cc-e0a176968f9c",
+        "resource_type": "APPLICATION",
+        "pid": 3028,
+        "hwnd": 595620,
+        "document_path": "C:\\Users\\hp\\AppData\\Local\\Temp\\AstraRun\\sandbox\\task_f025f1_1791752572\\output\\factorial_result.txt"
+      }
+    },
+    {
+      "event_id": "cev_1791752574541_9406fa",
+      "run_id": "run_1791752572839_47620c47",
+      "task_id": "task_f025f1_1791752572",
+      "parent_event_id": "cev_1791752573885_42de54",
+      "timestamp_monotonic": 350956.2825028,
+      "timestamp_wall": 1791752574.541092,
+      "event_type": "RESOURCE_DISPOSED",
+      "component": "AstraResourceLedger",
+      "input_hash": null,
+      "output_hash": null,
+      "model_id": null,
+      "capability": null,
+      "authorization_verdict": null,
+      "resulting_event_id": null,
+      "data": {
+        "resource_id": "3586b6b6-361a-40d1-8cd2-69351912c40b",
+        "resource_type": "SANDBOX_DIR",
+        "path": "C:\\Users\\hp\\AppData\\Local\\Temp\\AstraRun\\sandbox\\task_f025f1_1791752572",
+        "state": "CLOSED"
+      }
+    },
+    {
+      "event_id": "cev_1791752574544_75ed4d",
+      "run_id": "run_1791752572839_47620c47",
+      "task_id": "task_f025f1_1791752572",
+      "parent_event_id": "cev_1791752574541_9406fa",
+      "timestamp_monotonic": 350956.2859454,
+      "timestamp_wall": 1791752574.5445354,
+      "event_type": "RESOURCE_DISPOSED",
+      "component": "AstraResourceLedger",
+      "input_hash": null,
+      "output_hash": null,
+      "model_id": null,
+      "capability": null,
+      "authorization_verdict": null,
+      "resulting_event_id": null,
+      "data": {
+        "resource_id": "4e3191c2-5b0d-4463-9397-2da66e1a2fc2",
+        "resource_type": "SANDBOX_DIR",
+        "path": "C:\\Users\\hp\\AppData\\Local\\Temp\\AstraRun\\sandbox\\task_f025f1_1791752572",
+        "state": "CLOSED"
+      }
+    },
+    {
+      "event_id": "cev_1791752574657_6b949b",
+      "run_id": "run_1791752572839_47620c47",
+      "task_id": "task_f025f1_1791752572",
+      "parent_event_id": "cev_1791752574544_75ed4d",
+      "timestamp_monotonic": 350956.3988534,
+      "timestamp_wall": 1791752574.6574426,
+      "event_type": "RESOURCE_DISPOSED",
+      "component": "AstraResourceLedger",
+      "input_hash": null,
+      "output_hash": null,
+      "model_id": null,
+      "capability": null,
+      "authorization_verdict": null,
+      "resulting_event_id": null,
+      "data": {
+        "resource_id": "1a1cee48-ebb3-4f67-99cc-e0a176968f9c",
+        "resource_type": "APPLICATION",
+        "pid": 3028,
+        "hwnd": 595620,
+        "state": "CLOSED"
+      }
+    },
+    {
+      "event_id": "cev_1791752574658_621ca7",
+      "run_id": "run_1791752572839_47620c47",
+      "task_id": "task_f025f1_1791752572",
+      "parent_event_id": "cev_1791752574657_6b949b",
+      "timestamp_monotonic": 350956.4001298,
+      "timestamp_wall": 1791752574.658719,
+      "event_type": "RESOURCE_RESTORATION_VERIFIED",
+      "component": "AstraResourceLedger",
+      "input_hash": null,
+      "output_hash": null,
+      "model_id": null,
+      "capability": null,
+      "authorization_verdict": null,
+      "resulting_event_id": null,
+      "data": {
+        "cleaned_count": 3,
+        "preserved_count": 0,
+        "detached_count": 0,
+        "failed_count": 0,
+        "clean_ok": true,
+        "process_cleaned_up": true,
+        "remaining_active": 0
+      }
+    },
+    {
+      "event_id": "cev_1791752574660_593348",
+      "run_id": "run_1791752572839_47620c47",
+      "task_id": "task_f025f1_1791752572",
+      "parent_event_id": "cev_1791752574658_621ca7",
+      "timestamp_monotonic": 350956.40146,
+      "timestamp_wall": 1791752574.6600492,
+      "event_type": "GOAL_COMPLETED",
+      "component": "AstraWorkstationAgent",
+      "input_hash": null,
+      "output_hash": null,
+      "model_id": null,
+      "capability": null,
+      "authorization_verdict": null,
+      "resulting_event_id": null,
+      "data": {
+        "verdict": "SUCCESS",
+        "result": "10! = 3628800 displayed and verified"
+      }
+    }
+  ]
+}

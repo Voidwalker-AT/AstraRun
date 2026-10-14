@@ -1,0 +1,38 @@
+{
+  "phase": "F0-25F.3",
+  "stage": "STAGE 2 \u2014 PURGE LEGACY PRESENTATION SEMANTICS",
+  "verdict": "PASS",
+  "all_checks_passed": true,
+  "results": {
+    "legacy_acceptance_purge": {
+      "legacy_or_instances_found": 0,
+      "details": [],
+      "purged": true
+    },
+    "P1_requested_only_rejected": {
+      "verdict": "REJECTED",
+      "rejected": true,
+      "reason": "Failed predicates: Presentation was requested but RESULT_PRESENTED was not verified (C5)"
+    },
+    "P2_null_hwnd_rejected": {
+      "verdict": "REJECTED",
+      "rejected": true,
+      "reason": "Failed predicates: Presentation was requested but RESULT_PRESENTED was not verified (C5)"
+    },
+    "P3_target_unobserved_rejected": {
+      "verdict": "REJECTED",
+      "rejected": true,
+      "reason": "Failed predicates: Presentation was requested but RESULT_PRESENTED was not verified (C5)"
+    },
+    "P4_valid_presentation_approved": {
+      "verdict": "APPROVED",
+      "approved": true,
+      "reason": "All 1 required goal postconditions affirmatively verified."
+    },
+    "summary_mode_attestation": {
+      "hardcoded_literals_present": false,
+      "measures_real_window_text_and_class": true,
+      "passed": true
+    }
+  }
+}

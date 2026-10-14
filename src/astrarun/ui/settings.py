@@ -184,6 +184,11 @@ class SettingsDialog(QDialog):
         footer.addWidget(self.btn_save)
         main_layout.addLayout(footer)
 
+        # Attribute compatibility aliases
+        self.startup_cb = getattr(self, "chk_autostart", None)
+        self.learning_cb = getattr(self, "chk_learning", None)
+        self.export_cb = getattr(self, "chk_export", None)
+
     def _create_general_tab(self) -> QWidget:
         w = QWidget(self)
         v = QVBoxLayout(w)

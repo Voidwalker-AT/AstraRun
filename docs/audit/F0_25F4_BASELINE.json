@@ -1,0 +1,59 @@
+{
+  "phase": "F0-25F.4",
+  "phase_name": "POSITIVE COMPLETION, VERIFICATION & RELIABILITY CLOSURE",
+  "timestamp": "2026-10-12T23:43:40+05:30",
+  "git": {
+    "branch": "agent/anti-f0-24a1",
+    "commit": "bd287eba38e6743565fdf6da21cb629023573c6b",
+    "dirty_files_count": 74
+  },
+  "binaries": {
+    "dist_executable": "dist/AstraRun/AstraRun.exe",
+    "dist_sha256": "5b4226d8a3343cb42a9a5997568402b64265262920a2c667d2a86174e8fe928f",
+    "installed_executable": "C:\\Users\\hp\\AppData\\Local\\Programs\\AstraRun\\AstraRun.exe",
+    "installed_sha256": "5b4226d8a3343cb42a9a5997568402b64265262920a2c667d2a86174e8fe928f",
+    "parity": true
+  },
+  "mimo_f0_25f3_findings_addressed": [
+    {
+      "id": "FINDING_1_COMPLETION_AUTHORITY",
+      "severity": "CRITICAL",
+      "description": "set_active_contract has zero production callers; authoritative gate cannot approve legitimate completion; status=='SUCCESS' string matching fragile; end_run(non-SUCCESS) can emit ungated completion events."
+    },
+    {
+      "id": "FINDING_2_PHYSICAL_AGENTIC_VERIFICATION_STRATEGY",
+      "severity": "CRITICAL",
+      "description": "Physical Fibonacci task executed in production but planner selected RETURN_CODE_ONLY, which cannot prove file content or presentation; verifier fail-closed rejected evidence; task failed to complete."
+    },
+    {
+      "id": "FINDING_3_RESOURCE_RESTORATION_PROVENANCE",
+      "severity": "HIGH",
+      "description": "4 residual PIDs lacked creation-time ownership provenance; inconsistent 3-vs-4 residue reporting."
+    },
+    {
+      "id": "FINDING_4_CAUSAL_ARCHIVE_DUPLICATION",
+      "severity": "HIGH",
+      "description": "Physical causal archive contained 44 rows with only 22 unique event_ids (duplicate event identity)."
+    },
+    {
+      "id": "FINDING_5_ROUTING_UNDER_RECALL",
+      "severity": "HIGH",
+      "description": "F0-25F.3 had 0 false positives but 12 dynamic false negatives (under-recall). Blind set is burned; requires new >=300 prompt set executed once."
+    },
+    {
+      "id": "FINDING_6_PYTEST_ACCOUNTING_INTEGRITY",
+      "severity": "CRITICAL",
+      "description": "Machine pytest truth was 909 passed, 48 failed; final prose falsely reported 48 skipped. Machine-derived accounting mandatory."
+    },
+    {
+      "id": "FINDING_7_MUTATION_REPORTING_HONESTY",
+      "severity": "MEDIUM",
+      "description": "M6 and M13 were positive controls incorrectly counted as killed mutants. Separate positive controls from mutation kills."
+    },
+    {
+      "id": "FINDING_8_ATTESTATION_FALLBACK_LITERALS",
+      "severity": "MEDIUM",
+      "description": "Summary-mode fallback strings like 'AstraRun' and 'QtLauncher' entered RESULT_PRESENTED metadata unmeasured."
+    }
+  ]
+}

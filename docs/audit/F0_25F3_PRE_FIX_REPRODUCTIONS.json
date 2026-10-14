@@ -1,0 +1,109 @@
+{
+  "phase": "F0-25F.3",
+  "total_defects_audited": 10,
+  "defects_reproduced": 10,
+  "all_reproduced": true,
+  "results": {
+    "defect_a_unconditional_goal_completed": {
+      "run_id": "run_1791820986051_e601397d",
+      "emitted_event_type": "GOAL_COMPLETED",
+      "emitted_status": "SUCCESS",
+      "verified_postconditions_present": false,
+      "reproduced": true,
+      "evidence": "telemetry.end_run emits GOAL_COMPLETED unconditionally with status=SUCCESS despite zero verified postconditions."
+    },
+    "defect_b_legacy_requested_or_presented": {
+      "file": "scripts/verify_f0_25f_complete_physical.py:153",
+      "legacy_or_in_code": true,
+      "simulated_requested_only_passes": true,
+      "reproduced": true,
+      "evidence": "verify_f0_25f_complete_physical.py line 153 accepts REQUESTED even when PRESENTED is missing."
+    },
+    "defect_c_hollow_presentation_identity": {
+      "file": "src/astrarun/ui/result_presentation.py:326",
+      "new_window_bypasses_title_check": true,
+      "reproduced": true,
+      "evidence": "In mechanism=='explorer', any new explorer window is accepted (is_new_window or title_matches) even with empty or mismatched title."
+    },
+    "defect_d_vacuous_resource_disposal": {
+      "resource_id": "7567026e-f81d-40f7-8386-d240a16d7246",
+      "document_path": "",
+      "cleanup_result": true,
+      "lifecycle_state_after": "CLOSED",
+      "reproduced": true,
+      "evidence": "cleanup_sandbox_directory transitioned empty-path resource to CLOSED and returned True without verifying physical absence."
+    },
+    "defect_e_harness_manufactured_causality": {
+      "file": "scripts/verify_f0_25f1_complete_physical.py",
+      "broker_stubbed": true,
+      "model_hardcoded": true,
+      "harness_emits_model_events": true,
+      "reproduced": true,
+      "evidence": "Verification harness directly emitted MODEL_REQUEST/MODEL_RESPONSE and stubbed broker executor."
+    },
+    "defect_f_routing_over_generalization": {
+      "tested_prompts_count": 5,
+      "over_routed_count": 5,
+      "over_routes": [
+        {
+          "prompt": "summarize the plot of hamlet in one sentence",
+          "actual_intent": "execute_dynamic_tool"
+        },
+        {
+          "prompt": "solve this crossword puzzle clue: four-letter word for cat",
+          "actual_intent": "execute_dynamic_tool"
+        },
+        {
+          "prompt": "open visual studio code with the current folder",
+          "actual_intent": "execute_dynamic_tool"
+        },
+        {
+          "prompt": "search the web for python documentation",
+          "actual_intent": "execute_dynamic_tool"
+        },
+        {
+          "prompt": "what python version is installed",
+          "actual_intent": "execute_dynamic_tool"
+        }
+      ],
+      "reproduced": true,
+      "evidence": "5/5 non-dynamic workstation/conversational prompts were over-routed into execute_dynamic_tool."
+    },
+    "defect_g_benchmark_fixture_contamination": {
+      "file": "src/astrarun/cognition/service.py:531",
+      "repair02_literal_present": true,
+      "reproduced": true,
+      "evidence": "Production repair prompt contains explicit REPAIR-02 fixture dictionary key instructions."
+    },
+    "defect_h_workspace_path_contamination": {
+      "file": "src/astrarun/core/paths.py:334",
+      "hardcoded_workspace_path_present": true,
+      "reproduced": true,
+      "evidence": "Production python executable resolution hardcodes developer workspace venv path."
+    },
+    "defect_i_fabricated_summary_attestation": {
+      "file": "src/astrarun/ui/result_presentation.py:269-270",
+      "fabricated_literals_present": true,
+      "reproduced": true,
+      "evidence": "Summary attestation hardcodes verified_title='AstraRun' and verified_class='QtLauncher' literals without measuring actual window text/class."
+    },
+    "defect_j_source_freeze_sequencing": {
+      "freeze_file": "docs/audit/F0_25F1_SOURCE_FREEZE.json",
+      "stale_files_found": 2,
+      "mismatches": [
+        {
+          "file": "src/astrarun/ui/result_presentation.py",
+          "frozen": "3da74b89c060895e",
+          "current": "30987140a77c5f01"
+        },
+        {
+          "file": "src/astrarun/tasks/resource_ledger.py",
+          "frozen": "1dd1652309997e8b",
+          "current": "b4b7509d32937c2f"
+        }
+      ],
+      "reproduced": true,
+      "evidence": "F0-25F.1 freeze contained stale hashes (2 files mismatched) because code was edited after freeze generation."
+    }
+  }
+}

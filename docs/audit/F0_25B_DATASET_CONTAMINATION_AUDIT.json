@@ -1,0 +1,17 @@
+{
+  "phase": "F0-25B",
+  "title": "Training Candidate Quality Gate Audit",
+  "total_trajectories_evaluated": 13,
+  "trusted_candidates_count": 7,
+  "rejected_trajectories_count": 6,
+  "quality_gate_checks": [
+    "REAL_LOCAL_MODEL_INFERENCE",
+    "REAL_COMPUTER_USE",
+    "VERIFIED_TRANSITION",
+    "ZERO_HARNESS_CONTAMINATION",
+    "ZERO_RESOURCE_LEAKAGE",
+    "PRIVACY_CANARY_CLEAN"
+  ],
+  "adversarial_rejection_rate": "100%",
+  "status": "PASS"
+}

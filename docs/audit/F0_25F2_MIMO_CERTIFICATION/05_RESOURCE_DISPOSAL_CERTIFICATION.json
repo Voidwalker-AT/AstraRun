@@ -1,0 +1,21 @@
+{
+  "auditor": "MiMo",
+  "implementation": "resource_ledger.py L774-780 SANDBOX_DIR CLOSED gated on not Path(p).exists() with FAILED_CLEANUP; L924-940 general process/window/disk gate",
+  "tests": [
+    {"id": "R1", "case": "normal sandbox cleanup", "result": "CLOSED + dir gone", "evidence": "test_sandbox_dir_registration_and_auto_close PASSED (MiMo run); M8/M9 killed", "grade": "PASS"},
+    {"id": "R2", "case": "locked file/directory", "result": "FAILED_CLEANUP dir_still_exists", "evidence": "F0_25F.1 resource lifecycle results; M8 genuine", "grade": "PASS"},
+    {"id": "R3", "case": "nonexistent resource", "result": "CLOSED (path already absent passes exists-check)", "grade": "PASS"},
+    {"id": "R4", "case": "repeated close", "result": "UNVERIFIED", "basis": "no transition-legality validation L637-661; repeat close likely no-op or re-CLOSED", "grade": "UNVERIFIED"},
+    {"id": "R5", "case": "permission-denied simulation", "result": "covered by R2 semantics", "grade": "PASS"},
+    {"id": "R6", "case": "preserve_on_exit", "result": "NEVER_CLOSE / SAVED retained", "evidence": "test_sandbox_dir_preserve_on_failure PASSED", "grade": "PASS"},
+    {"id": "R7", "case": "nested directory", "result": "rmtree recursive", "grade": "PASS"},
+    {"id": "R8", "case": "cleanup exception", "result": "ignore_errors=True swallowed then exists-check → FAILED_CLEANUP if residue", "grade": "PASS"},
+    {"id": "R9", "case": "ledger says CLOSED but path remains", "result": "prevented by exists-gate for SANDBOX_DIR; GAP: document_path empty → vacuous CLOSED L775; DOCUMENT types not disk-checked L925", "grade": "PARTIAL"},
+    {"id": "R10", "case": "process cleanup identity mismatch", "result": "PID-reuse STALE_REUSED L879", "grade": "PASS"},
+    {"id": "R11", "case": "stale PID", "result": "STALE_REUSED / process_still_alive checks", "grade": "PASS"},
+    {"id": "R12", "case": "pre-existing user resource", "result": "orphan recovery retains prior-session resources; not charged", "grade": "PASS"}
+  ],
+  "physical_outranks_ledger": "ENFORCED for SANDBOX_DIR with non-empty path; NOT for empty-path or non-temp document types",
+  "verdict": "RESOURCE DISPOSAL = PARTIAL",
+  "verdict_rationale": "Core FAILED_CLEANUP gate is a genuine repair (R1-R8,R10-R12 PASS). Vacuous CLOSED when document_path empty and limited type scope prevent full PASS."
+}

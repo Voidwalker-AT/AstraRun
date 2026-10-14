@@ -1,0 +1,9 @@
+[
+  {
+    "task_id": "task_1_token_matrix",
+    "decision_label": "OUTPUT_PRESENTATION",
+    "presentation_format": "STRUCTURED_JSON_AND_STDOUT",
+    "target_file": "E:\\Workspace\\Agents\\AstraRun-Anti\\projects\\task1_token_matrix\\analysis_report.json",
+    "rationale": "Structured JSON file provides persistent verifiable evidence while stdout enables immediate feedback."
+  }
+]

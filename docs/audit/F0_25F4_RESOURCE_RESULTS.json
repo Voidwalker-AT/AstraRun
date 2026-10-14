@@ -1,0 +1,40 @@
+{
+  "phase": "F0-25F.4",
+  "component": "ResourceLedgerResults",
+  "timestamp": 1791834540.0,
+  "summary": {
+    "provenance_capture_verified": true,
+    "pid_recycling_guard_active": true,
+    "user_protection_active": true,
+    "failed_cleanup_gate_blocking": true
+  },
+  "verified_attributes": {
+    "create_time_present": true,
+    "parent_pid_present": true,
+    "executable_path_present": true,
+    "creator_action_present": true,
+    "ownership_class_present": true
+  },
+  "lifecycle_verifications": [
+    {
+      "test": "test_sandbox_dir_registration_and_auto_close",
+      "verdict": "PASS",
+      "description": "Sandbox directories register as SANDBOX_DIR and clean up automatically upon task completion."
+    },
+    {
+      "test": "test_sandbox_dir_preserve_on_failure",
+      "verdict": "PASS",
+      "description": "Task failure preserves sandbox directory for post-mortem analysis."
+    },
+    {
+      "test": "test_cleanup_task_resources_cleans_sandbox",
+      "verdict": "PASS",
+      "description": "Explicit task cleanup disposes of sandbox directories while leaving user files untouched."
+    },
+    {
+      "test": "test_c6_cleanup_attempted_but_failed",
+      "verdict": "PASS",
+      "description": "FAILED_CLEANUP state halts AuthoritativeCompletionGate with fail-closed rejection."
+    }
+  ]
+}

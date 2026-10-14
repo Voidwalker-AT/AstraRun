@@ -1,0 +1,16 @@
+{
+  "timestamp": 1791740800.0,
+  "git_branch": "agent/anti-f0-24a1",
+  "git_commit": "bd287eba38e6743565fdf6da21cb629023573c6b",
+  "git_diff_check": "src/astrarun/computer_use/ui/__init__.py:22: new blank line at EOF.",
+  "dist_binary": {
+    "path": "E:\\Workspace\\Agents\\AstraRun-Anti\\dist\\AstraRun\\AstraRun.exe",
+    "sha256": "2C59D0FE313488DB8EE7E07E9A6721DA609FC6AD15416430C24804DDFCD04C43"
+  },
+  "installed_binary": {
+    "path": "C:\\Users\\hp\\AppData\\Local\\Programs\\AstraRun\\AstraRun.exe",
+    "sha256": "2C59D0FE313488DB8EE7E07E9A6721DA609FC6AD15416430C24804DDFCD04C43"
+  },
+  "binary_hash_match": true,
+  "baseline_state": "FROZEN_BEFORE_F0_25F1_EDITS"
+}

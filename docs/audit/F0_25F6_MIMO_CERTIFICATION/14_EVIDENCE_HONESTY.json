@@ -1,0 +1,22 @@
+{
+  "auditor": "MiMo",
+  "comparisons": [
+    {"pattern": "FAIL -> SKIP", "found": false, "note": "regression summary honestly records 2 failed; XML matches"},
+    {"pattern": "UNKNOWN -> PASS", "found": "MILD — attestation-style fields not re-audited here; physical recovery screenshots imply windows that pixels do not show"},
+    {"pattern": "simulated -> physical", "found": "YES — physical recovery screenshots show Antigravity only; claimed Notepad/window states not visible; JSON PIDs may be real but visual 'physical' claim is misleading"},
+    {"pattern": "requested -> presented", "found": "NO new instance in F0-25F.6 materials"},
+    {"pattern": "return code -> semantic success", "found": "NO — generic repair uses semantic_verified"},
+    {"pattern": "event presence -> completion", "found": "NO new instance audited"},
+    {"pattern": "test fixture -> production", "found": "NO in src (purity PASS)"},
+    {"pattern": "hardcoded boolean -> observed fact", "found": "MILD — resource restoration zero leak claimed without archived PID create-time/screenshot proof"},
+    {"pattern": "report vs artifact contradictions", "found": "YES — (1) regression failures misnamed; (2) tool intelligence 38 vs JSON 39; (3) security '22 capabilities' vs 89; (4) blocked capability name sets differ"}
+  ],
+  "honesty_score_summary": {
+    "routing_honest": "YES — 90.6% FAIL vs 96% target acknowledged",
+    "regression_counts_honest": "YES in XML/JSON; NO in report failure names",
+    "physical_evidence_honest": "NO — screenshots misrepresent physical state",
+    "score_inflation": "NO on routing; YES risk on tool-intel report understatement is conservative not inflation"
+  },
+  "verdict": "EVIDENCE HONESTY = PARTIAL",
+  "verdict_rationale": "Routing FAIL honestly reported; regression counts honest; but physical recovery visual evidence and several report-vs-artifact contradictions prevent full honesty PASS."
+}

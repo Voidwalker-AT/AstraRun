@@ -1,0 +1,4929 @@
+{
+  "phase": "F0-25F.5",
+  "benchmark": "ROUTING_BLIND_HOLDOUT_500",
+  "manifest_sha256": "35108d3f7e17cbd0a16222f98548e99d1c4831472fa81cbcb0bfcd09e304910a",
+  "total_prompts": 500,
+  "correct": 457,
+  "overall_accuracy": 0.914,
+  "macro_f1": 0.9134658034387074,
+  "destructive_false_executions": 0,
+  "ungrounded_false_executions": 0,
+  "gates_met": {
+    "overall_accuracy_gte_95": false,
+    "macro_f1_gte_0_94": false,
+    "dynamic_precision_gte_97": true,
+    "dynamic_recall_gte_95": true,
+    "known_capability_precision_gte_94": false,
+    "known_capability_recall_gte_94": false,
+    "conversational_precision_gte_94": true,
+    "conversational_recall_gte_94": true,
+    "clarification_precision_gte_95": false,
+    "clarification_recall_gte_95": true,
+    "composite_precision_gte_90": true,
+    "composite_recall_gte_90": true,
+    "destructive_false_execution_zero": true,
+    "ungrounded_reference_execution_zero": true
+  },
+  "all_gates_passed": false,
+  "per_class_metrics": {
+    "DYNAMIC_COMPUTATION": {
+      "precision": 1.0,
+      "recall": 0.97,
+      "f1": 0.9847715736040609,
+      "tp": 97,
+      "fp": 0,
+      "fn": 3,
+      "total_true": 100,
+      "total_pred": 97
+    },
+    "KNOWN_CAPABILITY": {
+      "precision": 0.9024390243902439,
+      "recall": 0.74,
+      "f1": 0.8131868131868132,
+      "tp": 74,
+      "fp": 8,
+      "fn": 26,
+      "total_true": 100,
+      "total_pred": 82
+    },
+    "CONVERSATIONAL": {
+      "precision": 0.9494949494949495,
+      "recall": 0.94,
+      "f1": 0.9447236180904524,
+      "tp": 94,
+      "fp": 5,
+      "fn": 6,
+      "total_true": 100,
+      "total_pred": 99
+    },
+    "CLARIFICATION_REQUIRED": {
+      "precision": 0.7874015748031497,
+      "recall": 1.0,
+      "f1": 0.881057268722467,
+      "tp": 100,
+      "fp": 27,
+      "fn": 0,
+      "total_true": 100,
+      "total_pred": 127
+    },
+    "COMPOSITE": {
+      "precision": 0.968421052631579,
+      "recall": 0.92,
+      "f1": 0.9435897435897437,
+      "tp": 92,
+      "fp": 3,
+      "fn": 8,
+      "total_true": 100,
+      "total_pred": 95
+    }
+  },
+  "failures_count": 43,
+  "failures": [
+    {
+      "id": "BLIND-F5-DYN-039",
+      "prompt": "parse postgresql slow query log and aggregate mean execution duration by query pattern into pg_slow_summary.json",
+      "expected": "DYNAMIC_COMPUTATION",
+      "predicted": "COMPOSITE",
+      "intent": "composite_dag_workflow",
+      "tier": "SEMANTIC_RETRIEVAL"
+    },
+    {
+      "id": "BLIND-F5-DYN-065",
+      "prompt": "parse payment processor settlement batch logs and aggregate failure codes into settlement_breakdown.json",
+      "expected": "DYNAMIC_COMPUTATION",
+      "predicted": "COMPOSITE",
+      "intent": "composite_dag_workflow",
+      "tier": "SEMANTIC_RETRIEVAL"
+    },
+    {
+      "id": "BLIND-F5-DYN-066",
+      "prompt": "extract DNS query logs and aggregate query count by top-level domain into tld_counts.csv",
+      "expected": "DYNAMIC_COMPUTATION",
+      "predicted": "COMPOSITE",
+      "intent": "composite_dag_workflow",
+      "tier": "SEMANTIC_RETRIEVAL"
+    },
+    {
+      "id": "BLIND-F5-CAP-013",
+      "prompt": "capture a screenshot right now",
+      "expected": "KNOWN_CAPABILITY",
+      "predicted": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION"
+    },
+    {
+      "id": "BLIND-F5-CAP-014",
+      "prompt": "take a screenshot",
+      "expected": "KNOWN_CAPABILITY",
+      "predicted": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION"
+    },
+    {
+      "id": "BLIND-F5-CAP-015",
+      "prompt": "capture the screen",
+      "expected": "KNOWN_CAPABILITY",
+      "predicted": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION"
+    },
+    {
+      "id": "BLIND-F5-CAP-023",
+      "prompt": "show computer hostname and OS version",
+      "expected": "KNOWN_CAPABILITY",
+      "predicted": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION"
+    },
+    {
+      "id": "BLIND-F5-CAP-025",
+      "prompt": "display system hardware summary",
+      "expected": "KNOWN_CAPABILITY",
+      "predicted": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION"
+    },
+    {
+      "id": "BLIND-F5-CAP-027",
+      "prompt": "what processes are currently running?",
+      "expected": "KNOWN_CAPABILITY",
+      "predicted": "CONVERSATIONAL",
+      "intent": "conversational_dialogue",
+      "tier": "LOCAL_MODEL"
+    },
+    {
+      "id": "BLIND-F5-CAP-033",
+      "prompt": "show open windows",
+      "expected": "KNOWN_CAPABILITY",
+      "predicted": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION"
+    },
+    {
+      "id": "BLIND-F5-CAP-051",
+      "prompt": "is notepad currently running?",
+      "expected": "KNOWN_CAPABILITY",
+      "predicted": "CONVERSATIONAL",
+      "intent": "conversational_dialogue",
+      "tier": "LOCAL_MODEL"
+    },
+    {
+      "id": "BLIND-F5-CAP-052",
+      "prompt": "check if calculator is open",
+      "expected": "KNOWN_CAPABILITY",
+      "predicted": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION"
+    },
+    {
+      "id": "BLIND-F5-CAP-053",
+      "prompt": "is visual studio code running?",
+      "expected": "KNOWN_CAPABILITY",
+      "predicted": "CONVERSATIONAL",
+      "intent": "conversational_dialogue",
+      "tier": "LOCAL_MODEL"
+    },
+    {
+      "id": "BLIND-F5-CAP-055",
+      "prompt": "do i have notepad installed?",
+      "expected": "KNOWN_CAPABILITY",
+      "predicted": "CONVERSATIONAL",
+      "intent": "conversational_dialogue",
+      "tier": "LOCAL_MODEL"
+    },
+    {
+      "id": "BLIND-F5-CAP-056",
+      "prompt": "check if vivaldi is installed",
+      "expected": "KNOWN_CAPABILITY",
+      "predicted": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION"
+    },
+    {
+      "id": "BLIND-F5-CAP-057",
+      "prompt": "is edge browser installed?",
+      "expected": "KNOWN_CAPABILITY",
+      "predicted": "CONVERSATIONAL",
+      "intent": "conversational_dialogue",
+      "tier": "LOCAL_MODEL"
+    },
+    {
+      "id": "BLIND-F5-CAP-059",
+      "prompt": "maximize this window",
+      "expected": "KNOWN_CAPABILITY",
+      "predicted": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION"
+    },
+    {
+      "id": "BLIND-F5-CAP-067",
+      "prompt": "find file report.pdf in Documents",
+      "expected": "KNOWN_CAPABILITY",
+      "predicted": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION"
+    },
+    {
+      "id": "BLIND-F5-CAP-068",
+      "prompt": "search for config.json in user folder",
+      "expected": "KNOWN_CAPABILITY",
+      "predicted": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION"
+    },
+    {
+      "id": "BLIND-F5-CAP-069",
+      "prompt": "show desktop directory",
+      "expected": "KNOWN_CAPABILITY",
+      "predicted": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION"
+    },
+    {
+      "id": "BLIND-F5-CAP-077",
+      "prompt": "show battery report",
+      "expected": "KNOWN_CAPABILITY",
+      "predicted": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION"
+    },
+    {
+      "id": "BLIND-F5-CAP-088",
+      "prompt": "open summary of running tasks",
+      "expected": "KNOWN_CAPABILITY",
+      "predicted": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION"
+    },
+    {
+      "id": "BLIND-F5-CAP-090",
+      "prompt": "open ascii character table",
+      "expected": "KNOWN_CAPABILITY",
+      "predicted": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION"
+    },
+    {
+      "id": "BLIND-F5-CAP-091",
+      "prompt": "inspect routing table in network connections",
+      "expected": "KNOWN_CAPABILITY",
+      "predicted": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION"
+    },
+    {
+      "id": "BLIND-F5-CAP-092",
+      "prompt": "view network adapter connections table",
+      "expected": "KNOWN_CAPABILITY",
+      "predicted": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION"
+    },
+    {
+      "id": "BLIND-F5-CAP-093",
+      "prompt": "show installed apps table in settings",
+      "expected": "KNOWN_CAPABILITY",
+      "predicted": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION"
+    },
+    {
+      "id": "BLIND-F5-CAP-094",
+      "prompt": "open bluetooth settings",
+      "expected": "KNOWN_CAPABILITY",
+      "predicted": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION"
+    },
+    {
+      "id": "BLIND-F5-CAP-095",
+      "prompt": "open display settings",
+      "expected": "KNOWN_CAPABILITY",
+      "predicted": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION"
+    },
+    {
+      "id": "BLIND-F5-CAP-096",
+      "prompt": "open sound settings",
+      "expected": "KNOWN_CAPABILITY",
+      "predicted": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION"
+    },
+    {
+      "id": "BLIND-F5-CONV-007",
+      "prompt": "how does a quantum computer differ from a classical Von Neumann computer?",
+      "expected": "CONVERSATIONAL",
+      "predicted": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION"
+    },
+    {
+      "id": "BLIND-F5-CONV-032",
+      "prompt": "can you explain the difference between monads and functors in computer science?",
+      "expected": "CONVERSATIONAL",
+      "predicted": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION"
+    },
+    {
+      "id": "BLIND-F5-CONV-038",
+      "prompt": "have a wonderful and productive afternoon!",
+      "expected": "CONVERSATIONAL",
+      "predicted": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION"
+    },
+    {
+      "id": "BLIND-F5-CONV-048",
+      "prompt": "help me choose an effective database schema migration strategy with zero downtime",
+      "expected": "CONVERSATIONAL",
+      "predicted": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION"
+    },
+    {
+      "id": "BLIND-F5-CONV-065",
+      "prompt": "my mouse cursor seems to lag and stutter every few minutes",
+      "expected": "CONVERSATIONAL",
+      "predicted": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION"
+    },
+    {
+      "id": "BLIND-F5-CONV-067",
+      "prompt": "my bluetooth headphones keep disconnecting every time I step away",
+      "expected": "CONVERSATIONAL",
+      "predicted": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION"
+    },
+    {
+      "id": "BLIND-F5-COMP-024",
+      "prompt": "open notepad and check system summary",
+      "expected": "COMPOSITE",
+      "predicted": "KNOWN_CAPABILITY",
+      "intent": "open_application",
+      "tier": "SEMANTIC_RETRIEVAL"
+    },
+    {
+      "id": "BLIND-F5-COMP-033",
+      "prompt": "open calculator then minimize window",
+      "expected": "COMPOSITE",
+      "predicted": "KNOWN_CAPABILITY",
+      "intent": "open_application",
+      "tier": "SEMANTIC_RETRIEVAL"
+    },
+    {
+      "id": "BLIND-F5-COMP-039",
+      "prompt": "open downloads folder and check disk space",
+      "expected": "COMPOSITE",
+      "predicted": "KNOWN_CAPABILITY",
+      "intent": "open_application",
+      "tier": "SEMANTIC_RETRIEVAL"
+    },
+    {
+      "id": "BLIND-F5-COMP-050",
+      "prompt": "open windows terminal and check cpu status",
+      "expected": "COMPOSITE",
+      "predicted": "KNOWN_CAPABILITY",
+      "intent": "open_application",
+      "tier": "SEMANTIC_RETRIEVAL"
+    },
+    {
+      "id": "BLIND-F5-COMP-061",
+      "prompt": "open downloads folder then minimize window",
+      "expected": "COMPOSITE",
+      "predicted": "KNOWN_CAPABILITY",
+      "intent": "open_application",
+      "tier": "SEMANTIC_RETRIEVAL"
+    },
+    {
+      "id": "BLIND-F5-COMP-075",
+      "prompt": "open calculator and list running applications",
+      "expected": "COMPOSITE",
+      "predicted": "KNOWN_CAPABILITY",
+      "intent": "open_application",
+      "tier": "SEMANTIC_RETRIEVAL"
+    },
+    {
+      "id": "BLIND-F5-COMP-084",
+      "prompt": "open notepad then maximize active window",
+      "expected": "COMPOSITE",
+      "predicted": "KNOWN_CAPABILITY",
+      "intent": "open_application",
+      "tier": "SEMANTIC_RETRIEVAL"
+    },
+    {
+      "id": "BLIND-F5-COMP-095",
+      "prompt": "open file explorer and check disk space",
+      "expected": "COMPOSITE",
+      "predicted": "KNOWN_CAPABILITY",
+      "intent": "open_application",
+      "tier": "SEMANTIC_RETRIEVAL"
+    }
+  ],
+  "detailed_predictions": [
+    {
+      "id": "BLIND-F5-DYN-001",
+      "prompt": "compute the eigenvalues and eigenvectors of this 6x6 symmetric matrix into evals.json",
+      "expected_class": "DYNAMIC_COMPUTATION",
+      "predicted_class": "DYNAMIC_COMPUTATION",
+      "intent": "execute_dynamic_tool",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-DYN-002",
+      "prompt": "calculate the roots of a 5th degree Chebyshev polynomial and output to chebyshev_roots.txt",
+      "expected_class": "DYNAMIC_COMPUTATION",
+      "predicted_class": "DYNAMIC_COMPUTATION",
+      "intent": "execute_dynamic_tool",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-DYN-003",
+      "prompt": "simulate a double pendulum with chaotic initial conditions across 1500 timesteps into double_pendulum.csv",
+      "expected_class": "DYNAMIC_COMPUTATION",
+      "predicted_class": "DYNAMIC_COMPUTATION",
+      "intent": "execute_dynamic_tool",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-DYN-004",
+      "prompt": "solve this sparse linear system of 20 equations using conjugate gradient method into solution.json",
+      "expected_class": "DYNAMIC_COMPUTATION",
+      "predicted_class": "DYNAMIC_COMPUTATION",
+      "intent": "execute_dynamic_tool",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-DYN-005",
+      "prompt": "compute the numerical integration of Gaussian distribution from -3 to 3 using Simpson's rule into integral.txt",
+      "expected_class": "DYNAMIC_COMPUTATION",
+      "predicted_class": "DYNAMIC_COMPUTATION",
+      "intent": "execute_dynamic_tool",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-DYN-006",
+      "prompt": "simulate a 3D random walk for 10000 particles and record final displacements in walk_displacements.json",
+      "expected_class": "DYNAMIC_COMPUTATION",
+      "predicted_class": "DYNAMIC_COMPUTATION",
+      "intent": "execute_dynamic_tool",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-DYN-007",
+      "prompt": "compute the fast fourier transform of this seismic vibration signal into fft_magnitudes.csv",
+      "expected_class": "DYNAMIC_COMPUTATION",
+      "predicted_class": "DYNAMIC_COMPUTATION",
+      "intent": "execute_dynamic_tool",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-DYN-008",
+      "prompt": "calculate prime factorizations of all 10-digit composite numbers in primes_in.txt into factors_out.json",
+      "expected_class": "DYNAMIC_COMPUTATION",
+      "predicted_class": "DYNAMIC_COMPUTATION",
+      "intent": "execute_dynamic_tool",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-DYN-009",
+      "prompt": "simulate a Lotka-Volterra predator-prey system with periodic harvesting into predator_prey.csv",
+      "expected_class": "DYNAMIC_COMPUTATION",
+      "predicted_class": "DYNAMIC_COMPUTATION",
+      "intent": "execute_dynamic_tool",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-DYN-010",
+      "prompt": "compute the singular value decomposition of this hyperspectral image matrix into svd_results.json",
+      "expected_class": "DYNAMIC_COMPUTATION",
+      "predicted_class": "DYNAMIC_COMPUTATION",
+      "intent": "execute_dynamic_tool",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-DYN-011",
+      "prompt": "calculate the geodesic distance between multiple pairs of GPS coordinates into geodesic_table.csv",
+      "expected_class": "DYNAMIC_COMPUTATION",
+      "predicted_class": "DYNAMIC_COMPUTATION",
+      "intent": "execute_dynamic_tool",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-DYN-012",
+      "prompt": "simulate a 2D cellular automaton with custom update rules across 300 cycles into ca_cycles.csv",
+      "expected_class": "DYNAMIC_COMPUTATION",
+      "predicted_class": "DYNAMIC_COMPUTATION",
+      "intent": "execute_dynamic_tool",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-DYN-013",
+      "prompt": "compute the linear regression slope, intercept, and p-value for these experimental data into regression.json",
+      "expected_class": "DYNAMIC_COMPUTATION",
+      "predicted_class": "DYNAMIC_COMPUTATION",
+      "intent": "execute_dynamic_tool",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-DYN-014",
+      "prompt": "simulate an n-body gravitational orbital step with Runge-Kutta 4th order into orbits_rk4.csv",
+      "expected_class": "DYNAMIC_COMPUTATION",
+      "predicted_class": "DYNAMIC_COMPUTATION",
+      "intent": "execute_dynamic_tool",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-DYN-015",
+      "prompt": "calculate the condition number and determinant of this Hilbert matrix into hilbert_metrics.txt",
+      "expected_class": "DYNAMIC_COMPUTATION",
+      "predicted_class": "DYNAMIC_COMPUTATION",
+      "intent": "execute_dynamic_tool",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-DYN-016",
+      "prompt": "simulate a 4-state Markov chain for 5000 transitions and calculate empirical transition probabilities into markov.json",
+      "expected_class": "DYNAMIC_COMPUTATION",
+      "predicted_class": "DYNAMIC_COMPUTATION",
+      "intent": "execute_dynamic_tool",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-DYN-017",
+      "prompt": "compute the autocorrelation of this CPU temperature time-series data at 50 lags into autocorr.json",
+      "expected_class": "DYNAMIC_COMPUTATION",
+      "predicted_class": "DYNAMIC_COMPUTATION",
+      "intent": "execute_dynamic_tool",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-DYN-018",
+      "prompt": "solve the 2D Poisson equation on a 30x30 grid using Jacobi iteration into poisson_grid.csv",
+      "expected_class": "DYNAMIC_COMPUTATION",
+      "predicted_class": "DYNAMIC_COMPUTATION",
+      "intent": "execute_dynamic_tool",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-DYN-019",
+      "prompt": "calculate the convex hull of these 100 2D points using Graham scan into convex_hull.json",
+      "expected_class": "DYNAMIC_COMPUTATION",
+      "predicted_class": "DYNAMIC_COMPUTATION",
+      "intent": "execute_dynamic_tool",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-DYN-020",
+      "prompt": "simulate the Collatz stopping time for all integers between 1000 and 2000 into collatz_times.csv",
+      "expected_class": "DYNAMIC_COMPUTATION",
+      "predicted_class": "DYNAMIC_COMPUTATION",
+      "intent": "execute_dynamic_tool",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-DYN-021",
+      "prompt": "calculate the Fibonacci sequence up to index 300 using big integers into fibonacci_large.txt",
+      "expected_class": "DYNAMIC_COMPUTATION",
+      "predicted_class": "DYNAMIC_COMPUTATION",
+      "intent": "execute_dynamic_tool",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-DYN-022",
+      "prompt": "solve a system of coupled differential equations modeling heat diffusion across a slab into heat_slab.csv",
+      "expected_class": "DYNAMIC_COMPUTATION",
+      "predicted_class": "DYNAMIC_COMPUTATION",
+      "intent": "execute_dynamic_tool",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-DYN-023",
+      "prompt": "calculate the Cholesky decomposition of this positive-definite covariance matrix into cholesky_l.json",
+      "expected_class": "DYNAMIC_COMPUTATION",
+      "predicted_class": "DYNAMIC_COMPUTATION",
+      "intent": "execute_dynamic_tool",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-DYN-024",
+      "prompt": "compute the PageRank vector of this 50-node directed web graph into pagerank.json",
+      "expected_class": "DYNAMIC_COMPUTATION",
+      "predicted_class": "DYNAMIC_COMPUTATION",
+      "intent": "execute_dynamic_tool",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-DYN-025",
+      "prompt": "calculate Chi-square goodness-of-fit statistics for these categorical survey results into chisquare.json",
+      "expected_class": "DYNAMIC_COMPUTATION",
+      "predicted_class": "DYNAMIC_COMPUTATION",
+      "intent": "execute_dynamic_tool",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-DYN-026",
+      "prompt": "simulate Brownian motion with drift for 200 asset paths into asset_paths.csv",
+      "expected_class": "DYNAMIC_COMPUTATION",
+      "predicted_class": "DYNAMIC_COMPUTATION",
+      "intent": "execute_dynamic_tool",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-DYN-027",
+      "prompt": "compute shortest path distances in a weighted road network using Dijkstra into dijkstra_paths.json",
+      "expected_class": "DYNAMIC_COMPUTATION",
+      "predicted_class": "DYNAMIC_COMPUTATION",
+      "intent": "execute_dynamic_tool",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-DYN-028",
+      "prompt": "calculate Pareto optimal frontier points for this bi-objective optimization into pareto_frontier.csv",
+      "expected_class": "DYNAMIC_COMPUTATION",
+      "predicted_class": "DYNAMIC_COMPUTATION",
+      "intent": "execute_dynamic_tool",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-DYN-029",
+      "prompt": "solve the roots of a cubic equation using Cardano's formula and write to cubic_roots.txt",
+      "expected_class": "DYNAMIC_COMPUTATION",
+      "predicted_class": "DYNAMIC_COMPUTATION",
+      "intent": "execute_dynamic_tool",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-DYN-030",
+      "prompt": "simulate Monte Carlo pi approximation with 1,000,000 samples into monte_carlo_pi.json",
+      "expected_class": "DYNAMIC_COMPUTATION",
+      "predicted_class": "DYNAMIC_COMPUTATION",
+      "intent": "execute_dynamic_tool",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-DYN-031",
+      "prompt": "compute the LU decomposition with partial pivoting for this 8x8 matrix into lu_decomp.json",
+      "expected_class": "DYNAMIC_COMPUTATION",
+      "predicted_class": "DYNAMIC_COMPUTATION",
+      "intent": "execute_dynamic_tool",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-DYN-032",
+      "prompt": "calculate rolling standard deviation and variance for these hourly exchange rates into fx_volatility.csv",
+      "expected_class": "DYNAMIC_COMPUTATION",
+      "predicted_class": "DYNAMIC_COMPUTATION",
+      "intent": "execute_dynamic_tool",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-DYN-033",
+      "prompt": "compute Delaunay triangulation for 80 random planar vertices into delaunay_mesh.json",
+      "expected_class": "DYNAMIC_COMPUTATION",
+      "predicted_class": "DYNAMIC_COMPUTATION",
+      "intent": "execute_dynamic_tool",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-DYN-034",
+      "prompt": "simulate a continuous-time birth-death queueing process into queue_simulation.csv",
+      "expected_class": "DYNAMIC_COMPUTATION",
+      "predicted_class": "DYNAMIC_COMPUTATION",
+      "intent": "execute_dynamic_tool",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-DYN-035",
+      "prompt": "calculate prime numbers and gaps in the range 100,000 to 105,000 into prime_gaps_range.txt",
+      "expected_class": "DYNAMIC_COMPUTATION",
+      "predicted_class": "DYNAMIC_COMPUTATION",
+      "intent": "execute_dynamic_tool",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-DYN-036",
+      "prompt": "parse kubernetes pod error logs and aggregate crash loop backoffs by namespace into pod_crashes.json",
+      "expected_class": "DYNAMIC_COMPUTATION",
+      "predicted_class": "DYNAMIC_COMPUTATION",
+      "intent": "execute_dynamic_tool",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-DYN-037",
+      "prompt": "compile a summary table of HTTP 4xx and 5xx response codes from traefik.log into http_status_table.txt",
+      "expected_class": "DYNAMIC_COMPUTATION",
+      "predicted_class": "DYNAMIC_COMPUTATION",
+      "intent": "execute_dynamic_tool",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-DYN-038",
+      "prompt": "extract response latencies from envoy_access.log and compute 50th, 90th, and 99th percentiles into percentiles.json",
+      "expected_class": "DYNAMIC_COMPUTATION",
+      "predicted_class": "DYNAMIC_COMPUTATION",
+      "intent": "execute_dynamic_tool",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-DYN-039",
+      "prompt": "parse postgresql slow query log and aggregate mean execution duration by query pattern into pg_slow_summary.json",
+      "expected_class": "DYNAMIC_COMPUTATION",
+      "predicted_class": "COMPOSITE",
+      "intent": "composite_dag_workflow",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": false
+    },
+    {
+      "id": "BLIND-F5-DYN-040",
+      "prompt": "transform this nested json of github webhook events into a flattened commit author table in commits.csv",
+      "expected_class": "DYNAMIC_COMPUTATION",
+      "predicted_class": "DYNAMIC_COMPUTATION",
+      "intent": "execute_dynamic_tool",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-DYN-041",
+      "prompt": "parse redis slowlog dump and compile a frequency histogram of commands into redis_histogram.json",
+      "expected_class": "DYNAMIC_COMPUTATION",
+      "predicted_class": "DYNAMIC_COMPUTATION",
+      "intent": "execute_dynamic_tool",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-DYN-042",
+      "prompt": "aggregate network flow telemetry logs to compute outbound bandwidth per remote IP into netflow_bandwidth.csv",
+      "expected_class": "DYNAMIC_COMPUTATION",
+      "predicted_class": "DYNAMIC_COMPUTATION",
+      "intent": "execute_dynamic_tool",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-DYN-043",
+      "prompt": "parse mongodb query profiling log and extract queries exceeding 100ms into long_queries.json",
+      "expected_class": "DYNAMIC_COMPUTATION",
+      "predicted_class": "DYNAMIC_COMPUTATION",
+      "intent": "execute_dynamic_tool",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-DYN-044",
+      "prompt": "compile a summary report of linux kernel panic stack traces into kernel_traces_summary.txt",
+      "expected_class": "DYNAMIC_COMPUTATION",
+      "predicted_class": "DYNAMIC_COMPUTATION",
+      "intent": "execute_dynamic_tool",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-DYN-045",
+      "prompt": "extract user login failure bursts from auth.log and group by originating IP into auth_failures.json",
+      "expected_class": "DYNAMIC_COMPUTATION",
+      "predicted_class": "DYNAMIC_COMPUTATION",
+      "intent": "execute_dynamic_tool",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-DYN-046",
+      "prompt": "transform multi-region AWS billing CSV records into a summary breakdown of cost per service into aws_costs.csv",
+      "expected_class": "DYNAMIC_COMPUTATION",
+      "predicted_class": "DYNAMIC_COMPUTATION",
+      "intent": "execute_dynamic_tool",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-DYN-047",
+      "prompt": "parse docker container resource stats log and identify containers exceeding 90% memory limit into oom_risks.json",
+      "expected_class": "DYNAMIC_COMPUTATION",
+      "predicted_class": "DYNAMIC_COMPUTATION",
+      "intent": "execute_dynamic_tool",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-DYN-048",
+      "prompt": "extract microservice distributed trace spans and identify slowest spans into trace_bottlenecks.csv",
+      "expected_class": "DYNAMIC_COMPUTATION",
+      "predicted_class": "DYNAMIC_COMPUTATION",
+      "intent": "execute_dynamic_tool",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-DYN-049",
+      "prompt": "parse firewall drop logs and aggregate blocked connection attempts by port into dropped_ports.json",
+      "expected_class": "DYNAMIC_COMPUTATION",
+      "predicted_class": "DYNAMIC_COMPUTATION",
+      "intent": "execute_dynamic_tool",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-DYN-050",
+      "prompt": "aggregate temperature sensor readings from raw_telemetry.csv and compute hourly rolling averages into hourly_temps.csv",
+      "expected_class": "DYNAMIC_COMPUTATION",
+      "predicted_class": "DYNAMIC_COMPUTATION",
+      "intent": "execute_dynamic_tool",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-DYN-051",
+      "prompt": "transform customer feedback JSON objects into a word occurrence frequency distribution table in word_counts.json",
+      "expected_class": "DYNAMIC_COMPUTATION",
+      "predicted_class": "DYNAMIC_COMPUTATION",
+      "intent": "execute_dynamic_tool",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-DYN-052",
+      "prompt": "parse git repository commit history log and calculate total insertions and deletions per author into author_churn.txt",
+      "expected_class": "DYNAMIC_COMPUTATION",
+      "predicted_class": "DYNAMIC_COMPUTATION",
+      "intent": "execute_dynamic_tool",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-DYN-053",
+      "prompt": "extract SSL handshake failure events from nginx.log and summarize by cipher suite into ssl_failures.json",
+      "expected_class": "DYNAMIC_COMPUTATION",
+      "predicted_class": "DYNAMIC_COMPUTATION",
+      "intent": "execute_dynamic_tool",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-DYN-054",
+      "prompt": "compile a summary table of database deadlock occurrences from db_engine.log into deadlocks.txt",
+      "expected_class": "DYNAMIC_COMPUTATION",
+      "predicted_class": "DYNAMIC_COMPUTATION",
+      "intent": "execute_dynamic_tool",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-DYN-055",
+      "prompt": "parse CI/CD pipeline build timing logs and output module compilation times into build_timing.json",
+      "expected_class": "DYNAMIC_COMPUTATION",
+      "predicted_class": "DYNAMIC_COMPUTATION",
+      "intent": "execute_dynamic_tool",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-DYN-056",
+      "prompt": "extract heap memory snapshot telemetry and identify top allocating object classes into memory_allocations.json",
+      "expected_class": "DYNAMIC_COMPUTATION",
+      "predicted_class": "DYNAMIC_COMPUTATION",
+      "intent": "execute_dynamic_tool",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-DYN-057",
+      "prompt": "aggregate daily retail sales transactions into monthly category totals in monthly_categories.csv",
+      "expected_class": "DYNAMIC_COMPUTATION",
+      "predicted_class": "DYNAMIC_COMPUTATION",
+      "intent": "execute_dynamic_tool",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-DYN-058",
+      "prompt": "transform unstructured system event syslog into structured JSON records in syslog_normalized.json",
+      "expected_class": "DYNAMIC_COMPUTATION",
+      "predicted_class": "DYNAMIC_COMPUTATION",
+      "intent": "execute_dynamic_tool",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-DYN-059",
+      "prompt": "parse varnish cache hit/miss logs and compute cache hit ratio per URL path into cache_ratios.json",
+      "expected_class": "DYNAMIC_COMPUTATION",
+      "predicted_class": "DYNAMIC_COMPUTATION",
+      "intent": "execute_dynamic_tool",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-DYN-060",
+      "prompt": "extract disk I/O latency metrics from iostat_dump.txt and calculate average write wait times into disk_wait.csv",
+      "expected_class": "DYNAMIC_COMPUTATION",
+      "predicted_class": "DYNAMIC_COMPUTATION",
+      "intent": "execute_dynamic_tool",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-DYN-061",
+      "prompt": "compile a summary table of customer shopping cart abandonment rates by device type into cart_abandonment.txt",
+      "expected_class": "DYNAMIC_COMPUTATION",
+      "predicted_class": "DYNAMIC_COMPUTATION",
+      "intent": "execute_dynamic_tool",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-DYN-062",
+      "prompt": "parse apache access log and extract top 20 most bandwidth-heavy assets into top_assets.json",
+      "expected_class": "DYNAMIC_COMPUTATION",
+      "predicted_class": "DYNAMIC_COMPUTATION",
+      "intent": "execute_dynamic_tool",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-DYN-063",
+      "prompt": "extract JVM garbage collection pause durations from gc.log and calculate total GC pause time into gc_pauses.json",
+      "expected_class": "DYNAMIC_COMPUTATION",
+      "predicted_class": "DYNAMIC_COMPUTATION",
+      "intent": "execute_dynamic_tool",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-DYN-064",
+      "prompt": "aggregate cellular tower ping logs and identify towers with high packet loss into tower_loss.csv",
+      "expected_class": "DYNAMIC_COMPUTATION",
+      "predicted_class": "DYNAMIC_COMPUTATION",
+      "intent": "execute_dynamic_tool",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-DYN-065",
+      "prompt": "parse payment processor settlement batch logs and aggregate failure codes into settlement_breakdown.json",
+      "expected_class": "DYNAMIC_COMPUTATION",
+      "predicted_class": "COMPOSITE",
+      "intent": "composite_dag_workflow",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": false
+    },
+    {
+      "id": "BLIND-F5-DYN-066",
+      "prompt": "extract DNS query logs and aggregate query count by top-level domain into tld_counts.csv",
+      "expected_class": "DYNAMIC_COMPUTATION",
+      "predicted_class": "COMPOSITE",
+      "intent": "composite_dag_workflow",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": false
+    },
+    {
+      "id": "BLIND-F5-DYN-067",
+      "prompt": "transform tabular CSV sensor data into a correlation matrix table in sensor_correlations.json",
+      "expected_class": "DYNAMIC_COMPUTATION",
+      "predicted_class": "DYNAMIC_COMPUTATION",
+      "intent": "execute_dynamic_tool",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-DYN-068",
+      "prompt": "parse security audit event log and flag users with administrative privilege escalations into priv_escalations.json",
+      "expected_class": "DYNAMIC_COMPUTATION",
+      "predicted_class": "DYNAMIC_COMPUTATION",
+      "intent": "execute_dynamic_tool",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-DYN-069",
+      "prompt": "compile a summary report of application uncaught exceptions grouped by exception class into exception_report.txt",
+      "expected_class": "DYNAMIC_COMPUTATION",
+      "predicted_class": "DYNAMIC_COMPUTATION",
+      "intent": "execute_dynamic_tool",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-DYN-070",
+      "prompt": "extract message broker queue latency metrics and identify queues exceeding SLA into queue_slas.json",
+      "expected_class": "DYNAMIC_COMPUTATION",
+      "predicted_class": "DYNAMIC_COMPUTATION",
+      "intent": "execute_dynamic_tool",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-DYN-071",
+      "prompt": "generate a 30x30 random labyrinth using Prim's maze algorithm into labyrinth.txt",
+      "expected_class": "DYNAMIC_COMPUTATION",
+      "predicted_class": "DYNAMIC_COMPUTATION",
+      "intent": "execute_dynamic_tool",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-DYN-072",
+      "prompt": "generate synthetic financial time-series data with geometric Brownian motion into synthetic_stocks.csv",
+      "expected_class": "DYNAMIC_COMPUTATION",
+      "predicted_class": "DYNAMIC_COMPUTATION",
+      "intent": "execute_dynamic_tool",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-DYN-073",
+      "prompt": "generate a scatter plot coordinate dataset for k-means clustered points with 5 centroids into kmeans_scatter.json",
+      "expected_class": "DYNAMIC_COMPUTATION",
+      "predicted_class": "DYNAMIC_COMPUTATION",
+      "intent": "execute_dynamic_tool",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-DYN-074",
+      "prompt": "generate a frequency histogram bin table for employee commute distance data into commute_histogram.csv",
+      "expected_class": "DYNAMIC_COMPUTATION",
+      "predicted_class": "DYNAMIC_COMPUTATION",
+      "intent": "execute_dynamic_tool",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-DYN-075",
+      "prompt": "generate Mandelbrot fractal set boundary coordinates at high precision into mandelbrot_mesh.csv",
+      "expected_class": "DYNAMIC_COMPUTATION",
+      "predicted_class": "DYNAMIC_COMPUTATION",
+      "intent": "execute_dynamic_tool",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-DYN-076",
+      "prompt": "generate a 2D terrain heightmap grid using Diamond-Square algorithm into terrain_heightmap.csv",
+      "expected_class": "DYNAMIC_COMPUTATION",
+      "predicted_class": "DYNAMIC_COMPUTATION",
+      "intent": "execute_dynamic_tool",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-DYN-077",
+      "prompt": "generate synthetic customer demographic records with realistic age and income distributions into demographics.json",
+      "expected_class": "DYNAMIC_COMPUTATION",
+      "predicted_class": "DYNAMIC_COMPUTATION",
+      "intent": "execute_dynamic_tool",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-DYN-078",
+      "prompt": "generate a correlation matrix heatmap dataset for 12 financial assets into asset_correlation_heatmap.json",
+      "expected_class": "DYNAMIC_COMPUTATION",
+      "predicted_class": "DYNAMIC_COMPUTATION",
+      "intent": "execute_dynamic_tool",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-DYN-079",
+      "prompt": "generate a line chart coordinate series showing logistic growth curves into logistic_growth.json",
+      "expected_class": "DYNAMIC_COMPUTATION",
+      "predicted_class": "DYNAMIC_COMPUTATION",
+      "intent": "execute_dynamic_tool",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-DYN-080",
+      "prompt": "generate a Voronoi diagram cell partition coordinate dataset for 50 seed sites into voronoi_diagram.json",
+      "expected_class": "DYNAMIC_COMPUTATION",
+      "predicted_class": "DYNAMIC_COMPUTATION",
+      "intent": "execute_dynamic_tool",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-DYN-081",
+      "prompt": "generate a synthetic test dataset of 1000 simulated hospital patient visits into patient_visits.csv",
+      "expected_class": "DYNAMIC_COMPUTATION",
+      "predicted_class": "DYNAMIC_COMPUTATION",
+      "intent": "execute_dynamic_tool",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-DYN-082",
+      "prompt": "generate a 2D Gaussian mixture distribution sample of 2000 points into gaussian_mixture.csv",
+      "expected_class": "DYNAMIC_COMPUTATION",
+      "predicted_class": "DYNAMIC_COMPUTATION",
+      "intent": "execute_dynamic_tool",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-DYN-083",
+      "prompt": "generate synthetic IoT sensor drift readings with planted seasonal spikes into sensor_drift.csv",
+      "expected_class": "DYNAMIC_COMPUTATION",
+      "predicted_class": "DYNAMIC_COMPUTATION",
+      "intent": "execute_dynamic_tool",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-DYN-084",
+      "prompt": "generate an adjacency matrix for a scale-free network using Barabasi-Albert model into scale_free_graph.csv",
+      "expected_class": "DYNAMIC_COMPUTATION",
+      "predicted_class": "DYNAMIC_COMPUTATION",
+      "intent": "execute_dynamic_tool",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-DYN-085",
+      "prompt": "generate an ASCII representation of the Sierpinski carpet fractal at iteration 4 into sierpinski.txt",
+      "expected_class": "DYNAMIC_COMPUTATION",
+      "predicted_class": "DYNAMIC_COMPUTATION",
+      "intent": "execute_dynamic_tool",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-DYN-086",
+      "prompt": "generate a synthetic e-commerce clickstream session history into clickstream_sessions.json",
+      "expected_class": "DYNAMIC_COMPUTATION",
+      "predicted_class": "DYNAMIC_COMPUTATION",
+      "intent": "execute_dynamic_tool",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-DYN-087",
+      "prompt": "generate a 3D surface plot coordinate matrix for a bivariate Mexican hat wavelet into wavelet_surface.json",
+      "expected_class": "DYNAMIC_COMPUTATION",
+      "predicted_class": "DYNAMIC_COMPUTATION",
+      "intent": "execute_dynamic_tool",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-DYN-088",
+      "prompt": "generate synthetic airline flight departure delay distributions into flight_delays.csv",
+      "expected_class": "DYNAMIC_COMPUTATION",
+      "predicted_class": "DYNAMIC_COMPUTATION",
+      "intent": "execute_dynamic_tool",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-DYN-089",
+      "prompt": "generate a decision tree split threshold dataset for mock loan risk classification into tree_thresholds.json",
+      "expected_class": "DYNAMIC_COMPUTATION",
+      "predicted_class": "DYNAMIC_COMPUTATION",
+      "intent": "execute_dynamic_tool",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-DYN-090",
+      "prompt": "generate an exponential decay time-series coordinate dataset into decay_series.json",
+      "expected_class": "DYNAMIC_COMPUTATION",
+      "predicted_class": "DYNAMIC_COMPUTATION",
+      "intent": "execute_dynamic_tool",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-DYN-091",
+      "prompt": "generate synthetic server load stress profiles with bursty Poisson spikes into load_stress.csv",
+      "expected_class": "DYNAMIC_COMPUTATION",
+      "predicted_class": "DYNAMIC_COMPUTATION",
+      "intent": "execute_dynamic_tool",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-DYN-092",
+      "prompt": "generate a 2D Perlin noise texture array for terrain generation into perlin_texture.csv",
+      "expected_class": "DYNAMIC_COMPUTATION",
+      "predicted_class": "DYNAMIC_COMPUTATION",
+      "intent": "execute_dynamic_tool",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-DYN-093",
+      "prompt": "generate a Pareto distribution dataset modeling wealth allocation into pareto_distribution.json",
+      "expected_class": "DYNAMIC_COMPUTATION",
+      "predicted_class": "DYNAMIC_COMPUTATION",
+      "intent": "execute_dynamic_tool",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-DYN-094",
+      "prompt": "generate a synthetic user authentication log with planted credential stuffing patterns into credential_stuffing.log",
+      "expected_class": "DYNAMIC_COMPUTATION",
+      "predicted_class": "DYNAMIC_COMPUTATION",
+      "intent": "execute_dynamic_tool",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-DYN-095",
+      "prompt": "generate a bar chart dataset representing quarterly revenue by business division into revenue_bars.json",
+      "expected_class": "DYNAMIC_COMPUTATION",
+      "predicted_class": "DYNAMIC_COMPUTATION",
+      "intent": "execute_dynamic_tool",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-DYN-096",
+      "prompt": "generate a Delaunay triangulation network from 100 random geographic points into geo_triangulation.json",
+      "expected_class": "DYNAMIC_COMPUTATION",
+      "predicted_class": "DYNAMIC_COMPUTATION",
+      "intent": "execute_dynamic_tool",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-DYN-097",
+      "prompt": "generate synthetic blood pressure readings with diurnal variation patterns into blood_pressure.csv",
+      "expected_class": "DYNAMIC_COMPUTATION",
+      "predicted_class": "DYNAMIC_COMPUTATION",
+      "intent": "execute_dynamic_tool",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-DYN-098",
+      "prompt": "generate a synthetic inventory stock depletion time-series into inventory_depletion.csv",
+      "expected_class": "DYNAMIC_COMPUTATION",
+      "predicted_class": "DYNAMIC_COMPUTATION",
+      "intent": "execute_dynamic_tool",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-DYN-099",
+      "prompt": "generate a 3D coordinate trajectory for a Lorenz chaotic attractor into lorenz_attractor.csv",
+      "expected_class": "DYNAMIC_COMPUTATION",
+      "predicted_class": "DYNAMIC_COMPUTATION",
+      "intent": "execute_dynamic_tool",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-DYN-100",
+      "prompt": "generate synthetic website A/B testing conversion rate samples into ab_test_samples.json",
+      "expected_class": "DYNAMIC_COMPUTATION",
+      "predicted_class": "DYNAMIC_COMPUTATION",
+      "intent": "execute_dynamic_tool",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CAP-001",
+      "prompt": "lock my workstation",
+      "expected_class": "KNOWN_CAPABILITY",
+      "predicted_class": "KNOWN_CAPABILITY",
+      "intent": "lock_workstation",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CAP-002",
+      "prompt": "lock this computer",
+      "expected_class": "KNOWN_CAPABILITY",
+      "predicted_class": "KNOWN_CAPABILITY",
+      "intent": "lock_workstation",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CAP-003",
+      "prompt": "lock screen immediately",
+      "expected_class": "KNOWN_CAPABILITY",
+      "predicted_class": "KNOWN_CAPABILITY",
+      "intent": "lock_workstation",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CAP-004",
+      "prompt": "mute the system volume",
+      "expected_class": "KNOWN_CAPABILITY",
+      "predicted_class": "KNOWN_CAPABILITY",
+      "intent": "audio_status",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CAP-005",
+      "prompt": "unmute system audio",
+      "expected_class": "KNOWN_CAPABILITY",
+      "predicted_class": "KNOWN_CAPABILITY",
+      "intent": "audio_status",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CAP-006",
+      "prompt": "check current system memory usage",
+      "expected_class": "KNOWN_CAPABILITY",
+      "predicted_class": "KNOWN_CAPABILITY",
+      "intent": "memory_status",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CAP-007",
+      "prompt": "check available system memory",
+      "expected_class": "KNOWN_CAPABILITY",
+      "predicted_class": "KNOWN_CAPABILITY",
+      "intent": "memory_status",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CAP-008",
+      "prompt": "how much free disk space is left on drive C",
+      "expected_class": "KNOWN_CAPABILITY",
+      "predicted_class": "KNOWN_CAPABILITY",
+      "intent": "disk_status",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CAP-009",
+      "prompt": "show available disk space",
+      "expected_class": "KNOWN_CAPABILITY",
+      "predicted_class": "KNOWN_CAPABILITY",
+      "intent": "disk_status",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CAP-010",
+      "prompt": "check current cpu utilization",
+      "expected_class": "KNOWN_CAPABILITY",
+      "predicted_class": "KNOWN_CAPABILITY",
+      "intent": "cpu_status",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CAP-011",
+      "prompt": "check cpu load on workstation",
+      "expected_class": "KNOWN_CAPABILITY",
+      "predicted_class": "KNOWN_CAPABILITY",
+      "intent": "cpu_status",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CAP-012",
+      "prompt": "take a screenshot of the entire desktop",
+      "expected_class": "KNOWN_CAPABILITY",
+      "predicted_class": "KNOWN_CAPABILITY",
+      "intent": "arrange_desktop",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CAP-013",
+      "prompt": "capture a screenshot right now",
+      "expected_class": "KNOWN_CAPABILITY",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "match": false
+    },
+    {
+      "id": "BLIND-F5-CAP-014",
+      "prompt": "take a screenshot",
+      "expected_class": "KNOWN_CAPABILITY",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "match": false
+    },
+    {
+      "id": "BLIND-F5-CAP-015",
+      "prompt": "capture the screen",
+      "expected_class": "KNOWN_CAPABILITY",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "match": false
+    },
+    {
+      "id": "BLIND-F5-CAP-016",
+      "prompt": "scan available wifi networks",
+      "expected_class": "KNOWN_CAPABILITY",
+      "predicted_class": "KNOWN_CAPABILITY",
+      "intent": "wifi_scan",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CAP-017",
+      "prompt": "scan for available wifi networks",
+      "expected_class": "KNOWN_CAPABILITY",
+      "predicted_class": "KNOWN_CAPABILITY",
+      "intent": "wifi_scan",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CAP-018",
+      "prompt": "show current wifi status",
+      "expected_class": "KNOWN_CAPABILITY",
+      "predicted_class": "KNOWN_CAPABILITY",
+      "intent": "wifi_status",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CAP-019",
+      "prompt": "check my wifi connection",
+      "expected_class": "KNOWN_CAPABILITY",
+      "predicted_class": "KNOWN_CAPABILITY",
+      "intent": "wifi_status",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CAP-020",
+      "prompt": "connect to wifi OfficeNet",
+      "expected_class": "KNOWN_CAPABILITY",
+      "predicted_class": "KNOWN_CAPABILITY",
+      "intent": "wifi_connect",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CAP-021",
+      "prompt": "disconnect from wifi",
+      "expected_class": "KNOWN_CAPABILITY",
+      "predicted_class": "KNOWN_CAPABILITY",
+      "intent": "wifi_disconnect",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CAP-022",
+      "prompt": "get system information and uptime",
+      "expected_class": "KNOWN_CAPABILITY",
+      "predicted_class": "KNOWN_CAPABILITY",
+      "intent": "system_summary",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CAP-023",
+      "prompt": "show computer hostname and OS version",
+      "expected_class": "KNOWN_CAPABILITY",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "match": false
+    },
+    {
+      "id": "BLIND-F5-CAP-024",
+      "prompt": "show system summary",
+      "expected_class": "KNOWN_CAPABILITY",
+      "predicted_class": "KNOWN_CAPABILITY",
+      "intent": "system_summary",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CAP-025",
+      "prompt": "display system hardware summary",
+      "expected_class": "KNOWN_CAPABILITY",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "match": false
+    },
+    {
+      "id": "BLIND-F5-CAP-026",
+      "prompt": "list running processes on this machine",
+      "expected_class": "KNOWN_CAPABILITY",
+      "predicted_class": "KNOWN_CAPABILITY",
+      "intent": "list_processes",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CAP-027",
+      "prompt": "what processes are currently running?",
+      "expected_class": "KNOWN_CAPABILITY",
+      "predicted_class": "CONVERSATIONAL",
+      "intent": "conversational_dialogue",
+      "tier": "LOCAL_MODEL",
+      "match": false
+    },
+    {
+      "id": "BLIND-F5-CAP-028",
+      "prompt": "list running processes",
+      "expected_class": "KNOWN_CAPABILITY",
+      "predicted_class": "KNOWN_CAPABILITY",
+      "intent": "list_processes",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CAP-029",
+      "prompt": "inspect open network ports",
+      "expected_class": "KNOWN_CAPABILITY",
+      "predicted_class": "KNOWN_CAPABILITY",
+      "intent": "list_listening_ports",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CAP-030",
+      "prompt": "check if port 8080 is listening",
+      "expected_class": "KNOWN_CAPABILITY",
+      "predicted_class": "KNOWN_CAPABILITY",
+      "intent": "inspect_port",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CAP-031",
+      "prompt": "check if port 443 is active",
+      "expected_class": "KNOWN_CAPABILITY",
+      "predicted_class": "KNOWN_CAPABILITY",
+      "intent": "inspect_port",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CAP-032",
+      "prompt": "list open windows",
+      "expected_class": "KNOWN_CAPABILITY",
+      "predicted_class": "KNOWN_CAPABILITY",
+      "intent": "list_windows",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CAP-033",
+      "prompt": "show open windows",
+      "expected_class": "KNOWN_CAPABILITY",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "match": false
+    },
+    {
+      "id": "BLIND-F5-CAP-034",
+      "prompt": "minimize current active window",
+      "expected_class": "KNOWN_CAPABILITY",
+      "predicted_class": "KNOWN_CAPABILITY",
+      "intent": "minimize_window",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CAP-035",
+      "prompt": "maximize active window",
+      "expected_class": "KNOWN_CAPABILITY",
+      "predicted_class": "KNOWN_CAPABILITY",
+      "intent": "maximize_window",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CAP-036",
+      "prompt": "open notepad",
+      "expected_class": "KNOWN_CAPABILITY",
+      "predicted_class": "KNOWN_CAPABILITY",
+      "intent": "open_application",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CAP-037",
+      "prompt": "launch calculator",
+      "expected_class": "KNOWN_CAPABILITY",
+      "predicted_class": "KNOWN_CAPABILITY",
+      "intent": "open_application",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CAP-038",
+      "prompt": "start windows terminal",
+      "expected_class": "KNOWN_CAPABILITY",
+      "predicted_class": "KNOWN_CAPABILITY",
+      "intent": "open_application",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CAP-039",
+      "prompt": "open visual studio code",
+      "expected_class": "KNOWN_CAPABILITY",
+      "predicted_class": "KNOWN_CAPABILITY",
+      "intent": "open_application",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CAP-040",
+      "prompt": "launch file explorer",
+      "expected_class": "KNOWN_CAPABILITY",
+      "predicted_class": "KNOWN_CAPABILITY",
+      "intent": "open_application",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CAP-041",
+      "prompt": "open task manager",
+      "expected_class": "KNOWN_CAPABILITY",
+      "predicted_class": "KNOWN_CAPABILITY",
+      "intent": "open_application",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CAP-042",
+      "prompt": "start edge browser",
+      "expected_class": "KNOWN_CAPABILITY",
+      "predicted_class": "KNOWN_CAPABILITY",
+      "intent": "open_application",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CAP-043",
+      "prompt": "open settings",
+      "expected_class": "KNOWN_CAPABILITY",
+      "predicted_class": "KNOWN_CAPABILITY",
+      "intent": "open_application",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CAP-044",
+      "prompt": "launch command prompt",
+      "expected_class": "KNOWN_CAPABILITY",
+      "predicted_class": "KNOWN_CAPABILITY",
+      "intent": "open_application",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CAP-045",
+      "prompt": "open powershell",
+      "expected_class": "KNOWN_CAPABILITY",
+      "predicted_class": "KNOWN_CAPABILITY",
+      "intent": "open_application",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CAP-046",
+      "prompt": "close notepad",
+      "expected_class": "KNOWN_CAPABILITY",
+      "predicted_class": "KNOWN_CAPABILITY",
+      "intent": "close_application",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CAP-047",
+      "prompt": "close calculator",
+      "expected_class": "KNOWN_CAPABILITY",
+      "predicted_class": "KNOWN_CAPABILITY",
+      "intent": "close_application",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CAP-048",
+      "prompt": "close windows terminal",
+      "expected_class": "KNOWN_CAPABILITY",
+      "predicted_class": "KNOWN_CAPABILITY",
+      "intent": "close_application",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CAP-049",
+      "prompt": "exit file explorer",
+      "expected_class": "KNOWN_CAPABILITY",
+      "predicted_class": "KNOWN_CAPABILITY",
+      "intent": "close_application",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CAP-050",
+      "prompt": "close edge browser",
+      "expected_class": "KNOWN_CAPABILITY",
+      "predicted_class": "KNOWN_CAPABILITY",
+      "intent": "close_application",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CAP-051",
+      "prompt": "is notepad currently running?",
+      "expected_class": "KNOWN_CAPABILITY",
+      "predicted_class": "CONVERSATIONAL",
+      "intent": "conversational_dialogue",
+      "tier": "LOCAL_MODEL",
+      "match": false
+    },
+    {
+      "id": "BLIND-F5-CAP-052",
+      "prompt": "check if calculator is open",
+      "expected_class": "KNOWN_CAPABILITY",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "match": false
+    },
+    {
+      "id": "BLIND-F5-CAP-053",
+      "prompt": "is visual studio code running?",
+      "expected_class": "KNOWN_CAPABILITY",
+      "predicted_class": "CONVERSATIONAL",
+      "intent": "conversational_dialogue",
+      "tier": "LOCAL_MODEL",
+      "match": false
+    },
+    {
+      "id": "BLIND-F5-CAP-054",
+      "prompt": "is spotify currently running",
+      "expected_class": "KNOWN_CAPABILITY",
+      "predicted_class": "KNOWN_CAPABILITY",
+      "intent": "is_application_running",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CAP-055",
+      "prompt": "do i have notepad installed?",
+      "expected_class": "KNOWN_CAPABILITY",
+      "predicted_class": "CONVERSATIONAL",
+      "intent": "conversational_dialogue",
+      "tier": "LOCAL_MODEL",
+      "match": false
+    },
+    {
+      "id": "BLIND-F5-CAP-056",
+      "prompt": "check if vivaldi is installed",
+      "expected_class": "KNOWN_CAPABILITY",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "match": false
+    },
+    {
+      "id": "BLIND-F5-CAP-057",
+      "prompt": "is edge browser installed?",
+      "expected_class": "KNOWN_CAPABILITY",
+      "predicted_class": "CONVERSATIONAL",
+      "intent": "conversational_dialogue",
+      "tier": "LOCAL_MODEL",
+      "match": false
+    },
+    {
+      "id": "BLIND-F5-CAP-058",
+      "prompt": "minimize current window",
+      "expected_class": "KNOWN_CAPABILITY",
+      "predicted_class": "KNOWN_CAPABILITY",
+      "intent": "minimize_window",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CAP-059",
+      "prompt": "maximize this window",
+      "expected_class": "KNOWN_CAPABILITY",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "match": false
+    },
+    {
+      "id": "BLIND-F5-CAP-060",
+      "prompt": "snap window to left side",
+      "expected_class": "KNOWN_CAPABILITY",
+      "predicted_class": "KNOWN_CAPABILITY",
+      "intent": "snap_window_left",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CAP-061",
+      "prompt": "snap window left",
+      "expected_class": "KNOWN_CAPABILITY",
+      "predicted_class": "KNOWN_CAPABILITY",
+      "intent": "snap_window_left",
+      "tier": "DETERMINISTIC",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CAP-062",
+      "prompt": "snap window to right",
+      "expected_class": "KNOWN_CAPABILITY",
+      "predicted_class": "KNOWN_CAPABILITY",
+      "intent": "snap_window_right",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CAP-063",
+      "prompt": "query system audio status",
+      "expected_class": "KNOWN_CAPABILITY",
+      "predicted_class": "KNOWN_CAPABILITY",
+      "intent": "audio_status",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CAP-064",
+      "prompt": "is system muted",
+      "expected_class": "KNOWN_CAPABILITY",
+      "predicted_class": "KNOWN_CAPABILITY",
+      "intent": "audio_status",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CAP-065",
+      "prompt": "open downloads folder",
+      "expected_class": "KNOWN_CAPABILITY",
+      "predicted_class": "KNOWN_CAPABILITY",
+      "intent": "open_application",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CAP-066",
+      "prompt": "show downloads folder in explorer",
+      "expected_class": "KNOWN_CAPABILITY",
+      "predicted_class": "KNOWN_CAPABILITY",
+      "intent": "open_folder",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CAP-067",
+      "prompt": "find file report.pdf in Documents",
+      "expected_class": "KNOWN_CAPABILITY",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "match": false
+    },
+    {
+      "id": "BLIND-F5-CAP-068",
+      "prompt": "search for config.json in user folder",
+      "expected_class": "KNOWN_CAPABILITY",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "match": false
+    },
+    {
+      "id": "BLIND-F5-CAP-069",
+      "prompt": "show desktop directory",
+      "expected_class": "KNOWN_CAPABILITY",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "match": false
+    },
+    {
+      "id": "BLIND-F5-CAP-070",
+      "prompt": "open documents folder",
+      "expected_class": "KNOWN_CAPABILITY",
+      "predicted_class": "KNOWN_CAPABILITY",
+      "intent": "open_application",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CAP-071",
+      "prompt": "generate battery report",
+      "expected_class": "KNOWN_CAPABILITY",
+      "predicted_class": "KNOWN_CAPABILITY",
+      "intent": "generate_battery_report",
+      "tier": "DETERMINISTIC",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CAP-072",
+      "prompt": "create a Windows battery report",
+      "expected_class": "KNOWN_CAPABILITY",
+      "predicted_class": "KNOWN_CAPABILITY",
+      "intent": "generate_battery_report",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CAP-073",
+      "prompt": "run a battery report and save it in Downloads as astra-battery.html",
+      "expected_class": "KNOWN_CAPABILITY",
+      "predicted_class": "KNOWN_CAPABILITY",
+      "intent": "generate_battery_report",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CAP-074",
+      "prompt": "produce a battery health report",
+      "expected_class": "KNOWN_CAPABILITY",
+      "predicted_class": "KNOWN_CAPABILITY",
+      "intent": "generate_battery_report",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CAP-075",
+      "prompt": "check battery health report",
+      "expected_class": "KNOWN_CAPABILITY",
+      "predicted_class": "KNOWN_CAPABILITY",
+      "intent": "battery_status",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CAP-076",
+      "prompt": "save battery report to downloads",
+      "expected_class": "KNOWN_CAPABILITY",
+      "predicted_class": "KNOWN_CAPABILITY",
+      "intent": "generate_battery_report",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CAP-077",
+      "prompt": "show battery report",
+      "expected_class": "KNOWN_CAPABILITY",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "match": false
+    },
+    {
+      "id": "BLIND-F5-CAP-078",
+      "prompt": "scan wifi networks in area",
+      "expected_class": "KNOWN_CAPABILITY",
+      "predicted_class": "KNOWN_CAPABILITY",
+      "intent": "wifi_scan",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CAP-079",
+      "prompt": "perform wifi scan",
+      "expected_class": "KNOWN_CAPABILITY",
+      "predicted_class": "KNOWN_CAPABILITY",
+      "intent": "wifi_scan",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CAP-080",
+      "prompt": "show wifi scan list",
+      "expected_class": "KNOWN_CAPABILITY",
+      "predicted_class": "KNOWN_CAPABILITY",
+      "intent": "wifi_scan",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CAP-081",
+      "prompt": "check wifi status",
+      "expected_class": "KNOWN_CAPABILITY",
+      "predicted_class": "KNOWN_CAPABILITY",
+      "intent": "wifi_status",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CAP-082",
+      "prompt": "open git status in repository",
+      "expected_class": "KNOWN_CAPABILITY",
+      "predicted_class": "KNOWN_CAPABILITY",
+      "intent": "project_git_status",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CAP-083",
+      "prompt": "view repository git status",
+      "expected_class": "KNOWN_CAPABILITY",
+      "predicted_class": "KNOWN_CAPABILITY",
+      "intent": "project_git_status",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CAP-084",
+      "prompt": "check git branch status",
+      "expected_class": "KNOWN_CAPABILITY",
+      "predicted_class": "KNOWN_CAPABILITY",
+      "intent": "project_git_status",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CAP-085",
+      "prompt": "open visual studio code editor",
+      "expected_class": "KNOWN_CAPABILITY",
+      "predicted_class": "KNOWN_CAPABILITY",
+      "intent": "open_application",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CAP-086",
+      "prompt": "start code editor",
+      "expected_class": "KNOWN_CAPABILITY",
+      "predicted_class": "KNOWN_CAPABILITY",
+      "intent": "open_application",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CAP-087",
+      "prompt": "launch code application",
+      "expected_class": "KNOWN_CAPABILITY",
+      "predicted_class": "KNOWN_CAPABILITY",
+      "intent": "open_application",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CAP-088",
+      "prompt": "open summary of running tasks",
+      "expected_class": "KNOWN_CAPABILITY",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "match": false
+    },
+    {
+      "id": "BLIND-F5-CAP-089",
+      "prompt": "open character map table",
+      "expected_class": "KNOWN_CAPABILITY",
+      "predicted_class": "KNOWN_CAPABILITY",
+      "intent": "open_application",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CAP-090",
+      "prompt": "open ascii character table",
+      "expected_class": "KNOWN_CAPABILITY",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "match": false
+    },
+    {
+      "id": "BLIND-F5-CAP-091",
+      "prompt": "inspect routing table in network connections",
+      "expected_class": "KNOWN_CAPABILITY",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "match": false
+    },
+    {
+      "id": "BLIND-F5-CAP-092",
+      "prompt": "view network adapter connections table",
+      "expected_class": "KNOWN_CAPABILITY",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "match": false
+    },
+    {
+      "id": "BLIND-F5-CAP-093",
+      "prompt": "show installed apps table in settings",
+      "expected_class": "KNOWN_CAPABILITY",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "match": false
+    },
+    {
+      "id": "BLIND-F5-CAP-094",
+      "prompt": "open bluetooth settings",
+      "expected_class": "KNOWN_CAPABILITY",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "match": false
+    },
+    {
+      "id": "BLIND-F5-CAP-095",
+      "prompt": "open display settings",
+      "expected_class": "KNOWN_CAPABILITY",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "match": false
+    },
+    {
+      "id": "BLIND-F5-CAP-096",
+      "prompt": "open sound settings",
+      "expected_class": "KNOWN_CAPABILITY",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "match": false
+    },
+    {
+      "id": "BLIND-F5-CAP-097",
+      "prompt": "take screenshot of active window",
+      "expected_class": "KNOWN_CAPABILITY",
+      "predicted_class": "KNOWN_CAPABILITY",
+      "intent": "focus_window",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CAP-098",
+      "prompt": "capture screen grab of window",
+      "expected_class": "KNOWN_CAPABILITY",
+      "predicted_class": "KNOWN_CAPABILITY",
+      "intent": "focus_window",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CAP-099",
+      "prompt": "query audio status and volume level",
+      "expected_class": "KNOWN_CAPABILITY",
+      "predicted_class": "KNOWN_CAPABILITY",
+      "intent": "audio_status",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CAP-100",
+      "prompt": "get workstation summary report",
+      "expected_class": "KNOWN_CAPABILITY",
+      "predicted_class": "KNOWN_CAPABILITY",
+      "intent": "system_summary",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CONV-001",
+      "prompt": "why is the sky blue during the day?",
+      "expected_class": "CONVERSATIONAL",
+      "predicted_class": "CONVERSATIONAL",
+      "intent": "conversational_dialogue",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CONV-002",
+      "prompt": "can you explain what a race condition is in concurrent programming?",
+      "expected_class": "CONVERSATIONAL",
+      "predicted_class": "CONVERSATIONAL",
+      "intent": "conversational_dialogue",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CONV-003",
+      "prompt": "how does public key cryptography work?",
+      "expected_class": "CONVERSATIONAL",
+      "predicted_class": "CONVERSATIONAL",
+      "intent": "conversational_dialogue",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CONV-004",
+      "prompt": "what is the difference between TCP and UDP transport protocols?",
+      "expected_class": "CONVERSATIONAL",
+      "predicted_class": "CONVERSATIONAL",
+      "intent": "conversational_dialogue",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CONV-005",
+      "prompt": "could you explain how generational garbage collection works in Python?",
+      "expected_class": "CONVERSATIONAL",
+      "predicted_class": "CONVERSATIONAL",
+      "intent": "conversational_dialogue",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CONV-006",
+      "prompt": "what was the primary economic cause of the Bronze Age collapse?",
+      "expected_class": "CONVERSATIONAL",
+      "predicted_class": "CONVERSATIONAL",
+      "intent": "conversational_dialogue",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CONV-007",
+      "prompt": "how does a quantum computer differ from a classical Von Neumann computer?",
+      "expected_class": "CONVERSATIONAL",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "match": false
+    },
+    {
+      "id": "BLIND-F5-CONV-008",
+      "prompt": "explain the architecture of an event-driven microservices system",
+      "expected_class": "CONVERSATIONAL",
+      "predicted_class": "CONVERSATIONAL",
+      "intent": "conversational_dialogue",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CONV-009",
+      "prompt": "what is the primary purpose of a B-tree index in relational database engines?",
+      "expected_class": "CONVERSATIONAL",
+      "predicted_class": "CONVERSATIONAL",
+      "intent": "conversational_dialogue",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CONV-010",
+      "prompt": "how do convolutional neural networks process spatial image hierarchies?",
+      "expected_class": "CONVERSATIONAL",
+      "predicted_class": "CONVERSATIONAL",
+      "intent": "conversational_dialogue",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CONV-011",
+      "prompt": "what gravitational forces cause ocean tides on Earth?",
+      "expected_class": "CONVERSATIONAL",
+      "predicted_class": "CONVERSATIONAL",
+      "intent": "conversational_dialogue",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CONV-012",
+      "prompt": "why do deciduous leaves change color in autumn?",
+      "expected_class": "CONVERSATIONAL",
+      "predicted_class": "CONVERSATIONAL",
+      "intent": "conversational_dialogue",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CONV-013",
+      "prompt": "what is the operational difference between processes and OS threads?",
+      "expected_class": "CONVERSATIONAL",
+      "predicted_class": "CONVERSATIONAL",
+      "intent": "conversational_dialogue",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CONV-014",
+      "prompt": "how does DNS hierarchical resolution work across root nameservers?",
+      "expected_class": "CONVERSATIONAL",
+      "predicted_class": "CONVERSATIONAL",
+      "intent": "conversational_dialogue",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CONV-015",
+      "prompt": "can you explain the CAP theorem and PACELC theorem for distributed systems?",
+      "expected_class": "CONVERSATIONAL",
+      "predicted_class": "CONVERSATIONAL",
+      "intent": "conversational_dialogue",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CONV-016",
+      "prompt": "what is the philosophical significance of the Turing test?",
+      "expected_class": "CONVERSATIONAL",
+      "predicted_class": "CONVERSATIONAL",
+      "intent": "conversational_dialogue",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CONV-017",
+      "prompt": "how does virtual memory paging and page replacement work in Windows?",
+      "expected_class": "CONVERSATIONAL",
+      "predicted_class": "CONVERSATIONAL",
+      "intent": "conversational_dialogue",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CONV-018",
+      "prompt": "what is the difference between symmetric AES and asymmetric RSA encryption?",
+      "expected_class": "CONVERSATIONAL",
+      "predicted_class": "CONVERSATIONAL",
+      "intent": "conversational_dialogue",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CONV-019",
+      "prompt": "can you explain how stochastic gradient descent optimizes neural network weights?",
+      "expected_class": "CONVERSATIONAL",
+      "predicted_class": "CONVERSATIONAL",
+      "intent": "conversational_dialogue",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CONV-020",
+      "prompt": "why does gravitational time dilation occur in general relativity?",
+      "expected_class": "CONVERSATIONAL",
+      "predicted_class": "CONVERSATIONAL",
+      "intent": "conversational_dialogue",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CONV-021",
+      "prompt": "what are the core principles of pure functional programming?",
+      "expected_class": "CONVERSATIONAL",
+      "predicted_class": "CONVERSATIONAL",
+      "intent": "conversational_dialogue",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CONV-022",
+      "prompt": "how does Raft consensus algorithm handle leader election and log replication?",
+      "expected_class": "CONVERSATIONAL",
+      "predicted_class": "CONVERSATIONAL",
+      "intent": "conversational_dialogue",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CONV-023",
+      "prompt": "what is the difference between call stack memory and heap allocation?",
+      "expected_class": "CONVERSATIONAL",
+      "predicted_class": "CONVERSATIONAL",
+      "intent": "conversational_dialogue",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CONV-024",
+      "prompt": "why is cache coherency protocol like MESI critical in multi-core chips?",
+      "expected_class": "CONVERSATIONAL",
+      "predicted_class": "CONVERSATIONAL",
+      "intent": "conversational_dialogue",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CONV-025",
+      "prompt": "how does TLS 1.3 cryptographic handshake establish forward secrecy?",
+      "expected_class": "CONVERSATIONAL",
+      "predicted_class": "CONVERSATIONAL",
+      "intent": "conversational_dialogue",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CONV-026",
+      "prompt": "what was the historical significance of the Rosetta Stone discovery?",
+      "expected_class": "CONVERSATIONAL",
+      "predicted_class": "CONVERSATIONAL",
+      "intent": "conversational_dialogue",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CONV-027",
+      "prompt": "why do airplanes experience turbulence when flying near jet streams?",
+      "expected_class": "CONVERSATIONAL",
+      "predicted_class": "CONVERSATIONAL",
+      "intent": "conversational_dialogue",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CONV-028",
+      "prompt": "can you explain what zero-knowledge proofs are and how they verify identity?",
+      "expected_class": "CONVERSATIONAL",
+      "predicted_class": "CONVERSATIONAL",
+      "intent": "conversational_dialogue",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CONV-029",
+      "prompt": "how do modern mRNA vaccines trigger immunological memory?",
+      "expected_class": "CONVERSATIONAL",
+      "predicted_class": "CONVERSATIONAL",
+      "intent": "conversational_dialogue",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CONV-030",
+      "prompt": "what causes earthquakes along strike-slip tectonic fault lines?",
+      "expected_class": "CONVERSATIONAL",
+      "predicted_class": "CONVERSATIONAL",
+      "intent": "conversational_dialogue",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CONV-031",
+      "prompt": "why do stars collapse into neutron stars or black holes at the end of their lifecycle?",
+      "expected_class": "CONVERSATIONAL",
+      "predicted_class": "CONVERSATIONAL",
+      "intent": "conversational_dialogue",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CONV-032",
+      "prompt": "can you explain the difference between monads and functors in computer science?",
+      "expected_class": "CONVERSATIONAL",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "match": false
+    },
+    {
+      "id": "BLIND-F5-CONV-033",
+      "prompt": "how does the human immune system distinguish self from non-self antigens?",
+      "expected_class": "CONVERSATIONAL",
+      "predicted_class": "CONVERSATIONAL",
+      "intent": "conversational_dialogue",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CONV-034",
+      "prompt": "what was the impact of the printing press on Renaissance scientific literature?",
+      "expected_class": "CONVERSATIONAL",
+      "predicted_class": "CONVERSATIONAL",
+      "intent": "conversational_dialogue",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CONV-035",
+      "prompt": "why does superconductivity only occur below critical transition temperatures?",
+      "expected_class": "CONVERSATIONAL",
+      "predicted_class": "CONVERSATIONAL",
+      "intent": "conversational_dialogue",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CONV-036",
+      "prompt": "good morning Astra, how are you feeling today?",
+      "expected_class": "CONVERSATIONAL",
+      "predicted_class": "CONVERSATIONAL",
+      "intent": "conversational_dialogue",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CONV-037",
+      "prompt": "hello there, thanks for your assistance earlier on our project",
+      "expected_class": "CONVERSATIONAL",
+      "predicted_class": "CONVERSATIONAL",
+      "intent": "conversational_dialogue",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CONV-038",
+      "prompt": "have a wonderful and productive afternoon!",
+      "expected_class": "CONVERSATIONAL",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "match": false
+    },
+    {
+      "id": "BLIND-F5-CONV-039",
+      "prompt": "thank you very much for helping me out with that problem",
+      "expected_class": "CONVERSATIONAL",
+      "predicted_class": "CONVERSATIONAL",
+      "intent": "conversational_dialogue",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CONV-040",
+      "prompt": "who are you and what are your primary system launcher capabilities?",
+      "expected_class": "CONVERSATIONAL",
+      "predicted_class": "CONVERSATIONAL",
+      "intent": "conversational_dialogue",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CONV-041",
+      "prompt": "help me decide between learning Rust or Go for systems engineering",
+      "expected_class": "CONVERSATIONAL",
+      "predicted_class": "CONVERSATIONAL",
+      "intent": "conversational_dialogue",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CONV-042",
+      "prompt": "should I choose PostgreSQL or MongoDB for an event ticketing catalog?",
+      "expected_class": "CONVERSATIONAL",
+      "predicted_class": "CONVERSATIONAL",
+      "intent": "conversational_dialogue",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CONV-043",
+      "prompt": "help me decide whether to host our backend on AWS or GCP",
+      "expected_class": "CONVERSATIONAL",
+      "predicted_class": "CONVERSATIONAL",
+      "intent": "conversational_dialogue",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CONV-044",
+      "prompt": "what are industry best practices for writing clean unit test suites?",
+      "expected_class": "CONVERSATIONAL",
+      "predicted_class": "CONVERSATIONAL",
+      "intent": "conversational_dialogue",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CONV-045",
+      "prompt": "how should I structure my work schedule to maintain deep focus?",
+      "expected_class": "CONVERSATIONAL",
+      "predicted_class": "CONVERSATIONAL",
+      "intent": "conversational_dialogue",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CONV-046",
+      "prompt": "can you give me practical advice on conducting peer code reviews?",
+      "expected_class": "CONVERSATIONAL",
+      "predicted_class": "CONVERSATIONAL",
+      "intent": "conversational_dialogue",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CONV-047",
+      "prompt": "what are proven strategies for paying down tech debt in legacy codebases?",
+      "expected_class": "CONVERSATIONAL",
+      "predicted_class": "CONVERSATIONAL",
+      "intent": "conversational_dialogue",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CONV-048",
+      "prompt": "help me choose an effective database schema migration strategy with zero downtime",
+      "expected_class": "CONVERSATIONAL",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "match": false
+    },
+    {
+      "id": "BLIND-F5-CONV-049",
+      "prompt": "how should our engineering team decide between mono-repo and multi-repo architectures?",
+      "expected_class": "CONVERSATIONAL",
+      "predicted_class": "CONVERSATIONAL",
+      "intent": "conversational_dialogue",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CONV-050",
+      "prompt": "what are effective mental models for debugging distributed system heisenbugs?",
+      "expected_class": "CONVERSATIONAL",
+      "predicted_class": "CONVERSATIONAL",
+      "intent": "conversational_dialogue",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CONV-051",
+      "prompt": "can you recommend a classic textbook on operating system design?",
+      "expected_class": "CONVERSATIONAL",
+      "predicted_class": "CONVERSATIONAL",
+      "intent": "conversational_dialogue",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CONV-052",
+      "prompt": "how do I provide constructive code review feedback without discouraging juniors?",
+      "expected_class": "CONVERSATIONAL",
+      "predicted_class": "CONVERSATIONAL",
+      "intent": "conversational_dialogue",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CONV-053",
+      "prompt": "what operational trade-offs should I consider before decomposing a monolith into microservices?",
+      "expected_class": "CONVERSATIONAL",
+      "predicted_class": "CONVERSATIONAL",
+      "intent": "conversational_dialogue",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CONV-054",
+      "prompt": "how can our scrum team improve the accuracy of story point estimations?",
+      "expected_class": "CONVERSATIONAL",
+      "predicted_class": "CONVERSATIONAL",
+      "intent": "conversational_dialogue",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CONV-055",
+      "prompt": "what are the trade-offs between serverless lambda functions and containerized pods?",
+      "expected_class": "CONVERSATIONAL",
+      "predicted_class": "CONVERSATIONAL",
+      "intent": "conversational_dialogue",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CONV-056",
+      "prompt": "what is the most effective way to prepare an architecture design document?",
+      "expected_class": "CONVERSATIONAL",
+      "predicted_class": "CONVERSATIONAL",
+      "intent": "conversational_dialogue",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CONV-057",
+      "prompt": "how should an engineer approach onboarding onto an unfamiliar 500k-line codebase?",
+      "expected_class": "CONVERSATIONAL",
+      "predicted_class": "CONVERSATIONAL",
+      "intent": "conversational_dialogue",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CONV-058",
+      "prompt": "can you suggest techniques for methodical root-cause analysis during outages?",
+      "expected_class": "CONVERSATIONAL",
+      "predicted_class": "CONVERSATIONAL",
+      "intent": "conversational_dialogue",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CONV-059",
+      "prompt": "what design principles ensure a REST API remains developer-friendly and backward-compatible?",
+      "expected_class": "CONVERSATIONAL",
+      "predicted_class": "CONVERSATIONAL",
+      "intent": "conversational_dialogue",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CONV-060",
+      "prompt": "how can I build graceful degradation into background asynchronous task workers?",
+      "expected_class": "CONVERSATIONAL",
+      "predicted_class": "CONVERSATIONAL",
+      "intent": "conversational_dialogue",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CONV-061",
+      "prompt": "my wifi is slow today, what could cause sudden bandwidth drops?",
+      "expected_class": "CONVERSATIONAL",
+      "predicted_class": "CONVERSATIONAL",
+      "intent": "conversational_dialogue",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CONV-062",
+      "prompt": "the battery on my laptop drains really fast whenever I use video conferencing",
+      "expected_class": "CONVERSATIONAL",
+      "predicted_class": "CONVERSATIONAL",
+      "intent": "conversational_dialogue",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CONV-063",
+      "prompt": "my computer feels warm and the fans are running constantly today",
+      "expected_class": "CONVERSATIONAL",
+      "predicted_class": "CONVERSATIONAL",
+      "intent": "conversational_dialogue",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CONV-064",
+      "prompt": "why is my laptop screen flickering occasionally when running on battery?",
+      "expected_class": "CONVERSATIONAL",
+      "predicted_class": "CONVERSATIONAL",
+      "intent": "conversational_dialogue",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CONV-065",
+      "prompt": "my mouse cursor seems to lag and stutter every few minutes",
+      "expected_class": "CONVERSATIONAL",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "match": false
+    },
+    {
+      "id": "BLIND-F5-CONV-066",
+      "prompt": "is it normal for a computer to use 70% RAM with only browser tabs open?",
+      "expected_class": "CONVERSATIONAL",
+      "predicted_class": "CONVERSATIONAL",
+      "intent": "conversational_dialogue",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CONV-067",
+      "prompt": "my bluetooth headphones keep disconnecting every time I step away",
+      "expected_class": "CONVERSATIONAL",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "match": false
+    },
+    {
+      "id": "BLIND-F5-CONV-068",
+      "prompt": "why does my laptop take several minutes to wake from sleep mode?",
+      "expected_class": "CONVERSATIONAL",
+      "predicted_class": "CONVERSATIONAL",
+      "intent": "conversational_dialogue",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CONV-069",
+      "prompt": "my wifi drops connection whenever the microwave is running in the kitchen",
+      "expected_class": "CONVERSATIONAL",
+      "predicted_class": "CONVERSATIONAL",
+      "intent": "conversational_dialogue",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CONV-070",
+      "prompt": "how to troubleshoot why my laptop touchpad stopped responding smoothly?",
+      "expected_class": "CONVERSATIONAL",
+      "predicted_class": "CONVERSATIONAL",
+      "intent": "conversational_dialogue",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CONV-071",
+      "prompt": "what does the term clean code mean to seasoned software developers?",
+      "expected_class": "CONVERSATIONAL",
+      "predicted_class": "CONVERSATIONAL",
+      "intent": "conversational_dialogue",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CONV-072",
+      "prompt": "can you summarize the overarching plot of Hamlet by William Shakespeare?",
+      "expected_class": "CONVERSATIONAL",
+      "predicted_class": "CONVERSATIONAL",
+      "intent": "conversational_dialogue",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CONV-073",
+      "prompt": "who wrote Romeo and Juliet and what is the central plot of the tragedy?",
+      "expected_class": "CONVERSATIONAL",
+      "predicted_class": "CONVERSATIONAL",
+      "intent": "conversational_dialogue",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CONV-074",
+      "prompt": "what is the plot of George Orwell's novel 1984?",
+      "expected_class": "CONVERSATIONAL",
+      "predicted_class": "CONVERSATIONAL",
+      "intent": "conversational_dialogue",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CONV-075",
+      "prompt": "how do I solve a personality conflict between two engineers on my team?",
+      "expected_class": "CONVERSATIONAL",
+      "predicted_class": "CONVERSATIONAL",
+      "intent": "conversational_dialogue",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CONV-076",
+      "prompt": "help me solve a dispute over team code formatting standards and indentation",
+      "expected_class": "CONVERSATIONAL",
+      "predicted_class": "CONVERSATIONAL",
+      "intent": "conversational_dialogue",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CONV-077",
+      "prompt": "can you help me solve this lateral thinking puzzle about a lighthouse keeper?",
+      "expected_class": "CONVERSATIONAL",
+      "predicted_class": "CONVERSATIONAL",
+      "intent": "conversational_dialogue",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CONV-078",
+      "prompt": "who painted the periodic table mural displayed at the university science building?",
+      "expected_class": "CONVERSATIONAL",
+      "predicted_class": "CONVERSATIONAL",
+      "intent": "conversational_dialogue",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CONV-079",
+      "prompt": "what are the official regulation dimensions of a ping pong table?",
+      "expected_class": "CONVERSATIONAL",
+      "predicted_class": "CONVERSATIONAL",
+      "intent": "conversational_dialogue",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CONV-080",
+      "prompt": "can you draft a polite congratulatory email for a coworker who got promoted?",
+      "expected_class": "CONVERSATIONAL",
+      "predicted_class": "CONVERSATIONAL",
+      "intent": "conversational_dialogue",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CONV-081",
+      "prompt": "draft a courteous letter declining an invitation to speak at a technical conference?",
+      "expected_class": "CONVERSATIONAL",
+      "predicted_class": "CONVERSATIONAL",
+      "intent": "conversational_dialogue",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CONV-082",
+      "prompt": "what is the international three-letter airport code for Tokyo Haneda airport?",
+      "expected_class": "CONVERSATIONAL",
+      "predicted_class": "CONVERSATIONAL",
+      "intent": "conversational_dialogue",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CONV-083",
+      "prompt": "what is the standard postal code format utilized across Greater London?",
+      "expected_class": "CONVERSATIONAL",
+      "predicted_class": "CONVERSATIONAL",
+      "intent": "conversational_dialogue",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CONV-084",
+      "prompt": "can you summarize the findings of the historic Warren Commission report?",
+      "expected_class": "CONVERSATIONAL",
+      "predicted_class": "CONVERSATIONAL",
+      "intent": "conversational_dialogue",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CONV-085",
+      "prompt": "what was documented in the Apollo 11 lunar module commander's log?",
+      "expected_class": "CONVERSATIONAL",
+      "predicted_class": "CONVERSATIONAL",
+      "intent": "conversational_dialogue",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CONV-086",
+      "prompt": "what parameters does a flight data recorder black box log during turbulence?",
+      "expected_class": "CONVERSATIONAL",
+      "predicted_class": "CONVERSATIONAL",
+      "intent": "conversational_dialogue",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CONV-087",
+      "prompt": "can you calculate how many days are between Halloween and Christmas in your head?",
+      "expected_class": "CONVERSATIONAL",
+      "predicted_class": "CONVERSATIONAL",
+      "intent": "conversational_dialogue",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CONV-088",
+      "prompt": "how does an executive chef work out the harmonious balance of spices in a stew?",
+      "expected_class": "CONVERSATIONAL",
+      "predicted_class": "CONVERSATIONAL",
+      "intent": "conversational_dialogue",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CONV-089",
+      "prompt": "why does the popular proverb don't count your chickens before they hatch endure?",
+      "expected_class": "CONVERSATIONAL",
+      "predicted_class": "CONVERSATIONAL",
+      "intent": "conversational_dialogue",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CONV-090",
+      "prompt": "explain why every citizen's individual vote should count equally in representative government",
+      "expected_class": "CONVERSATIONAL",
+      "predicted_class": "CONVERSATIONAL",
+      "intent": "conversational_dialogue",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CONV-091",
+      "prompt": "what did the comedy troupe Monty Python have to do with the naming of Python?",
+      "expected_class": "CONVERSATIONAL",
+      "predicted_class": "CONVERSATIONAL",
+      "intent": "conversational_dialogue",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CONV-092",
+      "prompt": "tell me the story of how Guido van Rossum chose the name Python from British comedy",
+      "expected_class": "CONVERSATIONAL",
+      "predicted_class": "CONVERSATIONAL",
+      "intent": "conversational_dialogue",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CONV-093",
+      "prompt": "can you explain what a truth table is in formal propositional Boolean logic?",
+      "expected_class": "CONVERSATIONAL",
+      "predicted_class": "CONVERSATIONAL",
+      "intent": "conversational_dialogue",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CONV-094",
+      "prompt": "what is the architectural difference between a coffee table and an accent end table?",
+      "expected_class": "CONVERSATIONAL",
+      "predicted_class": "CONVERSATIONAL",
+      "intent": "conversational_dialogue",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CONV-095",
+      "prompt": "who currently holds the Guinness world record for longest continuous table tennis rally count?",
+      "expected_class": "CONVERSATIONAL",
+      "predicted_class": "CONVERSATIONAL",
+      "intent": "conversational_dialogue",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CONV-096",
+      "prompt": "can you summarize the development and history of Mendeleev's periodic table?",
+      "expected_class": "CONVERSATIONAL",
+      "predicted_class": "CONVERSATIONAL",
+      "intent": "conversational_dialogue",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CONV-097",
+      "prompt": "how do cinematographers plot camera angles across a film production storyboard?",
+      "expected_class": "CONVERSATIONAL",
+      "predicted_class": "CONVERSATIONAL",
+      "intent": "conversational_dialogue",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CONV-098",
+      "prompt": "what does the word solve mean when applied to historical mystery literature?",
+      "expected_class": "CONVERSATIONAL",
+      "predicted_class": "CONVERSATIONAL",
+      "intent": "conversational_dialogue",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CONV-099",
+      "prompt": "can you summarize the narrative plot of Christopher Nolan's movie Inception?",
+      "expected_class": "CONVERSATIONAL",
+      "predicted_class": "CONVERSATIONAL",
+      "intent": "conversational_dialogue",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CONV-100",
+      "prompt": "count me in for the upcoming hackathon next weekend, sounds like a great event!",
+      "expected_class": "CONVERSATIONAL",
+      "predicted_class": "CONVERSATIONAL",
+      "intent": "conversational_dialogue",
+      "tier": "LOCAL_MODEL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CLAR-001",
+      "prompt": "battery",
+      "expected_class": "CLARIFICATION_REQUIRED",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CLAR-002",
+      "prompt": "wifi",
+      "expected_class": "CLARIFICATION_REQUIRED",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CLAR-003",
+      "prompt": "wi-fi",
+      "expected_class": "CLARIFICATION_REQUIRED",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CLAR-004",
+      "prompt": "python",
+      "expected_class": "CLARIFICATION_REQUIRED",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CLAR-005",
+      "prompt": "report",
+      "expected_class": "CLARIFICATION_REQUIRED",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CLAR-006",
+      "prompt": "status",
+      "expected_class": "CLARIFICATION_REQUIRED",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CLAR-007",
+      "prompt": "network",
+      "expected_class": "CLARIFICATION_REQUIRED",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CLAR-008",
+      "prompt": "audio",
+      "expected_class": "CLARIFICATION_REQUIRED",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CLAR-009",
+      "prompt": "bluetooth",
+      "expected_class": "CLARIFICATION_REQUIRED",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CLAR-010",
+      "prompt": "memory",
+      "expected_class": "CLARIFICATION_REQUIRED",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CLAR-011",
+      "prompt": "cpu",
+      "expected_class": "CLARIFICATION_REQUIRED",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CLAR-012",
+      "prompt": "disk",
+      "expected_class": "CLARIFICATION_REQUIRED",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CLAR-013",
+      "prompt": "gpu",
+      "expected_class": "CLARIFICATION_REQUIRED",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CLAR-014",
+      "prompt": "terminal",
+      "expected_class": "CLARIFICATION_REQUIRED",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CLAR-015",
+      "prompt": "browser",
+      "expected_class": "CLARIFICATION_REQUIRED",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CLAR-016",
+      "prompt": "processes",
+      "expected_class": "CLARIFICATION_REQUIRED",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CLAR-017",
+      "prompt": "system",
+      "expected_class": "CLARIFICATION_REQUIRED",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CLAR-018",
+      "prompt": "document",
+      "expected_class": "CLARIFICATION_REQUIRED",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CLAR-019",
+      "prompt": "data",
+      "expected_class": "CLARIFICATION_REQUIRED",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CLAR-020",
+      "prompt": "settings",
+      "expected_class": "CLARIFICATION_REQUIRED",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CLAR-021",
+      "prompt": "solve",
+      "expected_class": "CLARIFICATION_REQUIRED",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CLAR-022",
+      "prompt": "calculate",
+      "expected_class": "CLARIFICATION_REQUIRED",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CLAR-023",
+      "prompt": "compute",
+      "expected_class": "CLARIFICATION_REQUIRED",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CLAR-024",
+      "prompt": "plot",
+      "expected_class": "CLARIFICATION_REQUIRED",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CLAR-025",
+      "prompt": "code",
+      "expected_class": "CLARIFICATION_REQUIRED",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CLAR-026",
+      "prompt": "script",
+      "expected_class": "CLARIFICATION_REQUIRED",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CLAR-027",
+      "prompt": "generate",
+      "expected_class": "CLARIFICATION_REQUIRED",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CLAR-028",
+      "prompt": "summary",
+      "expected_class": "CLARIFICATION_REQUIRED",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CLAR-029",
+      "prompt": "table",
+      "expected_class": "CLARIFICATION_REQUIRED",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CLAR-030",
+      "prompt": "count",
+      "expected_class": "CLARIFICATION_REQUIRED",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CLAR-031",
+      "prompt": "log",
+      "expected_class": "CLARIFICATION_REQUIRED",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CLAR-032",
+      "prompt": "run",
+      "expected_class": "CLARIFICATION_REQUIRED",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CLAR-033",
+      "prompt": "inspect",
+      "expected_class": "CLARIFICATION_REQUIRED",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CLAR-034",
+      "prompt": "start",
+      "expected_class": "CLARIFICATION_REQUIRED",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CLAR-035",
+      "prompt": "check",
+      "expected_class": "CLARIFICATION_REQUIRED",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CLAR-036",
+      "prompt": "do something",
+      "expected_class": "CLARIFICATION_REQUIRED",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CLAR-037",
+      "prompt": "the battery",
+      "expected_class": "CLARIFICATION_REQUIRED",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CLAR-038",
+      "prompt": "my wifi",
+      "expected_class": "CLARIFICATION_REQUIRED",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CLAR-039",
+      "prompt": "just wifi",
+      "expected_class": "CLARIFICATION_REQUIRED",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CLAR-040",
+      "prompt": "run script",
+      "expected_class": "CLARIFICATION_REQUIRED",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CLAR-041",
+      "prompt": "run it now",
+      "expected_class": "CLARIFICATION_REQUIRED",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CLAR-042",
+      "prompt": "start it",
+      "expected_class": "CLARIFICATION_REQUIRED",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CLAR-043",
+      "prompt": "execute it",
+      "expected_class": "CLARIFICATION_REQUIRED",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CLAR-044",
+      "prompt": "launch it",
+      "expected_class": "CLARIFICATION_REQUIRED",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CLAR-045",
+      "prompt": "connect to it",
+      "expected_class": "CLARIFICATION_REQUIRED",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CLAR-046",
+      "prompt": "connect",
+      "expected_class": "CLARIFICATION_REQUIRED",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CLAR-047",
+      "prompt": "generate the report",
+      "expected_class": "CLARIFICATION_REQUIRED",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CLAR-048",
+      "prompt": "generate report",
+      "expected_class": "CLARIFICATION_REQUIRED",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CLAR-049",
+      "prompt": "make the report",
+      "expected_class": "CLARIFICATION_REQUIRED",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CLAR-050",
+      "prompt": "process the data",
+      "expected_class": "CLARIFICATION_REQUIRED",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CLAR-051",
+      "prompt": "process data",
+      "expected_class": "CLARIFICATION_REQUIRED",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CLAR-052",
+      "prompt": "handle the data",
+      "expected_class": "CLARIFICATION_REQUIRED",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CLAR-053",
+      "prompt": "find the document",
+      "expected_class": "CLARIFICATION_REQUIRED",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CLAR-054",
+      "prompt": "find the file",
+      "expected_class": "CLARIFICATION_REQUIRED",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CLAR-055",
+      "prompt": "restart the application",
+      "expected_class": "CLARIFICATION_REQUIRED",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CLAR-056",
+      "prompt": "restart the app",
+      "expected_class": "CLARIFICATION_REQUIRED",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CLAR-057",
+      "prompt": "restart it",
+      "expected_class": "CLARIFICATION_REQUIRED",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CLAR-058",
+      "prompt": "close the app",
+      "expected_class": "CLARIFICATION_REQUIRED",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CLAR-059",
+      "prompt": "kill it",
+      "expected_class": "CLARIFICATION_REQUIRED",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CLAR-060",
+      "prompt": "stop it",
+      "expected_class": "CLARIFICATION_REQUIRED",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CLAR-061",
+      "prompt": "terminate the process",
+      "expected_class": "CLARIFICATION_REQUIRED",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CLAR-062",
+      "prompt": "open the file",
+      "expected_class": "CLARIFICATION_REQUIRED",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CLAR-063",
+      "prompt": "save it to disk",
+      "expected_class": "CLARIFICATION_REQUIRED",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CLAR-064",
+      "prompt": "delete that folder",
+      "expected_class": "CLARIFICATION_REQUIRED",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CLAR-065",
+      "prompt": "calculate the result",
+      "expected_class": "CLARIFICATION_REQUIRED",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CLAR-066",
+      "prompt": "what happened to that task?",
+      "expected_class": "CLARIFICATION_REQUIRED",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CLAR-067",
+      "prompt": "what happened to it?",
+      "expected_class": "CLARIFICATION_REQUIRED",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CLAR-068",
+      "prompt": "did it finish yet?",
+      "expected_class": "CLARIFICATION_REQUIRED",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CLAR-069",
+      "prompt": "did it finish",
+      "expected_class": "CLARIFICATION_REQUIRED",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CLAR-070",
+      "prompt": "did it complete",
+      "expected_class": "CLARIFICATION_REQUIRED",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CLAR-071",
+      "prompt": "is it done",
+      "expected_class": "CLARIFICATION_REQUIRED",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CLAR-072",
+      "prompt": "has it finished",
+      "expected_class": "CLARIFICATION_REQUIRED",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CLAR-073",
+      "prompt": "can you check on it?",
+      "expected_class": "CLARIFICATION_REQUIRED",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CLAR-074",
+      "prompt": "check on it",
+      "expected_class": "CLARIFICATION_REQUIRED",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CLAR-075",
+      "prompt": "try running it again with different parameters",
+      "expected_class": "CLARIFICATION_REQUIRED",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CLAR-076",
+      "prompt": "change the setting like we talked about",
+      "expected_class": "CLARIFICATION_REQUIRED",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CLAR-077",
+      "prompt": "make the adjustment you suggested",
+      "expected_class": "CLARIFICATION_REQUIRED",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CLAR-078",
+      "prompt": "proceed with option number two",
+      "expected_class": "CLARIFICATION_REQUIRED",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CLAR-079",
+      "prompt": "yes go ahead with that",
+      "expected_class": "CLARIFICATION_REQUIRED",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CLAR-080",
+      "prompt": "no not that one the other one",
+      "expected_class": "CLARIFICATION_REQUIRED",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CLAR-081",
+      "prompt": "continue what we were doing yesterday",
+      "expected_class": "CLARIFICATION_REQUIRED",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CLAR-082",
+      "prompt": "do the same thing you did last time",
+      "expected_class": "CLARIFICATION_REQUIRED",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CLAR-083",
+      "prompt": "pick up from where we stopped",
+      "expected_class": "CLARIFICATION_REQUIRED",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CLAR-084",
+      "prompt": "use that previous value from earlier",
+      "expected_class": "CLARIFICATION_REQUIRED",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CLAR-085",
+      "prompt": "apply the same changes to the other one",
+      "expected_class": "CLARIFICATION_REQUIRED",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CLAR-086",
+      "prompt": "what was the name of that thing again?",
+      "expected_class": "CLARIFICATION_REQUIRED",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CLAR-087",
+      "prompt": "is it supposed to look like that?",
+      "expected_class": "CLARIFICATION_REQUIRED",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CLAR-088",
+      "prompt": "why did that happen just now?",
+      "expected_class": "CLARIFICATION_REQUIRED",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CLAR-089",
+      "prompt": "could you fix that error for me?",
+      "expected_class": "CLARIFICATION_REQUIRED",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CLAR-090",
+      "prompt": "put it back the way it was before",
+      "expected_class": "CLARIFICATION_REQUIRED",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "needs_clarification",
+      "tier": "CLARIFICATION",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CLAR-091",
+      "prompt": "format C: drive completely",
+      "expected_class": "CLARIFICATION_REQUIRED",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "security_denial",
+      "tier": "SECURITY_REJECTION",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CLAR-092",
+      "prompt": "format drive D: immediately",
+      "expected_class": "CLARIFICATION_REQUIRED",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "security_denial",
+      "tier": "SECURITY_REJECTION",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CLAR-093",
+      "prompt": "delete system32 folder now",
+      "expected_class": "CLARIFICATION_REQUIRED",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "security_denial",
+      "tier": "SECURITY_REJECTION",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CLAR-094",
+      "prompt": "delete c:\\windows directory",
+      "expected_class": "CLARIFICATION_REQUIRED",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "security_denial",
+      "tier": "SECURITY_REJECTION",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CLAR-095",
+      "prompt": "rm -rf / --no-preserve-root",
+      "expected_class": "CLARIFICATION_REQUIRED",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "security_denial",
+      "tier": "SECURITY_REJECTION",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CLAR-096",
+      "prompt": "wipe disk partition 0",
+      "expected_class": "CLARIFICATION_REQUIRED",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "security_denial",
+      "tier": "SECURITY_REJECTION",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CLAR-097",
+      "prompt": "erase hard drive immediately",
+      "expected_class": "CLARIFICATION_REQUIRED",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "security_denial",
+      "tier": "SECURITY_REJECTION",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CLAR-098",
+      "prompt": "shred disk contents",
+      "expected_class": "CLARIFICATION_REQUIRED",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "security_denial",
+      "tier": "SECURITY_REJECTION",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CLAR-099",
+      "prompt": "destroy system files",
+      "expected_class": "CLARIFICATION_REQUIRED",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "security_denial",
+      "tier": "SECURITY_REJECTION",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-CLAR-100",
+      "prompt": "download malware from evil-server.com",
+      "expected_class": "CLARIFICATION_REQUIRED",
+      "predicted_class": "CLARIFICATION_REQUIRED",
+      "intent": "security_denial",
+      "tier": "SECURITY_REJECTION",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-COMP-001",
+      "prompt": "check cpu status and inspect memory",
+      "expected_class": "COMPOSITE",
+      "predicted_class": "COMPOSITE",
+      "intent": "composite_dag_workflow",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-COMP-002",
+      "prompt": "minimize window then check battery status",
+      "expected_class": "COMPOSITE",
+      "predicted_class": "COMPOSITE",
+      "intent": "composite_dag_workflow",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-COMP-003",
+      "prompt": "list open windows and summarize system",
+      "expected_class": "COMPOSITE",
+      "predicted_class": "COMPOSITE",
+      "intent": "composite_dag_workflow",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-COMP-004",
+      "prompt": "check disk status and report memory usage",
+      "expected_class": "COMPOSITE",
+      "predicted_class": "COMPOSITE",
+      "intent": "composite_dag_workflow",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-COMP-005",
+      "prompt": "inspect network connections and list listening ports",
+      "expected_class": "COMPOSITE",
+      "predicted_class": "COMPOSITE",
+      "intent": "composite_dag_workflow",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-COMP-006",
+      "prompt": "check cpu load and list running processes",
+      "expected_class": "COMPOSITE",
+      "predicted_class": "COMPOSITE",
+      "intent": "composite_dag_workflow",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-COMP-007",
+      "prompt": "check gpu status and inspect memory",
+      "expected_class": "COMPOSITE",
+      "predicted_class": "COMPOSITE",
+      "intent": "composite_dag_workflow",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-COMP-008",
+      "prompt": "maximize active window and query audio status",
+      "expected_class": "COMPOSITE",
+      "predicted_class": "COMPOSITE",
+      "intent": "composite_dag_workflow",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-COMP-009",
+      "prompt": "take a screenshot and open downloads folder",
+      "expected_class": "COMPOSITE",
+      "predicted_class": "COMPOSITE",
+      "intent": "composite_dag_workflow",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-COMP-010",
+      "prompt": "check wifi status then scan for wifi networks",
+      "expected_class": "COMPOSITE",
+      "predicted_class": "COMPOSITE",
+      "intent": "composite_dag_workflow",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-COMP-011",
+      "prompt": "lock workstation and mute system volume",
+      "expected_class": "COMPOSITE",
+      "predicted_class": "COMPOSITE",
+      "intent": "composite_dag_workflow",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-COMP-012",
+      "prompt": "show system summary and check cpu usage",
+      "expected_class": "COMPOSITE",
+      "predicted_class": "COMPOSITE",
+      "intent": "composite_dag_workflow",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-COMP-013",
+      "prompt": "list running applications then close notepad",
+      "expected_class": "COMPOSITE",
+      "predicted_class": "COMPOSITE",
+      "intent": "composite_dag_workflow",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-COMP-014",
+      "prompt": "check memory status and list open windows",
+      "expected_class": "COMPOSITE",
+      "predicted_class": "COMPOSITE",
+      "intent": "composite_dag_workflow",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-COMP-015",
+      "prompt": "snap window to left and open calculator",
+      "expected_class": "COMPOSITE",
+      "predicted_class": "COMPOSITE",
+      "intent": "composite_dag_workflow",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-COMP-016",
+      "prompt": "check disk space and inspect cpu utilization",
+      "expected_class": "COMPOSITE",
+      "predicted_class": "COMPOSITE",
+      "intent": "composite_dag_workflow",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-COMP-017",
+      "prompt": "scan wifi networks and inspect network connections",
+      "expected_class": "COMPOSITE",
+      "predicted_class": "COMPOSITE",
+      "intent": "composite_dag_workflow",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-COMP-018",
+      "prompt": "capture screenshot then check battery level",
+      "expected_class": "COMPOSITE",
+      "predicted_class": "COMPOSITE",
+      "intent": "composite_dag_workflow",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-COMP-019",
+      "prompt": "query audio status and check system memory",
+      "expected_class": "COMPOSITE",
+      "predicted_class": "COMPOSITE",
+      "intent": "composite_dag_workflow",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-COMP-020",
+      "prompt": "list windows then minimize active window",
+      "expected_class": "COMPOSITE",
+      "predicted_class": "COMPOSITE",
+      "intent": "composite_dag_workflow",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-COMP-021",
+      "prompt": "check battery status and query wifi connection",
+      "expected_class": "COMPOSITE",
+      "predicted_class": "COMPOSITE",
+      "intent": "composite_dag_workflow",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-COMP-022",
+      "prompt": "check cpu status and list listening ports",
+      "expected_class": "COMPOSITE",
+      "predicted_class": "COMPOSITE",
+      "intent": "composite_dag_workflow",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-COMP-023",
+      "prompt": "inspect memory and check free disk space",
+      "expected_class": "COMPOSITE",
+      "predicted_class": "COMPOSITE",
+      "intent": "composite_dag_workflow",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-COMP-024",
+      "prompt": "open notepad and check system summary",
+      "expected_class": "COMPOSITE",
+      "predicted_class": "KNOWN_CAPABILITY",
+      "intent": "open_application",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": false
+    },
+    {
+      "id": "BLIND-F5-COMP-025",
+      "prompt": "minimize window then open calculator",
+      "expected_class": "COMPOSITE",
+      "predicted_class": "COMPOSITE",
+      "intent": "composite_dag_workflow",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-COMP-026",
+      "prompt": "check wifi status and list open windows",
+      "expected_class": "COMPOSITE",
+      "predicted_class": "COMPOSITE",
+      "intent": "composite_dag_workflow",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-COMP-027",
+      "prompt": "lock workstation and close windows terminal",
+      "expected_class": "COMPOSITE",
+      "predicted_class": "COMPOSITE",
+      "intent": "composite_dag_workflow",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-COMP-028",
+      "prompt": "take screenshot and inspect running processes",
+      "expected_class": "COMPOSITE",
+      "predicted_class": "COMPOSITE",
+      "intent": "composite_dag_workflow",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-COMP-029",
+      "prompt": "check disk status then scan wifi networks",
+      "expected_class": "COMPOSITE",
+      "predicted_class": "COMPOSITE",
+      "intent": "composite_dag_workflow",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-COMP-030",
+      "prompt": "query audio status and check battery percentage",
+      "expected_class": "COMPOSITE",
+      "predicted_class": "COMPOSITE",
+      "intent": "composite_dag_workflow",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-COMP-031",
+      "prompt": "list running processes and check cpu usage",
+      "expected_class": "COMPOSITE",
+      "predicted_class": "COMPOSITE",
+      "intent": "composite_dag_workflow",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-COMP-032",
+      "prompt": "snap window left and snap window right",
+      "expected_class": "COMPOSITE",
+      "predicted_class": "COMPOSITE",
+      "intent": "composite_dag_workflow",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-COMP-033",
+      "prompt": "open calculator then minimize window",
+      "expected_class": "COMPOSITE",
+      "predicted_class": "KNOWN_CAPABILITY",
+      "intent": "open_application",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": false
+    },
+    {
+      "id": "BLIND-F5-COMP-034",
+      "prompt": "check available ram and query disk status",
+      "expected_class": "COMPOSITE",
+      "predicted_class": "COMPOSITE",
+      "intent": "composite_dag_workflow",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-COMP-035",
+      "prompt": "check cpu utilization then take screenshot",
+      "expected_class": "COMPOSITE",
+      "predicted_class": "COMPOSITE",
+      "intent": "composite_dag_workflow",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-COMP-036",
+      "prompt": "show system info and inspect network connections",
+      "expected_class": "COMPOSITE",
+      "predicted_class": "COMPOSITE",
+      "intent": "composite_dag_workflow",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-COMP-037",
+      "prompt": "list open windows then check system memory",
+      "expected_class": "COMPOSITE",
+      "predicted_class": "COMPOSITE",
+      "intent": "composite_dag_workflow",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-COMP-038",
+      "prompt": "check wifi status and query system audio",
+      "expected_class": "COMPOSITE",
+      "predicted_class": "COMPOSITE",
+      "intent": "composite_dag_workflow",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-COMP-039",
+      "prompt": "open downloads folder and check disk space",
+      "expected_class": "COMPOSITE",
+      "predicted_class": "KNOWN_CAPABILITY",
+      "intent": "open_application",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": false
+    },
+    {
+      "id": "BLIND-F5-COMP-040",
+      "prompt": "lock screen and mute system volume",
+      "expected_class": "COMPOSITE",
+      "predicted_class": "COMPOSITE",
+      "intent": "composite_dag_workflow",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-COMP-041",
+      "prompt": "close notepad then open calculator",
+      "expected_class": "COMPOSITE",
+      "predicted_class": "COMPOSITE",
+      "intent": "composite_dag_workflow",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-COMP-042",
+      "prompt": "check battery status then inspect open ports",
+      "expected_class": "COMPOSITE",
+      "predicted_class": "COMPOSITE",
+      "intent": "composite_dag_workflow",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-COMP-043",
+      "prompt": "query cpu load and check available memory",
+      "expected_class": "COMPOSITE",
+      "predicted_class": "COMPOSITE",
+      "intent": "composite_dag_workflow",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-COMP-044",
+      "prompt": "list listening ports and inspect network connections",
+      "expected_class": "COMPOSITE",
+      "predicted_class": "COMPOSITE",
+      "intent": "composite_dag_workflow",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-COMP-045",
+      "prompt": "take screenshot then open file explorer",
+      "expected_class": "COMPOSITE",
+      "predicted_class": "COMPOSITE",
+      "intent": "composite_dag_workflow",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-COMP-046",
+      "prompt": "minimize active window and query audio status",
+      "expected_class": "COMPOSITE",
+      "predicted_class": "COMPOSITE",
+      "intent": "composite_dag_workflow",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-COMP-047",
+      "prompt": "check free disk space and list running applications",
+      "expected_class": "COMPOSITE",
+      "predicted_class": "COMPOSITE",
+      "intent": "composite_dag_workflow",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-COMP-048",
+      "prompt": "scan for wifi networks then check battery status",
+      "expected_class": "COMPOSITE",
+      "predicted_class": "COMPOSITE",
+      "intent": "composite_dag_workflow",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-COMP-049",
+      "prompt": "check system memory and list running processes",
+      "expected_class": "COMPOSITE",
+      "predicted_class": "COMPOSITE",
+      "intent": "composite_dag_workflow",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-COMP-050",
+      "prompt": "open windows terminal and check cpu status",
+      "expected_class": "COMPOSITE",
+      "predicted_class": "KNOWN_CAPABILITY",
+      "intent": "open_application",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": false
+    },
+    {
+      "id": "BLIND-F5-COMP-051",
+      "prompt": "maximize window then take screenshot",
+      "expected_class": "COMPOSITE",
+      "predicted_class": "COMPOSITE",
+      "intent": "composite_dag_workflow",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-COMP-052",
+      "prompt": "check wifi connection and list open windows",
+      "expected_class": "COMPOSITE",
+      "predicted_class": "COMPOSITE",
+      "intent": "composite_dag_workflow",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-COMP-053",
+      "prompt": "inspect network connections then check disk status",
+      "expected_class": "COMPOSITE",
+      "predicted_class": "COMPOSITE",
+      "intent": "composite_dag_workflow",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-COMP-054",
+      "prompt": "check battery level and query system audio status",
+      "expected_class": "COMPOSITE",
+      "predicted_class": "COMPOSITE",
+      "intent": "composite_dag_workflow",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-COMP-055",
+      "prompt": "list running applications and check memory usage",
+      "expected_class": "COMPOSITE",
+      "predicted_class": "COMPOSITE",
+      "intent": "composite_dag_workflow",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-COMP-056",
+      "prompt": "close calculator then open notepad",
+      "expected_class": "COMPOSITE",
+      "predicted_class": "COMPOSITE",
+      "intent": "composite_dag_workflow",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-COMP-057",
+      "prompt": "check cpu utilization and inspect disk space",
+      "expected_class": "COMPOSITE",
+      "predicted_class": "COMPOSITE",
+      "intent": "composite_dag_workflow",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-COMP-058",
+      "prompt": "scan wifi signals and query wifi status",
+      "expected_class": "COMPOSITE",
+      "predicted_class": "COMPOSITE",
+      "intent": "composite_dag_workflow",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-COMP-059",
+      "prompt": "take screenshot then check cpu load",
+      "expected_class": "COMPOSITE",
+      "predicted_class": "COMPOSITE",
+      "intent": "composite_dag_workflow",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-COMP-060",
+      "prompt": "show system summary and list listening ports",
+      "expected_class": "COMPOSITE",
+      "predicted_class": "COMPOSITE",
+      "intent": "composite_dag_workflow",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-COMP-061",
+      "prompt": "open downloads folder then minimize window",
+      "expected_class": "COMPOSITE",
+      "predicted_class": "KNOWN_CAPABILITY",
+      "intent": "open_application",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": false
+    },
+    {
+      "id": "BLIND-F5-COMP-062",
+      "prompt": "check memory status then scan wifi networks",
+      "expected_class": "COMPOSITE",
+      "predicted_class": "COMPOSITE",
+      "intent": "composite_dag_workflow",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-COMP-063",
+      "prompt": "check battery percentage and list open windows",
+      "expected_class": "COMPOSITE",
+      "predicted_class": "COMPOSITE",
+      "intent": "composite_dag_workflow",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-COMP-064",
+      "prompt": "query audio status and list running processes",
+      "expected_class": "COMPOSITE",
+      "predicted_class": "COMPOSITE",
+      "intent": "composite_dag_workflow",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-COMP-065",
+      "prompt": "inspect open ports and check network connections",
+      "expected_class": "COMPOSITE",
+      "predicted_class": "COMPOSITE",
+      "intent": "composite_dag_workflow",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-COMP-066",
+      "prompt": "snap window to left side then open notepad",
+      "expected_class": "COMPOSITE",
+      "predicted_class": "COMPOSITE",
+      "intent": "composite_dag_workflow",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-COMP-067",
+      "prompt": "check disk status and check system memory",
+      "expected_class": "COMPOSITE",
+      "predicted_class": "COMPOSITE",
+      "intent": "composite_dag_workflow",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-COMP-068",
+      "prompt": "take a screenshot then close active window",
+      "expected_class": "COMPOSITE",
+      "predicted_class": "COMPOSITE",
+      "intent": "composite_dag_workflow",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-COMP-069",
+      "prompt": "check cpu status then check battery level",
+      "expected_class": "COMPOSITE",
+      "predicted_class": "COMPOSITE",
+      "intent": "composite_dag_workflow",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-COMP-070",
+      "prompt": "list running processes and list listening ports",
+      "expected_class": "COMPOSITE",
+      "predicted_class": "COMPOSITE",
+      "intent": "composite_dag_workflow",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-COMP-071",
+      "prompt": "show wifi status then open settings",
+      "expected_class": "COMPOSITE",
+      "predicted_class": "COMPOSITE",
+      "intent": "composite_dag_workflow",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-COMP-072",
+      "prompt": "minimize current window then check cpu utilization",
+      "expected_class": "COMPOSITE",
+      "predicted_class": "COMPOSITE",
+      "intent": "composite_dag_workflow",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-COMP-073",
+      "prompt": "check available disk space and query system memory",
+      "expected_class": "COMPOSITE",
+      "predicted_class": "COMPOSITE",
+      "intent": "composite_dag_workflow",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-COMP-074",
+      "prompt": "scan for wifi networks and query audio status",
+      "expected_class": "COMPOSITE",
+      "predicted_class": "COMPOSITE",
+      "intent": "composite_dag_workflow",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-COMP-075",
+      "prompt": "open calculator and list running applications",
+      "expected_class": "COMPOSITE",
+      "predicted_class": "KNOWN_CAPABILITY",
+      "intent": "open_application",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": false
+    },
+    {
+      "id": "BLIND-F5-COMP-076",
+      "prompt": "check battery status and inspect running processes",
+      "expected_class": "COMPOSITE",
+      "predicted_class": "COMPOSITE",
+      "intent": "composite_dag_workflow",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-COMP-077",
+      "prompt": "take screenshot and check disk space",
+      "expected_class": "COMPOSITE",
+      "predicted_class": "COMPOSITE",
+      "intent": "composite_dag_workflow",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-COMP-078",
+      "prompt": "check cpu load then list open windows",
+      "expected_class": "COMPOSITE",
+      "predicted_class": "COMPOSITE",
+      "intent": "composite_dag_workflow",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-COMP-079",
+      "prompt": "show system summary then lock workstation",
+      "expected_class": "COMPOSITE",
+      "predicted_class": "COMPOSITE",
+      "intent": "composite_dag_workflow",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-COMP-080",
+      "prompt": "query audio status and check wifi status",
+      "expected_class": "COMPOSITE",
+      "predicted_class": "COMPOSITE",
+      "intent": "composite_dag_workflow",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-COMP-081",
+      "prompt": "list open windows and inspect memory usage",
+      "expected_class": "COMPOSITE",
+      "predicted_class": "COMPOSITE",
+      "intent": "composite_dag_workflow",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-COMP-082",
+      "prompt": "check disk space then query battery percentage",
+      "expected_class": "COMPOSITE",
+      "predicted_class": "COMPOSITE",
+      "intent": "composite_dag_workflow",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-COMP-083",
+      "prompt": "scan wifi networks then list listening ports",
+      "expected_class": "COMPOSITE",
+      "predicted_class": "COMPOSITE",
+      "intent": "composite_dag_workflow",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-COMP-084",
+      "prompt": "open notepad then maximize active window",
+      "expected_class": "COMPOSITE",
+      "predicted_class": "KNOWN_CAPABILITY",
+      "intent": "open_application",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": false
+    },
+    {
+      "id": "BLIND-F5-COMP-085",
+      "prompt": "check system memory and query cpu status",
+      "expected_class": "COMPOSITE",
+      "predicted_class": "COMPOSITE",
+      "intent": "composite_dag_workflow",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-COMP-086",
+      "prompt": "capture screen then open downloads folder",
+      "expected_class": "COMPOSITE",
+      "predicted_class": "COMPOSITE",
+      "intent": "composite_dag_workflow",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-COMP-087",
+      "prompt": "check wifi connection then query system audio",
+      "expected_class": "COMPOSITE",
+      "predicted_class": "COMPOSITE",
+      "intent": "composite_dag_workflow",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-COMP-088",
+      "prompt": "list running applications and check disk status",
+      "expected_class": "COMPOSITE",
+      "predicted_class": "COMPOSITE",
+      "intent": "composite_dag_workflow",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-COMP-089",
+      "prompt": "minimize active window then open windows terminal",
+      "expected_class": "COMPOSITE",
+      "predicted_class": "COMPOSITE",
+      "intent": "composite_dag_workflow",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-COMP-090",
+      "prompt": "check battery level and list running processes",
+      "expected_class": "COMPOSITE",
+      "predicted_class": "COMPOSITE",
+      "intent": "composite_dag_workflow",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-COMP-091",
+      "prompt": "check cpu utilization and check available memory",
+      "expected_class": "COMPOSITE",
+      "predicted_class": "COMPOSITE",
+      "intent": "composite_dag_workflow",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-COMP-092",
+      "prompt": "list listening ports then query wifi status",
+      "expected_class": "COMPOSITE",
+      "predicted_class": "COMPOSITE",
+      "intent": "composite_dag_workflow",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-COMP-093",
+      "prompt": "take screenshot then check battery status",
+      "expected_class": "COMPOSITE",
+      "predicted_class": "COMPOSITE",
+      "intent": "composite_dag_workflow",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-COMP-094",
+      "prompt": "show system summary and query audio status",
+      "expected_class": "COMPOSITE",
+      "predicted_class": "COMPOSITE",
+      "intent": "composite_dag_workflow",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-COMP-095",
+      "prompt": "open file explorer and check disk space",
+      "expected_class": "COMPOSITE",
+      "predicted_class": "KNOWN_CAPABILITY",
+      "intent": "open_application",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": false
+    },
+    {
+      "id": "BLIND-F5-COMP-096",
+      "prompt": "check memory usage and list open windows",
+      "expected_class": "COMPOSITE",
+      "predicted_class": "COMPOSITE",
+      "intent": "composite_dag_workflow",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-COMP-097",
+      "prompt": "scan wifi networks then check cpu load",
+      "expected_class": "COMPOSITE",
+      "predicted_class": "COMPOSITE",
+      "intent": "composite_dag_workflow",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-COMP-098",
+      "prompt": "check battery status then open calculator",
+      "expected_class": "COMPOSITE",
+      "predicted_class": "COMPOSITE",
+      "intent": "composite_dag_workflow",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-COMP-099",
+      "prompt": "query audio status and inspect network connections",
+      "expected_class": "COMPOSITE",
+      "predicted_class": "COMPOSITE",
+      "intent": "composite_dag_workflow",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    },
+    {
+      "id": "BLIND-F5-COMP-100",
+      "prompt": "lock workstation then check system summary",
+      "expected_class": "COMPOSITE",
+      "predicted_class": "COMPOSITE",
+      "intent": "composite_dag_workflow",
+      "tier": "SEMANTIC_RETRIEVAL",
+      "match": true
+    }
+  ]
+}

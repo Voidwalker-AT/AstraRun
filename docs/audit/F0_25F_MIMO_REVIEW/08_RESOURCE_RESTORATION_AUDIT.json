@@ -1,0 +1,37 @@
+{
+  "auditor": "MiMo",
+  "independent_baseline_before_observation": {
+    "astrarun_processes_at_start": [],
+    "note": "Before first MiMo spawn, no AstraRun processes. A subsequent cleanup killed 2 AstraRun PIDs (11856, 16316) left by a failed first observation attempt (MiMo-caused, recorded honestly)."
+  },
+  "stage6_package_claims": {
+    "resource_ledger_sandbox_verified": true,
+    "clean_termination": true,
+    "how_verified": "Stage6 script creates synthetic dummy dir test_stage6_sb, registers/closes via ledger in-process — NOT a real task sandbox from the calc/presentation runs",
+    "hardcoded": "verify_f0_25f_complete_physical.py:208-209 writes both fields as literals after asserts",
+    "pid_delta_in_package": "ABSENT — no before/after PID set comparison recorded in F0-25F evidence despite report L77 claiming evaluator does this"
+  },
+  "result_viewer_residue_risk": {
+    "finding": "present_result registers discovered viewer windows with CleanupPolicy.NEVER_CLOSE (result_presentation.py:181)",
+    "observed_residue_after_stage6": "UNKNOWN — no evidence package inventory of Explorer/Notepad processes after the presentation run",
+    "mimo_note": "Stage6 presentation mechanism was explorer; PHYSICAL_PRESENTATION.png shows no explorer — either it opened after the screenshot, failed to appear on the interactive desktop, or closed; verified_pid 22948 was not inventoried post-run"
+  },
+  "mimo_observation_teardown": {
+    "method": "IPC QUIT",
+    "exit_code": 0,
+    "residual_astrarun_after_quit": "killed leftovers to zero before final artifact write",
+    "classification": "MiMo-owned cleanup, not Astra proof"
+  },
+  "ledger_semantics_defect": {
+    "code": "resource_ledger.py:740-772",
+    "behavior": "shutil.rmtree(ignore_errors=True) then unconditionally update CLOSED + emit RESOURCE_DISPOSED without verifying path absence",
+    "implication": "ledger 'disposed' is not proof of disk cleanup"
+  },
+  "classification": {
+    "pre_existing_user": "unrelated desktop apps (Antigravity/MiMoCode) — untouched",
+    "task_created": "Stage6 synthetic test_stage6_sb (verifier-owned); exploration noted prior repair_holdout_* and test_* sandbox dirs predating F0-25F — NOT charged to F0-25F runtime",
+    "unknown": "whether explorer PID 22948 remained after Stage6"
+  },
+  "verdict": "RESOURCE_RESTORATION = UNVERIFIED",
+  "verdict_rationale": "No independent PID/window/resource delta exists in the F0-25F package; Stage6 sandbox check is synthetic; ledger disposal does not verify disk state. No proven mass residue either — UNVERIFIED not FAIL."
+}

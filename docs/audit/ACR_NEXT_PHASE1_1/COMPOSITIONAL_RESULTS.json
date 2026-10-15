@@ -1,0 +1,87 @@
+{
+  "total_benchmark_cases": 68,
+  "category_breakdown": {
+    "canonical_knowledge": 10,
+    "current_information": 8,
+    "user_private_records": 8,
+    "live_system_observation": 8,
+    "authoritative_standards": 7,
+    "external_ai_consultation": 6,
+    "compound_multi_source": 5,
+    "privacy_disclosure_traps": 4,
+    "soft_enrichment": 5,
+    "trap_words_resilience": 7
+  },
+  "compound_cases_analysis": [
+    {
+      "query": "Compare my draft specification in my notes with the official RFC 7519 standard.",
+      "needs_count": 2,
+      "need_types": [
+        "AUTHORITATIVE_REFERENCE",
+        "USER_SPECIFIC"
+      ],
+      "sources": [
+        "Official Standards Repository / Primary RFC / NIST",
+        "Authoritative Model Peer Review",
+        "Local Workstation Filesystem / Indexed Documents",
+        "Connected Desktop Applications / Notes / Mail"
+      ]
+    },
+    {
+      "query": "Review my code in my repo and check what latest security vulnerabilities were reported today.",
+      "needs_count": 2,
+      "need_types": [
+        "CURRENT",
+        "USER_SPECIFIC"
+      ],
+      "sources": [
+        "Official / Real-time Web Feeds",
+        "Web Search Index",
+        "Local Workstation Filesystem / Indexed Documents",
+        "Connected Desktop Applications / Notes / Mail"
+      ]
+    },
+    {
+      "query": "Verify my resume against the official job description on the company website.",
+      "needs_count": 2,
+      "need_types": [
+        "AUTHORITATIVE_REFERENCE",
+        "USER_SPECIFIC"
+      ],
+      "sources": [
+        "Official Standards Repository / Primary RFC / NIST",
+        "Authoritative Model Peer Review",
+        "Local Workstation Filesystem / Indexed Documents",
+        "Connected Desktop Applications / Notes / Mail"
+      ]
+    },
+    {
+      "query": "Check my syllabus notes and verify against the official NIST guidelines.",
+      "needs_count": 2,
+      "need_types": [
+        "AUTHORITATIVE_REFERENCE",
+        "USER_SPECIFIC"
+      ],
+      "sources": [
+        "Official Standards Repository / Primary RFC / NIST",
+        "Authoritative Model Peer Review",
+        "Local Workstation Filesystem / Indexed Documents",
+        "Connected Desktop Applications / Notes / Mail"
+      ]
+    },
+    {
+      "query": "Compare my draft budget with the latest stock market trends today.",
+      "needs_count": 2,
+      "need_types": [
+        "CURRENT",
+        "USER_SPECIFIC"
+      ],
+      "sources": [
+        "Official / Real-time Web Feeds",
+        "Web Search Index",
+        "Local Workstation Filesystem / Indexed Documents",
+        "Connected Desktop Applications / Notes / Mail"
+      ]
+    }
+  ]
+}

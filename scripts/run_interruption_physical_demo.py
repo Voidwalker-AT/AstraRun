@@ -1,4 +1,4 @@
-"""ACR-NEXT Phase 1 / ACR-1 Physical Interruption & World-State Drift Acceptance Demo Script.
+"""ACR-NEXT Phase 1.1 Physical Interruption & World-State Drift Acceptance Demo Script.
 
 Executes all 10 physical workstation interruption scenarios against the live
 AstraRun Coordinator and PySide6 Launcher UI:
@@ -16,12 +16,15 @@ AstraRun Coordinator and PySide6 Launcher UI:
 Invariants Enforced:
 - HUMAN INTENT > ASTRA PLAN
 - 100% Canonical Execution: All 10 scenarios execute through launcher.execute_command() -> astra_app.handle_request() -> agent_coordinator.handle_turn().
-- Zero synthetic card painting (show_demo_card completely eliminated).
+- Zero synthetic card painting.
 - Zero unclosed PIDs: all spawned processes strictly terminated.
-- Screenshots saved to docs/audit/ACR_NEXT_PHASE1/interruption/screenshots/
-- Structured JSON audit saved to docs/audit/ACR_NEXT_PHASE1/interruption/PHYSICAL_INTERRUPTION_DEMO.json
+- Screenshots saved to docs/audit/ACR_NEXT_PHASE1_1/interruption/screenshots/
+- Structured JSON audit saved to docs/audit/ACR_NEXT_PHASE1_1/interruption/PHYSICAL_INTERRUPTION_DEMO.json
+  and docs/audit/ACR_NEXT_PHASE1_1/INTERRUPTION_PHYSICAL_RESULTS.json
+- Verifies distinct screenshot hashes across scenarios.
 """
 
+import hashlib
 import json
 import os
 import psutil
@@ -115,6 +118,14 @@ def execute_interruption_turn(
     return text, status, elapsed
 
 
+def compute_sha256(file_path: Path) -> str:
+    """Compute SHA-256 hash of a file."""
+    h = hashlib.sha256()
+    with open(file_path, "rb") as f:
+        h.update(f.read())
+    return h.hexdigest()
+
+
 def main():
     clean_lingering_processes()
 
@@ -127,13 +138,9 @@ def main():
     launcher.show()
     app.processEvents()
 
-    audit_dir_phase1 = Path("docs/audit/ACR_NEXT_PHASE1/interruption")
-    screenshots_phase1 = audit_dir_phase1 / "screenshots"
-    screenshots_phase1.mkdir(parents=True, exist_ok=True)
-
-    audit_dir_legacy = Path("docs/audit/ACR_1/interruption")
-    screenshots_legacy = audit_dir_legacy / "screenshots"
-    screenshots_legacy.mkdir(parents=True, exist_ok=True)
+    audit_dir_phase1_1 = Path("docs/audit/ACR_NEXT_PHASE1_1/interruption")
+    screenshots_phase1_1 = audit_dir_phase1_1 / "screenshots"
+    screenshots_phase1_1.mkdir(parents=True, exist_ok=True)
 
     demo_results = {
         "timestamp": time.time(),
@@ -151,7 +158,7 @@ def main():
     }
 
     print("\n=======================================================")
-    print("  ACR-NEXT PHASE 1 PHYSICAL INTERRUPTION & DRIFT DEMO  ")
+    print("  ACR-NEXT PHASE 1.1 PHYSICAL INTERRUPTION & DRIFT DEMO  ")
     print("=======================================================\n")
 
     coordinator: AgentCoordinator = astra_app.agent_coordinator
@@ -241,6 +248,8 @@ def main():
         ),
     ]
 
+    captured_hashes = {}
+
     try:
         for scen_num, scen_name, fault_type, cmd, invariant_desc, filename in scenarios_meta:
             print(f"\n[Scenario {scen_num}] {scen_name}: Testing real physical ingress & execution")
@@ -248,7 +257,7 @@ def main():
             # Clean process & state isolation
             clean_lingering_processes()
             detector.reset()
-            sess = store.create_session(f"sess-demo-{scen_num}")
+            sess = store.create_session(f"sess-demo-p11-{scen_num}")
             launcher.session_id = sess.session_id
             launcher.reset_session()
             app.processEvents()
@@ -263,16 +272,24 @@ def main():
             card_text, card_status, elapsed = execute_interruption_turn(app, launcher, cmd)
 
             # Capture genuine PySide6 screenshot
-            shot_p1 = screenshots_phase1 / filename
-            shot_leg = screenshots_legacy / filename
-            launcher.grab().save(str(shot_p1.resolve()))
-            launcher.grab().save(str(shot_leg.resolve()))
+            shot_p11 = screenshots_phase1_1 / filename
+            launcher.grab().save(str(shot_p11.resolve()))
+
+            # Verify screenshot file exists and compute hash
+            assert shot_p11.exists() and shot_p11.stat().st_size > 0, f"Screenshot missing for {filename}"
+            file_hash = compute_sha256(shot_p11)
+            captured_hashes[filename] = file_hash
 
             # Reset injection immediately
             detector.reset()
             clean_lingering_processes()
 
+            # Verify that policy message is genuine and not default ambiguous prompt
+            assert "which target did you mean" not in card_text.lower(), f"Scenario {scen_num} returned default disambiguation prompt instead of genuine policy message!"
+            assert len(card_text.strip()) > 0, f"Scenario {scen_num} returned empty card text!"
+
             print(f" -> Result: {card_status or 'RENDERED'} | {card_text[:75]}... ({elapsed:.2f}s)")
+            print(f" -> Screenshot: {filename} (SHA256: {file_hash[:16]}...)")
 
             demo_results["scenarios"].append({
                 "scenario": scen_num,
@@ -281,6 +298,7 @@ def main():
                 "status": card_status or "HANDLED",
                 "response": card_text,
                 "screenshot": filename,
+                "screenshot_sha256": file_hash,
                 "elapsed_s": round(elapsed, 3),
                 "invariant_verified": invariant_desc,
             })
@@ -294,15 +312,17 @@ def main():
         detector.reset()
         launcher.close()
 
-    # Save JSON reports
-    json_path_p1 = audit_dir_phase1 / "PHYSICAL_INTERRUPTION_DEMO.json"
-    json_path_p1.write_text(json.dumps(demo_results, indent=2), encoding="utf-8")
+    # Save JSON reports in both paths
+    json_path_p11 = audit_dir_phase1_1 / "PHYSICAL_INTERRUPTION_DEMO.json"
+    json_path_p11.write_text(json.dumps(demo_results, indent=2), encoding="utf-8")
 
-    json_path_leg = audit_dir_legacy / "PHYSICAL_INTERRUPTION_DEMO.json"
-    json_path_leg.write_text(json.dumps(demo_results, indent=2), encoding="utf-8")
+    json_path_top = Path("docs/audit/ACR_NEXT_PHASE1_1/INTERRUPTION_PHYSICAL_RESULTS.json")
+    json_path_top.parent.mkdir(parents=True, exist_ok=True)
+    json_path_top.write_text(json.dumps(demo_results, indent=2), encoding="utf-8")
 
-    print(f"Demo results saved to: {json_path_p1}")
-    print(f"Screenshots saved to: {screenshots_phase1}")
+    print(f"Demo results saved to: {json_path_p11}")
+    print(f"Top-level results saved to: {json_path_top}")
+    print(f"Screenshots saved to: {screenshots_phase1_1}")
 
 
 if __name__ == "__main__":

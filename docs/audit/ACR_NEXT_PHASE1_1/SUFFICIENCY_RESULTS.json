@@ -1,0 +1,212 @@
+{
+  "phase": "ACR-NEXT Phase 1.1",
+  "total_evaluated": 18,
+  "accuracy": 1.0,
+  "latency_metrics_ms": {
+    "min": 0.009,
+    "avg": 0.171,
+    "max": 1.342,
+    "budget_limit_ms": 15.0,
+    "budget_satisfied": true
+  },
+  "results": [
+    {
+      "query": "Explain the Diffie-Hellman key exchange protocol.",
+      "is_sufficient": true,
+      "expected_sufficient": true,
+      "reason": "SUFFICIENT_INTERNAL_KNOWLEDGE",
+      "expected_reason": "SUFFICIENT_INTERNAL_KNOWLEDGE",
+      "passed": true,
+      "observable_capability": null,
+      "latency_ms": 1.342,
+      "explanation": "General conceptual, theoretical, or algorithmic inquiry resolvable via internal knowledge."
+    },
+    {
+      "query": "What is the time complexity of merge sort in the worst case?",
+      "is_sufficient": true,
+      "expected_sufficient": true,
+      "reason": "SUFFICIENT_INTERNAL_KNOWLEDGE",
+      "expected_reason": "SUFFICIENT_INTERNAL_KNOWLEDGE",
+      "passed": true,
+      "observable_capability": null,
+      "latency_ms": 0.12,
+      "explanation": "General conceptual, theoretical, or algorithmic inquiry resolvable via internal knowledge."
+    },
+    {
+      "query": "What is the current stock price of Microsoft?",
+      "is_sufficient": false,
+      "expected_sufficient": false,
+      "reason": "MISSING_CURRENT_INFORMATION",
+      "expected_reason": "MISSING_CURRENT_INFORMATION",
+      "passed": true,
+      "observable_capability": null,
+      "latency_ms": 0.091,
+      "explanation": "Query requires prerequisite evidence: Real-time or current world state: 'current stock'"
+    },
+    {
+      "query": "What is the weather forecast in Seattle today?",
+      "is_sufficient": false,
+      "expected_sufficient": false,
+      "reason": "MISSING_CURRENT_INFORMATION",
+      "expected_reason": "MISSING_CURRENT_INFORMATION",
+      "passed": true,
+      "observable_capability": null,
+      "latency_ms": 0.085,
+      "explanation": "Query requires prerequisite evidence: Real-time or current world state: 'weather forecast in'"
+    },
+    {
+      "query": "What did I write in my project roadmap document?",
+      "is_sufficient": false,
+      "expected_sufficient": false,
+      "reason": "MISSING_USER_SPECIFIC_CONTEXT",
+      "expected_reason": "MISSING_USER_SPECIFIC_CONTEXT",
+      "passed": true,
+      "observable_capability": null,
+      "latency_ms": 0.079,
+      "explanation": "Query requires prerequisite evidence: User private record or personal context: 'my project'"
+    },
+    {
+      "query": "Summarize my meeting notes from yesterday's 1-on-1.",
+      "is_sufficient": false,
+      "expected_sufficient": false,
+      "reason": "MISSING_USER_SPECIFIC_CONTEXT",
+      "expected_reason": "MISSING_USER_SPECIFIC_CONTEXT",
+      "passed": true,
+      "observable_capability": null,
+      "latency_ms": 0.086,
+      "explanation": "Query requires prerequisite evidence: User private record or personal context: 'my meeting notes'"
+    },
+    {
+      "query": "battery percentage",
+      "is_sufficient": true,
+      "expected_sufficient": true,
+      "reason": "SUFFICIENT_OBSERVABLE_STATE",
+      "expected_reason": "SUFFICIENT_OBSERVABLE_STATE",
+      "passed": true,
+      "observable_capability": "battery_status",
+      "latency_ms": 0.011,
+      "explanation": "Live system observation required and resolvable via authorized capability 'battery_status'."
+    },
+    {
+      "query": "inspect running processes",
+      "is_sufficient": true,
+      "expected_sufficient": true,
+      "reason": "SUFFICIENT_OBSERVABLE_STATE",
+      "expected_reason": "SUFFICIENT_OBSERVABLE_STATE",
+      "passed": true,
+      "observable_capability": "inspect_process",
+      "latency_ms": 0.009,
+      "explanation": "Live system observation required and resolvable via authorized capability 'inspect_process'."
+    },
+    {
+      "query": "Verify against RFC 9110 what headers are forbidden in HTTP/2 requests.",
+      "is_sufficient": false,
+      "expected_sufficient": false,
+      "reason": "MISSING_AUTHORITATIVE_SOURCE",
+      "expected_reason": "MISSING_AUTHORITATIVE_SOURCE",
+      "passed": true,
+      "observable_capability": null,
+      "latency_ms": 0.106,
+      "explanation": "Query requires prerequisite evidence: Authoritative standard / primary document required: 'Verify against'"
+    },
+    {
+      "query": "Check the official NIST FIPS 186-5 standard for digital signatures.",
+      "is_sufficient": false,
+      "expected_sufficient": false,
+      "reason": "MISSING_AUTHORITATIVE_SOURCE",
+      "expected_reason": "MISSING_AUTHORITATIVE_SOURCE",
+      "passed": true,
+      "observable_capability": null,
+      "latency_ms": 0.105,
+      "explanation": "Query requires prerequisite evidence: Authoritative standard / primary document required: 'official NIST'"
+    },
+    {
+      "query": "Ask ChatGPT to review this algorithm and give a second opinion.",
+      "is_sufficient": false,
+      "expected_sufficient": false,
+      "reason": "MISSING_EXTERNAL_VERIFICATION",
+      "expected_reason": "MISSING_EXTERNAL_VERIFICATION",
+      "passed": true,
+      "observable_capability": null,
+      "latency_ms": 0.244,
+      "explanation": "Query requires prerequisite evidence: External AI peer review consultation: 'Ask ChatGPT'"
+    },
+    {
+      "query": "Consult Gemini for an alternate explanation of this proof.",
+      "is_sufficient": false,
+      "expected_sufficient": false,
+      "reason": "MISSING_EXTERNAL_VERIFICATION",
+      "expected_reason": "MISSING_EXTERNAL_VERIFICATION",
+      "passed": true,
+      "observable_capability": null,
+      "latency_ms": 0.075,
+      "explanation": "Query requires prerequisite evidence: External AI peer review consultation: 'Consult Gemini'"
+    },
+    {
+      "query": "Teach me Hill cipher. I have a cryptography exam.",
+      "is_sufficient": true,
+      "expected_sufficient": true,
+      "reason": "SUFFICIENT_INTERNAL_KNOWLEDGE",
+      "expected_reason": "SUFFICIENT_INTERNAL_KNOWLEDGE",
+      "passed": true,
+      "observable_capability": null,
+      "latency_ms": 0.279,
+      "explanation": "Core inquiry is resolvable via internal knowledge; personal context constitutes optional enrichment."
+    },
+    {
+      "query": "Explain binary search trees for my midterm review.",
+      "is_sufficient": true,
+      "expected_sufficient": true,
+      "reason": "SUFFICIENT_INTERNAL_KNOWLEDGE",
+      "expected_reason": "SUFFICIENT_INTERNAL_KNOWLEDGE",
+      "passed": true,
+      "observable_capability": null,
+      "latency_ms": 0.111,
+      "explanation": "Core inquiry is resolvable via internal knowledge; personal context constitutes optional enrichment."
+    },
+    {
+      "query": "What was the latest battle of the American Civil War?",
+      "is_sufficient": true,
+      "expected_sufficient": true,
+      "reason": "SUFFICIENT_INTERNAL_KNOWLEDGE",
+      "expected_reason": "SUFFICIENT_INTERNAL_KNOWLEDGE",
+      "passed": true,
+      "observable_capability": null,
+      "latency_ms": 0.135,
+      "explanation": "Query appears self-contained and suitable for direct synthesis or governed planning."
+    },
+    {
+      "query": "Explain how alternating current differs from direct current.",
+      "is_sufficient": true,
+      "expected_sufficient": true,
+      "reason": "SUFFICIENT_INTERNAL_KNOWLEDGE",
+      "expected_reason": "SUFFICIENT_INTERNAL_KNOWLEDGE",
+      "passed": true,
+      "observable_capability": null,
+      "latency_ms": 0.09,
+      "explanation": "General conceptual, theoretical, or algorithmic inquiry resolvable via internal knowledge."
+    },
+    {
+      "query": "What is my best estimate of the mass of the Sun?",
+      "is_sufficient": true,
+      "expected_sufficient": true,
+      "reason": "SUFFICIENT_INTERNAL_KNOWLEDGE",
+      "expected_reason": "SUFFICIENT_INTERNAL_KNOWLEDGE",
+      "passed": true,
+      "observable_capability": null,
+      "latency_ms": 0.088,
+      "explanation": "General conceptual, theoretical, or algorithmic inquiry resolvable via internal knowledge."
+    },
+    {
+      "query": "do it",
+      "is_sufficient": false,
+      "expected_sufficient": false,
+      "reason": "AMBIGUOUS_GOAL",
+      "expected_reason": "AMBIGUOUS_GOAL",
+      "passed": true,
+      "observable_capability": null,
+      "latency_ms": 0.02,
+      "explanation": "Query uses conversational pronouns without any preceding session history."
+    }
+  ]
+}

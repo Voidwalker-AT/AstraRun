@@ -92,6 +92,7 @@ def test_self_sufficient_generalization(evaluator: KnowledgeSufficiencyEvaluator
     assert result.reason in (
         SufficiencyReason.SUFFICIENT_INTERNAL_KNOWLEDGE,
         SufficiencyReason.SUFFICIENT_SESSION_CONTEXT,
+        SufficiencyReason.SUFFICIENT_OBSERVABLE_STATE,
     )
     assert latency_ms < 15.0, f"Latency {latency_ms:.2f}ms exceeded 15ms bound for '{query}'"
 

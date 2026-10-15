@@ -29,6 +29,16 @@ COMPOSITE_DISQUALIFIERS = {
     "and", "then", "after", "while", "also", "plus", "with", "but",
 }
 
+# Delegation, retrieval, privacy, temporal qualifiers, and research keywords that strictly disqualify fast-track
+DELEGATION_AND_GOVERNANCE_DISQUALIFIERS = {
+    "to", "via", "using", "from", "into", "through",
+    "chatgpt", "gemini", "claude", "ai", "model",
+    "my", "our", "private", "confidential", "secret",
+    "latest", "recent", "newest", "updated",
+    "documentation", "docs", "notes", "report", "paper", "file", "folder",
+    "show", "send", "transmit", "upload", "export",
+}
+
 
 class SingleStepFastTrack:
     """
@@ -53,10 +63,6 @@ class SingleStepFastTrack:
         q_clean = query.strip()
 
         # Strip leading conversational greetings or polite prefixes if followed by an operation
-        # e.g., "hello, open calculator" -> "open calculator"
-        # "hey, calculate 2 + 2" -> "calculate 2 + 2"
-        # "good morning, please check battery report" -> "check battery report"
-        # "hi, launch notepad" -> "launch notepad"
         clean_stripped = re.sub(
             r"^(?:hello|hi|hey|good\s+morning|good\s+afternoon|good\s+evening|thanks|thank\s+you|please|can\s+you|could\s+you)[,\s]+(?:please\s+)?(?:now\s+)?",
             "",
@@ -81,6 +87,11 @@ class SingleStepFastTrack:
         # Check for composite disqualifiers (only after math check)
         for t in tokens:
             if t in COMPOSITE_DISQUALIFIERS:
+                return None
+
+        # Check for delegation, privacy, external models, and retrieval disqualifiers
+        for t in tokens:
+            if t in DELEGATION_AND_GOVERNANCE_DISQUALIFIERS:
                 return None
 
         q_lower = " ".join(tokens)

@@ -1,0 +1,35 @@
+{
+  "phase": "ACR-NEXT Phase 1.1",
+  "base_sha": "be4f17cb7ab17e77edd3efa9921c6967b3ccfd5f",
+  "components_modified": [
+    "src/astrarun/security/models.py",
+    "src/astrarun/cognition/acquisition.py",
+    "src/astrarun/cognition/sufficiency.py",
+    "src/astrarun/agent/fast_track.py",
+    "src/astrarun/agent/coordinator.py",
+    "src/astrarun/agent/interruption.py",
+    "src/astrarun/app.py",
+    "src/astrarun/ui/launcher.py",
+    "scripts/run_interruption_physical_demo.py",
+    "tests/architecture/test_knowledge_sufficiency.py",
+    "tests/architecture/test_blind_sufficiency_compositional.py"
+  ],
+  "architectural_invariants_preserved": [
+    "No raw shell or subprocess execution",
+    "ExecutionBroker + ActionGate remain authoritative execution bottleneck",
+    "Zero global mutable state in session layer",
+    "Resident session store isolation",
+    "Human intent strictly takes precedence over agent plan"
+  ],
+  "forensic_issues_repaired": [
+    "Replaced regex cascade with compositional knowledge sufficiency evaluation",
+    "Introduced SUFFICIENT_OBSERVABLE_STATE for live system inspection (battery, processes)",
+    "Distinguished HARD_BLOCKING prerequisites from SOFT_ENRICHMENT educational relevance",
+    "Protected against historical, electrical, and conversational trap words",
+    "Added Two-Axis Privacy: LocalAccessScope (5 scopes) and EgressDisclosurePolicy (4 policies)",
+    "Guarded SingleStepFastTrack against complex, temporal, retrieval, and delegation requests",
+    "Separated WorldDriftDetector transient per-turn simulation from baseline resource tracking",
+    "Fixed UI bug where TurnStatus.WAITING_CLARIFICATION showed 'Which target did you mean?'",
+    "Re-ran live physical interruption demonstration with genuine policy messages and unique screenshot hashes"
+  ]
+}

@@ -834,9 +834,16 @@ class AstraApplication:
             res_type = "blocked"
         elif turn_res.status == TurnStatus.PAUSED_CONFIRMATION:
             res_type = "confirm"
-        elif turn_res.status in (TurnStatus.CLARIFICATION_REQUIRED, TurnStatus.WAITING_CLARIFICATION):
+        elif turn_res.status == TurnStatus.CLARIFICATION_REQUIRED:
             res_type = "clarify"
-        elif turn_res.status in (TurnStatus.INFORMATION_REQUIRED, TurnStatus.PAUSED_USER_ACTIVE, TurnStatus.WORLD_STATE_CHANGED, TurnStatus.RECOVERING):
+        elif turn_res.status in (
+            TurnStatus.INFORMATION_REQUIRED,
+            TurnStatus.PAUSED_USER_ACTIVE,
+            TurnStatus.WORLD_STATE_CHANGED,
+            TurnStatus.RECOVERING,
+            TurnStatus.WAITING_CLARIFICATION,
+            TurnStatus.REOBSERVING,
+        ):
             res_type = "conversational"
 
         data = {
@@ -864,6 +871,7 @@ class AstraApplication:
             type=res_type,
             success=success,
             message=turn_res.response_text,
+            prompt=turn_res.response_text,
             data=data,
             confirmation_token=turn_res.metadata.get("confirmation_token"),
             request_id=envelope.request_id,

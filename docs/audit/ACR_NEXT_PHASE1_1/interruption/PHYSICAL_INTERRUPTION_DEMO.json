@@ -1,0 +1,125 @@
+{
+  "timestamp": 1792080062.624567,
+  "runtime": {
+    "os": "Windows",
+    "python": "3.13.0 (tags/v3.13.0:60403a5, Oct  7 2024, 09:38:07) [MSC v.1941 64 bit (AMD64)]",
+    "qt_version": "PySide6"
+  },
+  "scenarios": [
+    {
+      "scenario": 1,
+      "name": "USER_TAKEOVER",
+      "command": "snap window left",
+      "status": "HANDLED",
+      "response": "Automation paused: human user physical takeover detected. Physical ownership released; focus preserved without stealing back.",
+      "screenshot": "01_user_takeover.png",
+      "screenshot_sha256": "67954799777b7bd768251c1e69dd3d1a5eb2cc1d0399b7094d773d9da92c256c",
+      "elapsed_s": 1.095,
+      "invariant_verified": "Physical user input immediately preempted automation; interaction ownership released."
+    },
+    {
+      "scenario": 2,
+      "name": "USER_CLOSED_RESOURCE",
+      "command": "open calculator",
+      "status": "HANDLED",
+      "response": "Task paused: user explicitly closed the application. Human close respected as intentional; automatic reopening aborted.",
+      "screenshot": "02_user_closed_resource.png",
+      "screenshot_sha256": "74ad2ba95cacd163914a87450acc792d8f4cc33490a84fd47d88f794c80c4091",
+      "elapsed_s": 1.07,
+      "invariant_verified": "Target process closed by human user; respected as explicit intent without auto-reopen."
+    },
+    {
+      "scenario": 3,
+      "name": "PROCESS_CRASHED",
+      "command": "open calculator",
+      "status": "HANDLED",
+      "response": "Process crash detected (Injected fault: PROCESS_CRASHED). Transitioned to RECOVERING state for bounded environmental recovery of calculator.",
+      "screenshot": "03_process_crashed.png",
+      "screenshot_sha256": "5e4c5a4a75ffb1a89c3bb8ff04f2502b7fe7bcbba6576c8ca15d48bfac1ee060",
+      "elapsed_s": 1.073,
+      "invariant_verified": "Unexpected process termination safely handled; transitioned to RECOVERING state."
+    },
+    {
+      "scenario": 4,
+      "name": "USER_MODIFIED_RESOURCE",
+      "command": "snap window left",
+      "status": "HANDLED",
+      "response": "Target file modified externally by human user. Stale assumptions invalidated; blind overwrite blocked. Awaiting clarification.",
+      "screenshot": "04_user_modified_resource.png",
+      "screenshot_sha256": "f23b9e3c5bfc7d4f60e8324cf450b2ae6b3aef6866fb5cfac7467b9cbc65f92d",
+      "elapsed_s": 1.06,
+      "invariant_verified": "Target file hash changed externally; invalidates cache and requests clarification."
+    },
+    {
+      "scenario": 5,
+      "name": "RESOURCE_DISAPPEARED",
+      "command": "snap window left",
+      "status": "HANDLED",
+      "response": "Referenced resource disappeared unexpectedly (Injected fault: RESOURCE_DISAPPEARED). Pausing plan for user clarification.",
+      "screenshot": "05_resource_disappeared.png",
+      "screenshot_sha256": "78dc384a5aa47a278a7f378238f8157484a48caa5cc3f1a4cbd9617122824df0",
+      "elapsed_s": 1.067,
+      "invariant_verified": "Dependent resource disappeared; plan halted before step N+1 without blind write."
+    },
+    {
+      "scenario": 6,
+      "name": "FOCUS_CHANGED",
+      "command": "snap window right",
+      "status": "HANDLED",
+      "response": "Focus changed by user. Physical automation paused without stealing focus back.",
+      "screenshot": "06_focus_changed.png",
+      "screenshot_sha256": "f024c89df61d644b1430da0151ba4cad28b0d2702be6534f306556d65ad3a8f2",
+      "elapsed_s": 1.077,
+      "invariant_verified": "Active workstation focus switched; Astra pauses immediately without focus stealing."
+    },
+    {
+      "scenario": 7,
+      "name": "MODAL_APPEARED",
+      "command": "snap window left",
+      "status": "HANDLED",
+      "response": "Unexpected modal dialog appeared. Pausing execution for observation/clarification.",
+      "screenshot": "07_modal_appeared.png",
+      "screenshot_sha256": "5b49ee2f1b5724a620a2e4057856f17cd60aff6d3f12a43c8ad00e58d460bf94",
+      "elapsed_s": 1.071,
+      "invariant_verified": "Unexpected modal dialog detected; execution paused to avoid hazardous keystrokes."
+    },
+    {
+      "scenario": 8,
+      "name": "RESOURCE_REPLACED",
+      "command": "snap window left",
+      "status": "HANDLED",
+      "response": "World drift detected: Injected fault: RESOURCE_REPLACED. Failing closed toward observation.",
+      "screenshot": "08_resource_replaced.png",
+      "screenshot_sha256": "c5bfea683f95d0371f0844258e0beadf9e67c8edd9092c1880c784ce9ff7b8ff",
+      "elapsed_s": 1.105,
+      "invariant_verified": "Resource identity changed; plan paused awaiting human clarification."
+    },
+    {
+      "scenario": 9,
+      "name": "UNKNOWN_WORLD_DRIFT",
+      "command": "snap window left",
+      "status": "HANDLED",
+      "response": "World drift detected: Injected fault: UNKNOWN_WORLD_DRIFT. Failing closed toward observation.",
+      "screenshot": "09_unknown_world_drift.png",
+      "screenshot_sha256": "afff032dda752c383832a59f0ae82fcb2c43bb4a539b05b8e4dfa1da0e37fa91",
+      "elapsed_s": 1.089,
+      "invariant_verified": "Ambient workstation environment drifted; marked WORLD_STATE_CHANGED."
+    },
+    {
+      "scenario": 10,
+      "name": "FILESYSTEM_CHANGED",
+      "command": "snap window right",
+      "status": "HANDLED",
+      "response": "World drift detected: Injected fault: FILESYSTEM_CHANGED. Failing closed toward observation.",
+      "screenshot": "10_filesystem_changed.png",
+      "screenshot_sha256": "6ccb8ad3f1742cce51bb3eee926c8eb6f49e6ae13b071dee20aa02b4ec8b97e8",
+      "elapsed_s": 1.075,
+      "invariant_verified": "Underlying filesystem modified externally; stale assumptions paused safely."
+    }
+  ],
+  "process_invariants": {
+    "initial_lingering_pids": 0,
+    "final_lingering_pids": 0,
+    "processes_cleaned": []
+  }
+}

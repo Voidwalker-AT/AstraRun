@@ -187,13 +187,27 @@ class AgentCoordinator:
         fast_decision = SingleStepFastTrack.match(user_text)
         if fast_decision is not None:
             logger.debug("Turn %s resolved via SingleStepFastTrack: %s", turn_id, fast_decision.goal_summary)
+            is_obs = any(
+                step.capability_id in ("battery_status", "inspect_process")
+                for step in fast_decision.plan_steps
+            )
+            suff_reason = (
+                SufficiencyReason.SUFFICIENT_OBSERVABLE_STATE.value
+                if is_obs
+                else SufficiencyReason.SUFFICIENT_INTERNAL_KNOWLEDGE.value
+            )
+            suff_expl = (
+                "Workstation observation resolvable via authorized live capability on fast-track path."
+                if is_obs
+                else "Self-sufficient operational command on fast-track path."
+            )
             suff_event = KnowledgeSufficiencyEvaluatedEvent(
                 session_id=active_session.session_id,
                 turn_id=turn_id,
                 is_sufficient=True,
-                reason=SufficiencyReason.SUFFICIENT_INTERNAL_KNOWLEDGE.value,
+                reason=suff_reason,
                 confidence=1.0,
-                explanation="Self-sufficient operational command on fast-track path.",
+                explanation=suff_expl,
                 task_id=envelope.request_id,
             )
             self.session_store.record_event(suff_event)
@@ -279,6 +293,11 @@ class AgentCoordinator:
                 if schema:
                     candidate_schemas.append(schema)
 
+            if sufficiency.observable_capability_id:
+                obs_schema = self.registry.get_capability_schema(sufficiency.observable_capability_id)
+                if obs_schema and all(s.id != obs_schema.id for s in candidate_schemas):
+                    candidate_schemas.insert(0, obs_schema)
+
             decision = self.reasoner.reason_turn(
                 query=user_text,
                 session=active_session,
@@ -355,7 +374,7 @@ class AgentCoordinator:
         last_post_snap: Optional[WorldResourceSnapshot] = None
 
         for idx, step in enumerate(decision.plan_steps):
-            # 5.0 VERIFY ASSUMPTIONS before continuing to dependent step N+1
+            # 5.0 VERIFY ASSUMPTIONS before continuing to dependent step N+1, or check pre-action takeover/drift at step 0
             if idx > 0 and last_post_snap is not None:
                 assumptions_valid, pre_drift = self.drift_detector.verify_assumptions(
                     step_args=step.arguments,
@@ -378,6 +397,33 @@ class AgentCoordinator:
                         envelope=envelope,
                         metadata={"interruption": policy_outcome, "step_id": step.step_id},
                     )
+            elif idx == 0:
+                # Pre-action check before step 0 begins: check for physical user takeover or active interruption
+                initial_snap = self.drift_detector.capture_snapshot(step.arguments)
+                if initial_snap.user_input_detected or self.drift_detector._simulated_fault:
+                    pre_drift = self.drift_detector.detect_drift(
+                        before=initial_snap,
+                        after=initial_snap,
+                        action_capability=step.capability_id,
+                        target_info=step.arguments,
+                    )
+                    if pre_drift and pre_drift.has_drift:
+                        logger.warning("Pre-action takeover/drift detected before step 0: %s", pre_drift.details)
+                        policy_outcome = self.policy_engine.apply_policy(
+                            pre_drift, step.arguments, active_session
+                        )
+                        status_enum = getattr(TurnStatus, pre_drift.recommended_coordinator_state, TurnStatus.WAITING_CLARIFICATION)
+                        return self._commit_turn(
+                            turn_id=turn_id,
+                            status=status_enum,
+                            user_text=user_text,
+                            assistant_text=policy_outcome["message"],
+                            decision=decision,
+                            session=active_session,
+                            t0=t0,
+                            envelope=envelope,
+                            metadata={"interruption": policy_outcome, "step_id": step.step_id},
+                        )
 
             # 5.1 PRE-ACTION WORLD OBSERVATION
             pre_snap = self.drift_detector.capture_snapshot(step.arguments)
@@ -683,6 +729,7 @@ class AgentCoordinator:
         session.add_turn(turn_rec)
         self._update_rolling_summary(session)
         self.session_store.save_session(session)
+        self.drift_detector.reset_turn()
 
         return TurnResult(
             turn_id=turn_id,

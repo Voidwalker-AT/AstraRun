@@ -1,0 +1,26 @@
+{
+  "timestamp": 1792080787.0569434,
+  "pytest_suite_summary": {
+    "total_collected": 1217,
+    "passed": 1203,
+    "skipped": 14,
+    "failed": 0,
+    "errors": 0,
+    "architecture_tests_passed": 156,
+    "execution_time_seconds": 614.57,
+    "verdict": "100% PASS"
+  },
+  "architecture_suites": {
+    "test_blind_sufficiency_compositional.py": "70/70 PASSED",
+    "test_knowledge_sufficiency.py": "54/54 PASSED",
+    "test_acquisition_planner.py": "8/8 PASSED",
+    "test_human_interruption.py": "5/5 PASSED",
+    "test_single_step_fast_track.py": "5/5 PASSED",
+    "test_turn_reasoner.py": "5/5 PASSED",
+    "test_multi_turn_intelligence.py": "3/3 PASSED",
+    "test_security_governance.py": "2/2 PASSED",
+    "test_math_verifier.py": "2/2 PASSED",
+    "test_tool_to_reasoning.py": "1/1 PASSED",
+    "test_legacy_fallback.py": "1/1 PASSED"
+  }
+}

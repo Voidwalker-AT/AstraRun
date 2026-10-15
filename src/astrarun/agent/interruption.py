@@ -59,10 +59,12 @@ class WorldResourceSnapshot:
     target_hwnd: Optional[int] = None
     target_pid: Optional[int] = None
     target_pid_alive: bool = False
+    target_pid_create_time: float = 0.0
     target_app: str = ""
     target_file_path: Optional[str] = None
     target_file_exists: bool = False
     target_file_mtime: Optional[float] = None
+    target_file_size: int = 0
     target_file_sha256: Optional[str] = None
     active_dialog_count: int = 0
     active_dialog_hwnds: List[int] = field(default_factory=list)
@@ -82,10 +84,12 @@ class WorldResourceSnapshot:
             "target_hwnd": self.target_hwnd,
             "target_pid": self.target_pid,
             "target_pid_alive": self.target_pid_alive,
+            "target_pid_create_time": self.target_pid_create_time,
             "target_app": self.target_app,
             "target_file_path": self.target_file_path,
             "target_file_exists": self.target_file_exists,
             "target_file_mtime": self.target_file_mtime,
+            "target_file_size": self.target_file_size,
             "target_file_sha256": self.target_file_sha256,
             "active_dialog_count": self.active_dialog_count,
             "active_dialog_hwnds": list(self.active_dialog_hwnds),
@@ -119,6 +123,7 @@ class WorldDriftDetector:
     def __init__(self) -> None:
         self._user_takeover_override: bool = False
         self._simulated_fault: Optional[InterruptionType] = None
+        self._tracked_resources: Dict[str, Any] = {}
 
     def inject_fault(self, fault: Optional[InterruptionType]) -> None:
         """Inject a fault for deterministic testing."""
@@ -128,10 +133,15 @@ class WorldDriftDetector:
         """Override user input detection to simulate physical user takeover."""
         self._user_takeover_override = active
 
-    def reset(self) -> None:
-        """Reset all simulated faults and user takeover overrides."""
+    def reset_turn(self) -> None:
+        """Reset per-turn synthetic test state without clearing tracked resource baselines."""
         self._user_takeover_override = False
         self._simulated_fault = None
+
+    def reset(self) -> None:
+        """Full reset of detector state and tracked baselines."""
+        self.reset_turn()
+        self._tracked_resources.clear()
 
     def capture_snapshot(
         self,
@@ -193,6 +203,7 @@ class WorldDriftDetector:
         file_path_str = info.get("path") or info.get("filepath") or info.get("target_path")
         file_exists = False
         file_mtime = None
+        file_size = 0
         file_sha256 = None
         if file_path_str:
             try:
@@ -201,6 +212,7 @@ class WorldDriftDetector:
                     file_exists = True
                     stat = p.stat()
                     file_mtime = stat.st_mtime
+                    file_size = stat.st_size
                     try:
                         h = hashlib.sha256()
                         with open(p, "rb") as f:
@@ -215,8 +227,15 @@ class WorldDriftDetector:
         t_hwnd = info.get("hwnd")
         t_pid = info.get("pid")
         t_pid_alive = False
+        t_pid_create_time = 0.0
         if t_pid:
             t_pid_alive = self._is_pid_alive(t_pid)
+            if t_pid_alive:
+                try:
+                    proc = psutil.Process(t_pid)
+                    t_pid_create_time = proc.create_time()
+                except Exception:
+                    t_pid_create_time = 0.0
         t_app = info.get("app_name") or info.get("target_app") or ""
         bounds = None
         is_min = False
@@ -250,10 +269,12 @@ class WorldDriftDetector:
             target_hwnd=t_hwnd,
             target_pid=t_pid,
             target_pid_alive=t_pid_alive,
+            target_pid_create_time=t_pid_create_time,
             target_app=t_app,
             target_file_path=file_path_str,
             target_file_exists=file_exists,
             target_file_mtime=file_mtime,
+            target_file_size=file_size,
             target_file_sha256=file_sha256,
             user_input_detected=user_input_detected,
             last_input_time=last_input_time,

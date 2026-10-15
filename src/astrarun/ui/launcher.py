@@ -861,7 +861,7 @@ class LauncherWindow(QDialog):
             cand_list = res.candidates if isinstance(res.candidates, list) else []
             card = DisambiguationCard(
                 candidates=cand_list,
-                title=res.prompt or "Which target did you mean?",
+                title=res.prompt or res.message or "Which target did you mean?",
                 parent=self,
             )
             card.candidate_selected.connect(self._on_candidate_chosen)

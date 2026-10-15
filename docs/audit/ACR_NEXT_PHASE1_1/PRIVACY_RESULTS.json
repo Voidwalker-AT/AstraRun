@@ -1,0 +1,108 @@
+{
+  "two_axis_model": {
+    "local_access_scopes": [
+      "ACTIVE_FOREGROUND_RESOURCE",
+      "AUTHORIZED_WORKSPACE",
+      "EXPLICITLY_AUTHORIZED_USER_DIRECTORIES",
+      "SENSITIVE_PERSONAL_STORES",
+      "PROHIBITED_CREDENTIAL_SYSTEM_LOCATIONS"
+    ],
+    "egress_disclosure_policies": [
+      "PUBLIC_SAFE",
+      "LOCAL_ONLY",
+      "SCRUBBED_SUMMARY_ONLY",
+      "EXPLICIT_CONFIRMATION_REQUIRED"
+    ],
+    "governance_rule": "Local filesystem/state read access is strictly decoupled from external egress permission. Reading a file never implies permission to transmit it externally."
+  },
+  "evaluations": [
+    {
+      "query": "Send my tax return PDF to ChatGPT for analysis.",
+      "is_sufficient": false,
+      "needs": [
+        {
+          "description": "User private context: my tax",
+          "access_scope": "EXPLICITLY_AUTHORIZED_USER_DIRECTORIES",
+          "disclosure_policy": "EXPLICIT_CONFIRMATION_REQUIRED",
+          "privacy_sensitive": true,
+          "requires_confirmation": true
+        },
+        {
+          "description": "External AI consultation: Send my tax return PDF to ChatGPT",
+          "access_scope": "SENSITIVE_PERSONAL_STORES",
+          "disclosure_policy": "EXPLICIT_CONFIRMATION_REQUIRED",
+          "privacy_sensitive": true,
+          "requires_confirmation": true
+        }
+      ],
+      "privacy_notice": "Security Invariant: Local files and personal records will NEVER be transmitted externally without explicit user confirmation.",
+      "policy_verified": true
+    },
+    {
+      "query": "Upload my bank statements to Claude to generate a budget.",
+      "is_sufficient": false,
+      "needs": [
+        {
+          "description": "User private context: my bank statements",
+          "access_scope": "EXPLICITLY_AUTHORIZED_USER_DIRECTORIES",
+          "disclosure_policy": "EXPLICIT_CONFIRMATION_REQUIRED",
+          "privacy_sensitive": true,
+          "requires_confirmation": true
+        },
+        {
+          "description": "External AI consultation: Upload my bank statements to Claude",
+          "access_scope": "SENSITIVE_PERSONAL_STORES",
+          "disclosure_policy": "EXPLICIT_CONFIRMATION_REQUIRED",
+          "privacy_sensitive": true,
+          "requires_confirmation": true
+        }
+      ],
+      "privacy_notice": "Security Invariant: Local files and personal records will NEVER be transmitted externally without explicit user confirmation.",
+      "policy_verified": true
+    },
+    {
+      "query": "Email my confidential client list to an external AI model.",
+      "is_sufficient": false,
+      "needs": [
+        {
+          "description": "User private context: my confidential client list",
+          "access_scope": "EXPLICITLY_AUTHORIZED_USER_DIRECTORIES",
+          "disclosure_policy": "EXPLICIT_CONFIRMATION_REQUIRED",
+          "privacy_sensitive": true,
+          "requires_confirmation": true
+        },
+        {
+          "description": "External AI consultation: Email my confidential client list to an external AI model",
+          "access_scope": "SENSITIVE_PERSONAL_STORES",
+          "disclosure_policy": "EXPLICIT_CONFIRMATION_REQUIRED",
+          "privacy_sensitive": true,
+          "requires_confirmation": true
+        }
+      ],
+      "privacy_notice": "Security Invariant: Local files and personal records will NEVER be transmitted externally without explicit user confirmation.",
+      "policy_verified": true
+    },
+    {
+      "query": "Share my private key backup with the online verifier.",
+      "is_sufficient": false,
+      "needs": [
+        {
+          "description": "User private context: my private key",
+          "access_scope": "EXPLICITLY_AUTHORIZED_USER_DIRECTORIES",
+          "disclosure_policy": "EXPLICIT_CONFIRMATION_REQUIRED",
+          "privacy_sensitive": true,
+          "requires_confirmation": true
+        },
+        {
+          "description": "External AI consultation: Share my private key backup with the online verifier",
+          "access_scope": "SENSITIVE_PERSONAL_STORES",
+          "disclosure_policy": "EXPLICIT_CONFIRMATION_REQUIRED",
+          "privacy_sensitive": true,
+          "requires_confirmation": true
+        }
+      ],
+      "privacy_notice": "Security Invariant: Local files and personal records will NEVER be transmitted externally without explicit user confirmation.",
+      "policy_verified": true
+    }
+  ]
+}

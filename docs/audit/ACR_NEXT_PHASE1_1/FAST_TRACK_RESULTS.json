@@ -1,0 +1,83 @@
+{
+  "positive_matches": [
+    {
+      "query": "2 + 2",
+      "matched": true,
+      "goal_summary": "Compute arithmetic expression",
+      "tool": null
+    },
+    {
+      "query": "15 * 8",
+      "matched": true,
+      "goal_summary": "Compute arithmetic expression",
+      "tool": null
+    },
+    {
+      "query": "open calculator",
+      "matched": true,
+      "goal_summary": "Launch Calculator application",
+      "tool": "open_application"
+    },
+    {
+      "query": "battery percentage",
+      "matched": true,
+      "goal_summary": "Check system battery status",
+      "tool": "battery_status"
+    },
+    {
+      "query": "battery status",
+      "matched": true,
+      "goal_summary": "Check system battery status",
+      "tool": "battery_status"
+    },
+    {
+      "query": "snap current window left",
+      "matched": true,
+      "goal_summary": "Snap foreground window left",
+      "tool": "snap_window_left"
+    },
+    {
+      "query": "snap current window right",
+      "matched": true,
+      "goal_summary": "Snap foreground window right",
+      "tool": "snap_window_right"
+    }
+  ],
+  "guarded_fall_throughs": [
+    {
+      "query": "snap window left and open calculator",
+      "correctly_rejected": true,
+      "reason": "Guarded fall-through to cognition / reasoning"
+    },
+    {
+      "query": "open latest cuda documentation",
+      "correctly_rejected": true,
+      "reason": "Guarded fall-through to cognition / reasoning"
+    },
+    {
+      "query": "send my notes to chatgpt",
+      "correctly_rejected": true,
+      "reason": "Guarded fall-through to cognition / reasoning"
+    },
+    {
+      "query": "make it shorter",
+      "correctly_rejected": true,
+      "reason": "Guarded fall-through to cognition / reasoning"
+    },
+    {
+      "query": "open it",
+      "correctly_rejected": true,
+      "reason": "Guarded fall-through to cognition / reasoning"
+    },
+    {
+      "query": "what did i write in my draft",
+      "correctly_rejected": true,
+      "reason": "Guarded fall-through to cognition / reasoning"
+    },
+    {
+      "query": "battery status on my remote laptop",
+      "correctly_rejected": true,
+      "reason": "Guarded fall-through to cognition / reasoning"
+    }
+  ]
+}

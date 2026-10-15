@@ -98,6 +98,44 @@ class CapabilityOperationKind(str, Enum):
     PRIVILEGED_SYSTEM = "PRIVILEGED_SYSTEM"
     UNKNOWN_CONSEQUENTIAL = "UNKNOWN_CONSEQUENTIAL"
 
+class LocalAccessScope(str, Enum):
+    """Authoritative boundaries for workstation and local filesystem access."""
+    ACTIVE_FOREGROUND_RESOURCE = "ACTIVE_FOREGROUND_RESOURCE"
+    AUTHORIZED_WORKSPACE = "AUTHORIZED_WORKSPACE"
+    EXPLICITLY_AUTHORIZED_USER_DIRECTORIES = "EXPLICITLY_AUTHORIZED_USER_DIRECTORIES"
+    SENSITIVE_PERSONAL_STORES = "SENSITIVE_PERSONAL_STORES"
+    PROHIBITED_CREDENTIAL_SYSTEM_LOCATIONS = "PROHIBITED_CREDENTIAL_SYSTEM_LOCATIONS"
+
+    @property
+    def is_restricted(self) -> bool:
+        return self in (
+            LocalAccessScope.SENSITIVE_PERSONAL_STORES,
+            LocalAccessScope.PROHIBITED_CREDENTIAL_SYSTEM_LOCATIONS,
+        )
+
+    @property
+    def is_prohibited(self) -> bool:
+        return self == LocalAccessScope.PROHIBITED_CREDENTIAL_SYSTEM_LOCATIONS
+
+
+class EgressDisclosurePolicy(str, Enum):
+    """Authoritative rules governing external transmission and model disclosure."""
+    PUBLIC_SAFE = "PUBLIC_SAFE"
+    LOCAL_ONLY = "LOCAL_ONLY"  # Default for all local / private content: never disclose externally
+    SCRUBBED_SUMMARY_ONLY = "SCRUBBED_SUMMARY_ONLY"
+    EXPLICIT_CONFIRMATION_REQUIRED = "EXPLICIT_CONFIRMATION_REQUIRED"
+
+    @property
+    def allows_external_transmission(self) -> bool:
+        return self in (
+            EgressDisclosurePolicy.PUBLIC_SAFE,
+            EgressDisclosurePolicy.SCRUBBED_SUMMARY_ONLY,
+        )
+
+    @property
+    def requires_confirmation(self) -> bool:
+        return self == EgressDisclosurePolicy.EXPLICIT_CONFIRMATION_REQUIRED
+
 
 @dataclass(frozen=True)
 class CapabilitySecurityMetadata:
@@ -107,3 +145,5 @@ class CapabilitySecurityMetadata:
     mutates_state: bool = False
     requires_confirmation: bool = False
     resource_scope: str = "local"
+    local_access_scope: LocalAccessScope = LocalAccessScope.ACTIVE_FOREGROUND_RESOURCE
+    egress_disclosure_policy: EgressDisclosurePolicy = EgressDisclosurePolicy.LOCAL_ONLY

@@ -212,6 +212,12 @@ class LauncherWindow(QDialog):
             except Exception as err:
                 logger.debug("Could not register launcher HWND: %s", err)
 
+    def reset_session(self) -> str:
+        """Start a completely fresh conversation session with zero cross-session state."""
+        import uuid
+        self.session_id = f"launcher-sess-{uuid.uuid4().hex[:12]}"
+        return self.session_id
+
     def _init_window(self) -> None:
         """Set frameless, top-most, tool-window flags and translucent attributes."""
         self.setWindowTitle("AstraRun")

@@ -1,6 +1,6 @@
 {
   "milestone": "C2.2A",
-  "timestamp": 1791966041.7290707,
+  "timestamp": 1792043234.9588084,
   "qwen_endpoint": "http://127.0.0.1:8089",
   "total_tasks": 4,
   "passed_tasks": 4,
@@ -8,9 +8,9 @@
     {
       "class": "CLASS_1_ALGORITHM_PURE_MATH",
       "task_id": "task_holdout_cls1_math",
-      "latency_ms": 3490.0053000019398,
+      "latency_ms": 3861.7237000144087,
       "prompt_hash": "51d52321eb7931a26c3ea47084db9a4aa9309cd98aae64dc4bc20b43003a1b9b",
-      "response_hash": "f65362abe685d83433dfb54e3d05588889c03d7522ff4f8ea309bd21cd583f53",
+      "response_hash": "f1a585ca61345331b82f950a9260f01ae61f1f2df3d4c549af13251969e3c9a0",
       "ast_safe": true,
       "sandbox_status": "SUCCESS",
       "artifact_sha256": "fa7ebba65b42464bb0e04071862a55abd44d4737799e998c6804935380cc6f25",
@@ -19,9 +19,9 @@
     {
       "class": "CLASS_2_CSV_DATA_TRANSFORM",
       "task_id": "task_holdout_cls2_csv",
-      "latency_ms": 4116.0258000018075,
+      "latency_ms": 4172.714299988002,
       "prompt_hash": "40f3b17c26a11f86d25ee2da33135925ee135e1caf27c6ecfe5d620049a78b8f",
-      "response_hash": "52d284f40c0575dc3363e818cf14d2227db00c774be6cda87311940b80dcc6ca",
+      "response_hash": "4d04e2edb3ef11628340f9e9ea38a43b5c4c86d570c02cbfcba8f4958dfd70eb",
       "ast_safe": true,
       "sandbox_status": "SUCCESS",
       "artifact_sha256": "ba39d8d3d9b64f7eca4c992431f70966a9df4ecc296d646f660a9bdff533b9bf",
@@ -30,12 +30,12 @@
     {
       "class": "CLASS_3_STATISTICS_SUMMARY",
       "task_id": "task_holdout_cls3_stats",
-      "latency_ms": 3499.303800002963,
+      "latency_ms": 4083.612499991432,
       "prompt_hash": "c1d396db940b1d688470cd25ebf85af671f5d8faca8cc5775e2f7e9ae339f440",
-      "response_hash": "5f401a5634d187741367a15a085f4060eb741c6c4c43e40bb874e67df5bcaf7d",
+      "response_hash": "77ce8c400b7c28d5c4b84181978644f1552bfde2559b484078b2f8074c2d242c",
       "ast_safe": true,
       "sandbox_status": "SUCCESS",
-      "artifact_sha256": "4e1d578abb713c73680f865fac0f421af4cf52be159e7329d8a1210c5e8a4cad",
+      "artifact_sha256": "ce4c15cb1e187744c91818f05b154abfd0535d6a417a761aaaaf913b51fa93d7",
       "verified": true
     },
     {

@@ -2,9 +2,9 @@
   "test_name": "architectural_acceptance_3d_visualization",
   "evidence_class": "REAL_INSTALLED_PRODUCT_EXECUTION",
   "prompt": "Create a Python program that generates a 3D visualization of a function you choose, save the source and output to a new Desktop folder, run it, fix any errors yourself, and show me the finished visualization.",
-  "task_id": "task_58fadcf5",
+  "task_id": "task_229ea7c8",
   "status": "COMPLETED",
-  "duration_seconds": 34.03,
+  "duration_seconds": 61.68,
   "model_path": "E:\\AI_Models\\GGUF\\qwen2.5-coder-1.5b-instruct-q4_k_m.gguf",
   "model_role": "DEEP (Qwen2.5-Coder-1.5B)",
   "plan": [
@@ -12,26 +12,26 @@
       "step_id": "step_1",
       "capability": "execute_dynamic_tool",
       "state": "COMPLETED",
-      "duration_ms": 33667.66
+      "duration_ms": 61308.2
     }
   ],
   "target_location": "C:\\Users\\hp\\Desktop",
   "source_hash_chain": {
-    "candidate_memory_sha256": "a970aef0359636c4abd92d21bccee0406aa55e77e9adfd4cd0e39adc7b07a82d",
-    "sandbox_staged_sha256": "a970aef0359636c4abd92d21bccee0406aa55e77e9adfd4cd0e39adc7b07a82d",
-    "evidence_copied_sha256": "a970aef0359636c4abd92d21bccee0406aa55e77e9adfd4cd0e39adc7b07a82d",
+    "candidate_memory_sha256": "184df44ae7120f134d7bcc6a62717c34bea6bde35fa8be54d724ff3bd2114262",
+    "sandbox_staged_sha256": "184df44ae7120f134d7bcc6a62717c34bea6bde35fa8be54d724ff3bd2114262",
+    "evidence_copied_sha256": "184df44ae7120f134d7bcc6a62717c34bea6bde35fa8be54d724ff3bd2114262",
     "all_match": true
   },
   "artifacts_verified": {
     "main.py": {
       "path": "C:\\Users\\hp\\Desktop\\main.py",
-      "size_bytes": 1617,
-      "sha256": "a970aef0359636c4abd92d21bccee0406aa55e77e9adfd4cd0e39adc7b07a82d"
+      "size_bytes": 1507,
+      "sha256": "184df44ae7120f134d7bcc6a62717c34bea6bde35fa8be54d724ff3bd2114262"
     },
     "3d_visualization.png": {
       "path": "C:\\Users\\hp\\Desktop\\3d_visualization.png",
-      "size_bytes": 71301,
-      "sha256": "e0dc402a280992114df6c2f9dce0427e4a498c228a5b96784fc0ff67c6fb17ee"
+      "size_bytes": 186974,
+      "sha256": "fc3e81f189181eee47b8199c8ab41a35a6b6af1ce9a77eca2efa255b676acd8a"
     },
     "3D_Visualization.png": {
       "path": "C:\\Users\\hp\\Desktop\\3D Visualization\\3D_Visualization.png",
@@ -64,5 +64,5 @@
   },
   "verifier_intervention": "ZERO",
   "verification_passed": true,
-  "timestamp": 1791967320.869459
+  "timestamp": 1792043170.4925454
 }

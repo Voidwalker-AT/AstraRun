@@ -19,12 +19,12 @@
       "repair_attempts": 1,
       "revisions_recorded": 3,
       "artifacts_found": [
-        "C:\\Users\\hp\\AppData\\LocalLow\\AstraRun\\sandbox\\repair_holdout_repair_01_1791966369116\\report.txt",
-        "C:\\Users\\hp\\AppData\\LocalLow\\AstraRun\\sandbox\\repair_holdout_repair_01_1791966369116\\main.py"
+        "C:\\Users\\hp\\AppData\\LocalLow\\AstraRun\\sandbox\\repair_holdout_repair_01_1792043703061\\report.txt",
+        "C:\\Users\\hp\\AppData\\LocalLow\\AstraRun\\sandbox\\repair_holdout_repair_01_1792043703061\\main.py"
       ],
       "expected_artifact": "report.txt",
       "exit_code": 0,
-      "duration_sec": 2.08,
+      "duration_sec": 2.94,
       "final_source": "subtotal = 120\ntax = 15\ntotal = subtotal + tax\nwith open(\"report.txt\", \"w\", encoding=\"utf-8\") as f:\n    f.write(f\"Total: {total}\\n\")"
     },
     {
@@ -32,18 +32,19 @@
       "category": "missing_dict_key",
       "goal": "Parse status dictionary and extract timestamp and message to log.txt",
       "is_success": false,
-      "has_artifact": false,
+      "has_artifact": true,
       "semantic_verified": false,
-      "semantic_value_extracted": null,
+      "semantic_value_extracted": "[No timestamp provided] All systems normal",
       "repair_attempts": 1,
       "revisions_recorded": 3,
       "artifacts_found": [
-        "C:\\Users\\hp\\AppData\\LocalLow\\AstraRun\\sandbox\\repair_holdout_repair_02_1791966371201\\main.py"
+        "C:\\Users\\hp\\AppData\\LocalLow\\AstraRun\\sandbox\\repair_holdout_repair_02_1792043706021\\log.txt",
+        "C:\\Users\\hp\\AppData\\LocalLow\\AstraRun\\sandbox\\repair_holdout_repair_02_1792043706021\\main.py"
       ],
       "expected_artifact": "log.txt",
       "exit_code": 0,
-      "duration_sec": 2.67,
-      "final_source": "status_data = {\"time\": \"2026-10-06T12:00:00Z\", \"message\": \"All systems normal\"}\nts = status_data.get(\"timestamp\", None)\nmsg = status_data.get(\"message\", None)\nif ts is not None and msg is not None:\n    with open(\"log.txt\", \"w\", encoding=\"utf-8\") as f:\n        f.write(f\"[{ts}] {msg}\\n\")\nelse:\n    print(\"Error: Missing 'timestamp' or 'message' in status data.\")"
+      "duration_sec": 2.99,
+      "final_source": "status_data = {\"time\": \"2026-10-06T12:00:00Z\", \"message\": \"All systems normal\"}\nts = status_data.get(\"timestamp\", \"No timestamp provided\")\nmsg = status_data.get(\"message\", \"No message provided\")\nwith open(\"log.txt\", \"w\", encoding=\"utf-8\") as f:\n    f.write(f\"[{ts}] {msg}\\n\")"
     },
     {
       "id": "REPAIR-03",
@@ -56,12 +57,12 @@
       "repair_attempts": 1,
       "revisions_recorded": 3,
       "artifacts_found": [
-        "C:\\Users\\hp\\AppData\\LocalLow\\AstraRun\\sandbox\\repair_holdout_repair_03_1791966373869\\active.txt",
-        "C:\\Users\\hp\\AppData\\LocalLow\\AstraRun\\sandbox\\repair_holdout_repair_03_1791966373869\\main.py"
+        "C:\\Users\\hp\\AppData\\LocalLow\\AstraRun\\sandbox\\repair_holdout_repair_03_1792043709041\\active.txt",
+        "C:\\Users\\hp\\AppData\\LocalLow\\AstraRun\\sandbox\\repair_holdout_repair_03_1792043709041\\main.py"
       ],
       "expected_artifact": "active.txt",
       "exit_code": 0,
-      "duration_sec": 2.4,
+      "duration_sec": 2.77,
       "final_source": "servers = [\"web-01\", \"web-02\", \"db-primary\", \"cache-redis\"]\nif servers:  # Check if the list is not empty\n    last_server = servers[-1]  # Get the last item in the list\n    with open(\"active.txt\", \"w\", encoding=\"utf-8\") as f:\n        f.write(last_server + \"\\n\")\nelse:\n    print(\"The server list is empty.\")"
     },
     {
@@ -75,12 +76,12 @@
       "repair_attempts": 1,
       "revisions_recorded": 3,
       "artifacts_found": [
-        "C:\\Users\\hp\\AppData\\LocalLow\\AstraRun\\sandbox\\repair_holdout_repair_04_1791966376270\\point.txt",
-        "C:\\Users\\hp\\AppData\\LocalLow\\AstraRun\\sandbox\\repair_holdout_repair_04_1791966376270\\main.py"
+        "C:\\Users\\hp\\AppData\\LocalLow\\AstraRun\\sandbox\\repair_holdout_repair_04_1792043711837\\point.txt",
+        "C:\\Users\\hp\\AppData\\LocalLow\\AstraRun\\sandbox\\repair_holdout_repair_04_1792043711837\\main.py"
       ],
       "expected_artifact": "point.txt",
       "exit_code": 0,
-      "duration_sec": 1.81,
+      "duration_sec": 2.36,
       "final_source": "coords = (10, 20)\nx, y = coords\nwith open(\"point.txt\", \"w\", encoding=\"utf-8\") as f:\n    f.write(f\"Point({x}, {y})\\n\")"
     },
     {
@@ -96,12 +97,12 @@
       "repair_attempts": 1,
       "revisions_recorded": 3,
       "artifacts_found": [
-        "C:\\Users\\hp\\AppData\\LocalLow\\AstraRun\\sandbox\\repair_holdout_repair_05_1791966378083\\config.json",
-        "C:\\Users\\hp\\AppData\\LocalLow\\AstraRun\\sandbox\\repair_holdout_repair_05_1791966378083\\main.py"
+        "C:\\Users\\hp\\AppData\\LocalLow\\AstraRun\\sandbox\\repair_holdout_repair_05_1792043714227\\config.json",
+        "C:\\Users\\hp\\AppData\\LocalLow\\AstraRun\\sandbox\\repair_holdout_repair_05_1792043714227\\main.py"
       ],
       "expected_artifact": "config.json",
       "exit_code": 0,
-      "duration_sec": 1.72,
+      "duration_sec": 2.22,
       "final_source": "from pathlib import Path\nout_dir = Path(\".\")\nout_file = out_dir / \"config.json\"\nwith open(out_file, \"w\", encoding=\"utf-8\") as f:\n    f.write('{\"status\": \"ok\"}\\n')"
     },
     {
@@ -115,13 +116,13 @@
       "repair_attempts": 1,
       "revisions_recorded": 3,
       "artifacts_found": [
-        "C:\\Users\\hp\\AppData\\LocalLow\\AstraRun\\sandbox\\repair_holdout_repair_06_1791966379811\\signature.bin",
-        "C:\\Users\\hp\\AppData\\LocalLow\\AstraRun\\sandbox\\repair_holdout_repair_06_1791966379811\\main.py"
+        "C:\\Users\\hp\\AppData\\LocalLow\\AstraRun\\sandbox\\repair_holdout_repair_06_1792043716486\\signature.bin",
+        "C:\\Users\\hp\\AppData\\LocalLow\\AstraRun\\sandbox\\repair_holdout_repair_06_1792043716486\\main.py"
       ],
       "expected_artifact": "signature.bin",
       "exit_code": 0,
-      "duration_sec": 1.68,
-      "final_source": "import os, sys, math, struct, zlib, json, re; from pathlib import Path\n\nsig = b\"\\x89PNG\\r\\n\\x1a\\n\"\nwith open(\"signature.bin\", \"wb\") as f:\n    f.write(sig)"
+      "duration_sec": 2.06,
+      "final_source": "import struct\n\nsig = b\"\\x89PNG\\r\\n\\x1a\\n\"\nwith open(\"signature.bin\", \"wb\") as f:\n    f.write(sig)"
     },
     {
       "id": "REPAIR-07",
@@ -130,16 +131,16 @@
       "is_success": true,
       "has_artifact": true,
       "semantic_verified": true,
-      "semantic_value_extracted": "2026-10-14 13:56:23",
+      "semantic_value_extracted": "2026-10-15 11:25:20",
       "repair_attempts": 1,
       "revisions_recorded": 3,
       "artifacts_found": [
-        "C:\\Users\\hp\\AppData\\LocalLow\\AstraRun\\sandbox\\repair_holdout_repair_07_1791966381494\\timestamp.txt",
-        "C:\\Users\\hp\\AppData\\LocalLow\\AstraRun\\sandbox\\repair_holdout_repair_07_1791966381494\\main.py"
+        "C:\\Users\\hp\\AppData\\LocalLow\\AstraRun\\sandbox\\repair_holdout_repair_07_1792043718562\\timestamp.txt",
+        "C:\\Users\\hp\\AppData\\LocalLow\\AstraRun\\sandbox\\repair_holdout_repair_07_1792043718562\\main.py"
       ],
       "expected_artifact": "timestamp.txt",
       "exit_code": 0,
-      "duration_sec": 1.66,
+      "duration_sec": 2.28,
       "final_source": "import time\nts = time.strftime(\"%Y-%m-%d %H:%M:%S\")\nwith open(\"timestamp.txt\", \"w\", encoding=\"utf-8\") as f:\n    f.write(ts + \"\\n\")"
     },
     {
@@ -150,16 +151,16 @@
       "has_artifact": true,
       "semantic_verified": true,
       "semantic_value_extracted": "55",
-      "repair_attempts": 1,
-      "revisions_recorded": 3,
+      "repair_attempts": 2,
+      "revisions_recorded": 5,
       "artifacts_found": [
-        "C:\\Users\\hp\\AppData\\LocalLow\\AstraRun\\sandbox\\repair_holdout_repair_08_1791966383176\\result.txt",
-        "C:\\Users\\hp\\AppData\\LocalLow\\AstraRun\\sandbox\\repair_holdout_repair_08_1791966383176\\main.py"
+        "C:\\Users\\hp\\AppData\\LocalLow\\AstraRun\\sandbox\\repair_holdout_repair_08_1792043720872\\result.txt",
+        "C:\\Users\\hp\\AppData\\LocalLow\\AstraRun\\sandbox\\repair_holdout_repair_08_1792043720872\\main.py"
       ],
       "expected_artifact": "result.txt",
       "exit_code": 0,
-      "duration_sec": 1.87,
-      "final_source": "total = sum(range(1, 11))  # Corrected the range to include 10\nassert total == 55, f\"Expected total 55 but got {total}\"\nwith open(\"result.txt\", \"w\", encoding=\"utf-8\") as f:\n    f.write(str(total) + \"\\n\")"
+      "duration_sec": 4.57,
+      "final_source": "total = sum(range(1, 11))  # Corrected to include 10\nassert total == 55, f\"Expected total 55 but got {total}\"\nwith open(\"result.txt\", \"w\", encoding=\"utf-8\") as f:\n    f.write(str(total) + \"\\n\")"
     }
   ]
 }

@@ -33,7 +33,7 @@ You converse naturally, preserve context across multi-turn dialogs, resolve conv
 
 MODES:
 - DIRECT_ANSWER: For questions, explanations, math, code examples/snippets, summaries, or pure conversation. Provide your response in "assistant_reply".
-  CRITICAL: If the user asks for code, explanations, analogies, or answers (e.g. 'explain deadlock', 'give me a python example', 'show me code', 'why does that work?'), you MUST use DIRECT_ANSWER with the full text or code in "assistant_reply". Do NOT use tools or execute code for conversational requests!
+  CRITICAL: If the user asks for code, explanations, analogies, or answers (e.g. 'explain <concept>', 'give me an example', 'show me code', 'why does that work?'), you MUST use DIRECT_ANSWER with the full text or code in "assistant_reply". Do NOT use tools or execute code for conversational requests!
 - TOOL_PLAN: ONLY when the user explicitly requests an operational action on the workstation (e.g. creating/saving a file, launching/opening an application or file, snapping a window, checking battery status).
   CRITICAL: You MUST select capability_id ONLY from the Candidate Capabilities list provided below. NEVER invent, hallucinate, or use IDs not present in Candidate Capabilities (such as 'display_text', 'print', or arbitrary tools). If no suitable capability is listed under Candidate Capabilities, you MUST use DIRECT_ANSWER.
 - HYBRID_ACT_AND_ANSWER: When the user explicitly requests both an operational workstation action AND a conversational explanation (e.g., 'Open calculator and explain why 0.1 + 0.2 is weird').
@@ -41,11 +41,11 @@ MODES:
 - REFUSE: When the request is harmful or strictly prohibited.
 
 RULES:
-1. Grounded Context: When the user asks for an example, code, explanation, or analogy (e.g. 'Give me an example', 'Now give me a tiny Python example', 'Show me code'), your response MUST be directly about the topic of the ongoing conversation in the Conversation History (e.g., if discussing deadlocks, provide a Python deadlock example using threading and locks; if discussing recursion, provide recursive code). NEVER output generic 'Hello, World!' or switch to unrelated topics.
+1. Grounded Context: When the user asks for an example, code, explanation, or analogy (e.g. 'Give me an example', 'Show me code'), your response MUST be directly about the active topic of the ongoing conversation in the Conversation History. NEVER switch to unrelated topics or output generic placeholders.
 2. When the user asks a question, requests an explanation, asks 'why does that work?', asks for a code snippet/example, or asks to make something shorter or summarize, use DIRECT_ANSWER. Put the complete explanation, analogy, or code in "assistant_reply".
-3. When the user references prior discussion (e.g. 'put that example in a text file', 'make it shorter', 'why does that work?'), resolve 'that' or 'it' using the Conversation History and Pinned Artifacts.
+3. When the user references prior discussion (e.g. 'put that example in a text file', 'make it shorter', 'why does that work?'), resolve 'that' or 'it' strictly against the Active Topic and Conversation History.
 4. For TOOL_PLAN, select capabilities ONLY from the Candidate Capabilities provided below. Map arguments accurately.
-5. For file creation ('write_file'), provide 'path' and 'content' with the actual resolved text from conversation.
+5. For file creation ('write_file', 'save_text_file'), provide 'path' and 'content' with the actual resolved text from conversation.
 6. Output strictly a single valid JSON object matching the TurnDecision schema. No markdown formatting around the JSON outside ```json fences."""
 
 
@@ -106,6 +106,13 @@ class TurnReasoner:
             decision.metadata["latency_ms"] = obs.latency_ms
             decision.metadata["prompt_tokens"] = obs.prompt_tokens
             decision.metadata["completion_tokens"] = obs.completion_tokens
+            # Deterministic mathematical verification of claims
+            if decision.assistant_reply:
+                from astrarun.cognition.math_verifier import MathClaimVerifier
+                repaired, math_audits = MathClaimVerifier.verify_and_repair(decision.assistant_reply)
+                if math_audits:
+                    decision.assistant_reply = repaired
+                    decision.metadata["math_claim_audits"] = [a.__dict__ for a in math_audits]
             return decision
 
         logger.warning("Inference did not succeed (%s: %s). Falling back.", obs.status, obs.failure_reason)
@@ -171,6 +178,9 @@ class TurnReasoner:
 
         # 1. Recent turns & rolling summary from session
         if session:
+            if session.active_topic:
+                context_sections.append(f"### Active Discussion Topic:\n{session.active_topic}")
+
             if session.rolling_summary:
                 context_sections.append(f"### Previous Conversation Summary:\n{session.rolling_summary}")
 
@@ -178,11 +188,16 @@ class TurnReasoner:
             if recent_turns:
                 turns_repr = []
                 for idx, t in enumerate(recent_turns, 1):
+                    turn_topic_str = f" (Topic: {t.topic})" if t.topic else ""
                     turns_repr.append(f"Turn {idx} [User]: {t.user_text}")
-                    turns_repr.append(f"Turn {idx} [Astra]: {t.assistant_text}")
+                    turns_repr.append(f"Turn {idx} [Astra]{turn_topic_str}: {t.assistant_text}")
+                    if t.conversational_artifacts:
+                        for art in t.conversational_artifacts:
+                            preview = (art.content[:90] + "...") if art.content and len(art.content) > 90 else (art.content or "")
+                            turns_repr.append(f"Turn {idx} [Artifact: {art.kind.value} '{art.display_name}'] (topic: {art.topic}): {preview}")
                     if t.artifacts:
                         art_descs = [f"{a.kind.value}: {a.display_name} (path: {a.path})" for a in t.artifacts]
-                        turns_repr.append(f"Turn {idx} [Artifacts Created]: {', '.join(art_descs)}")
+                        turns_repr.append(f"Turn {idx} [Workstation Artifacts]: {', '.join(art_descs)}")
                 context_sections.append("### Conversation History:\n" + "\n".join(turns_repr))
 
             # 2. Pinned artifacts
@@ -191,6 +206,16 @@ class TurnReasoner:
                 for k, a in session.pinned_artifacts.items():
                     art_lines.append(f"- '{k}': {a.kind.value} '{a.display_name}' (verified={a.verified}, path={a.path}, pid={a.pid})")
                 context_sections.append("### Verified Pinned Artifacts:\n" + "\n".join(art_lines))
+
+            # 2B. Contextual Grounding Directive for follow-up turns
+            if session.active_topic:
+                q_lower = query.lower()
+                if any(w in q_lower for w in ("shorter", "summarize", "example", "why", "work", "it", "that", "put that", "more")):
+                    context_sections.append(
+                        f"### Contextual Grounding Directive:\n"
+                        f"The user query is a continuation referring directly to the Active Discussion Topic: '{session.active_topic}'.\n"
+                        f"Your response MUST remain strictly on the active topic '{session.active_topic}'. Do NOT switch to unrelated topics."
+                    )
 
         # 3. Compact world state
         if world_state and (world_state.foreground_app or world_state.visible_windows):
@@ -206,15 +231,15 @@ class TurnReasoner:
         else:
             context_sections.append("### Candidate Capabilities:\nNone available. No workstation tools match this request. You MUST choose mode: DIRECT_ANSWER.")
 
-        # 5. Schema and template guidance
+        # 5. Schema and template guidance (Neutral format templates without domain-specific few-shot priming)
         context_sections.append(
 """### Output Format Examples:
 
 Example 1: Question, explanation, or code snippet (DIRECT_ANSWER):
 {
   "mode": "DIRECT_ANSWER",
-  "assistant_reply": "Deadlock occurs when two threads wait on locks held by each other. For example:\\n\\nimport threading\\nlock1 = threading.Lock()\\nlock2 = threading.Lock()\\n\\ndef task():\\n    with lock1:\\n        with lock2:\\n            pass",
-  "goal_summary": "Explain concept and provide code snippet",
+  "assistant_reply": "<Complete direct explanation, answer, or code addressing the user's specific request and active topic>",
+  "goal_summary": "<Goal summary>",
   "plan_steps": [],
   "referenced_artifacts": [],
   "confidence": 1.0
@@ -223,8 +248,8 @@ Example 1: Question, explanation, or code snippet (DIRECT_ANSWER):
 Example 2: Operational workstation action (TOOL_PLAN):
 {
   "mode": "TOOL_PLAN",
-  "assistant_reply": "Saving the notes to disk.",
-  "goal_summary": "Save notes file",
+  "assistant_reply": "<Brief confirmation of the workstation action>",
+  "goal_summary": "<Goal summary>",
   "plan_steps": [
     {
       "step_id": "step-1",
@@ -348,8 +373,13 @@ CRITICAL: In 'assistant_reply', provide your complete, detailed response to the 
 
             # If empty candidate schemas were explicitly provided and proposed tools are unregistered
             if candidate_schemas is not None and len(candidate_schemas) == 0 and decision.plan_steps:
-                from astrarun.capabilities.manifest import CAPABILITY_MANIFEST
-                if not any(s.capability_id in CAPABILITY_MANIFEST for s in decision.plan_steps):
+                from astrarun.capabilities.manifest import AUTHORITATIVE_CAPABILITY_MANIFEST
+                if not any(s.capability_id in AUTHORITATIVE_CAPABILITY_MANIFEST for s in decision.plan_steps):
+                    # Recover any code, text, or script embedded in the hallucinated tool arguments
+                    for s in decision.plan_steps:
+                        code_val = s.arguments.get("code") or s.arguments.get("text") or s.arguments.get("script") or s.arguments.get("content")
+                        if code_val and str(code_val) not in (decision.assistant_reply or ""):
+                            decision.assistant_reply = f"{decision.assistant_reply or ''}\n\n```python\n{code_val}\n```".strip()
                     decision.mode = TurnMode.DIRECT_ANSWER
                     decision.plan_steps = []
 

@@ -13,6 +13,7 @@ Invariants:
 from __future__ import annotations
 
 import os
+import re
 import time
 import uuid
 from dataclasses import dataclass, field
@@ -50,6 +51,13 @@ from astrarun.session.models import (
     TurnRecord,
 )
 from astrarun.session.store import SessionStore
+from astrarun.agent.interruption import (
+    InterruptionAssessment,
+    InterruptionPolicyEngine,
+    InterruptionType,
+    WorldDriftDetector,
+    WorldResourceSnapshot,
+)
 
 logger = get_logger("astrarun.agent.coordinator")
 
@@ -62,6 +70,12 @@ class TurnStatus(str, Enum):
     BLOCKED = "BLOCKED"
     FAILED = "FAILED"
     CANCELLED = "CANCELLED"
+    # Extended Coordinator States (Objective B)
+    PAUSED_USER_ACTIVE = "PAUSED_USER_ACTIVE"
+    WORLD_STATE_CHANGED = "WORLD_STATE_CHANGED"
+    REOBSERVING = "REOBSERVING"
+    RECOVERING = "RECOVERING"
+    WAITING_CLARIFICATION = "WAITING_CLARIFICATION"
 
 
 @dataclass
@@ -93,6 +107,7 @@ class AgentCoordinator:
         session_store: Optional[SessionStore] = None,
         indexer: Optional[CapabilitySemanticIndex] = None,
         verifier: Optional[StepVerifier] = None,
+        drift_detector: Optional[WorldDriftDetector] = None,
     ) -> None:
         self.registry = registry or CapabilityRegistry()
         self.broker = broker or ExecutionBroker(capability_registry=self.registry)
@@ -100,6 +115,8 @@ class AgentCoordinator:
         self.session_store = session_store or SessionStore.get_instance()
         self.indexer = indexer or CapabilitySemanticIndex(registry=self.registry)
         self.verifier = verifier or StepVerifier()
+        self.drift_detector = drift_detector or WorldDriftDetector()
+        self.policy_engine = InterruptionPolicyEngine()
 
     @classmethod
     def get_instance(cls) -> AgentCoordinator:
@@ -121,6 +138,11 @@ class AgentCoordinator:
         # 1. INGESTED: Ensure active session
         active_session = session or self.session_store.get_or_create(envelope.session_id)
         user_text = envelope.raw_query or envelope.normalized_query
+
+        # Semantic Topic tracking & provenance
+        turn_topic, is_new_topic = self._extract_turn_topic(user_text, active_session.get_active_topic())
+        if turn_topic:
+            active_session.set_active_topic(turn_topic)
 
         user_event = UserTurnEvent(
             session_id=active_session.session_id,
@@ -226,10 +248,39 @@ class AgentCoordinator:
         tool_observations: List[Dict[str, Any]] = []
         artifacts_pinned: List[PinnedArtifact] = []
 
-        # Resolve pronoun references in arguments if needed
+        # Resolve pronoun references in arguments using semantic lineage
         self._resolve_conversational_references(decision, active_session, user_text)
 
-        for step in decision.plan_steps:
+        last_post_snap: Optional[WorldResourceSnapshot] = None
+
+        for idx, step in enumerate(decision.plan_steps):
+            # 5.0 VERIFY ASSUMPTIONS before continuing to dependent step N+1
+            if idx > 0 and last_post_snap is not None:
+                assumptions_valid, pre_drift = self.drift_detector.verify_assumptions(
+                    step_args=step.arguments,
+                    last_snapshot=last_post_snap,
+                )
+                if not assumptions_valid and pre_drift:
+                    logger.warning("Interruption detected before step %s: %s", step.step_id, pre_drift.details)
+                    policy_outcome = self.policy_engine.apply_policy(
+                        pre_drift, step.arguments, active_session
+                    )
+                    status_enum = getattr(TurnStatus, pre_drift.recommended_coordinator_state, TurnStatus.WAITING_CLARIFICATION)
+                    return self._commit_turn(
+                        turn_id=turn_id,
+                        status=status_enum,
+                        user_text=user_text,
+                        assistant_text=policy_outcome["message"],
+                        decision=decision,
+                        session=active_session,
+                        t0=t0,
+                        envelope=envelope,
+                        metadata={"interruption": policy_outcome, "step_id": step.step_id},
+                    )
+
+            # 5.1 PRE-ACTION WORLD OBSERVATION
+            pre_snap = self.drift_detector.capture_snapshot(step.arguments)
+
             # Emit ToolCallEvent
             call_ev = ToolCallEvent(
                 session_id=active_session.session_id,
@@ -253,7 +304,7 @@ class AgentCoordinator:
 
             broker_res = self.broker.execute(proposal)
 
-            # 5A. Policy BLOCK
+            # 5A. Policy BLOCK - Governed security invariant takes precedence
             if broker_res.verdict == "BLOCK" or broker_res.blocked:
                 obs_ev = ToolObservationEvent(
                     session_id=active_session.session_id,
@@ -278,7 +329,7 @@ class AgentCoordinator:
                     error=broker_res.message,
                 )
 
-            # 5B. Policy CONFIRM
+            # 5B. Policy CONFIRM - Awaiting human consent
             if broker_res.verdict == "CONFIRM" or broker_res.requires_confirmation:
                 active_session.active_confirmation = broker_res.confirmation_token
                 obs_ev = ToolObservationEvent(
@@ -302,6 +353,36 @@ class AgentCoordinator:
                     t0=t0,
                     envelope=envelope,
                     metadata={"confirmation_token": broker_res.confirmation_token},
+                )
+
+            # 5.2 POST-ACTION WORLD OBSERVATION & DRIFT DETECTION
+            post_snap = self.drift_detector.capture_snapshot(step.arguments)
+            last_post_snap = post_snap
+
+            # 5.3 DRIFT & INTERRUPTION DETECTION
+            drift_assessment = self.drift_detector.detect_drift(
+                before=pre_snap,
+                after=post_snap,
+                action_capability=step.capability_id,
+                target_info=step.arguments,
+            )
+            if drift_assessment and drift_assessment.has_drift:
+                logger.warning("Interruption/drift detected after step %s: %s (%s)",
+                               step.step_id, drift_assessment.interruption_type, drift_assessment.details)
+                policy_outcome = self.policy_engine.apply_policy(
+                    drift_assessment, step.arguments, active_session
+                )
+                status_enum = getattr(TurnStatus, drift_assessment.recommended_coordinator_state, TurnStatus.WAITING_CLARIFICATION)
+                return self._commit_turn(
+                    turn_id=turn_id,
+                    status=status_enum,
+                    user_text=user_text,
+                    assistant_text=policy_outcome["message"],
+                    decision=decision,
+                    session=active_session,
+                    t0=t0,
+                    envelope=envelope,
+                    metadata={"interruption": policy_outcome, "step_id": step.step_id},
                 )
 
             # 5C. Execution Failure
@@ -446,6 +527,36 @@ class AgentCoordinator:
         )
         self.session_store.record_event(comp_ev)
 
+        # Extract conversational artifacts from assistant text for DIRECT_ANSWER and HYBRID
+        conv_artifacts: List[PinnedArtifact] = []
+        if decision.mode in (TurnMode.DIRECT_ANSWER, TurnMode.HYBRID_ACT_AND_ANSWER) and assistant_text:
+            active_topic = session.get_active_topic() or "general"
+            u_lower = user_text.lower()
+
+            art_kind = ArtifactKind.EXPLANATION
+            if any(w in u_lower for w in ("example", "snippet", "numerical", "concrete", "code")):
+                art_kind = ArtifactKind.EXAMPLE
+            elif "```" in assistant_text:
+                art_kind = ArtifactKind.CODE
+
+            art_id = f"art-conv-{turn_id}"
+            conv_art = PinnedArtifact(
+                artifact_id=art_id,
+                kind=art_kind,
+                display_name=f"{active_topic}_{art_kind.value.lower()}",
+                verified_identity=turn_id,
+                content=assistant_text,
+                topic=active_topic,
+                created_turn_id=turn_id,
+                verified=True,
+            )
+            conv_artifacts.append(conv_art)
+            session.pin_artifact(conv_art.display_name, conv_art)
+            if art_kind in (ArtifactKind.EXAMPLE, ArtifactKind.CODE):
+                session.pin_artifact("last_example", conv_art)
+            elif art_kind == ArtifactKind.EXPLANATION:
+                session.pin_artifact("last_explanation", conv_art)
+
         # Append TurnRecord to session
         tool_calls = [s.to_dict() for s in decision.plan_steps]
         turn_rec = TurnRecord(
@@ -454,6 +565,8 @@ class AgentCoordinator:
             user_text=user_text,
             assistant_text=assistant_text,
             decision_mode=decision.mode.value,
+            topic=session.get_active_topic(),
+            conversational_artifacts=conv_artifacts,
             tool_calls=tool_calls,
             tool_observations=tool_observations or [],
             artifacts=artifacts_pinned or [],
@@ -499,16 +612,25 @@ class AgentCoordinator:
             elif step.capability_id in ("write_file", "save_text_file"):
                 # If writing content from prior conversation ("put that example in a text file")
                 content = step.arguments.get("content") or step.arguments.get("text") or ""
-                if not content or content.lower() in ("that", "that example", "example"):
-                    # Extract the most recent substantial assistant text containing the example
-                    for past_turn in reversed(session.turns):
-                        if past_turn.assistant_text and len(past_turn.assistant_text) > 20:
-                            content = past_turn.assistant_text
-                            if "content" in step.arguments:
-                                step.arguments["content"] = content
-                            else:
-                                step.arguments["text"] = content
-                            break
+                if not content or content.lower().strip() in ("that", "that example", "the example", "example", "it"):
+                    resolved_art = session.resolve_conversational_artifact(content or query)
+                    if resolved_art and resolved_art.content:
+                        content = resolved_art.content
+                        if "content" in step.arguments:
+                            step.arguments["content"] = content
+                        else:
+                            step.arguments["text"] = content
+                        logger.debug("Resolved pronoun to lineage artifact '%s' (topic=%s)",
+                                     resolved_art.display_name, resolved_art.topic)
+                    else:
+                        for past_turn in reversed(session.turns):
+                            if past_turn.assistant_text and len(past_turn.assistant_text) > 20:
+                                content = past_turn.assistant_text
+                                if "content" in step.arguments:
+                                    step.arguments["content"] = content
+                                else:
+                                    step.arguments["text"] = content
+                                break
 
     def _verify_and_pin_artifact(
         self,
@@ -591,7 +713,47 @@ class AgentCoordinator:
         """Maintain compact rolling summary when conversation reaches 3+ turns."""
         if len(session.turns) <= 2:
             return
-        # Compact summary of the initial topic and major turns
-        first_topic = session.turns[0].user_text[:60]
-        recent_topic = session.turns[-1].user_text[:60]
-        session.rolling_summary = f"Session started with '{first_topic}'. Recent focus: '{recent_topic}'. Total turns: {len(session.turns)}."
+        first_topic = session.turns[0].topic or session.turns[0].user_text[:40]
+        recent_topic = session.get_active_topic() or session.turns[-1].user_text[:40]
+        session.rolling_summary = (
+            f"Conversation started with '{first_topic}'. "
+            f"Active topic: '{recent_topic}'. "
+            f"Total turns: {len(session.turns)}."
+        )
+
+    @staticmethod
+    def _extract_turn_topic(query: str, current_active_topic: Optional[str] = None) -> Tuple[Optional[str], bool]:
+        """
+        Extract the semantic topic from the query or maintain active topic for continuations.
+        Returns: (topic_name, is_new_topic)
+        """
+        q = query.strip()
+        q_lower = q.lower()
+
+        # Continuation patterns (do NOT change topic)
+        continuation_patterns = [
+            r"^(?:give me|show me|provide)\s+(?:a\s+|an\s+)?(?:concrete\s+)?(?:numerical\s+)?(?:code\s+)?(?:tiny\s+)?(?:python\s+)?(?:example|snippet)",
+            r"^(?:why\s+does\s+(?:that|it|this))",
+            r"^(?:make\s+(?:the\s+explanation|that|it|this)\s+(?:shorter|concise|simpler))",
+            r"^(?:put\s+that\s+example|save\s+that\s+example|write\s+that\s+example)",
+            r"^(?:open\s+(?:it|that|the\s+file))",
+            r"^(?:summarize\s+(?:that|it|this))",
+            r"^(?:more\s+details|elaborate|continue)",
+        ]
+        for pat in continuation_patterns:
+            if re.search(pat, q_lower):
+                return current_active_topic, False
+
+        # New topic patterns
+        m = re.search(r"(?:now\s+)?(?:explain|what\s+is|what\s+are|tell\s+me\s+about|describe)\s+(?:why\s+)?(.+?)(?:\.|\?|$)", q_lower)
+        if m:
+            extracted = m.group(1).strip()
+            extracted = re.sub(r"^(?:the\s+|a\s+|an\s+)", "", extracted)
+            extracted = re.sub(r"\s+(?:matter|matters|works?)$", "", extracted)
+            return extracted, True
+
+        m2 = re.search(r"(?:i['\s]?m|i\s+am)\s+(?:studying|revising|learning|working\s+on)\s+(.+?)(?:\.|\?|\;|\,|$)", q_lower)
+        if m2:
+            return m2.group(1).strip(), True
+
+        return current_active_topic, False

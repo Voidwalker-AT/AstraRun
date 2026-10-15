@@ -263,12 +263,31 @@ def get_button_style(
         """
 
 
-def get_badge_style(color: str, bg_color: str, border_color: Optional[str] = None) -> str:
+def get_badge_style(color: str, bg_color: Optional[str] = None, border_color: Optional[str] = None) -> str:
     """Return styling for discrete status and category badges."""
+    VARIANTS = {
+        "success": (SUCCESS, SUCCESS_BG, SUCCESS_BORDER),
+        "danger": (DANGER, DANGER_BG, DANGER_BORDER),
+        "warning": (WARNING, WARNING_BG, WARNING_BORDER),
+        "info": (ACCENT, SURFACE_RAISED, BORDER_SUBTLE),
+    }
+    if bg_color is None and color.lower() in VARIANTS:
+        c, bg, b = VARIANTS[color.lower()]
+        return f"""
+            color: {c};
+            background-color: {bg};
+            border: 1px solid {b};
+            border-radius: 4px;
+            padding: 2px 6px;
+            font-family: {FONT_FAMILY};
+            font-size: {FONT_SIZE_SMALL};
+            font-weight: 600;
+        """
     b_col = border_color or f"{color}33"
+    bg = bg_color or SURFACE_RAISED
     return f"""
         color: {color};
-        background-color: {bg_color};
+        background-color: {bg};
         border: 1px solid {b_col};
         border-radius: 4px;
         padding: 2px 6px;

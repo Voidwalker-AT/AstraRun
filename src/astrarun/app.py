@@ -756,7 +756,8 @@ class AstraApplication:
 
         # 3. Conversational topics / questions / explanations
         conversational_starts = (
-            "explain", "why", "what is", "what are", "how does", "tell me",
+            "explain", "now explain", "can you explain", "could you explain",
+            "describe", "why", "what is", "what are", "how does", "tell me",
             "give me", "show me", "summarize", "make it", "what were we",
             "hello", "hi", "who are you", "i'm studying", "i am studying",
             "i'm revising", "i am revising",
@@ -773,7 +774,12 @@ class AstraApplication:
                 return False
             return True
 
-        if "cryptography" in tokens or "deadlock" in tokens or "recursion" in tokens or "modular" in tokens:
+        # Generic conversational inquiry indicators
+        inquiry_indicators = {
+            "concept", "difference", "compare", "definition", "overview",
+            "study", "revising", "tutorial", "lesson", "algorithm",
+        }
+        if inquiry_indicators & tokens:
             return True
 
         # 4. Hybrid queries: action + explanation

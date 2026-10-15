@@ -1,0 +1,19 @@
+{
+  "phase": "ACR-NEXT Phase 1",
+  "components_added": [
+    "src/astrarun/cognition/sufficiency.py (KnowledgeSufficiencyEvaluator, SufficiencyReason, KnowledgeSufficiencyResult)",
+    "src/astrarun/cognition/acquisition.py (InformationAcquisitionPlanner, NeedType, FreshnessRequirement, AuthorityRequirement, SourceType, InformationNeed, SourceCandidate, EvidenceRequest, AcquisitionPlan)",
+    "tests/architecture/test_knowledge_sufficiency.py (Domain generalization, temporal, user-specific, authoritative holdout tests)",
+    "tests/architecture/test_acquisition_planner.py (Acquisition planning, privacy constraints, coordinator integration)"
+  ],
+  "components_modified": [
+    "src/astrarun/session/events.py (Added KNOWLEDGE_SUFFICIENCY_EVALUATED, INFORMATION_NEED_CREATED, ACQUISITION_PLAN_CREATED events)",
+    "src/astrarun/agent/coordinator.py (Integrated KnowledgeSufficiencyEvaluator, InformationAcquisitionPlanner, and TurnStatus.INFORMATION_REQUIRED)",
+    "src/astrarun/agent/interruption.py (Added WorldDriftDetector.reset() to eliminate state contamination)",
+    "src/astrarun/app.py (Routed knowledge acquisition and verification queries to AgentCoordinator; mapped TurnStatus.INFORMATION_REQUIRED)",
+    "src/astrarun/ui/launcher.py (Added coordinator drift_detector reset in reset_session)",
+    "scripts/run_interruption_physical_demo.py (Refactored all 10 scenarios to execute 100% through canonical Launcher ingress with zero synthetic cards)"
+  ],
+  "legacy_code_retained": true,
+  "breaking_changes": false
+}

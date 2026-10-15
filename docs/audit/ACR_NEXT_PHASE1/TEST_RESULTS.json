@@ -1,0 +1,17 @@
+{
+  "architecture_tests": {
+    "total": 86,
+    "passed": 86,
+    "failed": 0,
+    "skipped": 0,
+    "duration_s": 91.01,
+    "status": "GREEN"
+  },
+  "full_test_suite": {
+    "total": 1146,
+    "passed": 1132,
+    "failed": 0,
+    "skipped": 14,
+    "status": "GREEN"
+  }
+}

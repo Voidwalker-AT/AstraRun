@@ -1,0 +1,232 @@
+{
+  "total_cases": 20,
+  "accuracy": 1.0,
+  "mean_latency_ms": 0.105,
+  "max_latency_ms": 1.349,
+  "cases": [
+    {
+      "query": "Explain modular inverses in cryptography.",
+      "is_sufficient": true,
+      "expected_sufficient": true,
+      "reason": "SUFFICIENT_INTERNAL_KNOWLEDGE",
+      "expected_reason": "SUFFICIENT_INTERNAL_KNOWLEDGE",
+      "matched": true,
+      "latency_ms": 1.349,
+      "missing_aspects": []
+    },
+    {
+      "query": "How does quicksort partition an array?",
+      "is_sufficient": true,
+      "expected_sufficient": true,
+      "reason": "SUFFICIENT_INTERNAL_KNOWLEDGE",
+      "expected_reason": "SUFFICIENT_INTERNAL_KNOWLEDGE",
+      "matched": true,
+      "latency_ms": 0.074,
+      "missing_aspects": []
+    },
+    {
+      "query": "Derive the quadratic formula step by step.",
+      "is_sufficient": true,
+      "expected_sufficient": true,
+      "reason": "SUFFICIENT_INTERNAL_KNOWLEDGE",
+      "expected_reason": "SUFFICIENT_INTERNAL_KNOWLEDGE",
+      "matched": true,
+      "latency_ms": 0.059,
+      "missing_aspects": []
+    },
+    {
+      "query": "What are eigenvalues and eigenvectors geometrically?",
+      "is_sufficient": true,
+      "expected_sufficient": true,
+      "reason": "SUFFICIENT_INTERNAL_KNOWLEDGE",
+      "expected_reason": "SUFFICIENT_INTERNAL_KNOWLEDGE",
+      "matched": true,
+      "latency_ms": 0.061,
+      "missing_aspects": []
+    },
+    {
+      "query": "Explain the difference between mitosis and meiosis.",
+      "is_sufficient": true,
+      "expected_sufficient": true,
+      "reason": "SUFFICIENT_INTERNAL_KNOWLEDGE",
+      "expected_reason": "SUFFICIENT_INTERNAL_KNOWLEDGE",
+      "matched": true,
+      "latency_ms": 0.058,
+      "missing_aspects": []
+    },
+    {
+      "query": "open calculator",
+      "is_sufficient": true,
+      "expected_sufficient": true,
+      "reason": "SUFFICIENT_INTERNAL_KNOWLEDGE",
+      "expected_reason": "SUFFICIENT_INTERNAL_KNOWLEDGE",
+      "matched": true,
+      "latency_ms": 0.005,
+      "missing_aspects": []
+    },
+    {
+      "query": "battery status",
+      "is_sufficient": true,
+      "expected_sufficient": true,
+      "reason": "SUFFICIENT_INTERNAL_KNOWLEDGE",
+      "expected_reason": "SUFFICIENT_INTERNAL_KNOWLEDGE",
+      "matched": true,
+      "latency_ms": 0.003,
+      "missing_aspects": []
+    },
+    {
+      "query": "2 + 2",
+      "is_sufficient": true,
+      "expected_sufficient": true,
+      "reason": "SUFFICIENT_INTERNAL_KNOWLEDGE",
+      "expected_reason": "SUFFICIENT_INTERNAL_KNOWLEDGE",
+      "matched": true,
+      "latency_ms": 0.007,
+      "missing_aspects": []
+    },
+    {
+      "query": "What is the current stock price of Apple?",
+      "is_sufficient": false,
+      "expected_sufficient": false,
+      "reason": "MISSING_CURRENT_INFORMATION",
+      "expected_reason": "MISSING_CURRENT_INFORMATION",
+      "matched": true,
+      "latency_ms": 0.048,
+      "missing_aspects": [
+        "Real-time or current world state: 'current stock'"
+      ]
+    },
+    {
+      "query": "What is the weather in Tokyo right now?",
+      "is_sufficient": false,
+      "expected_sufficient": false,
+      "reason": "MISSING_CURRENT_INFORMATION",
+      "expected_reason": "MISSING_CURRENT_INFORMATION",
+      "matched": true,
+      "latency_ms": 0.044,
+      "missing_aspects": [
+        "Real-time or current world state: 'weather in'"
+      ]
+    },
+    {
+      "query": "Who won the match last night?",
+      "is_sufficient": false,
+      "expected_sufficient": false,
+      "reason": "MISSING_CURRENT_INFORMATION",
+      "expected_reason": "MISSING_CURRENT_INFORMATION",
+      "matched": true,
+      "latency_ms": 0.038,
+      "missing_aspects": [
+        "Real-time or current world state: 'Who won the match last night'"
+      ]
+    },
+    {
+      "query": "What is the latest version of Python released today?",
+      "is_sufficient": false,
+      "expected_sufficient": false,
+      "reason": "MISSING_CURRENT_INFORMATION",
+      "expected_reason": "MISSING_CURRENT_INFORMATION",
+      "matched": true,
+      "latency_ms": 0.046,
+      "missing_aspects": [
+        "Real-time or current world state: 'latest version'"
+      ]
+    },
+    {
+      "query": "What topics are on my syllabus for CS 101?",
+      "is_sufficient": false,
+      "expected_sufficient": false,
+      "reason": "MISSING_USER_SPECIFIC_CONTEXT",
+      "expected_reason": "MISSING_USER_SPECIFIC_CONTEXT",
+      "matched": true,
+      "latency_ms": 0.049,
+      "missing_aspects": [
+        "User private record or personal schedule: 'my syllabus'"
+      ]
+    },
+    {
+      "query": "Summarize my exam notes for tomorrow's test.",
+      "is_sufficient": false,
+      "expected_sufficient": false,
+      "reason": "MISSING_USER_SPECIFIC_CONTEXT",
+      "expected_reason": "MISSING_USER_SPECIFIC_CONTEXT",
+      "matched": true,
+      "latency_ms": 0.047,
+      "missing_aspects": [
+        "User private record or personal schedule: 'my exam notes'"
+      ]
+    },
+    {
+      "query": "Check my schedule for meetings this afternoon.",
+      "is_sufficient": false,
+      "expected_sufficient": false,
+      "reason": "MISSING_USER_SPECIFIC_CONTEXT",
+      "expected_reason": "MISSING_USER_SPECIFIC_CONTEXT",
+      "matched": true,
+      "latency_ms": 0.044,
+      "missing_aspects": [
+        "User private record or personal schedule: 'my schedule'"
+      ]
+    },
+    {
+      "query": "Where did I save my draft presentation?",
+      "is_sufficient": false,
+      "expected_sufficient": false,
+      "reason": "MISSING_USER_SPECIFIC_CONTEXT",
+      "expected_reason": "MISSING_USER_SPECIFIC_CONTEXT",
+      "matched": true,
+      "latency_ms": 0.044,
+      "missing_aspects": [
+        "User private record or personal schedule: 'my draft'"
+      ]
+    },
+    {
+      "query": "Verify against RFC 7519 the claims specification for JWTs.",
+      "is_sufficient": false,
+      "expected_sufficient": false,
+      "reason": "MISSING_AUTHORITATIVE_SOURCE",
+      "expected_reason": "MISSING_AUTHORITATIVE_SOURCE",
+      "matched": true,
+      "latency_ms": 0.041,
+      "missing_aspects": [
+        "Authoritative standard / primary document required: 'Verify against'"
+      ]
+    },
+    {
+      "query": "Check the NIST specification for FIPS 140-3 cryptographic modules.",
+      "is_sufficient": false,
+      "expected_sufficient": false,
+      "reason": "MISSING_AUTHORITATIVE_SOURCE",
+      "expected_reason": "MISSING_AUTHORITATIVE_SOURCE",
+      "matched": true,
+      "latency_ms": 0.044,
+      "missing_aspects": [
+        "Authoritative standard / primary document required: 'Check the NIST'"
+      ]
+    },
+    {
+      "query": "do it",
+      "is_sufficient": false,
+      "expected_sufficient": false,
+      "reason": "AMBIGUOUS_GOAL",
+      "expected_reason": "AMBIGUOUS_GOAL",
+      "matched": true,
+      "latency_ms": 0.023,
+      "missing_aspects": [
+        "Pronoun referent has no antecedent in session history."
+      ]
+    },
+    {
+      "query": "fix it",
+      "is_sufficient": false,
+      "expected_sufficient": false,
+      "reason": "AMBIGUOUS_GOAL",
+      "expected_reason": "AMBIGUOUS_GOAL",
+      "matched": true,
+      "latency_ms": 0.013,
+      "missing_aspects": [
+        "Pronoun referent has no antecedent in session history."
+      ]
+    }
+  ]
+}

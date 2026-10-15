@@ -216,6 +216,10 @@ class LauncherWindow(QDialog):
         """Start a completely fresh conversation session with zero cross-session state."""
         import uuid
         self.session_id = f"launcher-sess-{uuid.uuid4().hex[:12]}"
+        if hasattr(self, "app") and hasattr(self.app, "coordinator"):
+            coord = getattr(self.app, "coordinator", None)
+            if coord and hasattr(coord, "drift_detector") and hasattr(coord.drift_detector, "reset"):
+                coord.drift_detector.reset()
         return self.session_id
 
     def _init_window(self) -> None:

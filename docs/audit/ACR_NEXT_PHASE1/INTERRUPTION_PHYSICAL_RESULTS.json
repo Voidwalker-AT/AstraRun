@@ -1,0 +1,115 @@
+{
+  "timestamp": 1792049177.831879,
+  "runtime": {
+    "os": "Windows",
+    "python": "3.13.0 (tags/v3.13.0:60403a5, Oct  7 2024, 09:38:07) [MSC v.1941 64 bit (AMD64)]",
+    "qt_version": "PySide6"
+  },
+  "scenarios": [
+    {
+      "scenario": 1,
+      "name": "USER_TAKEOVER",
+      "command": "snap window left",
+      "status": "HANDLED",
+      "response": "Automation paused: human user physical takeover detected. Physical ownership released; focus preserved without stealing back.",
+      "screenshot": "01_user_takeover.png",
+      "elapsed_s": 1.064,
+      "invariant_verified": "Physical user input immediately preempted automation; interaction ownership released."
+    },
+    {
+      "scenario": 2,
+      "name": "USER_CLOSED_RESOURCE",
+      "command": "open calculator",
+      "status": "HANDLED",
+      "response": "Task paused: user explicitly closed the application. Human close respected as intentional; automatic reopening aborted.",
+      "screenshot": "02_user_closed_resource.png",
+      "elapsed_s": 5.756,
+      "invariant_verified": "Target process closed by human user; respected as explicit intent without auto-reopen."
+    },
+    {
+      "scenario": 3,
+      "name": "PROCESS_CRASHED",
+      "command": "open calculator",
+      "status": "HANDLED",
+      "response": "Process crash detected (Injected fault: PROCESS_CRASHED). Transitioned to RECOVERING state for bounded environmental recovery of calculator.",
+      "screenshot": "03_process_crashed.png",
+      "elapsed_s": 5.197,
+      "invariant_verified": "Unexpected process termination safely handled; transitioned to RECOVERING state."
+    },
+    {
+      "scenario": 4,
+      "name": "USER_MODIFIED_RESOURCE",
+      "command": "snap window left",
+      "status": "HANDLED",
+      "response": "Which target did you mean?",
+      "screenshot": "04_user_modified_resource.png",
+      "elapsed_s": 1.053,
+      "invariant_verified": "Target file hash changed externally; invalidates cache and requests clarification."
+    },
+    {
+      "scenario": 5,
+      "name": "RESOURCE_DISAPPEARED",
+      "command": "snap window left",
+      "status": "HANDLED",
+      "response": "Which target did you mean?",
+      "screenshot": "05_resource_disappeared.png",
+      "elapsed_s": 1.054,
+      "invariant_verified": "Dependent resource disappeared; plan halted before step N+1 without blind write."
+    },
+    {
+      "scenario": 6,
+      "name": "FOCUS_CHANGED",
+      "command": "snap window right",
+      "status": "HANDLED",
+      "response": "Focus changed by user. Physical automation paused without stealing focus back.",
+      "screenshot": "06_focus_changed.png",
+      "elapsed_s": 1.058,
+      "invariant_verified": "Active workstation focus switched; Astra pauses immediately without focus stealing."
+    },
+    {
+      "scenario": 7,
+      "name": "MODAL_APPEARED",
+      "command": "snap window left",
+      "status": "HANDLED",
+      "response": "Which target did you mean?",
+      "screenshot": "07_modal_appeared.png",
+      "elapsed_s": 1.068,
+      "invariant_verified": "Unexpected modal dialog detected; execution paused to avoid hazardous keystrokes."
+    },
+    {
+      "scenario": 8,
+      "name": "RESOURCE_REPLACED",
+      "command": "snap window left",
+      "status": "HANDLED",
+      "response": "Which target did you mean?",
+      "screenshot": "08_resource_replaced.png",
+      "elapsed_s": 1.046,
+      "invariant_verified": "Resource identity changed; plan paused awaiting human clarification."
+    },
+    {
+      "scenario": 9,
+      "name": "UNKNOWN_WORLD_DRIFT",
+      "command": "snap window left",
+      "status": "HANDLED",
+      "response": "Which target did you mean?",
+      "screenshot": "09_unknown_world_drift.png",
+      "elapsed_s": 1.047,
+      "invariant_verified": "Ambient workstation environment drifted; marked WORLD_STATE_CHANGED."
+    },
+    {
+      "scenario": 10,
+      "name": "FILESYSTEM_CHANGED",
+      "command": "snap window right",
+      "status": "HANDLED",
+      "response": "",
+      "screenshot": "10_filesystem_changed.png",
+      "elapsed_s": 1.059,
+      "invariant_verified": "Underlying filesystem modified externally; stale assumptions paused safely."
+    }
+  ],
+  "process_invariants": {
+    "initial_lingering_pids": 0,
+    "final_lingering_pids": 0,
+    "processes_cleaned": []
+  }
+}

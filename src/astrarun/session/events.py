@@ -24,6 +24,9 @@ class EventType(str, Enum):
     RECOVERY = "RECOVERY"
     ASSISTANT_RESPONSE = "ASSISTANT_RESPONSE"
     TURN_COMPLETED = "TURN_COMPLETED"
+    KNOWLEDGE_SUFFICIENCY_EVALUATED = "KNOWLEDGE_SUFFICIENCY_EVALUATED"
+    INFORMATION_NEED_CREATED = "INFORMATION_NEED_CREATED"
+    ACQUISITION_PLAN_CREATED = "ACQUISITION_PLAN_CREATED"
 
 
 @dataclass
@@ -144,3 +147,41 @@ class TurnCompletedEvent(SessionEvent):
     duration_s: float = 0.0
     task_id: Optional[str] = None
     event_type: EventType = field(default=EventType.TURN_COMPLETED, init=False)
+
+
+@dataclass
+class KnowledgeSufficiencyEvaluatedEvent(SessionEvent):
+    """Outcome of pre-reasoning knowledge sufficiency evaluation."""
+    is_sufficient: bool = True
+    reason: str = "SUFFICIENT_INTERNAL_KNOWLEDGE"
+    confidence: float = 1.0
+    missing_aspects: List[str] = field(default_factory=list)
+    explanation: str = ""
+    task_id: Optional[str] = None
+    event_type: EventType = field(default=EventType.KNOWLEDGE_SUFFICIENCY_EVALUATED, init=False)
+
+
+@dataclass
+class InformationNeedCreatedEvent(SessionEvent):
+    """Structured information need identified by InformationAcquisitionPlanner."""
+    need_id: str = ""
+    description: str = ""
+    need_type: str = "FACTUAL"
+    freshness: str = "STATIC"
+    authority: str = "ANY_REASONABLE"
+    priority: int = 1
+    privacy_sensitive: bool = False
+    task_id: Optional[str] = None
+    event_type: EventType = field(default=EventType.INFORMATION_NEED_CREATED, init=False)
+
+
+@dataclass
+class AcquisitionPlanCreatedEvent(SessionEvent):
+    """Structured information acquisition plan formulated before execution."""
+    plan_id: str = ""
+    need_count: int = 0
+    evidence_request_count: int = 0
+    target_sources: List[str] = field(default_factory=list)
+    user_summary: str = ""
+    task_id: Optional[str] = None
+    event_type: EventType = field(default=EventType.ACQUISITION_PLAN_CREATED, init=False)

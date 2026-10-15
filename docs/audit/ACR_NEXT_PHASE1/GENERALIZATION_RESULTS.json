@@ -1,0 +1,163 @@
+{
+  "domains_evaluated": [
+    "cryptography",
+    "computer_science",
+    "physics",
+    "biology",
+    "mathematics",
+    "law_and_humanities"
+  ],
+  "total_queries": 18,
+  "domain_breakdown": {
+    "cryptography": {
+      "count": 3,
+      "sufficient_count": 3,
+      "accuracy": 1.0,
+      "queries": [
+        {
+          "query": "Explain Hill cipher.",
+          "is_sufficient": true,
+          "reason": "SUFFICIENT_INTERNAL_KNOWLEDGE",
+          "confidence": 0.92
+        },
+        {
+          "query": "How does Diffie-Hellman key exchange work?",
+          "is_sufficient": true,
+          "reason": "SUFFICIENT_INTERNAL_KNOWLEDGE",
+          "confidence": 0.92
+        },
+        {
+          "query": "Why is RSA vulnerable to small private exponents?",
+          "is_sufficient": true,
+          "reason": "SUFFICIENT_INTERNAL_KNOWLEDGE",
+          "confidence": 0.85
+        }
+      ]
+    },
+    "computer_science": {
+      "count": 3,
+      "sufficient_count": 3,
+      "accuracy": 1.0,
+      "queries": [
+        {
+          "query": "Explain deadlock prevention vs deadlock avoidance.",
+          "is_sufficient": true,
+          "reason": "SUFFICIENT_INTERNAL_KNOWLEDGE",
+          "confidence": 0.92
+        },
+        {
+          "query": "What is Dijkstra's algorithm?",
+          "is_sufficient": true,
+          "reason": "SUFFICIENT_INTERNAL_KNOWLEDGE",
+          "confidence": 0.92
+        },
+        {
+          "query": "Describe tail call optimization in recursion.",
+          "is_sufficient": true,
+          "reason": "SUFFICIENT_INTERNAL_KNOWLEDGE",
+          "confidence": 0.92
+        }
+      ]
+    },
+    "physics": {
+      "count": 3,
+      "sufficient_count": 3,
+      "accuracy": 1.0,
+      "queries": [
+        {
+          "query": "Explain Kepler's second law of planetary motion.",
+          "is_sufficient": true,
+          "reason": "SUFFICIENT_INTERNAL_KNOWLEDGE",
+          "confidence": 0.92
+        },
+        {
+          "query": "How does the photoelectric effect work?",
+          "is_sufficient": true,
+          "reason": "SUFFICIENT_INTERNAL_KNOWLEDGE",
+          "confidence": 0.92
+        },
+        {
+          "query": "What is the Carnot efficiency theorem?",
+          "is_sufficient": true,
+          "reason": "SUFFICIENT_INTERNAL_KNOWLEDGE",
+          "confidence": 0.92
+        }
+      ]
+    },
+    "biology": {
+      "count": 3,
+      "sufficient_count": 3,
+      "accuracy": 1.0,
+      "queries": [
+        {
+          "query": "How does mRNA translation occur at the ribosome?",
+          "is_sufficient": true,
+          "reason": "SUFFICIENT_INTERNAL_KNOWLEDGE",
+          "confidence": 0.92
+        },
+        {
+          "query": "Describe cellular respiration in mitochondria.",
+          "is_sufficient": true,
+          "reason": "SUFFICIENT_INTERNAL_KNOWLEDGE",
+          "confidence": 0.92
+        },
+        {
+          "query": "Explain the mechanism of CRISPR-Cas9 target recognition.",
+          "is_sufficient": true,
+          "reason": "SUFFICIENT_INTERNAL_KNOWLEDGE",
+          "confidence": 0.92
+        }
+      ]
+    },
+    "mathematics": {
+      "count": 3,
+      "sufficient_count": 3,
+      "accuracy": 1.0,
+      "queries": [
+        {
+          "query": "Derive the quadratic formula.",
+          "is_sufficient": true,
+          "reason": "SUFFICIENT_INTERNAL_KNOWLEDGE",
+          "confidence": 0.92
+        },
+        {
+          "query": "What are eigenvalues and eigenvectors?",
+          "is_sufficient": true,
+          "reason": "SUFFICIENT_INTERNAL_KNOWLEDGE",
+          "confidence": 0.92
+        },
+        {
+          "query": "Explain Fermat's Little Theorem.",
+          "is_sufficient": true,
+          "reason": "SUFFICIENT_INTERNAL_KNOWLEDGE",
+          "confidence": 0.92
+        }
+      ]
+    },
+    "law_and_humanities": {
+      "count": 3,
+      "sufficient_count": 3,
+      "accuracy": 1.0,
+      "queries": [
+        {
+          "query": "Explain separation of powers in constitutional law.",
+          "is_sufficient": true,
+          "reason": "SUFFICIENT_INTERNAL_KNOWLEDGE",
+          "confidence": 0.92
+        },
+        {
+          "query": "What were the economic causes of the French Revolution?",
+          "is_sufficient": true,
+          "reason": "SUFFICIENT_INTERNAL_KNOWLEDGE",
+          "confidence": 0.85
+        },
+        {
+          "query": "Compare utilitarianism and deontological ethics.",
+          "is_sufficient": true,
+          "reason": "SUFFICIENT_INTERNAL_KNOWLEDGE",
+          "confidence": 0.92
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "total_samples": 300,
+  "min_latency_ms": 0.0024,
+  "mean_latency_ms": 0.0316,
+  "p50_latency_ms": 0.0365,
+  "p95_latency_ms": 0.0714,
+  "p99_latency_ms": 0.1265,
+  "max_latency_ms": 0.2088,
+  "budget_bound_ms": 15.0,
+  "pass_budget": true
+}

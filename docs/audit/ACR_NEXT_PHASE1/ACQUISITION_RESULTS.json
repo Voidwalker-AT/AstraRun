@@ -1,0 +1,136 @@
+{
+  "total_cases": 6,
+  "cases": [
+    {
+      "query": "What is the current stock price of Apple?",
+      "sufficiency_reason": "MISSING_CURRENT_INFORMATION",
+      "needs_count": 1,
+      "needs": [
+        {
+          "need_id": "need-1",
+          "description": "Current or real-time state: Real-time or current world state: 'current stock'",
+          "need_type": "CURRENT",
+          "freshness": "REALTIME",
+          "authority": "CORROBORATED",
+          "priority": 1,
+          "privacy_sensitive": false
+        }
+      ],
+      "evidence_requests_count": 1,
+      "sources": [
+        "Official / Real-time Web Feeds",
+        "Web Search Index"
+      ],
+      "user_summary": "To answer your request accurately, additional information is required:\n\u2022 Missing: Current or real-time state: Real-time or current world state: 'current stock' (Priority: P1)\n\nProposed acquisition sources:\n\u2022 Official / Real-time Web Feeds (WEB_PRIMARY)\n\u2022 Web Search Index (WEB_SECONDARY)"
+    },
+    {
+      "query": "What is the weather in Tokyo right now?",
+      "sufficiency_reason": "MISSING_CURRENT_INFORMATION",
+      "needs_count": 1,
+      "needs": [
+        {
+          "need_id": "need-1",
+          "description": "Current or real-time state: Real-time or current world state: 'weather in'",
+          "need_type": "CURRENT",
+          "freshness": "CURRENT",
+          "authority": "CORROBORATED",
+          "priority": 1,
+          "privacy_sensitive": false
+        }
+      ],
+      "evidence_requests_count": 1,
+      "sources": [
+        "Official / Real-time Web Feeds",
+        "Web Search Index"
+      ],
+      "user_summary": "To answer your request accurately, additional information is required:\n\u2022 Missing: Current or real-time state: Real-time or current world state: 'weather in' (Priority: P1)\n\nProposed acquisition sources:\n\u2022 Official / Real-time Web Feeds (WEB_PRIMARY)\n\u2022 Web Search Index (WEB_SECONDARY)"
+    },
+    {
+      "query": "Check my syllabus for CS 101.",
+      "sufficiency_reason": "MISSING_USER_SPECIFIC_CONTEXT",
+      "needs_count": 1,
+      "needs": [
+        {
+          "need_id": "need-1",
+          "description": "Private user / local resource: User private record or personal schedule: 'my syllabus'",
+          "need_type": "USER_SPECIFIC",
+          "freshness": "CURRENT",
+          "authority": "USER_SOURCE_REQUIRED",
+          "priority": 1,
+          "privacy_sensitive": true
+        }
+      ],
+      "evidence_requests_count": 1,
+      "sources": [
+        "Local Workstation Filesystem / Indexed Documents",
+        "Connected Desktop Applications / Notes / Mail"
+      ],
+      "user_summary": "To answer your request accurately, additional information is required:\n\u2022 Missing: Private user / local resource: User private record or personal schedule: 'my syllabus' (Priority: P1)\n\nProposed acquisition sources:\n\u2022 Local Workstation Filesystem / Indexed Documents (LOCAL_KNOWLEDGE) [Requires User Authorization]\n\u2022 Connected Desktop Applications / Notes / Mail (CONNECTED_APPLICATION) [Requires User Authorization]\n\nNote: Accessing local files or personal records requires explicit authorization."
+    },
+    {
+      "query": "Review my resume in my documents folder.",
+      "sufficiency_reason": "MISSING_USER_SPECIFIC_CONTEXT",
+      "needs_count": 1,
+      "needs": [
+        {
+          "need_id": "need-1",
+          "description": "Private user / local resource: User private record or personal schedule: 'my resume'",
+          "need_type": "USER_SPECIFIC",
+          "freshness": "CURRENT",
+          "authority": "USER_SOURCE_REQUIRED",
+          "priority": 1,
+          "privacy_sensitive": true
+        }
+      ],
+      "evidence_requests_count": 1,
+      "sources": [
+        "Local Workstation Filesystem / Indexed Documents",
+        "Connected Desktop Applications / Notes / Mail"
+      ],
+      "user_summary": "To answer your request accurately, additional information is required:\n\u2022 Missing: Private user / local resource: User private record or personal schedule: 'my resume' (Priority: P1)\n\nProposed acquisition sources:\n\u2022 Local Workstation Filesystem / Indexed Documents (LOCAL_KNOWLEDGE) [Requires User Authorization]\n\u2022 Connected Desktop Applications / Notes / Mail (CONNECTED_APPLICATION) [Requires User Authorization]\n\nNote: Accessing local files or personal records requires explicit authorization."
+    },
+    {
+      "query": "Verify against RFC 7519 the claims specification for JWTs.",
+      "sufficiency_reason": "MISSING_AUTHORITATIVE_SOURCE",
+      "needs_count": 1,
+      "needs": [
+        {
+          "need_id": "need-1",
+          "description": "Authoritative standard / primary document: Authoritative standard / primary document required: 'Verify against'",
+          "need_type": "AUTHORITATIVE_REFERENCE",
+          "freshness": "STATIC",
+          "authority": "PRIMARY_REQUIRED",
+          "priority": 1,
+          "privacy_sensitive": false
+        }
+      ],
+      "evidence_requests_count": 1,
+      "sources": [
+        "Official Standards Repository / Primary RFC / NIST",
+        "Authoritative Model Peer Review"
+      ],
+      "user_summary": "To answer your request accurately, additional information is required:\n\u2022 Missing: Authoritative standard / primary document: Authoritative standard / primary document required: 'Verify against' (Priority: P1)\n\nProposed acquisition sources:\n\u2022 Official Standards Repository / Primary RFC / NIST (WEB_PRIMARY)\n\u2022 Authoritative Model Peer Review (EXTERNAL_INTELLIGENCE)"
+    },
+    {
+      "query": "fix it",
+      "sufficiency_reason": "AMBIGUOUS_GOAL",
+      "needs_count": 1,
+      "needs": [
+        {
+          "need_id": "need-1",
+          "description": "Clarification of ambiguous goal or undefined pronoun referent",
+          "need_type": "USER_SPECIFIC",
+          "freshness": "CURRENT",
+          "authority": "USER_SOURCE_REQUIRED",
+          "priority": 1,
+          "privacy_sensitive": false
+        }
+      ],
+      "evidence_requests_count": 1,
+      "sources": [
+        "Direct Conversational Clarification with User"
+      ],
+      "user_summary": "I need a bit more context to proceed:\n\u2022 Clarification of ambiguous goal or undefined pronoun referent\n\nPlease clarify your goal or specify the object you are referring to."
+    }
+  ]
+}

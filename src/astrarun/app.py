@@ -754,13 +754,14 @@ class AstraApplication:
         if (pronoun_indicators & tokens) and (action_indicators & tokens):
             return True
 
-        # 3. Conversational topics / questions / explanations
+        # 3. Conversational topics / questions / explanations / knowledge acquisition
         conversational_starts = (
             "explain", "now explain", "can you explain", "could you explain",
             "describe", "why", "what is", "what are", "how does", "tell me",
             "give me", "show me", "summarize", "make it", "what were we",
             "hello", "hi", "who are you", "i'm studying", "i am studying",
-            "i'm revising", "i am revising",
+            "i'm revising", "i am revising", "verify", "check", "lookup",
+            "search", "where is", "who won", "who is", "when did",
         )
         if any(q_lower.startswith(prefix) for prefix in conversational_starts):
             # Exclude legacy UI inspection commands like "what can you do?"
@@ -774,10 +775,11 @@ class AstraApplication:
                 return False
             return True
 
-        # Generic conversational inquiry indicators
+        # Generic conversational inquiry & knowledge indicators
         inquiry_indicators = {
             "concept", "difference", "compare", "definition", "overview",
             "study", "revising", "tutorial", "lesson", "algorithm",
+            "syllabus", "notes", "schedule", "rfc", "nist", "weather", "stock",
         }
         if inquiry_indicators & tokens:
             return True
@@ -832,8 +834,10 @@ class AstraApplication:
             res_type = "blocked"
         elif turn_res.status == TurnStatus.PAUSED_CONFIRMATION:
             res_type = "confirm"
-        elif turn_res.status == TurnStatus.CLARIFICATION_REQUIRED:
+        elif turn_res.status in (TurnStatus.CLARIFICATION_REQUIRED, TurnStatus.WAITING_CLARIFICATION):
             res_type = "clarify"
+        elif turn_res.status in (TurnStatus.INFORMATION_REQUIRED, TurnStatus.PAUSED_USER_ACTIVE, TurnStatus.WORLD_STATE_CHANGED, TurnStatus.RECOVERING):
+            res_type = "conversational"
 
         data = {
             "turn_id": turn_res.turn_id,
@@ -849,6 +853,11 @@ class AstraApplication:
             TurnStatus.SUCCESS,
             TurnStatus.PAUSED_CONFIRMATION,
             TurnStatus.CLARIFICATION_REQUIRED,
+            TurnStatus.INFORMATION_REQUIRED,
+            TurnStatus.PAUSED_USER_ACTIVE,
+            TurnStatus.WORLD_STATE_CHANGED,
+            TurnStatus.RECOVERING,
+            TurnStatus.WAITING_CLARIFICATION,
         )
 
         return ExecutionResult(

@@ -28,13 +28,25 @@ from astrarun.agent.verifier import StepVerifier
 from astrarun.capabilities.registry import CapabilityRegistry
 from astrarun.cognition.turn_models import PlanStep, TurnDecision, TurnMode
 from astrarun.cognition.turn_reasoner import TurnReasoner
+from astrarun.cognition.sufficiency import (
+    KnowledgeSufficiencyEvaluator,
+    KnowledgeSufficiencyResult,
+    SufficiencyReason,
+)
+from astrarun.cognition.acquisition import (
+    InformationAcquisitionPlanner,
+    AcquisitionPlan,
+)
 from astrarun.computer_use.world.summary import WorldStateAdapter, WorldStateSummary
 from astrarun.core.logging import get_logger
 from astrarun.ingress.models import RequestEnvelope
 from astrarun.security.execution_broker import ActionCategory, ActionProposal, ExecutionBroker
 from astrarun.session.events import (
+    AcquisitionPlanCreatedEvent,
     AssistantResponseEvent,
     EventType,
+    InformationNeedCreatedEvent,
+    KnowledgeSufficiencyEvaluatedEvent,
     ReasoningDecisionEvent,
     SessionEvent,
     ToolCallEvent,
@@ -76,6 +88,8 @@ class TurnStatus(str, Enum):
     REOBSERVING = "REOBSERVING"
     RECOVERING = "RECOVERING"
     WAITING_CLARIFICATION = "WAITING_CLARIFICATION"
+    # Phase 1: Information Acquisition State
+    INFORMATION_REQUIRED = "INFORMATION_REQUIRED"
 
 
 @dataclass
@@ -108,6 +122,8 @@ class AgentCoordinator:
         indexer: Optional[CapabilitySemanticIndex] = None,
         verifier: Optional[StepVerifier] = None,
         drift_detector: Optional[WorldDriftDetector] = None,
+        sufficiency_evaluator: Optional[KnowledgeSufficiencyEvaluator] = None,
+        acquisition_planner: Optional[InformationAcquisitionPlanner] = None,
     ) -> None:
         self.registry = registry or CapabilityRegistry()
         self.broker = broker or ExecutionBroker(capability_registry=self.registry)
@@ -117,6 +133,8 @@ class AgentCoordinator:
         self.verifier = verifier or StepVerifier()
         self.drift_detector = drift_detector or WorldDriftDetector()
         self.policy_engine = InterruptionPolicyEngine()
+        self.sufficiency_evaluator = sufficiency_evaluator or KnowledgeSufficiencyEvaluator()
+        self.acquisition_planner = acquisition_planner or InformationAcquisitionPlanner()
 
     @classmethod
     def get_instance(cls) -> AgentCoordinator:
@@ -165,11 +183,94 @@ class AgentCoordinator:
         )
         self.session_store.record_event(obs_event)
 
-        # 3. FAST_TRACK_OR_REASON
-        decision = SingleStepFastTrack.match(user_text)
-        if decision is not None:
-            logger.debug("Turn %s resolved via SingleStepFastTrack: %s", turn_id, decision.goal_summary)
+        # 3. KNOWLEDGE SUFFICIENCY & FAST_TRACK_OR_REASON
+        fast_decision = SingleStepFastTrack.match(user_text)
+        if fast_decision is not None:
+            logger.debug("Turn %s resolved via SingleStepFastTrack: %s", turn_id, fast_decision.goal_summary)
+            suff_event = KnowledgeSufficiencyEvaluatedEvent(
+                session_id=active_session.session_id,
+                turn_id=turn_id,
+                is_sufficient=True,
+                reason=SufficiencyReason.SUFFICIENT_INTERNAL_KNOWLEDGE.value,
+                confidence=1.0,
+                explanation="Self-sufficient operational command on fast-track path.",
+                task_id=envelope.request_id,
+            )
+            self.session_store.record_event(suff_event)
+            decision = fast_decision
         else:
+            # 3A. Evaluate Knowledge Sufficiency (< 15ms local heuristic)
+            sufficiency = self.sufficiency_evaluator.evaluate(
+                query=user_text,
+                session=active_session,
+                world_state=world_summary,
+            )
+            suff_event = KnowledgeSufficiencyEvaluatedEvent(
+                session_id=active_session.session_id,
+                turn_id=turn_id,
+                is_sufficient=sufficiency.is_sufficient,
+                reason=sufficiency.reason.value,
+                confidence=sufficiency.confidence,
+                missing_aspects=sufficiency.missing_aspects,
+                explanation=sufficiency.explanation,
+                task_id=envelope.request_id,
+            )
+            self.session_store.record_event(suff_event)
+
+            if not sufficiency.is_sufficient:
+                # 3B. Formulate Information Acquisition Plan
+                acq_plan = self.acquisition_planner.plan_acquisition(
+                    query=user_text,
+                    sufficiency=sufficiency,
+                    session=active_session,
+                )
+                for need in acq_plan.needs:
+                    need_ev = InformationNeedCreatedEvent(
+                        session_id=active_session.session_id,
+                        turn_id=turn_id,
+                        need_id=need.need_id,
+                        description=need.description,
+                        need_type=need.need_type.value,
+                        freshness=need.freshness.value,
+                        authority=need.authority.value,
+                        priority=need.priority,
+                        privacy_sensitive=need.privacy_sensitive,
+                        task_id=envelope.request_id,
+                    )
+                    self.session_store.record_event(need_ev)
+
+                plan_ev = AcquisitionPlanCreatedEvent(
+                    session_id=active_session.session_id,
+                    turn_id=turn_id,
+                    plan_id=acq_plan.plan_id,
+                    need_count=len(acq_plan.needs),
+                    evidence_request_count=len(acq_plan.evidence_requests),
+                    target_sources=[s.identifier for r in acq_plan.evidence_requests for s in r.target_sources],
+                    user_summary=acq_plan.user_summary,
+                    task_id=envelope.request_id,
+                )
+                self.session_store.record_event(plan_ev)
+
+                # Return structured INFORMATION_REQUIRED turn
+                return self._commit_turn(
+                    turn_id=turn_id,
+                    status=TurnStatus.INFORMATION_REQUIRED,
+                    user_text=user_text,
+                    assistant_text=acq_plan.user_summary,
+                    decision=TurnDecision(
+                        mode=TurnMode.CLARIFY if sufficiency.reason == SufficiencyReason.AMBIGUOUS_GOAL else TurnMode.DIRECT_ANSWER,
+                        assistant_reply=acq_plan.user_summary,
+                        goal_summary=f"Information Acquisition Plan: {user_text}",
+                        confidence=sufficiency.confidence,
+                        model_role="ACQUISITION_PLANNER",
+                        metadata={"acquisition_plan": acq_plan.to_dict()},
+                    ),
+                    session=active_session,
+                    t0=t0,
+                    envelope=envelope,
+                    metadata={"acquisition_plan": acq_plan.to_dict()},
+                )
+
             # Semantic retrieval for Top-6 capability schemas
             top_retrievals = self.indexer.retrieve(user_text, top_k=6)
             candidate_schemas = []
@@ -280,6 +381,11 @@ class AgentCoordinator:
 
             # 5.1 PRE-ACTION WORLD OBSERVATION
             pre_snap = self.drift_detector.capture_snapshot(step.arguments)
+
+            # Auto-bind foreground HWND if window capability omitted target HWND
+            if step.capability_id in ("snap_window_left", "snap_window_right", "maximize_window", "minimize_window"):
+                if "hwnd" not in step.arguments or not step.arguments["hwnd"]:
+                    step.arguments["hwnd"] = pre_snap.foreground_hwnd or 0
 
             # Emit ToolCallEvent
             call_ev = ToolCallEvent(

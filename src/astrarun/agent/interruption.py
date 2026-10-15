@@ -128,6 +128,11 @@ class WorldDriftDetector:
         """Override user input detection to simulate physical user takeover."""
         self._user_takeover_override = active
 
+    def reset(self) -> None:
+        """Reset all simulated faults and user takeover overrides."""
+        self._user_takeover_override = False
+        self._simulated_fault = None
+
     def capture_snapshot(
         self,
         target_info: Optional[Dict[str, Any]] = None,

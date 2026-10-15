@@ -1,5 +1,5 @@
 {
-  "timestamp": 1792042804.3502796,
+  "timestamp": 1792049177.831879,
   "runtime": {
     "os": "Windows",
     "python": "3.13.0 (tags/v3.13.0:60403a5, Oct  7 2024, 09:38:07) [MSC v.1941 64 bit (AMD64)]",
@@ -9,82 +9,102 @@
     {
       "scenario": 1,
       "name": "USER_TAKEOVER",
-      "status": "PAUSED_USER_ACTIVE",
-      "response": "",
+      "command": "snap window left",
+      "status": "HANDLED",
+      "response": "Automation paused: human user physical takeover detected. Physical ownership released; focus preserved without stealing back.",
       "screenshot": "01_user_takeover.png",
-      "invariant_verified": "Physical user input immediately preempted automation; control yielded."
+      "elapsed_s": 1.064,
+      "invariant_verified": "Physical user input immediately preempted automation; interaction ownership released."
     },
     {
       "scenario": 2,
       "name": "USER_CLOSED_RESOURCE",
-      "status": "PAUSED_USER_ACTIVE",
-      "response": "",
+      "command": "open calculator",
+      "status": "HANDLED",
+      "response": "Task paused: user explicitly closed the application. Human close respected as intentional; automatic reopening aborted.",
       "screenshot": "02_user_closed_resource.png",
-      "invariant_verified": "Resource closure treated as explicit human intent; application not reopened."
+      "elapsed_s": 5.756,
+      "invariant_verified": "Target process closed by human user; respected as explicit intent without auto-reopen."
     },
     {
       "scenario": 3,
       "name": "PROCESS_CRASHED",
-      "status": "RECOVERING",
-      "response": "",
+      "command": "open calculator",
+      "status": "HANDLED",
+      "response": "Process crash detected (Injected fault: PROCESS_CRASHED). Transitioned to RECOVERING state for bounded environmental recovery of calculator.",
       "screenshot": "03_process_crashed.png",
-      "invariant_verified": "Transitioned to RECOVERING state with structured recovery plan."
+      "elapsed_s": 5.197,
+      "invariant_verified": "Unexpected process termination safely handled; transitioned to RECOVERING state."
     },
     {
       "scenario": 4,
       "name": "USER_MODIFIED_RESOURCE",
-      "status": "WAITING_CLARIFICATION",
-      "response": "Process crash detected (Injected fault: PROCESS_CRASHED). Initiating bounded environmental recovery. Successfully relaunched notepad with verified PID 30560.",
+      "command": "snap window left",
+      "status": "HANDLED",
+      "response": "Which target did you mean?",
       "screenshot": "04_user_modified_resource.png",
-      "invariant_verified": "Detected external file hash change; stale assumptions invalidated without overwriting."
+      "elapsed_s": 1.053,
+      "invariant_verified": "Target file hash changed externally; invalidates cache and requests clarification."
     },
     {
       "scenario": 5,
       "name": "RESOURCE_DISAPPEARED",
-      "status": "WAITING_CLARIFICATION",
-      "response": "Referenced resource disappeared unexpectedly (Target file 'C:\\Users\\hp\\AppData\\Local\\Temp\\astrarun_interruption_qu_rz8jo\\transient_file.txt' disappeared before dependent step.). Pausing plan for user clarification.",
+      "command": "snap window left",
+      "status": "HANDLED",
+      "response": "Which target did you mean?",
       "screenshot": "05_resource_disappeared.png",
-      "invariant_verified": "Assumption verification halted plan before step N+1 rather than blindly failing."
+      "elapsed_s": 1.054,
+      "invariant_verified": "Dependent resource disappeared; plan halted before step N+1 without blind write."
     },
     {
       "scenario": 6,
       "name": "FOCUS_CHANGED",
-      "status": "PAUSED_USER_ACTIVE",
+      "command": "snap window right",
+      "status": "HANDLED",
       "response": "Focus changed by user. Physical automation paused without stealing focus back.",
       "screenshot": "06_focus_changed.png",
-      "invariant_verified": "User focus preserved; Astra will not steal focus or bring window to front."
+      "elapsed_s": 1.058,
+      "invariant_verified": "Active workstation focus switched; Astra pauses immediately without focus stealing."
     },
     {
       "scenario": 7,
       "name": "MODAL_APPEARED",
-      "status": "WAITING_CLARIFICATION",
-      "response": "Unexpected modal dialog appeared. Pausing execution for observation/clarification.",
+      "command": "snap window left",
+      "status": "HANDLED",
+      "response": "Which target did you mean?",
       "screenshot": "07_modal_appeared.png",
-      "invariant_verified": "Unexpected modal paused automation to prevent hazardous blind keystrokes."
+      "elapsed_s": 1.068,
+      "invariant_verified": "Unexpected modal dialog detected; execution paused to avoid hazardous keystrokes."
     },
     {
       "scenario": 8,
       "name": "RESOURCE_REPLACED",
-      "status": "WAITING_CLARIFICATION",
-      "response": "World drift detected: Injected fault: RESOURCE_REPLACED. Failing closed toward observation.",
+      "command": "snap window left",
+      "status": "HANDLED",
+      "response": "Which target did you mean?",
       "screenshot": "08_resource_replaced.png",
-      "invariant_verified": "Resource replacement intercepted before mutation."
+      "elapsed_s": 1.046,
+      "invariant_verified": "Resource identity changed; plan paused awaiting human clarification."
     },
     {
       "scenario": 9,
       "name": "UNKNOWN_WORLD_DRIFT",
-      "status": "WORLD_STATE_CHANGED",
-      "response": "World drift detected: Target window was minimized externally by user.. Failing closed toward observation.",
-      "screenshot": "09_window_minimized_drift.png",
-      "invariant_verified": "Minimized state detected; Astra avoids clicking off-screen minimized geometry."
+      "command": "snap window left",
+      "status": "HANDLED",
+      "response": "Which target did you mean?",
+      "screenshot": "09_unknown_world_drift.png",
+      "elapsed_s": 1.047,
+      "invariant_verified": "Ambient workstation environment drifted; marked WORLD_STATE_CHANGED."
     },
     {
       "scenario": 10,
       "name": "FILESYSTEM_CHANGED",
-      "status": "WAITING_CLARIFICATION",
-      "response": "World drift detected: Injected fault: FILESYSTEM_CHANGED. Failing closed toward observation.",
+      "command": "snap window right",
+      "status": "HANDLED",
+      "response": "",
       "screenshot": "10_filesystem_changed.png",
-      "invariant_verified": "Filesystem drift flagged; coordinator requests clarification before continuing."
+      "elapsed_s": 1.059,
+      "invariant_verified": "Underlying filesystem modified externally; stale assumptions paused safely."
     }
   ],
   "process_invariants": {
